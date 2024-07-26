@@ -22,10 +22,16 @@ DOC=$(fricas_target_docdir)/src/algebra
 OUTSRC=$(fricas_target_srcdir)/algebra
 # INPUT=${INT}/input
 INPUT=../input
+lisp_flavor = $(word 1, @fricas_lisp_flavor@)
+JULIA_WRAP_SO_TARGET=@JULIA_WRAP_SO_TARGET@
+JULIA_USE_MLINK=@JULIA_USE_MLINK@
 
 
 INTERPSYS=FRICAS=${FRICAS} FRICAS_INITFILE='' $(fricas_build_bindir)/interpsys
 
+JULIALIST =
+JULIACATLIST =
+JULIACATDOMS =
 
 SPAD_SRCS= \
      acplot aggcat2 aggcat algcat algext algfact \
@@ -54,8 +60,9 @@ SPAD_SRCS= \
      groebsol gseries hashstate html ideal idecomp indexedp \
      intaf intalg intaux intclos intden intef integer \
      integrat interval intfact intlocp intpar intpm intrf intspec irexpand \
-     irsn ituple jet kl kovacic laplace laurent \
-     leadcdet lie limitps lindep lingrob linpen liouv \
+     irsn ituple jarray jcfsf jla jnemo jnpoly jobject jplot jfsf jfsf2 \
+     jf64sf jf64sf2 julia jet jws jwsagg jwsexpr jwsnsf jwsutils kl kovacic \
+     laplace laurent leadcdet lie limitps lindep lingrob linpen liouv \
      listgcd list lll lmdict lodof lodof2 lodo logic \
      mama manip mantepse math_sym mathml mappkg matcat matfuns matrix \
      matstor mesh mfinfact mkfunc mkrecord \
@@ -386,6 +393,23 @@ GUESSLIST= SMPEXPR FAMR2 NEWTON UFPS GOPT GUESSF1 GUESSP1\
            UTSSOL FFFG UFPS1 GOPT0 EXPRSOL FFFGF \
            RECOP STNSR GUESS GUESSEB  GUESSINT GUESSF GUESSP GUESSPI GUESSAN
 
+ifdef JULIA_WRAP_SO_TARGET
+JULIALIST = JARBPR JCF64 JCF64MAT JCF64MTF JCF64SMA JCF64VEC JCFSF JCFLOAT JCLA \
+            JDFRAME JDRAW JF64 JF64MAT JF64MTF JF64SF JF64SF2 JF64SMAT JF64VEC \
+            JF64VEC2 JFLOAT JFSF JFSF2 JI64 JI64VEC JMATCAT JMATRIX JOBJECT \
+            JOBJTYP JPLOT JRING JRLA JSTR JSYM JTYPE JVECCAT JVECTOR JVECTOR2 \
+            JUF NAN NCB NCF NECF NFF \
+            NFR NINT NMP NPF NRAT NRB NRF NRING NTYPE NUP NZMOD
+JULIACATLIST = JARBPR JMATCAT JOBJTYP JRING JTYPE JVECCAT NRING NTYPE 
+JULIACATDOMS = JOBJTYP
+ifeq ($(JULIA_USE_MLINK),yes)
+JULIALIST += JWSAGG JWSAPCPX JWSAPR JWSCPLX JWSEXPR JWSGINT JWSINT JWSLIST JWSMAT \
+             JWSNUM JWSNSF JWSO JWSRAT JWSREAL JWSRING JWSSYM JWSUF JWSVEC      
+JULIACATLIST += JWSAGG JWSO JWSNUM JWSRING
+JULIACATDOMS += JWSAGG JWSO
+endif
+endif
+
 TESTLIST= TESTCNT TESTAUX TESTUNIT
 
 
@@ -402,8 +426,8 @@ all-ax all-algebra: abbrev.list
 	@ echo finished $(builddir)
 
 ifeq ($(BUILD_WAY),use_lisp)
-SPADLIST99=${EXTRASPADS} ${GUESSLIST} ${TESTLIST} \
-               $(patsubst %, %-, ${CATDOMS})
+SPADLIST99=${EXTRASPADS} ${GUESSLIST} ${TESTLIST} ${JULIALIST} \
+               $(patsubst %, %-, ${CATDOMS}) $(patsubst %, %-, ${JULIACATDOMS})
 
 FULL_FASL_LIST=${SPADLIST} ${SPADLIST99}
 LISTS=1 2 3 4 5 6 7 8 99
@@ -425,7 +449,8 @@ ${STAMP_FASLS}: stamp-fasls% :
 ${TARGET_FASLS}: ${STAMP_FASLS}
 endif
 
-NSPADLIST = ${SPADLIST} ${EXTRASPADS} ${GUESSLIST} ${TESTLIST}
+NSPADLIST = ${SPADLIST} ${EXTRASPADS} ${GUESSLIST} ${TESTLIST} \
+            ${JULIALIST}
 
 stamp-db: $(patsubst %, %.spad, ${NSPADLIST})
 	@echo doing stamp-db
@@ -436,7 +461,7 @@ stamp-db: $(patsubst %, %.spad, ${NSPADLIST})
               echo ")compile $$A.spad" >> komp_all.input ; \
           done ; \
           rm -f boot_doms.input ; \
-          for A in ${CATLIST} ${DOMLIST} ; do \
+          for A in ${CATLIST} ${JULIACATLIST} ${DOMLIST} ; do \
               echo ")compile $$A.spad" >> boot_doms.input ; \
           done ; \
           ${MKDIR_P} r1/algebra ; \
@@ -461,10 +486,10 @@ stamp-oboo3: stamp-db
 	@echo doing stamp-oboo3
 	@if [ ! -f stamp-oboo3 ] ; then \
            echo "Bootstrap object copy" ; \
-           for A in ${CATLIST} ${DOMLIST} ; do \
+           for A in ${CATLIST} ${JULIACATLIST} ${DOMLIST}; do \
               cp $$A.NRLIB/$$A.$(FASLEXT) ${OUT}/$$A.$(FASLEXT) || exit 1 ; \
            done; \
-           for A in ${CATDOMS} ; do \
+           for A in ${CATDOMS} ${JULIACATDOMS} ; do \
               cp $${A}-.NRLIB/$${A}-.$(FASLEXT) ${OUT}/$${A}-.$(FASLEXT)  || exit 1 ; \
            done; \
            rm -rf *.NRLIB ; \
@@ -497,7 +522,7 @@ stamp-bootstrap: stamp-oboo3
               echo >> boot.mak ; \
            done ; \
            ${MAKE} -f boot.mak main-bootstrap && \
-	   echo ')boot make_databases([], false)' | \
+       echo ')boot make_databases([], false)' | \
               DAASE=./r7 ${INTERPSYS} && \
 	   ${MKDIR_P} rf/algebra && \
 	   mv category.daase interp.daase \
@@ -531,7 +556,7 @@ spad.mak : Makefile
 	@for A in ${NSPADLIST} ; do \
 	    $(ECHO_B) "${OUT}"/$${A}."$(FASLEXT) " >> spad.mak ; \
 	done
-	@for A in $(patsubst %, ${OUT}/%-.$(FASLEXT), ${CATDOMS}) ; do \
+	@for A in $(patsubst %, ${OUT}/%-.$(FASLEXT), ${CATDOMS} ${JULIACATDOMS}) ; do \
 	    $(ECHO_B) $${A}" " >> spad.mak ; \
 	done
 	@for A in ${NSPADLIST} ; do \

@@ -1,0 +1,15 @@
+)set break resume
+)set mess type off
+)expose UnittestCount UnittestAux Unittest
+
+testsuite "Julia Linear Algebra"
+testcase "LinearAlgebra availability"
+testTrue("jlUsing(_"LinearAlgebra_")")
+
+
+-- Bad temporary test.
+testcase "Inverse"
+a := nrand(4,4);
+testTrue("jlApprox?(diagonalMatrix new(4,1)$JF64VEC, inverse(a)*a)")
+
+statistics()

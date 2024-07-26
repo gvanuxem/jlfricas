@@ -1,0 +1,665 @@
+)abbrev category JTYPE JuliaType
+++ Category for Julia types
+++ Author: G.Vanuxem
+++ Date Created: December 2022
+++ Description:
+++  Parent category of Julia elements.
+JuliaType() : Category == Join(SetCategory, ConvertibleTo(String))
+
+)abbrev category JRING JuliaRing
+++ Category for Julia rings
+++ Author: G.Vanuxem
+++ Date Created: May 2024
+++ Description:
+++  Parent category of Julia ring elements.
+JuliaRing() : Category == Join(JuliaType, Ring) with
+  one?  : % -> Boolean
+  ++ one?(x) checks whether or not x is the multiplicative identity.
+  zero? : % -> Boolean
+  ++ zero?(x) checks whether or not x is the additive identity.
+
+)abbrev domain JSTR JuliaString
+++ Domain for Julia strings
+++ Author: G. Vanuxem
+++ Date Created:
+++ Description:
+++  This domain allows the manipulation of Julia strings.
+++  Accessing elements is 1-based.
+-- TODO: -- Unusable:jlEvalString(estr)@% or @JuliaString
+JuliaString() : Exports == Implementation where
+    STR  ==> String
+    PI   ==> PositiveInteger
+    NNI  ==> NonNegativeInteger
+    Exports ==> Join(JuliaType, StringAggregate) with
+      string   : % -> String
+      ++ string(s) coerces s to String.
+      coerce   : % -> String
+      ++ coerce(s) coerces s to String.
+      coerce   : String -> %
+      ++ coerce(str) coerces str to a JuliaString.
+      jstring  : String -> %
+      ++ jstring(str) coerces str to a Julia string.
+      concat   : (%, %) -> %
+      ++ concat(s, t) returns s and t concatenated.
+      concat   : List(%) -> %
+      ++ concat(l) returns the concatenated l.
+      jlSplit  :(%, %, NNI) -> List(%)
+      ++ jlSplit(str, delims, n) split str with delimiter(s) delims
+      ++ (a string or a regular expression). Return a list of size n.
+      ++ Parse entirely str if n = 0.
+      jlSplit  :(%, %) -> List(%)
+      ++ jlSplit(str, delims) split str with delimiter(s) delims
+      ++ (a string or a regular expression). Equivalent to
+      ++ jlSplit(str, delims, 0).
+      jlRegex  : % -> %
+      ++ jlRegex(str) returns the JuliaString corresponding to a Julia
+      ++ regular expression, that is, "r"str"". Convenient function.
+      jlSubstitute  : % -> %
+      ++ jlSubstitute(str) returns the JuliaString corresponding to a Julia
+      ++ subtitute expression, that is, "s"str""". Convenient function.
+      jlLatex  : % -> %
+      ++ jlLatex(str) returns the JuliaString corresponding to a Julia
+      ++ LaTeX expression, that is, "L"str"" if your Julia support it
+      ++ (LaTeXStrings package). Convenient function.
+      jlRegexMatch?   : (%, %) -> Boolean
+      ++ jlRegexMatch(regex,s) checks if the regular expression matches in s.
+      jlRegexMatch    : (%, %) -> %
+      ++ jlRegexMatch(regex, s) returns the matched regular expression in s.
+      jlRegexMatch    : (%, %, PI) -> %
+      ++ jlRegexMatch(regex, s, i) returns the matched regular expression in s,
+      ++ starting at index i.
+      jlRegexMatch    : (%, %) -> List(%)
+      ++ jlRegexMatch(regex, s) returns the matched regular expressions in s.
+      jlRegexMatch    : (%, %, PI) -> List(%)
+      ++ jlRegexMatch(regex, s, i) returns the matched regular expressions in s,
+      ++ starting at index i.
+      jlRegexMatch    : (%, %) -> AssociationList(%,%)
+      ++ jlRegexMatch(regex, s) returns the matched regular expressions in s.
+      jlRegexMatch    : (%, %, PI) -> AssociationList(%,%)
+      ++ jlRegexMatch(regex, s, i) returns the matched regular expressions in s,
+      ++ starting at index i.
+      jlRegexReplace  : (%, %, %) -> %
+      ++ jlRegexReplace(regex,subst,str) will replace captured regular expression
+      ++ in str with subst. More information in String documentation of Julia.
+      ++ For example:
+      ++  jlRegexReplace(jlRegex("!"), jlSubstitute(" you"), "hey!")
+    Implementation ==> String add
+      import from JuliaUtilityFunctions
+      import from AssociationList(%,%)
+      jlInitialize(true)
+
+      jsps(s)  ==> s pretend String 
+      qjstr(s) ==> concat([jstring("_""), s, jstring("_"")])
+
+      string(s) : String       == jsps(s)
+      coerce(s : %)  : String  == jsps(s)
+      coerce(s : String) :  %  == s pretend %
+      jstring(s) : %           == s pretend %
+      concat(s,t) : %          == concat(jsps(s),jsps(t)) pretend %
+
+      jlRegex(s)               ==
+        concat(jstring "r",
+          jstring(string(s::OutputForm)$OutputFormTools))
+
+      jlSubstitute(s)          ==
+        concat(jstring "s",
+          jstring(string(s::OutputForm)$OutputFormTools))
+
+      jlLatex(s)          ==
+        concat(jstring "L",
+          jstring(string(s::OutputForm)$OutputFormTools))
+
+      jlSplit(str, delims, n) == 
+        resl : List(%) := []
+        estr : String :=
+          concat(["splt=split(_"", jsps(str), "_",_"", jsps(delims), "_",limit=", 
+            string(n),");"])@String
+        jlEvalString(estr)@Void
+        n : Integer := jl_int64_eval_string("length(splt)")$Lisp
+        for i in 1..n repeat
+          estr := concat(["string(if((ret=splt[",string(i), _
+            "])===nothing) _"_" else ret end)"])
+          resl := concat!(resl, jl_string_eval_string(estr)$Lisp)          
+        resl
+
+      jlSplit(str, delims) == jlSplit(str, delims, 0)
+
+      jlRegexMatch?(r, s)  ==
+        estr : String := concat(
+          ["occursin(", jsps(r), ",", string(s::OutputForm)$OutputFormTools,")"])
+        jlEvalString(estr)@Boolean
+
+      jlRegexMatch(r, s) : % == jlRegexMatch(r, s, 1)
+
+      jlRegexMatch(r, s, ind) : % ==
+        stri := ind pretend Integer
+        estr : String := concat(
+          ["string(match(", jsps(r), ",_"", jsps(s), "_",", string(stri), ").match)"])@String
+        jl_string_eval_string(estr)$Lisp
+
+      jlRegexMatch(r, s) : List(%) == jlRegexMatch(r, s, 1)
+
+      jlRegexMatch(r, s, ind) : List(%) ==
+        stri := ind pretend Integer
+        resl : List(%) := []
+        estr : String :=
+          concat(["reg=match(", jsps(r), ",_"", jsps(s), "_",", string(stri),");"])@String
+        jlEvalString(estr)@Void
+        n : Integer := jl_int64_eval_string("size(reg.captures,1)")$Lisp
+        for i in 1..n repeat
+          estr := concat(["string(if((ret=reg.captures[",string(i), _
+            "])===nothing) _"_" else ret end)"])
+          resl := concat!(resl, jl_string_eval_string(estr)$Lisp)          
+        resl
+
+      jlRegexMatch(r: %, s : %) : AssociationList(%,%) ==
+        jlRegexMatch(r,s,1)
+
+      jlRegexMatch(r: %, s : %, ind : PI) : AssociationList(%,%) ==
+        name : %  
+        stri := ind pretend Integer
+        --  StringTable?
+        resal : AssociationList(%, %) := table()
+        estr : String :=
+          concat(["reg=match(", jsps(r), ",_"",
+            jsps(s), "_",", string(stri), ");"])@String
+        jlEvalString(estr)@Void
+        -- TODO: check bad regex, actually Julia throws error(s).
+        -- if (reg===nothing) ...
+        n : Integer := jl_int64_eval_string("size(reg.captures,1)")$Lisp
+        for i in n..1 by -1 repeat
+          if not empty?(name:=jl_string_eval_string(
+              concat(["keys(reg)[", string(i), "];"]))$Lisp pretend %; name) then
+            estr := concat(["string(reg.captures[",string(i), "])"])  
+            resal.name := jl_string_eval_string(estr)$Lisp
+        resal
+
+      jlRegexReplace(r, s, str) ==
+        t : String := concat(["replace(_"",jsps(str),
+          "_",", jsps(r), "=>", jsps(s), ")"])
+        jl_string_eval_string(t)$Lisp
+
+)abbrev domain JSYM JuliaSymbol
+++ Domain for the Julia symbols
+++ Author: G. Vanuxem
+++ Date Created:
+++ Description:
+++  This domain allows the manipulation of Julia symbols.
+JuliaSymbol() : Exports == Implementation where
+    JSTR ==> JuliaString
+    Exports ==> Join(JuliaType, ConvertibleTo(InputForm)) with
+      string  : % -> String
+      coerce  : JuliaString -> %
+      coerce  : String -> %
+      coerce  : Symbol -> %
+      jstring : % -> JuliaString
+      ++ jstring(x) converts x to a Julia string representing the Julia symbol.
+      jsym    : String -> %
+      ++ jsym(str) converts str to a Julia symbol.
+      jsym    : Symbol -> %
+      ++ jsym(sym) converts sym to a Julia symbol.
+    Implementation ==> add
+      import from JuliaUtilityFunctions
+      import from JuliaString
+      jlInitialize(true)
+
+      x:% = y:% == EQUAL(x,y)$Lisp
+      convert(sy : %) : InputForm == sy pretend InputForm
+      convert(sy : %) : String == PNAME(sy)$Lisp
+      coerce(s : JuliaString) : %  ==
+        VALUES(INTERN(concat(":",string(s)))$Lisp)$Lisp
+      coerce(s : String) : %  ==
+        VALUES(INTERN(concat(":",s))$Lisp)$Lisp
+      coerce(sy : %) : OutputForm == sy pretend OutputForm
+      coerce(sy : Symbol) : %     ==
+          VALUES(INTERN(concat(":", string(sy)))$Lisp)$Lisp
+      string(sy : %) : String     == PNAME(sy)$Lisp
+      jsym(sy : String) : %       == coerce(sy pretend JSTR)
+      jsym(sym : Symbol) == VALUES(INTERN(concat(":", string(sym)))$Lisp)$Lisp
+      jstring(sy: %) : JuliaString   == PNAME(sy)$Lisp pretend JSTR
+
+)abbrev domain JI64 JuliaInt64
+++ Domain for the Julia Int64
+++ Author: G. Vanuxem
+++ Date Created:
+++ Description:
+++  This domain allows the manipulation of Julia Int64.
+++  Beware of internal Lisp implementations of machine integer,
+++  usually they differ, for example Lisp MOST-POSITIVE-FIXNUM on 
+++  x86_64 GNU/Linux is 4611686018427387903 with SBCL whereas it is
+++  1152921504606846975 with Clozure CL. They will be passed as an Int64
+++  to Julia nevertheless, but returned value can not fit in a Lisp fixnum. 
+++  In Julia, typemax(Int64) is 9223372036854775807 on this arch. 
+++  This domain is therefore not intented to perfom "advanced" computation,
+++  it just includes basic arthmetic and is used, for example,
+++  for returned pivot vectors in linear algebra.
+JuliaInt64() : Exports == Implementation where
+  Exports ==> Join(JuliaType, IntegerNumberSystem) with
+    min     : () -> %
+    max     : () -> %
+    string  : % -> String
+    coerce  : SingleInteger -> %
+    coerce  : % -> SingleInteger
+    ji64    : SingleInteger -> %
+    ji64    : Integer -> %
+    hashUpdate! : (HashState, %) -> HashState
+  Implementation ==> SingleInteger add
+    import JuliaUtilityFunctions
+    jlInitialize(true)
+    Rep := SingleInteger
+
+    jlsi(x) ==> x pretend %   
+    coerce(jsi : %): SingleInteger == jsi pretend SingleInteger     
+    coerce(si : SingleInteger) == jlsi(si)
+    convert(x : %) : Integer  == x pretend Integer
+    string(i) == convert(i)
+
+    ji64(x : SingleInteger) : % == jlsi(x)
+    ji64(x : Integer) : % == coerce(x)
+
+)abbrev domain JF64 JuliaFloat64
+++ Domain for Julia Float64
+++ Author: G. Vanuxem
+++ Date Created:
+++ Description:
+++  \spadtype{JuliaFloat64} implements 64 bits floating
+++  point arithmetic using Julia Float64 type. Bear in mind that,
+++  like JuliaInt64, the internal representation depends on the
+++  underlying Lisp implementation, so the usual pure arithmetic
+++  operations occur there. For other functions like sqrt, log, exp,
+++  transcendental functions etc. the calculations are performed
+++  at machine level (generally in C language, or even using
+++  assembly language).  
+JuliaFloat64() : Exports == Implementation where
+    JSF ==> JuliaSpecialFunctions
+    PI  ==> PositiveInteger
+    Exports ==> Join (JuliaType,
+                      ConvertibleTo(InputForm),
+                      FloatingPointSystem,
+                      ElementaryFunctionCategory,
+                      TranscendentalFunctionCategory,
+                      DifferentialRing, CommutativeRing) with
+                      -- SpecialFunctionCategory) with
+      jlF64Format : String -> String
+      ++ change the output format using Lisp format strings.
+      jlApprox?: (%, %) -> Boolean
+      ++ jlApprox?(x,y) computes inexact equality comparison
+      ++ with default parameters.
+      ++ Two numbers compare equal if their relative distance
+      ++ or their absolute distance is within tolerance bounds.
+      coerce  : % -> DoubleFloat
+      coerce  : DoubleFloat -> %
+      convert : % -> JuliaString
+      jf64    : DoubleFloat -> %
+      ++ jf64(x) coerces x to a Julia Float64.
+      jf64    : Integer -> %
+      ++ jf64(i) coerces i to a Julia Float64.
+      exp    : () -> %
+      ++ exp() returns the JuliaFloat64 ℯ (%e or exp(1)).
+      exp1    : () -> %
+      ++ exp() returns the JuliaFloat64 ℯ (%e or exp(1)).
+      jlApply : (JuliaString, %) -> %
+      ++ jlApply(func, x) applies func to argument x.
+      jlApply : (JuliaString, %, %) -> %
+      ++ jlApply(func, x, y) applies func to arguments x and y.
+      jlApply : (JuliaString, %, %, %) -> %
+      ++ jlApply(func, x, y, z) applies func to arguments x, y and z.
+      urand01 : () -> %
+      ++ urand01() returns an uniformly distributed random number
+      ++ contained in [0,1].
+      nrand : () -> %
+      ++ nrand() returns an normally distributed random number.
+      expm1   :  % -> %
+      ++ expm1(x) computes accurately e^x-1.
+      log2  : % -> %
+      ++ log2(x) computes the base 2 logarithm of x.
+      log10 : % -> %
+      ++ log10(x) computes the base 10 logarithm of x.  
+      --atan : % -> %
+     -- ++ atan(x) computes the inverse tangent of x.
+      atan : (%, %) -> %
+      ++ atan(x, y) computes the inverse tangent of x/y.
+
+      nan: () -> %
+      ++ nan() returns the Julia Float64 NaN (not a number) constant.
+      positiveInfinity: () -> %
+      ++ positiveInfinity() returns the Julia Float64
+      ++ positive infinity constant.
+      negativeInfinity: () -> %
+      ++ negativeInfinity() returns the Julia Float64
+      ++ negtive infinity constant.
+
+      hashUpdate! : (HashState, %) -> HashState
+
+    Implementation ==> add
+      import from JuliaUtilityFunctions
+      jlInitialize(true)
+  
+      pdf(x) ==> x pretend DoubleFloat
+      defined?(func) ==>
+        not jlDefined?(func) =>
+          error concat(string(func), " is not defined in Julia")
+      
+      max_SF ==> MOST_-POSITIVE_-DOUBLE_-FLOAT$Lisp      
+      MER ==> Record(MANTISSA : Integer, EXPONENT : Integer)
+
+      manexp : % -> MER
+
+      -- format : String := "~,6,,F"
+      -- format : String := "~F"
+      format : String := "~A"
+
+      jlF64Format(s : String) : String ==
+        ss : String := format
+        format := s
+        ss
+
+      0                == FLOAT(0$Lisp, max_SF)$Lisp pretend %
+      1                == FLOAT(1$Lisp, max_SF)$Lisp pretend %
+      exp1()           == exp1()$DoubleFloat pretend %
+      exp()           == exp1()$DoubleFloat pretend %
+      pi()             == pi()$DoubleFloat pretend %
+      positiveInfinity() == POSITIVE_-INFINITY$Lisp
+      negativeInfinity() == NEGATIVE_-INFINITY$Lisp
+      nan() : % == NAN$Lisp
+
+      urand01()        == jl_dbl_eval_string("rand(Float64)")$Lisp
+      nrand()        == jl_dbl_eval_string("randn(Float64)")$Lisp
+
+
+      manexp(x) ==
+        zero? x => [0, 0]
+        s := sign x; x := abs x
+        if x > max()$% then return [s*mantissa(max())+1, exponent max()]
+        me : Record(man : %, exp : Integer) := MANEXP(x)$Lisp
+        two53 := base()^precision()
+        [s*wholePart(two53 * me.man ), me.exp-precision()]
+
+      x < y            == less_DF(x, y)$Lisp
+      x = y            == eql_DF(x, y)$Lisp
+      jlApprox?(x, y)  == jl_bool_function_dbl_dbl("isapprox", x, y)$Lisp
+      - x              == minus_DF(x)$Lisp
+      x + y            == add_DF(x, y)$Lisp
+      x : % - y : %    == sub_DF(x, y)$Lisp
+      x : % * y : %    == mul_DF(x, y)$Lisp
+      i : Integer * x : %  == mul_DF_I(x, i)$Lisp
+      x : % / y : %    == div_DF(x, y)$Lisp
+      x : % / i : Integer  == div_DF_I(x, i)$Lisp
+      x : % ^ i : Integer == jl_dbl_function_dbl_int("^", x, i)$Lisp
+      x : % ^ i : PI   == jl_dbl_function_dbl_int("^", x, i)$Lisp
+      x : % ^ y : %    == jl_dbl_function_dbl_dbl("^", x, y)$Lisp
+
+      jlApply(func, x)  ==
+        defined?(func)
+        jl_dbl_function_dbl(func, x)$Lisp
+      jlApply(func, x, y)  ==
+        defined?(func)
+        jl_dbl_function_dbl_dbl(func, x, y)$Lisp
+      jlApply(func, x, y, z)  ==
+        defined?(func)
+        jl_dbl_function_dbl_dbl_dbl(func, x, y, z)$Lisp
+
+      retract(x : %) : Fraction(Integer) ==
+        rationalApproximation(pdf(x), (precision() - 1)::NonNegativeInteger, base())
+
+      retractIfCan(x:%):Union(Fraction Integer, "failed") ==
+        rationalApproximation(pdf(x), (precision() - 1)::NonNegativeInteger, base())
+
+      x : % ^ r : Fraction Integer ==
+         zero? x =>
+            zero? r => 1
+            negative? r => error "division by 0"
+            0
+         zero? r or (x = 1) => 1
+         (r = 1) => x
+         n := numer r
+         d := denom r
+         negative? x =>
+            odd? d =>
+               odd? n => return -((-x)^r)
+               return ((-x)^r)
+            error "negative root"
+         d = 2 => sqrt(x) ^ n
+         x ^ (n::% / d::%)
+
+      retract(x : %) : Integer ==
+        x = ((n := wholePart x)::%) => n
+        error "Not an integer"
+
+      retractIfCan(x:%):Union(Integer, "failed") ==
+        x = ((n := wholePart x)::%) => n
+        "failed"
+
+      negative? x      == negative?_DF(x)$Lisp
+      zero? x          == zero?_DF(x)$Lisp
+      recip(x)         == (zero? x => "failed"; 1 / x)
+      differentiate x  == 0
+
+      exp(x : %)     == jl_dbl_function_dbl("exp", x)$Lisp
+      expm1(x : %)   == jl_dbl_function_dbl("expm1", x)$Lisp
+      log(x : %)     == jl_dbl_function_dbl("log", x)$Lisp
+      log2(x : %)    == jl_dbl_function_dbl("log2", x)$Lisp
+      log10(x : %)   == jl_dbl_function_dbl("log10", x)$Lisp
+      sqrt(x : %)    == jl_dbl_function_dbl("sqrt", x)$Lisp
+
+      sin(x : %)   == jl_dbl_function_dbl("sin", x)$Lisp
+      cos(x : %)   == jl_dbl_function_dbl("cos", x)$Lisp
+      tan(x : %)   == jl_dbl_function_dbl("tan", x)$Lisp
+      cot(x : %)   == jl_dbl_function_dbl("cot", x)$Lisp
+      sec(x : %)   == jl_dbl_function_dbl("sec", x)$Lisp
+      csc(x : %)   == jl_dbl_function_dbl("csc", x)$Lisp
+
+      asin(x : %) == jl_dbl_function_dbl("asin", x)$Lisp
+      acos(x : %) == jl_dbl_function_dbl("acos", x)$Lisp
+      atan(x : %) == jl_dbl_function_dbl("atan", x)$Lisp
+      atan(x : %, y : %) == jl_dbl_function_dbl_dbl("atan", x, y)$Lisp
+      acot(x : %) == jl_dbl_function_dbl("acot", x)$Lisp
+      asec(x : %) == jl_dbl_function_dbl("asec", x)$Lisp
+      acsc(x : %) == jl_dbl_function_dbl("acsc", x)$Lisp
+
+      sinh(x : %) == jl_dbl_function_dbl("sinh", x)$Lisp
+      cosh(x : %) == jl_dbl_function_dbl("cosh", x)$Lisp
+      tanh(x : %) == jl_dbl_function_dbl("tanh", x)$Lisp
+      coth(x : %) == jl_dbl_function_dbl("coth", x)$Lisp
+      sech(x : %) == jl_dbl_function_dbl("sech", x)$Lisp
+      csch(x : %) == jl_dbl_function_dbl("csch", x)$Lisp
+
+      asinh(x : %) == jl_dbl_function_dbl("asinh", x)$Lisp
+      acosh(x : %) == jl_dbl_function_dbl("acosh", x)$Lisp
+      atanh(x : %) == jl_dbl_function_dbl("atanh", x)$Lisp
+      acoth(x : %) == jl_dbl_function_dbl("acoth", x)$Lisp
+      asech(x : %) == jl_dbl_function_dbl("asech", x)$Lisp
+      acsch(x : %) == jl_dbl_function_dbl("acsch", x)$Lisp
+
+      base()           == FLOAT_-RADIX(0$%)$Lisp
+      mantissa x       == manexp(x).MANTISSA
+      exponent x       == manexp(x).EXPONENT
+      precision()      == FLOAT_-DIGITS(0$%)$Lisp
+      bits()           == FLOAT_-DIGITS(0$%)$Lisp
+      wholePart x      == TRUNCATE(x)$Lisp
+      float(ma, ex, b) == ma*(b::%)^ex
+      max(x, y)        == max_DF(x, y)$Lisp
+      min(x, y)        == min_DF(x, y)$Lisp
+      abs(x)           == abs_DF(x)$Lisp
+
+      max()            == max_SF
+      min()            == MOST_-NEGATIVE_-DOUBLE_-FLOAT$Lisp
+      order(a)         == order(a pretend DoubleFloat)
+
+      coerce(x : %) : DoubleFloat == x pretend DoubleFloat
+      coerce(x : DoubleFloat) :%  == x pretend %
+      convert(x : %) : JuliaString ==
+        FORMAT(NIL$Lisp, format, x)$Lisp
+      convert(x : %) : String ==
+        FORMAT(NIL$Lisp, format, x)$Lisp
+      string(x : %) : String == convert x
+      convert(x : %) : InputForm ==
+        convert(x pretend DoubleFloat)
+      convert(x : %) : Float == convert(x pretend DoubleFloat)$Float
+      coerce(x : %) : OutputForm ==
+        message(FORMAT(NIL$Lisp, format, x)$Lisp)
+
+      jf64(x : DoubleFloat) : % == x pretend %
+      jf64(x : Integer) : % == coerce(x)@DoubleFloat pretend %
+
+)abbrev domain JCF64 JuliaComplexF64
+++ Domain for the Complex Julia JF64
+++ Author: G. Vanuxem
+++ Date Created:
+++ Description: \spadtype{JuliaComplexF64} implements complex 64 bits
+++ floating point arithmetic using Julia Float64.
+JuliaComplexF64() : Exports == Implementation where
+    JF64  ==> JuliaFloat64
+    Exports ==> Join(JuliaType, ComplexCategory(JuliaFloat64)) with
+      jcf64 : JuliaFloat64 -> %
+      jcf64 : (JuliaFloat64, JuliaFloat64) -> %
+    Implementation ==> Complex(JuliaFloat64) add
+      jcf64(r) == complex(r,0$JuliaFloat64)
+      jcf64(r,i) == complex(r,i)
+
+)abbrev package JUF JuliaUtilityFunctions
+++ Utility package for Julia related data.
+++ Author: G. Vanuxem
+++ Date Created:
+++ Description:
+++  This package provides different Julia utility functions.
+JuliaUtilityFunctions() : Exports == Implementation where
+  NNI       ==> NonNegativeInteger
+  JSYM      ==> JuliaSymbol
+  JI64      ==> JuliaInt64
+  JF64      ==> JuliaFloat64
+  JCF64     ==> JuliaComplexF64
+  JF64VEC   ==> JuliaFloat64Vector
+  JF64MAT   ==> JuliaFloat64Matrix
+  JCF64VEC  ==> JuliaComplexF64Vector
+  JCF64MAT  ==> JuliaComplexF64Matrix  
+  JSTR      ==> JuliaString
+  Exports ==> with
+    jlInitialize  : Boolean -> Boolean
+    ++ jlInitialize(init) initializes the Julia environment if init is true,
+    ++ otherwise clears the Julia environment. Normally, it should
+    ++ not be used since it is automatically called.
+    jlUsing       : JuliaString -> Boolean
+    ++ jlUsing(modpack) loads the module or package modpack
+    ++ and makes its exported names available.
+    ++ Returns false if it can not be loaded.
+    jlImport      : JuliaString -> Boolean
+    ++ jlImport(modpackfunc) imports the module, package or function
+    ++ modpackfunc and makes its exported name(s) available.
+    ++ Returns false if it can not be imported.
+
+    jlDefined?    : JuliaSymbol -> Boolean
+    ++ jlDefined?(sym) tests whether or not sym is defined in Julia.
+    jlDefined?    : JuliaString -> Boolean
+    ++ jlDefined?(str) tests whether or not str is defined in Julia.
+    jlDefined?    : String -> Boolean
+    ++ jlDefined?(str) tests whether or not str is defined in Julia.
+
+    jlAddPackage  : (JuliaString) -> Void
+    ++ jlAddPackage(package) add package to Julia project.
+    jlAddPackage  : (String) -> Void
+    ++ jlAddPackage(package) add package to Julia project.
+
+    jlApprox?: (JCF64, JCF64) -> Boolean
+    ++ jlApprox?(x,y) computes inexact equality comparison
+    ++ with default parameters. Two numbers compare equal
+    ++ if their relative distance or their absolute distance
+    ++ is within tolerance bounds. Applied component-wise.
+
+    jlEvalString   : JSTR -> Void
+    ++ jlEvalString(str) evaluates str in Julia with no output.
+    jlEvalString   : String -> Void
+    ++ jlEvalString(str) evaluates str in Julia with no output.
+    jlEvalString   : JSTR -> Boolean
+    ++ jlEvalString(str) evaluates str in Julia,
+    ++ where output is a Boolean.
+    jlEvalString   : String -> Boolean
+    ++ jlEvalString(str) evaluates str in Julia,
+    ++ where output is a Boolean.
+    jlEvalString   : JSTR -> JI64
+    ++ jlEvalString(str) evaluates str in Julia,
+    ++ where output is a JuliaInt64.
+    jlEvalString   : String -> JI64
+    ++ jlEvalString(str) evaluates str in Julia,
+    ++ where output is a JuliaInt64.
+    jlEvalString   : JSTR -> JSTR
+    ++ jlEvalString(str) evaluates str in Julia,
+    ++ where output is a JuliaString.
+    jlEvalString   : String -> JSTR
+    ++ jlEvalString(str) evaluates str in Julia,
+    ++ where output is a JuliaString.
+    jlEvalString   : JSTR -> String
+    ++ jlEvalString(str) evaluates str in Julia,
+    ++ where output is a String.
+    jlEvalString   : String -> String
+    ++ jlEvalString(str) evaluates str in Julia,
+    ++ where output is a String.
+    jlEvalString   : JSTR -> JF64
+    ++ jlEvalString(str) evaluates str in Julia,
+    ++ where output is a JuliaFloat64.
+    jlEvalString   : String -> JF64
+    ++ jlEvalString(str) evaluates str in Julia,
+    ++ where output is a JuliaFloat64.
+    median: JF64VEC -> JF64
+    mean  : JF64VEC -> JF64
+    var   : JF64VEC -> JF64
+    std   : JF64VEC -> JF64
+    cor   : JF64MAT -> JF64MAT
+    cov   : JF64MAT -> JF64MAT
+  Implementation ==> add
+    import from String
+    import from JuliaString
+    init_julia_env()$Lisp
+    jl_using_package("Random")$Lisp
+    jl_using_package("Statistics")$Lisp
+    jl_import_symbol("Statistics.var")$Lisp
+
+    defined?(func) ==>
+      not jlDefined?(func)$JuliaUtilityFunctions =>
+        error concat(string(func), " is not defined in Julia")
+
+    jlInitialize(init) ==
+      if init then init_julia_env()$Lisp
+      else clear_julia_env()$Lisp
+    jlUsing(m) == jl_using_package(m)$Lisp
+    jlImport(m) == jl_import_symbol(m)$Lisp
+    jlDefined?(sym : JuliaSymbol) ==
+      jl_bool_eval_string(concat(["isdefined(Main,",
+        string(sym),")"])@String)$Lisp
+    jlDefined?(str : JuliaString) ==
+      jl_bool_eval_string(concat(["isdefined(Main,",
+        string(coerce(str)@JSYM),")"])@String)$Lisp
+    jlDefined?(str : String) ==
+      jl_bool_eval_string(concat(["isdefined(Main,",
+        string(jsym(str)@JSYM),")"])$String)$Lisp
+
+    jlAddPackage(str : JuliaString) ==
+      jl_eval_string(concat([jstring("import Pkg;Pkg.add(_""),
+            str,jstring("_")")])$JuliaString)$Lisp
+    jlAddPackage(str : String) ==
+      jl_eval_string(concat(["import Pkg;Pkg.add(_"",
+            str,"_")"])$String)$Lisp
+
+    median(v:JF64VEC) : JF64 == jl_dbl_1dfunction(0$NNI, "median", v)$Lisp
+    mean(v:JF64VEC) : JF64   == jl_dbl_1dfunction(0$NNI, "mean", v)$Lisp
+    var(v:JF64VEC) : JF64    == jl_dbl_1dfunction(0$NNI, "var", v)$Lisp
+    std(v:JF64VEC) : JF64    == jl_dbl_1dfunction(0$NNI, "std", v)$Lisp
+    cor(m:JF64MAT) : JF64MAT == jl_dbl_1dfunction(0$NNI, "cor", m)$Lisp
+    cov(m:JF64MAT) : JF64MAT == jl_dbl_1dfunction(0$NNI, "cov", m)$Lisp
+
+    jlApprox?(x:JCF64, y:JCF64) : Boolean ==
+        jl_bool_function_dbl_dbl("isapprox", real(x), real(y))$Lisp
+          and jl_bool_function_dbl_dbl("isapprox", imag(x), imag(y))$Lisp
+
+    jlEvalString(s : JSTR)   : Void == jl_eval_string(s)$Lisp
+    jlEvalString(s : String) : Void == jl_eval_string(s)$Lisp
+    jlEvalString(s : JSTR)   : Boolean == jl_bool_eval_string(s)$Lisp
+    jlEvalString(s : String) : Boolean == jl_bool_eval_string(s)$Lisp
+    jlEvalString(s : JSTR)   : JI64 == jl_int64_eval_string(s)$Lisp
+    jlEvalString(s : String) : JI64 == jl_int64_eval_string(s)$Lisp
+    jlEvalString(s : JSTR)   : JSTR == jl_string_eval_string(s)$Lisp
+    jlEvalString(s : String) : JSTR == jl_string_eval_string(s)$Lisp
+    jlEvalString(s : JSTR)   : String == jl_string_eval_string(s)$Lisp
+    jlEvalString(s : String) : String == jl_string_eval_string(s)$Lisp
+    jlEvalString(s : JSTR)   : JF64 == jl_dbl_eval_string(s)$Lisp
+    jlEvalString(s : String) : JF64 == jl_dbl_eval_string(s)$Lisp

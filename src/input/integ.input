@@ -1,6 +1,8 @@
 )set break resume
 )expose UnittestCount UnittestAux Unittest
 
+)unexpose JuliaWSExpression
+
 testsuite "integ"
 
 is_evaluated_integral(res, f) ==

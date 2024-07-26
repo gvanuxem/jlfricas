@@ -1,0 +1,1176 @@
+)abbrev category JOBJTYP JuliaObjectType
+++ Category for arbirary Julia objects
+++ Author: G.Vanuxem
+++ Date Created: April. 2024
+++ Description:
+++  Category for arbitrary Julia objects, more precisely
+++  objects that can only be used within Julia.
+JuliaObjectType() : Category == JuliaType() with
+    jlref   : String -> %
+    ++ jlref(str) evaluates the Julia command str and returns
+    ++ the corresponding FriCAS Julia object.
+    jlId    : % -> String
+    ++ jlId(obj) returns the Julia indexed dictionary index related
+    ++ to the object obj.
+    jlType  : % -> String
+    ++ jlType(obj) return the Julia type of obj.
+    jlRef   : % -> SExpression
+    ++ jlRef(obj) returns the pretty printed internal Lisp representation
+    ++ of the Julia object obj.
+    jlApply : (String, %) -> % 
+    ++jlApply(func, obj) executes the function func with obj as parameter
+    ++ and returns the result as a FriCAS JuliaObjectType.
+    jlApply : (String, %, %) -> %
+    ++jlApply(func, obj1, obj2) executes the function func with obj1 and obj2
+    ++ as parameters and returns the result as a FriCAS JuliaObjectType.
+    ++ For example, using JuliaObject:
+    ++ \example{M:=nrand(4,4);jlApply("getproperty", jlApply("svd", M::JOBJECT), jsym "S")}
+    ++ should be "equivalent" to svdvals(M)
+    jlApply : (String, %, %, %) -> % 
+    ++ jlApply(func, obj1, obj2, obj3) executes the function func with obj1, obj2
+    ++ and obj3 as parameters and returns the result as a FriCAS JuliaObjectType.
+    jlApply : (String, %, %, %, %) -> % 
+    ++ jlApply(func, obj1, obj2, obj3, obj4) executes the function func with obj1, obj2,
+    ++ obj3 and obj4 as parameters and returns the result as a FriCAS JuliaObjectType.
+    jlApply : (String, %, %, %, %, %) -> % 
+    ++ jlApply(func, obj1, obj2, obj3, obj4, obj5) executes the function func with obj1,
+    ++ obj2, obj3, obj4 and obj5 as parameters and returns the result as a FriCAS
+    ++ JuliaObjectType.
+    jlApply : (String, %, %, %, %, %, %) -> % 
+    ++ jlApply(func, obj1, obj2, obj3, obj4, obj5, obj6) executes the function func
+    ++ with obj1, obj2, obj3, obj4, obj5 and obj6 as parameters and returns
+    ++ the result as a FriCAS JuliaObjectType.
+    string  : % -> String
+    ++ string(obj) returns the Julia corresponding value of the object obj
+    ++ as a string. Convenience function.
+    jlAbout : % -> Void
+    ++ jlAbout(obj) displays Julia informations about obj
+    ++ if you have About.jl installed in Julia.
+    ++ In the Julia interpreter:
+    ++   import Pkg
+    ++   Pkg.import("https://github.com/tecosaur/About.jl")
+    elt : (%, JuliaSymbol) -> %
+    ++ elt(obj, sym) returns the property sym of obj.
+    ++ For example, using JuliaObject:
+    ++ \example{ret := jlApply("svd",jobject("rand(4,4)")); ret.U}
+    qelt : (%, JuliaSymbol) -> %
+    ++ elt(obj, sym) returns the property sym of obj. No checks are done
+    ++ regarding the existence of the sym property. If it does not exist,
+    ++ Julia will throw an error.
+  add
+    import from JuliaUtilityFunctions
+    import from JuliaSymbol
+
+    getind(a) ==> concat(["getindex(", "refs,_"",
+      JLREFID(a)$Lisp pretend String, "_")"])
+    junfunc(opfunc, a) ==> jlref(concat([opfunc, "(", getind(a),")"]))
+    jbinfunc(func,a,b) ==>
+      jlref(concat([func, "(", getind(a), ",", getind(b),")"]))
+    jterfunc(func,a,b,c) ==>
+      jlref(concat([func, "(", getind(a), ",", getind(b), ",", getind(c), ")"]))
+    jquatfunc(func,a,b,c,d) ==> jlref(concat([func, "(", getind(a), ",", 
+      getind(b), ",", getind(c), ",", getind(d), ")"]))
+    jquinfunc(func,a,b,c,d,e) ==> jlref(concat([func, "(", getind(a), ",", 
+      getind(b), ",", getind(c), ",", getind(d), ",",
+        getind(e), ")"]))
+    jsenfunc(func,a,b,c,d,e,f) ==> jlref(concat([func, "(", getind(a), ",", 
+      getind(b), ",", getind(c), ",", getind(d), ",",
+        getind(e), "," , getind(f), ")"]))
+
+    jlref(cmd)   == make_jlref(cmd)$Lisp  
+    jlId(obj)    == JLREFID(obj)$Lisp pretend String
+    jlType(obj)  == JLREFTYPE(obj)$Lisp pretend String
+    jlRef(obj)   == obj pretend SExpression
+
+    convert(obj) : String == jl_string_eval_string(concat(["string(", getind(obj),")"]))$Lisp
+    string(obj)  == jl_string_eval_string(concat(["string(", getind(obj),")"]))$Lisp
+
+    elt(obj, jsy) ==
+      defined := concat(["hasproperty(", getind(obj), ",", string(jsy), ")"])
+      not jl_bool_eval_string(defined)$Lisp =>
+        error concat("elt: undefined symbol ", string jsy)
+      jlref(concat(["getproperty(", getind(obj), ",", string(jsy), ")"]))
+    qelt(obj, jsy) ==
+      jlref(concat(["getproperty(", getind(obj), ",", string(jsy), ")"]))
+    string(ob)   ==
+      jl_string_eval_string(concat(["string(", getind(ob), ")"]))$Lisp
+    jlApply(func, a) == junfunc(func, a)
+    jlApply(func, a, b) == jbinfunc(func,a,b)
+    jlApply(func, a, b, c) == jterfunc(func,a,b,c)
+    jlApply(func, a, b, c, d) == jquatfunc(func,a,b,c,d)
+    jlApply(func, a, b, c, d, e) == jquinfunc(func,a,b,c,d,e)
+    jlApply(func, a, b, c, d, e, f) == jsenfunc(func,a,b,c,d,e,f)
+    jlAbout(obj) ==
+      not jlUsing(jstring "About") =>
+        error("jlAbout: the _"About.jl_" Julia package is not installed. _
+See the JuliaType category for information")
+      jl_eval_string(concat(["about(", getind(obj),")"]))$Lisp
+
+)abbrev domain JOBJECT JuliaObject
+++ Generic domain for Julia objects
+++ Author: G.Vanuxem
+++ Date Created: April. 2024
+++ Description:
+++  Julia objects i.e. objects that can only be used
+++  within Julia, and not directly by FriCAS.
+JuliaObject() : Exports == Implementation where
+  INT ==> Integer
+  NNI ==> NonNegativeInteger
+  Exports ==> JuliaObjectType with
+    mutable? : % -> Boolean
+    ++ mutable?(obj) checks wheter or not obj is mutable.
+    coerce  : String -> %
+    ++ coerce(str) returns str a FriCAS Julia object.
+    coerce  : JuliaString -> %
+    ++ coerce(jstr) returns jstr a FriCAS Julia object.
+    coerce  : JuliaSymbol -> %
+    ++ coerce(x): convenience function.
+    coerce  : JuliaInt64  -> %
+    ++ coerce(x): convenience function.
+    coerce  : Integer  -> %
+    ++ coerce(x): convenience function.
+    coerce  : JuliaFloat64 -> %
+    ++ coerce(x): convenience function.
+    coerce  : JuliaFloat64Vector -> %
+    ++ coerce(x): convenience function.
+    coerce  : JuliaComplexF64Vector -> %
+    ++ coerce(x): convenience function.
+    coerce  : JuliaFloat64Matrix -> %
+    ++ coerce(x): convenience function.
+    coerce  : JuliaComplexF64Matrix -> %
+    ++ coerce(x): convenience function.
+    jobject : String -> %
+    ++ jlObject(string) constructs an arbirary Julia object depending
+    ++ on string used (evaluated by Julia). For example:
+    ++ \example{jlObject("rand(Float64,(2,3,4))")}
+    ++ a 2x3x4 arryay of JF64 (Float64).
+  Implementation ==> add
+    import from JuliaUtilityFunctions
+    import from String
+
+    jlInitialize(true)
+
+    Rep := SExpression
+    getind(a)  ==> concat(["getindex(", "refs,_"", jlId a, "_")"])
+
+    mutable?(x) ==
+      jl_bool_eval_string(concat(["ismutable(", getind(x), ")"]))$Lisp
+  
+    convert(obj : %) : String ==
+      jl_string_eval_string(concat(["string(", getind(obj), ")"]))$Lisp
+    coerce(js : JuliaString ) == jlref(concat ["_"", js pretend String, "_""])
+    coerce(str : String ) == jlref(concat ["_"", str, "_""])
+    coerce(jsy : JuliaSymbol ) == jlref(convert(jsy))
+    coerce(ji : JuliaInt64 ) == jlref(convert(ji))
+    coerce(i : Integer) == jlref(concat(["BigInt(", string(i), ")"]))
+    coerce(jf : JuliaFloat64 ) == jlref(convert(jf))
+    coerce(v : JuliaFloat64Vector) : % ==
+      make_jlref_from_vec(0$NNI, v)$Lisp
+    coerce(v : JuliaComplexF64Vector) : % ==
+      make_jlref_from_vec(1$NNI, v)$Lisp
+    coerce(m : JuliaFloat64Matrix) : % ==
+      make_jlref_from_mat(0$NNI, jlVector(m), nrows m)$Lisp
+    coerce(m : JuliaComplexF64Matrix) : % ==
+      make_jlref_from_mat(1$NNI, jlVector(m), nrows m)$Lisp
+    coerce(ob : %) : OutputForm ==
+      ret : List OutputForm := jl_stringify_wrapped_index("show",
+        "_"text/plain_"", getind(ob))$Lisp
+      #ret ~= 1 or more?(elt(ret,1) pretend String, _$LINELENGTH$Lisp)
+        => pile ret
+      vconcat ret
+    jobject(str: String) : % == jlref(str)
+
+)abbrev domain JFLOAT JuliaFloat
+++ Domain for Julia (Big) floats
+++ Author: G. Vanuxem
+++ Date Created: Feb. 2024
+++ Keywords: float, floating point, number
+++ Description:
+++  \spadtype{JuliaFloat} implements arbitrary precision floating
+++  point arithmetic using Julia BigFloats (MPFR based).
+++ https://www.mpfr.org/
+JuliaFloat() : Exports == Implementation where
+  INT       ==> Integer
+  JI64      ==> JuliaInt64
+  PI        ==> PositiveInteger
+  JF64      ==> JuliaFloat64
+  Exports ==> Join(JuliaObjectType, JuliaRing, ConvertibleTo(InputForm),
+            CommutativeRing, FloatingPointSystem, arbitraryPrecision,
+            ElementaryFunctionCategory, TranscendentalFunctionCategory,
+            DifferentialRing) with
+            -- SpecialFunctionCategory) with
+    jlApprox?: (%, %) -> Boolean
+    ++ jlApprox?(x,y) computes inexact equality comparison
+    ++ with default parameters.
+    ++ Two numbers compare equal if their relative distance
+    ++ or their absolute distance is within tolerance bounds.
+    jlApprox?: (%, %, %) -> Boolean
+    ++ jlApprox?(x,y,atol) computes inexact equality comparison
+    ++ with absolute tolerance atol.
+    ++ Two numbers compare equal if their relative distance
+    ++ or their absolute distance is within tolerance bounds.
+    finite?   : % -> Boolean
+    ++ finite?(x) tests whether or not x is finite.
+    integer?  : % -> Boolean
+    ++ integer?(x) tests whether or not x is an integer.
+    precision : % -> PositiveInteger
+    ++ precision(x) returns the precision of x.
+    precision: (%, PI) -> %
+    ++ precision(x, p) returns a copy of x with precision p.
+    expm1   :  % -> %
+    ++ expm1(x) computes accurately ℯ^x-1. It avoids the loss of precision
+    ++ involved in the direct evaluation of exp(x)-1 for small values of x.
+    exp2  : % -> %
+    ++ exp2(x) computes the base 2 exponential of x.
+    exp10 : % -> %
+    ++ exp10(x) computes the base 10 exponential of x. 
+    log1p : % -> %
+    ++log1p(x) computes accurately log(1+x)
+    log2  : % -> %
+    ++ log2(x) computes the base 2 logarithm of x.
+    log10 : % -> %
+    ++ log10(x) computes the base 10 logarithm of x.  
+    exp    : () -> %
+    ++ exp() returns the JuliaFloat ℯ (%e or exp(1)).
+    exp1    : () -> %
+    ++ exp() returns the JuliaFloat ℯ (%e or exp(1)).
+    urand01 : () -> %
+    ++ urand01() returns an uniformly distributed random number
+    ++ contained in [0,1].
+    nrand : () -> %
+    ++ nrand() returns an normally distributed random number.
+    urand01 : (n : PI) -> JuliaVector(%)
+    ++ urand01(n) returns a JuliaVector of size n with 
+    ++ uniformly distributed random numbers contained in [0,1] in.
+    nrand : (n : PI) -> JuliaVector(%)
+    ++ rand(n) returns a JuliaVector of size n with normally
+    ++ distributed random numbers.
+    urand01 : (m : PI, n : PI) -> JuliaMatrix(JuliaFloat)
+    ++ urand01(m,n) returns a JuliaMatrix of size (m,n) with 
+    ++ uniformly distributed random number contained in [0,1].
+    nrand : (m : PI, n : PI) -> JuliaMatrix(JuliaFloat)
+    ++ rand(n) returns a JuliaMatrix of size (m,n) with normally
+    ++ distributed random numbers.
+    atan : (%, %) -> %
+    ++ atan(x, y) computes the inverse tangent of x/y.
+    string : % -> String
+    ++ string(fl) return the strings representation of fl. 
+    "*"      : (%, Integer) -> %
+    "/"      : (Integer, %) -> %
+    coerce   : JF64 -> %
+    coerce   : Float -> %
+    jfloat   : String -> %
+    jfloat   : Integer -> %
+    jfloat   : Fraction(Integer) -> %
+    jfloat   : Float -> %
+  Implementation ==> add
+    import from JuliaUtilityFunctions
+    import from String
+    import from NemoInteger
+    import from NemoRational
+
+    jlInitialize(true)
+    Rep := SExpression
+    getind(a)  ==> concat(["getindex(", "refs,_"", jlId a, "_")"])
+
+    junfunc(opfunc, a) ==> jlref(concat([opfunc, "(", getind(a),")"]))
+    jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
+    jbinfunc(func,a,b) ==>
+      jlref(concat([func, "(", getind(a), ",", getind(b),")"]))
+    jfbinbop(op,a,b) ==>
+      jl_bool_eval_string(concat([getind(a), op, getind(b)]))$Lisp
+
+    precision() ==
+      jl_int64_eval_string("precision(BigFloat)")$Lisp pretend PI
+    precision(p : PI) ==
+      oldp := precision()
+      jl_eval_string(concat(["setprecision(BigFloat,",string(p),")"]))$Lisp
+      oldp
+    precision(x : %) ==
+      jl_int64_eval_string(concat(["precision(", getind(x),")"]))$Lisp pretend PI
+    precision(x : %, p : PI) ==
+      tmp : String := concat(["setprecision(", getind(x),",", string(p),")"])
+      jlref(tmp)
+
+    0         == jlref("zero(BigFloat)")
+    1         == jlref("one(BigFloat)")
+    pi()      == jlref("BigFloat(π)")
+    exp1()    == jlref("BigFloat(ℯ)")
+    exp()    == jlref("BigFloat(ℯ)")
+    exp()     == jlref("BigFloat(ℯ)")
+    urand01() == jlref("rand(BigFloat)")
+    nrand()   == jlref("randn(BigFloat)")
+
+    x = y  == jfbinbop("==",x,y)
+    x ~= y == jfbinbop("!=",x,y)
+    x < y  == jfbinbop("<",x,y)
+    x > y  == jfbinbop(">",x,y)
+    x >= y == jfbinbop(">=",x,y)
+    x <= y == jfbinbop("<=",x,y)
+    jlApprox?(x, y) ==
+      jl_bool_eval_string(concat(["isapprox(", getind(x),
+        ",", getind(y), ")"]))$Lisp
+    jlApprox?(x, y, atol) ==
+      jl_bool_eval_string(concat(["isapprox(", getind(x),
+        ",", getind(y), ",atol=", getind(atol),")"]))$Lisp
+
+    -- TODO: add boolean unary operator macro?
+    zero? x ==
+      jl_bool_eval_string(concat(["iszero(", getind(x),")"]))$Lisp
+    one? x ==
+      jl_bool_eval_string(concat(["isone(", getind(x),")"]))$Lisp
+    finite? x ==
+      jl_bool_eval_string(concat(["isfinite(", getind(x),")"]))$Lisp
+    integer? x ==
+      jl_bool_eval_string(concat(["isinteger(", getind(x),")"]))$Lisp
+
+    x + y == jbinop("+", x, y)
+    x - y == jbinop("-", x, y)
+    - x   == junfunc("-", x)
+    x : % * y : % == jbinop("*", x, y)
+    x : % / y : % == jbinop("/", x, y)
+    x : % ^ y : % == jbinop("^", x, y)
+
+    x : Integer * y : % == jlref(concat([getind(coerce(x)), "*", getind(y)]))
+    x : % * y : Integer == jlref(concat([getind(x), "*", getind(coerce(y))]))
+    x : Integer / y : % == jlref(concat([getind(coerce(x)), "/", getind(y)]))
+    x : % / y : Integer == jlref(concat([getind(x), "/", getind(coerce(y))]))
+
+    x ^ y : PositiveInteger ==
+      jbinop("^", x, coerce(y pretend Integer))
+    x ^ y : NonNegativeInteger ==
+      jbinop("^", x, coerce(y pretend Integer))
+    x ^ y : Integer ==
+      jbinop("^", x, coerce(y))
+
+    -- x quo y == jbinop("div", x, y)
+    x quo y == jbinop("÷", x, y)
+    x rem y == jbinop("%", x, y)
+
+    sqrt(x)  == junfunc("√",x)
+    exp(x)   == junfunc("exp",x)
+    log(x)   == junfunc("log",x)
+    expm1(x) == junfunc("expm1",x)
+    exp2(x)  == junfunc("exp2",x)
+    exp10(x) == junfunc("exp10",x)
+    log1p(x) == junfunc("log1p",x)
+    log2(x)  == junfunc("log2",x)
+    log10(x) == junfunc("log10",x)
+
+    sin(x)  == junfunc("sin",x)
+    cos(x)  == junfunc("cos",x)
+    tan(x)  == junfunc("tan",x)
+    sec(x)  == junfunc("sec",x)
+    cot(x)  == junfunc("cot",x)
+    csc(x)  == junfunc("csc",x)
+
+    asin(x)  == junfunc("asin",x)
+    acos(x)  == junfunc("acos",x)
+    atan(x)  == junfunc("atan",x)
+    atan(x,y) == jbinfunc("atan", x, y)
+    asec(x)  == junfunc("asec",x)
+    acot(x)  == junfunc("acot",x)
+    acsc(x)  == junfunc("acsc",x)
+
+    sinh(x)  == junfunc("sinh",x)
+    cosh(x)  == junfunc("cosh",x)
+    tanh(x)  == junfunc("tanh",x)
+    sech(x)  == junfunc("sech",x)
+    coth(x)  == junfunc("coth",x)
+    csch(x)  == junfunc("csch",x)
+
+    asinh(x)  == junfunc("asinh",x)
+    acosh(x)  == junfunc("acosh",x)
+    atanh(x)  == junfunc("atanh",x)
+    asech(x)  == junfunc("asech",x)
+    acoth(x)  == junfunc("acoth",x)
+    acsch(x)  == junfunc("acsch",x)
+
+    urand01(n) ==
+      jlref(concat(["rand(BigFloat,", string(n pretend INT), ")"]))$JuliaVector(%)
+    nrand(n) ==
+      jlref(concat(["randn(BigFloat,", string(n pretend INT), ")"]))$JuliaVector(%)
+    urand01(rows, cols) ==
+      jlref(concat(["rand(BigFloat,", string(rows pretend INT), ",",
+        string(cols pretend INT),")"]))
+    nrand(rows, cols) ==
+      jlref(concat(["randn(BigFloat,", string(rows pretend INT), ",",
+        string(cols pretend INT),")"]))
+
+    convert(x : %) : Float ==
+      tmp := jlref(concat(["QQ(rationalize(BigInt,", getind(x),"))"]))$NemoRational
+      coerce(retract(tmp)@Fraction(Integer))
+    retractIfCan(x) : Union (Integer, "failed") ==
+      integer?(x) => convert jlref(concat(["ZZ(", getind(x),")"]))$NemoInteger
+      "failed"
+    retractIfCan(x) : Union (Fraction(Integer), "failed") ==
+      tmp := jlref(concat(["QQ(rationalize(BigInt,", getind(x),"))"]))$NemoRational
+      coerce(retract(tmp)@Fraction(Integer))
+
+    convert(x : %) : InputForm == string(x) pretend InputForm
+
+    coerce(jf : JF64) : % == jfloat(convert(jf)@String)
+    coerce(i : Integer) : % == jlref(concat(["BigFloat(", string(i),")"]))
+    coerce(x : Float) : % ==
+      tmp := outputSpacing(0)
+      ret : % := jlref(concat(["BigFloat(_"", convert(x)@String, "_")"]))
+      outputSpacing(tmp)
+      ret
+    coerce(fi: Fraction(Integer)) == coerce(numer(fi))/coerce(denom(fi))
+    coerce(i : %) : OutputForm == string(i) pretend OutputForm
+    jfloat(s : String) : % == jlref(concat(["BigFloat(_"", s,"_")"]))
+    jfloat(i : Integer) : % == jlref(concat(["BigFloat(", string(i),")"]))
+    jfloat(fi : Fraction(Integer)) == coerce(fi)
+    jfloat(x : Float) : % == coerce(x)
+
+)abbrev domain JCFLOAT JuliaComplexFloat
+++ Domain for Julia (Big) complex floats
+++ Author: G. Vanuxem
+++ Date Created: May. 2024
+++ Keywords: float, floating point, complex number
+++ Description:
+++  \spadtype{JuliaFComplexloat} implements arbitrary precision floating
+++  point arithmetic for complex numbers using Julia BigFloats (MPFR based).
+++ https://www.mpfr.org/
+JuliaComplexFloat() : Exports == Implementation where
+  INT       ==> Integer
+  JI64      ==> JuliaInt64
+  PI        ==> PositiveInteger
+  JF64      ==> JuliaFloat64
+  Exports ==> Join(JuliaObjectType, JuliaRing, ComplexCategory(JuliaFloat)) with
+            -- SpecialFunctionCategory) with
+    jlApprox?: (%, %) -> Boolean
+    ++ jlApprox?(x,y) computes inexact equality comparison
+    ++ with default parameters.
+    ++ Two numbers compare equal if their relative distance
+    ++ or their absolute distance is within tolerance bounds.
+    jlApprox?: (%, %, %) -> Boolean
+    ++ jlApprox?(x,y,atol) computes inexact equality comparison
+    ++ with absolute tolerance atol.
+    ++ Two numbers compare equal if their relative distance
+    ++ or their absolute distance is within tolerance bounds.
+    finite?   : % -> Boolean
+    ++ finite?(x) tests whether or not x is finite.
+    integer?  : % -> Boolean
+    ++ integer?(x) tests whether or not x is an integer.
+    real?  : % -> Boolean
+    ++ real?(x) tests whether or not x is real.
+    precision : % -> PositiveInteger
+    ++ precision(x) returns the precision of x.
+    precision: (%, PI) -> %
+    ++ precision(x, p) returns a copy of x with precision p.
+    expm1   :  % -> %
+    ++ expm1(x) computes accurately ℯ^x-1. It avoids the loss of precision
+    ++ involved in the direct evaluation of exp(x)-1 for small values of x.
+    exp2  : % -> %
+    ++ exp2(x) computes the base 2 exponential of x.
+    exp10 : % -> %
+    ++ exp10(x) computes the base 10 exponential of x. 
+    log1p : % -> %
+    ++log1p(x) computes accurately log(1+x)
+    log2  : % -> %
+    ++ log2(x) computes the base 2 logarithm of x.
+    log10 : % -> %
+    ++ log10(x) computes the base 10 logarithm of x.  
+    exp    : () -> %
+    ++ exp() returns the JuliaComplexFloat ℯ (%e or exp(1)).
+    exp1    : () -> %
+    ++ exp() returns the JuliaComplexFloat ℯ (%e or exp(1)).
+    urand01 : () -> %
+    ++ urand01() returns an uniformly distributed random number
+    ++ contained in [0,1].
+    nrand : () -> %
+    ++ nrand() returns an normally distributed random number.
+    urand01 : (n : PI) -> JuliaVector(%)
+    ++ urand01(n) returns a JuliaVector of size n with 
+    ++ uniformly distributed random numbers contained in [0,1] in.
+    nrand : (n : PI) -> JuliaVector(%)
+    ++ rand(n) returns a JuliaVector of size n with normally
+    ++ distributed random numbers.
+    urand01 : (m : PI, n : PI) -> JuliaMatrix(JuliaFloat)
+    ++ urand01(m,n) returns a JuliaMatrix of size (m,n) with 
+    ++ uniformly distributed random number contained in [0,1].
+    nrand : (m : PI, n : PI) -> JuliaMatrix(JuliaFloat)
+    ++ rand(n) returns a JuliaMatrix of size (m,n) with normally
+    ++ distributed random numbers.
+    atan : % -> %
+    ++ atan(x) computes the inverse tangent of x.
+    atan : (%, %) -> %
+    ++ atan(x, y) computes the inverse tangent of x/y.
+    string : % -> String
+    ++ string(fl) return the strings representation of fl. 
+    "*"      : (%, Integer) -> %
+    "/"      : (Integer, %) -> %
+    "/"      : (%, Integer) -> %
+    coerce   : JF64 -> %
+    coerce   : Float -> %
+    jcfloat   : String -> %
+    jcfloat   : Integer -> %
+    jcfloat   : Fraction(Integer) -> %
+    jcfloat   : Float -> %
+  Implementation ==> Complex(JuliaFloat64) add
+    import from JuliaUtilityFunctions
+    import from String
+    import from NemoInteger
+    import from NemoRational
+
+    jlInitialize(true)
+    Rep := SExpression
+    getind(a)  ==> concat(["getindex(", "refs,_"", jlId a, "_")"])
+
+    junfunc(opfunc, a) ==> jlref(concat([opfunc, "(", getind(a),")"]))
+    jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
+    jbinfunc(func,a,b) ==>
+      jlref(concat([func, "(", getind(a), ",", getind(b),")"]))
+    jfbinbop(op,a,b) ==>
+      jl_bool_eval_string(concat([getind(a), op, getind(b)]))$Lisp
+
+    0           == jlref("zero(Complex{BigFloat})")
+    1           == jlref("one(Complex{BigFloat})")
+    imaginary() == jlref("Complex{BigFloat}(im)")
+    pi()        == jlref("Complex{BigFloat}(π)")
+    exp1()      == jlref("Complex{BigFloat}(ℯ)")
+    exp()       == jlref("Complex{BigFloat}(ℯ)")
+    urand01()   == jlref("rand(Complex{BigFloat})")
+    nrand()     == jlref("randn(Complex{BigFloat})")
+    real(x)     == jlref(concat(["real(", getind(x), ")"]))$JuliaFloat
+    imag(x)     == jlref(concat(["imag(", getind(x), ")"]))$JuliaFloat
+
+    complex(r, i) ==
+      jlref(concat(["Complex{BigFloat}(", getind(r), ",", getind(i), ")"]))
+    x = y  == jfbinbop("==",x,y)
+    x ~= y == jfbinbop("!=",x,y)
+    jlApprox?(x, y) ==
+      jl_bool_eval_string(concat(["isapprox(", getind(x),
+        ",", getind(y), ")"]))$Lisp
+    jlApprox?(x, y, atol) ==
+      jl_bool_eval_string(concat(["isapprox(", getind(x),
+        ",", getind(y), ",atol=", getind(atol),")"]))$Lisp
+
+    -- TODO: add boolean unary operator macro?
+    zero? x ==
+      jl_bool_eval_string(concat(["iszero(", getind(x),")"]))$Lisp
+    one? x ==
+      jl_bool_eval_string(concat(["isone(", getind(x),")"]))$Lisp
+    finite? x ==
+      jl_bool_eval_string(concat(["isfinite(", getind(x),")"]))$Lisp
+    integer? x ==
+      jl_bool_eval_string(concat(["isinteger(", getind(x),")"]))$Lisp
+    real? x ==
+      jl_bool_eval_string(concat(["isreal(", getind(x),")"]))$Lisp
+
+    x + y == jbinop("+", x, y)
+    x - y == jbinop("-", x, y)
+    - x   == junfunc("-", x)
+    x : % * y : % == jbinop("*", x, y)
+    x : % / y : % == jbinop("/", x, y)
+    x : % ^ y : % == jbinop("^", x, y)
+
+    x : Integer * y : % == jlref(concat([getind(coerce(x)), "*", getind(y)]))
+    x : % * y : Integer == jlref(concat([getind(x), "*", getind(coerce(y))]))
+    x : Integer / y : % == jlref(concat([getind(coerce(x)), "/", getind(y)]))
+    x : % / y : Integer == jlref(concat([getind(x), "/", getind(coerce(y))]))
+
+    x ^ y : PositiveInteger ==
+      jbinop("^", x, coerce(y pretend Integer))
+    x ^ y : NonNegativeInteger ==
+      jbinop("^", x, coerce(y pretend Integer))
+    x ^ y : Integer ==
+      jbinop("^", x, coerce(y))
+
+    -- x quo y == jbinop("div", x, y)
+    x quo y == jbinop("÷", x, y)
+    x rem y == jbinop("%", x, y)
+
+    sqrt(x)  == junfunc("√",x)
+    exp(x)   == junfunc("exp",x)
+    log(x)   == junfunc("log",x)
+    expm1(x) == junfunc("expm1",x)
+    exp2(x)  == junfunc("exp2",x)
+    exp10(x) == junfunc("exp10",x)
+    log1p(x) == junfunc("log1p",x)
+    log2(x)  == junfunc("log2",x)
+    log10(x) == junfunc("log10",x)
+
+    sin(x)  == junfunc("sin",x)
+    cos(x)  == junfunc("cos",x)
+    tan(x)  == junfunc("tan",x)
+    sec(x)  == junfunc("sec",x)
+    cot(x)  == junfunc("cot",x)
+    csc(x)  == junfunc("csc",x)
+
+    asin(x)  == junfunc("asin",x)
+    acos(x)  == junfunc("acos",x)
+    atan(x)  == junfunc("atan",x)
+    atan(x,y) == jbinfunc("atan", x, y)
+    asec(x)  == junfunc("asec",x)
+    acot(x)  == junfunc("acot",x)
+    acsc(x)  == junfunc("acsc",x)
+
+    sinh(x)  == junfunc("sinh",x)
+    cosh(x)  == junfunc("cosh",x)
+    tanh(x)  == junfunc("tanh",x)
+    sech(x)  == junfunc("sech",x)
+    coth(x)  == junfunc("coth",x)
+    csch(x)  == junfunc("csch",x)
+
+    asinh(x)  == junfunc("asinh",x)
+    acosh(x)  == junfunc("acosh",x)
+    atanh(x)  == junfunc("atanh",x)
+    asech(x)  == junfunc("asech",x)
+    acoth(x)  == junfunc("acoth",x)
+    acsch(x)  == junfunc("acsch",x)
+
+    urand01(n) ==
+      jlref(concat(["rand(Complex{BigFloat},", string(n pretend INT), ")"]))$JuliaVector(%)
+    nrand(n) ==
+      jlref(concat(["randn(Complex{BigFloat},", string(n pretend INT), ")"]))$JuliaVector(%)
+    urand01(rows, cols) ==
+      jlref(concat(["rand(Complex{BigFloat},", string(rows pretend INT), ",",
+        string(cols pretend INT),")"]))
+    nrand(rows, cols) ==
+      jlref(concat(["randn(Complex{BigFloat},", string(rows pretend INT), ",",
+        string(cols pretend INT),")"]))
+
+    retractIfCan(x) : Union (Integer, "failed") ==
+      integer?(x) => convert jlref(concat(["ZZ(", getind(x),")"]))$NemoInteger
+      "failed"
+    retractIfCan(x) : Union (Fraction(Integer), "failed") ==
+      tmp := jlref(concat(["QQ(rationalize(BigInt,", getind(x),"))"]))$NemoRational
+      coerce(retract(tmp)@Fraction(Integer))
+
+    convert(x : %) : InputForm == string(x) pretend InputForm
+
+    coerce(jf : JF64) : % == jlref(concat(["Complex{BigFloat}(", convert(jf),")"]))
+    coerce(i : Integer) : % == jlref(concat(["Complex{BigFloat}(", string(i),")"]))
+    coerce(x : Float) : % == 
+      jlref(concat(["Complex{BigFloat}(", getind(coerce(x)@JuliaFloat), ")"]))
+    coerce(fi: Fraction(Integer)) == coerce(numer(fi))/coerce(denom(fi))
+    coerce(i : %) : OutputForm == string(i) pretend OutputForm
+    jcfloat(s : String) : % == jlref(concat(["Complex{BigFloat}(_"", s,"_")"]))
+    jcfloat(i : Integer) : % == jlref(concat(["Complex{BigFloat}(", string(i),")"]))
+    jcfloat(fi : Fraction(Integer)) == coerce(fi)
+    jcfloat(x : Float) : % == coerce(x)
+
+)abbrev domain JDFRAME JuliaDataFrame
+++ Description: test package
+-- Testing general object creation
+-- Report results for example. 
+JuliaDataFrame() : Exports == Implementation where
+    PI  ==> PositiveInteger
+    NNI ==> NonNegativeInteger
+    Z   ==> Integer
+    getind(a)  ==> concat(["getindex(", "refs,_"", jlId a, "_")"])
+    Exports ==> JuliaObjectType with
+      jlDescribe: % -> %
+      ++ jlDescribe(df) returns basic statisitics about df.
+      matrix : % -> JuliaObject
+      ++ matrix(df) returns a copy of the internal DataFrame matrix.
+      jdframe:  JuliaFloat64Matrix -> %
+      ++ jdframe(array) returns an automatically created data frame.
+      jdframe:  (JuliaFloat64Matrix, List(JuliaSymbol)) -> %
+      ++ jdframe(a, ls) returns a data frame from data a and column names
+      ++ ls.
+    Implementation ==> add
+      import from JuliaUtilityFunctions
+      import from String
+
+      not jlUsing coerce "DataFrames" =>
+        error "JuliaDataFrame: DataFrames is not installed in Julia"
+      --jl_eval_string("macro dfa(obj) DataFrame(eval(Meta.parse(obj)),:auto) end")$Lisp
+      jl_eval_string("function dfa(obj) DataFrame(obj, :auto) end")$Lisp
+
+      Rep := SExpression
+      junfunc(op, a) ==> jlref(concat([op, "(", getind(a),")"]))
+
+      jlDescribe(df) == junfunc("describe", df)
+      matrix(df) == junfunc("matrix", df)
+      coerce(df : %) : OutputForm ==
+        ret : List(OutputForm) := jl_stringify_wrapped_index("show",
+          "_"text/plain_"", getind(df))$Lisp
+        pile ret
+      jdframe(array) ==
+        junfunc("dfa", coerce(array)@JuliaObject)
+      jdframe(array, lnames) ==
+        tls := first lines formatExpression(lnames::OutputForm)$Format1D
+        jlref(concat(["DataFrame(", getind(coerce(array)@JuliaObject),",", tls, ")"]))
+
+)abbrev domain JVECTOR JuliaVector
+++ Description: This domain provides a JuliaVector type
+++ for JuliaObjectType. Minimum index is 1.
+JuliaVector(R : JuliaObjectType) : Exports == Implementation where
+    PI  ==> PositiveInteger
+    NNI ==> NonNegativeInteger
+    Z   ==> Integer
+    Exports ==> Join(JuliaObjectType, JuliaVectorCategory(R)) with
+      vector  : List R -> %
+      ++ vector(l) converts the list l to a vector.
+      jlDisplay: % -> Void
+      ++ jlDisplay(v) pretty prints v (à la Julia).
+      juliaVPrint : Boolean -> Boolean
+      ++ juliaVPrint(b) defines whether or not FriCAS uses 
+      ++ the printing version of Julia for vectors instead of
+      ++ its OutputForm version. Returns previous value.
+      ++ By default it is the Julia version.
+      jvector:    String -> %
+      ++ jvector(str) evaluates the string str and returns the generated vector.
+      ++ No checks are done at the FriCAS level.
+    Implementation ==> Vector(R) add
+      import from JuliaUtilityFunctions
+      import from String
+
+      pprint := true
+
+      jlInitialize(true)
+
+      Rep := SExpression
+      getind(a)  ==> concat(["getindex(", "refs,_"", jlId a, "_")"])
+
+      #x                          == jl_int64_eval_string(concat(["length(",
+        getind(x),")"]))$Lisp
+      minIndex x                  == 1$Lisp
+      maxIndex x                  == jl_int64_eval_string(concat(["length(",
+        getind(x),")"]))$Lisp
+      empty()                     == error "empty()$JuliaVector: not supported"
+      new(n, x:R)                 ==
+        jlref(concat(["fill(", getind(x),",", string(n),")"]))
+      qelt(x, i)                  ==
+        jlref(concat([getind(x),"[",string(i),"]"]))$R -- or getindex in Julia
+      elt(x, i:Integer) : R    == qelt(x, i)
+      qsetelt!(v : %, i, s:R)  ==
+        jl_eval_string(concat([getind(v),"[",string(i), "]=", getind(s)]))$Lisp
+        s
+      setelt!(x : %, i : Integer, s : R) == qsetelt!(x, i, s)
+      fill!(v, x) == jlref(concat(["fill!(", getind(v),",", getind(x),")"]))
+      less?(v,n) == #v < n
+      vector l == construct l
+
+      map!(f, s1 : %) ==
+        n : Z := #s1
+        for i in 1..n repeat qsetelt!(s1, i, f(qelt(s1, i)))
+        s1
+
+      map(f, s1 : %) ==
+        n := #s1
+        ss2 : % := new(n, qelt(s1,1))
+        for i in 1..n repeat qsetelt!(ss2, i, f(qelt(s1, i)))
+        ss2
+
+      map(f, a, b)   ==
+        maxind := min(#a, #b)
+        c : % := new(maxind, qelt(a,1))
+        for i in 1..maxind repeat
+          setelt!(c, i, f(qelt(a, i), qelt(b, i)))
+        c
+
+      copy(v) == jlref(concat(["deepcopy(", getind(v),")"]))
+
+      coerce(v) : OutputForm ==
+        pprint =>
+          ret : List OutputForm := jl_stringify_wrapped_index("show",
+            "_"text/plain_"", getind(v))$Lisp
+          vconcat ret
+        bracket [qelt(v, k)::OutputForm for k in 1$Lisp .. maxIndex v]
+        
+
+      juliaVPrint(b) ==
+        oldpprint := pprint
+        pprint:=b
+        oldpprint
+
+      jlDisplay(v) ==
+        jl_eval_string(concat(["display(", getind(v), ")"]))$Lisp
+
+      jvector(str) == jlref(str)
+
+)abbrev package JVECTOR2 JuliaVectorFunctions2
+++ Author:
+++ Basic Functions:
+++ Related Constructors:
+++ Also See:
+++ AMS Classifications:
+++ Keywords:
+++ References:
+++ Description:
+++   This package provides operations which all take as arguments
+++ Julia vectors of elements of some type \spad{A} and functions from \spad{A} to
+++ another of type \spad{B}. The operations all iterate over their vector argument
+++ and either return a value of type B or a vector over B.
+
+JuliaVectorFunctions2(A, B) : Exports == Implementation where
+  A, B : Join(JuliaObjectType, JuliaRing) --Temporary
+  VA ==> JuliaVector A
+  VB ==> JuliaVector B
+  O2 ==> FiniteLinearAggregateFunctions2(A, VA, B, VB)
+  UB ==> Union(B,"failed")
+  Exports ==> with
+    scan   : ((A, B) -> B, VA, B) -> VB
+      ++ scan(func, vec, ident) creates a new vector whose elements are
+      ++ the result of applying reduce to the binary function func,
+      ++ increasing initial subsequences of the vector vec,
+      ++ and the element ident.
+    reduce : ((A, B) -> B, VA, B) -> B
+      ++ reduce(func, vec, ident) combines the elements in vec using the
+      ++ binary function func. Argument ident is returned if vec is empty.
+    map    : (A -> B, VA) -> VB
+      ++ map(f, v) applies the function f to every element of the vector v
+      ++ producing a new vector containing the values.
+    map : (A -> UB, VA) -> Union(VB,"failed")
+      ++ map(f, v) applies the function f to every element of the vector v
+      ++ producing a new vector containing the values or \spad{"failed"}.
+  Implementation ==> add
+    scan(f, v, b)   == scan(f, v, b)$O2
+    reduce(f, v, b) == reduce(f, v, b)$O2
+    map(f : (A -> B), v : VA) : VB == map(f, v)$O2
+
+    map(f:(A -> UB), a:VA):Union(VB,"failed") ==
+     res : List B  := []
+     for u in entries(a) repeat
+       r := f u
+       r = "failed" => return "failed"
+       res := cons(r::B, res)
+     vector reverse! res
+
+)abbrev domain JMATRIX JuliaMatrix
+++ Description: This domain provides a generic Julia matrix type
+++ stored in Julia with no bound checking on elt's. Minimum index is 1.
+JuliaMatrix(R : Join(JuliaObjectType , JuliaRing)) :  Exports == Implementation where
+    OF      ==> OutputForm 
+    PI      ==> PositiveInteger
+    NNI     ==> NonNegativeInteger
+    INT     ==> Integer
+    NINT    ==> NemoInteger
+    JVEC    ==> JuliaVector(R)
+    Exports ==> Join(JuliaObjectType, JuliaMatrixCategory(R,
+                                 JuliaVector(R),
+                                 JuliaVector(R))) with
+      if R has IntegerNumberSystem or R has QuotientFieldCategory(NINT) then
+        radicalEigenvalues: % -> JuliaVector(NemoAlgebraicNumber)
+      eigenvalues: % -> JuliaVector(R)
+      ++ eigenvalues(m) returns eigenvalues of m.
+      "^" : (%, PositiveInteger) -> %
+      coerce: % -> Matrix(R)
+      ++ coerce(m) coerces a copy of m to a Matrix(R).
+      if not R has NemoType then
+        jlApprox?: (%, %) -> Boolean
+        ++ jlApprox?(A,B) computes component-wise inexact equalit
+        ++ with default parameters.
+        ++ Two numbers compare equal if their relative distance
+        ++ or their absolute distance is within tolerance bounds.
+      jlDisplay: % -> Void
+      ++ jldisplay(m) pretty prints m (à la Julia).
+      juliaMPrint : Boolean -> Boolean
+      ++ juliaMPrint(b) defines whether or not FriCAS uses 
+      ++ the printing version of Julia for matrices instead of
+      ++ its OutputForm version. Returns previous value.
+      ++ By default it is the Julia version.
+      identity:    NNI -> %
+      ++ identity(n) returns a n by n identity matrix.S
+      diagonalMatrix:   JuliaVector(R) -> %
+      ++ diagonalMatrix(v) returns a diagonal matrix with elements of v.
+      jmatrix:    String -> %
+      ++ jmatrix(str) evaluates the string str and returns the generated matrix.
+      ++ No checks are done at the FriCAS level.
+    Implementation ==> Matrix(R) add
+      import from JuliaUtilityFunctions
+      import from String
+      import from JuliaString
+
+      jlInitialize(true)
+      op_of_Ring : Symbol := CAR(devaluate(R)$Lisp)$Lisp
+
+      Rep := SExpression
+      pprint := true
+
+      -- For an unknown reason NemoRealBall is taken into account with "is", 
+      -- "if Domain is NemoRealBall", whereas NemoPrimeField or
+      -- NemoIntegerMod are not, so use String and '=' instead of 'is'.
+      NRing : String := string(op_of_Ring)
+
+      spjs(str) ==> str pretend JuliaString
+      getind(m)  ==> concat(["getindex(", "refs,_"", jlId m, "_")"])
+      jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
+      junfunc(op, a) ==> jlref(concat([op, "(", getind(a),")"]))
+      jbinfunc(func,a,b) ==> 
+        jlref(concat([func, "(", getind(a), ",", getind(b), ")"]))
+      jbinbop(op,a,b) ==>
+        jl_bool_eval_string(concat([getind(a), op, getind(b)]))$Lisp
+
+      minRowIndex x == 1
+      minColIndex x == 1
+      nrows(a : %) : NNI ==
+        jl_int64_eval_string(concat(["size(", getind(a), ",1)"]))$Lisp
+      ncols(a : %) : NNI ==
+        jl_int64_eval_string(concat(["size(", getind(a), ",2)"]))$Lisp
+      maxRowIndex x == nrows(x)
+      maxColIndex x == ncols(x)
+      #m == nrows(m) * ncols(m)
+
+      qelt(m, i, j) == jlref(concat(["getindex(", getind(m), ",",
+        string(i), ",", string(j), ")"]))$R
+      elt(m:%, i:INT, j:INT) == qelt( m, i, j)
+      qsetelt!(m, i, j, r) ==
+        jl_eval_string(concat(["setindex!(", getind(m), ",", getind(r)
+          ",", string(i), ",", string(j), ")"]))$Lisp
+        r
+      setelt!(m : %, i : Integer, j : Integer, r : R) ==
+          qsetelt!(m, i, j, r)
+      empty() == error "empty()$JuliaMatrix: not supported" --Qnew(0$Integer,0$Integer)
+      if R has NemoRing then
+        if R is NemoInteger then
+          new(rows, cols, a) ==
+            jlref(concat(["ZZMatrixSpace(", string(rows), ",",
+              string(cols),")(fill(", getind(a), ",(", 
+                string(rows), ",", string(cols),")))"]))
+          coerce(m : %) : OutputForm ==
+            if pprint then
+                ret: List(OutputForm) :=
+                  jl_stringify_wrapped_index("show", "_"text/plain_"", getind(m))$Lisp
+                vconcat ret
+            else
+                l : List List OutputForm
+                l := [[qelt(m, j, i) :: OutputForm _
+                    for i in 1 .. ncols(m)] _
+                    for j in 1 .. nrows(m)]
+                matrix(l)
+        else if R is NemoRational then
+          new(rows, cols, a) ==
+            jlref(concat(["QQMatrixSpace(", string(rows), ",",
+              string(cols),")(fill(", getind(a), ",(", 
+                string(rows), ",", string(cols),")))"]))
+          coerce(m : %) : OutputForm ==
+            if pprint then
+                ret: List(String) := jl_stringify_wrapped_index("show",
+                  "_"text/plain_"", getind(m))$Lisp
+                vconcat [jlRegexReplace(jlRegex(jstring("//")),
+                  jlSubstitute(jstring (" /")), spjs(a)) pretend OutputForm
+                    for a in parts ret]$List(OutputForm)
+            else
+                l : List List OutputForm
+                l := [[qelt(m, j, i) :: OutputForm _
+                    for i in 1 .. ncols(m)] _
+                    for j in 1 .. nrows(m)]
+                matrix(l)
+        else if R is NemoRealField then
+          new(rows, cols, a) ==
+            jlref(concat(["matrix_space(RealField(),", string(rows), ",",
+              string(cols),")(fill(", getind(a), ",(", 
+                string(rows), ",", string(cols),")))"]))
+          coerce(m : %) : OutputForm ==
+            if pprint then
+                ret: List(OutputForm) :=
+                  jl_stringify_wrapped_index("show", "_"text/plain_"", getind(m))$Lisp
+                vconcat ret
+            else
+                l : List List OutputForm
+                l := [[qelt(m, j, i) :: OutputForm _
+                    for i in 1 .. ncols(m)] _
+                    for j in 1 .. nrows(m)]
+                matrix(l)
+        else if R is NemoComplexField then
+          new(rows, cols, a) ==
+            jlref(concat(["matrix_space(ComplexField(),", string(rows), ",",
+              string(cols),")(fill(", getind(a), ",(", 
+                string(rows), ",", string(cols),")))"]))
+          eigenvalues(m) == jlref(concat ["eigenvalues(", getind(m), ")"])$JuliaVector(R)
+          coerce(m : %) : OutputForm ==
+            if pprint then
+                ret: List(OutputForm) :=
+                  jl_stringify_wrapped_index("show", "_"text/plain_"", getind(m))$Lisp
+                vconcat ret
+            else
+                l : List List OutputForm
+                l := [[qelt(m, j, i) :: OutputForm _
+                    for i in 1 .. ncols(m)] _
+                    for j in 1 .. nrows(m)]
+                matrix(l)
+        else if NRing = "NemoAlgebraicNumber" then
+          new(rows, cols, a) ==
+            jlref(concat(["matrix_space(QQBar", ",", string(rows), ",",
+              string(cols),")(fill(", getind(a), ",(", 
+                string(rows), ",", string(cols),")))"]))
+          coerce(m : %) : OutputForm ==
+            if pprint then
+                ret: List(OutputForm) :=
+                  jl_stringify_wrapped_index("show", "_"text/plain_"", getind(m))$Lisp
+                vconcat ret
+            else
+                l : List List OutputForm
+                l := [[qelt(m, j, i) :: OutputForm _
+                    for i in 1 .. ncols(m)] _
+                    for j in 1 .. nrows(m)]
+                matrix(l)
+        else if NRing = "NemoPrimeField" and R has FiniteFieldCategory then
+          new(rows, cols, a) ==
+            jlref(concat(["matrix_space(NPF", string(size()$R), ",", string(rows), ",",
+              string(cols),")(fill(", getind(a), ",(", 
+                string(rows), ",", string(cols),")))"]))
+          coerce(m : %) : OutputForm ==
+            if pprint then
+                ret: List(OutputForm) :=
+                  jl_stringify_wrapped_index("show", "_"text/plain_"", getind(m))$Lisp
+                vconcat ret
+            else
+                l : List List OutputForm
+                l := [[qelt(m, j, i) :: OutputForm _
+                    for i in 1 .. ncols(m)] _
+                    for j in 1 .. nrows(m)]
+                matrix(l)
+        else if NRing = "NemoFiniteField" and R has FiniteFieldCategory then
+          new(rows, cols, a) ==
+            jlref(concat(["matrix_space(NFF", string(size()$R), ",", string(rows), ",",
+              string(cols),")(fill(", getind(a), ",(", 
+                string(rows), ",", string(cols),")))"]))
+          coerce(m : %) : OutputForm ==
+            if pprint then
+                ret: List(OutputForm) :=
+                  jl_stringify_wrapped_index("show", "_"text/plain_"", getind(m))$Lisp
+                vconcat ret
+            else
+                l : List List OutputForm
+                l := [[qelt(m, j, i) :: OutputForm _
+                    for i in 1 .. ncols(m)] _
+                    for j in 1 .. nrows(m)]
+                matrix(l)
+        else if NRing = "NemoIntegerMod" and R has Finite then
+          new(rows, cols, a) ==
+            jlref(concat(["matrix_space(NZMOD", string(size()$R),",", string(rows), ",",
+              string(cols),")(fill(", getind(a), ",(", string(rows), ",", string(cols),")))"]))
+          coerce(m : %) : OutputForm ==
+            if pprint then
+                ret: List(OutputForm) :=
+                  jl_stringify_wrapped_index("show", "_"text/plain_"", getind(m))$Lisp
+                vconcat ret
+            else
+                l : List List OutputForm
+                l := [[qelt(m, j, i) :: OutputForm _
+                    for i in 1 .. ncols(m)] _
+                    for j in 1 .. nrows(m)]
+                matrix(l)
+        else if NRing = "NemoRealBall" and R has JuliaArbitraryPrecision then
+          new(rows, cols, a) ==
+            jlref(concat(["matrix_space(NRB", string(precision()$R), ",", string(rows), ",",
+              string(cols),")(fill(", getind(a), ",(", 
+                string(rows), ",", string(cols),")))"]))
+          coerce(m : %) : OutputForm ==
+            if pprint then
+                ret: List(OutputForm) :=
+                  jl_stringify_wrapped_index("show", "_"text/plain_"", getind(m))$Lisp
+                vconcat ret
+            else
+                l : List List OutputForm
+                l := [[qelt(m, j, i) :: OutputForm _
+                    for i in 1 .. ncols(m)] _
+                    for j in 1 .. nrows(m)]
+                matrix(l)
+        else if NRing = "NemoComplexBall" and R has JuliaArbitraryPrecision then
+          new(rows, cols, a) ==
+            jlref(concat(["matrix_space(NCB", string(precision()$R), ",", string(rows), ",",
+              string(cols),")(fill(", getind(a), ",(", 
+                string(rows), ",", string(cols),")))"]))
+          coerce(m : %) : OutputForm ==
+            if pprint then
+                ret: List(OutputForm) :=
+                  jl_stringify_wrapped_index("show", "_"text/plain_"", getind(m))$Lisp
+                vconcat ret
+            else
+                l : List List OutputForm
+                l := [[qelt(m, j, i) :: OutputForm _
+                    for i in 1 .. ncols(m)] _
+                    for j in 1 .. nrows(m)]
+                matrix(l)
+      else
+        new(rows, cols, a) ==
+          jlref(concat(["fill(", getind(a), ",(", 
+            string(rows), ",", string(cols),"))"]))
+        coerce(m : %) : OutputForm ==
+          if pprint then
+              ret: List(OutputForm) :=
+                jl_stringify_wrapped_index("show", "_"text/plain_"", getind(m))$Lisp
+              -- remove the matrix type
+              vconcat rest ret
+          else
+              l : List List OutputForm
+              l := [[qelt(m, j, i) :: OutputForm _
+                  for i in 1 .. ncols(m)] _
+                  for j in 1 .. nrows(m)]
+              matrix(l)
+    
+      qnew(rows, cols) == new(rows, cols, 0)
+  
+      zero(m,n) == new(m, n, 0$R)
+
+      matrix(l : List List R) ==
+        empty?(l) => error "matrix: empty matrix is not supported"
+        -- error check: this is a top level function
+        rows : NonNegativeInteger := 1; cols := # first l
+        for ll in rest l repeat
+          cols ~= # ll => error "matrix: rows of different lengths"
+          rows := rows + 1
+        ans := new(rows, cols, 0$R)
+        for i in 1..rows for ll in l repeat
+          for j in 1..cols for r in ll repeat
+            qsetelt!(ans, i, j, r)
+        ans
+
+      if not R has NemoType then 
+        jlApprox?(x, y) ==
+          jl_bool_eval_string(concat(["isapprox(", getind(x),
+            ",", getind(y), ")"]))$Lisp
+
+      jlDisplay(m : %) ==
+        jl_eval_string(concat(["display(", getind(m), ")"]))$Lisp
+
+      juliaMPrint(b) ==
+          oldpprint := pprint
+          pprint:=b
+          oldpprint
+
+      coerce(m : %) : Matrix(R) ==
+          l : List List R
+          l := [[qelt(m, j, i) _
+              for i in 1 .. ncols(m)] _
+              for j in 1 .. nrows(m)]
+          matrix l
+
+      square?(m) == nrows(m) = ncols(m)
+      zero?(m) == jl_bool_eval_string(concat(["iszero(", getind(m), ")"]))$Lisp
+      diagonal?(m) == jl_bool_eval_string(concat(["is_diagonal(",
+        getind(m), ")"]))$Lisp
+      symmetric?(m : %) : Boolean == jl_bool_eval_string(concat(["is_symmetric(",
+        getind(m), ")"]))$Lisp
+      --positiveDefinite?(m : %) : Boolean ==
+      --   jl_bool_2dfunction(0$NNI,"isposdef", m.elts, m.ncols)$Lisp
+
+      copy(m) == jlref(concat(["deepcopy(", getind(m),")"]))
+      transpose(m) == jlref(concat(["transpose(",getind(m),")"]))
+
+      -- TODO
+      if R has IntegralDomain then
+        rank(m) == rank(coerce(m)@Matrix(R))
+      inverse(m) == jlref(concat(["inv(",getind(m),")"]))
+      determinant(m) == jlref(concat(["det(", getind(m),")"]))$R
+
+      if R has IntegerNumberSystem or R has QuotientFieldCategory(NINT) then
+        radicalEigenvalues(m) ==
+          jlref(concat ["eigenvalues(QQBar,",
+            getind(m), ")"])$JuliaVector(NemoAlgebraicNumber)
+
+      a : % * b : % == jlref(concat([getind(a),"*",getind(b)]))
+      x ^ e : NonNegativeInteger ==
+        jlref(concat([getind(x),"^", string(e)]))
+      x ^ e : PositiveInteger ==
+        jlref(concat([getind(x),"^", string(e)]))
+
+      identity(n) ==
+          m := new(n,n,0)
+          for i in 1..n repeat setelt!(m,i,i,1)
+          m
+      
+      diagonalMatrix(v : JuliaVector(R)) : % ==
+        n : NNI := #v
+        u := new(n, n, 0$R)
+        for i in 1..n repeat setelt!(u, i, i, elt(v,i))
+        u
+
+      jmatrix(str) == jlref(str)
