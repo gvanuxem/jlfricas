@@ -162,6 +162,8 @@ JuliaWSAggregate(E : JuliaWSObject) : Category == JuliaWSObject with
 JuliaWSList(E : JuliaWSObject) : Exports == Implementation where
   getind(a)  ==> concat(["getindex(", "refs, _"", jlId a, "_")"])
   Exports ==> JuliaWSAggregate(E) with
+    coerce  : % -> List(E)
+    ++ coerce(l) coerces l to a FriCAS List.
     jWSList : List(E) -> %
     ++ jWSList(list) constructs list as a JuliaWSList.
     jWSList : String -> %
@@ -185,6 +187,12 @@ JuliaWSList(E : JuliaWSObject) : Exports == Implementation where
       error "The Julia MathLink package is not installed."
 
     Rep := SExpression
+
+    coerce(wslist) : List(E) ==
+      l : List(E) := []
+      for i in 1..integer length(wslist) repeat  l := concat(l, wslist.i)
+      l
+
     jWSList(str : String) == jlref(concat(["W_`", str, "_`"]))
     -- TODO?
     jWSList(l : List(E)) == jWSAggregate(l)

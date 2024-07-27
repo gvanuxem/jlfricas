@@ -207,7 +207,7 @@ JuliaWSInteger() : Exports == Implementation where
     ++ QFactorial(x,q) returns the q-analog of factorial of x.
     fibonacci : % -> %
     ++ fibonacci(n) returns the Fibonacci numberi Fn.
-    factor : % -> JuliaWSList(%)
+    factor : % -> JuliaWSList JuliaWSList(%)
     ++ factor(n) returns the WS factorization of n.
     coerce  : Integer  -> %
     ++ coerce(z): coeeces z. Convenience function.
@@ -274,6 +274,8 @@ JuliaWSInteger() : Exports == Implementation where
     gcd(a,b) == jbinfunc("W_"GCD_"", a, b)
     lcm(a,b) == jbinfunc("W_"LCM_"", a, b)
 
+    length(i) == junfunc("W_"BitLength_"", i)
+    shift(i,n) == jbinfunc("W_"BitShiftLeft_"", i, n)
 
     factorial(n)      == junfunc("W_"Factorial_"", n)
     binomial(n,m)     == jbinfunc("W_"Binomial_"", n, m)
@@ -667,15 +669,7 @@ JuliaWSReal() : Exports == Implementation where
     jWSReal(f : Integer) == jlref(concat(["WReal(_"", string(f), "_")"]))
     jWSReal(str) == jlref(concat(["WReal(_"", str, "_")"]))
     coerce(x) : OutputForm ==
-      if negative? x then
-        if member?(char "e", string x) then
-          - (string(-x)pretend OutputForm)
-        else
-          - (toString(-x) pretend OutputForm)
-      else
-        if member?(char "e", ret:=string x) then
-          ret pretend OutputForm
-        else toString(x) pretend OutputForm
+      coerce(x pretend JuliaWSExpression)
 
 )abbrev domain JWSAPR JuliaWSAPReal
 ++ Generic domain for Julia WS arbitrary precision real numbers
@@ -932,16 +926,8 @@ JuliaWSAPReal(prec : PositiveInteger) : Exports == Implementation where
       str = "0" => 0
       jlref(concat(["weval(NN(_"", str, "_`", string(prec), "_"))"]))
     coerce(x) : OutputForm ==
-      -- FIXME: double back-quoted 0 (accuracy)
-      -- gudermannian(pi()$JWSAPCPX(20) * imaginary()$JWSAPCPX(20))
-      -- use e-16*%i as precision?
-      zero? x => coerce(0)
-      if negative? x then
-        --ret := junfunc("W_"DecimalForm_"",-x)
-        - (toString(-x, jWSExpr("OutputForm")) pretend OutputForm)
-      else
-        toString(x, jWSExpr("OutputForm")) pretend OutputForm
-        --toString(junfunc("W_"DecimalForm_"",x)) pretend OutputForm
+      coerce(x pretend JuliaWSExpression)
+
 
 )abbrev domain JWSGINT JuliaWSGaussianInteger
 ++ Generic domain for Julia WS gaussian integers
