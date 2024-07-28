@@ -1052,7 +1052,7 @@ char* jl_call_wrap_2darray(int64_t cplx, double *array, int64_t m, int64_t n)
     char* nstr = "";
     char cdims[50];
     jl_array_t *mat;
-    jl_value_t* *var, *rnd;
+    jl_value_t *var, *rnd;
 
     sprintf(cdims, "(%ld, %ld)", m, n);
     jl_value_t* dims = (jl_value_t *) jl_eval_string(cdims);
