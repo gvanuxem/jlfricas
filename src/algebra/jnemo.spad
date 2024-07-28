@@ -1110,8 +1110,7 @@ NemoRealBall(p: PositiveInteger) : Exports == Implementation where
       "(_"", convert(jf),"_")"]))
     coerce(f : Float) ==
       tmp := outputSpacing(0)
-      ret := jlref(concat(["NRB", string(p),"(_"",
-        convert(f),"_")"]))
+      ret := jlref(concat(["NRB", string(p),"(_"", convert(f),"_")"]))
       outputSpacing(tmp)
       ret
     coerce(i : Integer) == jlref(concat(["NRB",string(p),
@@ -1457,11 +1456,9 @@ NemoRealField() : Exports == Implementation where
     
     coerce(jf : JF64) == jlref(concat(["NRF(_"", convert(jf),"_")"]))
     coerce(f : Float) ==
-      --tmp := outputSpacing(0)
-      outputSpacing(0)
+      tmp := outputSpacing(0)
       ret := jlref(concat(["NRF(_"", convert(f), "_")"]))
-      --outputSpacing(tmp)
-      outputSpacing(10)
+      outputSpacing(tmp)
       ret
     
     --TODO
@@ -1476,10 +1473,10 @@ NemoRealField() : Exports == Implementation where
       "failed"
     coerce(i : Integer) == jlref(concat(["NRF(", string(i),")"]))
     coerce(s : String) == jlref(concat(["NRF(_"", s,"_")"]))
-    coerce(i : %) : OutputForm == string(i) pretend OutputForm
     jnrf(s : String) : % == jlref(concat(["NRF(_"", s,"_")"]))
     jnrf(i : Integer) : % == jlref(concat(["NRF(", string(i),")"]))
     jnrf(f : Float) == coerce(f)
+    coerce(i : %) : OutputForm == string(i) pretend OutputForm
 
 )abbrev domain NCF NemoComplexField
 ++ Domain for Nemo Complex Field based on the Arb
@@ -1638,11 +1635,9 @@ NemoComplexField() : Exports == Implementation where
     coerce(i : Integer) == jlref(concat(["NCF(", string(i),")"]))
     coerce(s : String) == jlref(concat(["NCF(_"", s,"_")"]))
     coerce(f : Float) ==
-      --tmp := outputSpacing(0)
-      outputSpacing(0)
+      tmp := outputSpacing(0)
       ret := jlref(concat(["NCF(_"", convert(f),"_")"]))
-      --outputSpacing(tmp)
-      outputSpacing(10)
+      outputSpacing(tmp)
       ret
     coerce(an : NemoAlgebraicNumber) == junfunc("NCF", an)
     coerce(i : %) : OutputForm == string(i) pretend OutputForm
@@ -1651,11 +1646,8 @@ NemoComplexField() : Exports == Implementation where
       jlref(concat(["NCF(_"", r, "_",_"", i, "_")"]))
     jncf(f : Float) : % == coerce(f)
     jncf(r : Float, i : Float) : % ==
-      --tmp := outputSpacing(0)
-      outputSpacing(0)
-      ret := jlref(concat(["NCF(_"", convert(r), "_",_"", convert(i), "_")"]))
-      --outputSpacing(tmp)
-      outputSpacing(10)
+      ret := jlref(concat(["NCF(_"", toString(r,
+          digits()$Float), "_",_"", toString(i, digits()$Float), "_")"]))
       ret
     jncf(i : Integer) : % == jlref(concat(["NCF(", string(i),")"]))
     jncf(r : Integer, i : Integer) : % ==

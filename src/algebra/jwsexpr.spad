@@ -119,6 +119,8 @@ JuliaWSExpression() : Exports == Implementation where
     ++ GammaRegularized(a,x) computes the regularized incomplete gamma function.
     Gamma : (%, %, %) -> %
     ++ Gamma(a,z1,z2) computes the generalized incomplete gamma function.
+    gamma : % -> %
+    ++ gamma(a) computes the gamma function.
     inverseBetaRegularized : (%, %, %) -> %
     ++ inverseBetaRegularized(s,a,b) computes the beta inverse.
     inverseGammaRegularized : (%, %) -> %
@@ -396,15 +398,60 @@ JuliaWSExpression() : Exports == Implementation where
     ++ maxLimit(expr, params) returns the max limit, eventually nested or
     ++  multivariate, of expr.
     solve : (Equation(%), %) -> JWSL(JWSL(%))
-    ++ solve(eq, vars)
+    ++ solve(eq, vars) tries to solve the equation eq.
     solve : (%, %) -> JWSL(JWSL(%))
-    ++ solve(expr, vars)
+    ++ solve(expr, vars) tries to solve the expression expr.
+    solve : (Equation(%), %, %) -> JWSL(JWSL(%))
+    ++ solve(expr, vars, dom) tries to solve the expression expr.
     solve : (%, %, %) -> JWSL(JWSL(%))
-    ++ solve(expr, vars, dom)
+    ++ solve(expr, vars, dom) tries to solve the expression expr.
+    solve : (%, String, %, %) -> JWSL(JWSL(%))
+    ++ solve(lhs, rel, rhs,lvars) tries to solve the (in)equation in expr
+    ++ where rel is the relation operator ("==" for example).
+    solve : (%, String, %, %, %) -> JWSL(JWSL(%))
+    ++ solve(lhs, rel,rhs,lvars,dom) tries to solve the (in)equation in expr
+    ++ where rel is the relation operator ("==" for example).
     numericSolve : (Equation(%), %) -> %
-    ++ numericSolve(eq, vars)
+    ++ numericSolve(eq, vars) returns the solution(s) to the equation eq.
     numericSolve : (%, %) -> %
-    ++ numericSolve(expr, vars)
+    ++ numericSolve(expr, vars) returns the solution(s) to the expression expr.
+    residue : (%, %) -> %
+    ++ residue(expr, {x,x0}) returns the residue of expr at x0.
+    residueSum : (%, %) -> %
+    ++ residueSum(expr, var) returns the residue of expr.
+    ++ \example{residueSum(Gamma(x),x)}
+    reduce : (Equation(%), %) -> JWSL(JWSL(%))
+    ++ reduce(expr,lvars) tries to reduce the equation in expr.
+    reduce : (%, %) -> JWSL(JWSL(%))
+    ++ reduce(expr,lvars) tries to reduce the (in)equation in expr.
+    reduce : (Equation(%), %, %) -> JWSL(JWSL(%))
+    ++ reduce(expr,lvars,dom) tries to reduce the equation in expr.
+    reduce : (%, %, %) -> JWSL(JWSL(%))
+    ++ reduce(expr,lvars,dom) tries to reduce the (in)equation in expr.
+    reduce : (%, String, %, %) -> JWSL(JWSL(%))
+    ++ reduce(lhs, rel, rhs,lvars) tries to reduce the (in)equation
+    ++ in expr where rel is the relation operator ("==" or "<=" for example).
+    reduce : (%, String, %, %, %) -> JWSL(JWSL(%))
+    ++ reduce(lhs, rel,rhs,lvars,dom) tries to reduce the (in)equation
+    ++ in expr where rel is the relation operator ("=" or "<=" for example).
+    findInstance : (Equation(%), %) -> JWSL(JWSL(%))
+    ++ findInstance(expr,lvars) tries to find an instance the equation in expr.
+    findInstance : (%, %) -> JWSL(JWSL(%))
+    ++ findInstance(expr,lvars) tries to find an instance the
+    ++ (in)equation in expr.
+    findInstance : (Equation(%), %, %) -> JWSL(JWSL(%))
+    ++ findInstance(expr,lvars,dom) tries to find an instance the equation
+    ++ in expr.
+    findInstance : (Equation(%), %, %, %) -> JWSL(JWSL(%))
+    ++ findInstance(expr,lvars,dom,n) tries to find n instance(s) to the
+    ++ equation in expr.
+    findInstance : (%, %, %) -> JWSL(JWSL(%))
+    ++ findInstance(expr,lvars,dom) tries to find an instance the equation
+    ++ in expr.
+    findInstance : (%, %, %, %) -> JWSL(JWSL(%))
+    ++ findInstance(expr,lvars,dom, n) tries to find n instance(s) to
+    ++ the (in)equation in expr.
+    
 
     numerator : % -> %
     ++ numerator(expr) returns the numerator of expr.
@@ -448,6 +495,8 @@ JuliaWSExpression() : Exports == Implementation where
     ++ polynomialQuotientRemainder(p1,p2,var) returns the quotient and remainder
     ++ of p1 and p2 in x.
 
+    padeApproximant : (%, %) -> %
+    ++ padeApproximant(expr, {x,x0, {n,m}}) returns the Padé approximant at x0.
 
     symmetricPolynomial : (%, JWSL(%)) -> %
     ++ symmetricPolynomial(n,lvars) returns the n-th elementary symmetric
@@ -950,6 +999,7 @@ JuliaWSExpression() : Exports == Implementation where
     Beta(z,a,b) == jterfunc("W_"Beta_"", z,a,b)
     BetaRegularized(z,a,b) == jterfunc("W_"BetaRegularized_"", z,a,b)
     Gamma(x) == junfunc("W_"Gamma_"", x)
+    gamma(x) == junfunc("W_"Gamma_"", x)
     Gamma(a,z) == jbinfunc("W_"Gamma_"", a,z)
     Gamma(a, z1, z2) == jterfunc("W_"Gamma_"", a, z1,z2)
     -- Checks?
@@ -1116,11 +1166,51 @@ JuliaWSExpression() : Exports == Implementation where
       jbinfunc("W_"Solve_"", jWSExpr(expr), vars)
     solve(expr : %, vars : %) ==
       jbinfunc("W_"Solve_"", expr, vars)
+    solve(expr,rel,cmp,lvars) ==
+      if rel = "=" then rel := "=="
+      expr : String := concat([jlSymbolic(expr), rel, jlSymbolic(cmp)])
+      jbinfunc("W_"Solve_"", jWSExpr(expr), lvars)
+    solve(expr,rel,cmp,lvars,dom) ==
+      if rel = "=" then rel := "=="
+      expr : String := concat([jlSymbolic(expr), rel, jlSymbolic(cmp)])
+      jterfunc("W_"Solve_"", jWSExpr(expr), lvars, dom)
     numericSolve(eq : Equation(%), vars : %) ==
       expr : String := concat([jlSymbolic(lhs eq), "==", jlSymbolic(rhs eq)])
       jbinfunc("W_"NSolve_"", jWSExpr(expr), vars)
     numericSolve(expr : %, vars : %) ==
       jbinfunc("W_"NSolve_"", expr, vars)
+    residue(expr,param) == jbinfunc("W_"Residue_"", expr, param)
+    residueSum(expr,param) == jbinfunc("W_"ResidueSum_"", expr, param)
+    reduce(expr:%, lvars:%) == jbinfunc("W_"Reduce_"", expr, lvars)
+    reduce(eq : Equation(%),lvars) ==
+      expr : String := concat([jlSymbolic(lhs eq), "==", jlSymbolic(rhs eq)])
+      jbinfunc("W_"Reduce_"", jWSExpr(expr), lvars)
+    reduce(eq : Equation(%),lvars,dom) ==
+      expr : String := concat([jlSymbolic(lhs eq), "==", jlSymbolic(rhs eq)])
+      jterfunc("W_"Reduce_"", jWSExpr(expr), lvars, dom)
+    reduce(expr:%, lvars:%, dom : %) == jterfunc("W_"Reduce_"", expr, lvars,dom)
+    reduce(expr,rel,cmp,lvars) ==
+      if rel = "=" then rel := "=="
+      expr : String := concat([jlSymbolic(expr), rel, jlSymbolic(cmp)])
+      jbinfunc("W_"Reduce_"", jWSExpr(expr), lvars)
+    reduce(expr,rel,cmp,lvars,dom) ==
+      if rel = "=" then rel := "=="
+      expr : String := concat([jlSymbolic(expr), rel, jlSymbolic(cmp)])
+      jterfunc("W_"Reduce_"", jWSExpr(expr), lvars, dom)
+    findInstance(expr:%, lvars:%) == jbinfunc("W_"FindInstance_"", expr, lvars)
+    findInstance(eq : Equation(%),lvars) ==
+      expr : String := concat([jlSymbolic(lhs eq), "==", jlSymbolic(rhs eq)])
+      jbinfunc("W_"FindInstance_"", jWSExpr(expr), lvars)
+    findInstance(eq : Equation(%),lvars,dom) ==
+      expr : String := concat([jlSymbolic(lhs eq), "==", jlSymbolic(rhs eq)])
+      jterfunc("W_"FindInstance_"", jWSExpr(expr), lvars, dom)
+    findInstance(eq : Equation(%),lvars,dom,n) ==
+      expr : String := concat([jlSymbolic(lhs eq), "==", jlSymbolic(rhs eq)])
+      jquatfunc("W_"FindInstance_"", jWSExpr(expr), lvars, dom, n)
+    findInstance(expr:%, lvars:%, dom : %) ==
+      jterfunc("W_"FindInstance_"", expr, lvars,dom)
+    findInstance(expr:%, lvars:%, dom : %, n) ==
+      jquatfunc("W_"FindInstance_"", expr, lvars,dom,n)
 
     numerator(rexpr)   == junfunc("W_"Numerator_"", rexpr)
     denominator(rexpr) == junfunc("W_"Denominator_"", rexpr)
@@ -1154,6 +1244,7 @@ JuliaWSExpression() : Exports == Implementation where
       jterfunc("W_"PolynomialRemainder_"",p1,p2,var)
     polynomialQuotientRemainder(p1,p2,var) ==
       jterfunc("W_"PolynomialQuotientRemainder_"",p1,p2,var)
+    padeApproximant(expr, param) == jbinfunc("W_"PadeApproximant_"",expr,param)
     symmetricPolynomial(order, vars) ==
       jbinfunc("W_"SymmetricPolynomial_"",order,vars)
     symmetricReduction(p, vars) ==

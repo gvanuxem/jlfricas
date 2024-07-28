@@ -461,12 +461,22 @@ JuliaWSReal() : Exports == Implementation where
     ++ coerce(x) converts x as a JuliaFloat.
     coerce  : String -> %
     ++ coerce(str) construct str as a JuliaWSReal.
+    coerce  : JuliaFloat64  -> %
+    ++ coerce(x) converts x as a JuliaWSReal.
+    coerce  : DoubleFloat  -> %
+    ++ coerce(x) converts x as a JuliaWSReal.
     coerce  : Float  -> %
     ++ coerce(x) converts x as a JuliaWSReal.
     coerce  : JuliaFloat  -> %
     ++ coerce(x) converts x as a JuliaWSReal.
     coerce  : % -> JuliaWSExpression
     ++ coerce(x) coerce x to a JuliaWSExpression.
+    jWSReal : DoubleFloat -> %
+    ++ jWSReal(z) coerces the integer z to a JuliaWSReal.
+    jWSReal : Float -> %
+    ++ jWSReal(z) coerces the integer z to a JuliaWSReal.
+    jWSReal : JuliaFloat64 -> %
+    ++ jWSReal(z) coerces the integer z to a JuliaWSReal.
     jWSReal : Integer -> %
     ++ jWSReal(z) coerces the integer z to a JuliaWSReal.
     jWSReal : String -> %
@@ -664,8 +674,19 @@ JuliaWSReal() : Exports == Implementation where
       ret : % := jlref(concat(["WReal(_"", convert(f)@String, "_")"]))
       outputSpacing(tmp)
       ret
+    coerce(f : JuliaFloat64) == jlref(concat(["WReal(_"", toString(f), "_")"]))
+    coerce(f : DoubleFloat) == jlref(concat(["WReal(_"", toString(f), "_")"]))
+    coerce(f : Float) ==
+      jlref(concat(["WReal(_"", toString(f,digits()$Float), "_")"]))
     coerce(f : JuliaFloat) == jlref(concat(["WReal(_"", string(f), "_")"]))
     coerce(f : Integer) == jlref(concat(["WReal(_"", string(f), "_")"]))
+    jWSReal(f : JuliaFloat64) == jlref(concat(["WReal(_"", toString(f), "_")"]))
+    jWSReal(f : DoubleFloat) == jlref(concat(["WReal(_"", toString(f), "_")"]))
+    jWSReal(f : Float) ==
+      tmp := outputSpacing(0)
+      a := jlref(concat(["WReal(_"", toString(f), "_")"]))
+      outputSpacing(tmp)
+      a
     jWSReal(f : Integer) == jlref(concat(["WReal(_"", string(f), "_")"]))
     jWSReal(str) == jlref(concat(["WReal(_"", str, "_")"]))
     coerce(x) : OutputForm ==
