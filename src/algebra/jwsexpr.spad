@@ -1162,20 +1162,23 @@ JuliaWSExpression() : Exports == Implementation where
     maxLimit(expr, params : %) == jbinfunc("W_"MaxLimit_"", expr, params)
 
     solve(eq : Equation(%), vars : %) ==
-      expr : String := concat([jlSymbolic(lhs eq), "==", jlSymbolic(rhs eq)])
+      expr : String := concat([toString(lhs eq), "==", toString(rhs eq)])
       jbinfunc("W_"Solve_"", jWSExpr(expr), vars)
+    solve(eq : Equation(%), vars : %, param : %) ==
+      expr : String := concat([toString(lhs eq), "==", toString(rhs eq)])
+      jterfunc("W_"Solve_"", jWSExpr(expr), vars, param)
     solve(expr : %, vars : %) ==
       jbinfunc("W_"Solve_"", expr, vars)
     solve(expr,rel,cmp,lvars) ==
       if rel = "=" then rel := "=="
-      expr : String := concat([jlSymbolic(expr), rel, jlSymbolic(cmp)])
+      expr : String := concat([toString(expr), rel, toString(cmp)])
       jbinfunc("W_"Solve_"", jWSExpr(expr), lvars)
     solve(expr,rel,cmp,lvars,dom) ==
       if rel = "=" then rel := "=="
-      expr : String := concat([jlSymbolic(expr), rel, jlSymbolic(cmp)])
+      expr : String := concat([toString(expr), rel, toString(cmp)])
       jterfunc("W_"Solve_"", jWSExpr(expr), lvars, dom)
     numericSolve(eq : Equation(%), vars : %) ==
-      expr : String := concat([jlSymbolic(lhs eq), "==", jlSymbolic(rhs eq)])
+      expr : String := concat([toString(lhs eq), "==", toString(rhs eq)])
       jbinfunc("W_"NSolve_"", jWSExpr(expr), vars)
     numericSolve(expr : %, vars : %) ==
       jbinfunc("W_"NSolve_"", expr, vars)
@@ -1183,29 +1186,29 @@ JuliaWSExpression() : Exports == Implementation where
     residueSum(expr,param) == jbinfunc("W_"ResidueSum_"", expr, param)
     reduce(expr:%, lvars:%) == jbinfunc("W_"Reduce_"", expr, lvars)
     reduce(eq : Equation(%),lvars) ==
-      expr : String := concat([jlSymbolic(lhs eq), "==", jlSymbolic(rhs eq)])
+      expr : String := concat([toString(lhs eq), "==", toString(rhs eq)])
       jbinfunc("W_"Reduce_"", jWSExpr(expr), lvars)
     reduce(eq : Equation(%),lvars,dom) ==
-      expr : String := concat([jlSymbolic(lhs eq), "==", jlSymbolic(rhs eq)])
+      expr : String := concat([toString(lhs eq), "==", toString(rhs eq)])
       jterfunc("W_"Reduce_"", jWSExpr(expr), lvars, dom)
     reduce(expr:%, lvars:%, dom : %) == jterfunc("W_"Reduce_"", expr, lvars,dom)
     reduce(expr,rel,cmp,lvars) ==
       if rel = "=" then rel := "=="
-      expr : String := concat([jlSymbolic(expr), rel, jlSymbolic(cmp)])
+      expr : String := concat([toString(expr), rel, toString(cmp)])
       jbinfunc("W_"Reduce_"", jWSExpr(expr), lvars)
     reduce(expr,rel,cmp,lvars,dom) ==
       if rel = "=" then rel := "=="
-      expr : String := concat([jlSymbolic(expr), rel, jlSymbolic(cmp)])
+      expr : String := concat([toString(expr), rel, toString(cmp)])
       jterfunc("W_"Reduce_"", jWSExpr(expr), lvars, dom)
     findInstance(expr:%, lvars:%) == jbinfunc("W_"FindInstance_"", expr, lvars)
     findInstance(eq : Equation(%),lvars) ==
-      expr : String := concat([jlSymbolic(lhs eq), "==", jlSymbolic(rhs eq)])
+      expr : String := concat([toString(lhs eq), "==", toString(rhs eq)])
       jbinfunc("W_"FindInstance_"", jWSExpr(expr), lvars)
     findInstance(eq : Equation(%),lvars,dom) ==
-      expr : String := concat([jlSymbolic(lhs eq), "==", jlSymbolic(rhs eq)])
+      expr : String := concat([toString(lhs eq), "==", toString(rhs eq)])
       jterfunc("W_"FindInstance_"", jWSExpr(expr), lvars, dom)
     findInstance(eq : Equation(%),lvars,dom,n) ==
-      expr : String := concat([jlSymbolic(lhs eq), "==", jlSymbolic(rhs eq)])
+      expr : String := concat([toString(lhs eq), "==", toString(rhs eq)])
       jquatfunc("W_"FindInstance_"", jWSExpr(expr), lvars, dom, n)
     findInstance(expr:%, lvars:%, dom : %) ==
       jterfunc("W_"FindInstance_"", expr, lvars,dom)
