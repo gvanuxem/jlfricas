@@ -54,7 +54,7 @@ JuliaInt64Vector() : Exports == Implementation where
             ~pprint =>
                 bracket [qelt(v, k)::OutputForm for k in 1$Lisp .. maxIndex v]
             ret: List OutputForm := jl_stringify_1difunction("show", "_"text/plain_"", v)$Lisp
-            vconcat rest ret
+            pile(append(["" pretend OutputForm],rest ret))
 
         juliaIVPrint(b) ==
             oldpprint := pprint
@@ -145,7 +145,7 @@ JuliaFloat64Vector() : Exports == Implementation where
             ~pprint =>
                 bracket [qelt(v, k)::OutputForm for k in 1$Lisp .. maxIndex v]
             ret: List OutputForm := jl_stringify_1dfunction(0$NNI, "show", "_"text/plain_"", v)$Lisp
-            vconcat rest ret
+            pile(append(["" pretend OutputForm],rest ret))
 
         copy!(b, a) ==
             jl_1d2function(0$NNI,"copy!", b, a)$Lisp
@@ -388,7 +388,7 @@ JuliaFloat64Matrix() :  Exports == Implementation where
                 ret: List OutputForm :=
                     jl_stringify_2dfunction(0$NNI, "show", "_"text/plain_"",
                         m.elts, m.ncols)$Lisp
-                vconcat rest ret
+                pile(append(["" pretend OutputForm],rest ret))
             else
                 l : List List OutputForm
                 l := [[qelt(m, j, i) :: OutputForm _
@@ -668,7 +668,7 @@ JuliaComplexF64Vector() :  Exports == Implementation where
                 bracket [qelt(v, k)::OutputForm for k in 1$Lisp .. maxIndex v]
             ret: List OutputForm :=
                 jl_stringify_1dfunction(1$NNI, "show", "_"text/plain_"", v)$Lisp
-            vconcat rest ret
+            pile(append(["" pretend OutputForm],rest ret))
 
 
 )abbrev domain JCF64MAT JuliaComplexF64Matrix
@@ -918,7 +918,7 @@ JuliaComplexF64Matrix() : Exports == Implementation where
                 ret: List OutputForm :=
                     jl_stringify_2dfunction(1$NNI, "show", "_"text/plain_"",
                         m.elts, m.ncols)$Lisp
-                vconcat rest ret
+                pile(append(["" pretend OutputForm],rest ret))
             else
                 l : List List OutputForm
                 l := [[qelt(m, j, i) :: OutputForm _
