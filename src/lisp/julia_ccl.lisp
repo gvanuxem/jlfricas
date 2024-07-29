@@ -5,7 +5,7 @@
 (defconstant negative-infinity ccl::double-float-negative-infinity)
 (defconstant nan ccl::double-float-nan)
 
-(defclass jlref  () ;(ccl::fricas-object-wrapper)
+(defclass jlref  ()
     ((id  :reader jlrefId   :initarg :id)
     (type :accessor jlrefType :initarg :type))
     (:default-initargs :id nil :type nil))
@@ -56,7 +56,7 @@
     (let ((size (array-dimension array 0)))
         ;(concatenate 'string (string #\newline)
         (uiop:split-string (ccl::%get-cstring
-                (ccl::with-encoded-cstrs :iso-8859-1 ((sa func) (sb mime))
+                (ccl::with-encoded-cstrs :utf-8 ((sa func) (sb mime))
                     (ccl:with-pointer-to-ivector (ptr array)
                         (ccl::external-call "jl_call_stringify_1difunction"
                             :address sa :address sb
@@ -66,7 +66,7 @@
 (defun |jl_stringify_1dfunction| (cplx func mime array)
     (let ((size (get_vnrows cplx array)))
         (uiop:split-string (ccl::%get-cstring
-            (ccl::with-encoded-cstrs :iso-8859-1 ((sa func) (sb mime))
+            (ccl::with-encoded-cstrs :utf-8 ((sa func) (sb mime))
                 (ccl:with-pointer-to-ivector (ptr array)
                     (ccl::external-call "jl_call_stringify_1dfunction"
                         :int cplx :address sa :address sb
@@ -164,7 +164,7 @@
     (let ((n (get_ncols cplx array m)))
         (uiop:split-string 
             (ccl::%get-cstring 
-                (ccl::with-encoded-cstrs :iso-8859-1 ((sa func) (sb mime))
+                (ccl::with-encoded-cstrs :utf-8 ((sa func) (sb mime))
                     (ccl:with-pointer-to-ivector (ptr array)
                         (ccl::external-call "jl_call_stringify_2dfunction"
                             :int cplx :address sa :address sb

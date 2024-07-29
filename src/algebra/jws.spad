@@ -170,9 +170,8 @@ JuliaWSSymbol() : Exports == Implementation where
     coerce(bool : Boolean) ==
       bool => WTrue()
       WFalse()
-    string(obj) ==
-      jl_string_eval_string(concat(["string(", getind(obj),")"]))$Lisp
-    convert(obj) : String == string(obj)
+    string(sym) == jl_string_getindex(jlId sym)$Lisp
+    convert(sym) : String == string(sym)
     coerce(sym : %) : Boolean == sym = WTrue()
     coerce(sym : %) : Symbol  == coerce(string(sym))
     coerce(sym : Symbol) == jlref(concat(["WSymbol(_"", string(sym), "_")"]))
@@ -181,7 +180,7 @@ JuliaWSSymbol() : Exports == Implementation where
     jWSSym(sym : Symbol) == jlref(concat(["WSymbol(_"", string(sym), "_")"]))
     jWSSym(str : String) == jlref(concat(["W_`", str, "_`"]))
     coerce(obj) : OutputForm ==
-      jl_string_eval_string(concat(["string(", getind(obj),")"]))$Lisp
+      jl_string_getindex(jlId(obj))$Lisp
 
 )abbrev domain JWSINT JuliaWSInteger
 ++ Generic domain for Julia WS integers
@@ -291,17 +290,17 @@ JuliaWSInteger() : Exports == Implementation where
 
     random(n) == junfunc("W_"RandomInteger_"",n)
     integer(i) == parsei(string i)
-    string(obj) ==
-      jl_string_eval_string(concat(["string(", getind(obj),")"]))$Lisp
-    convert(obj) : String == string obj  
+    string(i) == jl_string_getindex(jlId i)$Lisp
+    convert(i) : String == string i  
     convert(i : %) : Integer == parsei(string i)
     coerce(x : %) : JuliaWSRational ==
       jlref(concat(getind(x), "/1"))$JuliaWSRational
     coerce(x : %) : JuliaWSExpression == x pretend JuliaWSExpression
     coerce(i : Integer) == jlref(concat(["WInteger(_"", string(i), "_")"]))
     jWSInt(i : Integer) == jlref(concat(["WInteger(_"", string(i), "_")"]))
-    coerce(i) : OutputForm == coerce(parsei(toString(i)))$Integer
-      --jl_string_eval_string(concat(["string(weval(", getind(i),"))"]))$Lisp
+    coerce(i) : OutputForm == --jl_string_getindex(jlId i)$Lisp
+      coerce(parsei(jl_string_getindex(jlId i)$Lisp))$Integer
+
 
 )abbrev domain JWSRAT JuliaWSRational
 ++ Generic domain for Julia WS rational numbers
@@ -374,8 +373,7 @@ JuliaWSRational() : Exports == Implementation where
     x : % ^ y : PositiveInteger == jbinop("^", x, coerce(y))
     x : % ^ y : NonNegativeInteger == jbinop("^", x, coerce(y))
 
-    string(q) ==
-      toString q
+    string(q) == toString q
     convert(q) : String == toString q
     retract(q : %) : JuliaWSInteger ==
       denom(q) = 1 => numer(q)
@@ -658,8 +656,7 @@ JuliaWSReal() : Exports == Implementation where
 
     toString(x, form) == string jbinfunc("W_"ToString_"", x, form)
 
-    string(x) : String ==
-      jl_string_eval_string(concat(["string(",getind(x),")"]))$Lisp
+    string(x) : String == jl_string_getindex(jlId x)$Lisp
     convert(obj) : String == string obj
     coerce(r : %) : DoubleFloat ==
       jl_dbl_eval_string(getind(jlEval r))$Lisp pretend DoubleFloat
@@ -922,7 +919,7 @@ JuliaWSAPReal(prec : PositiveInteger) : Exports == Implementation where
       jlEval jWSExpr(concat(["RandomReal[WorkingPrecision->",
         string(prec pretend Integer),"]"])) pretend %
     string(x) : String ==
-      jl_string_eval_string(concat(["string(", getind(x),")"]))$Lisp
+      toString(x pretend JuliaWSExpression, jWSExpr("OutputForm"))
     convert(obj) : String == string obj
     toString(x, form) == string jbinfunc("W_"ToString_"", x, form)
 
@@ -1028,8 +1025,7 @@ JuliaWSGaussianInteger() : Exports == Implementation where
 
     random(n) == complex(junfunc("W_"RandomInteger_"",n) pretend JuliaWSInteger,
       junfunc("W_"RandomInteger_"",n) pretend JuliaWSInteger) 
-    string(obj) ==
-      jl_string_eval_string(concat(["string(weval(", getind(obj),"))"]))$Lisp
+    string(gi) == toString(gi)
     convert(obj) : String == string obj
     coerce(x : %) : JuliaWSExpression == x pretend JuliaWSExpression
     coerce(i : Integer) ==
@@ -1244,8 +1240,7 @@ JuliaWSComplex() : Exports == Implementation where
       jbinfunc("W_"PolyLog_"", two, z)
 
     urand01() == jWSExpr("RandomComplex[]") pretend %
-    string(z) ==
-      jl_string_eval_string(concat(["string(", getind(z),")"]))$Lisp
+    string(z) == toString z
     convert(z) : String == string z
     toString(z, form) == string jbinfunc("W_"ToString_"", z, form)
     coerce(z : %) : Complex(DoubleFloat) ==
@@ -1472,8 +1467,7 @@ JuliaWSAPComplex(prec : PositiveInteger) : Exports == Implementation where
     urand01() ==
       jWSExpr(concat(["RandomComplex[WorkingPrecision->",
         string(prec),"]"])) pretend %
-    string(obj) ==
-      jl_string_eval_string(concat(["string(weval(", getind(obj),"))"]))$Lisp
+    string(z) == toString(z pretend JuliaWSExpression, jWSExpr("OutputForm"))
     convert(obj) : String == string obj
     toString(z, form) == string jbinfunc("W_"ToString_"", z, form)
     coerce(z : %) : JuliaWSExpression == z pretend JuliaWSExpression

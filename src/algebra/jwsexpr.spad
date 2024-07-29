@@ -420,18 +420,18 @@ JuliaWSExpression() : Exports == Implementation where
     residueSum : (%, %) -> %
     ++ residueSum(expr, var) returns the residue of expr.
     ++ \example{residueSum(Gamma(x),x)}
-    reduce : (Equation(%), %) -> JWSL(JWSL(%))
+    reduce : (Equation(%), %) -> %
     ++ reduce(expr,lvars) tries to reduce the equation in expr.
-    reduce : (%, %) -> JWSL(JWSL(%))
+    reduce : (%, %) -> %
     ++ reduce(expr,lvars) tries to reduce the (in)equation in expr.
-    reduce : (Equation(%), %, %) -> JWSL(JWSL(%))
+    reduce : (Equation(%), %, %) -> %
     ++ reduce(expr,lvars,dom) tries to reduce the equation in expr.
-    reduce : (%, %, %) -> JWSL(JWSL(%))
+    reduce : (%, %, %) -> %
     ++ reduce(expr,lvars,dom) tries to reduce the (in)equation in expr.
-    reduce : (%, String, %, %) -> JWSL(JWSL(%))
+    reduce : (%, String, %, %) -> %
     ++ reduce(lhs, rel, rhs,lvars) tries to reduce the (in)equation
     ++ in expr where rel is the relation operator ("==" or "<=" for example).
-    reduce : (%, String, %, %, %) -> JWSL(JWSL(%))
+    reduce : (%, String, %, %, %) -> %
     ++ reduce(lhs, rel,rhs,lvars,dom) tries to reduce the (in)equation
     ++ in expr where rel is the relation operator ("=" or "<=" for example).
     findInstance : (Equation(%), %) -> JWSL(JWSL(%))
@@ -1167,8 +1167,8 @@ JuliaWSExpression() : Exports == Implementation where
     solve(eq : Equation(%), vars : %, param : %) ==
       expr : String := concat([toString(lhs eq), "==", toString(rhs eq)])
       jterfunc("W_"Solve_"", jWSExpr(expr), vars, param)
-    solve(expr : %, vars : %) ==
-      jbinfunc("W_"Solve_"", expr, vars)
+    solve(expr : %, vars : %) == jbinfunc("W_"Solve_"", expr, vars)
+    solve(expr:%,vars:%,param:%) == jterfunc("W_"Solve_"", expr, vars, param)
     solve(expr,rel,cmp,lvars) ==
       if rel = "=" then rel := "=="
       expr : String := concat([toString(expr), rel, toString(cmp)])
@@ -1371,8 +1371,7 @@ JuliaWSExpression() : Exports == Implementation where
     --jWSExpr concat(["ReplaceAll[", toString(rule),"][", toString(expr), "]"])
 
     toString(expr, form) == string jbinfunc("W_"ToString_"", expr, form)
-    string(expr) ==
-      jl_string_eval_string(concat(["string(", getind(expr),")"]))$Lisp
+    string(expr) == jl_string_getindex(jlId(expr))$Lisp
     convert(expr) : String == string expr
     retractIfCan(expr : %) : Union(JuliaFloat64, "failed") ==
       jlType(expr) = "Float64" => jl_dbl_eval_string(getind(expr))$Lisp pretend JuliaFloat64
@@ -1397,7 +1396,7 @@ JuliaWSExpression() : Exports == Implementation where
     coerce(str : String) == jlref(concat(["W_`", str, "_`"]))
     coerce(l : List(%)) : % ==
       -- Temporary (and dirty) hack
-      -- TODO : use getind and List - unsupported: real and complex
+      -- TODO : use getind and List
       lstr := map(obj +-> toString(obj), l)$ListFunctions2(%, String)
       str : String := "{"
       for i in 1..(#lstr - 1) repeat

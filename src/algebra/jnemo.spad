@@ -1859,11 +1859,8 @@ NemoFactored(R : Join(NemoType, IntegralDomain)) :
       jl_eval_string("tmp=nothing")$Lisp
       makeFR(jlref(concat(["unit(", getind(fr), ")"]))$R, ret)$Factored(R)
       
-    string(ob)   ==
-      jl_string_eval_string(concat(["string(", getind(ob), ")"]))$Lisp
-  
-    convert(obj : %) : String ==
-      jl_string_eval_string(concat(["string(", getind(obj), ")"]))$Lisp
+    string(ob)   == jl_string_getindex(jlId ob)$Lisp
+    convert(obj : %) : String == string obj
     coerce(ob : %) : OutputForm ==
       ret : List OutputForm := jl_stringify_wrapped_index("show",
         "_"text/plain_"", getind(ob))$Lisp

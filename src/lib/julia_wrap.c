@@ -8,7 +8,7 @@
 
 static jl_value_t *jl_complex64_type, *V, *refs, *irefs;
 static jl_value_t *array_int64, *array_dbl, *array_cdbl, *array2_dbl, *array2_cdbl;
-static jl_function_t *setind, *getind, *del, *stringify, *MIME, *stringify;
+static jl_function_t *setind, *getind, *del, *stringify, *MIME, *Stringify;
 
 // Use '_str' instead of '_string' to avoid conflict with Julia
 void jl_eval_str(char* code)
@@ -79,12 +79,6 @@ char* jl_string_eval_string(char* code)
         jl_exception_clear();
         return(nstr);
     }
-    /*
-    jl_printf(jl_stderr_stream(), code);
-    jl_printf(jl_stderr_stream(), ": ");
-    jl_printf(jl_stderr_stream(), jl_string_data(result));
-    jl_printf(jl_stderr_stream(), "\n");
-    */
     return(jl_string_data(result));
 }
 
@@ -116,7 +110,7 @@ char* jl_setindex_wrap_eval_string(const char* index, const char* code)
     return(jl_string_data(ret));    
 }
 
-void jl_delete_wrapped_index(const char *index)
+void jl_delete_index(const char *index)
 {
     jl_value_t *res;
     char* nstr = "";
@@ -139,7 +133,7 @@ void jl_delete_wrapped_index(const char *index)
     return;
 }
 
-char* jl_getindex_wrapped_index(const char *index)
+char* jl_string_getindex(const char *index)
 {
     char* nstr = "";
     jl_value_t *result;
@@ -347,7 +341,7 @@ char*  jl_call_stringify_1difunction(const char* function,
         return("");
     }
 
-    ret = jl_call1(stringify, jl_call1(jl_get_function(jl_main_module, "take!"), io));
+    ret = jl_call1(Stringify, jl_call1(jl_get_function(jl_main_module, "take!"), io));
     if (jl_exception_occurred()) {
         jl_call2(jl_get_function(jl_base_module, "showerror"),
                 jl_stderr_obj(),
@@ -419,7 +413,7 @@ char* jl_call_stringify_1dfunction(int64_t cplx, const char* function,
         return("");
     }
 
-    ret = jl_call1(stringify, jl_call1(jl_get_function(jl_main_module, "take!"), io));
+    ret = jl_call1(Stringify, jl_call1(jl_get_function(jl_main_module, "take!"), io));
     if (jl_exception_occurred()) {
         jl_call2(jl_get_function(jl_base_module, "showerror"),
                 jl_stderr_obj(),
@@ -679,7 +673,7 @@ char*  jl_call_stringify_2dfunction(int64_t cplx, const char* function,
         return("");
     }
 
-    ret = jl_call1(stringify, jl_call1(jl_get_function(jl_main_module, "take!"), io));
+    ret = jl_call1(Stringify, jl_call1(jl_get_function(jl_main_module, "take!"), io));
     if (jl_exception_occurred()) {
         jl_call2(jl_get_function(jl_base_module, "showerror"),
                 jl_stderr_obj(),
@@ -1255,7 +1249,7 @@ void jl_init_env(void){
     del = jl_get_function(jl_base_module, "delete!");
     stringify = jl_get_function(jl_base_module, "string");
     MIME = jl_get_function(jl_base_module, "MIME");
-    stringify = jl_get_function(jl_base_module, "String");
+    Stringify = jl_get_function(jl_base_module, "String");
 
     // Quick & dirty hack
     // Set some default functions to avoid conflicts with the Nemo ones

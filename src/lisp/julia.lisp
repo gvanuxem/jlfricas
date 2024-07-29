@@ -35,7 +35,7 @@
         (func c-string) (arg1 double) (arg2 int))
 (fricas-foreign-call boot::|jl_dbl_function_int_dbl| "jl_call_dbl_function_int_dbl" double
         (func c-string) (arg1 int) (arg2 double))
-(fricas-foreign-call boot::|jl_delete_wrapped_index| "jl_delete_wrapped_index"
+(fricas-foreign-call boot::|jl_delete_index| "jl_delete_index"
         void (idx c-string))
 
 #+:sbcl
@@ -46,7 +46,7 @@
     bool (func c-string) (arg1 double) (arg2 double))
 (fricas-foreign-call boot::|jl_string_eval_string| "jl_string_eval_string"
     c-string (command c-string))
-(fricas-foreign-call boot::|jl_getindex_wrapped_index| "jl_getindex_wrapped_index"
+(fricas-foreign-call boot::|jl_string_getindex| "jl_string_getindex"
     c-string (index c-string))
 (fricas-foreign-call boot::|jl_setindex_wrap_eval_string| "jl_setindex_wrap_eval_string"
     c-string (index c-string) (command c-string))
@@ -60,13 +60,14 @@
         (func c-string) (arg1 double) (arg2 double))
 (fricas-foreign-call jl_string_eval_string "jl_string_eval_string" c-string
         (command c-string))
-(fricas-foreign-call jl_getindex_wrapped_index "jl_getindex_wrapped_index" c-string
+(fricas-foreign-call jl_string_getindex "jl_string_getindex" c-string
     (index c-string))
 (fricas-foreign-call jl_setindex_wrap_eval_string "jl_setindex_wrap_eval_string"
     c-string (index c-string) (command c-string))
 )
 )
 
+;(get-encoded-string :utf-8 cname (#_strlen cname))
 #+:openmcl
 (progn
 (defmacro boot::|jl_bool_eval_string| (str)
@@ -74,9 +75,9 @@
 (defmacro boot::|jl_bool_function_dbl_dbl| (func arg1 arg2)
     `(if (eq (jl_bool_function_dbl_dbl ,func ,arg1 ,arg2)  0) nil t))
 (defmacro boot::|jl_string_eval_string| (str)
-    `(ccl::%get-cstring (jl_string_eval_string ,str)))
-(defmacro boot::|jl_getindex_wrapped_index| (index)
-    `(ccl::%get-cstring (jl_getindex_wrapped_index ,index)))
+    `(ccl::%get-utf-8-cstring (jl_string_eval_string ,str)))
+(defmacro boot::|jl_string_getindex| (index)
+    `(ccl::%get-utf-8-cstring (jl_string_getindex ,index)))
 (defmacro boot::|jl_setindex_wrap_eval_string| (index str)
     `(ccl::%get-cstring (jl_setindex_wrap_eval_string ,index ,str)))
 )
@@ -84,7 +85,6 @@
 (in-package "BOOT")
 
 (defun |jl_stringify_wrapped_index| (func mime index)
-    ;(concatenate 'string (string #\newline)
     (uiop:split-string
         (|jl_string_eval_string| (concatenate 'string
             "io = IOBuffer();" func "(io," mime "," index ");String(take!(io))"))

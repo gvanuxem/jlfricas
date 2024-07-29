@@ -82,8 +82,8 @@ JuliaObjectType() : Category == JuliaType() with
     jlType(obj)  == JLREFTYPE(obj)$Lisp pretend String
     jlRef(obj)   == obj pretend SExpression
 
-    convert(obj) : String == jl_string_eval_string(concat(["string(", getind(obj),")"]))$Lisp
-    string(obj)  == jl_string_eval_string(concat(["string(", getind(obj),")"]))$Lisp
+    string(obj)  == jl_string_getindex(jlId obj)$Lisp
+    convert(obj) : String == string obj
 
     elt(obj, jsy) ==
       defined := concat(["hasproperty(", getind(obj), ",", string(jsy), ")"])
@@ -92,8 +92,7 @@ JuliaObjectType() : Category == JuliaType() with
       jlref(concat(["getproperty(", getind(obj), ",", string(jsy), ")"]))
     qelt(obj, jsy) ==
       jlref(concat(["getproperty(", getind(obj), ",", string(jsy), ")"]))
-    string(ob)   ==
-      jl_string_eval_string(concat(["string(", getind(ob), ")"]))$Lisp
+    string(ob)   == jl_string_getindex(jlId ob)$Lisp
     jlApply(func, a) == junfunc(func, a)
     jlApply(func, a, b) == jbinfunc(func,a,b)
     jlApply(func, a, b, c) == jterfunc(func,a,b,c)
@@ -684,7 +683,7 @@ JuliaDataFrame() : Exports == Implementation where
       junfunc(op, a) ==> jlref(concat([op, "(", getind(a),")"]))
 
       jlDescribe(df) == junfunc("describe", df)
-      matrix(df) == junfunc("matrix", df)
+      matrix(df) == junfunc("Matrix", df)
       coerce(df : %) : OutputForm ==
         ret : List(OutputForm) := jl_stringify_wrapped_index("show",
           "_"text/plain_"", getind(df))$Lisp
