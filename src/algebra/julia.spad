@@ -613,7 +613,6 @@ JuliaUtilityFunctions() : Exports == Implementation where
     jl_using_package("Random")$Lisp
     jl_using_package("Statistics")$Lisp
     jl_import_symbol("Statistics.var")$Lisp
-
     defined?(func) ==>
       not jlDefined?(func)$JuliaUtilityFunctions =>
         error concat(string(func), " is not defined in Julia")
@@ -627,11 +626,23 @@ JuliaUtilityFunctions() : Exports == Implementation where
       jl_bool_eval_string(concat(["isdefined(Main,",
         string(sym),")"])@String)$Lisp
     jlDefined?(str : JuliaString) ==
-      jl_bool_eval_string(concat(["isdefined(Main,",
+      lsym := split(str,char ".")
+      (size:=#lsym) = 1 => jl_bool_eval_string(concat(["isdefined(Main,",
         string(coerce(str)@JSYM),")"])@String)$Lisp
+      sym := coerce(last lsym)@JSYM
+      nspace : JuliaString := first lsym
+      for i in 2..(size-1) repeat nspace := concat(concat(nspace, jstring "."), lsym.i)
+      jl_bool_eval_string(concat(["isdefined(", string nspace, ","
+        string(sym),")"])@String)$Lisp
     jlDefined?(str : String) ==
-      jl_bool_eval_string(concat(["isdefined(Main,",
-        string(jsym(str)@JSYM),")"])$String)$Lisp
+      lsym := split(str,char ".")
+      (size:=#lsym) = 1 => jl_bool_eval_string(concat(["isdefined(Main,",
+        string(coerce(str)@JSYM),")"])@String)$Lisp
+      sym := coerce(last lsym)@JSYM
+      nspace : String := first lsym
+      for i in 2..(size-1) repeat nspace := concat(concat(nspace, "."), lsym.i)
+      jl_bool_eval_string(concat(["isdefined(", nspace, ","
+        string(sym),")"])@String)$Lisp
 
     jlAddPackage(str : JuliaString) ==
       jl_eval_string(concat([jstring("import Pkg;Pkg.add(_""),
@@ -644,8 +655,8 @@ JuliaUtilityFunctions() : Exports == Implementation where
     mean(v:JF64VEC) : JF64   == jl_dbl_1dfunction(0$NNI, "mean", v)$Lisp
     var(v:JF64VEC) : JF64    == jl_dbl_1dfunction(0$NNI, "var", v)$Lisp
     std(v:JF64VEC) : JF64    == jl_dbl_1dfunction(0$NNI, "std", v)$Lisp
-    cor(m:JF64MAT) : JF64MAT == jl_dbl_1dfunction(0$NNI, "cor", m)$Lisp
-    cov(m:JF64MAT) : JF64MAT == jl_dbl_1dfunction(0$NNI, "cov", m)$Lisp
+    cor(m:JF64MAT) : JF64MAT == jl_array_2dfunction(0$NNI, "cor", m)$Lisp
+    cov(m:JF64MAT) : JF64MAT == jl_array_2dfunction(0$NNI, "cov", m)$Lisp
 
     jlApprox?(x:JCF64, y:JCF64) : Boolean ==
         jl_bool_function_dbl_dbl("isapprox", real(x), real(y))$Lisp

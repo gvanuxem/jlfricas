@@ -36,19 +36,23 @@ JuliaWSObject() : Category == JuliaObjectType with
     junfunc(func,a) ==> jlref(concat(["weval(",func, "(", getind(a),"))"]))
     jbinfunc(func,a,b) ==>
       jlref(concat(["weval(", func, "(", getind(a), ",", getind(b),"))"]))
-    -- TODO: jlApply("ArcTan", jWSExpr("3.2"), jWSExpr("2.3"))
-    -- versus symbolic
-    -- jlApply("ArcTan", jWSReal("3.2"), jWSReal("2.3"))
     jlApply(sym, arg) ==
       jlref(concat(["W_"", sym, "_"(", getind(arg),")"]))
     jlApply(sym, a, b) ==
       jlref(concat(["W_"", sym, "_"(", getind(a), ",", getind(b),")"]))
     jlApply(sym, a, b, c) ==
       jlref(concat(["W_"", sym, "_"(", getind(a), ",", getind(b),
-        ",", getind(c)")"]))
+        ",", getind(c),")"]))
     jlApply(sym, a, b, c, d) ==
         jlref(concat(["W_"", sym, "_"(", getind(a), ",", getind(b),
-          ",", getind(c), ",", getind(d) ")"]))
+          ",", getind(c), ",", getind(d),")"]))
+    jlApply(sym, a, b, c, d, e) ==
+        jlref(concat(["W_"", sym, "_"(", getind(a), ",", getind(b),
+          ",", getind(c), ",", getind(d), ",", getind(e),")"]))
+    jlApply(sym, a, b, c, d, e, f) ==
+        jlref(concat(["W_"", sym, "_"(", getind(a), ",", getind(b), ",",
+          getind(c), ",", getind(d), ",", getind(e), ",", getind(f),")"]))
+
     jlSymbolic(jws) ==
       -- subject to change
       jl_string_eval_string(concat(["weval(W_"ToString_"(W_"FullForm_"(",

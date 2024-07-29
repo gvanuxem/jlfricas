@@ -209,7 +209,6 @@ JuliaWSList(E : JuliaWSObject) : Exports == Implementation where
 JuliaWSVector(E : JuliaWSObject) : Exports == Implementation where
   getind(a)  ==> concat(["getindex(", "refs, _"", jlId a, "_")"])
   Exports ==> JuliaWSAggregate(E) with
-
     --cross Length_
     "+" : (%, %) -> %
     ++ a + b is the vector addition. WS error if dimensions are incompatible.

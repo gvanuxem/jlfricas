@@ -76,6 +76,9 @@ JuliaObjectType() : Category == JuliaType() with
     jsenfunc(func,a,b,c,d,e,f) ==> jlref(concat([func, "(", getind(a), ",", 
       getind(b), ",", getind(c), ",", getind(d), ",",
         getind(e), "," , getind(f), ")"]))
+    defined?(func) ==>
+      not jlDefined?(func)$JuliaUtilityFunctions =>
+        error concat(func, " is not defined in Julia")
 
     jlref(cmd)   == make_jlref(cmd)$Lisp  
     jlId(obj)    == JLREFID(obj)$Lisp pretend String
@@ -93,12 +96,24 @@ JuliaObjectType() : Category == JuliaType() with
     qelt(obj, jsy) ==
       jlref(concat(["getproperty(", getind(obj), ",", string(jsy), ")"]))
     string(ob)   == jl_string_getindex(jlId ob)$Lisp
-    jlApply(func, a) == junfunc(func, a)
-    jlApply(func, a, b) == jbinfunc(func,a,b)
-    jlApply(func, a, b, c) == jterfunc(func,a,b,c)
-    jlApply(func, a, b, c, d) == jquatfunc(func,a,b,c,d)
-    jlApply(func, a, b, c, d, e) == jquinfunc(func,a,b,c,d,e)
-    jlApply(func, a, b, c, d, e, f) == jsenfunc(func,a,b,c,d,e,f)
+    jlApply(func, a) ==
+      defined?(func)
+      junfunc(func, a)
+    jlApply(func, a, b) ==
+      defined? func
+      jbinfunc(func,a,b)
+    jlApply(func, a, b, c) ==
+      defined? func
+      jterfunc(func,a,b,c)
+    jlApply(func, a, b, c, d) ==
+      defined? func
+      jquatfunc(func,a,b,c,d)
+    jlApply(func, a, b, c, d, e) ==
+      defined? func
+      jquinfunc(func,a,b,c,d,e)
+    jlApply(func, a, b, c, d, e, f) ==
+      defined? func
+      jsenfunc(func,a,b,c,d,e,f)
     jlAbout(obj) ==
       not jlUsing(jstring "About") =>
         error("jlAbout: the _"About.jl_" Julia package is not installed. _
@@ -110,8 +125,8 @@ See the JuliaType category for information")
 ++ Author: G.Vanuxem
 ++ Date Created: April. 2024
 ++ Description:
-++  Julia objects i.e. objects that can only be used
-++  within Julia, and not directly by FriCAS.
+++  Julia objects i.e. objects that are used within Julia,
+++ and not directly by the underlying FriCAS Common LISP.
 JuliaObject() : Exports == Implementation where
   INT ==> Integer
   NNI ==> NonNegativeInteger
@@ -141,8 +156,8 @@ JuliaObject() : Exports == Implementation where
     jobject : String -> %
     ++ jlObject(string) constructs an arbirary Julia object depending
     ++ on string used (evaluated by Julia). For example:
-    ++ \example{jlObject("rand(Float64,(2,3,4))")}
-    ++ a 2x3x4 arryay of JF64 (Float64).
+    ++ \example{jobject("rand(Float64,(2,3,4))")}
+    ++ a 2x3x4 array of JF64 (Float64).
   Implementation ==> add
     import from JuliaUtilityFunctions
     import from String
