@@ -24,7 +24,8 @@ JuliaObjectType() : Category == JuliaType() with
     ++jlApply(func, obj1, obj2) executes the function func with obj1 and obj2
     ++ as parameters and returns the result as a FriCAS JuliaObjectType.
     ++ For example, using JuliaObject:
-    ++ \example{M:=nrand(4,4);jlApply("getproperty", jlApply("svd", M::JOBJECT), jsym "S")}
+    ++ \example{M:=nrand(4,4);jlApply("getproperty",
+    ++ jlApply("svd", M::JOBJECT), jsym "S")}
     ++ should be "equivalent" to svdvals(M)
     jlApply : (String, %, %, %) -> % 
     ++ jlApply(func, obj1, obj2, obj3) executes the function func with obj1, obj2
@@ -57,9 +58,16 @@ JuliaObjectType() : Category == JuliaType() with
     ++ elt(obj, sym) returns the property sym of obj. No checks are done
     ++ regarding the existence of the sym property. If it does not exist,
     ++ Julia will throw an error.
+    elt : (%, Integer) -> %
+    ++ elt(obj, ind) returns the element at index ind of obj.
+    ++ For example for a Tuple or a vector.
+    qelt : (%, Integer) -> %
+    ++ qelt(obj, ind) returns the element at index ind of obj.
+    ++ For example for a Tuple or a vector.
   add
     import from JuliaUtilityFunctions
     import from JuliaSymbol
+    import from String
 
     getind(a) ==> concat(["getindex(", "refs,_"",
       JLREFID(a)$Lisp pretend String, "_")"])
@@ -88,13 +96,19 @@ JuliaObjectType() : Category == JuliaType() with
     string(obj)  == jl_string_getindex(jlId obj)$Lisp
     convert(obj) : String == string obj
 
-    elt(obj, jsy) ==
-      defined := concat(["hasproperty(", getind(obj), ",", string(jsy), ")"])
+    elt(obj : %, jsy : JuliaSymbol) ==
+      defined := concat(["hasproperty(", getind(obj), ",",
+        str := string(jsy), ")"])
       not jl_bool_eval_string(defined)$Lisp =>
-        error concat("elt: undefined symbol ", string jsy)
+        error concat("elt: undefined symbol ", str)
       jlref(concat(["getproperty(", getind(obj), ",", string(jsy), ")"]))
-    qelt(obj, jsy) ==
+    qelt(obj : %, jsy : JuliaSymbol) ==
       jlref(concat(["getproperty(", getind(obj), ",", string(jsy), ")"]))
+    elt(obj : %, ind : Integer) ==
+      jlref(concat([getind(obj), "[", string(ind), "]"]))
+    qelt(obj : %, ind : Integer) ==
+      jlref(concat([getind(obj), "[", string(ind), "]"]))
+
     string(ob)   == jl_string_getindex(jlId ob)$Lisp
     jlApply(func, a) ==
       defined?(func)
@@ -119,7 +133,12 @@ JuliaObjectType() : Category == JuliaType() with
         error("jlAbout: the _"About.jl_" Julia package is not installed. _
 See the JuliaType category for information")
       jl_eval_string(concat(["about(", getind(obj),")"]))$Lisp
-
+    coerce(ob : %) : OutputForm ==
+      ret : List OutputForm := jl_stringify_wrapped_index("show",
+        "_"text/plain_"", getind(ob))$Lisp
+      #ret ~= 1 or more?(elt(ret,1) pretend String, _$LINELENGTH$Lisp)
+        => pile(append(["" pretend OutputForm], ret))
+      vconcat ret
 )abbrev domain JOBJECT JuliaObject
 ++ Generic domain for Julia objects
 ++ Author: G.Vanuxem
@@ -186,12 +205,6 @@ JuliaObject() : Exports == Implementation where
       make_jlref_from_mat(0$NNI, jlVector(m), nrows m)$Lisp
     coerce(m : JuliaComplexF64Matrix) : % ==
       make_jlref_from_mat(1$NNI, jlVector(m), nrows m)$Lisp
-    coerce(ob : %) : OutputForm ==
-      ret : List OutputForm := jl_stringify_wrapped_index("show",
-        "_"text/plain_"", getind(ob))$Lisp
-      #ret ~= 1 or more?(elt(ret,1) pretend String, _$LINELENGTH$Lisp)
-        => pile ret
-      vconcat ret
     jobject(str: String) : % == jlref(str)
 
 )abbrev domain JFLOAT JuliaFloat
@@ -253,18 +266,6 @@ JuliaFloat() : Exports == Implementation where
     ++ contained in [0,1].
     nrand : () -> %
     ++ nrand() returns an normally distributed random number.
-    urand01 : (n : PI) -> JuliaVector(%)
-    ++ urand01(n) returns a JuliaVector of size n with 
-    ++ uniformly distributed random numbers contained in [0,1] in.
-    nrand : (n : PI) -> JuliaVector(%)
-    ++ rand(n) returns a JuliaVector of size n with normally
-    ++ distributed random numbers.
-    urand01 : (m : PI, n : PI) -> JuliaMatrix(JuliaFloat)
-    ++ urand01(m,n) returns a JuliaMatrix of size (m,n) with 
-    ++ uniformly distributed random number contained in [0,1].
-    nrand : (m : PI, n : PI) -> JuliaMatrix(JuliaFloat)
-    ++ rand(n) returns a JuliaMatrix of size (m,n) with normally
-    ++ distributed random numbers.
     atan : (%, %) -> %
     ++ atan(x, y) computes the inverse tangent of x/y.
     string : % -> String
@@ -400,17 +401,6 @@ JuliaFloat() : Exports == Implementation where
     acoth(x)  == junfunc("acoth",x)
     acsch(x)  == junfunc("acsch",x)
 
-    urand01(n) ==
-      jlref(concat(["rand(BigFloat,", string(n pretend INT), ")"]))$JuliaVector(%)
-    nrand(n) ==
-      jlref(concat(["randn(BigFloat,", string(n pretend INT), ")"]))$JuliaVector(%)
-    urand01(rows, cols) ==
-      jlref(concat(["rand(BigFloat,", string(rows pretend INT), ",",
-        string(cols pretend INT),")"]))
-    nrand(rows, cols) ==
-      jlref(concat(["randn(BigFloat,", string(rows pretend INT), ",",
-        string(cols pretend INT),")"]))
-
     convert(x : %) : Float ==
       tmp := jlref(concat(["QQ(rationalize(BigInt,", getind(x),"))"]))$NemoRational
       coerce(retract(tmp)@Fraction(Integer))
@@ -431,7 +421,7 @@ JuliaFloat() : Exports == Implementation where
       outputSpacing(tmp)
       ret
     coerce(fi: Fraction(Integer)) == coerce(numer(fi))/coerce(denom(fi))
-    coerce(i : %) : OutputForm == string(i) pretend OutputForm
+    coerce(f : %) : OutputForm == coerce(f pretend JuliaObject)
     jfloat(s : String) : % == jlref(concat(["BigFloat(_"", s,"_")"]))
     jfloat(i : Integer) : % == jlref(concat(["BigFloat(", string(i),")"]))
     jfloat(fi : Fraction(Integer)) == coerce(fi)
@@ -495,18 +485,6 @@ JuliaComplexFloat() : Exports == Implementation where
     ++ contained in [0,1].
     nrand : () -> %
     ++ nrand() returns an normally distributed random number.
-    urand01 : (n : PI) -> JuliaVector(%)
-    ++ urand01(n) returns a JuliaVector of size n with 
-    ++ uniformly distributed random numbers contained in [0,1] in.
-    nrand : (n : PI) -> JuliaVector(%)
-    ++ rand(n) returns a JuliaVector of size n with normally
-    ++ distributed random numbers.
-    urand01 : (m : PI, n : PI) -> JuliaMatrix(JuliaFloat)
-    ++ urand01(m,n) returns a JuliaMatrix of size (m,n) with 
-    ++ uniformly distributed random number contained in [0,1].
-    nrand : (m : PI, n : PI) -> JuliaMatrix(JuliaFloat)
-    ++ rand(n) returns a JuliaMatrix of size (m,n) with normally
-    ++ distributed random numbers.
     atan : % -> %
     ++ atan(x) computes the inverse tangent of x.
     atan : (%, %) -> %
@@ -635,16 +613,8 @@ JuliaComplexFloat() : Exports == Implementation where
     acoth(x)  == junfunc("acoth",x)
     acsch(x)  == junfunc("acsch",x)
 
-    urand01(n) ==
-      jlref(concat(["rand(Complex{BigFloat},", string(n pretend INT), ")"]))$JuliaVector(%)
-    nrand(n) ==
-      jlref(concat(["randn(Complex{BigFloat},", string(n pretend INT), ")"]))$JuliaVector(%)
-    urand01(rows, cols) ==
-      jlref(concat(["rand(Complex{BigFloat},", string(rows pretend INT), ",",
-        string(cols pretend INT),")"]))
-    nrand(rows, cols) ==
-      jlref(concat(["randn(Complex{BigFloat},", string(rows pretend INT), ",",
-        string(cols pretend INT),")"]))
+    urand01() == jlref("rand(Complex{BigFloat})")
+    nrand()   == jlref("randn(Complex{BigFloat})")
 
     retractIfCan(x) : Union (Integer, "failed") ==
       integer?(x) => convert jlref(concat(["ZZ(", getind(x),")"]))$NemoInteger
@@ -660,7 +630,7 @@ JuliaComplexFloat() : Exports == Implementation where
     coerce(x : Float) : % == 
       jlref(concat(["Complex{BigFloat}(", getind(coerce(x)@JuliaFloat), ")"]))
     coerce(fi: Fraction(Integer)) == coerce(numer(fi))/coerce(denom(fi))
-    coerce(i : %) : OutputForm == string(i) pretend OutputForm
+    coerce(cplx) : OutputForm == coerce(cplx pretend JuliaObject)
     jcfloat(s : String) : % == jlref(concat(["Complex{BigFloat}(_"", s,"_")"]))
     jcfloat(i : Integer) : % == jlref(concat(["Complex{BigFloat}(", string(i),")"]))
     jcfloat(fi : Fraction(Integer)) == coerce(fi)
@@ -699,10 +669,6 @@ JuliaDataFrame() : Exports == Implementation where
 
       jlDescribe(df) == junfunc("describe", df)
       matrix(df) == junfunc("Matrix", df)
-      coerce(df : %) : OutputForm ==
-        ret : List(OutputForm) := jl_stringify_wrapped_index("show",
-          "_"text/plain_"", getind(df))$Lisp
-        pile ret
       jdframe(array) ==
         junfunc("dfa", coerce(array)@JuliaObject)
       jdframe(array, lnames) ==
@@ -719,21 +685,26 @@ JuliaVector(R : JuliaObjectType) : Exports == Implementation where
     Exports ==> Join(JuliaObjectType, JuliaVectorCategory(R)) with
       vector  : List R -> %
       ++ vector(l) converts the list l to a vector.
+      urand01 : (n : PI) -> JuliaVector(JuliaFloat)
+      ++ urand01(n) returns a JuliaVector of size n with 
+      ++ uniformly distributed random numbers contained in [0,1] in.
+      nrand : (n : PI) -> JuliaVector(JuliaFloat)
+      ++ rand(n) returns a JuliaVector of size n with normally
+      ++ distributed random numbers.
+      urand01 : (n : PI) -> JuliaVector(JuliaComplexFloat)
+      ++ urand01(n) returns a JuliaVector of size n with 
+      ++ uniformly distributed random numbers contained in [0,1] in.
+      nrand : (n : PI) -> JuliaVector(JuliaComplexFloat)
+      ++ rand(n) returns a JuliaVector of size n with normally
+      ++ distributed random numbers.
       jlDisplay: % -> Void
       ++ jlDisplay(v) pretty prints v (à la Julia).
-      juliaVPrint : Boolean -> Boolean
-      ++ juliaVPrint(b) defines whether or not FriCAS uses 
-      ++ the printing version of Julia for vectors instead of
-      ++ its OutputForm version. Returns previous value.
-      ++ By default it is the Julia version.
       jvector:    String -> %
       ++ jvector(str) evaluates the string str and returns the generated vector.
       ++ No checks are done at the FriCAS level.
     Implementation ==> Vector(R) add
       import from JuliaUtilityFunctions
       import from String
-
-      pprint := true
 
       jlInitialize(true)
 
@@ -759,6 +730,17 @@ JuliaVector(R : JuliaObjectType) : Exports == Implementation where
       less?(v,n) == #v < n
       vector l == construct l
 
+      if R is JuliaFloat then
+        urand01(n : PI) ==
+          jlref(concat(["rand(BigFloat,", string(n), ")"]))
+        nrand(n : PI) ==
+          jlref(concat(["randn(BigFloat,", string(n), ")"]))
+      if R is JuliaComplexFloat then
+        urand01(n : PI) ==
+          jlref(concat(["rand(Complex{BigFloat},", string(n), ")"]))
+        nrand(n : PI) ==
+          jlref(concat(["randn(Complex{BigFloat},", string(n), ")"]))
+
       map!(f, s1 : %) ==
         n : Z := #s1
         for i in 1..n repeat qsetelt!(s1, i, f(qelt(s1, i)))
@@ -778,23 +760,10 @@ JuliaVector(R : JuliaObjectType) : Exports == Implementation where
         c
 
       copy(v) == jlref(concat(["deepcopy(", getind(v),")"]))
-
-      coerce(v) : OutputForm ==
-        pprint =>
-          ret : List OutputForm := jl_stringify_wrapped_index("show",
-            "_"text/plain_"", getind(v))$Lisp
-          vconcat ret
-        bracket [qelt(v, k)::OutputForm for k in 1$Lisp .. maxIndex v]
-        
-
-      juliaVPrint(b) ==
-        oldpprint := pprint
-        pprint:=b
-        oldpprint
-
+      
       jlDisplay(v) ==
         jl_eval_string(concat(["display(", getind(v), ")"]))$Lisp
-
+      coerce(v : %) : OutputForm == coerce(v pretend JuliaObject)
       jvector(str) == jlref(str)
 
 )abbrev package JVECTOR2 JuliaVectorFunctions2
@@ -849,7 +818,6 @@ JuliaVectorFunctions2(A, B) : Exports == Implementation where
 ++ Description: This domain provides a generic Julia matrix type
 ++ stored in Julia with no bound checking on elt's. Minimum index is 1.
 JuliaMatrix(R : Join(JuliaObjectType , JuliaRing)) :  Exports == Implementation where
-    OF      ==> OutputForm 
     PI      ==> PositiveInteger
     NNI     ==> NonNegativeInteger
     INT     ==> Integer
@@ -871,13 +839,22 @@ JuliaMatrix(R : Join(JuliaObjectType , JuliaRing)) :  Exports == Implementation 
         ++ with default parameters.
         ++ Two numbers compare equal if their relative distance
         ++ or their absolute distance is within tolerance bounds.
+        if R has FloatingPointSystem then
+          urand01 : (m : PI, n : PI) -> JuliaMatrix(JuliaFloat)
+          ++ urand01(m,n) returns a JuliaMatrix of size (m,n) with 
+          ++ uniformly distributed random number contained in [0,1].
+          nrand : (m : PI, n : PI) -> JuliaMatrix(JuliaFloat)
+          ++ rand(n) returns a JuliaMatrix of size (m,n) with normally
+          ++ distributed random numbers.
+        if R has ComplexCategory(JuliaFloat) then
+          urand01 : (m : PI, n : PI) -> JuliaMatrix(JuliaComplexFloat)
+          ++ urand01(m,n) returns a JuliaMatrix of size (m,n) with 
+          ++ uniformly distributed random number contained in [0,1].
+          nrand : (m : PI, n : PI) -> JuliaMatrix(JuliaComplexFloat)
+          ++ rand(n) returns a JuliaMatrix of size (m,n) with normally
+          ++ distributed random numbers.
       jlDisplay: % -> Void
       ++ jldisplay(m) pretty prints m (à la Julia).
-      juliaMPrint : Boolean -> Boolean
-      ++ juliaMPrint(b) defines whether or not FriCAS uses 
-      ++ the printing version of Julia for matrices instead of
-      ++ its OutputForm version. Returns previous value.
-      ++ By default it is the Julia version.
       identity:    NNI -> %
       ++ identity(n) returns a n by n identity matrix.S
       diagonalMatrix:   JuliaVector(R) -> %
@@ -894,11 +871,10 @@ JuliaMatrix(R : Join(JuliaObjectType , JuliaRing)) :  Exports == Implementation 
       op_of_Ring : Symbol := CAR(devaluate(R)$Lisp)$Lisp
 
       Rep := SExpression
-      pprint := true
 
-      -- For an unknown reason NemoRealBall is taken into account with "is", 
+      -- For an unknown reason NemoRealBall is taken into account with "is",
       -- "if Domain is NemoRealBall", whereas NemoPrimeField or
-      -- NemoIntegerMod are not, so use String and '=' instead of 'is'.
+      -- NemoIntegerMod are not, so use String and '=' instead of 'is's.
       NRing : String := string(op_of_Ring)
 
       spjs(str) ==> str pretend JuliaString
@@ -927,191 +903,67 @@ JuliaMatrix(R : Join(JuliaObjectType , JuliaRing)) :  Exports == Implementation 
         jl_eval_string(concat(["setindex!(", getind(m), ",", getind(r)
           ",", string(i), ",", string(j), ")"]))$Lisp
         r
-      setelt!(m : %, i : Integer, j : Integer, r : R) ==
-          qsetelt!(m, i, j, r)
+      setelt!(m : %, i : Integer, j : Integer, r : R) == qsetelt!(m, i, j, r)
       empty() == error "empty()$JuliaMatrix: not supported" --Qnew(0$Integer,0$Integer)
       if R has NemoRing then
         if R is NemoInteger then
           new(rows, cols, a) ==
             jlref(concat(["ZZMatrixSpace(", string(rows), ",",
-              string(cols),")(fill(", getind(a), ",(", 
+              string(cols),")(fill(", getind(a), ",(",
                 string(rows), ",", string(cols),")))"]))
-          coerce(m : %) : OutputForm ==
-            if pprint then
-                ret: List(OutputForm) :=
-                  jl_stringify_wrapped_index("show", "_"text/plain_"", getind(m))$Lisp
-                vconcat ret
-            else
-                l : List List OutputForm
-                l := [[qelt(m, j, i) :: OutputForm _
-                    for i in 1 .. ncols(m)] _
-                    for j in 1 .. nrows(m)]
-                matrix(l)
         else if R is NemoRational then
           new(rows, cols, a) ==
             jlref(concat(["QQMatrixSpace(", string(rows), ",",
-              string(cols),")(fill(", getind(a), ",(", 
+              string(cols),")(fill(", getind(a), ",(",
                 string(rows), ",", string(cols),")))"]))
-          coerce(m : %) : OutputForm ==
-            if pprint then
-                ret: List(String) := jl_stringify_wrapped_index("show",
-                  "_"text/plain_"", getind(m))$Lisp
-                vconcat [jlRegexReplace(jlRegex(jstring("//")),
-                  jlSubstitute(jstring (" /")), spjs(a)) pretend OutputForm
-                    for a in parts ret]$List(OutputForm)
-            else
-                l : List List OutputForm
-                l := [[qelt(m, j, i) :: OutputForm _
-                    for i in 1 .. ncols(m)] _
-                    for j in 1 .. nrows(m)]
-                matrix(l)
         else if R is NemoRealField then
           new(rows, cols, a) ==
             jlref(concat(["matrix_space(RealField(),", string(rows), ",",
-              string(cols),")(fill(", getind(a), ",(", 
+              string(cols),")(fill(", getind(a), ",(",
                 string(rows), ",", string(cols),")))"]))
-          coerce(m : %) : OutputForm ==
-            if pprint then
-                ret: List(OutputForm) :=
-                  jl_stringify_wrapped_index("show", "_"text/plain_"", getind(m))$Lisp
-                vconcat ret
-            else
-                l : List List OutputForm
-                l := [[qelt(m, j, i) :: OutputForm _
-                    for i in 1 .. ncols(m)] _
-                    for j in 1 .. nrows(m)]
-                matrix(l)
         else if R is NemoComplexField then
           new(rows, cols, a) ==
             jlref(concat(["matrix_space(ComplexField(),", string(rows), ",",
-              string(cols),")(fill(", getind(a), ",(", 
+              string(cols),")(fill(", getind(a), ",(",
                 string(rows), ",", string(cols),")))"]))
-          eigenvalues(m) == jlref(concat ["eigenvalues(", getind(m), ")"])$JuliaVector(R)
-          coerce(m : %) : OutputForm ==
-            if pprint then
-                ret: List(OutputForm) :=
-                  jl_stringify_wrapped_index("show", "_"text/plain_"", getind(m))$Lisp
-                vconcat ret
-            else
-                l : List List OutputForm
-                l := [[qelt(m, j, i) :: OutputForm _
-                    for i in 1 .. ncols(m)] _
-                    for j in 1 .. nrows(m)]
-                matrix(l)
+          eigenvalues(m) == jlref(concat ["eigenvalues(",
+            getind(m), ")"])$JuliaVector(R)
         else if NRing = "NemoAlgebraicNumber" then
           new(rows, cols, a) ==
             jlref(concat(["matrix_space(QQBar", ",", string(rows), ",",
               string(cols),")(fill(", getind(a), ",(", 
                 string(rows), ",", string(cols),")))"]))
-          coerce(m : %) : OutputForm ==
-            if pprint then
-                ret: List(OutputForm) :=
-                  jl_stringify_wrapped_index("show", "_"text/plain_"", getind(m))$Lisp
-                vconcat ret
-            else
-                l : List List OutputForm
-                l := [[qelt(m, j, i) :: OutputForm _
-                    for i in 1 .. ncols(m)] _
-                    for j in 1 .. nrows(m)]
-                matrix(l)
         else if NRing = "NemoPrimeField" and R has FiniteFieldCategory then
           new(rows, cols, a) ==
-            jlref(concat(["matrix_space(NPF", string(size()$R), ",", string(rows), ",",
-              string(cols),")(fill(", getind(a), ",(", 
+            jlref(concat(["matrix_space(NPF", string(size()$R), ",",
+              string(rows), ",", string(cols),")(fill(", getind(a), ",(", 
                 string(rows), ",", string(cols),")))"]))
-          coerce(m : %) : OutputForm ==
-            if pprint then
-                ret: List(OutputForm) :=
-                  jl_stringify_wrapped_index("show", "_"text/plain_"", getind(m))$Lisp
-                vconcat ret
-            else
-                l : List List OutputForm
-                l := [[qelt(m, j, i) :: OutputForm _
-                    for i in 1 .. ncols(m)] _
-                    for j in 1 .. nrows(m)]
-                matrix(l)
         else if NRing = "NemoFiniteField" and R has FiniteFieldCategory then
           new(rows, cols, a) ==
-            jlref(concat(["matrix_space(NFF", string(size()$R), ",", string(rows), ",",
-              string(cols),")(fill(", getind(a), ",(", 
+            jlref(concat(["matrix_space(NFF", string(size()$R), ",",
+              string(rows), ",", string(cols),")(fill(", getind(a), ",(", 
                 string(rows), ",", string(cols),")))"]))
-          coerce(m : %) : OutputForm ==
-            if pprint then
-                ret: List(OutputForm) :=
-                  jl_stringify_wrapped_index("show", "_"text/plain_"", getind(m))$Lisp
-                vconcat ret
-            else
-                l : List List OutputForm
-                l := [[qelt(m, j, i) :: OutputForm _
-                    for i in 1 .. ncols(m)] _
-                    for j in 1 .. nrows(m)]
-                matrix(l)
         else if NRing = "NemoIntegerMod" and R has Finite then
           new(rows, cols, a) ==
-            jlref(concat(["matrix_space(NZMOD", string(size()$R),",", string(rows), ",",
-              string(cols),")(fill(", getind(a), ",(", string(rows), ",", string(cols),")))"]))
-          coerce(m : %) : OutputForm ==
-            if pprint then
-                ret: List(OutputForm) :=
-                  jl_stringify_wrapped_index("show", "_"text/plain_"", getind(m))$Lisp
-                vconcat ret
-            else
-                l : List List OutputForm
-                l := [[qelt(m, j, i) :: OutputForm _
-                    for i in 1 .. ncols(m)] _
-                    for j in 1 .. nrows(m)]
-                matrix(l)
+            jlref(concat(["matrix_space(NZMOD", string(size()$R),",",
+              string(rows), ",", string(cols),")(fill(", getind(a),
+                ",(", string(rows), ",", string(cols),")))"]))
         else if NRing = "NemoRealBall" and R has JuliaArbitraryPrecision then
           new(rows, cols, a) ==
-            jlref(concat(["matrix_space(NRB", string(precision()$R), ",", string(rows), ",",
-              string(cols),")(fill(", getind(a), ",(", 
+            jlref(concat(["matrix_space(NRB", string(precision()$R), ",",
+              string(rows), ",", string(cols),")(fill(", getind(a), ",(", 
                 string(rows), ",", string(cols),")))"]))
-          coerce(m : %) : OutputForm ==
-            if pprint then
-                ret: List(OutputForm) :=
-                  jl_stringify_wrapped_index("show", "_"text/plain_"", getind(m))$Lisp
-                vconcat ret
-            else
-                l : List List OutputForm
-                l := [[qelt(m, j, i) :: OutputForm _
-                    for i in 1 .. ncols(m)] _
-                    for j in 1 .. nrows(m)]
-                matrix(l)
         else if NRing = "NemoComplexBall" and R has JuliaArbitraryPrecision then
           new(rows, cols, a) ==
-            jlref(concat(["matrix_space(NCB", string(precision()$R), ",", string(rows), ",",
-              string(cols),")(fill(", getind(a), ",(", 
+            jlref(concat(["matrix_space(NCB", string(precision()$R), ",",
+              string(rows), ",", string(cols),")(fill(", getind(a), ",(", 
                 string(rows), ",", string(cols),")))"]))
-          coerce(m : %) : OutputForm ==
-            if pprint then
-                ret: List(OutputForm) :=
-                  jl_stringify_wrapped_index("show", "_"text/plain_"", getind(m))$Lisp
-                vconcat ret
-            else
-                l : List List OutputForm
-                l := [[qelt(m, j, i) :: OutputForm _
-                    for i in 1 .. ncols(m)] _
-                    for j in 1 .. nrows(m)]
-                matrix(l)
       else
         new(rows, cols, a) ==
           jlref(concat(["fill(", getind(a), ",(", 
             string(rows), ",", string(cols),"))"]))
-        coerce(m : %) : OutputForm ==
-          if pprint then
-              ret: List(OutputForm) :=
-                jl_stringify_wrapped_index("show", "_"text/plain_"", getind(m))$Lisp
-              -- remove the matrix type
-              vconcat rest ret
-          else
-              l : List List OutputForm
-              l := [[qelt(m, j, i) :: OutputForm _
-                  for i in 1 .. ncols(m)] _
-                  for j in 1 .. nrows(m)]
-              matrix(l)
     
       qnew(rows, cols) == new(rows, cols, 0)
-  
       zero(m,n) == new(m, n, 0$R)
 
       matrix(l : List List R) ==
@@ -1131,14 +983,21 @@ JuliaMatrix(R : Join(JuliaObjectType , JuliaRing)) :  Exports == Implementation 
         jlApprox?(x, y) ==
           jl_bool_eval_string(concat(["isapprox(", getind(x),
             ",", getind(y), ")"]))$Lisp
+        if R has FloatingPointSystem then
+          urand01(rows, cols) : JuliaMatrix(JuliaFloat) ==
+            jlref(concat(["rand(BigFloat,", string(rows), ",", string(cols),")"]))
+          nrand(rows, cols) : JuliaMatrix(JuliaFloat) ==
+            jlref(concat(["randn(BigFloat,", string(rows), ",", string(cols),")"]))
+        if R has ComplexCategory(JuliaFloat) then
+          urand01(rows, cols) : JuliaMatrix(JuliaComplexFloat) ==
+            jlref(concat(["rand(Complex{BigFloat},", string(rows), ",",
+              string(cols),")"]))
+          nrand(rows, cols) : JuliaMatrix(JuliaComplexFloat) ==
+            jlref(concat(["randn(Complex{BigFloat},", string(rows), ",",
+              string(cols),")"]))
 
       jlDisplay(m : %) ==
         jl_eval_string(concat(["display(", getind(m), ")"]))$Lisp
-
-      juliaMPrint(b) ==
-          oldpprint := pprint
-          pprint:=b
-          oldpprint
 
       coerce(m : %) : Matrix(R) ==
           l : List List R
@@ -1186,5 +1045,5 @@ JuliaMatrix(R : Join(JuliaObjectType , JuliaRing)) :  Exports == Implementation 
         u := new(n, n, 0$R)
         for i in 1..n repeat setelt!(u, i, i, elt(v,i))
         u
-
+      coerce(m : %) : OutputForm == coerce(m pretend JuliaObject)
       jmatrix(str) == jlref(str)

@@ -781,6 +781,12 @@ JuliaWSExpression() : Exports == Implementation where
     coerce  : Integer  -> %
     ++ coerce(z) coerces the integer z to a JuliaWSExpression.
     ++ Convenience function.
+    coerce  : Fraction(Integer)  -> %
+    ++ coerce(q) coerces the rational q to a JuliaWSExpression.
+    ++ Convenience function.
+    coerce  : Float  -> %
+    ++ coerce(f) coerces the floating point number f to a JuliaWSExpression.
+    ++ Convenience function.
     coerce  : String  -> %
     ++ coerce(str) coerces the string str to a JuliaWSExpression
     ++ evaluating str as a Wolfram Symbolic Language Expression.
@@ -802,6 +808,12 @@ JuliaWSExpression() : Exports == Implementation where
     ++ jWSExpr(z) returns the Integer z as a JuliaWSExpression.
     jWSExpr : Fraction Integer -> %
     ++ jWSExpr(q)  returns the Fraction(Integer) q as a JuliaWSExpression.
+    jWSExpr : DoubleFloat -> %
+    ++ jWSExpr(r)  returns the DoubleFloat as a JuliaWSExpression.
+    jWSExpr : JuliaFloat64 -> %
+    ++ jWSExpr(r)  returns the JuliaFloat64  as a JuliaWSExpression.
+    jWSExpr : Float -> %
+    ++ jWSExpr(r)  returns the Float r as a JuliaWSExpression.
     jWSExpr : String -> %
     ++ jWSExpr(str) constructs str as a JuliaWSExpression evaluating
     ++ str as a Wolfram Symbolic Language Expression.
@@ -1393,6 +1405,8 @@ JuliaWSExpression() : Exports == Implementation where
 
     coerce(sym : Symbol) == jlref(concat(["W_`", string(sym),  "_`"]))
     coerce(i : Integer) == jlref(concat(["WInteger(_"", string(i), "_")"]))
+    coerce(q : Fraction(Integer)) == jWSRat(q)$JuliaWSRational pretend %
+    coerce(r : Float) == jWSReal(r)$JuliaWSReal pretend %
     coerce(str : String) == jlref(concat(["W_`", str, "_`"]))
     coerce(l : List(%)) : % ==
       -- Temporary (and dirty) hack
@@ -1405,6 +1419,9 @@ JuliaWSExpression() : Exports == Implementation where
     jWSRule(lhs, rhs) == jbinfunc("W_"Rule_"", lhs, rhs)
     jWSExpr(i : Integer) == jlref(concat(["WInteger(_"", string(i), "_")"]))
     jWSExpr(q : Fraction(Integer)) == jWSRat(q)$JuliaWSRational pretend %
+    jWSExpr(r : DoubleFloat) == jWSReal(r)$JuliaWSReal pretend %
+    jWSExpr(r : JuliaFloat64) == jWSReal(r)$JuliaWSReal pretend %
+    jWSExpr(r : Float) == jWSReal(r)$JuliaWSReal pretend %
     jWSExpr(sym : Symbol) : % == jlref(concat(["W_`", string(sym),  "_`"]))
     jWSExpr(str : String) : % == jlref(concat(["W_`", str, "_`"]))
     jlWSSetOptions(arg1, arg2) == jbinfunc("W_"SetOptions_"", arg1, arg2)

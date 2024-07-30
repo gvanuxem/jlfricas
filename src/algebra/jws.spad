@@ -691,7 +691,8 @@ JuliaWSReal() : Exports == Implementation where
     jWSReal(f : Integer) == jlref(concat(["WReal(_"", string(f), "_")"]))
     jWSReal(str) == jlref(concat(["WReal(_"", str, "_")"]))
     coerce(x) : OutputForm ==
-      coerce(x pretend JuliaWSExpression)
+      x >= 0 => coerce(x pretend JuliaWSExpression)
+      - coerce(abs(x) pretend JuliaWSExpression)
 
 )abbrev domain JWSAPR JuliaWSAPReal
 ++ Generic domain for Julia WS arbitrary precision real numbers
@@ -745,6 +746,14 @@ JuliaWSAPReal(prec : PositiveInteger) : Exports == Implementation where
     ++ coerce(x) converts x as a JuliaWSAPReal.
     coerce  : % -> JuliaWSExpression
     ++ coerce(x) coerce x to a JuliaWSExpression.
+    jWSReal : DoubleFloat -> %
+    ++ jWSReal(f) coerces f to a JuliaWSAPReal.
+    jWSReal : JuliaFloat64 -> %
+    ++ jWSReal(f) coerces f to a JuliaWSAPReal.
+    jWSReal : Float -> %
+    ++ jWSReal(f) coerces f to a JuliaWSAPReal.
+    jWSReal : JuliaFloat -> %
+    ++ jWSReal(f) coerces f to a JuliaWSAPReal.
     jWSReal : String -> %
     ++ jWSReal(str) constructs str as a JuliaWSAPReal.
   Implementation ==> JuliaObject add
@@ -939,7 +948,7 @@ JuliaWSAPReal(prec : PositiveInteger) : Exports == Implementation where
       outputSpacing(tmp)
       ret
     coerce(f : JuliaFloat) ==
-      jlref(concat(["weval(NN(_"", string(f), "_`", string(prec), "_"))"]))
+      jlref(concat(["weval(NN(_"", toString(f), "_`", string(prec), "_"))"]))
     coerce(i : Integer) ==
       zero? i => 0
       jlref(concat(["weval(NN(_"", string(i), "_`", string(prec), "_"))"]))
@@ -947,8 +956,20 @@ JuliaWSAPReal(prec : PositiveInteger) : Exports == Implementation where
       -- 0 is very special
       str = "0" => 0
       jlref(concat(["weval(NN(_"", str, "_`", string(prec), "_"))"]))
+    jWSReal(f : JuliaFloat) ==
+      jlref(concat(["weval(NN(_"", toString(f), "_`", string(prec), "_"))"]))
+    jWSReal(f : DoubleFloat) ==
+      jlref(concat(["weval(NN(_"", toString(f), "_`", string(prec), "_"))"]))
+    jWSReal(f : JuliaFloat64) ==
+      jlref(concat(["weval(NN(_"", toString(f), "_`", string(prec), "_"))"]))
+    jWSReal(f : Float) ==
+      tmp := outputSpacing(0)
+      a := jlref(concat(["weval(NN(_"", toString(f), "_`", string(prec), "_"))"]))
+      outputSpacing(tmp)
+      a
     coerce(x) : OutputForm ==
-      coerce(x pretend JuliaWSExpression)
+      x >= 0 => coerce(x pretend JuliaWSExpression)
+      - coerce(abs(x) pretend JuliaWSExpression)
 
 
 )abbrev domain JWSGINT JuliaWSGaussianInteger
@@ -1264,7 +1285,7 @@ JuliaWSComplex() : Exports == Implementation where
       jlref(concat(["weval(W_"Complex_"(", getind(re), "," , getind(0), "))"]))
     jWSComplex(re : JuliaWSReal, im : JuliaWSReal) : % ==
       jlref(concat(["weval(W_"Complex_"(", getind(re), "," , getind(im), "))"]))
-    coerce(z) : OutputForm ==
+    coerce(z) : OutputForm == --coerce(z pretend JuliaWSExpression)
       re := (r := real z)::OutputForm
       ie := (i := imag z)::OutputForm
       zero? i => re
@@ -1487,14 +1508,14 @@ JuliaWSAPComplex(prec : PositiveInteger) : Exports == Implementation where
       jlref(concat(["weval(W_"Complex_"(", getind(re), "," , getind(0), "))"]))
     jWSComplex(re : JuliaWSAPReal(prec), im : JuliaWSAPReal(prec)) : % ==
       jlref(concat(["weval(W_"Complex_"(", getind(re), "," , getind(im), "))"]))
-    coerce(z) : OutputForm ==
-      re := (r := real z)::OutputForm
-      ie := (i := imag z)::OutputForm
-      zero? i  => re
-      outi := '%i::OutputForm
-      ip :=
-        (i = 1) => outi
-        ((-i) = 1) => -outi
-        ie * outi
-      zero? r => ip
-      re + ip
+    coerce(z) : OutputForm == coerce(z pretend JuliaWSExpression)
+      --re := (r := real z)::OutputForm
+      --ie := (i := imag z)::OutputForm
+      --zero? i  => re
+      --outi := '%i::OutputForm
+      --ip :=
+      --  (i = 1) => outi
+      --  ((-i) = 1) => -outi
+      --  ie * outi
+      --zero? r => ip
+      --re + ip
