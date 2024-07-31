@@ -162,10 +162,10 @@ JuliaWSExpression() : Exports == Implementation where
     ++ or evaluates it at x if x is a number.
     chebyshevT : (%, %) -> %
     ++ chebyshevT(n, expr) returns the chebyshev polynomial of the first kind
-    ++ or evaluate it at x if x is a number.
+    ++ or evaluates it at x if x is a number.
     chebyshevU : (%, %) -> %
     ++ chebyshevU(n, expr) returns chebyshev polynomial of the second kind
-    ++ or evaluate it at x if x is a number.
+    ++ or evaluates it at x if x is a number.
     hermiteH : (%, %) -> %
     ++ hermiteH(n, x) returns the Hermite polynomial or evaluates
     ++ it at x if x is a number.
@@ -290,7 +290,7 @@ JuliaWSExpression() : Exports == Implementation where
     ++ \example{series(cos(x),"\{x, 0, 12\}")}
     sum : (%, %) -> %
     ++ sum(f(n),range) returns the sum f(imin) + .. + f(imax) defined
-    ++ by the list range, for example \example{jWSexpr("\{i, imin, imax\}")}.
+    ++ by the list range, for example \example{jWSExpr("\{i, imin, imax\}")}.
     ++ See Wolfram Language specifications.
     sum : (%, %, Segment(Integer)) -> %
     ++ sum(f(n),n, a..b) returns the sum f(a) + .. + f(b).
@@ -298,7 +298,7 @@ JuliaWSExpression() : Exports == Implementation where
     ++ sum(f(n),n) returns the indefinite sum of f(n).
     product : (%, %) -> %
     ++ product(f(n),range) returns the product f(imin) * .. * f(imax) defined
-    ++ by the list range, for example \example{jWSexpr("\{i, imin, imax\}")}.
+    ++ by the list range, for example \example{jWSExpr("\{i, imin, imax\}")}.
     ++ See Wolfram language specifications.
     product : (%, %, Segment(Integer)) -> %
     ++ product(f(n),n, a..b) returns the product f(a) * .. * f(b).
@@ -307,7 +307,7 @@ JuliaWSExpression() : Exports == Implementation where
     numericSum : (%, %) -> %
     ++ numericSum(f(n),range) an evaluated numerical approximation of
     ++ the sum f(imin) + .. + f(imax) defined by the list range,
-    ++ for example \example{jWSexpr("\{i, imin, imax\}")}.
+    ++ for example \example{jWSExpr("\{i, imin, imax\}")}.
     ++ See Wolfram language specifications.
     numericSum     : (%, %, Segment(Integer)) -> %
     ++ numericSum(f(n),n, a..b) returns an evaluated numerical approximation
@@ -315,7 +315,7 @@ JuliaWSExpression() : Exports == Implementation where
     numericProduct : (%, %) -> %
     ++ numericProduct(f(n),range) an evaluated numerical approximation of
     ++ the sum f(imin) + .. + f(imax) defined by the list range,
-    ++ for example \example{jWSexpr("\{i, imin, imax\}")}.
+    ++ for example \example{jWSExpr("\{i, imin, imax\}")}.
     ++ See Wolfram language specifications.
     numericProduct : (%, %, Segment(Integer)) -> %
     ++ numericProduct(f(n),n, a..b) returns an evaluated numerical approximation
@@ -460,6 +460,16 @@ JuliaWSExpression() : Exports == Implementation where
     ++ dSolveValue(eq, func,var) returns the value determined by the
     ++ differential equation eq for the function func
     ++ with independant variable var.
+    numericDSolve: (%, %, %) -> %
+    ++ numericDSolve(expr,fun,xrange) solves numerically the differential
+    ++ equation(s) in expr for the function fun, in the range xrange.
+    ++ Other combinaisons of parameters are also avaliable.
+    numericDSolve: (Equation(%), %, %) -> %
+    ++ numericDSolve(eq,fun,xrange) solves numerically the differential
+    ++ equation eq for the function fun, in the range xrange.
+    numericDSolve: (%, %, %, %) -> %
+    ++ numericDSolve(expr,fun,xrange,yrange) solves numerically the differential
+    ++ equation(s) in expr for the function fun, in the ranges xrange and yrange.
 
     residue : (%, %) -> %
     ++ residue(expr, {x,x0}) returns the residue of expr at x0.
@@ -1282,14 +1292,19 @@ JuliaWSExpression() : Exports == Implementation where
     dSolve(expr : %, u : %, var : %) == jterfunc("W_"DSolve_"", expr, u, var)
     dSolve(eq : Equation(%), u : %, var : %) ==
       expr : String := concat([toString(lhs eq), "==", toString(rhs eq)])
-      jterfunc("W_"DSolve_"", jWSExpr expr, u, var)
+      jterfunc("W_"DSolve_"", jWSExpr(expr), u, var)
     dSolveValue(expr : %, u : %, var : %) == jterfunc("W_"DSolve_"", expr, u, var)
     dSolveValue(eq : Equation(%), u : %, var : %) ==
       expr : String := concat([toString(lhs eq), "==", toString(rhs eq)])
-      jterfunc("W_"DSolve_"", jWSExpr expr, u, var)
-      --Function:  ?^? : (%, Fraction(Integer)) -> % is missing from domain: Expression(JuliaWSExpression)
-      --Internal Error
-      --The function ^ with signature  (Fraction (Integer)) is missing from domain Expression(JuliaWSExpression)
+      jterfunc("W_"DSolve_"", jWSExpr(expr), u, var)
+    numericDSolve(expr : %, u : %, xrange : %) ==
+      jterfunc("W_"NDSolve_"", expr, u, xrange)
+    numericDSolve(eq : Equation(%), u : %, xrange : %) ==
+      expr : String := concat([toString(lhs eq), "==", toString(rhs eq)])
+      jterfunc("W_"NDSolve_"", jWSExpr(expr), u, xrange)
+    numericDSolve(expr : %, u : %, xrange : %, yrange : %) ==
+      jquatfunc("W_"NDSolve_"", expr, u, xrange, yrange)
+    
     residue(expr,param) == jbinfunc("W_"Residue_"", expr, param)
     residueSum(expr,param) == jbinfunc("W_"ResidueSum_"", expr, param)
     reduce(expr:%, lvars:%) == jbinfunc("W_"Reduce_"", expr, lvars)

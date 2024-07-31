@@ -69,7 +69,6 @@ JuliaWSObject() : Category == JuliaObjectType with
       prec := jlref(concat(["WInteger(_"", string(p), "_")"]))
       jbinfunc("W_"N_"", expr, prec)
     
-
 )abbrev category JWSRING JuliaWSRing
 ++ Category for Julia WS rings
 ++ Author: G.Vanuxem
@@ -183,8 +182,7 @@ JuliaWSSymbol() : Exports == Implementation where
     coerce(sym : %) : JuliaWSExpression == sym pretend JuliaWSExpression
     jWSSym(sym : Symbol) == jlref(concat(["WSymbol(_"", string(sym), "_")"]))
     jWSSym(str : String) == jlref(concat(["W_`", str, "_`"]))
-    coerce(obj) : OutputForm ==
-      jl_string_getindex(jlId(obj))$Lisp
+    coerce(obj) : OutputForm == jl_string_getindex(jlId(obj))$Lisp
 
 )abbrev domain JWSINT JuliaWSInteger
 ++ Generic domain for Julia WS integers
@@ -304,7 +302,6 @@ JuliaWSInteger() : Exports == Implementation where
     jWSInt(i : Integer) == jlref(concat(["WInteger(_"", string(i), "_")"]))
     coerce(i) : OutputForm == --jl_string_getindex(jlId i)$Lisp
       coerce(parsei(jl_string_getindex(jlId i)$Lisp))$Integer
-
 
 )abbrev domain JWSRAT JuliaWSRational
 ++ Generic domain for Julia WS rational numbers
