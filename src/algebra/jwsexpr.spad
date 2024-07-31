@@ -463,13 +463,27 @@ JuliaWSExpression() : Exports == Implementation where
     numericDSolve: (%, %, %) -> %
     ++ numericDSolve(expr,fun,xrange) solves numerically the differential
     ++ equation(s) in expr for the function fun, in the range xrange.
-    ++ Other combinaisons of parameters are also avaliable.
+    ++ Other combinaisons of parameters are also available.
     numericDSolve: (Equation(%), %, %) -> %
     ++ numericDSolve(eq,fun,xrange) solves numerically the differential
     ++ equation eq for the function fun, in the range xrange.
     numericDSolve: (%, %, %, %) -> %
     ++ numericDSolve(expr,fun,xrange,yrange) solves numerically the differential
     ++ equation(s) in expr for the function fun, in the ranges xrange and yrange.
+    ++ Other combinaisons of parameters are also available (see documentation).
+    numericDSolveValue: (%, %, %) -> %
+    ++ numericDSolveValue(expr,fun,xrange) returns the numerical value solution
+    ++ of the differential equation(s) in expr for the function fun,
+    ++ in the range xrange.
+    ++ Other combinaisons of parameters are also available (see documentation).
+    numericDSolveValue: (Equation(%), %, %) -> %
+    ++ numericDSolveValue(eq,fun,xrange) return the numerical solution of
+    ++ the differential equation eq for the function fun, in the range xrange.
+    numericDSolveValue: (%, %, %, %) -> %
+    ++ numericDSolveValue(expr,fun,xrange,yrange) returns the numerical solution
+    ++ of the differential equation(s) in expr for the function fun,
+    ++ in the ranges xrange and yrange.
+    ++ Other combinaisons of parameters are also available (see documentation).
 
     residue : (%, %) -> %
     ++ residue(expr, {x,x0}) returns the residue of expr at x0.
@@ -1287,13 +1301,15 @@ JuliaWSExpression() : Exports == Implementation where
       jWSExpr expr
     derivative(op, n, var) ==
       d:= string name op
-      expr : String := concat(["Derivative[", toString(n),"][", d,"][", toString(var),"]"])
+      expr : String := concat(["Derivative[",
+        toString(n),"][", d,"][", toString(var),"]"])
       jWSExpr expr
     dSolve(expr : %, u : %, var : %) == jterfunc("W_"DSolve_"", expr, u, var)
     dSolve(eq : Equation(%), u : %, var : %) ==
       expr : String := concat([toString(lhs eq), "==", toString(rhs eq)])
       jterfunc("W_"DSolve_"", jWSExpr(expr), u, var)
-    dSolveValue(expr : %, u : %, var : %) == jterfunc("W_"DSolve_"", expr, u, var)
+    dSolveValue(expr : %, u : %, var : %) ==
+      jterfunc("W_"DSolve_"", expr, u, var)
     dSolveValue(eq : Equation(%), u : %, var : %) ==
       expr : String := concat([toString(lhs eq), "==", toString(rhs eq)])
       jterfunc("W_"DSolve_"", jWSExpr(expr), u, var)
@@ -1304,7 +1320,14 @@ JuliaWSExpression() : Exports == Implementation where
       jterfunc("W_"NDSolve_"", jWSExpr(expr), u, xrange)
     numericDSolve(expr : %, u : %, xrange : %, yrange : %) ==
       jquatfunc("W_"NDSolve_"", expr, u, xrange, yrange)
-    
+    numericDSolveValue(expr : %, u : %, xrange : %) ==
+      jterfunc("W_"NDSolveValue_"", expr, u, xrange)
+    numericDSolveValue(eq : Equation(%), u : %, xrange : %) ==
+      expr : String := concat([toString(lhs eq), "==", toString(rhs eq)])
+      jterfunc("W_"NDSolveValue_"", jWSExpr(expr), u, xrange)
+    numericDSolveValue(expr : %, u : %, xrange : %, yrange : %) ==
+      jquatfunc("W_"NDSolveValue_"", expr, u, xrange, yrange)
+
     residue(expr,param) == jbinfunc("W_"Residue_"", expr, param)
     residueSum(expr,param) == jbinfunc("W_"ResidueSum_"", expr, param)
     reduce(expr:%, lvars:%) == jbinfunc("W_"Reduce_"", expr, lvars)
@@ -1364,7 +1387,6 @@ JuliaWSExpression() : Exports == Implementation where
     fromCoefficientRules(list, vars) ==
       jbinfunc("W_"FromCoefficientRules_"", list, vars)
 
-
     polynomialQuotient(p1,p2,var) ==
       jterfunc("W_"PolynomialQuotient_"",p1,p2,var)
     polynomialRemainder(p1,p2,var) ==
@@ -1416,7 +1438,8 @@ JuliaWSExpression() : Exports == Implementation where
     gcd(p1,p2) == jbinfunc("W_"PolynomialGCD_"", p1, p2)
     lcm(p1,p2) == jbinfunc("W_"PolynomialLCM_"", p1, p2)
 
-    minimalPolynomial(expr, var) == jbinfunc("W_"MinimalPolynomial_"", expr, var)
+    minimalPolynomial(expr, var) ==
+      jbinfunc("W_"MinimalPolynomial_"", expr, var)
     minimalPolynomial(expr, var, ext) ==
       jterfunc("W_"MinimalPolynomial_"", expr, var, ext)
     findRoot(expr,init) == jbinfunc("W_"FindRoot_"", expr, init)
