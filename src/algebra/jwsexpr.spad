@@ -144,6 +144,7 @@ JuliaWSExpression() : Exports == Implementation where
     legendreQ : (%, %) -> %
     ++ legendreQ(n, z) returns the Legendre function
     ++ of the second kind or evaluates it at x if x is a number.
+    ++ \example{legendreQ(3,jWSExpr x)}
     legendreP  : (%, %, %) -> %
     ++ legendreP(n, m, x) returns the associated Legendre polynomial
     ++ of the first type or evaluates it at x if x is a number.
@@ -221,7 +222,8 @@ JuliaWSExpression() : Exports == Implementation where
     QPolyGamma : (%, %)-> %
     ++ QPolyGamma(x,q) returs the q-digamma of x.
     QPolyGamma : (%, %, %) -> %
-    ++ QPolyGamma(n,x,q) returns the n-th derivative of the q-digamma function of x.
+    ++ QPolyGamma(n,x,q) returns the n-th derivative of the q-digamma
+    ++ function of x.
     mathieuC : (%, %, %) -> %
     ++ mathieuC(a,q,z) is the even Mathieu function with
     ++ characteristic a and parameter q.
@@ -248,7 +250,8 @@ JuliaWSExpression() : Exports == Implementation where
     inverseJacobiCn : (%, %) -> %
     ++ inverseJacobiCn(nu, m) computes the inverse JacobiCN elliptic function.
     ellipticTheta : (%, %, %) -> %
-    ++ ellipticTheta(a, u, q) computes the theta function, a ranges from 1 to 4.
+    ++ ellipticTheta(a, u, q) computes the theta function,
+    ++ a ranges from 1 to 4.
     ellipticThetaPrime : (%, %, %) -> %
     ++ ellipticThetaPrime(a, u, q) computes the derivative of the
     ++ theta function, a ranges from 1 to 4.
@@ -367,11 +370,12 @@ JuliaWSExpression() : Exports == Implementation where
     ++ function expr with respect to sym.
     numericMaximize : (%, %, %) -> %
     ++ numericMaximize(expr, vars, dom) maximizes numerically the expression
-    ++ function expr with respect to vars and vars restricted to the domain dom.
+    ++ function expr with respect to vars and vars restricted
+    ++ to the domain dom.
 
     integrate : (%, %) -> %
-    ++ integrate(expr, opts) integrate expr with respect to opt as options.
-    ++ For example:
+    ++ integrate(expr, opts|var) integrate expr with respect to opt or var
+    ++ as options. For example:
     ++ \example{x:=jWSExpr x;integrate(1/(x^4-1),x)}
     ++ \example{opt:=jWSList [x,-1,1]}
     ++ \example{integrate(cos(x),opt)}
@@ -379,13 +383,17 @@ JuliaWSExpression() : Exports == Implementation where
     ++ \example{integrate(cos(x),"\{x,-1.0,1.0\}")}
     ++ => 1.68294
     integrate : (%, %, Segment(Integer)) -> %
-    ++ integrate()
+    ++ integrate(expr, var, seg) is the definite integration of expr
+    ++ with respect to var using segment seg. 
     integrate : (%, Symbol) -> %
-    ++ integrate()
+    ++ integrate(expr, var) is the indefinite integration of expr
+    ++ with repect to var.
     numericIntegrate : (%, %) -> %
-    ++ numericIntegrate()
+    ++ numericIntegrate(expr, opt|var) integrate numerically expr with respect
+    ++ to opt or var as options.
     numericIntegrate : (%, %, Segment(Integer)) -> %
-    ++ numericIntegrate()
+    ++ numericIntegrate(expr, var, seg) integrates expr using segment seg
+    ++ with respect to var.
     limit : (%, %) -> %
     ++ limit(expr, params) returns the limit, eventually nested or
     ++ multivariate, of expr.
@@ -415,6 +423,44 @@ JuliaWSExpression() : Exports == Implementation where
     ++ numericSolve(eq, vars) returns the solution(s) to the equation eq.
     numericSolve : (%, %) -> %
     ++ numericSolve(expr, vars) returns the solution(s) to the expression expr.
+
+    derivative : (BasicOperator, JuliaWSInteger) -> %
+    ++ derivative(func,n) returns the derivative of order n of func.
+    ++ \example{fprime:=derivative(operator('f),1)}
+    derivative : (BasicOperator, JuliaWSInteger, %) -> %
+    ++ derivative(func, n, var) returns the derivative of order n of func
+    ++ applied to var.
+    ++ \example{x := jWSExpr x}
+    ++ \example{fprimex:=derivative(operator('f),1,x)}
+    dSolve : (%, %, %) -> %
+    ++ dSolve(expr, funcs, vars) solves the (list of) differential equation(s)
+    ++ expr for the function(s) funcs with independant variable(s) vars.
+    ++ \example{x:=jWSExpr x;}
+    ++ \example{fx:=derivative(operator('f),0,x)}
+    ++ \example{fprimex:=derivative(operator('f),1,x)}
+    ++ \example{dSolve(jWSEqual(fprimex + fx , a *sin(x)),fx,x)}
+    dSolve : (Equation(%), %, %)  -> %
+    ++ dSolve(eq, func,var) solves the differential equation eq
+    ++ for the function(s) funcs with independant variable(s) vars.
+    ++ \example{x:=jWSExpr x;}
+    ++ \example{fx:=derivative(operator('f),0,x)}
+    ++ \example{fprimex:=derivative(operator('f),1,x)}
+    ++ \example{dSolve(fprimex + fx = a * sin(x)/cos(x),fx,x)}
+    dSolveValue : (%, %, %) -> %
+    ++ dSolveValue(expr,funcs, vars)returns the value determined by the
+    ++ differential equation(s) in expr for the function(s) funcs
+    ++ with independant variable(s) vars.
+    ++ \example{x:=jWSExpr x;}
+    ++ \example{f:=derivative(operator('f),0)}
+    ++ \example{f0:=derivative(operator('f),0,0)}
+    ++ \example{fx:=derivative(operator('f),0,x)}
+    ++ \example{fprimex:=derivative(operator('f),1,x)}
+    ++ \example{dSolveValue(jWSExpr([jWSEqual(fprimex + fx , a *sin(x)/cos(x)), jWSEqual(f0,0)]),f,x)}
+    dSolveValue : (Equation(%), %, %)  -> %
+    ++ dSolveValue(eq, func,var) returns the value determined by the
+    ++ differential equation eq for the function func
+    ++ with independant variable var.
+
     residue : (%, %) -> %
     ++ residue(expr, {x,x0}) returns the residue of expr at x0.
     residueSum : (%, %) -> %
@@ -469,23 +515,38 @@ JuliaWSExpression() : Exports == Implementation where
     variables : % -> JWSL(%)
     ++ variables(p) returns the list of variables in p.
     exponent  : (%, %) -> %
-    ++ exponent(p,expr) returns the maximaum exponent of p for expr. 
+    ++ exponent(p,expr) returns the maximaum exponent of p for expr.
+    ++ \example{x:= jWSExpr x;y := jWSExpr y}
+    ++ \example{p:=(x^2-2)^3*(y*x^3+x^11*y^7)*(y^5+x*y^2+x^11+y)}
+    ++ \example{exponent(%,(x^2-2))}
     exponent  : (%, %, %) -> %
-    ++ exponent(p, expr, map)
+    ++ exponent(p, expr, map) applies map to the exponents related to expr
+    ++ and returns it. By default map = "Max".
+    ++ \example{x:= jWSExpr x;y := jWSExpr y}
+    ++ \example{p:=expand((x^2-2)^3*(y*x^3+x^11*y^7)*(y^5+x*y^2+x^11+y))}
+    ++ \example{exponent(p,x,"Min")}
     coefficient : (%, %) -> %
-    ++ coefficient
+    ++ coefficient(p,expr) returns the coefficient of expr in p.
+    ++ \example{x:= jWSExpr x}
+    ++ \example{coefficient((x - y)^4, x * y^3)}
     coefficient : (%, %, JuliaWSInteger) -> %
-    ++ coefficient
+    ++ coefficient(p, expr, n) returns the coefficient of expr^n in p.
     coefficientList : (%, %) -> %
-    ++ coefficientList
+    ++ coefficientList(p,expr) returns the list of coefficients of expr in p.
     coefficientRules : % -> %
-    ++ coefficientRules
+    ++ coefficientRules(p) returns the coefficients and exponents
+    ++ of p as WS rules.
     coefficientRules : (%, %) -> %
-    ++ coefficientRules
-    fromCoefficientRules : % -> %
-    ++ fromCoefficientRules
+    ++ coefficientRules(p,vars) returns the coefficients and exponents
+    ++ of p with respect to var(s) as WS rules.
+    fromCoefficientRules : (%, %) -> %
+    ++ fromCoefficientRules(list, vars) constructs the polynomial
+    ++ from the list of coefficients and exponents rules.
+    ++ \example{x:= jWSExpr x;y := jWSExpr y}
+    ++ \example{coefficientRules((x + y)^2+x^11,jWSExpr [x,y])}
+    ++ \example{fromCoefficientRules(%, jWSExpr [x,y])}
     monomialList : % -> %
-    ++ monomialList
+    ++ monomialList(p) returns the list of monomials in p.
 
     polynomialQuotient  : (%, %, %) -> %
     ++ polynomialQuotient(p1, p2, x) returns the quotient of p1 and p2 in x. 
@@ -796,12 +857,24 @@ JuliaWSExpression() : Exports == Implementation where
     coerce : Symbol -> %
     ++ coerce(sym) coerces sym to a JuliaWSExpression.
     coerce : List(%) -> %
-    ++ coerce(list) coerces list of JuliaWSExpression to to a WS List.
+    ++ coerce(list) coerces list of JuliaWSExpression.
     jlWSSetOptions : (%, %) -> %
     ++ jlWSSetOptions(type, opts) sets some internal engine options.
     -- SetAttributes Hold*
     jWSRule : (%,  %) -> %
     ++ jWSRule(lhs,rhs) returns the Julia WS rule lhs->rhs.
+    jWSEqual : (%,  %) -> %
+    ++ jWSEqual(lhs,rhs) returns the Julia WS equality lhs == rhs.
+    jWSNotEqual : (%,  %) -> %
+    ++ jWSNotEqual(lhs,rhs) returns the Julia WS inequality lhs != rhs.
+    jWSLess : (%,  %) -> %
+    ++ jWSLess(lhs,rhs) returns the Julia WS inequality lhs < rhs.
+    jWSLessEqual : (%,  %) -> %
+    ++ jWSLessEqual(lhs,rhs) returns the Julia WS inequality lhs <= rhs.
+    jWSGreater : (%,  %) -> %
+    ++ jWSGreater(lhs,rhs) returns the Julia WS inequality lhs > rhs.
+    jWSGreaterEqual : (%,  %) -> %
+    ++ jWSGreaterEqual(lhs,rhs) returns the Julia WS inequality lhs >= rhs.
     jWSExpr : Symbol -> %
     ++ jWSExpr(sym) coerces sym to a JuliaWSExpression.
     jWSExpr : Integer -> %
@@ -814,6 +887,9 @@ JuliaWSExpression() : Exports == Implementation where
     ++ jWSExpr(r)  returns the JuliaFloat64  as a JuliaWSExpression.
     jWSExpr : Float -> %
     ++ jWSExpr(r)  returns the Float r as a JuliaWSExpression.
+    jWSExpr : List(%) -> %
+    ++ jWSExpr(list) returns the list of JuliaWSExpression
+    ++ as a JuliaWSExpression.
     jWSExpr : String -> %
     ++ jWSExpr(str) constructs str as a JuliaWSExpression evaluating
     ++ str as a Wolfram Symbolic Language Expression.
@@ -888,7 +964,7 @@ JuliaWSExpression() : Exports == Implementation where
     x : % ^ y : PositiveInteger == jbinop("^", x, coerce(y))
     x : % ^ y : NonNegativeInteger == jbinop("^", x, coerce(y))
     x : % ^ q : JuliaWSRational == jbinop("^", x, q)
-    x : % ^ q : Fraction(Integer) == jbinop("^", x, coerce(q))
+    x : % ^ q : Fraction(Integer) == jbinop("^", x, coerce(q)@JuliaWSRational)
 
     round(x)   == junfunc("W_"Round_"", x)
     ceiling(x) == junfunc("W_"Ceiling_"", x)
@@ -1194,6 +1270,26 @@ JuliaWSExpression() : Exports == Implementation where
       jbinfunc("W_"NSolve_"", jWSExpr(expr), vars)
     numericSolve(expr : %, vars : %) ==
       jbinfunc("W_"NSolve_"", expr, vars)
+
+    derivative(op, n) ==
+      d:= string name op
+      expr : String := concat(["Derivative[", toString(n),"][", d,"]"])
+      jWSExpr expr
+    derivative(op, n, var) ==
+      d:= string name op
+      expr : String := concat(["Derivative[", toString(n),"][", d,"][", toString(var),"]"])
+      jWSExpr expr
+    dSolve(expr : %, u : %, var : %) == jterfunc("W_"DSolve_"", expr, u, var)
+    dSolve(eq : Equation(%), u : %, var : %) ==
+      expr : String := concat([toString(lhs eq), "==", toString(rhs eq)])
+      jterfunc("W_"DSolve_"", jWSExpr expr, u, var)
+    dSolveValue(expr : %, u : %, var : %) == jterfunc("W_"DSolve_"", expr, u, var)
+    dSolveValue(eq : Equation(%), u : %, var : %) ==
+      expr : String := concat([toString(lhs eq), "==", toString(rhs eq)])
+      jterfunc("W_"DSolve_"", jWSExpr expr, u, var)
+      --Function:  ?^? : (%, Fraction(Integer)) -> % is missing from domain: Expression(JuliaWSExpression)
+      --Internal Error
+      --The function ^ with signature  (Fraction (Integer)) is missing from domain Expression(JuliaWSExpression)
     residue(expr,param) == jbinfunc("W_"Residue_"", expr, param)
     residueSum(expr,param) == jbinfunc("W_"ResidueSum_"", expr, param)
     reduce(expr:%, lvars:%) == jbinfunc("W_"Reduce_"", expr, lvars)
@@ -1250,7 +1346,8 @@ JuliaWSExpression() : Exports == Implementation where
     coefficientRules(p,expr) == jbinfunc("W_"CoefficientRules_"",p,expr)
     monomialList(p) == junfunc("W_"MonomialList_"", p)
     coefficientRules(p) == junfunc("W_"CoefficientRules_"", p)
-    fromCoefficientRules(p) == junfunc("W_"FromCoefficientRules_"", p)
+    fromCoefficientRules(list, vars) ==
+      jbinfunc("W_"FromCoefficientRules_"", list, vars)
 
 
     polynomialQuotient(p1,p2,var) ==
@@ -1417,6 +1514,12 @@ JuliaWSExpression() : Exports == Implementation where
         str := concat([str, lstr.i, ","])
       jlref(concat(["W_`", concat([str, lstr.(#lstr) ,"}"]), "_`"]))
     jWSRule(lhs, rhs) == jbinfunc("W_"Rule_"", lhs, rhs)
+    jWSEqual(lhs, rhs) == jbinfunc("W_"Equal_"", lhs, rhs)
+    jWSNotEqual(lhs, rhs) == jbinfunc("W_"Unequal_"", lhs, rhs)
+    jWSLess(lhs, rhs) == jbinfunc("W_"Less_"", lhs, rhs)
+    jWSLessEqual(lhs, rhs) == jbinfunc("W_"LessEqual_"", lhs, rhs)
+    jWSGreater(lhs, rhs) == jbinfunc("W_"Greater_"", lhs, rhs)
+    jWSGreaterEqual(lhs, rhs) == jbinfunc("W_"GreaterEqual_"", lhs, rhs)
     jWSExpr(i : Integer) == jlref(concat(["WInteger(_"", string(i), "_")"]))
     jWSExpr(q : Fraction(Integer)) == jWSRat(q)$JuliaWSRational pretend %
     jWSExpr(r : DoubleFloat) == jWSReal(r)$JuliaWSReal pretend %
@@ -1424,6 +1527,7 @@ JuliaWSExpression() : Exports == Implementation where
     jWSExpr(r : Float) == jWSReal(r)$JuliaWSReal pretend %
     jWSExpr(sym : Symbol) : % == jlref(concat(["W_`", string(sym),  "_`"]))
     jWSExpr(str : String) : % == jlref(concat(["W_`", str, "_`"]))
+    jWSExpr(l : List(%)) : % == coerce(l)
     jlWSSetOptions(arg1, arg2) == jbinfunc("W_"SetOptions_"", arg1, arg2)
     matrixForm(expr) == junfunc("W_"MatrixForm_"", expr)
     coerce(expr) : OutputForm ==
