@@ -12,18 +12,25 @@ JuliaWSUtilityFunctions() : Exports == Implementation where
     seedRandom : JuliaWSInteger -> JuliaWSExpression
     ++ seedRandom(n) reseed the random number generator with n as seed.
     ++ Returns the random generator state.
-    urand01Real : (JuliaWSInteger, JuliaWSInteger) -> JuliaWSMatrix(JuliaWSReal)
+    urand01Real : PositiveInteger -> JuliaWSVector(JuliaWSReal)
+    ++ urand01Real(n) returns a Julia WS vector with uniformly
+    ++ distributed random elements in the range 0..1. Convenience function.
+    urand01Real : (PositiveInteger, PositiveInteger) -> JuliaWSMatrix(JuliaWSReal)
     ++ urand01Real(rows,cols) returns a Julia WS matrix with uniformly
     ++ distributed random elements in the range 0..1. Convenience function.
-    urand01Complex : (JuliaWSInteger, JuliaWSInteger) ->
+    urand01Complex : PositiveInteger -> JuliaWSVector(JuliaWSComplex)
+    ++ urand01Complex(n) returns a Julia WS vector with uniformly
+    ++ distributed random complex elements in the unit square.
+    ++ Convenience function.
+    urand01Complex : (PositiveInteger, PositiveInteger) ->
       JuliaWSMatrix(JuliaWSComplex)
     ++ urand01Complex(rows,cols) returns a Julia WS matrix with uniformly
     ++ distributed random complex elements in the unit square.
     ++ Convenience function.
-    hankelMatrix : JuliaWSInteger -> JuliaWSMatrix(JuliaWSInteger)
+    hankelMatrix : PositiveInteger -> JuliaWSMatrix(JuliaWSInteger)
     ++ hankelMatrix(n) returns the square Hankel matrix with integer
     ++ coefficients.
-    hilbertMatrix : JuliaWSInteger -> JuliaWSMatrix(JuliaWSRational)
+    hilbertMatrix : PositiveInteger -> JuliaWSMatrix(JuliaWSRational)
     ++ hilbertMatrix(n) returns the square Hilbert matrix.
     gaussianMatrix : JuliaWSReal -> JuliaWSMatrix(JuliaWSReal)
     ++ gaussianMatrix(r) returns the Gaussian matrix with radius r.
@@ -37,9 +44,9 @@ JuliaWSUtilityFunctions() : Exports == Implementation where
                           -> JuliaWSMatrix(JuliaWSExpression)
     ++ vandermondeMatrix(lvars, m) returns a Vandermonde matrix with nodes
     ++ from lvars and m columns.
-    identityMatrix : JuliaWSInteger ->  JuliaWSMatrix(JuliaWSInteger)
+    identityMatrix : PositiveInteger ->  JuliaWSMatrix(JuliaWSInteger)
     ++ identityMatrix(n) returns the identity matrix of size n.
-    zeroMatrix : (JuliaWSInteger, JuliaWSInteger) ->
+    zeroMatrix : (PositiveInteger, PositiveInteger) ->
                     JuliaWSMatrix(JuliaWSInteger)
     ++ \spad{zeroMatrix(m, n)} returns an m-by-n zero matrix.
     range : JuliaWSInteger -> JuliaWSList(JuliaWSInteger)
@@ -70,6 +77,7 @@ JuliaWSUtilityFunctions() : Exports == Implementation where
     ++ \example{x:=jWSExpr(x);opt:=jWSList [x,-5,5]}
     ++ \example{jlWSExport("sin.png", jlWSPlot(sin(x),opt))}
   Implementation ==> add
+    import JuliaWSInteger
     import from JuliaWSList(JuliaWSInteger)
   
     junfunc(func,a) ==> jlref(concat(["weval(", func, "(", getind(a),"))"]))
@@ -90,11 +98,17 @@ JuliaWSUtilityFunctions() : Exports == Implementation where
 
     urand01Real(rows,cols) ==
       range := jWSList("{0,1}")@JuliaWSList(JuliaWSInteger)
-      dims := jWSList([rows,cols])@JuliaWSList(JuliaWSInteger)
+      dims := jWSList([jWSInt(rows),jWSInt(cols)])@JuliaWSList(JuliaWSInteger)
       jbinfunc("W_"RandomReal_"", range, dims)
+    urand01Real(n) ==
+      range := jWSList("{0,1}")@JuliaWSList(JuliaWSInteger)
+      jbinfunc("W_"RandomReal_"", range, jWSInt n)
+    urand01Complex(n) ==
+      range := jWSList("1+I")@JuliaWSList(JuliaWSInteger)
+      jbinfunc("W_"RandomComplex_"", range, jWSInt n)
     urand01Complex(rows,cols) ==
       range := jWSList("1+I")@JuliaWSList(JuliaWSInteger)
-      dims := jWSList([rows,cols])@JuliaWSList(JuliaWSInteger)
+      dims := jWSList([jWSInt(rows),jWSInt(cols)])@JuliaWSList(JuliaWSInteger)
       jbinfunc("W_"RandomComplex_"", range, dims)
 
     range(n) ==
@@ -104,12 +118,12 @@ JuliaWSUtilityFunctions() : Exports == Implementation where
     range(m,n,step) ==
       jterfunc("W_"Range_"", m, n, step)
 
-    hankelMatrix(n) == junfunc("W_"HankelMatrix_"", n)
-    hilbertMatrix(n) == junfunc("W_"HilbertMatrix_"", n)
+    hankelMatrix(n) == junfunc("W_"HankelMatrix_"", jWSInt(n))
+    hilbertMatrix(n) == junfunc("W_"HilbertMatrix_"", jWSInt(n))
     gaussianMatrix(r) == junfunc("W_"GaussianMatrix_"", r)
     vandermondeMatrix(lvars) == junfunc("W_"VandermondeMatrix_"", lvars)
     vandermondeMatrix(lvars, m) == jbinfunc("W_"VandermondeMatrix_"", lvars, m)
-    identityMatrix(n) == junfunc("W_"IdentityMatrix_"", n)
+    identityMatrix(n) == junfunc("W_"IdentityMatrix_"", jWSInt(n))
     zeroMatrix(m,n) == 
       jbinfunc("W_"ConstantArray_"", 0$JuliaWSInteger,
-        jWSList([m, n])@JuliaWSList(JuliaWSInteger))
+        jWSList([jWSInt(m), jWSInt(n)])@JuliaWSList(JuliaWSInteger))

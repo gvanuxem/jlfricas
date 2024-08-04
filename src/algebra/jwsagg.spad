@@ -17,6 +17,8 @@ JuliaWSAggregate(E : JuliaWSObject) : Category == JuliaWSObject with
     ++ dimensions(agg) returns dimensions of agg.
     elt : (%, Integer) -> E
     ++ elt(agg,i) returns the i-th element.
+    qelt : (%, Integer) -> E
+    ++ qelt(agg,i) returns the i-th element.
     part : (%, JuliaWSInteger) -> E
     ++ part(agg,i) returns the i-th element.
     take : (%, Integer) -> %
@@ -63,10 +65,20 @@ JuliaWSAggregate(E : JuliaWSObject) : Category == JuliaWSObject with
     ++ reverse(agg) reverses the elements of agg.
     reverse : (%, JuliaWSInteger) -> %
     ++ reverse(agg, level) reverses the elements of agg at level.
+    if E has JuliaWSNumber then
+      total : % -> E
+      ++ total(agg) returns the sum of the elements in agg.
+      --mean : % > -> E
+      --++ mean(agg)
+      differences : % -> %
+      ++ differences(agg)
+      accumulate : % -> %
+      ++ accumulate(agg) 
+      --ratios : % -> E
     reverse : (%, JuliaWSList(JuliaWSInteger)) -> %
     ++ reverse(agg, levels) reverses the elements of agg using levels.
-    setelt! : (%, Integer, E) -> %
-    ++ setelt!(l,i,elem) returns l with i-th element replaced by elem.
+    setelt : (%, Integer, E) -> %
+    ++ setelt(l,i,elem) returns l with i-th element replaced by elem.
     replacePart : (%, %) -> %
     ++ replacePart(expr, part) replaces expr using rule(s) expressing position(s).
     coerce  : % -> JuliaWSExpression
@@ -100,11 +112,10 @@ JuliaWSAggregate(E : JuliaWSObject) : Category == JuliaWSObject with
 
     x = y  == jbinbop("==", x, y)
     x ~= y == jbinbop("!=", x, y)
-    elt(agg, i) == jbinfunc("W_"Part_"", agg, jWSExpr(i))
+    elt(agg, i) == jbinfunc("W_"Part_"", agg, jWSInt(i))
+    qelt(agg, i) == jbinfunc("W_"Part_"", agg, jWSInt(i))
     part(agg, i) == jbinfunc("W_"Part_"", agg, i)
-    take(agg : %, i : Integer) ==
-      index := jWSExpr(string(i))$JuliaWSExpression
-      jbinfunc("W_"Take_"", agg, index)
+    take(agg : %, i : Integer) == jbinfunc("W_"Take_"", agg, jWSExpr(i))
     take(agg : %, elems : JuliaWSList(JuliaWSInteger)) == jbinfunc("W_"Take_"", agg, elems)
     extract(agg : %, elems) ==
       jbinfunc("W_"Extract_"", agg, elems)
@@ -125,21 +136,25 @@ JuliaWSAggregate(E : JuliaWSObject) : Category == JuliaWSObject with
     reverse(agg, level : JuliaWSInteger) == jbinfunc("W_"Reverse_"", agg, level)
     reverse(agg, levels : JuliaWSList(JuliaWSInteger)) == jbinfunc("W_"Reverse_"", agg, levels)
 
-    append(l, elt)       == jbinfunc("W_"Append_"", l, elt)
+    append(agg, elt)       == jbinfunc("W_"Append_"", agg, elt)
     --append!(l, elt)      == jbinfunc("W_"AppendTo_"", l, elt)
-    prepend(l, elt)      == jbinfunc("W_"Prepend_"", l, elt)
+    prepend(agg, elt)      == jbinfunc("W_"Prepend_"", agg, elt)
     --prepend!(l, elt)     == jbinfunc("W_"PrependTo_"", l, elt)
-    insert(l, elt, ind) == jterfunc("W_"Insert_"", l, elt, ind)
-    delete(l, inds)      == jbinfunc("W_"Delete_"", l, inds)
+    insert(agg, elt, ind) == jterfunc("W_"Insert_"", agg, elt, ind)
+    delete(agg, inds)      == jbinfunc("W_"Delete_"", agg, inds)
 
-    setelt!(agg,i,elem) ==
+    total(agg) == junfunc("W_"Total_"", agg)
+    differences(agg) == junfunc("W_"Differences_"", agg)
+    accumulate(agg) == junfunc("W_"Accumulate_"", agg)
+
+    setelt(agg,i,elem) ==
       jbinfunc("W_"ReplacePart_"", agg, jWSRule(jWSExpr(i),
         elem pretend JuliaWSExpression))
     replacePart(expr, part) == jbinfunc("W_"ReplacePart_"", expr, part)
     string(obj) ==
       jl_string_eval_string(concat(["string(", getind(obj),")"]))$Lisp
     convert(obj) : String == string(obj)
-    coerce(list : %) : JuliaWSExpression == list pretend JuliaWSExpression
+    coerce(agg : %) : JuliaWSExpression == agg pretend JuliaWSExpression
     coerce(agg : List(E)) == jWSAggregate agg
     jWSAggregate(l : List(E)) ==
       -- Temporary (and dirty) hack
@@ -264,6 +279,8 @@ JuliaWSVector(E : JuliaWSObject) : Exports == Implementation where
 
     Rep := SExpression
 
+    x = y  == jbinbop("==",x,y)
+    x ~= y == jbinbop("!=",x,y)
     x + y == jbinop("+", x, y)
     x - y == jbinop("-", x, y)
     - x   == junfunc("-", x)
@@ -294,7 +311,8 @@ JuliaWSVector(E : JuliaWSObject) : Exports == Implementation where
 -- JuliaWSRing?
 JuliaWSMatrix(E : JuliaWSObject) : Exports == Implementation where
   getind(a)  ==> concat(["getindex(", "refs, _"", jlId a, "_")"])
-  Exports ==> JuliaWSAggregate(E) with
+  Exports ==> JuliaWSAggregate(JuliaWSVector(E)) with
+  --JuliaWSObject with TODO:adapt to aggregates
     square?  : % -> Boolean
     ++ \spad{square?(m)} returns true if m is a square matrix
     ++ (i.e. if m has the same number of rows as columns) and false otherwise.
@@ -345,9 +363,12 @@ JuliaWSMatrix(E : JuliaWSObject) : Exports == Implementation where
     ++ a^n is the matrix power by the non negative integer n.
     elt : (%, Integer, Integer) -> E
     ++ elt(mat, m, n) returns the element (m,n) of the matrix mat.
-    setelt! : (%, Integer, Integer, E) -> %
-    ++ setelt!(mat,n,m,elt) returns a new matrix with element (n,m)
-    ++ relaced by elt.
+    qelt : (%, Integer, Integer) -> E
+    ++ qelt(mat, m, n) returns the element (m,n) of the matrix mat.
+    ++ No checks are done at the FriCAS level.
+    setelt : (%, Integer, Integer, E) -> %
+    ++ setelt(mat,n,m,elt) returns a new matrix with element (n,m)
+    ++ replaced by elt.
     row : (%, Integer) -> %
     ++ row(mat,i) returns the i-th row.
     column : (%, Integer) -> %
@@ -396,36 +417,40 @@ JuliaWSMatrix(E : JuliaWSObject) : Exports == Implementation where
     minors : (%, JuliaWSInteger) -> %
     ++ minors(m,i) returns the i-th minors of m.
     eigenvalues  : % -> JuliaWSVector(JuliaWSExpression)
-    ++ eigenvalues(m) returns the eigenvalues of m.
+    ++ eigenvalues(m) returns the eigenvalues of the square matrix m.
     eigenvectors : % -> JuliaWSMatrix(JuliaWSExpression)
-    ++ eigenvectors(m) returns the eigenvectors of m.
+    ++ eigenvectors(m) returns the eigenvectors of the square matrix m.
     eigenSystem  : % -> Record(values : JuliaWSVector(JuliaWSExpression),
                           vectors : JuliaWSMatrix(JuliaWSExpression))
-    ++ eigenSystem(m) computes the spectral decomposition of m.
-    ++ It returns in a Record, the eigenvalues, selecor 'values', and the
-    ++ the eigenvectors, selector 'vectors'.
+    ++ eigenSystem(m) computes the spectral decomposition of the square
+    ++ matrix m. It returns in a Record, the eigenvalues, selector 'values',
+    ++ and the eigenvectors selector 'vectors'.
     svd : % -> Record(S : %, sv : %, V : %)
-    ++ svd(m) computes the singular value decomposition of m.
+    ++ svd(m) computes the singular value decomposition of the matrix m.
     svdvals : % -> JuliaWSList(E)
-    ++ svdvals(m) returns the singular values of m.
+    ++ svdvals(m) returns the singular values of the matrix m.
     schurDecomposition : % -> Record(q : %, t : %)
-    ++ schurDecomposition(m) computes the Schur decomposition of m.
+    ++ schurDecomposition(m) computes the Schur decomposition of
+    ++ of the square matrix m.
     qrDecomposition : % -> Record(q : %, r : %)
-    ++ qrDecomposition(m) computes the QR decomposition of m.
+    ++ qrDecomposition(m) computes the QR decomposition of the matrix m.
     jordanDecomposition : % -> Record(s : %, j : %)
-    ++ jordanDecomposition(m) computes the Jordan decomposition of m.
+    ++ jordanDecomposition(m) computes the Jordan decomposition of
+    ++ of the square matrix m.
     hessenbergDecomposition : % -> Record(p : %, h : %)
-    ++ hessenbergDecomposition(m) computes the Hessenberg decomposition of m.
+    ++ hessenbergDecomposition(m) computes the Hessenberg decomposition of
+    ++ the square matrix m.
     choleskyDecomposition : % -> Record(l : %, u : %)
-    ++ choleskyDecomposition(m) computes the Cholesky decomposition of m.
+    ++ choleskyDecomposition(m) computes the Cholesky decomposition of
+    ++ the square matrix m.
     luDecomposition : % -> Record(lu : %, p : %, c : %)
-    ++ luDecomposition(m) computes the lU decomposition of m.
+    ++ luDecomposition(m) computes the lU decomposition of the matrix m.
     matrixFunction : (JuliaWSExpression, %) -> JuliaWSMatrix(JuliaWSExpression)
-    ++ matrixFunction(func, m) applies the matrix function func if available to
-    ++ the matrix m. Note that it is not applied element wisely.
-    ++ For example:
+    ++ matrixFunction(func, m) applies the matrix function func,
+    ++ if available, to the matrix m. Note that it is not
+    ++ an element-wise operation. For example:
     ++ \example{m := jWSMatrix("\{\{1.2, 1.7\},\{1.12, -2.1\}\}")@JWSMAT(JWSREAL)}
-    ++ \example{matrixFunction("Exp", m)}
+    ++ \example{matrixFunction("Sqrt", m)}
     randomRealMatrix :
       (JuliaWSList(JuliaWSReal), JuliaWSList(JuliaWSInteger)) -> JuliaWSMatrix(JuliaWSReal)
     ++ randomRealMatrix(range, dims) returns a random matrix with random numbers in the range
@@ -439,8 +464,8 @@ JuliaWSMatrix(E : JuliaWSObject) : Exports == Implementation where
     ++ \example{range:=jWSList("\{1+I\}")@JWSLIST(JWSCPLX)}
     ++ \example{randomComplexMatrix(range,jWSList("\{3,3\}")$JWSLIST(JWSINT))@JWSMAT(JWSCPLX)}
     diagonalMatrix : JuliaWSList(E) -> %
-    ++ \spad{diagonalMatrix(l)} returns a diagonal matrix with the elements
-    ++ of l on the diagonal.
+    ++ \spad{diagonalMatrix(l)} returns a diagonal matrix with elements
+    ++ of l as diagonal elements.
     toString: (%, JuliaWSExpression) -> String
     ++ toString(mat, form) returns the string representation of mat
     ++ with WS language format form.
@@ -448,7 +473,7 @@ JuliaWSMatrix(E : JuliaWSObject) : Exports == Implementation where
     ++ matrix(vec) returns vec as a matrix (inplace coercion).
     jWSMatrix : String -> %
     ++ jWSMatrix(str) constructs str as a JuliaWSMatrix.
-    ++ str must be in the WS language (list of list).
+    ++ str must be in the WS language (list of list(s)).
   Implementation ==> JuliaObject add
     import from JuliaUtilityFunctions
     import from JuliaWSExpression
@@ -479,12 +504,24 @@ JuliaWSMatrix(E : JuliaWSObject) : Exports == Implementation where
     antisymmetric?(m) == junfunc("W_"AntisymmetricMatrixQ_"", m) = WT
     positiveDefinite?(m) == junfunc("W_"PositiveDefiniteMatrixQ_"", m) = WT
     hermitian?(m) == junfunc("W_"HermitianMatrixQ_"", m) = WT
-
-    x + y == jbinop("+", x, y)
-    x - y == jbinop("-", x, y)
+    
+    x = y  == jbinbop("==",x,y)
+    x ~= y == jbinbop("!=",x,y)
+    x + y ==
+      dimensions(x) ~= dimensions(y) =>
+        error "+$JuliaWSMatrix: incompatible dimensions"
+      jbinop("+", x, y)
+    x - y ==
+      dimensions(x) ~= dimensions(y) =>
+        error "-$JuliaWSMatrix: incompatible dimensions"
+      jbinop("-", x, y)
     - x   == junfunc("-", x)
-    x : % * y : % == jbinfunc("W_"Dot_"", x, y)
-    x : % * v : JuliaWSVector(E) == jbinfunc("W_"Dot_"", x, v)
+    x : % * y : % ==
+      last(dimensions(x)) ~= first(dimensions(y)) =>
+        error "*$JuliaWSMatrix: incompatible dimensions"
+      jbinfunc("W_"Dot_"", x, y)
+    x : % * v : JuliaWSVector(E) ==
+      jbinfunc("W_"Dot_"", x, v)
     v : JuliaWSVector(E) * y : % == jbinfunc("W_"Dot_"", v, y)
     x : Integer * y : % == jbinop("*", coerce(x), y)
     a : E * x : % == jbinop("*", a, x)
@@ -495,20 +532,45 @@ JuliaWSMatrix(E : JuliaWSObject) : Exports == Implementation where
       jbinfunc("W_"MatrixPower_"", x, coerce(n)@JuliaWSInteger)
     matrixFunction(func, mat) == jbinfunc("W_"MatrixFunction_"", func, mat) 
     
-    rank(mat) == junfunc("W_"MatrixRank_"", mat)
-    inverse(mat) == junfunc("W_"Inverse_"", mat)
+    rank(mat) ==
+      junfunc("W_"MatrixRank_"", mat)
+    inverse(mat) ==
+      not square?(mat) => error "inverse$JuliaWSMatrix: not a square matrix"
+      junfunc("W_"Inverse_"", mat)
     pseudoInverse(mat) == junfunc("W_"PseudoInverse_"", mat)
-    linearSolve(mat, b) == jbinfunc("W_"LinearSolve_"", mat, b)
+    linearSolve(mat, b) ==
+      jbinfunc("W_"LinearSolve_"", mat, b)
 
-    elt(mat, i, j) == jterfunc("W_"Part_"", mat, jWSInt(i), jWSInt(j))
-    setelt!(mat,i,j,elem) ==
+    elt(mat, i, j) ==
+      dims := dimensions(mat)
+      i > integer first(dims) or j > integer last(dims) =>
+        error "elt:JuliaWSMatrix: incompatible index"
+      jterfunc("W_"Part_"", mat, jWSInt(i), jWSInt(j))
+    qelt(mat, i, j) == jterfunc("W_"Part_"", mat, jWSInt(i), jWSInt(j))
+    setelt(mat,i,j,elem) ==
+      dims := dimensions(mat)
+      i > integer first(dims) or j > integer last(dims) =>
+        error "setelt:JuliaWSMatrix: incompatible index"
       inds : List(JuliaWSInteger)  := [jWSInt(i), jWSInt(j)]
       rule := jWSRule(jWSList(inds)@JuliaWSList(JuliaWSInteger) pretend JuliaWSExpression,
         elem pretend JuliaWSExpression)
       jbinfunc("W_"ReplacePart_"", mat, rule)
-    row(l, i) == jbinfunc("W_"Part_"", l, jWSExpr(string(i)))
-    column(l, i) ==
-      jbinfunc("W_"Extract_"", l, jWSExpr(concat(["{All,", string(i),"}"])))
+    elt(m, i) ==
+      i > integer last(dimensions(m)) =>
+        error "elt:JuliaWSMatrix: incompatible index"
+      jbinfunc("W_"Extract_"", m, jWSExpr(concat(["{All,", string(i),"}"])))
+    qelt(m, i) ==
+      i > integer last(dimensions(m)) =>
+        error "elt:JuliaWSMatrix: incompatible index"
+      jbinfunc("W_"Extract_"", m, jWSExpr(concat(["{All,", string(i),"}"])))
+    row(m, i) ==
+      i > integer first(dimensions(m)) =>
+        error "row:JuliaWSMatrix: incompatible index"
+      jbinfunc("W_"Part_"", m, jWSExpr(string(i)))
+    column(m, i) ==
+      i > integer last(dimensions(m)) =>
+        error "elt:JuliaWSMatrix: incompatible index"
+      jbinfunc("W_"Extract_"", m, jWSExpr(concat(["{All,", string(i),"}"])))
 
     transpose(mat) == junfunc("W_"Transpose_"", mat)
     adjoint(mat) == junfunc("W_"ConjugateTranspose_"", mat)
@@ -520,9 +582,14 @@ JuliaWSMatrix(E : JuliaWSObject) : Exports == Implementation where
     minors(mat) == junfunc("W_"Minors_"", mat)
     minors(mat, k) == jbinfunc("W_"Minors_"", mat, k)
 
-    eigenvalues(mat) == junfunc("W_"Eigenvalues_"", mat)
-    eigenvectors(mat) == junfunc("W_"Eigenvectors_"", mat)
+    eigenvalues(mat) ==
+      not square?(mat) => error "eigenvalues: not a square matrix"
+      junfunc("W_"Eigenvalues_"", mat)
+    eigenvectors(mat) ==
+      not square?(mat) => error "eigenvectors: not a square matrix"
+      junfunc("W_"Eigenvectors_"", mat)
     eigenSystem(mat) ==
+      not square?(mat) => error "eigenSystem: not a square matrix"
       ret : JuliaWSList(JuliaWSExpression) := junfunc("W_"Eigensystem_"", mat)
       [first(ret) pretend JuliaWSVector(JuliaWSExpression),
             last(ret) pretend JuliaWSMatrix(JuliaWSExpression)]
@@ -531,30 +598,38 @@ JuliaWSMatrix(E : JuliaWSObject) : Exports == Implementation where
       [first(ret), elt(ret,2), last(ret)]
     svdvals(mat) == junfunc("W_"SingularValueList_"", mat)
     schurDecomposition(mat) ==
+      not square?(mat) => error "schurDecomposition: not a square matrix"
       ret : JuliaWSList(%) := junfunc("W_"SchurDecomposition_"", mat)
       [first(ret),last(ret)]
     qrDecomposition(mat) ==
       ret : JuliaWSList(%) := junfunc("W_"QRDecomposition_"", mat)
       [first(ret),last(ret)]
     hessenbergDecomposition(mat) ==
+      not square?(mat) => error "hessenbergDecomposition: not a square matrix"
       ret : JuliaWSList(%) := junfunc("W_"HessenbergDecomposition_"", mat)
       [first(ret),last(ret)]
     jordanDecomposition(mat) ==
+      not square?(mat) => error "jordanDecomposition: not a square matrix"
       ret : JuliaWSList(%) := junfunc("W_"JordanDecomposition_"", mat)
       [first(ret),last(ret)]
     choleskyDecomposition(mat) ==
+      not square?(mat) => error "choleskyDecomposition: not a square matrix"
       ret : JuliaWSList(%) := junfunc("W_"CholeskyDecomposition_"", mat)
       [first(ret),last(ret)]
     luDecomposition(mat) ==
       ret : JuliaWSList(%) := junfunc("W_"LUDecomposition_"", mat)
       [first(ret), elt(ret,2), last(ret)]
 
-    determinant(mat) == junfunc("W_"Det_"", mat)
+    determinant(mat) ==
+      not square?(mat) => error "determinant: not a square matrix"
+      junfunc("W_"Det_"", mat)
     trace(mat) == junfunc("W_"Tr_"", mat)
     diagonal(mat) == junfunc("W_"Diagonal_"", mat)
     norm(mat) == junfunc("W_"Norm_"", mat)
     norm(mat,type) ==  jbinfunc("W_"Norm_"", mat, type)
-    permanent(mat) == junfunc("W_"Permanent_"", mat)
+    permanent(mat) ==
+      not square?(mat) => error "permanent: not a square matrix"
+      junfunc("W_"Permanent_"", mat)
     kroneckerProduct(mat1, mat2) == jbinfunc("W_"KroneckerProduct_"", mat1, mat2)
 
     toString(mat, form) == string jbinfunc("W_"ToString_"", mat, form)

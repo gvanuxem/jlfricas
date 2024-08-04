@@ -50,20 +50,6 @@ JuliaObjectType() : Category == JuliaType() with
     ++ In the Julia interpreter:
     ++   import Pkg
     ++   Pkg.import("https://github.com/tecosaur/About.jl")
-    elt : (%, JuliaSymbol) -> %
-    ++ elt(obj, sym) returns the property sym of obj.
-    ++ For example, using JuliaObject:
-    ++ \example{ret := jlApply("svd",jobject("rand(4,4)")); ret.U}
-    qelt : (%, JuliaSymbol) -> %
-    ++ elt(obj, sym) returns the property sym of obj. No checks are done
-    ++ regarding the existence of the sym property. If it does not exist,
-    ++ Julia will throw an error.
-    elt : (%, Integer) -> %
-    ++ elt(obj, ind) returns the element at index ind of obj.
-    ++ For example for a Tuple or a vector.
-    qelt : (%, Integer) -> %
-    ++ qelt(obj, ind) returns the element at index ind of obj.
-    ++ For example for a Tuple or a vector.
   add
     import from JuliaUtilityFunctions
     import from JuliaSymbol
@@ -95,19 +81,6 @@ JuliaObjectType() : Category == JuliaType() with
 
     string(obj)  == jl_string_getindex(jlId obj)$Lisp
     convert(obj) : String == string obj
-
-    elt(obj : %, jsy : JuliaSymbol) ==
-      defined := concat(["hasproperty(", getind(obj), ",",
-        str := string(jsy), ")"])
-      not jl_bool_eval_string(defined)$Lisp =>
-        error concat("elt: undefined symbol ", str)
-      jlref(concat(["getproperty(", getind(obj), ",", string(jsy), ")"]))
-    qelt(obj : %, jsy : JuliaSymbol) ==
-      jlref(concat(["getproperty(", getind(obj), ",", string(jsy), ")"]))
-    elt(obj : %, ind : Integer) ==
-      jlref(concat([getind(obj), "[", string(ind), "]"]))
-    qelt(obj : %, ind : Integer) ==
-      jlref(concat([getind(obj), "[", string(ind), "]"]))
 
     string(ob)   == jl_string_getindex(jlId ob)$Lisp
     jlApply(func, a) ==
@@ -144,12 +117,26 @@ See the JuliaType category for information")
 ++ Author: G.Vanuxem
 ++ Date Created: April. 2024
 ++ Description:
-++  Julia objects i.e. objects that are used within Julia,
+++  Generic Julia objects i.e. objects that are used within Julia,
 ++ and not directly by the underlying FriCAS Common LISP.
 JuliaObject() : Exports == Implementation where
   INT ==> Integer
   NNI ==> NonNegativeInteger
   Exports ==> JuliaObjectType with
+    elt : (%, JuliaSymbol) -> %
+    ++ elt(obj, sym) returns the property sym of obj.
+    ++ For example:
+    ++ \example{ret := jlApply("svd",jobject("rand(4,4)")); ret.U}
+    qelt : (%, JuliaSymbol) -> %
+    ++ elt(obj, sym) returns the property sym of obj. No checks are done
+    ++ regarding the existence of the sym property. If it does not exist,
+    ++ Julia throws an error.
+    elt : (%, Integer) -> %
+    ++ elt(obj, ind) returns the element at index ind of obj.
+    ++ It can be used, for example, with a Tuple or a Vector.
+    qelt : (%, Integer) -> %
+    ++ qelt(obj, ind) returns the element at index ind of obj.
+    ++ It can be used, for example, with a Tuple or a Vector.
     mutable? : % -> Boolean
     ++ mutable?(obj) checks wheter or not obj is mutable.
     coerce  : String -> %
@@ -188,7 +175,20 @@ JuliaObject() : Exports == Implementation where
 
     mutable?(x) ==
       jl_bool_eval_string(concat(["ismutable(", getind(x), ")"]))$Lisp
-  
+
+    elt(obj : %, jsy : JuliaSymbol) ==
+      defined := concat(["hasproperty(", getind(obj), ",",
+        str := string(jsy), ")"])
+      not jl_bool_eval_string(defined)$Lisp =>
+        error concat("elt: undefined symbol ", str)
+      jlref(concat(["getproperty(", getind(obj), ",", string(jsy), ")"]))
+    qelt(obj : %, jsy : JuliaSymbol) ==
+      jlref(concat(["getproperty(", getind(obj), ",", string(jsy), ")"]))
+    elt(obj : %, ind : Integer) ==
+      jlref(concat([getind(obj), "[", string(ind), "]"]))
+    qelt(obj : %, ind : Integer) ==
+      jlref(concat([getind(obj), "[", string(ind), "]"]))
+
     convert(obj : %) : String ==
       jl_string_eval_string(concat(["string(", getind(obj), ")"]))$Lisp
     coerce(js : JuliaString ) == jlref(concat ["_"", js pretend String, "_""])
@@ -646,6 +646,20 @@ JuliaDataFrame() : Exports == Implementation where
     Z   ==> Integer
     getind(a)  ==> concat(["getindex(", "refs,_"", jlId a, "_")"])
     Exports ==> JuliaObjectType with
+      elt : (%, JuliaSymbol) -> %
+      ++ elt(obj, sym) returns the property sym of obj.
+      ++ For example, using JuliaObject:
+      ++ \example{ret := jlApply("svd",jobject("rand(4,4)")); ret.U}
+      qelt : (%, JuliaSymbol) -> %
+      ++ elt(obj, sym) returns the property sym of obj. No checks are done
+      ++ regarding the existence of the sym property. If it does not exist,
+      ++ Julia will throw an error.
+      elt : (%, Integer) -> %
+      ++ elt(obj, ind) returns the element at index ind of obj.
+      ++ For example for a Tuple or a vector.
+      qelt : (%, Integer) -> %
+      ++ qelt(obj, ind) returns the element at index ind of obj.
+      ++ For example for a Tuple or a vector.
       jlDescribe: % -> %
       ++ jlDescribe(df) returns basic statisitics about df.
       matrix : % -> JuliaObject
@@ -720,12 +734,17 @@ JuliaVector(R : JuliaObjectType) : Exports == Implementation where
       new(n, x:R)                 ==
         jlref(concat(["fill(", getind(x),",", string(n),")"]))
       qelt(x, i)                  ==
-        jlref(concat([getind(x),"[",string(i),"]"]))$R -- or getindex in Julia
-      elt(x, i:Integer) : R    == qelt(x, i)
+        jlref(concat([getind(x),"[",string(i),"]"]))$R
+      elt(x, i) : R    ==
+        i > #x => error "elt$Juliavector: incompatiible index"
+        jlref(concat([getind(x),"[",string(i),"]"]))$R
       qsetelt!(v : %, i, s:R)  ==
         jl_eval_string(concat([getind(v),"[",string(i), "]=", getind(s)]))$Lisp
         s
-      setelt!(x : %, i : Integer, s : R) == qsetelt!(x, i, s)
+      setelt!(v : %, i : Integer, s : R) ==
+        i > #v => error "setelt!$Juliavector: incompatiible index"
+        jl_eval_string(concat([getind(v),"[",string(i), "]=", getind(s)]))$Lisp
+        s
       fill!(v, x) == jlref(concat(["fill!(", getind(v),",", getind(x),")"]))
       less?(v,n) == #v < n
       vector l == construct l
@@ -898,12 +917,21 @@ JuliaMatrix(R : Join(JuliaObjectType , JuliaRing)) :  Exports == Implementation 
 
       qelt(m, i, j) == jlref(concat(["getindex(", getind(m), ",",
         string(i), ",", string(j), ")"]))$R
-      elt(m:%, i:INT, j:INT) == qelt( m, i, j)
-      qsetelt!(m, i, j, r) ==
+      elt(m : %, i : INT, j : INT) ==
+        i > nrows(m) or j > ncols(m) =>
+          error "elt$JuliaMatrix: incompatiible index"
+        jlref(concat(["getindex(", getind(m), ",",
+          string(i), ",", string(j), ")"]))$R
+      qsetelt!(m, i:INT, j:INT, r) ==
         jl_eval_string(concat(["setindex!(", getind(m), ",", getind(r)
           ",", string(i), ",", string(j), ")"]))$Lisp
         r
-      setelt!(m : %, i : Integer, j : Integer, r : R) == qsetelt!(m, i, j, r)
+      setelt!(m : %, i : Integer, j : Integer, r : R) ==
+        i > nrows(m) or j > ncols(m) =>
+          error "setelt!$JuliaMatrix: incompatiible index"
+        jl_eval_string(concat(["setindex!(", getind(m), ",", getind(r)
+          ",", string(i), ",", string(j), ")"]))$Lisp
+        r
       empty() == error "empty()$JuliaMatrix: not supported" --Qnew(0$Integer,0$Integer)
       if R has NemoRing then
         if R is NemoInteger then

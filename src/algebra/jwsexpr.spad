@@ -522,7 +522,6 @@ JuliaWSExpression() : Exports == Implementation where
     ++ findInstance(expr,lvars,dom, n) tries to find n instance(s) to
     ++ the (in)equation in expr.
     
-
     numerator : % -> %
     ++ numerator(expr) returns the numerator of expr.
     denominator : % -> %
@@ -920,6 +919,7 @@ JuliaWSExpression() : Exports == Implementation where
     ++ For example:
     ++ \example{jWSExpr "Factorial[5]"}
     ++ \example{jWSExpr "3.14159"}
+    ++ \example{jWSExpr "Today"}
   Implementation ==> JuliaObject add
     import from JuliaUtilityFunctions
 
@@ -943,7 +943,7 @@ JuliaWSExpression() : Exports == Implementation where
 
     strToExpr(s : String) : Union(Expression(Integer), "failed") ==
       -- Give up if there are arbitrary precision numbers
-      jlRegexMatch?(jlRegex(jstring "_`[1-9]|\bi\b"), jstring s) => "failed"
+      --jlRegexMatch?(jlRegex(jstring "_`[1-9]|\bi\b"), jstring s) => "failed"
       str := concat("0$Expression(Integer)+", s)
       af := parse(str)$InputForm
       av := interpret_in_new_env(af)$InputForm
@@ -954,6 +954,7 @@ JuliaWSExpression() : Exports == Implementation where
 
     pi()  == jlref("W_"Pi_"")
     exp() == jlref("W_"E_"")
+
     WT : JuliaWSSymbol := WTrue()
     WL : JuliaWSSymbol := WList()
     WR : JuliaWSSymbol := WRule()
@@ -1296,7 +1297,7 @@ JuliaWSExpression() : Exports == Implementation where
       jbinfunc("W_"NSolve_"", expr, vars)
 
     derivative(op, n) ==
-      d:= string name op
+      d := string name op
       expr : String := concat(["Derivative[", toString(n),"][", d,"]"])
       jWSExpr expr
     derivative(op, n, var) ==
@@ -1572,7 +1573,7 @@ JuliaWSExpression() : Exports == Implementation where
       -- Computationally too expensive
       -- error: middle word lowercasing
       jlHead(expr) = WS => coerce(string(expr))@OutputForm
-      pagew := string(_$LINELENGTH$Lisp pretend Integer)
+      pagew := string(_$LINELENGTH$Lisp pretend Integer - 2)
       sexpr := toString(expr, jWSExpr concat("PageWidth -> ", pagew))
       str : String := jl_string_eval_string(concat(["replace(_"", sexpr,
         "_", r_"\b[A-Z][a-z]{2}_" => x -> lowercase(x))"]))$Lisp
