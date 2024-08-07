@@ -1045,6 +1045,7 @@ NemoRealBall(p: PositiveInteger) : Exports == Implementation where
     -- x quo y == jbinop("div", x, y)
     x quo y == jbinop("÷", x, y)
     x rem y == jbinop("%", x, y)
+    float(m, e, b) == jbinop("*",jnrb(m), jnrb(b)^e)
 
     sqrt(x)  == junfunc("√",x)
     exp(x)   == junfunc("exp",x)
@@ -1417,6 +1418,7 @@ NemoRealField() : Exports == Implementation where
     -- x quo y == jbinop("div", x, y)
     x quo y == jbinop("÷", x, y)
     x rem y == jbinop("%", x, y)
+    float(m, e, b) == jbinop("*",jnrf(m), jnrf(b)^e)
 
     sqrt(x)  == junfunc("√",x)
     exp(x)   == junfunc("exp",x)

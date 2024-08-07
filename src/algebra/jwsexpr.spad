@@ -13,9 +13,9 @@
 JuliaWSExpression() : Exports == Implementation where
   getind(a)  ==> concat(["getindex(", "refs, _"", jlId a, "_")"])
   JWSL ==> JuliaWSList
-  Exports ==> Join(JuliaWSAggregate(%), PartialOrder,
+  Exports ==> Join(JuliaWSAggregate(%), PartialOrder, JuliaWSRing,
                   PartialDifferentialRing(%), ExpressionSpace) with
-    AlgebraicallyClosedFunctionSpace %
+    AlgebraicallyClosedFunctionSpace(%)
     TranscendentalFunctionCategory
     CombinatorialOpsCategory
     LiouvillianFunctionCategory

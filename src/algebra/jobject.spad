@@ -221,6 +221,7 @@ JuliaFloat() : Exports == Implementation where
   JI64      ==> JuliaInt64
   PI        ==> PositiveInteger
   JF64      ==> JuliaFloat64
+  parsei    ==> PARSE_-INTEGER$Lisp
   Exports ==> Join(JuliaObjectType, JuliaRing, ConvertibleTo(InputForm),
             CommutativeRing, FloatingPointSystem, arbitraryPrecision,
             ElementaryFunctionCategory, TranscendentalFunctionCategory,
@@ -306,6 +307,10 @@ JuliaFloat() : Exports == Implementation where
     precision(x : %, p : PI) ==
       tmp : String := concat(["setprecision(", getind(x),",", string(p),")"])
       jlref(tmp)
+    bits() == jl_int64_eval_string("precision(BigFloat)")$Lisp
+    bits(n) ==
+      jl_int64_eval_string(concat ["setprecision(BigFloat,",
+        string(n), ")"])$Lisp
 
     0         == jlref("zero(BigFloat)")
     1         == jlref("one(BigFloat)")
@@ -361,6 +366,13 @@ JuliaFloat() : Exports == Implementation where
     -- x quo y == jbinop("div", x, y)
     x quo y == jbinop("÷", x, y)
     x rem y == jbinop("%", x, y)
+    fractionPart(x) ==
+      ret : JuliaObject := junfunc("modf",x) -- Tuple
+      qelt(ret,1) pretend %
+    wholePart(x) ==
+      ret : JuliaObject := junfunc("modf",x) -- Tuple
+      parsei toString(junfunc("BigInt", qelt(ret,2)))
+    float(m, e, b) == jbinop("*",jfloat(m), jfloat(b)^e)
 
     sqrt(x)  == junfunc("√",x)
     exp(x)   == junfunc("exp",x)
@@ -847,8 +859,9 @@ JuliaMatrix(R : Join(JuliaObjectType , JuliaRing)) :  Exports == Implementation 
                                  JuliaVector(R))) with
       if R has IntegerNumberSystem or R has QuotientFieldCategory(NINT) then
         radicalEigenvalues: % -> JuliaVector(NemoAlgebraicNumber)
-      eigenvalues: % -> JuliaVector(R)
-      ++ eigenvalues(m) returns eigenvalues of m.
+      if R has ComplexCategory(NemoRealField) then
+        eigenvalues: % -> JuliaVector(R)
+        ++ eigenvalues(m) returns eigenvalues of m.
       "^" : (%, PositiveInteger) -> %
       coerce: % -> Matrix(R)
       ++ coerce(m) coerces a copy of m to a Matrix(R).
@@ -933,6 +946,7 @@ JuliaMatrix(R : Join(JuliaObjectType , JuliaRing)) :  Exports == Implementation 
           ",", string(i), ",", string(j), ")"]))$Lisp
         r
       empty() == error "empty()$JuliaMatrix: not supported" --Qnew(0$Integer,0$Integer)
+
       if R has NemoRing then
         if R is NemoInteger then
           new(rows, cols, a) ==
@@ -991,7 +1005,7 @@ JuliaMatrix(R : Join(JuliaObjectType , JuliaRing)) :  Exports == Implementation 
           jlref(concat(["fill(", getind(a), ",(", 
             string(rows), ",", string(cols),"))"]))
     
-      qnew(rows, cols) == new(rows, cols, 0)
+      qnew(rows, cols) == new(rows, cols, 0$R)
       zero(m,n) == new(m, n, 0$R)
 
       matrix(l : List List R) ==
@@ -1064,8 +1078,8 @@ JuliaMatrix(R : Join(JuliaObjectType , JuliaRing)) :  Exports == Implementation 
         jlref(concat([getind(x),"^", string(e)]))
 
       identity(n) ==
-          m := new(n,n,0)
-          for i in 1..n repeat setelt!(m,i,i,1)
+          m := new(n,n, 0$R)
+          for i in 1..n repeat setelt!(m,i,i,1$R)
           m
       
       diagonalMatrix(v : JuliaVector(R)) : % ==

@@ -554,7 +554,8 @@ JuliaWSReal() : Exports == Implementation where
       ret : JuliaWSRational := jbinfunc("W_"Rationalize_"", x, dx)
       jlHead ret = WRational() => ret
       error1("Cannot be retracted with tolerance: ", dx)
-      
+
+    float(m, e, b) == jbinop("*",jWSReal(m), jWSReal(b) ^ e)
     integerPart(x) == junfunc("W_"IntegerPart_"",x)
     wholePart(x) == convert(junfunc("W_"IntegerPart_"",x))$JuliaWSInteger
     fractionPart(x) == junfunc("W_"FractionalPart_"", x)
@@ -743,6 +744,8 @@ JuliaWSAPReal(prec : PositiveInteger) : Exports == Implementation where
     ++ coerce(x) converts x as a JuliaWSAPReal.
     coerce  : % -> JuliaWSExpression
     ++ coerce(x) coerce x to a JuliaWSExpression.
+    jWSReal : Integer -> %
+    ++ jWSReal(i) coerces i to a JuliaWSAPReal.
     jWSReal : DoubleFloat -> %
     ++ jWSReal(f) coerces f to a JuliaWSAPReal.
     jWSReal : JuliaFloat64 -> %
@@ -824,6 +827,7 @@ JuliaWSAPReal(prec : PositiveInteger) : Exports == Implementation where
     ceiling(x) == junfunc("W_"Ceiling_"", x)
     floor(x)   == junfunc("W_"Floor_"", x)
     abs(x)     == junfunc("W_"RealAbs_"", x)
+    float(m, e, b) == jbinop("*", jWSReal(m), jWSReal(b) ^ e)
 
     rationalApproximation(x) == junfunc("W_"Rationalize_"", x)
     rationalApproximation(x, dx) == jbinfunc("W_"Rationalize_"", x, dx)
@@ -931,6 +935,12 @@ JuliaWSAPReal(prec : PositiveInteger) : Exports == Implementation where
     string(x) : String ==
       toString(x pretend JuliaWSExpression, jWSExpr("OutputForm"))
     convert(obj) : String == string obj
+    toString(x) ==
+      str := toString(x pretend JuliaWSExpression)
+      str := jl_string_eval_string(concat(["replace(_"", str,
+        "_", _"*^_" => _" E _", r_"`[0-9]+\.?[0-9]*_" => _"_")"]))$Lisp
+      --jlRegexReplace(jlRegex("`.*\*\^" pretend JuliaString),
+      --  jlSubstitute("e" pretend JuliaString), str pretend JuliaString) pretend String
     toString(x, form) == string jbinfunc("W_"ToString_"", x, form)
 
     coerce(x : %) : JuliaWSExpression == x pretend JuliaWSExpression
@@ -953,6 +963,9 @@ JuliaWSAPReal(prec : PositiveInteger) : Exports == Implementation where
       -- 0 is very special
       str = "0" => 0
       jlref(concat(["weval(NN(_"", str, "_`", string(prec), "_"))"]))
+    jWSReal(i : Integer) ==
+      zero? i => 0
+      jlref(concat(["weval(NN(_"", string(i), "_`", string(prec), "_"))"]))
     jWSReal(f : JuliaFloat) ==
       jlref(concat(["weval(NN(_"", toString(f), "_`", string(prec), "_"))"]))
     jWSReal(f : DoubleFloat) ==
