@@ -344,6 +344,7 @@ interpret_in_new_env(x) ==
     interpret(x, nil)
 
 interpret(x, posnForm) ==
+  JGC()
   --type analyzes and evaluates expression x, returns object
   $env:local := [[NIL]]
   $genValue:local := true       --evaluate all generated code

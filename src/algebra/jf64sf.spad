@@ -1,0 +1,98 @@
+)abbrev package JF64SF JuliaFloat64SpecialFunctions
+++ Special functions computed using Julia's ecosystem.
+++ They are here essentially for "completeness" purpose with
+++ JuliaFloat64. You should use the DoubleFloat's special
+++ functions if available, calling Julia functions is costly.
+JuliaFloat64SpecialFunctions() : Exports == Implementation where
+  JF64 ==> JuliaFloat64
+  JI64 ==> JuliaInt64
+  Exports ==> with
+    ldexp : (JF64, JI64) -> JF64
+    ++ ldexp(x,n) computes x*2^n
+    exp2   : JF64 -> JF64
+    ++ exp2(x) computes the base 2 exponential of x.
+    exp10   : JF64 -> JF64
+    ++ exp10(x) computes the base 10 exponential of x.
+    log1p : JF64 -> JF64
+    ++ log1p(x) computes accurately natural logarithm of 1+x.
+
+    sind   : JF64 -> JF64
+    ++ sind(x) computes sine of x, where x is in degrees.
+    sinpi  : JF64 -> JF64
+    ++ sinpi(x) computes sin(pi*x) more accurately.
+    sinc   : JF64 -> JF64
+    ++ sinc(x) computes sin(pi*x)/(pi*x) if x~=0, and 1 if x=0.
+    cosd  : JF64 -> JF64
+    ++ cosd(x) computes cosine of x, where x is in degrees.
+    cospi : JF64 -> JF64
+    ++ cospi(x) computes cos(pi*x) more accurately.
+    cosc  : JF64 -> JF64
+    ++ cosc(x) computes cos(pi*x)/x−sin(pi*x)/(pi*x^2)
+    ++ if x~=0, and 0 if x=0 i.e. the derivative of sinc(x).
+    tand  : JF64 -> JF64
+    ++ tand(x) computes tangent of x, where x is in degrees.
+    tanpi : JF64 -> JF64
+    ++ tanpi(x) computes tan(pi*x) more accurately.
+    cotd  : JF64 -> JF64
+    ++ cotd(x) computes cotangent of x, where x is in degrees.
+    secd  : JF64 -> JF64
+    ++ secd(x) computes secant of x, where x is in degrees.
+    cscd  : JF64 -> JF64
+    ++ cscd(x) computes cosecant of x, where x is in degrees.
+    hypot : (JF64, JF64) -> JF64
+    ++ hypot(x,y) computes the hypotenuse avoiding overflow and underflow.
+
+    asind : JF64 -> JF64
+    ++ asind(x) computes the inverse sine of x, where output is in degrees.
+    acosd : JF64 -> JF64
+    ++ acosd(x) computes the inverse cosine of x, where output is in degrees.
+    atand : JF64 -> JF64
+    ++ atand(x) computes the inverse tangent of x, where output is in degrees.
+    atand  : (JF64, JF64) -> JF64
+    ++ atand(x, y) computes the inverse tangent of x/y, where output is in degrees.
+    acotd : JF64 -> JF64
+    ++ acotd(x) computes the inverse cotangent of x, where output is in degrees.
+    asecd : JF64 -> JF64
+    ++ asecd(x) computes the inverse secant of x, where output is in degrees.
+    acscd : JF64 -> JF64
+    ++ acscd(x) computes the inverse cosecant of x, where output is in degrees.
+    rad2Deg  : JF64 -> JF64
+    ++ rad2deg(x) converts x to degrees, where x is in radians.
+    deg2Rad  : JF64 -> JF64
+    ++ deg2rad(x) converts x to radian, where x is in degrees.
+
+  Implementation ==> add
+    import from JuliaString
+    import from JuliaUtilityFunctions
+
+    jlUsing(coerce("SpecialFunctions"))
+
+    ldexp(x,n) == jl_dbl_function_dbl_int("ldexp", x, n)$Lisp
+    exp2(x)    == jl_dbl_function_dbl("exp2", x)$Lisp
+    exp10(x)   == jl_dbl_function_dbl("exp10", x)$Lisp
+    log1p(x)   == jl_dbl_function_dbl("log1p", x)$Lisp
+
+    sinpi(x) == jl_dbl_function_dbl("sinpi", x)$Lisp
+    sinc(x)  == jl_dbl_function_dbl("sinc", x)$Lisp
+    cospi(x) == jl_dbl_function_dbl("cospi", x)$Lisp   
+    cosc(x)  == jl_dbl_function_dbl("cosc", x)$Lisp   
+    tanpi(x) == jl_dbl_function_dbl("tanpi", x)$Lisp
+    hypot(x,y) == jl_dbl_function_dbl_dbl("hypot", x, y)$Lisp
+
+    sind(x) == jl_dbl_function_dbl("sind", x)$Lisp
+    cosd(x) == jl_dbl_function_dbl("cosd", x)$Lisp
+    tand(x) == jl_dbl_function_dbl("tand", x)$Lisp
+    cotd(x) == jl_dbl_function_dbl("cotd", x)$Lisp
+    secd(x) == jl_dbl_function_dbl("secd", x)$Lisp
+    cscd(x) == jl_dbl_function_dbl("cscd", x)$Lisp
+
+    asind(x) == jl_dbl_function_dbl("asind", x)$Lisp
+    acosd(x) == jl_dbl_function_dbl("acosd", x)$Lisp
+    atand(x) == jl_dbl_function_dbl("atand", x)$Lisp
+    atand(x,y) == jl_dbl_function_dbl_dbl("atand", x, y)$Lisp
+    acotd(x) == jl_dbl_function_dbl("acotd", x)$Lisp
+    asecd(x) == jl_dbl_function_dbl("asecd", x)$Lisp
+    acscd(x) == jl_dbl_function_dbl("acscd", x)$Lisp
+
+    rad2Deg(x) == jl_dbl_function_dbl("rad2deg", x)$Lisp
+    deg2Rad(x) == jl_dbl_function_dbl("deg2rad", x)$Lisp

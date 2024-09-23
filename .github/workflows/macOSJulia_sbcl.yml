@@ -1,20 +1,16 @@
-name: FriCAS CI on macOS
+name: FriCAS CI on macOS (with Julia support - SBCL based)
 
 on: [push, pull_request]
 
 jobs:
   build:
-
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [macos-12, macos-14]
-    runs-on: ${{ matrix.os }}
+    runs-on: macos-12
     timeout-minutes: 30
     env:
-      SBCL_VER: ${{ matrix.os == 'macos-12' && '2.2.9' || '2.4.0' }}
-      ARCH: ${{ matrix.os == 'macos-12' && 'x86-64' || 'arm64' }}
-
+      SBCL_VER: '2.2.9'
+      ARCH: 'x86-64'
+      JULIA: 'https://julialang-s3.julialang.org/bin/mac/x64/1.10/julia-1.10.0-mac64.dmg'
+      DMG: 'julia-1.10.0-mac64.dmg'
     steps:
     - uses: actions/checkout@v4
     - name: download and install SBCL
@@ -22,18 +18,27 @@ jobs:
         wget https://downloads.sourceforge.net/project/sbcl/sbcl/${SBCL_VER}/sbcl-${SBCL_VER}-${ARCH}-darwin-binary.tar.bz2
         tar xvf sbcl-${SBCL_VER}-${ARCH}-darwin-binary.tar.bz2
         cd sbcl-${SBCL_VER}-${ARCH}-darwin && sudo ./install.sh
-
+    - name: download Julia
+      run: wget ${JULIA}
+    - name: mount Julia
+      run: hdiutil mount ${DMG}
+    - name: install Julia
+      run: |
+        sudo cp -R /Volumes/julia-1.10.0/julia-1.10.app /Applications
+        sudo ln -sf /Applications/Julia-1.10.app/Contents/Resources/julia/bin/julia /usr/local/bin/julia
+        sudo ln -sf /Applications/Julia-1.10.app/Contents/Resources/julia/lib/libjulia.dylib /usr/local/lib/libjulia.dylib
+    - name: adjust lib search path
+      run: export DYLD_FALLBACK_LIBRARY_PATH=/Applications/Julia-1.10.app/Contents/Resources/julia/lib:$DYLD_FALLBACK_LIBRARY_PATH  && sudo update_dyld_shared_cache
+    - name: install Julia libraries
+      run: julia -e "import Pkg;Pkg.add(\"Nemo\");Pkg.add(\"Suppressor\");Pkg.add(\"SpecialFunctions\")"
     - name: configure
       run: |
         mkdir ../build && cd ../build
-        ../jlfricas/configure --with-lisp=sbcl --with-gmp=`brew --prefix` || cat config.log
-
+        ../jlfricas/configure --enable-julia --with-gmp=`brew --prefix`|| cat config.log
     - name: make
       run: cd ../build && make -j3
-
     - name: make check
       run: cd ../build && make check -j3
-
     - name: Create artifact archives
       run: |
         cd ../build
@@ -43,10 +48,8 @@ jobs:
         ## reduce chance of error caused by "hdiutil: Resource busy"
         make dist-macos-dmg || make dist-macos-dmg
         mv FriCAS.dmg ../jlfricas/FriCAS-macOS-${ARCH}-${{ github.sha }}.dmg
-
     - name: Upload macOS binary
       uses: actions/upload-artifact@v4
       with:
         name: FriCAS-macOS-${{ env.ARCH }}-binary
         path: FriCAS-macOS-${{ env.ARCH }}-${{ github.sha }}.dmg
-

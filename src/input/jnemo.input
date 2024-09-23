@@ -1,0 +1,8 @@
+)set break resume
+)set mess type off
+)expose UnittestCount UnittestAux Unittest
+
+testsuite "Julia Nemo"
+testcase "Nemo availability"
+testTrue("jlUsing(_"Nemo_")")
+statistics()
