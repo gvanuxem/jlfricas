@@ -180,9 +180,7 @@ JuliaWSSymbol() : Exports == Implementation where
     coerce(sym : %) : JuliaWSExpression == sym pretend JuliaWSExpression
     jWSSym(sym : Symbol) == jlref(concat(["WSymbol(_"", string(sym), "_")"]))
     jWSSym(str : String) == jlref(concat(["W_`", str, "_`"]))
-    coerce(obj) : OutputForm ==
-      jl_string_eval_string(concat(["string(", getind(obj),")"]))$Lisp
-      --jl_string_getindex(jlId(obj))$Lisp
+    coerce(obj) : OutputForm == jl_string_getindex(jlId(obj))$Lisp
 
 )abbrev domain JWSINT JuliaWSInteger
 ++ Generic domain for Julia WS integers
@@ -299,9 +297,8 @@ JuliaWSInteger() : Exports == Implementation where
     coerce(i : Integer) == jlref(concat(["WInteger(_"", string(i), "_")"]))
     jWSInt(i : Integer) == jlref(concat(["WInteger(_"", string(i), "_")"]))
     -- TODO
-    coerce(i) : OutputForm == -- jl_string_getindex(jlId i)$Lisp
-      ret : String :=
-        jl_string_eval_string(concat(["string(", getind(i),")"]))$Lisp
+    coerce(i) : OutputForm ==
+      ret : String := jl_string_getindex(jlId i)$Lisp
       coerce(parsei(ret))$Integer
 
 )abbrev domain JWSRAT JuliaWSRational

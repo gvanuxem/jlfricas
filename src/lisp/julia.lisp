@@ -46,7 +46,7 @@
     bool (func c-string) (arg1 double) (arg2 double))
 (fricas-foreign-call boot::|jl_string_eval_string| "jl_string_eval_string"
     c-string (command c-string))
-(fricas-foreign-call boot::|jl_getindex_wrapped_index| "jl_getindex_wrapped_index"
+(fricas-foreign-call boot::|jl_string_getindex| "jl_getindex_wrapped_index"
     c-string (index c-string))
 (fricas-foreign-call boot::|jl_setindex_wrap_eval_string| "jl_setindex_wrap_eval_string"
     c-string (index c-string) (command c-string))
@@ -75,7 +75,7 @@
     `(if (eq (jl_bool_function_dbl_dbl ,func ,arg1 ,arg2)  0) nil t))
 (defmacro boot::|jl_string_eval_string| (str)
     `(ccl::%get-cstring (jl_string_eval_string ,str)))
-(defmacro boot::|jl_getindex_wrapped_index| (index)
+(defmacro boot::|jl_string_getindex| (index)
     `(ccl::%get-cstring (jl_getindex_wrapped_index ,index)))
 (defmacro boot::|jl_setindex_wrap_eval_string| (index str)
     `(ccl::%get-cstring (jl_setindex_wrap_eval_string ,index ,str)))

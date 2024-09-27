@@ -50,7 +50,7 @@ JuliaObjectType() : Category == JuliaType() with
     ++ jlAbout(obj) displays Julia informations about obj
     ++ if you have About.jl installed in Julia.
     ++ In the Julia interpreter:
-    ++   import Pkg
+    ++   import Pkg;
     ++   Pkg.import("https://github.com/tecosaur/About.jl")
   add
     import from JuliaUtilityFunctions
@@ -88,10 +88,8 @@ JuliaObjectType() : Category == JuliaType() with
     mutable?(x) ==
       jl_bool_eval_string(concat(["ismutable(", getind(x), ")"]))$Lisp
     -- TODO
-    string(obj)  == jl_string_eval_string(concat(["string(", getind(obj),")"]))$Lisp
-    -- jl_string_getindex(jlId obj)$Lisp
-    convert(obj)  == jl_string_eval_string(concat(["string(", getind(obj),")"]))$Lisp
-    -- jl_string_getindex(jlId obj)$Lisp
+    string(obj)  == jl_string_getindex(jlId obj)$Lisp
+    convert(obj)  == jl_string_getindex(jlId obj)$Lisp
     jlApply(func, a) ==
       defined?(func)
       junfunc(func, a)
@@ -258,9 +256,7 @@ JuliaObjBoolean() : Exports == Implementation where
   Implementation ==> JuliaObject() add
     import String
     getind(a)  ==> concat(["getindex(refs,_"", jlId a, "_")"])
-    coerce(bool) : Boolean ==
-      jl_string_eval_string(concat(["string(", getind(bool),")"]))$Lisp = "true"
-    --  jl_string_getindex(jlId bool)$Lisp = "true"
+    coerce(bool) : Boolean == jl_string_getindex(jlId bool)$Lisp = "true"
     jtrue() == jlref("true")
     jfalse() == jlref("false")
 
@@ -1490,6 +1486,5 @@ JuliaMatrix(R : JuliaObjectRing) :  Exports == Implementation where
         make_jlref_from_mat(0$NNI, jlVector(m), nrows m)$Lisp
       coerce(m : JuliaComplexF64Matrix) : JuliaMatrix(JuliaObjComplexF64) ==
         make_jlref_from_mat(1$NNI, jlVector(m), nrows m)$Lisp
-      --coerce(m : %) : OutputForm == coerce(m pretend JuliaObject)
       jmatrix(str) == jlref(str)
       coerce(mat : %) : OutputForm == coerce(mat pretend JuliaObject)
