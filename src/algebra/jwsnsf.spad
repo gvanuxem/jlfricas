@@ -388,9 +388,8 @@ JuliaWSNumericalSpecialFunctions(R : JuliaWSNumber) : Exports ==Implementation w
         => error "Type of output does not match input type"
   
     polylog(x,y) ==
-      -- TODO: JuliaWSAPComplex
       ret : R := jbinfunc("W_"PolyLog_"", x, y)
-      jtypeassert(x,ret)
+      jtypeassert(y,ret)
       ret
     riemannZeta(z) ==
       ret : R := junfunc("W_"Zeta_"",z)
@@ -398,7 +397,7 @@ JuliaWSNumericalSpecialFunctions(R : JuliaWSNumber) : Exports ==Implementation w
       ret
     riemannZeta(x,y) ==
       ret : R := jbinfunc("W_"Zeta_"",x, y)
-      jtypeassert(x,ret)
+      jtypeassert(y,ret)
       ret
     lambertW(z) ==
       ret : R := junfunc("W_"ProductLog_"",z)
@@ -406,11 +405,12 @@ JuliaWSNumericalSpecialFunctions(R : JuliaWSNumber) : Exports ==Implementation w
       ret
     lambertW(x,y) ==
       ret : R := jbinfunc("W_"ProductLog_"",x, y)
-      jtypeassert(x,ret)
+      jtypeassert(y,ret)
       ret
     polygamma(x,y) ==
       ret : R := jbinfunc("W_"PolyGamma_"", x, y)
-
+      jtypeassert(y,ret)
+      ret
     haversine(z) ==
       ret : R := junfunc("W_"Haversine_"", z)
       jtypeassert(z,ret)
@@ -517,7 +517,7 @@ JuliaWSNumericalSpecialFunctions(R : JuliaWSNumber) : Exports ==Implementation w
       ret
     lerchPhi(z,s,a) ==
       ret : R := jterfunc("W_"LerchPhi_"", z,s,a)
-      jtypeassert(z,ret)
+      jtypeassert(a,ret)
       ret
     polylog(n,p,z) ==
       ret : R := jterfunc("W_"PolyLog_"", n,p,z)
@@ -579,11 +579,11 @@ JuliaWSNumericalSpecialFunctions(R : JuliaWSNumber) : Exports ==Implementation w
       ret
     Beta(z,a,b) ==
       ret : R := jterfunc("W_"Beta_"", z,a,b)
-      jtypeassert(z,ret)
+      jtypeassert(b,ret)
       ret
     BetaRegularized(z,a,b) ==
       ret : R := jterfunc("W_"BetaRegularized_"", z,a,b)
-      jtypeassert(z,ret)
+      jtypeassert(b,ret)
       ret
     Gamma(z) ==
       ret : R := junfunc("W_"Gamma_"", z)
@@ -595,7 +595,7 @@ JuliaWSNumericalSpecialFunctions(R : JuliaWSNumber) : Exports ==Implementation w
       ret
     Gamma(a, z1, z2) ==
       ret : R := jterfunc("W_"Gamma_"", a, z1,z2)
-      jtypeassert(a,ret)
+      jtypeassert(z2,ret)
       ret
 
     GammaRegularized(a,z) ==
@@ -604,16 +604,16 @@ JuliaWSNumericalSpecialFunctions(R : JuliaWSNumber) : Exports ==Implementation w
       ret
     inverseBetaRegularized(s,a,b) ==
       ret : R := jterfunc("W_"InverseBetaRegularized_"", s,a,b)
-      jtypeassert(s,ret)
+      jtypeassert(b,ret)
       ret
     inverseGammaRegularized(a,s) ==
       ret : R := jbinfunc("W_"InverseGammaRegularized_"", a,s)
-      jtypeassert(a,ret)
+      jtypeassert(s,ret)
       ret
 
     pochhammer(a,n) ==
       ret : R := jbinfunc("W_"Pochhammer_"", a,n)
-      jtypeassert(a,ret)
+      jtypeassert(n,ret)
       ret
     digamma(z) ==
       ret : R := junfunc("W_"PolyGamma_"", z)
@@ -753,15 +753,15 @@ JuliaWSNumericalSpecialFunctions(R : JuliaWSNumber) : Exports ==Implementation w
 
     QPochhammer(z,q) ==
       ret : R := jbinfunc("W_"QPochhammer_"", z,q)
-      jtypeassert(z,ret)
+      jtypeassert(q,ret)
       ret
     QPochhammer(z,q,n) ==
       ret : R := jterfunc("W_"QPochhammer_"", z,q,n)
-      jtypeassert(z,ret)
+      jtypeassert(q,ret)
       ret
     QFactorial(z,q) ==
       ret : R := jbinfunc("W_"QFactorial_"", z,q)
-      jtypeassert(z,ret)
+      jtypeassert(q,ret)
       ret
     QBinomial(n,m,q) ==
       ret : R := jterfunc("W_"QBinomial_"", n,m,q)
@@ -769,15 +769,15 @@ JuliaWSNumericalSpecialFunctions(R : JuliaWSNumber) : Exports ==Implementation w
       ret
     QGamma(z,q) ==
       ret : R := jbinfunc("W_"QGamma_"", z,q)
-      jtypeassert(z,ret)
+      jtypeassert(q,ret)
       ret
     QPolyGamma(z,q) ==
       ret : R := jbinfunc("W_"QPolyGamma_"", z,q)
-      jtypeassert(z,ret)
+      jtypeassert(q,ret)
       ret
     QPolyGamma(n,z,q) ==
       ret : R := jterfunc("W_"QPolyGamma_"", n,z,q)
-      jtypeassert(z,ret)
+      jtypeassert(q,ret)
       ret
 
     mathieuC(a,q,z) ==
@@ -811,7 +811,7 @@ JuliaWSNumericalSpecialFunctions(R : JuliaWSNumber) : Exports ==Implementation w
 
     jacobiAmplitude(u,m) ==
       ret : R := jbinfunc("W_"JacobiAmplitude_"", u,m)
-      jtypeassert(u,ret)
+      jtypeassert(m,ret)
       ret
     jacobiSn(u,m) ==
       ret : R := jbinfunc("W_"JacobiSN_"", u,m)
@@ -831,7 +831,7 @@ JuliaWSNumericalSpecialFunctions(R : JuliaWSNumber) : Exports ==Implementation w
       ret
     inverseJacobiCn(v,m) ==
       ret : R := jbinfunc("W_"InverseJacobiCN_"", v,m)
-      jtypeassert(v,ret)
+      jtypeassert(m,ret)
       ret
     ellipticTheta(a,u,q) ==
       ret : R := jterfunc("W_"EllipticTheta_"", a,u,q)
@@ -868,7 +868,7 @@ JuliaWSNumericalSpecialFunctions(R : JuliaWSNumber) : Exports ==Implementation w
       ret
     ellipticPi(n,m) ==
       ret : R := jbinfunc("W_"EllipticPi_"", n,m)
-      jtypeassert(n,ret)
+      jtypeassert(m,ret)
       ret
     ellipticPi(n,z,m) ==
       ret : R := jterfunc("W_"EllipticPi_"", n,z,m)
