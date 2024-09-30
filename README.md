@@ -39,16 +39,18 @@ juliaVPrint
 ------------------------------- Categories --------------------------------
 
 Categories with names matching patterns:
-     julia 
+     julia
 
  JARBPR   JuliaArbitraryPrecision      JMATCAT  JuliaMatrixCategory
- JOBJTYP  JuliaObjectType              JRING    JuliaRing
+ JOBAGG   JuliaObjectAggregate         JOBRING  JuliaObjectRing
+ JOBTYPE  JuliaObjectType              JRING    JuliaRing
  JTYPE    JuliaType                    JVECCAT  JuliaVectorCategory
- JWS      JuliaWolframSymbolic
+ JWSAGG   JuliaWSAggregate             JWSNUM   JuliaWSNumber
+ JWSO     JuliaWSObject                JWSRING  JuliaWSRing
 --------------------------------- Domains ---------------------------------
 
 Domains with names matching patterns:
-     julia 
+     julia
 
  JCF64    JuliaComplexF64              JCF64MAT JuliaComplexF64Matrix
  JCF64SMA JuliaComplexF64SquareMatrix  JCF64VEC JuliaComplexF64Vector
@@ -57,18 +59,24 @@ Domains with names matching patterns:
  JF64SMAT JuliaF64SquareMatrix         JF64VEC  JuliaFloat64Vector
  JFLOAT   JuliaFloat                   JI64     JuliaInt64
  JI64VEC  JuliaInt64Vector             JMATRIX  JuliaMatrix
- JOBJECT  JuliaObject                  JOBJTYP- JuliaObjectType&
+ JOBAGG-  JuliaObjectAggregate&        JOBBINT  JuliaObjBigInt
+ JOBBOOL  JuliaObjBoolean              JOBCF64  JuliaObjComplexF64
+ JOBF64   JuliaObjFloat64              JOBI64   JuliaObjInt64
+ JOBJECT  JuliaObject                  JOBRING- JuliaObjectRing&
+ JOBTPLE  JuliaObjTuple                JOBTYPE- JuliaObjectType&
  JSTR     JuliaString                  JSYM     JuliaSymbol
- JVECTOR  JuliaVector                  JWS-     JuliaWolframSymbolic&
+ JVECTOR  JuliaVector                  JWSAGG-  JuliaWSAggregate&
  JWSAPCPX JuliaWSAPComplex             JWSAPR   JuliaWSAPReal
  JWSCPLX  JuliaWSComplex               JWSEXPR  JuliaWSExpression
  JWSGINT  JuliaWSGaussianInteger       JWSINT   JuliaWSInteger
- JWSRAT   JuliaWSRational              JWSREAL  JuliaWSReal
- JWSSYM   JuliaWSSymbol
+ JWSLIST  JuliaWSList                  JWSMAT   JuliaWSMatrix
+ JWSO-    JuliaWSObject&               JWSRAT   JuliaWSRational
+ JWSREAL  JuliaWSReal                  JWSSYM   JuliaWSSymbol
+ JWSVEC   JuliaWSVector
 -------------------------------- Packages ---------------------------------
 
 Packages with names matching patterns:
-     julia 
+     julia
 
  JCF64MTF JuliaComplexF64MatrixTranscendentalFunctions
  JCFSF    JuliaComplexFloatSpecialFunctions
@@ -80,6 +88,8 @@ Packages with names matching patterns:
  JFSF2    JuliaFloatSpecialFunctions2  JPLOT    JuliaPlotFunctions
  JRLA     JuliaRealLinearAlgebra       JUF      JuliaUtilityFunctions
  JVECTOR2 JuliaVectorFunctions2
+ JWSNSF   JuliaWSNumericalSpecialFunctions
+ JWSUF    JuliaWSUtilityFunctions
 --------------- System Commands for User Level: development ---------------
 
 System commands at this level matching patterns:
@@ -100,29 +110,30 @@ Nemo Categories/Domains (JuliaObject):
 
    There are no operations containing those patterns
 
------------------------------------------------- Categories ------------------------------------------------
+------------------------------- Categories --------------------------------
 
 Categories with names matching patterns:
      nemo
 
- NRING    NemoRing                                      NTYPE    NemoType
-------------------------------------------------- Domains --------------------------------------------------
+ NRING    NemoRing                     NTYPE    NemoType
+--------------------------------- Domains ---------------------------------
 
 Domains with names matching patterns:
      nemo
 
- NAN      NemoAlgebraicNumber                           NCB      NemoComplexBall
- NCF      NemoComplexField                              NECF     NemoExactComplexField
- NFF      NemoFiniteField                               NFR      NemoFactored
- NINT     NemoInteger                                   NMP      NemoMultivariatePolynomial
- NPF      NemoPrimeField                                NRAT     NemoRational
- NRB      NemoRealBall                                  NRF      NemoRealField
- NUP      NemoUnivariatePolynomial                      NZMOD    NemoIntegerMod
+ NACB     NemoAcbField                 NAN      NemoAlgebraicNumber
+ NARB     NemoArbField                 NCB      NemoComplexBall
+ NCF      NemoComplexField             NECF     NemoExactComplexField
+ NFF      NemoFiniteField              NFR      NemoFactored
+ NINT     NemoInteger                  NMP      NemoMultivariatePolynomial
+ NPF      NemoPrimeField               NRAT     NemoRational
+ NRB      NemoRealBall                 NRF      NemoRealField
+ NUP      NemoUnivariatePolynomial     NZMOD    NemoIntegerMod
 ```
 
 If you want to build and install the HTML documentation,
 you need to install Sphinx. On a Debian like system, to add it, issue in a
-terminal <code>sudo apt install python3 python3-pip && pip3 install -U Sphinx</code>.
+terminal <code>sudo apt install python3 python3-sphinx</code>.
 After building FriCAS, and before the installation, issue in your terminal
 <code>make htmldoc</code>.
 
