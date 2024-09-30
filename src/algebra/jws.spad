@@ -679,9 +679,9 @@ JuliaWSReal() : Exports == Implementation where
     jWSReal(f : DoubleFloat) == jlref(concat(["WReal(_"", toString(f), "_")"]))
     jWSReal(f : Float) ==
       tmp := outputSpacing(0)
-      a := jlref(concat(["WReal(_"", toString(f), "_")"]))
+      ret := jlref(concat(["WReal(_"", toString(f), "_")"]))
       outputSpacing(tmp)
-      a
+      ret
     jWSReal(f : Integer) == jlref(concat(["WReal(_"", string(f), "_")"]))
     jWSReal(str) == jlref(concat(["WReal(_"", str, "_")"]))
     coerce(x) : OutputForm ==
@@ -1152,15 +1152,15 @@ JuliaWSComplex() : Exports == Implementation where
       error "The Julia MathLink package is not installed."
     Rep := SExpression
 
-    0 == jlref("weval(W_"Complex_"(0.0,0.0))")
-    1 == jlref("weval(W_"Complex_"(1.0,0.0))")
-    imaginary()  == jlref("weval(W_"Complex_"(0.0,1.0))")
+    0 == jlref(concat(["W_`Complex[0.0,0.0]_`"]))
+    1 == jlref(concat(["W_`Complex[1.0,0.0]_`"]))
+    imaginary()  == jlref(concat(["W_`Complex[0.0,1.0]_`"]))
 
     zero? z == z = 0
     one? z  == z = 1
 
-    pi()  == jWSExpr("N[Complex[Pi,0]]")$JuliaWSExpression pretend %
-    exp() == jWSExpr("N[Complex[E,0]]")$JuliaWSExpression pretend %
+    pi()  == jlref(concat(["W_`Complex[Pi,0.0]_`"]))
+    exp() == jlref(concat(["W_`Complex[E,0.0]_`"]))
 
     real(z)      == junfunc("W_"Re_"", z)
     imag(z)      == junfunc("W_"Im_"", z)
@@ -1374,18 +1374,15 @@ JuliaWSAPComplex(prec : PositiveInteger) : Exports == Implementation where
       error "The Julia MathLink package is not installed."
     Rep := SExpression
 
-    0 == complex(0$JuliaWSAPReal(prec), 0$JuliaWSAPReal(prec))
-    1 == complex(1$JuliaWSAPReal(prec), 0$JuliaWSAPReal(prec))
-    imaginary()  ==
-      jWSExpr(concat(["N[Complex[0,1],", string(prec),"]"]))$JuliaWSExpression pretend %
+    0 == jlref(concat(["W_`N[Complex[0,0],", string(prec), "]_`"]))
+    1 == jlref(concat(["W_`N[Complex[1,0],", string(prec), "]_`"]))
+    imaginary()  == jlref(concat(["W_`N[Complex[0,1],", string(prec), "]_`"]))
 
     zero? z == z = 0
     one? z  == z = 1
 
-    pi()  ==
-      jWSExpr(concat(["N[Complex[Pi,0],", string(prec),"]"]))$JuliaWSExpression pretend %
-    exp() ==
-      jWSExpr(concat(["N[Complex[E,0],", string(prec),"]"]))$JuliaWSExpression pretend %
+    pi()  == jlref(concat(["W_`N[Complex[Pi,0],", string(prec), "]_`"]))
+    exp() == jlref(concat(["W_`N[Complex[E,0],", string(prec), "]_`"]))
 
     real(z)      == junfunc("W_"Re_"", z)
     imag(z)      == junfunc("W_"Im_"", z)
@@ -1514,14 +1511,14 @@ JuliaWSAPComplex(prec : PositiveInteger) : Exports == Implementation where
       jlref(concat(["weval(W_"Complex_"(", getind(re), "," , getind(0), "))"]))
     jWSComplex(re : JuliaWSAPReal(prec), im : JuliaWSAPReal(prec)) : % ==
       jlref(concat(["weval(W_"Complex_"(", getind(re), "," , getind(im), "))"]))
-    coerce(z) : OutputForm == coerce(z pretend JuliaWSExpression)
-      --re := (r := real z)::OutputForm
-      --ie := (i := imag z)::OutputForm
-      --zero? i  => re
-      --outi := '%i::OutputForm
-      --ip :=
-      --  (i = 1) => outi
-      --  ((-i) = 1) => -outi
-      --  ie * outi
-      --zero? r => ip
-      --re + ip
+    coerce(z) : OutputForm ==
+      re := (r := real z)::OutputForm
+      ie := (i := imag z)::OutputForm
+      zero? i => re
+      outi := '%i::OutputForm
+      ip :=
+        (i = 1) => outi
+        ((-i) = 1) => -outi
+        ie * outi
+      zero? r => ip
+      re + ip

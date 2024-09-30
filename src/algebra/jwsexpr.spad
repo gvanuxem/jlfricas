@@ -114,6 +114,8 @@ JuliaWSExpression() : Exports == Implementation where
     inverseErfc : % -> %
     ++ inverseErfc(x) computes the inverse complementary
     ++ error function of x.
+    EiEn : (JuliaWSInteger,%) -> %
+    ++ EiEn(n,z) returns the exponential integral En(z).
     BetaRegularized : (%, %, %) -> %
     ++ BetaRegularized(x,a,b) computes the regularized incomplete beta function.
     GammaRegularized : (%, %) -> %
@@ -517,7 +519,7 @@ JuliaWSExpression() : Exports == Implementation where
     ++ findInstance(expr,lvars,dom,n) tries to find n instance(s) to the
     ++ equation in expr.
     findInstance : (%, %, %) -> JWSL(JWSL(%))
-    ++ findInstance(expr,lvars,dom) tries to find an instance the equation
+    ++ findInstance(expr,lvars,dom) tries to find an instance to the equation
     ++ in expr.
     findInstance : (%, %, %, %) -> JWSL(JWSL(%))
     ++ findInstance(expr,lvars,dom, n) tries to find n instance(s) to
@@ -828,6 +830,11 @@ JuliaWSExpression() : Exports == Implementation where
     ++ with param1, param2 and param3 as parameters.
     length : % -> %
     ++ length(expr) returns the length of expr seen as a list.
+    level : (%, %) -> JWSL(%)
+    ++ level(expr, lev) returns the list of expression expr at level lev.
+    level : (%, %, Boolean) -> JWSL(%)
+    ++ level(expr, lev, head) returns the list of expression expr at level lev
+    ++ with heads if head is true.
     extract: (%, NonNegativeInteger) -> %
     ++ extract(expr,i) returns the i-th element of expr seen as a list.
     keys: % -> %
@@ -887,6 +894,14 @@ JuliaWSExpression() : Exports == Implementation where
     ++ coerce(sym) coerces sym to a JuliaWSExpression.
     coerce : List(%) -> %
     ++ coerce(list) coerces list of JuliaWSExpression.
+    jlWSPrecision : % -> %
+    ++ jlWSPrecision get precision of expr.
+    jlWSAccuracy : % -> %
+    ++ jlWSAccuracy(expr) get accuracy of expr. 
+    jlWSSetPrecision : (%, %) -> %
+    ++ jlWSSetPrecision(expr, prec) set precision of expr to prec.
+    jlWSSetAccuracy : (%, %) -> %
+    ++ jlWSSetAccuracy(expr, acc) set accuracy of expr to acc.
     jlWSSetOptions : (%, %) -> %
     ++ jlWSSetOptions(type, opts) sets some internal engine options.
     -- SetAttributes Hold*
@@ -1051,6 +1066,7 @@ JuliaWSExpression() : Exports == Implementation where
     Ci(x)       == junfunc("W_"CosIntegral_"",x)
     Chi(x)      == junfunc("W_"CoshIntegral_"",x)
     Ei(x)       == junfunc("W_"ExpIntegralEi_"",x)
+    EiEn(n,x)   == jbinfunc("W_"ExpIntegralE_"",n,x)
     fresnelC(x) == junfunc("W_"FresnelC_"",x)
     fresnelS(x) == junfunc("W_"FresnelS_"",x)
     li(x)       == junfunc("W_"LogIntegral_"",x)
@@ -1508,6 +1524,10 @@ JuliaWSExpression() : Exports == Implementation where
 
     length(expr) == junfunc("W_"Length_"", expr)
     extract(expr, i) == jbinfunc("W_"Extract_"", expr, jWSExpr(string(i)))
+    level(expr, level) == jbinfunc("W_"Level_"", expr, level)
+    level(expr, level, head) ==
+      if head then jterfunc("W_"Level_"", expr, level, jWSExpr "Heads->True")
+      else jbinfunc("W_"Level_"", expr, level)
     lookup(assocs,keys) == jbinfunc("W_"Lookup_"",assocs,keys)
     lookup(assocs,keys,def) == jterfunc("W_"Lookup_"",assocs,keys,def)
     keys(expr) ==
@@ -1526,9 +1546,12 @@ JuliaWSExpression() : Exports == Implementation where
     replaceAt(expr, at, n) == jterfunc("W_"ReplaceAt_"", expr, at, n)
     replaceAll(expr, rule) == jbinfunc("W_"ReplaceAll_"", expr, rule)
     replaceRepeated(expr, rule) == jbinfunc("W_"ReplaceRepeated_"", expr, rule)
-    -- HERE : operator form
+    -- HERE: operator form
     --jWSExpr concat(["ReplaceAll[", toString(rule),"][", toString(expr), "]"])
-
+    jlWSPrecision(expr) == junfunc("W_"Precision_"", expr)
+    jlWSAccuracy(expr) == junfunc("W_"Accuracy_"", expr)
+    jlWSSetPrecision(expr, n) == jbinfunc("W_"SetPrecision_"", expr, n)
+    jlWSSetAccuracy(expr, n) == jbinfunc("W_"SetAccuracy_"", expr, n)
     toString(expr, form) == string jbinfunc("W_"ToString_"", expr, form)
     retractIfCan(expr : %) : Union(JuliaFloat64, "failed") ==
       jlType(expr) = "Float64" => jl_dbl_eval_string(getind(expr))$Lisp pretend JuliaFloat64

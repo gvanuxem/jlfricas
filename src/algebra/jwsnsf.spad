@@ -162,6 +162,8 @@ JuliaWSNumericalSpecialFunctions(R : JuliaWSNumber) : Exports ==Implementation w
     --    meijerG : (List R, List R, List R, List R, R) -> R
     --        ++ meijerG(la, lb, lc, ld, z) is the meijerG function.
     ------------------------------------------------------------------
+    EiEn : (JuliaWSInteger, R) -> R
+    ++ EiEn(n,z) returns the exponential integral En of z.
     lambertW : (JuliaWSInteger, R) -> R
     ++ lambertW(k,z) returns the k-th solution to LambertW function.
     haversine : R -> R
@@ -641,6 +643,11 @@ JuliaWSNumericalSpecialFunctions(R : JuliaWSNumber) : Exports ==Implementation w
       ret
     fibonacci(n,z) ==
       ret : R := jbinfunc("W_"Fibonacci_"", n, z)
+      jtypeassert(z,ret)
+      ret
+
+    EiEn(n,z)     ==
+      ret : R := jbinfunc("W_"ExpIntegralE_"", n, z)
       jtypeassert(z,ret)
       ret
 
