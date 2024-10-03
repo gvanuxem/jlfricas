@@ -267,6 +267,7 @@ NemoRational() : Exports == Implementation where
 NemoAlgebraicNumber() : Exports == Implementation where
   NNI       ==> NonNegativeInteger
   Z         ==> NemoInteger
+  K         ==> Kernel %
   JI64      ==> JuliaInt64
   NINT      ==> NemoInteger
   NUP       ==> NemoUnivariatePolynomial
@@ -293,6 +294,10 @@ NemoAlgebraicNumber() : Exports == Implementation where
     algebraicInteger? : % -> Boolean
     ++ algebraicInteger?(a) tests whether  or not a
     ++ is an algebraic integer.
+    real : % -> %
+    ++ real(x) returns real part of x.
+    imag : % -> %
+    ++ imag(x) returns imaginary part of x.
     real?     : % -> Boolean
     ++ real?(x) tests whether or not x is a real number.
     random      : (NNI, NNI) -> %
@@ -344,6 +349,7 @@ NemoAlgebraicNumber() : Exports == Implementation where
 
     jlInitialize(true)
     Rep := SExpression
+    ALGOP := '%alg
 
     getind(a) ==> concat(["getindex(refs,_"", jlId(a), "_")"])
     jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
@@ -362,6 +368,9 @@ NemoAlgebraicNumber() : Exports == Implementation where
     rootOfUnity(n) == jlref(concat(["root_of_unity(QQBar,", string(n),")"]))
     rootOfUnity(n,k) ==
       jlref(concat(["root_of_unity(QQBar,", string(n), ",",string(k) ")"]))
+    real(x) == junfunc("real",x)
+    imag(x) == junfunc("imag",x)
+
     random(deg, bits) ==
       jlref(concat(["rand(QQBar,degree=", string(deg),
         ",bits=", string(bits), ",randtype=:real)"]))
@@ -383,7 +392,6 @@ NemoAlgebraicNumber() : Exports == Implementation where
     x : % ^ y : % == jbinop("^", x, y)
 
     x ^ y : Fraction Integer == jbinop("^", x, coerce(y)@NemoRational)
-
     x ^ y : Integer == jlref(concat [getind(x), "^", string(y)])
     x : % ^ y : % ==  jbinop("^", x, y)
 
@@ -412,6 +420,9 @@ NemoAlgebraicNumber() : Exports == Implementation where
       getind(a),")"]))$Z
     degree(a : %) ==
       jl_int64_eval_string(concat(["degree(", getind(a), ")"]))$Lisp
+
+    belong?(op) == belong?(op)$ExpressionSpace2_&(%, K) or has?(op, ALGOP)
+
 
     retractIfCan(x : %) : Union(Integer, "failed") ==
       not integer? x => "failed"

@@ -41,6 +41,8 @@ JuliaWSNumericalSpecialFunctions(R : JuliaWSNumber) : Exports ==Implementation w
         ++ airyBi(z) is the Airy function \spad{Bi(z)}.
     airyBiPrime : R -> R
         ++ airyBiPrime(z) is the derivative of the Airy function \spad{Bi(z)}.
+    dawson  : R -> R
+    ++ dawson(x) computes the Dawson integral of x.
     lambertW : R -> R
         ++ lambertW(z) = w is the principial branch of the solution
         ++ to the equation \spad{we^w = z}.
@@ -372,9 +374,11 @@ JuliaWSNumericalSpecialFunctions(R : JuliaWSNumber) : Exports ==Implementation w
     --++ jacobiZeta(ϕ,m) computes the Jacobi Zeta function.
     ++ jacobiZeta(phi,m) computes the Jacobi Zeta function.
     dedekindEta : R -> R
-    ++ dedekindEta(tau) computes the Dedekind modular elliptic eta. 
+    ++ dedekindEta(tau) computes the Dedekind modular elliptic eta.
+    dirichletEta : R -> R
+    ++ dirichletEta(z) computes the Dirichlet eta of z.
     kleinInvariantJ : R -> R
-    ++ kleinInvariantJ(tau) computes the Klein's absolute invariant. 
+    ++ kleinInvariantJ(tau) computes the Klein's absolute invariant.
     modularLambda : R -> R
     ++ modularLambda() computes the lambda modular function.
   Implementation ==> add
@@ -400,6 +404,10 @@ JuliaWSNumericalSpecialFunctions(R : JuliaWSNumber) : Exports ==Implementation w
     riemannZeta(x,y) ==
       ret : R := jbinfunc("W_"Zeta_"",x, y)
       jtypeassert(y,ret)
+      ret
+    dawson(z) ==
+      ret : R := junfunc("W_"DawsonF_"",z)
+      jtypeassert(z,ret)
       ret
     lambertW(z) ==
       ret : R := junfunc("W_"ProductLog_"",z)
@@ -889,6 +897,10 @@ JuliaWSNumericalSpecialFunctions(R : JuliaWSNumber) : Exports ==Implementation w
     dedekindEta(tau) ==
       ret : R := junfunc("W_"DedekindEta_"", tau)
       jtypeassert(tau,ret)
+      ret
+    dirichletEta(z) ==
+      ret : R := junfunc("W_"DirichletEta_"", z)
+      jtypeassert(z,ret)
       ret
     kleinInvariantJ(tau) ==
       ret : R := junfunc("W_"KleinInvariantJ_"", tau)

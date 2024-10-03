@@ -4,6 +4,7 @@ subdir = src/input/
 IN=$(fricas_src_srcdir)/input
 lisp_flavor = $(word 1, @fricas_lisp_flavor@)
 JULIA_WRAP_SO_TARGET=@JULIA_WRAP_SO_TARGET@
+JULIA_USE_MLINK=@JULIA_USE_MLINK@
 
 .PHONY: all all-ax all-input
 
@@ -154,6 +155,9 @@ REGRESS0 = agcd.output array.output bezout.output bugs2007.output \
 ifdef JULIA_WRAP_SO_TARGET
 REGRESS0 += julia.output jla.output jf64sf.output \
             jfsf.output jnemo.output jobject.output
+ifeq ($(JULIA_USE_MLINK),yes)
+REGRESS0 += jwssf.output
+endif
 endif
 
 

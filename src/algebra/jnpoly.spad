@@ -6,19 +6,31 @@
 NemoUnivariatePolynomial(R : NemoRing, x : Symbol):
   Exports == Implementation where
     NINT      ==> NemoInteger
+    NRAT      ==> NemoRational
     JI64      ==> JuliaInt64
     INT       ==> Integer
     PI        ==> PositiveInteger
     NNI       ==> NonNegativeInteger
     parsei    ==> PARSE_-INTEGER$Lisp
     Exports ==> Join(NemoRing, UnivariatePolynomialCategory(R)) with
-        if R has IntegerNumberSystem or R has QuotientFieldCategory(NINT) then
+        if R has IntegerNumberSystem then
           minimalPolynomial : NemoAlgebraicNumber -> %
           ++ minimalPolynomial(algn) returns the minimal polynomial of algn.
           ++ Convenience function.
           roots : % -> JuliaVector(NemoAlgebraicNumber)
           ++ roots(p) returns the roots of p.
           ++ Convenience function.
+        if R has QuotientFieldCategory(NINT) then
+          minimalPolynomial : NemoAlgebraicNumber -> %
+          ++ minimalPolynomial(algn) returns the minimal polynomial of algn.
+          ++ Convenience function.
+          roots : % -> JuliaVector(NemoAlgebraicNumber)
+          ++ roots(p) returns the roots of p.
+          ++ Convenience function.
+          "+" : (%, Fraction(Integer)) -> %
+          "*" : (%, Fraction(Integer)) -> %
+          "+" : (Fraction(Integer), %) -> %
+          "*" : (Fraction(Integer), %) -> %
         "*"   : (%, NNI) -> %
         "*"   : (%, PI) -> %
         jnup  : UnivariatePolynomial(x, R) -> %
@@ -57,9 +69,24 @@ NemoUnivariatePolynomial(R : NemoRing, x : Symbol):
         if R is NemoInteger then
           jl_eval_string(concat([NUPRing,",",string(x),"=polynomial_ring(ZZ,_"",
             string(x), "_")"])$String)$Lisp
+          roots(p) ==
+            jlref(concat(["roots(QQBar,",
+              getind(p),")"]))$JuliaVector(NemoAlgebraicNumber)
+          minimalPolynomial(p : NemoAlgebraicNumber) : % ==
+            jlref(concat(["minpoly(", NUPRing, ",", getind(p),")"]))
         else if R is NemoRational then
           jl_eval_string(concat([NUPRing,",",string(x), "=polynomial_ring(QQ,_"",
             string(x), "_")"])$String)$Lisp
+          roots(p) ==
+            jlref(concat(["roots(QQBar,",
+              getind(p),")"]))$JuliaVector(NemoAlgebraicNumber)
+          minimalPolynomial(p : NemoAlgebraicNumber) : % ==
+            jlref(concat(["minpoly(", NUPRing, ",", getind(p),")"]))
+          p : % + q : Fraction(Integer) == jbinop("+", p, coerce(q)@NRAT)
+          p : % * q : Fraction(Integer) == jbinop("*", p, coerce(q)@NRAT)
+          q : Fraction(Integer) + p : % == jbinop("+", coerce(q)@NRAT, p)
+          q : Fraction(Integer) * p : % == jbinop("*", coerce(q)@NRAT, p)
+          (p  / q) : % == jbinop("/" ,p, q)
         else if R is NemoAlgebraicNumber then
           jl_eval_string(concat([NUPRing,",",string(x), "=polynomial_ring(QQBar,_"",
             string(x), "_")"])$String)$Lisp
@@ -145,13 +172,6 @@ NemoUnivariatePolynomial(R : NemoRing, x : Symbol):
             => "failed"
           junfunc("last", ret)       
 
-        if R is NemoInteger or R is NemoRational then
-          roots(p) ==
-            jlref(concat(["roots(QQBar,",
-              getind(p),")"]))$JuliaVector(NemoAlgebraicNumber)
-          minimalPolynomial(p : NemoAlgebraicNumber) : % ==
-            jlref(concat(["minpoly(", NUPRing, ",", getind(p),")"]))
-
         degree(p) == jl_int64_eval_string(concat(["degree(", getind(p),")"]))$Lisp   
         leadingCoefficient(p : %) ==
           junfunc("leading_coefficient", p)
@@ -183,7 +203,7 @@ NemoUnivariatePolynomial(R : NemoRing, x : Symbol):
 ++ but the variables are assumed to commute.
 ++  For example:
 ++   VarSet: List Symbol:=[x,y,z]
-++   V := OVAR(VarSet)
+++   V := OrderedVariableList(VarSet)
 ++   -- eventually, for later use
 ++   -- E := IndexedExponents V
 ++   PRing := NMP(NINT,VarSet, "lex")
@@ -204,6 +224,11 @@ NemoMultivariatePolynomial(R : NemoRing, VarSet : List Symbol,
       Exports ==> Join(NemoRing, PolynomialCategory(R, 
                       IndexedExponents(OrderedVariableList(VarSet)),
                         OrderedVariableList(VarSet))) with
+        if R has QuotientFieldCategory(NINT) then
+          "+" : (%, Fraction(Integer)) -> %
+          "*" : (%, Fraction(Integer)) -> %
+          "+" : (Fraction(Integer), %) -> %
+          "*" : (Fraction(Integer), %) -> %
         jnmp     : MultivariatePolynomial(VarSet,R) -> %
         ++ jnmp(p) converts the multivariate polynomial p to
         ++ a Nemo multivariate polynomial.
@@ -260,6 +285,11 @@ NemoMultivariatePolynomial(R : NemoRing, VarSet : List Symbol,
         else if R is NemoRational then
           jl_eval_string(concat([NMPRing,",", vars, "=polynomial_ring(QQ,",
             jvars, ";internal_ordering=", string(InternalOrdering),")"])$String)$Lisp
+          p : % + q : Fraction(Integer) == jbinop("+", p, coerce(q)@NRAT)
+          p : % * q : Fraction(Integer) == jbinop("*", p, coerce(q)@NRAT)
+          q : Fraction(Integer) + p : % == jbinop("+", coerce(q)@NRAT, p)
+          q : Fraction(Integer) * p : % == jbinop("*", coerce(q)@NRAT, p)
+          (p / q) : % == jbinop("/", p, q)
         else if R is NemoAlgebraicNumber then
           jl_eval_string(concat([NMPRing,",", vars, "=polynomial_ring(QQBar,",
             jvars,";internal_ordering=", string(InternalOrdering),")"])$String)$Lisp
@@ -298,7 +328,7 @@ NemoMultivariatePolynomial(R : NemoRing, VarSet : List Symbol,
           jl_eval_string(concat([NMPRing,",", vars, "=polynomial_ring(",
             "NACB", string(precision()$R pretend INT),
               ",", jvars, ";internal_ordering=", string(InternalOrdering),")"])$String)$Lisp
-         error "Unimplemented ring."
+        else error "Unimplemented ring."
 
         0 == jlref(concat(["zero(",NMPRing,")"]))
         1 == jlref(concat(["one(",NMPRing,")"]))
@@ -310,8 +340,8 @@ NemoMultivariatePolynomial(R : NemoRing, VarSet : List Symbol,
         a : % * b : % == jbinop("*",a,b)
         a : R * b : % == jbinop("*",a,b)
         a : % * b : R == jbinop("*",a,b)
-        i : Integer  * b : % == jbinop("*", coerce(i)@NINT, b)
-        a : % * i : INT  == jbinop("*", a, coerce(i))
+        i : INT  * b : % == jbinop("*", coerce(i)@NINT, b)
+        a : % * i : INT  == jbinop("*", a, coerce(i)@NINT)
         a : % * i : PI  == jbinop("*", a, coerce(i pretend Integer)@NINT)
         a : % * i : NNI  == jbinop("*", a, coerce(i pretend Integer)@NINT)
         a : % ^ i : PI  == jbinop("^", a, coerce(i pretend Integer)@NINT)

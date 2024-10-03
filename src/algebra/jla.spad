@@ -754,6 +754,8 @@ JuliaF64MatrixTranscendentalFunctions() : Exports == Implementation where
         ++ acsch(m) computes the inverse matrix hyperbolic cosecant of m.
         acoth   : JF64MAT -> JCF64MAT
         ++ acoth(m) computes the inverse matrix hyperbolic cotangent of m.
+        cis     : JF64MAT -> JCF64MAT
+        ++ cis(x) returns exp(%i*x) computed efficiently.
     Implementation ==> add
         import from JuliaUtilityFunctions
         jlInitialize(true)
@@ -1022,6 +1024,14 @@ JuliaF64MatrixTranscendentalFunctions() : Exports == Implementation where
                 jlVector(m), nr)$Lisp
             ret
 
+        cis(m : JF64MAT) ==
+            nr := nrows(m)
+            nr ~= ncols(m) => error "cis: matrix is not square"
+            ret := qnew(nr,nr)$JCF64MAT
+            jl_array_2dfunction(1$NNI,0$NNI,"cis", jlVector(ret),
+                jlVector(m), nr)$Lisp
+            ret
+
 )abbrev package JCF64MTF JuliaComplexF64MatrixTranscendentalFunctions
 ++ Linear Algebra functions computed using Julia and its algorithms.
 JuliaComplexF64MatrixTranscendentalFunctions() : Exports == Implementation where
@@ -1096,6 +1106,8 @@ JuliaComplexF64MatrixTranscendentalFunctions() : Exports == Implementation where
         ++ acsch(m) computes the inverse matrix hyperbolic cosecant of m.
         acoth : JCF64MAT -> JCF64MAT
         ++ acoth(m) computes the inverse matrix hyperbolic cotangent of m.
+        cis   : JCF64MAT -> JCF64MAT
+        ++ cis(m) returns exp(%i*m) computed efficiently.
     Implementation ==> add
         import from JuliaUtilityFunctions
         jlInitialize(true)
@@ -1361,5 +1373,12 @@ JuliaComplexF64MatrixTranscendentalFunctions() : Exports == Implementation where
             nr ~= ncols(m) => error "acoth: matrix is not square"
             ret := qnew(nr,nr)$JCF64MAT
             jl_array_2dfunction(1$NNI,1$NNI,"acoth", jlVector(ret),
+                jlVector(m), nr)$Lisp
+            ret
+        cis(m : JCF64MAT) ==
+            nr := nrows(m)
+            nr ~= ncols(m) => error "cis: matrix is not square"
+            ret := qnew(nr,nr)$JCF64MAT
+            jl_array_2dfunction(1$NNI,1$NNI,"cis", jlVector(ret),
                 jlVector(m), nr)$Lisp
             ret

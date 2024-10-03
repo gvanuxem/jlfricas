@@ -560,9 +560,11 @@ JuliaComplexF64Vector() :  Exports == Implementation where
         vector : List JuliaComplexF64 -> %
         ++ vector(l) converts the list l to a vector.
         real : % -> JF64VEC
-        ++ real(v) returns a Julia Float64 vector with the v elements real part.
+        ++ real(v) returns a JuliaFloat64 vector with the real part
+        ++ of the v elements.
         imag : % -> JF64VEC
-        ++ imag(v) returns a Julia Float64 vector with the v elements imaginary part.
+        ++ imag(v) returns a JuliaFloat64 vector with the imaginary part
+        ++ of the v elements.
         copy!   : (%, %) -> %
         ++ copy!(b,a) copies efficiently a to b. No check are done on
         ++ arrays dimension.
@@ -693,9 +695,11 @@ JuliaComplexF64Matrix() : Exports == Implementation where
         jlVector: % -> JuliaComplexF64Vector
         ++ jlVector(m) returns reference to the internal vector representation.
         real : % -> JF64MAT
-        ++ real(m) returns a Julia Float64 matrix with the m elements real part.
+        ++ real(m) returns a JuliaFloat64 matrix with the real part of the
+        ++ m elements.
         imag : % -> JF64MAT
-        ++ imag(m) returns a Julia Float64 matrix with the m elements imaginary part.
+        ++ imag(m) returns a JuliaFloat64 matrix with the imaginary part
+        ++ of the m elements.
         jlApply : (JuliaString, %) -> Void
         ++ jlApply(func, x) apply func to argument x.
         jlApply : (JuliaString, %) -> JF64

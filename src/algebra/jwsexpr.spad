@@ -14,7 +14,8 @@ JuliaWSExpression() : Exports == Implementation where
   getind(a)  ==> concat(["getindex(refs, _"", jlId a, "_")"])
   JWSL ==> JuliaWSList
   Exports ==> Join(JuliaWSAggregate(%), PartialOrder, JuliaWSRing,
-                  PartialDifferentialRing(%), ExpressionSpace) with
+                  ComplexCategory(%), PartialDifferentialRing(%),
+                  ExpressionSpace) with
     AlgebraicallyClosedFunctionSpace(%)
     TranscendentalFunctionCategory
     CombinatorialOpsCategory
@@ -55,6 +56,8 @@ JuliaWSExpression() : Exports == Implementation where
     ++ erf(x,x1) computes the generalized error function.
     erfc    : % -> %
     ++ erfc(x) computes the complementary error function.
+    dawson  : % -> %
+    ++ dawson(x) computes the Dawson integral of x.
     lambertW : (JuliaWSInteger, %) -> %
     ++ lambertW(k,z) returns the k-th solution to LambertW function.
     haversine : % -> %
@@ -280,9 +283,11 @@ JuliaWSExpression() : Exports == Implementation where
     --++ jacobiZeta(ϕ,m) computes the Jacobi Zeta function.
     ++ jacobiZeta(phi,m) computes the Jacobi Zeta function.
     dedekindEta : % -> %
-    ++ dedekindEta(tau) computes the Dedekind modular elliptic eta. 
+    ++ dedekindEta(tau) computes the Dedekind modular elliptic eta.
+    dirichletEta : % -> %
+    ++ dirichletEta(z) computes the Dirichlet eta.
     kleinInvariantJ : % -> %
-    ++ kleinInvariantJ(tau) computes the Klein's absolute invariant. 
+    ++ kleinInvariantJ(tau) computes the Klein's absolute invariant.
     modularLambda : % -> %
     ++ modularLambda() computes the lambda modular function.
     series : (%, %) -> %
@@ -975,6 +980,8 @@ JuliaWSExpression() : Exports == Implementation where
 
     pi()  == jlref("W_"Pi_"")
     exp() == jlref("W_"E_"")
+    real(z)      == junfunc("W_"Re_"", z)
+    imag(z)      == junfunc("W_"Im_"", z)
 
     WT : JuliaWSSymbol := WTrue()
     WL : JuliaWSSymbol := WList()
@@ -1073,6 +1080,7 @@ JuliaWSExpression() : Exports == Implementation where
     dilog(x)    ==
       two := jWSExpr("2")
       jbinfunc("W_"PolyLog_"", two, x)
+    dawson(x)   == junfunc("W_"DawsonF_"",x)
 
     polylog(x,y) == jbinfunc("W_"PolyLog_"", x, y)
 
@@ -1219,6 +1227,7 @@ JuliaWSExpression() : Exports == Implementation where
     jacobiZeta(x,m) == jbinfunc("W_"JacobiZeta_"", x,m)
 
     dedekindEta(tau) == junfunc("W_"DedekindEta_"", tau)
+    dirichletEta(z) == junfunc("W_"DirichletEta_"", z)
 
     kleinInvariantJ(tau) == junfunc("W_"KleinInvariantJ_"", tau)
     modularLambda(tau) == junfunc("W_"ModularLambda_"", tau)

@@ -15,7 +15,7 @@ In this work-in-progress repository, a C wrapper using libjulia is embedded in [
 For general installation instructions see INSTALL. For general documentation
 consult <https://fricas.github.io>.
 
-To build FriCAS with Julia support, the <code>julia</code> executable needs to be available in your PATH, and a simple <code>./configure --enable-julia</code> should do the trick. The required Julia packages are Suppressor, Nemo and SpecialFunctions.
+To build FriCAS with Julia support, the <code>julia</code> executable needs to be available in your PATH, and a simple <code>./configure --enable-julia</code> should do the trick. We require Julia 1.6 or higher. Please see https://julialang.org/downloads/ for instructions on how to obtain Julia for your system. The required Julia packages are Suppressor, Nemo and SpecialFunctions.
 
 As of now with Clozure CL [queues](https://github.com/oconnore/queues) is also required. Use installed [quicklisp](https://www.quicklisp.org/beta/) with `queues`, and at configure time use the `--with-quicklisp` option, see the `quicklisp` documentation for how to load it and install `queues`.
 

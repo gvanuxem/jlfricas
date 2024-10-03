@@ -491,6 +491,8 @@ NemoAcbField(p: PositiveInteger) : Exports == Implementation where
     uniqueInteger : % -> Union(NemoInteger, "failed")
     ++ uniqueInteger(x) returns a NemoInteger if there is a unique integer
     ++ in the interval x, "failed" otherwise.
+    rootOfUnity : (NonNegativeInteger) -> %
+    ++ rootOfUnity(n)Return the root of unity exp(2*%pi*%i/n).
     precision :  () -> PositiveInteger
     ++ precision() returns precision in bits used. 
     guess    : (%, NonNegativeInteger) -> NemoAlgebraicNumber
@@ -626,6 +628,9 @@ NemoAcbField(p: PositiveInteger) : Exports == Implementation where
       jlref(concat(["guess(QQBar,", getind(a), ",",
         string(deg),")"]))$NemoAlgebraicNumber
 
+    rootOfUnity(n) ==
+      jlref(concat(["root_of_unity(", NACB, ",", string(n),")"]))
+
     complex(r:NemoArbField(p), i:NemoArbField(p)) ==
       jlref(concat([NACB, "(", getind(r),",",getind(i),")"]))
     
@@ -699,6 +704,8 @@ NemoComplexBall() : Exports == Implementation where
     ++ hypergeometric function 1F1.
     hypergeometricU : (%, %, %) -> %
     ++ hypergeometricU(a,b,x) is the confluent hypergeometric function U.
+    rootOfUnity : (NonNegativeInteger) -> %
+    ++ rootOfUnity(n)Return the root of unity exp(2*%pi*%i/n).
     bits  : % -> JI64
     ++ bits(x) returns the bit length of the mantissa of x.
     ++ For a result computed at prec bits of precision this can be anywhere
@@ -742,6 +749,8 @@ NemoComplexBall() : Exports == Implementation where
     jlInitialize(true)
     jl_eval_string("NACB256=AcbField(256)")$Lisp
 
+    rootOfUnity(n) ==
+      jlref(concat(["root_of_unity(NACB256,", string(n),")"]))
     complex(r : NemoRealBall, i : NemoRealBall) == jbinfunc("NACB256", r, i)
     jncb(s : String) : % == jlref(concat(["NACB256", "(_"", s,"_")"]))
     jncb(r : String, i : String) ==
@@ -1107,6 +1116,10 @@ NemoComplexField() : Exports == Implementation where
     -- TODO
     --atan : (%, JI64) -> %
     --++ atan(x, y) computes the inverse tangent of x/y.
+    rootOfUnity : (NonNegativeInteger) -> %
+    ++ rootOfUnity(n)Return the root of unity exp(2*%pi*%i/n).
+    rootOfUnity : (NonNegativeInteger, Integer) -> %
+    ++ rootOfUnity(n,k)Return the root of unity exp(2*%pi*%i*k/n).
     precision : () -> PI
     precision : PI -> PI
     guess    : (%, NonNegativeInteger) -> NemoAlgebraicNumber
@@ -1246,6 +1259,12 @@ NemoComplexField() : Exports == Implementation where
     hypergeometric1F1Regularized(x,y,z) ==
       jterfunc("hypergeometric_1f1_regularized", x, y, z)
     hypergeometricU(x,y,z) == jterfunc("hypergeometric_u", x, y, z)
+
+    rootOfUnity(n) == jlref(concat(["root_of_unity(NCF,",
+      string(n),")"]))
+    rootOfUnity(n,k) ==
+      jlref(concat(["root_of_unity(NCF,",
+        string(n), ",",string(k) ")"]))
 
     guess(a, deg) ==
       jlref(concat(["guess(QQBar,", getind(a), ",",
