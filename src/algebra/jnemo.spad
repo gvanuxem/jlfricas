@@ -919,6 +919,7 @@ NemoFactored(R : Join(NemoType, IntegralDomain)) :
   Implementation ==> JuliaObject add
     import from JuliaUtilityFunctions
     import from String
+    import from JuliaString
 
     jlInitialize(true)
 
@@ -943,9 +944,7 @@ NemoFactored(R : Join(NemoType, IntegralDomain)) :
       makeFR(jlref(concat(["unit(", getind(fr), ")"]))$R, ret)$Factored(R)
       
     coerce(ob : %) : OutputForm ==
-      ret : List OutputForm := jl_stringify_wrapped_index("show",
-        "_"text/plain_"", getind(ob))$Lisp
-      #ret ~= 1 or more?(elt(ret,1) pretend String, _$LINELENGTH$Lisp)
-        => pile ret
-      vconcat ret
+      jlRegexReplace(jlRegex(jstring "//"),jlSubstitute(jstring "/"),
+        string(ob) pretend JuliaString) pretend OutputForm
+
 

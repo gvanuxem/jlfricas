@@ -670,7 +670,7 @@ JuliaWSReal() : Exports == Implementation where
     coerce(str : String) : % == jlref(concat(["WReal(_"", str, "_")"]))
     coerce(f : Float) ==
       tmp := outputSpacing(0)
-      ret : % := jlref(concat(["WReal(_"", convert(f)@String, "_")"]))
+      ret : % := jlref(concat(["WReal(_"", toString(f), "_")"]))
       outputSpacing(tmp)
       ret
     coerce(f : JuliaFloat64) == jlref(concat(["WReal(_"", toString(f), "_")"]))

@@ -148,14 +148,14 @@ JuliaWSExpression() : Exports == Implementation where
     ++ legendreP(n, x) returns the legendre polynomial
     ++ of the first kind or evaluates it at x is x a number. 
     legendreQ : (%, %) -> %
-    ++ legendreQ(n, z) returns the Legendre function
+    ++ legendreQ(n, x) returns the Legendre function
     ++ of the second kind or evaluates it at x if x is a number.
     ++ \example{legendreQ(3,jWSExpr x)}
     legendreP  : (%, %, %) -> %
     ++ legendreP(n, m, x) returns the associated Legendre polynomial
     ++ of the first type or evaluates it at x if x is a number.
     legendreQ  : (%, %, %) -> %
-    ++ legendreQ(n, m, z) returns the associated Legendre function
+    ++ legendreQ(n, m, x) returns the associated Legendre function
     ++ of the second kind or evaluates it at x if x is a number.
     sphericalHarmonicY : (%, %, %, %) -> %
     ++ sphericalHarmonicY(l, m, theta, phi) returns the spherical
@@ -590,13 +590,13 @@ JuliaWSExpression() : Exports == Implementation where
     padeApproximant : (%, %) -> %
     ++ padeApproximant(expr, {x,x0, {n,m}}) returns the Padé approximant at x0.
 
-    symmetricPolynomial : (%, JWSL(%)) -> %
+    symmetricPolynomial : (JuliaWSInteger, JWSL(%)) -> %
     ++ symmetricPolynomial(n,lvars) returns the n-th elementary symmetric
     ++ polynomial with respect to variables in lvars.
     symmetricReduction : (%, JWSL(%)) -> JWSL(%)
     ++ symmetricReduction(f,lvars) return a pair of polynomial representing
     ++ f = p+q where p is a symmetric polynomial, q the remainder. 
-    symmetricReduction : (%, JWSL(%), JWSL(%)) -> %
+    symmetricReduction : (%, JWSL(%), JWSL(%)) -> JWSL(%)
     ++ symmetricReduction(f, lvars, replnt) return a pair of polynomial
     ++ representing f = p+q where p is a symmetric polynomial, q the remainder
     ++ where variables in p replaced by the ones in replnt.
@@ -851,12 +851,19 @@ JuliaWSExpression() : Exports == Implementation where
     lookup : (%, %, %) -> %
     ++ lookup(assocs,keys, defaultval) returns value(s) associated to key(s)
     ++ if key(s) exist(s), otherwise defaultval
+
     matrixForm : % -> %
     ++ matrixForm(mat) returns a pretty-printable form of mat i.e.
     ++ its WS 'MatrixForm'.
     traditionalForm : % -> %
     ++ traditionalForm(expr) returns a traditional form of expr i.e.
     ++ its WS 'TraditionalForm'.
+    quantityForm : (%, %) -> %
+    ++ quantityForm(expr,form) returns expr as a quantity with format
+    ++ form.
+    quantityForm : (%, JWSL(%)) -> %
+    ++ quantityForm(expr,lform) returns expr as a quantity with a list
+    ++ of formats lform.
     replace : (%, %) -> %
     ++ replace(expr, rule) applies rule(s) to expr.
     replace : (%, %, %) -> %
@@ -924,6 +931,10 @@ JuliaWSExpression() : Exports == Implementation where
     ++ jWSGreater(lhs,rhs) returns the Julia WS inequality lhs > rhs.
     jWSGreaterEqual : (%,  %) -> %
     ++ jWSGreaterEqual(lhs,rhs) returns the Julia WS inequality lhs >= rhs.
+    jWSQuantity : % -> %
+    ++ jWSQuantity(u) returns quantity unit u of 1. 
+    jWSQuantity : (%, %) -> %
+    ++ jWSQuantity(x,u) returns quantity unit u of x.
     jWSExpr : Symbol -> %
     ++ jWSExpr(sym) coerces sym to a JuliaWSExpression.
     jWSExpr : Integer -> %
@@ -977,6 +988,7 @@ JuliaWSExpression() : Exports == Implementation where
 
     0 == jlref("W_`0_`")
     1 == jlref("W_`1_`")
+    imaginary() == jlref("W_`I_`")
 
     pi()  == jlref("W_"Pi_"")
     exp() == jlref("W_"E_"")
@@ -1012,7 +1024,11 @@ JuliaWSExpression() : Exports == Implementation where
     x - y == jbinop("-", x, y)
     - x   == junfunc("-", x)
     x : % * y : % == jbinop("*", x, y)
-    x : Integer * y : % == jbinop("*", coerce(x), y)
+    x : Integer * y : % == jbinop("*", jWSExpr(x), y)
+    x : PositiveInteger * y : % == jbinop("*", jWSExpr(x), y)
+    x : NonNegativeInteger * y : % == jbinop("*", jWSExpr(x), y)
+    x : % * y : Fraction(Integer) == jbinop("*", x, coerce(y)@JuliaWSRational)
+    x : Fraction(Integer) * y : % == jbinop("*", coerce(x)@JuliaWSRational, y)
     x : % / y : % == jbinop("/", x, y)
     x : % ^ y : % == jbinop("^", x, y)
     x : % ^ y : Integer == jbinop("^", x, coerce(y))
@@ -1602,6 +1618,8 @@ JuliaWSExpression() : Exports == Implementation where
     jWSLessEqual(lhs, rhs) == jbinfunc("W_"LessEqual_"", lhs, rhs)
     jWSGreater(lhs, rhs) == jbinfunc("W_"Greater_"", lhs, rhs)
     jWSGreaterEqual(lhs, rhs) == jbinfunc("W_"GreaterEqual_"", lhs, rhs)
+    jWSQuantity(u) == junfunc("W_"Quantity_"", u)
+    jWSQuantity(m,u) == jbinfunc("W_"Quantity_"", m, u)
     jWSExpr(i : Integer) == jlref(concat(["WInteger(_"", string(i), "_")"]))
     jWSExpr(q : Fraction(Integer)) == jWSRat(q)$JuliaWSRational pretend %
     jWSExpr(r : DoubleFloat) == jWSReal(r)$JuliaWSReal pretend %
@@ -1612,6 +1630,8 @@ JuliaWSExpression() : Exports == Implementation where
     jWSExpr(l : List(%)) : % == coerce(l)
     jlWSSetOptions(arg1, arg2) == jbinfunc("W_"SetOptions_"", arg1, arg2)
     matrixForm(expr) == junfunc("W_"MatrixForm_"", expr)
+    quantityForm(expr, form : %) == jbinfunc("W_"QuantityForm_"", expr,form)
+    quantityForm(expr, form : JWSL(%)) == jbinfunc("W_"QuantityForm_"", expr,form)
     coerce(expr) : OutputForm ==
       -- Computationally too expensive
       -- error: middle word lowercasing

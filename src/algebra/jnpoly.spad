@@ -373,6 +373,11 @@ NemoMultivariatePolynomial(R : NemoRing, VarSet : List Symbol,
               [coerce(variable(coerce(sym)$Symbol)$OrderedVariableList(VarSet))@OrderedVariableList(VarSet),
                 exp]$Record(k:OrderedVariableList(VarSet),c:NNI))
           construct(res)$IndexedExponents(OrderedVariableList(VarSet))
+        degree(p : %, var) ==
+          ind := lookup(var)
+          ret : PositiveInteger := jl_int64_eval_string(concat(["degree(",
+            getind(p),",", string(ind),")"]))$Lisp
+          ret
         leadingCoefficient(p : %) ==
           junfunc("leading_coefficient", p)
         jnmp(mp) : % ==
