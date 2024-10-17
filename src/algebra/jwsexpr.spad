@@ -851,6 +851,10 @@ JuliaWSExpression() : Exports == Implementation where
     lookup : (%, %, %) -> %
     ++ lookup(assocs,keys, defaultval) returns value(s) associated to key(s)
     ++ if key(s) exist(s), otherwise defaultval
+    quantityUnit : % -> %
+    ++ quantityUnit(val) returns unit of val.
+    quantityMagnitude : % -> %
+    ++ quantityMagnitude(val) returns magnitude of val.
 
     matrixForm : % -> %
     ++ matrixForm(mat) returns a pretty-printable form of mat i.e.
@@ -932,9 +936,13 @@ JuliaWSExpression() : Exports == Implementation where
     jWSGreaterEqual : (%,  %) -> %
     ++ jWSGreaterEqual(lhs,rhs) returns the Julia WS inequality lhs >= rhs.
     jWSQuantity : % -> %
-    ++ jWSQuantity(jWSString(u)) returns quantity unit u of 1. 
+    ++ jWSQuantity(jWSString(u)) returns quantity unit u of 1.
+    ++ For example:
+    ++ \example{jWSQuantity jWSString "Meter"}
     jWSQuantity : (%, %) -> %
     ++ jWSQuantity(x,jWSString(u)) returns quantity unit u of x.
+    ++ For example:
+    ++ \example{jWSQuantity(1.2, jWSString "Meter")}
     jWSString : String -> %
     ++ jWSString(str) returns str as a WS String. 
     jWSExpr : Symbol -> %
@@ -1557,6 +1565,8 @@ JuliaWSExpression() : Exports == Implementation where
       else jbinfunc("W_"Level_"", expr, level)
     lookup(assocs,keys) == jbinfunc("W_"Lookup_"",assocs,keys)
     lookup(assocs,keys,def) == jterfunc("W_"Lookup_"",assocs,keys,def)
+    quantityUnit(val) == junfunc("W_"QuantityUnit_"", val)
+    quantityMagnitude(val) == junfunc("W_"QuantityMagnitude_"", val)
     keys(expr) ==
       -- TODO
       (head := jlHead(expr)) ~= WL and head ~= WR

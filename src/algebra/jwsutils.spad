@@ -69,6 +69,16 @@ JuliaWSUtilityFunctions() : Exports == Implementation where
     --outputForm
     --*Form
     -- TODO: OutputForm?
+    jlWSExportString : (JuliaWSExpression, JuliaWSExpression)
+      -> JuliaWSExpression
+    ++ jlWSExportString(expr, jWSString(format)) returns the string
+    ++ representation of expr in the format form. Use toString or string
+    ++ to obtain the FriCAS String.
+    ++ For example:
+    ++ \example{jWSExpr \"Probability[x < 0, x \\[Distributed] NormalDistribution[]]\"}
+    ++ \example{jWSExpr \"Probability[x < 1, x \\[Distributed] NormalDistribution[]]\"}
+    ++ \example{string jlWSExportString(%,jWSString "TeX")}
+
     jlWSPlot : (JuliaWSExpression, JuliaWSExpression) -> JuliaWSExpression
     ++ jlWSPlot(expr, options) is the WS plot function. Since it should be run
     ++ in a Wolfram notebook or any other supported graphical interfaces,
@@ -94,6 +104,8 @@ JuliaWSUtilityFunctions() : Exports == Implementation where
     jlWSExport(file, options) ==
       savefile : JuliaWSExpression := coerce(concat(["_"", file, "_""]))
       jbinfunc("W_"Export_"", savefile, options)
+    jlWSExportString(expr, format) ==
+      jlEval(jbinfunc("W_"ExportString_"", expr, format) pretend JuliaWSExpression)
     jlWSPlot(expr, options) == jbinfunc("W_"Plot_"", expr, options)
 
     urand01Real(rows,cols) ==
