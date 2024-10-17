@@ -444,9 +444,6 @@ JuliaWSReal() : Exports == Implementation where
     ++ erf(x) computes the error function of x.
     erfc    : % -> %
     ++ erfc(x) computes the complementary error function of x.
-    toString: (%, JuliaWSExpression) -> String
-    ++ toString(expr, form) returns the string representation of expr
-    ++ with WS language format form.
     rationalApproximation : % -> JuliaWSRational
     ++ rationalApproximation(x) try to find a rational approximation
     ++ of x. Error if x can not be retracted.
@@ -658,7 +655,10 @@ JuliaWSReal() : Exports == Implementation where
 
     urand01() == jlEval jWSExpr("RandomReal[]") pretend %
 
-    toString(x, form) == string jbinfunc("W_"ToString_"", x, form)
+    toString(x, p : NonNegativeInteger) ==
+      n := # string integerPart x
+      jl_string_eval_string(concat(["weval(W_"ToString_"(W_"NumberForm_"(",
+        getind(x),",", string(p+n), ")))"]))$Lisp
 
     coerce(r : %) : DoubleFloat ==
       jl_dbl_eval_string(getind(jlEval r))$Lisp pretend DoubleFloat
@@ -734,9 +734,6 @@ JuliaWSAPReal(prec : PositiveInteger) : Exports == Implementation where
     rationalApproximation : (%, %) -> JuliaWSRational
     ++ rationalApproximation(x, dx) try to find a rational approximation
     ++ of x within tolerance dx.
-    toString: (%, JuliaWSExpression) -> String
-    ++ toString(expr, form) returns the string representation of expr
-    ++ with WS language format form.
     coerce  : % -> JuliaFloat
     ++ coerce(x) converts x as a JuliaFloat.
     coerce  : String -> %
@@ -761,6 +758,7 @@ JuliaWSAPReal(prec : PositiveInteger) : Exports == Implementation where
     ++ jWSReal(str) constructs str as a JuliaWSAPReal.
   Implementation ==> JuliaObject add
     import from JuliaUtilityFunctions
+    import from String
     import from JuliaWSExpression
 
     jbinop(op,a,b) ==> jlref(concat(["weval(",getind(a), op, getind(b),")"]))
@@ -775,7 +773,7 @@ JuliaWSAPReal(prec : PositiveInteger) : Exports == Implementation where
     jbinbop(op,a,b) ==> jl_bool_eval_string(concat([getind(a), op, getind(b)]))$Lisp
     jtypeassert(a) ==> jlHead(a) ~= WReal()
         => error "Type of output does not match input type"
-    error1(msg, f) ==> error(concat [msg, " ", toString(f, jWSExpr "OutputForm")])
+    error1(msg, f) ==> error(concat [msg, " ", toString(f)])
 
     if not jlUsing(coerce("MathLink")) then
       error "The Julia MathLink package is not installed."
@@ -945,7 +943,8 @@ JuliaWSAPReal(prec : PositiveInteger) : Exports == Implementation where
         "_", _"*^_" => _" E _", r_"`[0-9]+\.?[0-9]*_" => _"_")"]))$Lisp
       --jlRegexReplace(jlRegex("`.*\*\^" pretend JuliaString),
       --  jlSubstitute("e" pretend JuliaString), str pretend JuliaString) pretend String
-    toString(x, form) == string jbinfunc("W_"ToString_"", x, form)
+    toString(x, p) ==
+      toString(x pretend JuliaWSReal, p)
 
     coerce(x : %) : JuliaWSExpression == x pretend JuliaWSExpression
     coerce(x : %) : JuliaFloat ==

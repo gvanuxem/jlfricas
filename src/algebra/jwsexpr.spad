@@ -932,9 +932,11 @@ JuliaWSExpression() : Exports == Implementation where
     jWSGreaterEqual : (%,  %) -> %
     ++ jWSGreaterEqual(lhs,rhs) returns the Julia WS inequality lhs >= rhs.
     jWSQuantity : % -> %
-    ++ jWSQuantity(u) returns quantity unit u of 1. 
+    ++ jWSQuantity(jWSString(u)) returns quantity unit u of 1. 
     jWSQuantity : (%, %) -> %
-    ++ jWSQuantity(x,u) returns quantity unit u of x.
+    ++ jWSQuantity(x,jWSString(u)) returns quantity unit u of x.
+    jWSString : String -> %
+    ++ jWSString(str) returns str as a WS String. 
     jWSExpr : Symbol -> %
     ++ jWSExpr(sym) coerces sym to a JuliaWSExpression.
     jWSExpr : Integer -> %
@@ -1620,6 +1622,7 @@ JuliaWSExpression() : Exports == Implementation where
     jWSGreaterEqual(lhs, rhs) == jbinfunc("W_"GreaterEqual_"", lhs, rhs)
     jWSQuantity(u) == junfunc("W_"Quantity_"", u)
     jWSQuantity(m,u) == jbinfunc("W_"Quantity_"", m, u)
+    jWSString(str) == jlref(concat(["W_`_"", str, "_"_`"]))
     jWSExpr(i : Integer) == jlref(concat(["WInteger(_"", string(i), "_")"]))
     jWSExpr(q : Fraction(Integer)) == jWSRat(q)$JuliaWSRational pretend %
     jWSExpr(r : DoubleFloat) == jWSReal(r)$JuliaWSReal pretend %
@@ -1630,8 +1633,9 @@ JuliaWSExpression() : Exports == Implementation where
     jWSExpr(l : List(%)) : % == coerce(l)
     jlWSSetOptions(arg1, arg2) == jbinfunc("W_"SetOptions_"", arg1, arg2)
     matrixForm(expr) == junfunc("W_"MatrixForm_"", expr)
-    quantityForm(expr, form : %) == jbinfunc("W_"QuantityForm_"", expr,form)
-    quantityForm(expr, form : JWSL(%)) == jbinfunc("W_"QuantityForm_"", expr,form)
+    quantityForm(expr, form : %) == jbinfunc("W_"QuantityForm_"", expr, form)
+    quantityForm(expr, form : JWSL(%)) ==
+      jbinfunc("W_"QuantityForm_"", expr, form)
     coerce(expr) : OutputForm ==
       -- Computationally too expensive
       -- error: middle word lowercasing
