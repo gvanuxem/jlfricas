@@ -132,7 +132,7 @@ JuliaObjectAggregate() : Category == Join(JuliaObjectType, Aggregate) with
     ++ For example:
     ++ \example{ret := jlApply("svd",jobject("rand(4,4)")); ret.U}
     qelt : (%, JuliaSymbol) -> %
-    ++ elt(obj, sym) returns the property sym of obj. No checks are done
+    ++ qelt(obj, sym) returns the property sym of obj. No checks are done
     ++ regarding the existence of the sym property. If it does not exist,
     ++ Julia throws an error.
     elt : (%, Integer) -> %
@@ -299,7 +299,7 @@ JuliaObjFloat64() : Exports == Implementation where
     cis : % -> JuliaObjComplexF64
     ++ cis(x) returns exp(%i*x) computed efficiently.
     cispi : % -> JuliaObjComplexF64
-    ++ cis(x) returns cis(%pi*x) computed efficiently.
+    ++ cispi(x) returns cis(%pi*x) computed efficiently.
     convert : Float -> %
     coerce : DoubleFloat -> %
     coerce : Float -> %
@@ -368,9 +368,9 @@ JuliaObjComplexF64() : Exports == Implementation where
     cis : % -> %
     ++ cis(x) returns exp(%i*x) computed efficiently.
     cispi : % -> %
-    ++ cis(x) returns cis(%pi*x) computed efficiently.
+    ++ cispi(x) returns cis(%pi*x) computed efficiently.
     jcfloat64 : String -> %
-    ++ jfloat64(str) evaluates str in Julia and returns the Julia
+    ++ jcfloat64(str) evaluates str in Julia and returns the Julia
     ++ Complex{Float64} object.
     ++ For example:
     ++ \example{jcfloat64 "cos(2pi)im"}
@@ -605,11 +605,11 @@ JuliaFloat() : Exports == Implementation where
     exp    : () -> %
     ++ exp() returns the JuliaFloat ℯ (%e or exp(1)).
     exp1    : () -> %
-    ++ exp() returns the JuliaFloat ℯ (%e or exp(1)).
+    ++ exp1() returns the JuliaFloat ℯ (%e or exp(1)).
     cis : % -> JuliaComplexFloat
     ++ cis(x) returns exp(%i*x) computed efficiently.
     cispi : % -> JuliaComplexFloat
-    ++ cis(x) returns cis(%pi*x) computed efficiently.
+    ++ cispi(x) returns cis(%pi*x) computed efficiently.
     urand01 : () -> %
     ++ urand01() returns an uniformly distributed random number
     ++ contained in [0,1].
@@ -856,11 +856,11 @@ JuliaComplexFloat() : Exports == Implementation where
     exp    : () -> %
     ++ exp() returns the JuliaComplexFloat ℯ (%e or exp(1)).
     exp1    : () -> %
-    ++ exp() returns the JuliaComplexFloat ℯ (%e or exp(1)).
+    ++ exp1() returns the JuliaComplexFloat ℯ (%e or exp(1)).
     cis : % -> %
     ++ cis(x) returns exp(%i*x) computed efficiently.
     cispi : % -> %
-    ++ cis(x) returns cis(%pi*x) computed efficiently.
+    ++ cispi(x) returns cis(%pi*x) computed efficiently.
     urand01 : () -> %
     ++ urand01() returns an uniformly distributed random number
     ++ contained in [0,1].
