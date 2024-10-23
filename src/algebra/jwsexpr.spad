@@ -982,7 +982,7 @@ JuliaWSExpression() : Exports == Implementation where
     jbinbop(op,a,b) ==> jl_bool_eval_string(concat([getind(a), op, getind(b)]))$Lisp
     error1(msg, f) ==> error concat [msg, " ", toString f]
 
-    if not jlUsing(coerce("MathLink")) then
+    if not jlUsing("MathLink") then
       error "The Julia MathLink package is not installed."
     jl_eval_string("import MathLink: WExpr, WSymbol, WReal, WRational, WInteger")$Lisp
     
@@ -990,7 +990,7 @@ JuliaWSExpression() : Exports == Implementation where
 
     strToExpr(s : String) : Union(Expression(Integer), "failed") ==
       -- Give up if there are arbitrary precision numbers
-      --jlRegexMatch?(jlRegex(jstring "_`[1-9]|\bi\b"), jstring s) => "failed"
+      -- jlRegexMatch?(jlRegex("_`[1-9]|\bi\b"), s) => "failed"
       str := concat("0$Expression(Integer)+", s)
       af := parse(str)$InputForm
       av := interpret_in_new_env(af)$InputForm

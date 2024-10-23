@@ -86,17 +86,17 @@ JuliaFloat64Vector() : Exports == Implementation where
         copy!: (%, %) -> %
         ++ copy!(b,a) copies efficiently a to b. No check are done on
         ++ arrays dimension.
-        jlApply : (JuliaString, %) -> Void
+        jlApply : (String, %) -> Void
         ++ jlApply(func, v) applies func to argument v.
-        jlApply : (JuliaString, %) -> JF64
+        jlApply : (String, %) -> JF64
         ++ jlApply(func, v) applies func to argument v
         ++ and returns a Julia Float64.
-        jlApply : (JuliaString, %, JF64) -> JF64
+        jlApply : (String, %, JF64) -> JF64
         ++ jlApply(func, v, val) applies func to arguments v and val
         ++ and returns a Julia Float64.
-        jlApply : (JuliaString, %, %) -> Void
+        jlApply : (String, %, %) -> Void
         ++ jlApply(func, v1, v2) applies func to arguments v1 and v2.
-        jlApply : (JuliaString, %, %, %) -> Void
+        jlApply : (String, %, %, %) -> Void
         ++ jlApply(func, v1, v2, v3) applies func to
         ++ arguments v1, v2 and v3.
         jlApprox?: (%, %) -> Boolean
@@ -123,7 +123,7 @@ JuliaFloat64Vector() : Exports == Implementation where
         jlInitialize(true)
         defined?(func) ==>
             not jlDefined?(func) =>
-                error concat(string(func), " is not defined in Julia")
+                error concat(func, " is not defined in Julia")
         pprint := true
 
         #x                          == Qsize x
@@ -283,11 +283,11 @@ JuliaFloat64Matrix() :  Exports == Implementation where
         ++ coerce(m) coerces a copy of m to a Matrix(DoubleFloat).
         jlVector: % -> JuliaFloat64Vector
         ++ jlVector(m) returns reference to the internal vector representation.
-        jlApply : (JuliaString, %) -> Void
+        jlApply : (String, %) -> Void
         ++ jlApply(func, x) apply func to argument x.
-        jlApply : (JuliaString, %) -> JF64
+        jlApply : (String, %) -> JF64
         ++ jlApply(func, x) apply func to argument x.
-        jlApply : (JuliaString, %, JF64) -> JF64
+        jlApply : (String, %, JF64) -> JF64
         ++ jlApply(func, x, val) apply func to arguments x and val.
         jlDisplay: % -> Void
         ++ jldisplay(m) pretty prints m (à la Julia).
@@ -338,7 +338,7 @@ JuliaFloat64Matrix() :  Exports == Implementation where
 
         defined?(func) ==>
             not jlDefined?(func) =>
-                error concat(string(func), " is not defined in Julia")
+                error concat(func, " is not defined in Julia")
         pprint := true
 
         minRowIndex x == 1
@@ -573,11 +573,11 @@ JuliaComplexF64Vector() :  Exports == Implementation where
         copy!   : (%, %) -> %
         ++ copy!(b,a) copies efficiently a to b. No check are done on
         ++ arrays dimension.
-        jlApply : (JuliaString, %) -> Void
+        jlApply : (String, %) -> Void
         ++ jlApply(func, x) apply func to argument x.
-        jlApply : (JuliaString, %) -> JF64
+        jlApply : (String, %) -> JF64
         ++ jlApply(func, x) apply func to argument x.
-        jlApply : (JuliaString, %, JF64) -> JF64
+        jlApply : (String, %, JF64) -> JF64
         ++ jlApply(func, x, val) apply func to arguments x and val.
         jlApprox?: (%, %) -> Boolean
         ++ jlApprox?(x,y) computes inexact equality comparison
@@ -602,7 +602,7 @@ JuliaComplexF64Vector() :  Exports == Implementation where
         jlInitialize(true)
         defined?(func) ==>
             not jlDefined?(func) =>
-                error concat(string(func), " is not defined in Julia")
+                error concat(func, " is not defined in Julia")
         pprint := true
 
         qelt(x, i)                  == Qelt1(x, i)
@@ -706,11 +706,11 @@ JuliaComplexF64Matrix() : Exports == Implementation where
         imag : % -> JF64MAT
         ++ imag(m) returns a JuliaFloat64 matrix with the imaginary part
         ++ of the m elements.
-        jlApply : (JuliaString, %) -> Void
+        jlApply : (String, %) -> Void
         ++ jlApply(func, x) apply func to argument x.
-        jlApply : (JuliaString, %) -> JF64
+        jlApply : (String, %) -> JF64
         ++ jlApply(func, x) apply func to argument x.
-        jlApply : (JuliaString, %, JF64) -> JF64
+        jlApply : (String, %, JF64) -> JF64
         ++ jlApply(func, x, val) apply func to arguments x and val.
         hermitian? : % -> Boolean
         ++ hermitian?(m) tests hermiticity of m.
@@ -759,7 +759,7 @@ JuliaComplexF64Matrix() : Exports == Implementation where
 
         defined?(func) ==>
             not jlDefined?(func) =>
-                error concat(string(func), " is not defined in Julia")
+                error concat(func, " is not defined in Julia")
         pprint := true
 
         Rep := Record(elts : JuliaComplexF64Vector,

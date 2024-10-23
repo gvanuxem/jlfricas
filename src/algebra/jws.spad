@@ -29,7 +29,7 @@ JuliaWSObject() : Category == JuliaObjectType with
     import from JuliaUtilityFunctions
     import from String
 
-    if not jlUsing(coerce("MathLink")) then
+    if not jlUsing("MathLink") then
       error "The Julia MathLink package is not installed."
     jl_eval_string("Interpret=W_`Interpreter_`")$Lisp
     getind(a)  ==> concat(["getindex(refs, _"", jlId a, "_")"])
@@ -141,7 +141,6 @@ JuliaWSSymbol() : Exports == Implementation where
   Implementation ==> JuliaObject add
     import from JuliaUtilityFunctions
     import from String
-    import from JuliaString
 
     jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
     jbinbop(op,a,b) ==>
@@ -150,7 +149,7 @@ JuliaWSSymbol() : Exports == Implementation where
     getname(sym) ==>
       jl_string_eval_string(concat(["getproperty(", getind(sym), ",:name,)"]))$Lisp
 
-    if not jlUsing(coerce("MathLink")) then
+    if not jlUsing("MathLink") then
       error "The Julia MathLink package is not installed."
     jl_eval_string("import MathLink: WSymbol")$Lisp
     
@@ -231,7 +230,7 @@ JuliaWSInteger() : Exports == Implementation where
         getind(c), ",", getind(d)"))"]))
     jbinbop(op,a,b) ==> jl_bool_eval_string(concat([getind(a), op, getind(b)]))$Lisp
 
-    if not jlUsing(coerce("MathLink")) then
+    if not jlUsing("MathLink") then
       error "The Julia MathLink package is not installed."
     jl_eval_string("import MathLink: WInteger")$Lisp
     
@@ -332,7 +331,7 @@ JuliaWSRational() : Exports == Implementation where
       jlref(concat(["weval(",func, "(", getind(a), ",", getind(b),"))"]))
     jbinbop(op,a,b) ==> jl_bool_eval_string(concat([getind(a), op, getind(b)]))$Lisp
 
-    if not jlUsing(coerce("MathLink")) then
+    if not jlUsing("MathLink") then
       error "The Julia MathLink package is not installed."
     jl_eval_string("WRAT=W_"Rational_"")$Lisp
     Rep := SExpression
@@ -495,7 +494,7 @@ JuliaWSReal() : Exports == Implementation where
     jbinbop(op,a,b) ==> jl_bool_eval_string(concat([getind(a), op, getind(b)]))$Lisp
     error1(msg, f) ==> error concat [msg, " ", toString f]
 
-    if not jlUsing(coerce("MathLink")) then
+    if not jlUsing("MathLink") then
       error "The Julia MathLink package is not installed."
     jl_eval_string("import MathLink: WReal")$Lisp
 
@@ -775,7 +774,7 @@ JuliaWSAPReal(prec : PositiveInteger) : Exports == Implementation where
         => error "Type of output does not match input type"
     error1(msg, f) ==> error(concat [msg, " ", toString(f)])
 
-    if not jlUsing(coerce("MathLink")) then
+    if not jlUsing("MathLink") then
       error "The Julia MathLink package is not installed."
     jl_eval_string("NN=W_`Interpreter[_"Real_"]_`")$Lisp
 
@@ -941,8 +940,8 @@ JuliaWSAPReal(prec : PositiveInteger) : Exports == Implementation where
       str := toString(x pretend JuliaWSExpression)
       str := jl_string_eval_string(concat(["replace(_"", str,
         "_", _"*^_" => _" E _", r_"`[0-9]+\.?[0-9]*_" => _"_")"]))$Lisp
-      --jlRegexReplace(jlRegex("`.*\*\^" pretend JuliaString),
-      --  jlSubstitute("e" pretend JuliaString), str pretend JuliaString) pretend String
+      --jlRegexReplace(jlRegex("`.*\*\^"),
+      --  jlSubstitute("e"), str)
     toString(x, p) ==
       toString(x pretend JuliaWSReal, p)
 
@@ -1017,7 +1016,7 @@ JuliaWSGaussianInteger() : Exports == Implementation where
     jbinbop(op,a,b) ==> jl_bool_eval_string(concat([getind(a), op, getind(b)]))$Lisp
     bool(a) ==> coerce(a)$JuliaWSSymbol
 
-    if not jlUsing(coerce("MathLink")) then
+    if not jlUsing("MathLink") then
       error "The Julia MathLink package is not installed."
     Rep := SExpression
 
@@ -1158,7 +1157,7 @@ JuliaWSComplex() : Exports == Implementation where
     error1(msg, f) ==> error concat [msg, " ", toString f]
     bool(a) ==> coerce(a)$JuliaWSSymbol
 
-    if not jlUsing(coerce("MathLink")) then
+    if not jlUsing("MathLink") then
       error "The Julia MathLink package is not installed."
     Rep := SExpression
 
@@ -1385,7 +1384,7 @@ JuliaWSAPComplex(prec : PositiveInteger) : Exports == Implementation where
     error1(msg, f) ==> error concat [msg, " ", toString(f, jWSExpr "OutputForm")]
     bool(a) ==> coerce(a)$JuliaWSSymbol
 
-    if not jlUsing(coerce("MathLink")) then
+    if not jlUsing("MathLink") then
       error "The Julia MathLink package is not installed."
     Rep := SExpression
 

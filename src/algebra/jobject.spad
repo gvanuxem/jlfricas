@@ -109,7 +109,7 @@ JuliaObjectType() : Category == JuliaType() with
       defined? func
       jsenfunc(func,a,b,c,d,e,f)
     jlAbout(obj) ==
-      not jlUsing(jstring "About") =>
+      not jlUsing("About") =>
         error("jlAbout: the _"About.jl_" Julia package is not installed. _
 See the JuliaObjectType category for information")
       jl_eval_string(concat(["about(", getind(obj),")"]))$Lisp
@@ -121,7 +121,7 @@ See the JuliaObjectType category for information")
       vconcat ret
 
 )abbrev category JOBAGG JuliaObjectAggregate
-++ Category for arbirary Julia aggregates
+++ Category for arbitrary Julia aggregates
 ++ Author: G.Vanuxem
 ++ Date Created: Aug. 2024
 ++ Description:
@@ -204,10 +204,6 @@ JuliaObject() : Exports == Implementation where
   INT ==> Integer
   NNI ==> NonNegativeInteger
   Exports ==> JuliaObjectAggregate with
-    coerce  : String -> %
-    ++ coerce(str) returns str as FriCAS Julia object.
-    coerce  : JuliaString -> %
-    ++ coerce(jstr) returns jstr as FriCAS Julia object.
     coerce  : JuliaSymbol -> %
     ++ coerce(x): convenience function.
     -- TODO: use a specific domain
@@ -233,7 +229,7 @@ JuliaObject() : Exports == Implementation where
     import from String
 
     jlInitialize(true)
-    jlImport("Libdl" pretend JuliaString)
+    jlImport("Libdl")
     Rep := SExpression
     getind(a)  ==> concat(["getindex(refs,_"", jlId a, "_")"])
 
@@ -242,8 +238,6 @@ JuliaObject() : Exports == Implementation where
       jl_eval_string(concat ["Libdl.dlclose(",getind(library),")"])$Lisp
     jlDlSym(library, sym) == jlref(concat(["Libdl.dlsym(",
       getind(library),",", string(sym),")"])) 
-    coerce(js : JuliaString ) == jlref(concat ["_"", js pretend String, "_""])
-    coerce(str : String ) == jlref(concat ["_"", str, "_""])
     coerce(jsy : JuliaSymbol ) == jlref(convert(jsy))
     jobject(str: String) : % == jlref(str)
 
@@ -504,7 +498,7 @@ JuliaObjBigInt() : Exports == Implementation where
     ++ value is assumed to be a Julia BigInt. 
   Implementation == JuliaObject() add
     import from JuliaUtilityFunctions
-    import from JuliaString
+    import from String
 
     jlInitialize(true)
     Rep := SExpression
@@ -570,15 +564,14 @@ JuliaObjTuple() : Exports == Implementation where
     ++ jtuple(str) returns a Julia tuple from the Julia command str.
   Implementation ==> add
     import from JuliaUtilityFunctions
+    import from JuliaStringUtilities
 
     jlInitialize(true)
     Rep := SExpression
 
-    spjs(str) ==> str pretend JuliaString
     jtuple(l : List(Any)) ==
-      jlref(string jlRegexReplace(jlRegex(spjs("\[(.*)\]")),
-        jlSubstitute(spjs("(\1)")),
-          spjs(first lines formatExpression(l::OutputForm)$Format1D)))
+      jlref(jlRegexReplace(jlRegex("\[(.*)\]"),
+        jlSubstitute("(\1)"), first lines formatExpression(l::OutputForm)$Format1D))
     -- TODO: string NRB without bracket
     jtuple(str : String) == jlref str
       
@@ -1108,7 +1101,7 @@ JuliaDataFrame() : Exports == Implementation where
       import from JuliaUtilityFunctions
       import from String
 
-      not jlUsing coerce "DataFrames" =>
+      not jlUsing "DataFrames" =>
         error "JuliaDataFrame: DataFrames is not installed in Julia"
       --jl_eval_string("macro dfa(obj) DataFrame(eval(Meta.parse(obj)),:auto) end")$Lisp
       jl_eval_string("function dfa(obj) DataFrame(obj, :auto) end")$Lisp
@@ -1397,7 +1390,6 @@ JuliaMatrix(R : JuliaObjectRing) :  Exports == Implementation where
     Implementation ==> add --Matrix(R) add
       import from JuliaUtilityFunctions
       import from String
-      import from JuliaString
 
       jlInitialize(true)
       op_of_Ring : Symbol := CAR(devaluate(R)$Lisp)$Lisp
@@ -1409,7 +1401,6 @@ JuliaMatrix(R : JuliaObjectRing) :  Exports == Implementation where
       -- NemoIntegerMod are not, so use String and '=' instead of 'is's.
       NRing : String := string(op_of_Ring)
 
-      spjs(str) ==> str pretend JuliaString
       getind(m)  ==> concat(["getindex(refs,_"", jlId m, "_")"])
       jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
       junfunc(op, a) ==> jlref(concat([op, "(", getind(a),")"]))

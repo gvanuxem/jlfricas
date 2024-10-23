@@ -83,7 +83,7 @@ JuliaFloatSpecialFunctions2() : Exports == Implementation where
     import from String
     import from JuliaUtilityFunctions
     
-    jlUsing(coerce("SpecialFunctions"))
+    jlUsing("SpecialFunctions")
 
     getind(a) ==> concat(["getindex(", "refs,_"", jlId(a), "_")"])
     jl_float_function_float(func, fl) ==>

@@ -2,7 +2,7 @@
 ++ Univariate polynomial domain using the Julia Nemo package
 ++ Author: G. Vanuxem
 ++ Date created: mar, 2024
-++ Purpose: Experimentation.
+-- TODO: eval
 NemoUnivariatePolynomial(R : NemoRing, x : Symbol):
   Exports == Implementation where
     NINT      ==> NemoInteger
@@ -36,13 +36,12 @@ NemoUnivariatePolynomial(R : NemoRing, x : Symbol):
         coerce   : Variable(x) -> %
         ++ coerce(x) converts the variable x to a Nemo univariate polynomial.
     Implementation ==> add
-        import JuliaUtilityFunctions
-        import String
-        import JuliaString
+        import from JuliaUtilityFunctions
+        import from String
+        import from JuliaStringUtilities
 
         jlInitialize(true)
         Rep := SExpression
-        spjs(str) ==> str pretend JuliaString
 
         tmp : SExpression := devaluate(R)$Lisp
         op_of_Ring : Symbol := CAR(tmp)$Lisp
@@ -50,8 +49,8 @@ NemoUnivariatePolynomial(R : NemoRing, x : Symbol):
         -- NemoPrimeField or NemoIntegerMod are not, so use String instead.
         NRing : String := string(op_of_Ring)
         NUPRing := concat("UP",FORMAT(false, "~a", tmp)$Lisp)
-        NUPRing := string(jlRegexReplace(jlRegex(jstring("[(|)|\s]")),
-          jlSubstitute(jstring ("")), spjs(NUPRing)))
+        NUPRing := jlRegexReplace(jlRegex("[(|)|\s]"),
+          jlSubstitute(""), NUPRing)
 
         getind(a) ==> concat(["getindex(refs,_"", jlId(a), "_")"])
         jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
@@ -124,11 +123,10 @@ NemoUnivariatePolynomial(R : NemoRing, x : Symbol):
         else error "Unimplemented ring."
 
         jnup(up) : % ==
-          p: JuliaString := jstring(first(lines 
-            formatExpression(up::OutputForm)$Format1D))
+          p: String := first(lines formatExpression(up::OutputForm)$Format1D)
           -- handle NRAT case
-          ret := string(jlRegexReplace(jlRegex(jstring("/")),
-            jlSubstitute(jstring ("//")),p))
+          ret := jlRegexReplace(jlRegex("/"),
+            jlSubstitute("//"),p)
           jlref(ret)
 
         0 == jlref(concat(["zero(", NUPRing, ")"]))
@@ -172,8 +170,8 @@ NemoUnivariatePolynomial(R : NemoRing, x : Symbol):
           junfunc("leading_coefficient", p)
 
         coerce(p : %) : OutputForm ==
-          jlRegexReplace(jlRegex(jstring "//"),jlSubstitute(jstring "/"),
-            spjs(string(p))) pretend OutputForm
+          jlRegexReplace(jlRegex("//"),jlSubstitute("/"),
+            string(p)) pretend OutputForm
 
         coerce(v : Variable(x)) == jlref(string(v::Symbol))
         coerce(i : Integer) == jlref(concat([NUPRing,"(",string(i),")"]))
@@ -192,10 +190,10 @@ NemoUnivariatePolynomial(R : NemoRing, x : Symbol):
 ++ References:
 ++ Description:
 ++   This type is a basic representation of sparse, distributed multivariate
-++ polynomials using the Julia Nemo package.
-++ It is parameterized by the coefficient ring.
-++ The coefficient ring may be non-commutative,
-++ but the variables are assumed to commute.
+++ polynomials using the Julia Nemo package. It is parameterized by the
+++ coefficient ring. The coefficient ring may be non-commutative,
+++ but the variables are assumed to commute. The monomial ordring
+++ used for internal storage can be one of :lex, :deglex or :degrevlex.
 ++  For example:
 ++   VarSet: List Symbol:=[x,y,z]
 ++   V := OrderedVariableList(VarSet)
@@ -207,6 +205,7 @@ NemoUnivariatePolynomial(R : NemoRing, x : Symbol):
 ++   z := z::V::PRing
 ++   p:=x*2+3*y^2+17*z^13
 ++   p^7
+-- TODO: eval
 NemoMultivariatePolynomial(R : NemoRing, VarSet : List Symbol,
           InternalOrdering : JuliaSymbol) : 
     Exports == Implementation where
@@ -232,31 +231,29 @@ NemoMultivariatePolynomial(R : NemoRing, VarSet : List Symbol,
         "*"      : (%, PositiveInteger) -> %
         "*"      : (%, NonNegativeInteger) -> %
       Implementation ==> add
-        import JuliaUtilityFunctions
-        import String
-        import JuliaString
+        import from JuliaUtilityFunctions
+        import from String
+        import from JuliaStringUtilities
 
         jlInitialize(true)
         Rep := SExpression
-
-        spjs(str) ==> str pretend JuliaString
 
         tmp : SExpression := devaluate(R)$Lisp
         op_of_Ring : Symbol := CAR(tmp)$Lisp
         -- For an unknown reason NemoRealBall is recognized whereas
         -- NemoPrimeField or NemoIntegerMod are not, so use String instead.
         NRing : String := string(op_of_Ring)
-        NMPRing := concat("MP",FORMAT(false, "~a", tmp)$Lisp)
-        NMPRing := string(jlRegexReplace(jlRegex(jstring("[(|)|\s]")),
-          jlSubstitute(jstring ("")), spjs(NMPRing)))
+        NMPRing := concat("MP", FORMAT(false, "~a", tmp)$Lisp)
+        NMPRing := jlRegexReplace(jlRegex("[(|)|\s]"),
+          jlSubstitute(""), NMPRing)
 
         -- Cleanup VarSet
         jVarSet := removeDuplicates(VarSet)
         
         -- FriCAS defined vars in Julia
-        -- Correct? spjs("(\1,)" -> spjs("(\1)"
-        vars := string jlRegexReplace(jlRegex(spjs("\[(.*)\]")), jlSubstitute(spjs("(\1)")),
-            spjs(first lines formatExpression(jVarSet::OutputForm)$Format1D))
+        -- Correct? "(\1,)" -> "(\1)"
+        vars := jlRegexReplace(jlRegex("\[(.*)\]"), jlSubstitute("(\1)"),
+            first lines formatExpression(jVarSet::OutputForm)$Format1D)
         
         -- List of double-quoted vars     
         lvars := map(v +-> string(v), jVarSet)$ListFunctions2(Symbol, String)
@@ -376,11 +373,9 @@ NemoMultivariatePolynomial(R : NemoRing, VarSet : List Symbol,
         leadingCoefficient(p : %) ==
           junfunc("leading_coefficient", p)
         jnmp(mp) : % ==
-          p: JuliaString := jstring first(lines
-            formatExpression(mp::OutputForm)$Format1D)
+          p: String := first(lines formatExpression(mp::OutputForm)$Format1D)
           -- handle NRAT case
-          ret := string(jlRegexReplace(jlRegex(jstring("/")),
-            jlSubstitute(jstring ("//")),p))
+          ret := jlRegexReplace(jlRegex("/"), jlSubstitute("//"),p)
           jlref(ret)
 
         p1:% exquo p2:% ==
@@ -391,8 +386,8 @@ NemoMultivariatePolynomial(R : NemoRing, VarSet : List Symbol,
           junfunc("last", ret)   
 
         coerce(p : %) : OutputForm ==
-          jlRegexReplace(jlRegex(jstring "//"),jlSubstitute(jstring "/"),
-            spjs(string(p))) pretend OutputForm
+          jlRegexReplace(jlRegex("//"),jlSubstitute("/"),
+            string(p)) pretend OutputForm
         coerce(v: OrderedVariableList(VarSet)) == jlref(string(convert(v)@Symbol))
         coerce(i : Integer) == jlref(concat([NMPRing, "(", string(i), ")"]))
         coerce(c : R) == jlref(concat([NMPRing, "(", getind(c),")"]))

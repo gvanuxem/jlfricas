@@ -118,9 +118,8 @@ JuliaWSAggregate(E : JuliaWSObject) : Category == JuliaWSObject with
       jlref(concat(["weval(", func, "(", getind(a), ",", getind(b), ",",
         getind(c), ",", getind(d)"))"]))
     jbinbop(op,a,b) ==> jl_bool_eval_string(concat([getind(a), op, getind(b)]))$Lisp
-    spjs(str) ==> str pretend JuliaString
 
-    if not jlUsing(coerce("MathLink")) then
+    if not jlUsing("MathLink") then
       error "The Julia MathLink package is not installed."
     
     Rep := SExpression
@@ -239,7 +238,7 @@ JuliaWSList(E : JuliaWSObject) : Exports == Implementation where
         getind(c), ",", getind(d)"))"]))
     jbinbop(op,a,b) ==> jl_bool_eval_string(concat([getind(a), op, getind(b)]))$Lisp
 
-    if not jlUsing(coerce("MathLink")) then
+    if not jlUsing("MathLink") then
       error "The Julia MathLink package is not installed."
 
     Rep := SExpression
@@ -317,7 +316,7 @@ JuliaWSVector(E : JuliaWSObject) : Exports == Implementation where
         getind(c), ",", getind(d)"))"]))
     jbinbop(op,a,b) ==> jl_bool_eval_string(concat([getind(a), op, getind(b)]))$Lisp
 
-    if not jlUsing(coerce("MathLink")) then
+    if not jlUsing("MathLink") then
       error "The Julia MathLink package is not installed."
 
     Rep := SExpression
@@ -544,7 +543,7 @@ JuliaWSMatrix(E : JuliaWSRing) : Exports == Implementation where
         getind(c), ",", getind(d)"))"]))
     jbinbop(op,a,b) ==> jl_bool_eval_string(concat([getind(a), op, getind(b)]))$Lisp
 
-    if not jlUsing(coerce("MathLink")) then
+    if not jlUsing("MathLink") then
       error "The Julia MathLink package is not installed."
     
     Rep := SExpression

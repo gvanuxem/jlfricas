@@ -8,7 +8,6 @@
 JuliaPlotFunctions() : Exports == Implementation where
   NNI     ==> NonNegativeInteger
   JF64    ==> JuliaFloat64
-  JSTR    ==> JuliaString
   SF      ==> DoubleFloat
   SEG     ==> Segment Float
   JF64VEC ==> JuliaFloat64Vector
@@ -69,7 +68,7 @@ JuliaPlotFunctions() : Exports == Implementation where
     jlContourf! : (JF64VEC, JF64VEC, JF64MAT) -> Void
     ++ jlContourf!(x,y,mat) draws the contour plot of surface mat
     ++ on the existing graph object. Fill area between contours.
-    jlPlotTitle! : JSTR -> Void
+    jlPlotTitle! : String -> Void
     ++ jlPlotTitle!(title) draws `title' as plot title in the current plot.
     ++ For example:
     ++   jlPlotTitle! "sin(x)"
@@ -87,15 +86,15 @@ JuliaPlotFunctions() : Exports == Implementation where
     ++ jlPlotYlims!(y1,y2) sets y plot limits.
     jlPlotZlims! : (JF64, JF64) -> Void
     ++ jlPlotZlims!(z1,z2) sets z plot limits.
-    jlPlotXlabel! : JSTR -> Void
+    jlPlotXlabel! : String -> Void
     ++ jlPlotXlabel!(str) sets x label.
     ++ See \spadfunFromX{jlPlotTitle}{JuliaPlotFunctions} for more
     ++ informations on the diffent supported formats.
-    jlPlotYlabel! : JSTR -> Void
+    jlPlotYlabel! : String -> Void
     ++ jlPlotYlabel!(str) sets y label.
     ++ See \spadfunFromX{jlPlotTitle}{JuliaPlotFunctions} for more
     ++ informations on the diffent supported formats.
-    jlPlotZlabel! : JSTR -> Void
+    jlPlotZlabel! : String -> Void
     ++ jlPlotZlabel!(str) sets z label.
     ++ See \spadfunFromX{jlPlotTitle}{JuliaPlotFunctions} for more
     ++ informations on the diffent supported formats.
@@ -165,19 +164,17 @@ JuliaPlotFunctions() : Exports == Implementation where
     ++ png (default), PDF, svg and more.
     ++ See https://docs.juliaplots.org/latest/output/#savefig-/-format 
   Implementation ==> add
-    import from String
     import from JuliaUtilityFunctions
+    import from String
     jlInitialize(true)
 
-    str(s) ==> s pretend String
-    jstr(s) ==> s pretend JuliaString
     pdf(x) ==> x pretend SF
     POINTS ==> 250
 
-    if not jlUsing(coerce("Plots")) then
+    if not jlUsing("Plots") then
         error "JuliaPlotFunctions: the Julia package Plots is not installed"
 
-    if not jlUsing(coerce("LaTeXStrings")) then
+    if not jlUsing("LaTeXStrings") then
         messagePrint("Warning: JuliaPlotFunctions: _"LaTeXStrings is not installed"
             " in Julia, do not use LaTeX strings_"")$OutputForm
     -- jlEvalString("gaston()")
@@ -212,34 +209,34 @@ JuliaPlotFunctions() : Exports == Implementation where
         v
 
     jlDensity(x)    ==
-        jlApply(jstr("density"), x)
+        jlApply("density", x)
         display()
     jlDensity!(x)   ==
-        jlApply(jstr("density!"), x)
+        jlApply("density!", x)
         display()
     jlPlot(x,y)     ==
-        jlApply(jstr("plot"), x, y)
+        jlApply("plot", x, y)
         display()
     jlPlot!(x,y)    ==
-        jlApply(jstr("plot!"), x, y)
+        jlApply("plot!", x, y)
         display()
     jlPlot(x,y,z)   ==
-        jlApply(jstr("plot"), x, y, z)
+        jlApply("plot", x, y, z)
         display()
     jlPlot!(x,y,z)  ==
-        jlApply(jstr("plot!"), x, y, z)
+        jlApply("plot!", x, y, z)
         display()
     jlCurves(x,y)   ==
-        jlApply(jstr("curves"), x, y)
+        jlApply("curves", x, y)
         display()
     jlCurves!(x,y)  ==
-        jlApply(jstr("curves!"), x, y)
+        jlApply("curves!", x, y)
         display()
     jlBar(x,y) ==
-        jlApply(jstr("bar"),x, y)
+        jlApply("bar",x, y)
         display()
     jlBar!(x,y) ==
-        jlApply(jstr("bar!"),x, y)
+        jlApply("bar!",x, y)
         display()
     jlSurface(x,y, mat : JuliaFloat64Matrix)  ==
         jl_2v2dfunction("surface",x,y,jlVector(mat), nrows(mat))$Lisp
@@ -270,34 +267,34 @@ JuliaPlotFunctions() : Exports == Implementation where
 
     jlPlotTitle!(title)    ==
         if first(title) = char "L" and elt(title, 2) = char "_"" then
-            jlEvalString(concat(["display(title!(",str(title),"))"]))
+            jlEvalString(concat(["display(title!(", title,"))"]))
         else
-            jlEvalString(concat(["display(title!(_"",str(title),"_"))"]))
+            jlEvalString(concat(["display(title!(_"", title,"_"))"]))
 
     jlPlotXlims!(x,y)      ==
-        jlApply(jstr("xlims!"), x, y)
+        jlApply("xlims!", x, y)
         display()
     jlPlotYlims!(x,y)      ==
-        jlApply(jstr("ylims!"), x, y)
+        jlApply("ylims!", x, y)
         display()
     jlPlotZlims!(x,y)      ==
-        jlApply(jstr("zlims!"), x, y)
+        jlApply("zlims!", x, y)
         display()
     jlPlotXlabel!(xlabel)  ==
         if first(xlabel) = char "L" and elt(xlabel, 2) = char "_"" then
-            jlEvalString(concat(["display(xlabel!(",str(xlabel),"))"]))
+            jlEvalString(concat(["display(xlabel!(", xlabel,"))"]))
         else
-            jlEvalString(concat(["display(xlabel!(_"",str(xlabel),"_"))"]))
+            jlEvalString(concat(["display(xlabel!(_"", xlabel,"_"))"]))
     jlPlotYlabel!(ylabel)  ==
         if first(ylabel) = char "L" and elt(ylabel, 2) = char "_"" then
-            jlEvalString(concat(["display(ylabel!(",str(ylabel),"))"]))
+            jlEvalString(concat(["display(ylabel!(", ylabel,"))"]))
         else
-            jlEvalString(concat(["display(ylabel!(_"",str(ylabel),"_"))"]))
+            jlEvalString(concat(["display(ylabel!(_"", ylabel,"_"))"]))
     jlPlotZlabel!(zlabel)  ==
         if first(zlabel) = char "L" and elt(zlabel, 2) = char "_"" then
-            jlEvalString(concat(["display(zlabel!(",str(zlabel),"))"]))
+            jlEvalString(concat(["display(zlabel!(", zlabel,"))"]))
         else
-            jlEvalString(concat(["display(zlabel!(_"",str(zlabel),"_"))"]))
+            jlEvalString(concat(["display(zlabel!(_"", zlabel,"_"))"]))
 
     -- FROM HERE: should be in another package
     -- TODO: factorize
@@ -495,10 +492,11 @@ JuliaDrawFunctions(Ex : Join(ConvertibleTo InputForm, SetCategory)):
 
     Implementation ==> add
         import from JuliaPlotFunctions
+        import from String
         import from MakeFloatCompiledFunction(Ex)
 
         pdf(x)      ==> x pretend SF
-        title(form) ==> coerce(unparse(convert(form))$InputForm)
+        title(form) ==> unparse(convert(form)@InputForm)$InputForm
 
         jlPlot(f : Ex, bind : BIND) ==
             func := makeFloatFunction(f, variable bind)

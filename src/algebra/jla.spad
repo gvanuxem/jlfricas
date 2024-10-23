@@ -138,9 +138,9 @@ JuliaRealLinearAlgebra() : Exports == Implementation where
     Implementation ==> add
         import from JuliaUtilityFunctions
         jlInitialize(true)
-        jlImport(coerce("LinearAlgebra.peakflops"))
-        jlImport(coerce("LinearAlgebra.LAPACK.gesv!"))
-        jlImport(coerce("LinearAlgebra.LAPACK.geev!"))
+        jlImport("LinearAlgebra.peakflops")
+        jlImport("LinearAlgebra.LAPACK.gesv!")
+        jlImport("LinearAlgebra.LAPACK.geev!")
 
         jlPeakFlops() == jl_dbl_eval_string("peakflops()")$Lisp
 
@@ -496,8 +496,8 @@ JuliaComplexLinearAlgebra() : Exports == Implementation where
     Implementation ==> add
         import from JuliaUtilityFunctions
         jlInitialize(true)
-        jlImport(coerce("LinearAlgebra.LAPACK.gesv!"))
-        jlImport(coerce("LinearAlgebra.LAPACK.geev!"))
+        jlImport("LinearAlgebra.LAPACK.gesv!")
+        jlImport("LinearAlgebra.LAPACK.geev!")
 
 
         normalize(v : JCF64VEC) ==

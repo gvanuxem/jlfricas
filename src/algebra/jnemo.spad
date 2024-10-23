@@ -166,12 +166,11 @@ NemoRational() : Exports == Implementation where
   Implementation ==> LocalAlgebra(NemoInteger,NemoInteger) add
     import from JuliaUtilityFunctions
     import from String
-    import from JuliaString
+    import from JuliaStringUtilities
 
     jlInitialize(true)
     Rep := SExpression
 
-    spjs(str) ==> str pretend JuliaString
     getind(a) ==> concat(["getindex(refs,_"", jlId a, "_")"])
     jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
     junfunc(func, a) ==> jlref(concat([func, "(", getind(a),")"]))
@@ -248,8 +247,8 @@ NemoRational() : Exports == Implementation where
     coerce(x : Fraction(Integer)) ==
       jlref(concat(["QQ(", string(numer x), "//", string(denom x),")"]))
     coerce(fi : %) : OutputForm ==
-      jlRegexReplace(jlRegex(jstring("//")), jlSubstitute(jstring ("/")),
-        spjs(string(fi))) pretend OutputForm
+      jlRegexReplace(jlRegex("//"), jlSubstitute("/"),
+        string(fi)) pretend OutputForm
     jnrat(i : Integer) == coerce(i)
     jnrat(fi : Fraction Integer) == coerce(fi)
     jnrat(ji : NemoInteger) == coerce(ji)
@@ -919,7 +918,7 @@ NemoFactored(R : Join(NemoType, IntegralDomain)) :
   Implementation ==> JuliaObject add
     import from JuliaUtilityFunctions
     import from String
-    import from JuliaString
+    import from JuliaStringUtilities
 
     jlInitialize(true)
 
@@ -944,7 +943,7 @@ NemoFactored(R : Join(NemoType, IntegralDomain)) :
       makeFR(jlref(concat(["unit(", getind(fr), ")"]))$R, ret)$Factored(R)
       
     coerce(ob : %) : OutputForm ==
-      jlRegexReplace(jlRegex(jstring "//"),jlSubstitute(jstring "/"),
-        string(ob) pretend JuliaString) pretend OutputForm
+      jlRegexReplace(jlRegex("//"),jlSubstitute("/"),
+        string(ob)) pretend OutputForm
 
 

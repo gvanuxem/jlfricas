@@ -62,10 +62,9 @@ JuliaFloat64SpecialFunctions() : Exports == Implementation where
     ++ deg2rad(x) converts x to radian, where x is in degrees.
 
   Implementation ==> add
-    import from JuliaString
     import from JuliaUtilityFunctions
 
-    jlUsing(coerce("SpecialFunctions"))
+    jlUsing("SpecialFunctions")
 
     ldexp(x,n) == jl_dbl_function_dbl_int("ldexp", x, n)$Lisp
     exp2(x)    == jl_dbl_function_dbl("exp2", x)$Lisp
