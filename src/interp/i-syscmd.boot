@@ -2144,7 +2144,9 @@ quitSpad2Cmd() ==
   sayKeyedMsg("S2IZ0032",NIL)
   terminateSystemCommand()
 
-leaveScratchpad () == QUIT()
+leaveScratchpad () ==
+  clear_julia_env()
+  QUIT()
 
 --% )version
 version() == FORMAT(true, '"~S~%",

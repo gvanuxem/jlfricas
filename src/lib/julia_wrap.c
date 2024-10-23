@@ -6,7 +6,7 @@
 
 // TODO: check return type of julia call
 
-static jl_value_t *jl_complex64_type, *V, *refs, *irefs;
+static jl_value_t *jl_complex64_type, *V, *refs; // *irefs;
 static jl_value_t *array_int64, *array_dbl, *array_cdbl, *array2_dbl, *array2_cdbl;
 static jl_function_t *setind, *getind, *del, *stringify, *MIME, *Stringify;
 
@@ -1233,7 +1233,7 @@ void jl_init_env(void){
     jl_init();
     jl_complex64_type = (jl_value_t *) jl_eval_string("ComplexF64");
 
-    refs = jl_eval_string("refs = IdDict{String, Any}()");
+    refs = jl_eval_string("refs = Dict{String, Any}()");
     //irefs = jl_eval_string("irefs = IdDict{String, Any}()");
     V = (jl_value_t *) jl_eval_string("'V'");
     array_int64 = jl_apply_array_type((jl_value_t*) jl_int64_type, 1);

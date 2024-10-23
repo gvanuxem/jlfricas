@@ -55,7 +55,7 @@
 (defun |jl_stringify_1difunction| (func mime array)
     (let ((size (array-dimension array 0)))
         ;(concatenate 'string (string #\newline)
-        (uiop:split-string (ccl::%get-cstring
+        (uiop:split-string (ccl::%get-utf-8-cstring
                 (ccl::with-encoded-cstrs :iso-8859-1 ((sa func) (sb mime))
                     (ccl:with-pointer-to-ivector (ptr array)
                         (ccl::external-call "jl_call_stringify_1difunction"
@@ -65,7 +65,7 @@
 
 (defun |jl_stringify_1dfunction| (cplx func mime array)
     (let ((size (get_vnrows cplx array)))
-        (uiop:split-string (ccl::%get-cstring
+        (uiop:split-string (ccl::%get-utf-8-cstring
             (ccl::with-encoded-cstrs :iso-8859-1 ((sa func) (sb mime))
                 (ccl:with-pointer-to-ivector (ptr array)
                     (ccl::external-call "jl_call_stringify_1dfunction"
@@ -89,7 +89,7 @@
 
 (defun |jl_wrap_1darray| (cplx array)
     (let ((size (get_vnrows cplx array)))
-        (ccl::%get-cstring
+        (ccl::%get-utf-8-cstring
             (ccl:with-pointer-to-ivector (ptr array)
                 (ccl::external-call "jl_call_wrap_1darray"
                     :int cplx :address ptr :int size
@@ -163,7 +163,7 @@
 (defun |jl_stringify_2dfunction| (cplx func mime array m)
     (let ((n (get_ncols cplx array m)))
         (uiop:split-string 
-            (ccl::%get-cstring 
+            (ccl::%get-utf-8-cstring 
                 (ccl::with-encoded-cstrs :iso-8859-1 ((sa func) (sb mime))
                     (ccl:with-pointer-to-ivector (ptr array)
                         (ccl::external-call "jl_call_stringify_2dfunction"
@@ -173,7 +173,7 @@
 
 (defun |jl_wrap_2darray| (cplx array m)
     (let ((n (get_ncols cplx array m)))
-        (ccl::%get-cstring
+        (ccl::%get-utf-8-cstring
             (ccl:with-pointer-to-ivector (ptr array)
                 (ccl::external-call "jl_call_wrap_2darray"
                     :int cplx :address ptr :int m :int n

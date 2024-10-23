@@ -275,9 +275,10 @@ JuliaFloat64Matrix() :  Exports == Implementation where
     Qnew1       ==> make_df_iarray2$Lisp
     Qelt2       ==> DFAREF21$Lisp
     Qsetelt2    ==> DFSETAREF21$Lisp
-    Exports ==> JuliaMatrixCategory(JuliaFloat64,
-                                   JuliaFloat64Vector,
-                                   JuliaFloat64Vector) with
+    Row         ==> JuliaFloat64Vector
+    Col         ==> JuliaFloat64Vector
+    MLAF        ==> MatrixLinearAlgebraFunctions(JF64, Row, Col, %)
+    Exports ==> JuliaMatrixCategory(JF64, Row, Col) with
         coerce: % -> Matrix(DoubleFloat)
         ++ coerce(m) coerces a copy of m to a Matrix(DoubleFloat).
         jlVector: % -> JuliaFloat64Vector
@@ -353,7 +354,7 @@ JuliaFloat64Matrix() :  Exports == Implementation where
         qsetelt!(m, i, j, r) == Qsetelt2(m.elts, m.ncols, m.nrows, j, i, r)
         setelt!(m : %, i : Integer, j : Integer, r : JF64) ==
             Qsetelt2(m.elts, m.ncols, m.nrows, j, i, r)
-        empty() == Qnew(0$Integer, 0$Integer)
+        empty() == error "empty()$JuliaFloat64Matrix is not supported"
         qnew(rows, cols) ==
             m: JuliaFloat64Vector := Qnew(rows, cols)
             [m, rows, cols]
@@ -506,6 +507,10 @@ JuliaFloat64Matrix() :  Exports == Implementation where
             for i in 1..n repeat setelt!(u, i, i, elt(v,i))
             u
 
+        nullity(m) == nullity(m)$MLAF
+        nullSpace(m) == nullSpace(m)$MLAF
+        rowEchelon(m) == rowEchelon(m)$MLAF
+        minordet(m) == minordet(m)$MLAF
 
 )abbrev domain JF64SMAT JuliaF64SquareMatrix
 ++ Description: This domain provides a fast Julia Float64
@@ -685,9 +690,10 @@ JuliaComplexF64Matrix() : Exports == Implementation where
     Qelt2       ==> JCDELT2$Lisp
     Qsetelt2    ==> JCDSETELT2$Lisp
     Qnew        ==> MAKE_CDOUBLE_VECTOR$Lisp
-    Exports ==> JuliaMatrixCategory(JuliaComplexF64,
-                    JuliaComplexF64Vector,
-                    JuliaComplexF64Vector) with
+    Row         ==> JuliaComplexF64Vector
+    Col         ==> JuliaComplexF64Vector
+    MLAF        ==> MatrixLinearAlgebraFunctions(JCF64, Row, Col, %)
+    Exports ==> JuliaMatrixCategory(JCF64, Row, Col) with
         coerce: JF64MAT -> %
         ++ coerce(m) coerces m to a a Julia Complex Float 64 matrix.
         jlDisplay : % -> Void  
@@ -773,7 +779,7 @@ JuliaComplexF64Matrix() : Exports == Implementation where
         setelt!(m : %, i : Integer, j : Integer, r : JCF64) ==
             Qsetelt2(m.elts, m.ncols, j, i, r)
 
-        empty() == [empty()$JCF64VEC, 0, 0]
+        empty() == error "empty()$JuliaComplexF64Matrix is not supported"
         qnew(rows, cols) ==
             vec : JCF64VEC := Qnew(rows*cols)
             [vec, rows, cols]
@@ -886,9 +892,14 @@ JuliaComplexF64Matrix() : Exports == Implementation where
             inv
 
         -- TODO
-        --determinant(m) ==
+        determinant(m) == determinant(m)$MLAF
         --    m.nrows ~= m.ncols => error "determinant: matrix is not square"
         --    jl_array_2dfunction(1$NNI,"det", m.elts, m.ncols)$Lisp
+
+        nullity(m) == nullity(m)$MLAF
+        nullSpace(m) == nullSpace(m)$MLAF
+        rowEchelon(m) == rowEchelon(m)$MLAF
+        minordet(m) == minordet(m)$MLAF
 
         jlDisplay(m) ==
             jl_2dfunction(1$NNI,"display", m.elts, m.ncols)$Lisp

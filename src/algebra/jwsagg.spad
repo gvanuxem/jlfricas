@@ -355,10 +355,13 @@ JuliaWSVector(E : JuliaWSObject) : Exports == Implementation where
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 -- JuliaWSRing?
 JuliaWSMatrix(E : JuliaWSRing) : Exports == Implementation where
-  getind(a)  ==> concat(["getindex(refs, _"", jlId a, "_")"])
-  NNI ==> NonNegativeInteger
+  NNI   ==> NonNegativeInteger
+  Row   ==> JuliaWSVector(E)
+  Col   ==> JuliaWSVector(E)
+  MLAF  ==> MatrixLinearAlgebraFunctions(E, Row, Col, %)
+  parsei    ==> PARSE_-INTEGER$Lisp
   Exports ==> Join(JuliaWSAggregate(JuliaWSVector(E)),
-            MatrixCategory(E, JuliaWSVector(E), JuliaWSVector(E))) with
+            MatrixCategory(E, Row, Col)) with
   --JuliaWSObject with TODO:adapt to aggregates
     square?  : % -> Boolean
     ++ \spad{square?(m)} returns true if m is a square matrix
@@ -426,16 +429,12 @@ JuliaWSMatrix(E : JuliaWSRing) : Exports == Implementation where
     ++ row(mat,i) returns the i-th row.
     column : (%, Integer) -> %
     ++ column(mat,i) returns the i-th column.
-    rank : % -> E
-    ++ rank(m) returns the matrix rank of m.
     transpose : % -> %
     ++ transpose(m) returns the tranposition of m.
     adjoint : % -> %
     ++ adjoint(m) returns the adjoint of m, i.e. the conjugate transposition of m.
     adjugate : % -> %
     ++ adjugate(m) returns the adjugate of square m. 
-    determinant: % -> E
-    ++ determinant(m) computes the determinant of m.
     norm : % -> E
     ++ norm(m) returns the norm of m, i.e. the value of the maximum
     ++ singular values of m.
@@ -449,22 +448,23 @@ JuliaWSMatrix(E : JuliaWSRing) : Exports == Implementation where
     ++ permanent(m) returns the permanent of m.
     diagonal : % -> JuliaWSVector(E)
     ++ diagonal(m) returns the diagonal elements of m as a vector.
-    kroneckerProduct : (%, %) -> %
-    ++ kroneckerProduct(mat1, mat2) returns the KroneckerProduct of mat1 and mat2.
     inverse: % -> %
     ++ inverse(m) computes the inverse of m.
     ++ For example:
     ++ \example{m:=jWSMatrix("\{\{a, b\}, \{b, a\}\}")@JWSMAT(JWSEXPR)}
     ++ \example{inverse m}
-    pseudoInverse: % -> %
-    ++ pseudoInverse(m) computes the pseudo inverse of m also knows as
+    if E has IntegralDomain then
+      invertIfCan : % -> Union(%,"failed")
+      ++ invertIfCan(m) returns the inverse of the matrix m.
+      ++ If the matrix is not invertible, "failed" is returned.
+      ++ Error: if the matrix is not square.
+    generalizedInverse: % -> %
+    ++ generalizedInverse(m) computes the pseudo inverse of m also knows as
     ++ Moore-Penrose inverse.
     linearSolve : (%, %) -> %
     ++ linearSolve(mat, b) finds x, solution of the equation mat * x = b.
     nullSpace : % -> JuliaWSList(JuliaWSVector(E))
     ++ nullSpace(m) returns the list of vector
-    rowReduce : % -> %
-    ++ rowReduce(m) returns the row-reduced form of m.
     minors : % -> %
     ++ minors(m) returns the minors of m.
     minors : (%, JuliaWSInteger) -> %
@@ -482,22 +482,22 @@ JuliaWSMatrix(E : JuliaWSRing) : Exports == Implementation where
     ++ svd(m) computes the singular value decomposition of the matrix m.
     svdvals : % -> JuliaWSList(E)
     ++ svdvals(m) returns the singular values of the matrix m.
-    schurDecomposition : % -> Record(q : %, t : %)
-    ++ schurDecomposition(m) computes the Schur decomposition of
+    schur : % -> Record(q : %, t : %)
+    ++ schurm) computes the Schur decomposition of
     ++ of the square matrix m.
-    qrDecomposition : % -> Record(q : %, r : %)
-    ++ qrDecomposition(m) computes the QR decomposition of the matrix m.
-    jordanDecomposition : % -> Record(s : %, j : %)
-    ++ jordanDecomposition(m) computes the Jordan decomposition of
+    qr: % -> Record(q : %, r : %)
+    ++ qr(m) computes the QR decomposition of the matrix m.
+    jordan : % -> Record(s : %, j : %)
+    ++ jordan(m) computes the Jordan decomposition of
     ++ of the square matrix m.
-    hessenbergDecomposition : % -> Record(p : %, h : %)
-    ++ hessenbergDecomposition(m) computes the Hessenberg decomposition of
+    hessenberg : % -> Record(p : %, h : %)
+    ++ hessenberg(m) computes the Hessenberg decomposition of
     ++ the square matrix m.
-    choleskyDecomposition : % -> Record(l : %, u : %)
-    ++ choleskyDecomposition(m) computes the Cholesky decomposition of
+    cholesky : % -> Record(l : %, u : %)
+    ++ cholesky(m) computes the Cholesky decomposition of
     ++ the square matrix m.
-    luDecomposition : % -> Record(lu : %, p : %, c : %)
-    ++ luDecomposition(m) computes the lU decomposition of the matrix m.
+    lu : % -> Record(lu : %, p : %, c : %)
+    ++ lu(m) computes the lU decomposition of the matrix m.
     matrixFunction : (JuliaWSExpression, %) -> JuliaWSMatrix(JuliaWSExpression)
     ++ matrixFunction(func, m) applies the matrix function func,
     ++ if available, to the matrix m. Note that it is not
@@ -532,6 +532,7 @@ JuliaWSMatrix(E : JuliaWSRing) : Exports == Implementation where
     import from JuliaWSExpression
     import from JuliaWSInteger
 
+    getind(a)  ==> concat(["getindex(refs, _"", jlId a, "_")"])
     jbinop(op,a,b) ==> jlref(concat(["weval(", getind(a), op, getind(b),")"]))
     junfunc(func,a) ==> jlref(concat(["weval(",func, "(", getind(a),"))"]))
     jbinfunc(func,a,b) ==>
@@ -582,16 +583,6 @@ JuliaWSMatrix(E : JuliaWSRing) : Exports == Implementation where
       jbinfunc("W_"MatrixPower_"", x, coerce(n)@JuliaWSInteger)
     x ^ n : NonNegativeInteger ==
       jbinfunc("W_"MatrixPower_"", x, coerce(n)@JuliaWSInteger)
-    matrixFunction(func, mat) == jbinfunc("W_"MatrixFunction_"", func, mat) 
-    
-    rank(mat) ==
-      junfunc("W_"MatrixRank_"", mat)
-    inverse(mat) ==
-      not square?(mat) => error "inverse$JuliaWSMatrix: not a square matrix"
-      junfunc("W_"Inverse_"", mat)
-    pseudoInverse(mat) == junfunc("W_"PseudoInverse_"", mat)
-    linearSolve(mat, b) ==
-      jbinfunc("W_"LinearSolve_"", mat, b)
 
     minRowIndex(mat) == 1$Integer
     minColIndex(mat) == 1$Integer
@@ -608,7 +599,7 @@ JuliaWSMatrix(E : JuliaWSRing) : Exports == Implementation where
     setelt(mat : %,i : Integer, j : Integer, elem) ==
       dims := dimensions(mat)
       i > integer first(dims) or j > integer last(dims) =>
-        error "setelt$JuliaWSMatrix: index is/are too large"
+        error "setelt$JuliaWSMatrix: index(es) is/are too large"
       inds : List(JuliaWSInteger)  := [jWSInt(i), jWSInt(j)]
       rule := jWSRule(jWSList(inds)@JuliaWSList(JuliaWSInteger) pretend JuliaWSExpression,
         elem pretend JuliaWSExpression)
@@ -622,12 +613,12 @@ JuliaWSMatrix(E : JuliaWSRing) : Exports == Implementation where
     setelt!(mat : %,i : Integer,j : Integer, elem : E) ==
       dims := dimensions(mat)
       i > integer first(dims) or j > integer last(dims) =>
-        error "setelt!$JuliaWSMatrix: index is/are too large"
+        error "setelt!$JuliaWSMatrix: index(s) is/are too large"
       inds : List(JuliaWSInteger)  := [jWSInt(i), jWSInt(j)]
       rule := jWSRule(jWSList(inds)@JuliaWSList(JuliaWSInteger) pretend JuliaWSExpression,
         elem pretend JuliaWSExpression)
       cmd := concat(["weval(W_"ReplacePart_"(", getind(mat), ",", getind(rule),"))"])
-      ret : String := jl_setindex_wrap_eval_string(jlId(mat),cmd)$Lisp
+      ret : String := jl_setindex_wrap_eval_string(jlId(mat), cmd)$Lisp
       if ret = "" then error "setelt!$JuliaWSMatrix: bad element in input"
       elem
     qsetelt!(mat,i,j,elem) ==
@@ -636,7 +627,7 @@ JuliaWSMatrix(E : JuliaWSRing) : Exports == Implementation where
       rule := jWSRule(jWSList(inds)@JuliaWSList(JuliaWSInteger) pretend JuliaWSExpression,
         elem pretend JuliaWSExpression)
       cmd := concat(["weval(W_"ReplacePart_"(", getind(mat), ",", getind(rule),"))"])
-      ret : String := jl_setindex_wrap_eval_string(jlId(mat),cmd)$Lisp
+      ret : String := jl_setindex_wrap_eval_string(jlId(mat), cmd)$Lisp
       if ret = "" then error "setelt!$JuliaWSMatrix: bad element in input"
       elem
     elt(m, i) ==
@@ -644,8 +635,6 @@ JuliaWSMatrix(E : JuliaWSRing) : Exports == Implementation where
         error "elt$JuliaWSMatrix: index is too large"
       jbinfunc("W_"Extract_"", m, jWSExpr(concat(["{All,", string(i),"}"])))
     qelt(m, i) ==
-      i > integer last(dimensions(m)) =>
-        error "elt$JuliaWSMatrix: index is too large"
       jbinfunc("W_"Extract_"", m, jWSExpr(concat(["{All,", string(i),"}"])))
     row(m, i) ==
       i > integer first(dimensions(m)) =>
@@ -661,7 +650,16 @@ JuliaWSMatrix(E : JuliaWSRing) : Exports == Implementation where
     adjugate(mat) == junfunc("W_"Adjugate_"", mat)
 
     nullSpace(mat) == junfunc("W_"NullSpace_"", mat)
-    rowReduce(mat) == junfunc("W_"RowReduce_"", mat)
+    rowEchelon(mat) == junfunc("W_"RowReduce_"", mat)
+
+    rank(mat) == parsei toString junfunc("W_"MatrixRank_"", mat)
+    inverse(mat) ==
+      not square?(mat) => error "inverse$JuliaWSMatrix: not a square matrix"
+      junfunc("W_"Inverse_"", mat)
+    generalizedInverse(mat) == junfunc("W_"PseudoInverse_"", mat)
+    linearSolve(mat, b) ==
+      jbinfunc("W_"LinearSolve_"", mat, b)
+    matrixFunction(func, mat) == jbinfunc("W_"MatrixFunction_"", func, mat) 
 
     minors(mat) == junfunc("W_"Minors_"", mat)
     minors(mat, k) == jbinfunc("W_"Minors_"", mat, k)
@@ -681,32 +679,40 @@ JuliaWSMatrix(E : JuliaWSRing) : Exports == Implementation where
       ret : JuliaWSList(%) := junfunc("W_"SingularValueDecomposition_"", mat)
       [first(ret), qelt(ret,2), last(ret)]
     svdvals(mat) == junfunc("W_"SingularValueList_"", mat)
-    schurDecomposition(mat) ==
-      not square?(mat) => error "schurDecomposition: not a square matrix"
+    schur(mat) ==
+      not square?(mat) => error "schur: not a square matrix"
       ret : JuliaWSList(%) := junfunc("W_"SchurDecomposition_"", mat)
       [first(ret),last(ret)]
-    qrDecomposition(mat) ==
+    qr(mat) ==
       ret : JuliaWSList(%) := junfunc("W_"QRDecomposition_"", mat)
       [first(ret),last(ret)]
-    hessenbergDecomposition(mat) ==
-      not square?(mat) => error "hessenbergDecomposition: not a square matrix"
+    hessenberg(mat) ==
+      not square?(mat) => error "hessenberg: not a square matrix"
       ret : JuliaWSList(%) := junfunc("W_"HessenbergDecomposition_"", mat)
       [first(ret),last(ret)]
-    jordanDecomposition(mat) ==
-      not square?(mat) => error "jordanDecomposition: not a square matrix"
+    jordan(mat) ==
+      not square?(mat) => error "jordan: not a square matrix"
       ret : JuliaWSList(%) := junfunc("W_"JordanDecomposition_"", mat)
       [first(ret),last(ret)]
-    choleskyDecomposition(mat) ==
-      not square?(mat) => error "choleskyDecomposition: not a square matrix"
+    cholesky(mat) ==
+      not square?(mat) => error "cholesky: not a square matrix"
       ret : JuliaWSList(%) := junfunc("W_"CholeskyDecomposition_"", mat)
       [first(ret),last(ret)]
-    luDecomposition(mat) ==
+    lu(mat) ==
       ret : JuliaWSList(%) := junfunc("W_"LUDecomposition_"", mat)
       [first(ret), qelt(ret,2), last(ret)]
 
     determinant(mat) ==
       not square?(mat) => error "determinant: not a square matrix"
       junfunc("W_"Det_"", mat)
+    if E has IntegralDomain then
+      nullity(m) == nullity(m)$MLAF
+      nullSpace(mat) == junfunc("W_"NullSpace_"", mat)
+      invertIfCan(m) == invertIfCan(m)$MLAF
+    if E has CommutativeRing then
+      minordet(mat) ==
+        not square?(mat) => error "minordet$JuliaWSMatrix: not a square matrix"
+        minordet(mat)$MLAF
     trace(mat) == junfunc("W_"Tr_"", mat)
     diagonal(mat) == junfunc("W_"Diagonal_"", mat)
     norm(mat) == junfunc("W_"Norm_"", mat)

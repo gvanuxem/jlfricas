@@ -19,7 +19,7 @@ To build FriCAS with Julia support, the <code>julia</code> executable needs to b
 
 As of now with Clozure CL [queues](https://github.com/oconnore/queues) is also required. Use installed [quicklisp](https://www.quicklisp.org/beta/) with `queues`, and at configure time use the `--with-quicklisp` option, see the `quicklisp` documentation for how to load it and install `queues`.
 
-If you want to visualize your data using Julia, small support is provided using StatsPlots and eventually LaTeXStrings Julia packages.
+If you want to visualize your data using Julia, small support is provided using `Plots` and eventually `LaTeXStrings` Julia packages.
 
 If you want to use [jFriCAS](https://jfricas.readthedocs.io/en/latest/) i.e. Jupyter support for FriCAS built with SBCL, make sure [hunchentoot](https://edicl.github.io/hunchentoot/) is installed. On a Debian like system you can add `hunchentoot` with <code>sudo apt install cl-hunchentoot</code> and issue, for example, <code>./configure --enable-gmp --enable-julia --enable-hunchentoot</code>.
 

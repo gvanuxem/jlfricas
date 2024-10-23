@@ -49,9 +49,9 @@ JuliaObjectType() : Category == JuliaType() with
     jlAbout : % -> Void
     ++ jlAbout(obj) displays Julia informations about obj
     ++ if you have About.jl installed in Julia.
-    ++ In the Julia interpreter:
-    ++   import Pkg;
-    ++   Pkg.import("https://github.com/tecosaur/About.jl")
+    ++ In the Julia interpreter enter in the package management mode
+    ++ with ']' and issue:
+    ++ pkg> add "https://github.com/tecosaur/About.jl"
   add
     import from JuliaUtilityFunctions
     import from JuliaSymbol
@@ -142,6 +142,7 @@ JuliaObjectAggregate() : Category == Join(JuliaObjectType, Aggregate) with
     ++ qelt(obj, ind) returns the element at index ind of obj.
     ++ It can be used, for example, with a Tuple or a Vector.
   add
+    import from String
     getind(a) ==> concat(["getindex(refs,_"",
       JLREFID(a)$Lisp pretend String, "_")"])
     elt(obj : %, jsy : JuliaSymbol) ==
@@ -157,6 +158,9 @@ JuliaObjectAggregate() : Category == Join(JuliaObjectType, Aggregate) with
       jlref(concat([getind(obj), "[", string(ind), "]"]))
     qelt(obj : %, ind : Integer) ==
       jlref(concat([getind(obj), "[", string(ind), "]"]))
+    empty() == jlref("missing")
+    empty? m ==
+      jl_bool_eval_string(concat(["ismissing(", getind(m),")"]))$Lisp
 
 )abbrev category JOBRING JuliaObjectRing
 ++ Category for Julia object rings
@@ -194,8 +198,8 @@ JuliaObjectRing() : Category == Join(JuliaObjectType, JuliaRing) add
 ++ Date Created: April. 2024
 ++ Description:
 ++  Generic Julia objects i.e. objects that are used within Julia,
-++ and not directly by the underlying FriCAS Common LISP. It supports
-++ the JuliaObjectAggregate category.
+++ and not directly by the underlying FriCAS Common LISP. It also
+++ supports the JuliaObjectAggregate category.
 JuliaObject() : Exports == Implementation where
   INT ==> Integer
   NNI ==> NonNegativeInteger
@@ -206,6 +210,7 @@ JuliaObject() : Exports == Implementation where
     ++ coerce(jstr) returns jstr as FriCAS Julia object.
     coerce  : JuliaSymbol -> %
     ++ coerce(x): convenience function.
+    -- TODO: use a specific domain
     jlDlOpen : String -> %
     ++ jlDlOpen(lib) opens/loads the dynamic shared library lib and
     ++ returns a reference pointer to this shared library that can
@@ -320,6 +325,11 @@ JuliaObjFloat64() : Exports == Implementation where
       jl_bool_eval_string(concat([getind(a), op, getind(b)]))$Lisp
     0 == jlref("0.0")
     1 == jlref("1.0")
+    x < y  == jbinbop("<",x,y)
+    x > y  == jbinbop(">",x,y)
+    x >= y == jbinbop(">=",x,y)
+    x <= y == jbinbop("<=",x,y)
+    characteristic() == 0
     x : % * a : Integer == jlref(concat [getind(x),"*",string(a)])
     q : Fraction(Integer) * x : % ==
       jlref(concat [toString(coerce(q)@JuliaFloat64), "*", getind(x)])
@@ -411,12 +421,41 @@ JuliaObjComplexF64() : Exports == Implementation where
 ++ or function argument for example. Only basic arithmetic operations
 ++ are supported.
 JuliaObjInt64() : Exports == Implementation where
-  Exports ==> Join(OrderedSet, JuliaObjectRing, CommutativeRing) with
+  parsei    ==> PARSE_-INTEGER$Lisp
+  Exports ==> Join(OrderedSet, JuliaObjectRing, CommutativeRing,
+        EuclideanDomain, OrderedIntegralDomain) with
     jint64 : Integer -> %
+    jint64 : String -> %
   Implementation ==> JuliaObject() add
+    import from JuliaUtilityFunctions
+    import from String
+
+    jlInitialize(true)
+    Rep := SExpression
+
+    getind(a)  ==> concat(["getindex(refs,_"", jlId a, "_")"])
+    jbinbop(op,a,b) ==>
+      jl_bool_eval_string(concat([getind(a), op, getind(b)]))$Lisp
+    jbinfunc(func,a,b) ==>
+      jlref(concat([func, "(", getind(a), ",", getind(b),")"]))
+
     0 == jlref("0")
     1 == jlref("1")
-    jint64(z) == jlref(string z)
+    x < y  == jbinbop("<",x,y)
+    x > y  == jbinbop(">",x,y)
+    x >= y == jbinbop(">=",x,y)
+    x <= y == jbinbop("<=",x,y)
+    characteristic() == 0
+    euclideanSize(x) ==
+      x = 0 => error "euclideanSize called on zero"
+      x < 0 => (- (parsei(string x) pretend Integer))::NonNegativeInteger
+      (parsei(string x) pretend Integer)::NonNegativeInteger
+    divide(a,b) ==
+      ret : JuliaObjTuple := jbinfunc("divrem",a,b)
+      [ret.1 pretend %, ret.2 pretend %]
+    coerce(z : Integer) == jlref(string z)
+    jint64(z : Integer) == jlref(string z)
+    jint64(str : String) == jlref(str)
 
 )abbrev domain JOBBINT JuliaObjBigInt
 ++ Convenience domain for Julia BigInt
@@ -431,7 +470,9 @@ JuliaObjInt64() : Exports == Implementation where
 ++ are supported. Use the GMP library:
 ++ https://gmplib.org/
 JuliaObjBigInt() : Exports == Implementation where
-  Exports ==> Join(OrderedSet, JuliaObjectRing, CommutativeRing) with
+  parsei    ==> PARSE_-INTEGER$Lisp
+  Exports ==> Join(OrderedSet, JuliaObjectRing, CommutativeRing,
+        EuclideanDomain, OrderedIntegralDomain) with
     jlBIApply : (JuliaObject, %) -> %
     ++ jlBIApply(func,x) applies the function pointer func to x.
     ++ It is expected that the C function modifies the first parameters
@@ -458,6 +499,9 @@ JuliaObjBigInt() : Exports == Implementation where
     ++ \example{jlBIApply(hypot3,jfloat64(2),jfloat64(7),jfloat64(9.0))}
     jbigint : Integer -> %
     ++ jbigint(z) converts z to a Julia BigInt. 
+    jbigint : String -> %
+    ++ jbigint(z) returns the string str evaluated in Julia where the returned
+    ++ value is assumed to be a Julia BigInt. 
   Implementation == JuliaObject() add
     import from JuliaUtilityFunctions
     import from JuliaString
@@ -466,6 +510,27 @@ JuliaObjBigInt() : Exports == Implementation where
     Rep := SExpression
 
     getind(a)  ==> concat(["getindex(refs,_"", jlId a, "_")"])
+    jbinbop(op,a,b) ==>
+      jl_bool_eval_string(concat([getind(a), op, getind(b)]))$Lisp
+    jbinfunc(func,a,b) ==>
+      jlref(concat([func, "(", getind(a), ",", getind(b),")"]))
+
+    0 == jlref("BigInt(0)")
+    1 == jlref("BigInt(1)")
+
+    x < y  == jbinbop("<",x,y)
+    x > y  == jbinbop(">",x,y)
+    x >= y == jbinbop(">=",x,y)
+    x <= y == jbinbop("<=",x,y)
+
+    euclideanSize(x) ==
+      x = 0 => error "euclideanSize called on zero"
+      x < 0 => (- parsei(string x) pretend Integer)::NonNegativeInteger
+      (parsei(string x) pretend Integer)::NonNegativeInteger
+    characteristic() == 0
+    divide(a,b) ==
+      ret : JuliaObjTuple := jbinfunc("divrem",a,b)
+      [ret.1 pretend %, ret.2 pretend %]
     jlBIApply(func, x) ==
       ret := jlref("BigInt()")
       jlref(concat ["ccall(", getind(func),
@@ -484,7 +549,8 @@ JuliaObjBigInt() : Exports == Implementation where
           getind(x), ",", getind(y), ",", getind(z),")"])
       ret
     coerce(z : Integer) == jlref(concat ["BigInt(",string(z),")"])
-    jbigint(z) == jlref(concat ["BigInt(",string(z),")"])
+    jbigint(z : Integer) == jlref(concat ["BigInt(",string(z),")"])
+    jbigint(str : String) == jlref(str)
 
 )abbrev domain JOBTPLE JuliaObjTuple
 ++ Convenience domain for Julia Tuple.
@@ -1082,6 +1148,8 @@ JuliaVector(R : JuliaObjectType) : Exports == Implementation where
       vector  : List R -> %
       ++ vector(l) converts the list l to a vector.
       if not R has NemoType then
+        kroneckerProduct : (%, %) -> %
+        ++ kroneckerProduct(v1,v2) returns the kronecker product of v1 and v2.
         if R has Join(JuliaObjectRing, FloatingPointSystem,
               arbitraryPrecision) then
           urand01 : (n : PI) -> JuliaVector(JuliaFloat)
@@ -1133,7 +1201,6 @@ JuliaVector(R : JuliaObjectType) : Exports == Implementation where
       minIndex x                  == 1$Lisp
       maxIndex x                  == jl_int64_eval_string(concat(["length(",
         getind(x),")"]))$Lisp
-      empty()                     == error "empty()$JuliaVector: not supported"
       new(n, x:R)                 ==
         jlref(concat(["fill(", getind(x),",", string(n),")"]))
       qelt(x, i)                  ==
@@ -1188,6 +1255,7 @@ JuliaVector(R : JuliaObjectType) : Exports == Implementation where
           setelt!(c, i, f(qelt(a, i), qelt(b, i)))
         c
 
+      kroneckerProduct(v1,v2) == jbinfunc("kron",v1,v2)
       copy(v) == jlref(concat(["deepcopy(", getind(v),")"]))
       sort(v : %) == junfunc("sort",v)
       sort!(v : %) == junfunc("sort!",v)
@@ -1262,14 +1330,22 @@ JuliaMatrix(R : JuliaObjectRing) :  Exports == Implementation where
     NNI     ==> NonNegativeInteger
     INT     ==> Integer
     NINT    ==> NemoInteger
-    JVEC    ==> JuliaVector(R)
+    Row     ==> JuliaVector(R)
+    Col     ==> JuliaVector(R)
+    MLAF    ==> MatrixLinearAlgebraFunctions(R, Row, Col, %)
+    parsei    ==> PARSE_-INTEGER$Lisp
     Exports ==> Join(JuliaObjectAggregate,
-                  JuliaMatrixCategory(R, JuliaVector(R), JuliaVector(R))) with
+                  JuliaMatrixCategory(R, Row, Col)) with
       if R has IntegerNumberSystem or R has QuotientFieldCategory(NINT) then
         radicalEigenvalues: % -> JuliaVector(NemoAlgebraicNumber)
       if R has ComplexCategory(NemoRealField) then
         eigenvalues: % -> JuliaVector(R)
         ++ eigenvalues(m) returns eigenvalues of m.
+      if R has IntegralDomain then
+        invertIfCan : % -> Union(%,"failed")
+        ++ invertIfCan(m) returns the inverse of the matrix m.
+        ++ If the matrix is not invertible, "failed" is returned.
+        ++ Error: if the matrix is not square.
       if not R has NemoType then
         jlApprox?: (%, %) -> Boolean
         ++ jlApprox?(A,B) computes component-wise inexact equalit
@@ -1318,7 +1394,7 @@ JuliaMatrix(R : JuliaObjectRing) :  Exports == Implementation where
       jmatrix:    String -> %
       ++ jmatrix(str) evaluates the string str and returns the generated matrix.
       ++ No checks are done at the FriCAS level.
-    Implementation ==> Matrix(R) add
+    Implementation ==> add --Matrix(R) add
       import from JuliaUtilityFunctions
       import from String
       import from JuliaString
@@ -1369,7 +1445,6 @@ JuliaMatrix(R : JuliaObjectRing) :  Exports == Implementation where
         jl_eval_string(concat(["setindex!(", getind(m), ",", getind(r)
           ",", string(i), ",", string(j), ")"]))$Lisp
         r
-      empty() == error "empty()$JuliaMatrix: not supported" --Qnew(0$Integer,0$Integer)
 
       if R has NemoRing then
         if R is NemoInteger then
@@ -1455,20 +1530,8 @@ JuliaMatrix(R : JuliaObjectRing) :  Exports == Implementation where
       m : % / a : R == jbinop("/", m, a)
       x : Integer * y : % == jlref(concat([string(x), "*", getind(y)]))
 
-      matrix(l : List List R) ==
-        empty?(l) => error "matrix: empty matrix is not supported"
-        -- error check: this is a top level function
-        rows : NonNegativeInteger := 1; cols := # first l
-        for ll in rest l repeat
-          cols ~= # ll => error "matrix: rows of different lengths"
-          rows := rows + 1
-        ans := new(rows, cols, 0$R)
-        for i in 1..rows for ll in l repeat
-          for j in 1..cols for r in ll repeat
-            qsetelt!(ans, i, j, r)
-        ans
-
-      if not R has NemoType then 
+      if not R has NemoType then
+        kroneckerProduct(m1,m2) == jbinfunc("kron",m1,m2)
         jlApprox?(x, y) ==
           jl_bool_eval_string(concat(["isapprox(", getind(x),
             ",", getind(y), ")"]))$Lisp
@@ -1484,6 +1547,9 @@ JuliaMatrix(R : JuliaObjectRing) :  Exports == Implementation where
           nrand(rows, cols) : JuliaMatrix(JuliaComplexFloat) ==
             jlref(concat(["randn(Complex{BigFloat},", string(rows), ",",
               string(cols),")"]))
+      else if R is NemoInteger or R is NemoRational then
+        radicalEigenvalues(m) == jlref(concat ["eigenvalues(QQBar,",
+          getind(m), ")"])$JuliaVector(NemoAlgebraicNumber)
 
       jlDisplay(m : %) ==
         jl_eval_string(concat(["display(", getind(m), ")"]))$Lisp
@@ -1499,17 +1565,28 @@ JuliaMatrix(R : JuliaObjectRing) :  Exports == Implementation where
 
       copy(m) == jlref(concat(["deepcopy(", getind(m),")"]))
       transpose(m) == jlref(concat(["transpose(",getind(m),")"]))
-
-      -- TODO
+      
       if R has IntegralDomain then
-        rank(m) == rank(coerce(m)@Matrix(R))
-      inverse(m) == junfunc("inv", m)
-      determinant(m) == jlref(concat(["det(", getind(m),")"]))$R
+        if R is JuliaFloat or R is JuliaComplexFloat then
+          rank(m) == rank(m)$MLAF
+        else
+          rank(m) == parsei string junfunc("rank", m)
+        nullity(m) == nullity(m)$MLAF
+        nullSpace(m) == nullSpace(m)$MLAF
+        invertIfCan(m) == invertIfCan(m)$MLAF
+      if R has EuclideanDomain then
+        rowEchelon(m) == rowEchelon(m)$MLAF
 
-      if R has IntegerNumberSystem or R has QuotientFieldCategory(NINT) then
-        radicalEigenvalues(m) ==
-          jlref(concat ["eigenvalues(QQBar,",
-            getind(m), ")"])$JuliaVector(NemoAlgebraicNumber)
+      -- if R has Field then (is not necessary)
+      inverse(m) == junfunc("inv", m)
+
+      if R is JuliaObjInt64 then -- returns a Julia Float64 so convert it
+        determinant(m) == jlref(concat(["Int64(det(", getind(m),"))"]))$R
+      else if R is JuliaObjBigInt then
+        determinant(m) == jlref(concat(["BigInt(det(", getind(m),"))"]))$R
+      else
+        determinant(m) == jlref(concat(["det(", getind(m),")"]))$R
+      minordet(m) == minordet(m)$MLAF
 
       identity(n) ==
           m := new(n,n, 0$R)
@@ -1521,6 +1598,19 @@ JuliaMatrix(R : JuliaObjectRing) :  Exports == Implementation where
         u := new(n, n, 0$R)
         for i in 1..n repeat setelt!(u, i, i, elt(v,i))
         u
+
+      matrix(l : List List R) ==
+        empty?(l) => error "matrix: empty matrix is not supported"
+        -- error check: this is a top level function
+        rows : NonNegativeInteger := 1; cols := # first l
+        for ll in rest l repeat
+          cols ~= # ll => error "matrix: rows of different lengths"
+          rows := rows + 1
+        ans := new(rows, cols, 0$R)
+        for i in 1..rows for ll in l repeat
+          for j in 1..cols for r in ll repeat
+            qsetelt!(ans, i, j, r)
+        ans
 
       coerce(m : %) : Matrix(R) ==
         l : List List R

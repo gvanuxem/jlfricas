@@ -174,14 +174,15 @@ JuliaPlotFunctions() : Exports == Implementation where
     pdf(x) ==> x pretend SF
     POINTS ==> 250
 
-    if not jlUsing(coerce("StatsPlots")) then
-        error "JuliaPlotFunctions: the Julia package StatsPlots is not installed"
+    if not jlUsing(coerce("Plots")) then
+        error "JuliaPlotFunctions: the Julia package Plots is not installed"
 
     if not jlUsing(coerce("LaTeXStrings")) then
         messagePrint("Warning: JuliaPlotFunctions: _"LaTeXStrings is not installed"
             " in Julia, do not use LaTeX strings_"")$OutputForm
     -- jlEvalString("gaston()")
     -- jlEvalString("WGLMakie.activate!()")
+    -- jlEvalString("plotly()")
 
     display() : Void == jlEvalString("gui()")
 

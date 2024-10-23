@@ -13,7 +13,8 @@ NemoUnivariatePolynomial(R : NemoRing, x : Symbol):
     NNI       ==> NonNegativeInteger
     parsei    ==> PARSE_-INTEGER$Lisp
     Exports ==> Join(NemoRing, UnivariatePolynomialCategory(R)) with
-        if R has IntegerNumberSystem then
+        if R has IntegerNumberSystem or R has
+            QuotientFieldCategory(NINT) then
           minimalPolynomial : NemoAlgebraicNumber -> %
           ++ minimalPolynomial(algn) returns the minimal polynomial of algn.
           ++ Convenience function.
@@ -21,12 +22,6 @@ NemoUnivariatePolynomial(R : NemoRing, x : Symbol):
           ++ roots(p) returns the roots of p.
           ++ Convenience function.
         if R has QuotientFieldCategory(NINT) then
-          minimalPolynomial : NemoAlgebraicNumber -> %
-          ++ minimalPolynomial(algn) returns the minimal polynomial of algn.
-          ++ Convenience function.
-          roots : % -> JuliaVector(NemoAlgebraicNumber)
-          ++ roots(p) returns the roots of p.
-          ++ Convenience function.
           "+" : (%, Fraction(Integer)) -> %
           "*" : (%, Fraction(Integer)) -> %
           "+" : (Fraction(Integer), %) -> %
