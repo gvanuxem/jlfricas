@@ -19,6 +19,8 @@ JuliaObjectType() : Category == JuliaType() with
     ++ of the Julia object obj.
     mutable? : % -> Boolean
     ++ mutable?(obj) checks wheter or not obj is mutable.
+    nothing? : % -> Boolean
+    ++ nothing?(obj) checks whether or not obj is nothing.
     jlApply : (String, %) -> % 
     ++jlApply(func, obj) executes the function func with obj as parameter
     ++ and returns the result as a FriCAS JuliaObjectType.
@@ -82,11 +84,13 @@ JuliaObjectType() : Category == JuliaType() with
     jlRef(obj)   == obj pretend SExpression
 
     x = y ==
-      jl_bool_eval_string(concat [getind(x),"==",getind(y)])$Lisp
+      jlEvalString(concat [getind(x),"==",getind(y)])@Boolean
     x ~= y ==
-      jl_bool_eval_string(concat [getind(x),"!=",getind(y)])$Lisp
+      jlEvalString(concat [getind(x),"!=",getind(y)])@Boolean
     mutable?(x) ==
-      jl_bool_eval_string(concat(["ismutable(", getind(x), ")"]))$Lisp
+      jlEvalString(concat(["ismutable(", getind(x), ")"]))@Boolean
+    nothing?(x) ==
+      jlEvalString(concat(["isnothing(", getind(x), ")"]))@Boolean
     -- TODO
     string(obj)  == jl_string_getindex(jlId obj)$Lisp
     convert(obj)  == jl_string_getindex(jlId obj)$Lisp
@@ -112,10 +116,11 @@ JuliaObjectType() : Category == JuliaType() with
       not jlUsing("About") =>
         error("jlAbout: the _"About.jl_" Julia package is not installed. _
 See the JuliaObjectType category for information")
-      jl_eval_string(concat(["about(", getind(obj),")"]))$Lisp
+      jlEvalString(concat(["about(", getind(obj),")"]))@Void
     coerce(obj : %) : OutputForm ==
       ret : List OutputForm := jl_stringify_wrapped_index("show",
         "_"text/plain_"", getind(obj))$Lisp
+      -- first line length only 
       #ret ~= 1 or more?(elt(ret,1) pretend String, _$LINELENGTH$Lisp)
         => pile(append(["" pretend OutputForm], ret))
       vconcat ret
@@ -142,7 +147,9 @@ JuliaObjectAggregate() : Category == Join(JuliaObjectType, Aggregate) with
     ++ qelt(obj, ind) returns the element at index ind of obj.
     ++ It can be used, for example, with a Tuple or a Vector.
   add
+    import from JuliaUtilityFunctions
     import from String
+
     getind(a) ==> concat(["getindex(refs,_"",
       JLREFID(a)$Lisp pretend String, "_")"])
     elt(obj : %, jsy : JuliaSymbol) ==
@@ -160,7 +167,7 @@ JuliaObjectAggregate() : Category == Join(JuliaObjectType, Aggregate) with
       jlref(concat([getind(obj), "[", string(ind), "]"]))
     empty() == jlref("missing")
     empty? m ==
-      jl_bool_eval_string(concat(["ismissing(", getind(m),")"]))$Lisp
+      jlEvalString(concat(["ismissing(", getind(m),")"]))@Boolean
 
 )abbrev category JOBRING JuliaObjectRing
 ++ Category for Julia object rings
@@ -207,18 +214,6 @@ JuliaObject() : Exports == Implementation where
     coerce  : JuliaSymbol -> %
     ++ coerce(x): convenience function.
     -- TODO: use a specific domain
-    jlDlOpen : String -> %
-    ++ jlDlOpen(lib) opens/loads the dynamic shared library lib and
-    ++ returns a reference pointer to this shared library that can
-    ++ be used to obtain adresses to symbols in it using jlDlSym.
-    ++ It is up to the user to unload the shared object when it is
-    ++ no longer necessary.
-    jlDlClose : % -> Void
-    ++ jlDlClose(libPtr) unload explicitely the shared library
-    ++ referenced by libPtr.
-    jlDlSym : (%, JuliaSymbol) -> %
-    ++ jlDlSym(lib, sym) returns the address of the symbol sym in
-    ++ the library referenced by lib. See jlDlOpen.
     jobject : String -> %
     ++ jlObject(string) constructs an arbirary Julia object depending
     ++ on string used (evaluated by Julia). For example:
@@ -229,15 +224,8 @@ JuliaObject() : Exports == Implementation where
     import from String
 
     jlInitialize(true)
-    jlImport("Libdl")
     Rep := SExpression
     getind(a)  ==> concat(["getindex(refs,_"", jlId a, "_")"])
-
-    jlDlOpen(library) == jlref(concat(["Libdl.dlopen(_"", library, "_")"]))
-    jlDlClose(library) ==
-      jl_eval_string(concat ["Libdl.dlclose(",getind(library),")"])$Lisp
-    jlDlSym(library, sym) == jlref(concat(["Libdl.dlsym(",
-      getind(library),",", string(sym),")"])) 
     coerce(jsy : JuliaSymbol ) == jlref(convert(jsy))
     jobject(str: String) : % == jlref(str)
 
@@ -255,7 +243,7 @@ JuliaObjBoolean() : Exports == Implementation where
     coerce : % -> Boolean
     jtrue : () -> %
     jfalse : () -> %
-  Implementation ==> JuliaObject() add
+  Implementation ==> add
     import String
     getind(a)  ==> concat(["getindex(refs,_"", jlId a, "_")"])
     coerce(bool) : Boolean == jl_string_getindex(jlId bool)$Lisp = "true"
@@ -277,24 +265,34 @@ JuliaObjFloat64() : Exports == Implementation where
     "*" : (%, Integer) -> %
     "/" : (%, Integer) -> %
     "/" : (Integer, %) -> %
-    jlCApply : (JuliaObject, %) -> %
-    ++ jlCApply(func,x) applies the function pointer func to x.
+    jlApprox?: (%, %) -> Boolean
+    ++ jlApprox?(x,y) computes inexact equality comparison
+    ++ with default parameters.
+    ++ Two numbers compare equal if their relative distance
+    ++ or their absolute distance is within tolerance bounds.
+    jlApprox?: (%, %, %) -> Boolean
+    ++ jlApprox?(x,y,atol) computes inexact equality comparison
+    ++ with absolute tolerance atol.
+    ++ Two numbers compare equal if their relative distance
+    ++ or their absolute distance is within tolerance bounds.
+    jlF64CApply : (JuliaObjDynamicLinker, %) -> %
+    ++ jlF64CApply(func,x) applies the function pointer func to x.
     ++ For example:
     ++ \example{libm:= jlDlOpen "libopenlibm"}
     ++ \example{squareRoot:=jlDlSym(libm,jsym(sqrt))}
-    ++ \example{jlCApply(squareRoot,jfloat64(2))} 
-    jlCApply : (JuliaObject, %, %) -> %
-    ++ jlCApply(func,x,y) applies the function pointer func to x and y.
+    ++ \example{jlF64CApply(squareRoot,jfloat64(2))}
+    jlF64CApply : (JuliaObjDynamicLinker, %, %) -> %
+    ++ jlF64CApply(func,x,y) applies the function pointer func to x and y.
     ++ For example:
     ++ \example{libm:= jlDlOpen "libopenlibm"}
     ++ \example{power:=jlDlSym(libm,jsym(pow))}
-    ++ \example{jlCApply(power,jfloat64(2),jfloat64(7))}
-    jlCApply : (JuliaObject, %, %, %) -> %
-    ++ jlCApply(func,x,y,z) applies the function pointer func to x, y and z.
+    ++ \example{jlF64CApply(power,jfloat64(2),jfloat64(7))}
+    jlF64CApply : (JuliaObjDynamicLinker, %, %, %) -> %
+    ++ jlF64CApply(func,x,y,z) applies the function pointer func to x, y and z.
     ++ For example with GSL-2.8:
     ++ \example{gsl:= jlDlOpen "libgsl.so.28"}
     ++ \example{hypot3:= jlDlSym(gsl,jsym(gsl_hypot3))}
-    ++ \example{jlCApply(hypot3,jfloat64(2),jfloat64(7),jfloat64(9.0))}
+    ++ \example{jlF64CApply(hypot3,jfloat64(2),jfloat64(7),jfloat64(9.0))}
     cis : % -> JuliaObjComplexF64
     ++ cis(x) returns exp(%i*x) computed efficiently.
     cispi : % -> JuliaObjComplexF64
@@ -308,8 +306,11 @@ JuliaObjFloat64() : Exports == Implementation where
     ++ jfloat64(str) evaluates str in Julia and returns the
     ++ Julia Float64 object. For example:
     ++\example{jfloat64("sin(pi)")}
-  Implementation ==> JuliaObject() add
+    ++\example{jfloat64("0.7")}
+  Implementation ==> add
+    import from JuliaUtilityFunctions
     import from String
+
     getind(a)  ==> concat(["getindex(refs,_"", jlId a, "_")"])
     jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
     junfunc(func, a) ==> jlref(concat([func, "(", getind(a),")"]))
@@ -317,6 +318,10 @@ JuliaObjFloat64() : Exports == Implementation where
       jlref(concat([func, "(", getind(a), ",", getind(b),")"]))
     jbinbop(op,a,b) ==>
       jl_bool_eval_string(concat([getind(a), op, getind(b)]))$Lisp
+
+    jlInitialize(true)
+    Rep := SExpression
+
     0 == jlref("0.0")
     1 == jlref("1.0")
     x < y  == jbinbop("<",x,y)
@@ -331,15 +336,22 @@ JuliaObjFloat64() : Exports == Implementation where
     x : % / i : Integer == jlref(concat [getind(x) , "/", string(i)])
     i : Integer / x : % == jlref(concat [string(i), "/", getind(x)])
 
-    jlCApply(func, x) ==
+    jlApprox?(x, y) ==
+      jlEvalString(concat(["isapprox(", getind(x),
+        ",", getind(y), ")"]))@Boolean
+    jlApprox?(x, y, atol) ==
+      jlEvalString(concat(["isapprox(", getind(x),
+        ",", getind(y), ", atol=", getind(atol),")"]))@Boolean
+
+    jlF64CApply(func, x) ==
       jlref(concat ["ccall(", getind(func),
-        ", Cdouble, (Cdouble,),", getind(x),")"])
-    jlCApply(func, x, y) ==
+        ", Float64, (Float64,),", getind(x),")"])
+    jlF64CApply(func, x, y) ==
       jlref(concat ["ccall(", getind(func),
-        ", Cdouble, (Cdouble,Cdouble),", getind(x), ",", getind(y),")"])
-    jlCApply(func, x, y, z) ==
+        ", Float64, (Float64,Float64),", getind(x), ",", getind(y),")"])
+    jlF64CApply(func, x, y, z) ==
       jlref(concat ["ccall(", getind(func), 
-        ", Cdouble, (Cdouble,Cdouble,Cdouble),",
+        ", Float64, (Float64,Float64,Float64),",
           getind(x), ",", getind(y), ",", getind(z), ")"])
     cis(x)   == junfunc("cis",x)
     cispi(x) == junfunc("cispi",x)
@@ -378,7 +390,7 @@ JuliaObjComplexF64() : Exports == Implementation where
     ++ Complex{Float64} object.
     ++ For example:
     ++ \example{jcfloat64 "cos(2pi)im"}
-  Implementation ==> JuliaObject() add
+  Implementation ==> add
     import from JuliaUtilityFunctions
     import from String
 
@@ -420,7 +432,7 @@ JuliaObjInt64() : Exports == Implementation where
         EuclideanDomain, OrderedIntegralDomain) with
     jint64 : Integer -> %
     jint64 : String -> %
-  Implementation ==> JuliaObject() add
+  Implementation ==> add
     import from JuliaUtilityFunctions
     import from String
 
@@ -443,7 +455,7 @@ JuliaObjInt64() : Exports == Implementation where
     euclideanSize(x) ==
       x = 0 => error "euclideanSize called on zero"
       x < 0 => (- (parsei(string x) pretend Integer))::NonNegativeInteger
-      (parsei(string x) pretend Integer)::NonNegativeInteger
+      parsei(string x)
     divide(a,b) ==
       ret : JuliaObjTuple := jbinfunc("divrem",a,b)
       [ret.1 pretend %, ret.2 pretend %]
@@ -467,36 +479,25 @@ JuliaObjBigInt() : Exports == Implementation where
   parsei    ==> PARSE_-INTEGER$Lisp
   Exports ==> Join(OrderedSet, JuliaObjectRing, CommutativeRing,
         EuclideanDomain, OrderedIntegralDomain) with
-    jlBIApply : (JuliaObject, %) -> %
-    ++ jlBIApply(func,x) applies the function pointer func to x.
+    jlBICApply : (JuliaObjDynamicLinker, %) -> %
+    ++ jlBICApply(func,x) applies the function pointer func to x.
     ++ It is expected that the C function modifies the first parameters
     ++ for the returned value (provided by FriCAS and returned here).
-    ++ For example:
-    ++ \example{gmp:= jlDlOpen "libgmp"}
-    ++ \example{squareRoot:=jlDlSym(libm,jsym(sqrt))}
-    ++ \example{jlBIApply(squareRoot,jfloat64(2))} 
-    jlBIApply : (JuliaObject, %, %) -> %
-    ++ jlBIApply(func,x,y) applies the function pointer func to x and y.
+    jlBICApply : (JuliaObjDynamicLinker, %, %) -> %
+    ++ jlBICApply(func,x,y) applies the function pointer func to x and y.
     ++ It is expected that the C function modifies the first parameters
     ++ for the returned value (provided by FriCAS and returned here).
-    ++ For example:
-    ++ \example{gmp:= jlDlOpen "libgmp"}
-    ++ \example{power:=jlDlSym(libm,jsym(pow))}
-    ++ \example{jlBIApply(power,jfloat64(2),jfloat64(7))}
-    jlBIApply : (JuliaObject, %, %, %) -> %
-    ++ jlBIApply(func,x,y,z) applies the function pointer func to x, y and z.
+    jlBICApply : (JuliaObjDynamicLinker, %, %, %) -> %
+    ++ jlBICApply(func,x,y,z) applies the function pointer func to x, y and z.
     ++ It is expected that the C function modifies the first parameters
     ++ for the returned value (provided by FriCAS and returned here).
-    ++ For example with GSL-2.8:
-    ++ \example{gmp:= jlDlOpen "libgmp"}
-    ++ \example{hypot3:= jlDlSym(gsl,jsym(gsl_hypot3))}
-    ++ \example{jlBIApply(hypot3,jfloat64(2),jfloat64(7),jfloat64(9.0))}
     jbigint : Integer -> %
     ++ jbigint(z) converts z to a Julia BigInt. 
     jbigint : String -> %
     ++ jbigint(z) returns the string str evaluated in Julia where the returned
-    ++ value is assumed to be a Julia BigInt. 
-  Implementation == JuliaObject() add
+    ++ value is assumed to be a Julia BigInt.
+    ++ \example{jbigint "BigInt(1234567890)"}
+  Implementation == add
     import from JuliaUtilityFunctions
     import from String
 
@@ -525,18 +526,18 @@ JuliaObjBigInt() : Exports == Implementation where
     divide(a,b) ==
       ret : JuliaObjTuple := jbinfunc("divrem",a,b)
       [ret.1 pretend %, ret.2 pretend %]
-    jlBIApply(func, x) ==
+    jlBICApply(func, x) ==
       ret := jlref("BigInt()")
       jlref(concat ["ccall(", getind(func),
        ", Int32, (Ref{BigInt}, Ref{BigInt}),", getind(ret),",", getind(x),")"])
       ret
-    jlBIApply(func, x, y) ==
+    jlBICApply(func, x, y) ==
       ret := jlref("BigInt()")
       jlref(concat ["ccall(", getind(func),
         ", Int32, (Ref{BigInt}, Ref{BigInt}, Ref{BigInt}),", getind(ret), ",",
           getind(x), ",", getind(y), ")"])
       ret
-    jlBIApply(func, x, y, z) ==
+    jlBICApply(func, x, y, z) ==
       ret := jlref("BigInt()")
       jlref(concat ["ccall(", getind(func), 
         ", Int32, (Ref{BigInt}, Ref{BigInt}, Ref{BigInt}),", getind(ret),",",
@@ -613,8 +614,8 @@ JuliaFloat() : Exports == Implementation where
     ++ precision(x) returns the precision of x.
     precision: (%, PI) -> %
     ++ precision(x, p) returns a copy of x with precision p.
-    jlMPFRApply : (JuliaObject, %) -> %
-    ++ jlMPFRApply(func,x) applies the function pointer func to x.
+    jllMPFRApply : (JuliaObject, %) -> %
+    ++ jllMPFRApply(func,x) applies the function pointer func to x.
     ++ It is expected that the C function modifies the first parameters
     ++ for the returned value (provided by FriCAS and returned here) and
     ++ and as a last parameter, the rounding mode. See MPFR.
@@ -622,11 +623,11 @@ JuliaFloat() : Exports == Implementation where
     ++ \example{mpfr:=jlDlOpen "libmpfr"}
     ++ \example{sym:= jlDlSym(mpfr,jsym(mpfr_gamma))}
     ++ \example{val:=jfloat("0.7");}
-    ++ \example{jlMPFRApply(sym,val)}
+    ++ \example{jllMPFRApply(sym,val)}
     ++ => 1.29805533264755778568117117915281161778...
     ++ \example{jlDlClose(mpfr)}
-    jlMPFRApply : (JuliaObject, %, %) -> %
-    ++ jlMPFRApply(func,x,y) applies the function pointer func to x and y.
+    jllMPFRApply : (JuliaObject, %, %) -> %
+    ++ jllMPFRApply(func,x,y) applies the function pointer func to x and y.
     ++ It is expected that the C function modifies the first parameters
     ++ for the returned value (provided by FriCAS and returned here) and
     ++ and as a last parameter, the rounding mode. See MPFR.
@@ -634,10 +635,10 @@ JuliaFloat() : Exports == Implementation where
     ++ \example{mpfr:=j lDlOpen "libmpfr"}
     ++ \example{sym:= jlDlSym(mpfr,jsym(mpfr_pow))}
     ++ \example{val:=jfloat("0.7");}
-    ++ \example{jlMPFRApply(sym,val, jfloat(2))}
+    ++ \example{jllMPFRApply(sym,val, jfloat(2))}
     ++ \example{jlDlClose(mpfr)}
-    jlMPFRApply : (JuliaObject, %, %, %) -> %
-    ++ jlMPFRApply(func,x,y,z) applies the function pointer func to x, y and z.
+    jllMPFRApply : (JuliaObject, %, %, %) -> %
+    ++ jllMPFRApply(func,x,y,z) applies the function pointer func to x, y and z.
     ++ It is expected that the C function modifies the first parameters
     ++ for the returned value (provided by FriCAS and returned here) and
     ++ as a last parameter, the rounding mode (the default mode is used here).
@@ -646,7 +647,7 @@ JuliaFloat() : Exports == Implementation where
     ++ \example{mpfr:=j lDlOpen "libmpfr"}
     ++ \example{sym:= jlDlSym(mpfr,jsym(mpfr_fma))}
     ++ \example{val:=jfloat("0.7");}
-    ++ \example{jlMPFRApply(sym,val, jfloat(2), jfloat(5))}
+    ++ \example{jllMPFRApply(sym,val, jfloat(2), jfloat(5))}
     ++ \example{jlDlClose(mpfr)}
     expm1   :  % -> %
     ++ expm1(x) computes accurately ℯ^x-1. It avoids the loss of precision
@@ -774,21 +775,21 @@ JuliaFloat() : Exports == Implementation where
       parsei toString(junfunc("BigInt", qelt(ret,2)))
     float(m, e, b) == jbinop("*",jfloat(m), jfloat(b)^e)
 
-    jlMPFRApply(func, x) ==
+    jllMPFRApply(func, x) ==
       -- Create an NaN for the returned value
       ret := jlref("BigFloat()")
       jlref(concat ["ccall(", getind(func),
         ", Int32, (Ref{BigFloat}, Ref{BigFloat}, Int32),", getind(ret),",",
           getind(x),", ROUNDING_MODE[])"])
       ret
-    jlMPFRApply(func, x, y) ==
+    jllMPFRApply(func, x, y) ==
       -- Create an NaN
       ret := jlref("BigFloat()")
       jlref(concat ["ccall(", getind(func),
         ", Int32, (Ref{BigFloat}, Ref{BigFloat}, Ref{BigFloat}, Int32),",
           getind(ret), ",", getind(x), ",", getind(y), ", ROUNDING_MODE[])"])
       ret
-    jlMPFRApply(func, x, y, z) ==
+    jllMPFRApply(func, x, y, z) ==
       -- Create an NaN
       ret := jlref("BigFloat()")
       jlref(concat ["ccall(", getind(func), 
@@ -1189,24 +1190,23 @@ JuliaVector(R : JuliaObjectType) : Exports == Implementation where
       jlInitialize(true)
       Rep := SExpression
 
-      #x                          == jl_int64_eval_string(concat(["length(",
-        getind(x),")"]))$Lisp
-      minIndex x                  == 1$Lisp
-      maxIndex x                  == jl_int64_eval_string(concat(["length(",
-        getind(x),")"]))$Lisp
-      new(n, x:R)                 ==
+      #x == jl_int64_eval_string(concat(["length(", getind(x),")"]))$Lisp
+      minIndex x == 1$Lisp
+      maxIndex x ==
+        jl_int64_eval_string(concat(["length(", getind(x),")"]))$Lisp
+      new(n, x:R) ==
         jlref(concat(["fill(", getind(x),",", string(n),")"]))
-      qelt(x, i)                  ==
+      qelt(x, i) ==
         jlref(concat([getind(x),"[",string(i),"]"]))$R
-      elt(x, i) : R    ==
+      elt(x, i) : R ==
         i > #x => error "elt$Juliavector: incompatiible index"
         jlref(concat([getind(x),"[",string(i),"]"]))$R
-      qsetelt!(v : %, i, s:R)  ==
-        jl_eval_string(concat([getind(v),"[",string(i), "]=", getind(s)]))$Lisp
+      qsetelt!(v : %, i, s:R) ==
+        jlEvalString(concat([getind(v),"[",string(i), "]=", getind(s)]))@Void
         s
       setelt!(v : %, i : Integer, s : R) ==
         i > #v => error "setelt!$Juliavector: incompatiible index"
-        jl_eval_string(concat([getind(v),"[",string(i), "]=", getind(s)]))$Lisp
+        jlEvalString(concat([getind(v),"[",string(i), "]=", getind(s)]))@Void
         s
       fill!(v, x) == jlref(concat(["fill!(", getind(v),",", getind(x),")"]))
       less?(v,n) == #v < n

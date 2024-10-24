@@ -61,9 +61,9 @@ SPAD_SRCS= \
      intaf intalg intaux intclos intden intef integer \
      integrat interval intfact intlocp intpar intpm intrf intspec irexpand \
      irsn ituple jarray jcfsf jla jnemo jnpoly jobject jplot jfsf jfsf2 \
-     jf64sf jf64sf2 jnball julia jet jws jwsagg jwsexpr jwsnsf jwsutils kl kovacic \
-     laplace laurent leadcdet lie limitps lindep lingrob linpen liouv \
-     listgcd list lll lmdict lodof lodof2 lodo logic \
+     jf64sf jf64sf2 jnball julia jutils jet jws jwsagg jwsexpr jwsnsf jwsutils \
+     kl kovacic laplace laurent leadcdet lie limitps lindep lingrob linpen \
+     liouv listgcd list lll lmdict lodof lodof2 lodo logic \
      mama manip mantepse math_sym mathml mappkg matcat matfuns matrix \
      matstor mesh mfinfact mkfunc mkrecord \
      mlift modgcd modhpsol modmonom modmon modring \
@@ -397,8 +397,8 @@ ifdef JULIA_WRAP_SO_TARGET
 JULIALIST = JARBPR JCF64 JCF64MAT JCF64MTF JCF64SMA JCF64VEC JCFSF JCFLOAT JCLA \
             JDFRAME JDRAW JF64 JF64MAT JF64MTF JF64SF JF64SF2 JF64SMAT JF64VEC \
             JF64VEC2 JFLOAT JFSF JFSF2 JI64 JI64VEC JMATCAT JMATRIX JOBJECT JOBAGG \
-            JOBBOOL JOBBINT  JOBCF64 JOBF64 JOBI64 JOBRING JOBTPLE JOBTYPE JPLOT \
-            JRING JRLA JSTRU JSYM JTYPE JVECCAT \
+            JOBBOOL JOBBINT JOBCF64 JOBDLINK JOBF64 JOBI64 JOBRING JOBTPLE JOBTYPE \
+            JPLOT JRING JRLA JSTRU JSYM JTYPE JVECCAT \
             JVECTOR JVECTOR2 JUF NAN NACB NARB NCB NCF NECF NFF \
             NFR NINT NMP NPF NRAT NRB NRF NRING NTYPE NUP NZMOD
 JULIACATLIST = JARBPR JMATCAT JOBAGG JOBRING JOBTYPE JRING JTYPE JVECCAT NRING NTYPE

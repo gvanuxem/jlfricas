@@ -91,6 +91,9 @@ JuliaFloat64Vector() : Exports == Implementation where
         jlApply : (String, %) -> JF64
         ++ jlApply(func, v) applies func to argument v
         ++ and returns a Julia Float64.
+        jlApply : (String, %) -> %
+        ++ jlApply(func, v) applies func to argument v
+        ++ and returns a JuliaFloat64Vector.
         jlApply : (String, %, JF64) -> JF64
         ++ jlApply(func, v, val) applies func to arguments v and val
         ++ and returns a Julia Float64.
@@ -162,6 +165,11 @@ JuliaFloat64Vector() : Exports == Implementation where
         jlApply(func, v : %) : JF64 ==
             defined?(func)
             jl_dbl_1dfunction(0$NNI, func, v)$Lisp
+        jlApply(func, v : %) : % ==
+            defined?(func)
+            ret := qnew(#v)
+            jl_array_1dfunction(0$NNI, 0$NNI,func, ret, v)$Lisp
+            ret
         jlApply(func, v : %, val : JF64) : JF64 ==
             defined?(func)
             jl_dbl_1dfunction_dbl(0$NNI, func, v, val)$Lisp
@@ -289,6 +297,8 @@ JuliaFloat64Matrix() :  Exports == Implementation where
         ++ jlApply(func, x) apply func to argument x.
         jlApply : (String, %, JF64) -> JF64
         ++ jlApply(func, x, val) apply func to arguments x and val.
+        jlApply : (String, %) -> %
+        ++ jlApply(func, x) apply func to argument x.
         jlDisplay: % -> Void
         ++ jldisplay(m) pretty prints m (à la Julia).
         juliaMPrint : Boolean -> Boolean
@@ -375,6 +385,10 @@ JuliaFloat64Matrix() :  Exports == Implementation where
         jlApply(func, m : %, val : JF64) : JF64 ==
             defined?(func)
             jl_dbl_2dfunction_dbl(0$NNI,func,  m.elts, m.ncols, val)$Lisp
+        jlApply(func, m) : % ==
+            ret := qnew(m.nrows, m.ncols)
+            jl_array_2dfunction(0$NNI,0$NNI,func, ret.elts, m.elts, m.ncols)$Lisp
+            ret
 
         jlDisplay(m) ==
             jl_2dfunction(0$NNI,"display", m.elts, m.ncols)$Lisp

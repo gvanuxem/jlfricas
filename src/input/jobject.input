@@ -3,6 +3,7 @@
 )expose UnittestCount UnittestAux Unittest
 
 testsuite "Julia Object"
+testcase "JuliaFloat"
 a := identity(10)$JuliaMatrix(JFLOAT);
 b := map(i+->nrand()$JFLOAT,a);
 testTrue("jlApprox?(inverse(b)*b,a)")
