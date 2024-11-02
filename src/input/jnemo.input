@@ -1,0 +1,37 @@
+)set break resume
+)set mess type off
+)expose UnittestCount UnittestAux Unittest
+
+testsuite "Julia Nemo"
+testcase "Nemo availability"
+testTrue("jlUsing(_"Nemo_")")
+
+testcase "NemoInteger arithmetic"
+a := jnint 2;
+b := jnint 4;
+testEquals("a+a", "b")
+testEquals("a-a", "0$NemoInteger")
+testEquals("a*a", "b")
+testEquals("2*a", "b")
+testEquals("a^2", "b")
+
+testcase "NemoRational arithmetic"
+a := jnrat 2;
+b := jnrat 4;
+c := jnrat(1/2)
+testEquals("a+a", "b")
+testEquals("a-a", "0$NemoRational")
+testEquals("a*a", "b")
+testEquals("2*a", "b")
+testEquals("a^2", "b")
+testEquals("b/a", "a")
+testEquals("a/b", "c")
+
+
+testcase "NemoExactComplexField"
+a := jnecf(1/2)
+testEquals("asin sin(a)", "a")
+testEquals("cos acos(a)", "a")
+testEquals("tan atan(a)", "a")
+
+statistics()

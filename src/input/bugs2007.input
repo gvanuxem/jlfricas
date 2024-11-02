@@ -1,6 +1,8 @@
 )set break resume
 )expose UnittestCount UnittestAux Unittest
 
+)unexpose NemoComplexField NemoExactComplexField JuliaWSExpression
+
 testsuite "bugs2007"
 
 testcase "derivative of besselK (issue 355)"

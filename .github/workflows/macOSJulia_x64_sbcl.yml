@@ -1,0 +1,55 @@
+name: FriCAS CI on x64 macOS (with Julia support - SBCL based)
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: macos-12
+    timeout-minutes: 30
+    env:
+      SBCL_VER: '2.2.9'
+      ARCH: 'x86-64'
+      JULIA: 'https://julialang-s3.julialang.org/bin/mac/x64/1.11/julia-1.11.1-mac64.dmg'
+      DMG: 'julia-1.11.1-mac64.dmg'
+    steps:
+    - uses: actions/checkout@v4
+    - name: download and install SBCL
+      run: |
+        wget https://downloads.sourceforge.net/project/sbcl/sbcl/${SBCL_VER}/sbcl-${SBCL_VER}-${ARCH}-darwin-binary.tar.bz2
+        tar xvf sbcl-${SBCL_VER}-${ARCH}-darwin-binary.tar.bz2
+        cd sbcl-${SBCL_VER}-${ARCH}-darwin && sudo ./install.sh
+    - name: download Julia
+      run: wget ${JULIA}
+    - name: mount Julia
+      run: hdiutil mount ${DMG}
+    - name: install Julia
+      run: |
+        sudo cp -R /Volumes/julia-1.11.1/julia-1.11.app /Applications
+        sudo ln -sf /Applications/Julia-1.11.app/Contents/Resources/julia/bin/julia /usr/local/bin/julia
+        sudo ln -sf /Applications/Julia-1.11.app/Contents/Resources/julia/lib/libjulia.dylib /usr/local/lib/libjulia.dylib
+    - name: adjust lib search path
+      run: export DYLD_FALLBACK_LIBRARY_PATH=/Applications/Julia-1.11.app/Contents/Resources/julia/lib:$DYLD_FALLBACK_LIBRARY_PATH  && sudo update_dyld_shared_cache
+    - name: install Julia libraries
+      run: julia -e "import Pkg;Pkg.add(\"Nemo\");Pkg.add(\"Suppressor\");Pkg.add(\"SpecialFunctions\")"
+    - name: configure
+      run: |
+        mkdir ../build && cd ../build
+        ../jlfricas/configure --enable-julia --with-gmp=`brew --prefix`|| cat config.log
+    - name: make
+      run: cd ../build && make -j3
+    - name: make check
+      run: cd ../build && make check -j3
+    - name: Create artifact archives
+      run: |
+        cd ../build
+        test "$GITHUB_REF_TYPE" != "tag" && rm -r target/*/src
+        make dist-macos
+        cp -v `brew list gmp | grep libgmp.10.dylib` FriCAS.app/Contents/Resources/usr/local/lib/fricas/target/*/lib/
+        ## reduce chance of error caused by "hdiutil: Resource busy"
+        make dist-macos-dmg || make dist-macos-dmg
+        mv FriCAS.dmg ../jlfricas/FriCAS-macOS-${ARCH}-${{ github.sha }}.dmg
+    - name: Upload macOS binary
+      uses: actions/upload-artifact@v4
+      with:
+        name: FriCAS-macOS-${{ env.ARCH }}-binary
+        path: FriCAS-macOS-${{ env.ARCH }}-${{ github.sha }}.dmg
