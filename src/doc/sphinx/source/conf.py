@@ -27,7 +27,8 @@ FRICAS_URL = PACKAGE_URL
 
 # Place of the official code repository.
 # It should be possible to clone the repository from this URL.
-PACKAGE_SOURCE = 'https://github.com/gvanuxem/jlfricas'
+PACKAGE_SOURCE = os.environ.get(
+    'PACKAGE_SOURCE', 'https://github.com/gvanuxem/jlfricas')
 
 # Adding the path to a file to PACKAGE_SOURCE_VIEW should give a URL to
 # show the respective source file.

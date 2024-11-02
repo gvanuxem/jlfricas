@@ -8,7 +8,7 @@ It is freely available under a
 `modified BSD license
 <https://github.com/gvanuxem/jlfricas/blob/master/LICENSE.txt>`_.
 
-`FriCAS <https://fricas.org/>` is a fork (2007) of the `Axiom <http://axiom-developer.org/>`_
+`FriCAS <https://fricas.org/>`_ is a fork (2007) of the `Axiom <http://axiom-developer.org/>`_
 computer algebra system.
 
 * |git repository|
