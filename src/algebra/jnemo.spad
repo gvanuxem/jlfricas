@@ -158,8 +158,8 @@ NemoInteger() : Exports == Implementation where
 NemoRational() : Exports == Implementation where
   Exports ==> Join(NemoRing, QuotientFieldCategory(NemoInteger), Canonical) with
     factorFraction : %  ->   Fraction Factored(NemoInteger)
-        ++ factorFraction(r) factors the numerator and the denominator of
-        ++ the fraction r.
+    ++ factorFraction(r) factors the numerator and the denominator of
+    ++ the fraction r.
     "*"     : (%, Integer) -> %
     -- Force the interpreter:
     --"/"     : (NemoInteger, NemoInteger) -> %
@@ -247,9 +247,9 @@ NemoRational() : Exports == Implementation where
       one? denom fi => convert(numer(fi))
       "failed"
     retract(fi : %) : Fraction(Integer) ==
-      convert(numer(fi))@Integer / convert(denom(fi))
+      convert(numer(fi)) / convert(denom(fi))
     retractIfCan(fi : %) : Union(Fraction(Integer), "failed") ==
-      convert(numer(fi))@Integer / convert(denom(fi))
+      convert(numer(fi)) / convert(denom(fi))
 
     coerce(x : NemoInteger) : % == junfunc("QQ(", x)
     coerce(i : Integer) ==
@@ -505,6 +505,7 @@ NemoIntegerMod(p : PositiveInteger) : Exports == Implementation where
     -- initialize
     NZMOD := concat ["NZMOD",string(p)]
     jlEvalString(concat([NZMOD,",=residue_ring(ZZ,", string(p),")"]))@Void
+    NZMODP := concat(NZMOD,"(")
 
     getind(a) ==> concat(["getindex(refs,_"", jlId a, "_")"])
     jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
@@ -534,8 +535,8 @@ NemoIntegerMod(p : PositiveInteger) : Exports == Implementation where
     random() == coerce(random(p)$Integer)
     index(n) == coerce(positiveRemainder(n,p) pretend Integer)
     convert(x) : Integer == parsei string(x)
-    coerce(x : NemoInteger) : % == junfunc(NZMOD, x)
-    coerce(i : Integer) == jlref(concat([NZMOD,"(", string(i), ")"]))
+    coerce(x : NemoInteger) : % == junfunc(NZMODP, x)
+    coerce(i : Integer) == jlref(concat([NZMODP, string(i), ")"]))
     jnzmod(i : Integer) == coerce(i)
     jnzmod(ji : NemoInteger) == coerce(ji)
     coerce(i : %) : OutputForm == string(i) pretend OutputForm
@@ -580,6 +581,7 @@ NemoPrimeField(p : PositiveInteger) : Exports == Implementation where
     not prime?(p) => error "Argument to NemoPrimeField(p) must be a prime"
     NPF := concat(["NPF", string(p)])
     jlEvalString(concat([NPF,"=GF(", string(p),")"]))@Void
+    NPFP := concat(NPF,"(")
 
     getind(a) ==> concat(["getindex(refs,_"", jlId a, "_")"])
 
@@ -642,8 +644,8 @@ NemoPrimeField(p : PositiveInteger) : Exports == Implementation where
     sqrt(x) == junfunc("sqrt(", x)
 
     convert(x : %) : Integer == parsei string(x)
-    coerce(x : NemoInteger) : % == junfunc(NPF, x)
-    coerce(i : Integer) == jlref(concat([NPF, "(", string(i), ")"]))
+    coerce(x : NemoInteger) : % == junfunc(NPFP, x)
+    coerce(i : Integer) == jlref(concat([NPFP, string(i), ")"]))
     jnpf(i : Integer) == coerce(i)
     jnpf(ji : NemoInteger) == coerce(ji)
     coerce(i : %) : OutputForm == string(i) pretend OutputForm
@@ -695,6 +697,7 @@ NemoFiniteField(p : PositiveInteger, n: PositiveInteger) : Exports == Implementa
     not prime?(p) => error "NemoFiniteField(p, n): argument p must be a prime"
     NFF := concat(["NFF",string(p^n)])
     jlEvalString(concat([NFF, "=GF(", string(p^n),")"]))@Void
+    NFFP := concat(NFF,"(")
 
     getind(a) ==> concat(["getindex(refs,_"", jlId a, "_")"])
 
@@ -759,8 +762,8 @@ NemoFiniteField(p : PositiveInteger, n: PositiveInteger) : Exports == Implementa
     sqrt(x) == junfunc("sqrt(", x)
 
     convert(x : %) : Integer == parsei(string(x))
-    coerce(x : NemoInteger) : % == junfunc(NFF, x)
-    coerce(i : Integer) == jlref(concat([NFF,"(", string(i), ")"]))
+    coerce(x : NemoInteger) : % == junfunc(NFFP, x)
+    coerce(i : Integer) == jlref(concat([NFFP, string(i), ")"]))
     jnff(i : Integer) == coerce(i)
     jnff(ji : NemoInteger) == coerce(ji)
     coerce(i : %) : OutputForm == string(i) pretend OutputForm
@@ -949,6 +952,7 @@ InnerNemoExactComplexField(Options : JuliaObject) : Exports == Implementation wh
     -- initialize (see Calcium constructor options)
     NECF := concat ["NECF", jlEvalString(concat ["string(hash(", getind(Options),"))"])@String]
     jlEvalString(concat [NECF,"=CalciumField(extended=true,options=",getind(Options),")"])@Void
+    NECFP := concat(NECF,"(")
 
     0    == jlref(concat ["zero(", NECF,")"])
     1    == jlref(concat ["one(", NECF,")"])
@@ -1102,26 +1106,26 @@ InnerNemoExactComplexField(Options : JuliaObject) : Exports == Implementation wh
       "failed"
 
     complex(r : NemoRational, i : NemoRational) ==
-      jlref(concat([NECF,"(", getind(r),"+onei(",NECF,")*", getind(i), ")"]))
+      jlref(concat([NECFP, getind(r),"+onei(",NECF,")*", getind(i), ")"]))
 
     convert(x) : InputForm == string(x) pretend InputForm
-    coerce(i : Integer) == jlref(concat([NECF,"(", string(i),")"]))
+    coerce(i : Integer) == jlref(concat([NECFP, string(i),")"]))
     coerce(z : Complex(Integer)) ==
-      jlref(concat([NECF,"(", string(real(z)),"+im*", string(imag(z)), ")"]))
-    coerce(i : PositiveInteger) == jlref(concat([NECF,"(", string(i),")"]))
+      jlref(concat([NECFP, string(real(z)),"+im*", string(imag(z)), ")"]))
+    coerce(i : PositiveInteger) == jlref(concat(["NECF(", string(i),")"]))
     coerce(fi : Fraction(Integer)) ==
       jlref(concat([NECF,"(QQ(", string(numer(fi)), "//", string(denom(fi)), "))"]))
-    coerce(nfi : NemoRational) == junfunc(NECF, nfi)
-    coerce(an : NemoAlgebraicNumber) == junfunc(NECF, an)
-    jnecf(an : NemoAlgebraicNumber) == junfunc(NECF, an)
+    coerce(nfi : NemoRational) == junfunc(NECFP, nfi)
+    coerce(an : NemoAlgebraicNumber) == junfunc(NECFP, an)
+    jnecf(an : NemoAlgebraicNumber) == junfunc(NECFP, an)
     jnecf(fi : Fraction(Integer)) ==
       jlref(concat([NECF,"(QQ(", string(numer(fi)), "//", string(denom(fi)), "))"]))
     jnecf(r : Fraction Integer, i : Fraction Integer) ==
       jlref(concat([NECF,"(QQ(", string(numer(r)), "//", string(denom(r)), ")",
         "+onei(",NECF,")*", "QQ(", string(numer(i)), "//", string(denom(i)), "))"]))
-    jnecf(nfi : NemoRational) == junfunc(NECF, nfi)
+    jnecf(nfi : NemoRational) == junfunc(NECFP, nfi)
     jnecf(r : NemoRational, i : NemoRational) ==
-      jlref(concat([NECF,"(", getind(r),"+onei(",NECF,")*", getind(i), ")"]))
+      jlref(concat([NECFP, getind(r),"+onei(", NECF,")*", getind(i), ")"]))
     coerce(i : %) : OutputForm == string(i) pretend OutputForm
 
 )abbrev domain NECF NemoExactComplexField

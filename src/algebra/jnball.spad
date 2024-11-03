@@ -128,6 +128,7 @@ NemoArbField(p: PositiveInteger) : Exports == Implementation where
     -- initialize
     NARB := concat(["NARB", string(p)])
     jlEvalString(concat([NARB, "=ArbField(", string(p),")"]))@Void
+    NARBP := concat(NARB,"(")
 
     getind(a) ==> concat(["getindex(refs,_"", jlId a, "_")"])
     jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
@@ -254,7 +255,7 @@ NemoArbField(p: PositiveInteger) : Exports == Implementation where
       convert(jlref(concat(["ZZ(", getind(x),")"]))$NemoInteger)
 
     retractIfCan(x : NemoAlgebraicNumber) : Union(%, "failed") ==
-      real?(x) => junfunc(concat(["NARB",string(p)]), x)
+      real?(x) => junfunc(NARBP, x)
       "failed"
 
     retractIfCan(x) : Union(Fraction Integer, "failed") ==
@@ -281,18 +282,18 @@ NemoArbField(p: PositiveInteger) : Exports == Implementation where
         getind(x),")))"]))$NemoRational
       coerce(retract(tmp)@Fraction(Integer))
 
-    coerce(jf : JF64) : % == jlref(concat([NARB, "(_"", convert(jf),"_")"]))
+    coerce(jf : JF64) : % == jlref(concat([NARBP, "_"", convert(jf),"_")"]))
     coerce(f : Float) ==
       tmp := outputSpacing(0)
-      ret := jlref(concat([NARB,"(_"", convert(f),"_")"]))
+      ret := jlref(concat([NARBP,"_"", convert(f),"_")"]))
       outputSpacing(tmp)
       ret
-    coerce(q : Fraction Integer) == jlref(concat([NARB,
-      "(", getind(jnrat(q)),")"]))
-    coerce(i : Integer) == jlref(concat([NARB,
-      "(", string(i),")"]))
+    coerce(q : Fraction Integer) == 
+      jlref(concat([NARBP, getind(jnrat(q)),")"]))
+    coerce(i : Integer) ==
+      jlref(concat([NARBP, string(i),")"]))
     jnball(a,b) == jbinfunc("ball(", a, b)
-    jnrb(s : String) == jlref(concat([NARB, "(_"", s,"_")"]))
+    jnrb(s : String) == jlref(concat([NARBP, "_"", s,"_")"]))
     jnrb(i : Integer) == coerce(i)
     jnrb(q : Fraction(Integer)) == coerce(q)
     jnrb(f : Float) == coerce(f)
@@ -391,7 +392,9 @@ NemoAcbField(p: PositiveInteger) : Exports == Implementation where
     coerce   : Complex(Integer) -> % -- for %i operations
     ++ coerce(z) coerces z. Convenience function.
     coerce    : NemoAlgebraicNumber -> %
+    ++ coerce(an) coerces the algebraic number an.
     coerce    : Float -> %
+    ++ coerce(r) coerce the floating point number r.
     jncb   : String -> %
     jncb   : (String, String) -> %
     jncb   : Integer -> %
@@ -422,8 +425,9 @@ NemoAcbField(p: PositiveInteger) : Exports == Implementation where
     Rep := SExpression
 
     -- initialize
-    NACB := concat(["NACB", string(p)])
+    NACB : String := concat(["NACB", string(p)])
     jlEvalString(concat([NACB,"=AcbField(", string(p),")"]))@Void
+    NACBP : String := concat(NACB,"(")
 
     precision() : PositiveInteger == p
     bits(x) == jlEvalString(concat(["bits(", getind(x),")"]))
@@ -524,29 +528,29 @@ NemoAcbField(p: PositiveInteger) : Exports == Implementation where
       jlref(concat(["root_of_unity(", NACB, ",", string(n),")"]))
 
     complex(r:NemoArbField(p), i:NemoArbField(p)) ==
-      jlref(concat([NACB, "(", getind(r),",",getind(i),")"]))
+      jlref(concat([NACBP, getind(r),",",getind(i),")"]))
 
     convert(z : NemoExactComplexField) ==
       jlref(concat([NACB,"(", getind(z),")"]))
     coerce(f : Float) ==
       tmp := outputSpacing(0)
-      ret := jlref(concat([NACB,"(_"", convert(f),"_")"]))
+      ret := jlref(concat([NACBP,"_"", convert(f),"_")"]))
       outputSpacing(tmp)
       ret
-    coerce(i : Integer) == jlref(concat([NACB, "(_"", string(i),"_")"]))
+    coerce(i : Integer) == jlref(concat([NACBP, "_"", string(i),"_")"]))
     coerce(gi : Complex(Integer)) ==
-      jbinfunc(NACB, coerce(real gi)@NemoArbField(p), coerce(imag gi)@NemoArbField(p))
-    coerce(an : NemoAlgebraicNumber) == junfunc(NACB, an)
-    jncb(s : String) == jlref(concat([NACB, "(_"", s,"_")"]))
+      jbinfunc(NACBP, coerce(real gi)@NemoArbField(p), coerce(imag gi)@NemoArbField(p))
+    coerce(an : NemoAlgebraicNumber) == junfunc(NACBP, an)
+    jncb(s : String) == jlref(concat([NACBP, "_"", s,"_")"]))
     jncb(r : String, i : String) ==
-      jlref(concat([NACB, "(_"", r, "_",_"", i, "_")"]))
+      jlref(concat([NACBP, "_"", r, "_",_"", i, "_")"]))
     jncb(f : Float) == coerce(f)
     jncb(r : Float, i : Float) ==
-      jbinfunc(NACB, coerce(r)@NemoArbField(p),
+      jbinfunc(NACBP, coerce(r)@NemoArbField(p),
         coerce(i)@NemoArbField(p))
     jncb(i : Integer) == coerce(i)
     jncb(r : Integer, i : Integer) ==
-      jbinfunc(NACB, coerce(r)@NemoArbField(p), coerce(i)@NemoArbField(p))
+      jbinfunc(NACBP, coerce(r)@NemoArbField(p), coerce(i)@NemoArbField(p))
     coerce(z : %) : OutputForm == string(z) pretend OutputForm
 
 )abbrev domain NCB NemoComplexBall

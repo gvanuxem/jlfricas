@@ -227,19 +227,6 @@ JuliaWSList(E : JuliaWSObject) : Exports == Implementation where
   Implementation ==> JuliaObject add
     import from JuliaUtilityFunctions
 
-    jbinop(op,a,b) ==> jlref(concat(["weval(", getind(a), op, getind(b),")"]))
-    junfunc(func,a) ==> jlref(concat(["weval(",func, getind(a),"))"]))
-    jbinfunc(func,a,b) ==>
-      jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
-    jterfunc(func,a,b,c) ==>
-      jlref(concat(["weval(", func, getind(a), ",",
-        getind(b), ",", getind(c)"))"]))
-    jquatfunc(func,a,b,c,d) ==>
-      jlref(concat(["weval(", func, getind(a), ",", getind(b), ",",
-        getind(c), ",", getind(d)"))"]))
-    jbinbop(op,a,b) ==>
-      jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
-
     if not jlUsing("MathLink") then
       error "The Julia MathLink package is not installed."
 

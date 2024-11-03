@@ -125,8 +125,7 @@ NemoUnivariatePolynomial(R : NemoRing, x : Symbol):
         jnup(up) : % ==
           p: String := first(lines formatExpression(up::OutputForm)$Format1D)
           -- handle NRAT case
-          ret := jlRegexReplace(jlRegex("/"),
-            jlSubstitute("//"),p)
+          ret := jlRegexReplace(jlRegex("/"), jlSubstitute("//"),p)
           jlref(ret)
 
         0 == jlref(concat(["zero(", NUPRing, ")"]))
@@ -170,7 +169,7 @@ NemoUnivariatePolynomial(R : NemoRing, x : Symbol):
           junfunc("leading_coefficient(", p)
 
         coerce(p : %) : OutputForm ==
-          jlRegexReplace(jlRegex("//"),jlSubstitute("/"),
+          jlRegexReplace(jlRegex("//"), jlSubstitute("/"),
             string(p)) pretend OutputForm
 
         coerce(v : Variable(x)) == jlref(string(v::Symbol))
@@ -256,7 +255,7 @@ NemoMultivariatePolynomial(R : NemoRing, VarSet : List Symbol,
         NMPRing := jlRegexReplace(jlRegex("[(|)|\s]"), 
           jlSubstitute(""), NMPRing)
 
-        -- Cleanup VarSet
+        -- Cleanup VarSet (TODO: reflect SMP)
         jVarSet := removeDuplicates(VarSet)
         
         -- FriCAS defined vars in Julia
@@ -359,7 +358,7 @@ NemoMultivariatePolynomial(R : NemoRing, VarSet : List Symbol,
         mainVariable(p : %) ==
           jlEvalString(concat(["is_constant(", getind(p),")"]))@Boolean
             => "failed"
-          sym : String := jlEvalString(concat["string(vars(",getind(p),")[1])"])@String  
+          sym : String := jlEvalString(concat["string(vars(",getind(p),")[1])"])  
           variable(sym::Symbol)$OrderedVariableList(VarSet)
         degree(p : %) ==
           -- just monomial(p,1) with Julia...
@@ -368,7 +367,7 @@ NemoMultivariatePolynomial(R : NemoRing, VarSet : List Symbol,
           vs := jlref(concat(["vars(", ind, ")"]))$JuliaVector(%)
           res : List(Record(k:OrderedVariableList(VarSet),c:NNI)):=[]
           for i in 1..#vs repeat
-            sym : String := jlEvalString(concat["string(",getind(qelt(vs,i)),")"])@String
+            sym : String := jlEvalString(concat["string(",getind(qelt(vs,i)),")"])
             exp := jlEvalString(concat(["degree(", ind,",", sym, ")"]))@NNI
             res:=concat(res,
               [coerce(variable(coerce(sym)$Symbol)$OrderedVariableList(VarSet))@OrderedVariableList(VarSet),
@@ -387,11 +386,11 @@ NemoMultivariatePolynomial(R : NemoRing, VarSet : List Symbol,
           jlref(ret)
 
         p1:% exquo p2:% ==
-          -- a Julia Tuple is returned
-          ret : JuliaObject := jbinfunc("divides(", p1, p2)
+          -- a Julia Tuple is returned (flag, quotient)
+          ret : JuliaObjTuple := jbinfunc("divides(", p1, p2)
           not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
             => "failed"
-          junfunc("last(", ret)   
+          junfunc("last(", ret)
 
         coerce(p : %) : OutputForm ==
           jlRegexReplace(jlRegex("//"),jlSubstitute("/"),
