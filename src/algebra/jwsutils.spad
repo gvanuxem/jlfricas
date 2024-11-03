@@ -90,53 +90,53 @@ JuliaWSUtilityFunctions() : Exports == Implementation where
     import JuliaWSInteger
     import from JuliaWSList(JuliaWSInteger)
   
-    junfunc(func,a) ==> jlref(concat(["weval(", func, "(", getind(a),"))"]))
+    junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
     jbinfunc(func,a,b) ==>
-      jlref(concat(["weval(", func, "(", getind(a), ",", getind(b),"))"]))
+      jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
     jterfunc(func,a,b,c) ==>
-      jlref(concat(["weval(", func, "(", getind(a), ",",
+      jlref(concat(["weval(", func, getind(a), ",",
         getind(b), ",", getind(c)"))"]))
     jquatfunc(func,a,b,c,d) ==>
-      jlref(concat(["weval(", func, "(", getind(a), ",", getind(b), ",",
+      jlref(concat(["weval(", func, getind(a), ",", getind(b), ",",
         getind(c), ",", getind(d)"))"]))
 
-    seedRandom(n) == junfunc("W_"SeedRandom_"", n)
+    seedRandom(n) == junfunc("W_"SeedRandom_"(", n)
     jlWSExport(file, options) ==
       savefile : JuliaWSExpression := coerce(concat(["_"", file, "_""]))
-      jbinfunc("W_"Export_"", savefile, options)
+      jbinfunc("W_"Export_"(", savefile, options)
     jlWSExportString(expr, format) ==
-      jlEval(jbinfunc("W_"ExportString_"", expr, format) pretend JuliaWSExpression)
-    jlWSPlot(expr, options) == jbinfunc("W_"Plot_"", expr, options)
+      jlEval(jbinfunc("W_"ExportString_"(", expr, format) pretend JuliaWSExpression)
+    jlWSPlot(expr, options) == jbinfunc("W_"Plot_"(", expr, options)
 
     urand01Real(rows,cols) ==
       range := jWSList("{0,1}")@JuliaWSList(JuliaWSInteger)
       dims := jWSList([jWSInt(rows),jWSInt(cols)])@JuliaWSList(JuliaWSInteger)
-      jbinfunc("W_"RandomReal_"", range, dims)
+      jbinfunc("W_"RandomReal_"(", range, dims)
     urand01Real(n) ==
       range := jWSList("{0,1}")@JuliaWSList(JuliaWSInteger)
-      jbinfunc("W_"RandomReal_"", range, jWSInt n)
+      jbinfunc("W_"RandomReal_"(", range, jWSInt n)
     urand01Complex(n) ==
       range := jWSList("1+I")@JuliaWSList(JuliaWSInteger)
-      jbinfunc("W_"RandomComplex_"", range, jWSInt n)
+      jbinfunc("W_"RandomComplex_"(", range, jWSInt n)
     urand01Complex(rows,cols) ==
       range := jWSList("1+I")@JuliaWSList(JuliaWSInteger)
       dims := jWSList([jWSInt(rows),jWSInt(cols)])@JuliaWSList(JuliaWSInteger)
-      jbinfunc("W_"RandomComplex_"", range, dims)
+      jbinfunc("W_"RandomComplex_"(", range, dims)
 
     range(n) ==
-      junfunc("W_"Range_"", n)
+      junfunc("W_"Range_"(", n)
     range(m,n) ==
-      jbinfunc("W_"Range_"", m, n)
+      jbinfunc("W_"Range_"(", m, n)
     range(m,n,step) ==
-      jterfunc("W_"Range_"", m, n, step)
+      jterfunc("W_"Range_"(", m, n, step)
 
-    hankelMatrix(n) == junfunc("W_"HankelMatrix_"", jWSInt(n))
-    hilbertMatrix(n) == junfunc("W_"HilbertMatrix_"", jWSInt(n))
-    gaussianMatrix(r) == junfunc("W_"GaussianMatrix_"", r)
-    vandermondeMatrix(lvars) == junfunc("W_"VandermondeMatrix_"", lvars)
-    vandermondeMatrix(lvars, m) == jbinfunc("W_"VandermondeMatrix_"", lvars, m)
-    identityMatrix(n) == junfunc("W_"IdentityMatrix_"", jWSInt(n))
+    hankelMatrix(n) == junfunc("W_"HankelMatrix_"(", jWSInt(n))
+    hilbertMatrix(n) == junfunc("W_"HilbertMatrix_"(", jWSInt(n))
+    gaussianMatrix(r) == junfunc("W_"GaussianMatrix_"(", r)
+    vandermondeMatrix(lvars) == junfunc("W_"VandermondeMatrix_"(", lvars)
+    vandermondeMatrix(lvars, m) == jbinfunc("W_"VandermondeMatrix_"(", lvars, m)
+    identityMatrix(n) == junfunc("W_"IdentityMatrix_"(", jWSInt(n))
     zeroMatrix(m,n) == 
-      jbinfunc("W_"ConstantArray_"", 0$JuliaWSInteger,
+      jbinfunc("W_"ConstantArray_"(", 0$JuliaWSInteger,
         jWSList([jWSInt(m), jWSInt(n)])@JuliaWSList(JuliaWSInteger))
 

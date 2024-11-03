@@ -54,9 +54,9 @@ NemoUnivariatePolynomial(R : NemoRing, x : Symbol):
 
         getind(a) ==> concat(["getindex(refs,_"", jlId(a), "_")"])
         jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
-        junfunc(op, a) ==> jlref(concat([op, "(", getind(a),")"]))
+        junfunc(op, a) ==> jlref(concat([op, getind(a),")"]))
         jbinfunc(func,a,b) ==> 
-          jlref(concat([func, "(", getind(a), ",", getind(b), ")"]))
+          jlref(concat([func, getind(a), ",", getind(b), ")"]))
         jbinbop(op,a,b) ==>
           jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
 
@@ -131,7 +131,7 @@ NemoUnivariatePolynomial(R : NemoRing, x : Symbol):
 
         0 == jlref(concat(["zero(", NUPRing, ")"]))
         1 == jlref(concat(["one(", NUPRing, ")"]))
-        - a == junfunc("-",a)
+        - a == junfunc("-(",a)
 
         a : % = b : % == jbinbop("==",a,b)
         a : % ~= b : % == jbinbop("!=",a,b)
@@ -153,21 +153,21 @@ NemoUnivariatePolynomial(R : NemoRing, x : Symbol):
         monomial(coef,exp) ==
           jlref(concat([getind(coef),"*", string(x), "^",
             string(exp pretend Integer)]))
-        reductum(p) == junfunc("tail",p)
-        gcd(p1,p2)  == jbinfunc("gcd",p1,p2)
+        reductum(p) == junfunc("tail(",p)
+        gcd(p1,p2)  == jbinfunc("gcd(",p1,p2)
         content(p : %)  == jlref(concat(["content(", getind(p), ")"]))$R
-        primitivePart(p) == junfunc("primpart", p)
+        primitivePart(p) == junfunc("primpart(", p)
         factor(a : %) : NemoFactored(%) == factor(a)$NemoFactored(%)
         (p1:% exquo p2:%): Union(%,"failed") ==
           -- Julia Tuple
-          ret : JuliaObject := jbinfunc("divides", p1, p2)
+          ret : JuliaObject := jbinfunc("divides(", p1, p2)
           not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
             => "failed"
-          junfunc("last", ret)       
+          junfunc("last(", ret)       
 
         degree(p) == jlEvalString(concat(["degree(", getind(p),")"]))@NNI
         leadingCoefficient(p : %) ==
-          junfunc("leading_coefficient", p)
+          junfunc("leading_coefficient(", p)
 
         coerce(p : %) : OutputForm ==
           jlRegexReplace(jlRegex("//"),jlSubstitute("/"),
@@ -274,9 +274,9 @@ NemoMultivariatePolynomial(R : NemoRing, VarSet : List Symbol,
 
         getind(a) ==> concat(["getindex(refs,_"", jlId(a), "_")"])
         jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
-        junfunc(op, a) ==> jlref(concat([op, "(", getind(a),")"]))
+        junfunc(op, a) ==> jlref(concat([op, getind(a),")"]))
         jbinfunc(func,a,b) ==> 
-          jlref(concat([func, "(", getind(a), ",", getind(b), ")"]))
+          jlref(concat([func, getind(a), ",", getind(b), ")"]))
         jbinbop(op,a,b) ==>
           jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
 
@@ -333,7 +333,7 @@ NemoMultivariatePolynomial(R : NemoRing, VarSet : List Symbol,
 
         0 == jlref(concat(["zero(",NMPRing,")"]))
         1 == jlref(concat(["one(",NMPRing,")"]))
-        - a == junfunc("-",a)
+        - a == junfunc("-(",a)
         a : % = b : % == jbinbop("==",a,b)
         a : % ~= b : % == jbinbop("!=",a,b)
         a : % + b : % == jbinop("+",a,b)
@@ -353,8 +353,8 @@ NemoMultivariatePolynomial(R : NemoRing, VarSet : List Symbol,
             => jlref(string(p))$R
           "failed"
 
-        reductum(p) == junfunc("tail",p)
-        gcd(p1,p2)  == jbinfunc("gcd",p1,p2)
+        reductum(p) == junfunc("tail(",p)
+        gcd(p1,p2)  == jbinfunc("gcd(",p1,p2)
         factor(a : %) : NemoFactored(%) == factor(a)$NemoFactored(%)
         mainVariable(p : %) ==
           jlEvalString(concat(["is_constant(", getind(p),")"]))@Boolean
@@ -379,7 +379,7 @@ NemoMultivariatePolynomial(R : NemoRing, VarSet : List Symbol,
           jlEvalString(concat(["degree(", getind(p),",", string(ind),")"]))@NNI
 
         leadingCoefficient(p : %) ==
-          junfunc("leading_coefficient", p)
+          junfunc("leading_coefficient(", p)
         jmp2nmp(mp) : % ==
           p: String := first(lines formatExpression(mp::OutputForm)$Format1D)
           -- handle NRAT case
@@ -388,10 +388,10 @@ NemoMultivariatePolynomial(R : NemoRing, VarSet : List Symbol,
 
         p1:% exquo p2:% ==
           -- a Julia Tuple is returned
-          ret : JuliaObject := jbinfunc("divides", p1, p2)
+          ret : JuliaObject := jbinfunc("divides(", p1, p2)
           not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
             => "failed"
-          junfunc("last", ret)   
+          junfunc("last(", ret)   
 
         coerce(p : %) : OutputForm ==
           jlRegexReplace(jlRegex("//"),jlSubstitute("/"),

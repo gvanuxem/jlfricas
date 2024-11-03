@@ -382,531 +382,531 @@ JuliaWSNumericalSpecialFunctions(R : JuliaWSNumber) : Exports ==Implementation w
     modularLambda : R -> R
     ++ modularLambda() computes the lambda modular function.
   Implementation ==> add
-    junfunc(func,a) ==> jlref(concat(["weval(", func, "(", getind(a),"))"]))
+    junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
     jbinfunc(func,a,b) ==>
-      jlref(concat(["weval(", func, "(", getind(a), ",", getind(b),"))"]))
+      jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
     jterfunc(func,a,b,c) ==>
-      jlref(concat(["weval(", func, "(", getind(a), ",", getind(b), ",", getind(c)"))"]))
+      jlref(concat(["weval(", func, getind(a), ",", getind(b), ",", getind(c)"))"]))
     jquatfunc(func,a,b,c,d) ==>
-      jlref(concat(["weval(", func, "(", getind(a), ",", getind(b), ",",
+      jlref(concat(["weval(", func, getind(a), ",", getind(b), ",",
         getind(c), ",", getind(d)"))"]))
     jtypeassert(a,b) ==> jlHead(a) ~= jlHead(b)
         => error "Type of output does not match input type"
   
     polylog(x,y) ==
-      ret : R := jbinfunc("W_"PolyLog_"", x, y)
+      ret : R := jbinfunc("W_"PolyLog_"(", x, y)
       jtypeassert(y,ret)
       ret
     riemannZeta(z) ==
-      ret : R := junfunc("W_"Zeta_"",z)
+      ret : R := junfunc("W_"Zeta_"(",z)
       jtypeassert(z,ret)
       ret
     riemannZeta(x,y) ==
-      ret : R := jbinfunc("W_"Zeta_"",x, y)
+      ret : R := jbinfunc("W_"Zeta_"(",x, y)
       jtypeassert(y,ret)
       ret
     dawson(z) ==
-      ret : R := junfunc("W_"DawsonF_"",z)
+      ret : R := junfunc("W_"DawsonF_"(",z)
       jtypeassert(z,ret)
       ret
     lambertW(z) ==
-      ret : R := junfunc("W_"ProductLog_"",z)
+      ret : R := junfunc("W_"ProductLog_"(",z)
       jtypeassert(z,ret)
       ret
     lambertW(x,y) ==
-      ret : R := jbinfunc("W_"ProductLog_"",x, y)
+      ret : R := jbinfunc("W_"ProductLog_"(",x, y)
       jtypeassert(y,ret)
       ret
     polygamma(x,y) ==
-      ret : R := jbinfunc("W_"PolyGamma_"", x, y)
+      ret : R := jbinfunc("W_"PolyGamma_"(", x, y)
       jtypeassert(y,ret)
       ret
     haversine(z) ==
-      ret : R := junfunc("W_"Haversine_"", z)
+      ret : R := junfunc("W_"Haversine_"(", z)
       jtypeassert(z,ret)
       ret
     inverseHaversine(z) ==
-      ret : R := junfunc("W_"InverseHaversine_"", z)
+      ret : R := junfunc("W_"InverseHaversine_"(", z)
       jtypeassert(z,ret)
       ret
     gudermannian(z) ==
-      ret : R := junfunc("W_"Gudermannian_"", z)
+      ret : R := junfunc("W_"Gudermannian_"(", z)
       jtypeassert(z,ret)
       ret
     inverseGudermannian(z) ==
-      ret : R := junfunc("W_"InverseGudermannian_"", z)
+      ret : R := junfunc("W_"InverseGudermannian_"(", z)
       jtypeassert(z,ret)
       ret
 
     airyAi(z) ==
-      ret : R := junfunc("W_"AiryAi_"", z)
+      ret : R := junfunc("W_"AiryAi_"(", z)
       jtypeassert(z,ret)
       ret
     airyBi(z) ==
-      ret : R := junfunc("W_"AiryBi_"", z)
+      ret : R := junfunc("W_"AiryBi_"(", z)
       jtypeassert(z,ret)
       ret
     airyAiPrime(z) ==
-      ret : R := junfunc("W_"AiryAiPrime_"", z)
+      ret : R := junfunc("W_"AiryAiPrime_"(", z)
       jtypeassert(z,ret)
       ret
     airyBiPrime(z) ==
-      ret : R := junfunc("W_"AiryBiPrime_"", z)
+      ret : R := junfunc("W_"AiryBiPrime_"(", z)
       jtypeassert(z,ret)
       ret
 
     besselJ(n,z) ==
-      ret : R := jbinfunc("W_"BesselJ_"", n,z)
+      ret : R := jbinfunc("W_"BesselJ_"(", n,z)
       jtypeassert(z,ret)
       ret
     besselY(n,z) ==
-      ret : R := jbinfunc("W_"BesselY_"", n,z)
+      ret : R := jbinfunc("W_"BesselY_"(", n,z)
       jtypeassert(z,ret)
       ret
     besselI(n,z) ==
-      ret : R := jbinfunc("W_"BesselI_"", n,z)
+      ret : R := jbinfunc("W_"BesselI_"(", n,z)
       jtypeassert(z,ret)
       ret
     besselK(n,z) ==
-      ret : R := jbinfunc("W_"BesselK_"", n,z)
+      ret : R := jbinfunc("W_"BesselK_"(", n,z)
       jtypeassert(z,ret)
       ret
     kelvinBer(n,z) ==
-      ret : R := jbinfunc("W_"KelvinBer_"", n,z)
+      ret : R := jbinfunc("W_"KelvinBer_"(", n,z)
       jtypeassert(z,ret)
       ret
     kelvinBei(n,z) ==
-      ret : R := jbinfunc("W_"KelvinBei_"", n,z)
+      ret : R := jbinfunc("W_"KelvinBei_"(", n,z)
       jtypeassert(z,ret)
       ret
     kelvinKer(n,z) ==
-      ret : R := jbinfunc("W_"KelvinKer_"", n,z)
+      ret : R := jbinfunc("W_"KelvinKer_"(", n,z)
       jtypeassert(z,ret)
       ret
     kelvinKei(n,z) ==
-      ret : R := jbinfunc("W_"KelvinKei_"", n,z)
+      ret : R := jbinfunc("W_"KelvinKei_"(", n,z)
       jtypeassert(z,ret)
       ret
     hankelH1(n,z) ==
-      ret : R := jbinfunc("W_"HankelH1_"", n,z)
+      ret : R := jbinfunc("W_"HankelH1_"(", n,z)
       jtypeassert(z,ret)
       ret
     hankelH2(n,z) ==
-      ret : R := jbinfunc("W_"HankelH2_"", n,z)
+      ret : R := jbinfunc("W_"HankelH2_"(", n,z)
       jtypeassert(z,ret)
       ret
 
     sphericalBesselJ(n,z) ==
-      ret : R := jbinfunc("W_"SphericalBesselJ_"", n,z)
+      ret : R := jbinfunc("W_"SphericalBesselJ_"(", n,z)
       jtypeassert(z,ret)
       ret
     sphericalBesselY(n,z) ==
-      ret : R := jbinfunc("W_"SphericalBesselY_"", n,z)
+      ret : R := jbinfunc("W_"SphericalBesselY_"(", n,z)
       jtypeassert(z,ret)
       ret
     sphericalHankelH1(n,z) ==
-      ret : R := jbinfunc("W_"SphericalHankelH1_"", n,z)
+      ret : R := jbinfunc("W_"SphericalHankelH1_"(", n,z)
       jtypeassert(z,ret)
       ret
     sphericalHankelH2(n,z) ==
-      ret : R := jbinfunc("W_"SphericalHankelH2_"", n,z)
+      ret : R := jbinfunc("W_"SphericalHankelH2_"(", n,z)
       jtypeassert(z,ret)
       ret
     struveH(n,z) ==
-      ret : R := jbinfunc("W_"StruveH_"", n,z)
+      ret : R := jbinfunc("W_"StruveH_"(", n,z)
       jtypeassert(z,ret)
       ret
     struveL(n,z) ==
-      ret : R := jbinfunc("W_"StruveL_"", n,z)
+      ret : R := jbinfunc("W_"StruveL_"(", n,z)
       jtypeassert(z,ret)
       ret
 
     dirichletL(k,j,s) ==
-      ret : R := jterfunc("W_"DirichletL_"", k,j,s)
+      ret : R := jterfunc("W_"DirichletL_"(", k,j,s)
       jtypeassert(s,ret)
       ret
     lerchPhi(z,s,a) ==
-      ret : R := jterfunc("W_"LerchPhi_"", z,s,a)
+      ret : R := jterfunc("W_"LerchPhi_"(", z,s,a)
       jtypeassert(a,ret)
       ret
     polylog(n,p,z) ==
-      ret : R := jterfunc("W_"PolyLog_"", n,p,z)
+      ret : R := jterfunc("W_"PolyLog_"(", n,p,z)
       jtypeassert(z,ret)
       ret
     ramanujanTau(n) ==
-      ret : R := junfunc("W_"RamanujanTau_"", n)
+      ret : R := junfunc("W_"RamanujanTau_"(", n)
       jtypeassert(n,ret)
       ret
     ramanujanTauL(n) ==
-      ret : R := junfunc("W_"RamanujanTauL_"", n)
+      ret : R := junfunc("W_"RamanujanTauL_"(", n)
       jtypeassert(n,ret)
       ret
     ramanujanTauTheta(n) ==
-      ret : R := junfunc("W_"RamanujanTauTheta_"", n)
+      ret : R := junfunc("W_"RamanujanTauTheta_"(", n)
       jtypeassert(n,ret)
       ret
     ramanujanTauZ(n) ==
-      ret : R := junfunc("W_"RamanujanTauZ_"", n)
+      ret : R := junfunc("W_"RamanujanTauZ_"(", n)
       jtypeassert(n,ret)
       ret
     riemannSiegelTheta(t) ==
-      ret : R := junfunc("W_"RiemannSiegelTheta_"", t)
+      ret : R := junfunc("W_"RiemannSiegelTheta_"(", t)
       jtypeassert(t,ret)
       ret
     riemannSiegelZ(t) ==
-      ret : R := junfunc("W_"RiemannSiegelZ_"", t)
+      ret : R := junfunc("W_"RiemannSiegelZ_"(", t)
       jtypeassert(t,ret)
       ret
     --stieltjesGamma(n) ==
-    --  ret : R := junfunc("W_"StieltjesGamma_"", n)
+    --  ret : R := junfunc("W_"StieltjesGamma_"(", n)
     --  ret
     stieltjesGamma(n, a) ==
       negative?(n) => error "stieltjesGamma: n must be a non negative integer"
-      ret : R := jbinfunc("W_"StieltjesGamma_"", n, a)
+      ret : R := jbinfunc("W_"StieltjesGamma_"(", n, a)
       jtypeassert(a,ret)
       ret
     hurwitzZeta(s,a) ==
-      ret : R := jbinfunc("W_"HurwitzZeta_"", s,a)
+      ret : R := jbinfunc("W_"HurwitzZeta_"(", s,a)
       jtypeassert(a,ret)
       ret
     hurwitzLerchPhi(z,s,a) ==
-      ret : R := jterfunc("W_"HurwitzLerchPhi_"", z,s,a)
+      ret : R := jterfunc("W_"HurwitzLerchPhi_"(", z,s,a)
       jtypeassert(a,ret)
       ret
 
     inverseErf(s) ==
-      ret : R := junfunc("W_"InverseErf_"", s)
+      ret : R := junfunc("W_"InverseErf_"(", s)
       jtypeassert(s,ret)
       ret
     inverseErfc(s) ==
-      ret : R := junfunc("W_"InverseErfc_"", s)
+      ret : R := junfunc("W_"InverseErfc_"(", s)
       jtypeassert(s,ret)
       ret
 
     Beta(x,y) ==
-      ret : R := jbinfunc("W_"Beta_"", x, y)
+      ret : R := jbinfunc("W_"Beta_"(", x, y)
       jtypeassert(x,ret)
       ret
     Beta(z,a,b) ==
-      ret : R := jterfunc("W_"Beta_"", z,a,b)
+      ret : R := jterfunc("W_"Beta_"(", z,a,b)
       jtypeassert(b,ret)
       ret
     BetaRegularized(z,a,b) ==
-      ret : R := jterfunc("W_"BetaRegularized_"", z,a,b)
+      ret : R := jterfunc("W_"BetaRegularized_"(", z,a,b)
       jtypeassert(b,ret)
       ret
     Gamma(z) ==
-      ret : R := junfunc("W_"Gamma_"", z)
+      ret : R := junfunc("W_"Gamma_"(", z)
       jtypeassert(z,ret)
       ret
     Gamma(a,z) ==
-      ret : R := jbinfunc("W_"Gamma_"", a,z)
+      ret : R := jbinfunc("W_"Gamma_"(", a,z)
       jtypeassert(z,ret)
       ret
     Gamma(a, z1, z2) ==
-      ret : R := jterfunc("W_"Gamma_"", a, z1,z2)
+      ret : R := jterfunc("W_"Gamma_"(", a, z1,z2)
       jtypeassert(z2,ret)
       ret
 
     GammaRegularized(a,z) ==
-      ret : R := jbinfunc("W_"GammaRegularized_"", a,z) 
+      ret : R := jbinfunc("W_"GammaRegularized_"(", a,z) 
       jtypeassert(z,ret)
       ret
     inverseBetaRegularized(s,a,b) ==
-      ret : R := jterfunc("W_"InverseBetaRegularized_"", s,a,b)
+      ret : R := jterfunc("W_"InverseBetaRegularized_"(", s,a,b)
       jtypeassert(b,ret)
       ret
     inverseGammaRegularized(a,s) ==
-      ret : R := jbinfunc("W_"InverseGammaRegularized_"", a,s)
+      ret : R := jbinfunc("W_"InverseGammaRegularized_"(", a,s)
       jtypeassert(s,ret)
       ret
 
     pochhammer(a,n) ==
-      ret : R := jbinfunc("W_"Pochhammer_"", a,n)
+      ret : R := jbinfunc("W_"Pochhammer_"(", a,n)
       jtypeassert(n,ret)
       ret
     digamma(z) ==
-      ret : R := junfunc("W_"PolyGamma_"", z)
+      ret : R := junfunc("W_"PolyGamma_"(", z)
       jtypeassert(z,ret)
       ret
     digamma(n,z) ==
-      ret : R := jbinfunc("W_"PolyGamma_"", n,z)
+      ret : R := jbinfunc("W_"PolyGamma_"(", n,z)
       jtypeassert(z,ret)
       ret
     logGamma(z) ==
-      ret : R := junfunc("W_"LogGamma_"", z)
+      ret : R := junfunc("W_"LogGamma_"(", z)
       jtypeassert(z,ret)
       ret
     logBarnesG(z) ==
-      ret : R := junfunc("W_"LogBarnesG_"", z)
+      ret : R := junfunc("W_"LogBarnesG_"(", z)
       jtypeassert(z,ret)
       ret
     barnesG(z) ==
-      ret : R := junfunc("W_"BarnesG_"", z)
+      ret : R := junfunc("W_"BarnesG_"(", z)
       jtypeassert(z,ret)
       ret
     hyperFactorial(z) ==
-      ret : R := junfunc("W_"Hyperfactorial_"", z)
+      ret : R := junfunc("W_"Hyperfactorial_"(", z)
       jtypeassert(z,ret)
       ret
     fibonacci(n,z) ==
-      ret : R := jbinfunc("W_"Fibonacci_"", n, z)
+      ret : R := jbinfunc("W_"Fibonacci_"(", n, z)
       jtypeassert(z,ret)
       ret
 
     EiEn(n,z)     ==
-      ret : R := jbinfunc("W_"ExpIntegralE_"", n, z)
+      ret : R := jbinfunc("W_"ExpIntegralE_"(", n, z)
       jtypeassert(z,ret)
       ret
 
     legendreP(n,z) ==
-      ret : R := jbinfunc("W_"LegendreP_"", n,z)
+      ret : R := jbinfunc("W_"LegendreP_"(", n,z)
       jtypeassert(z,ret)
       ret
     legendreP(n,m,z) ==
-      ret : R := jterfunc("W_"LegendreP_"", n,m,z)
+      ret : R := jterfunc("W_"LegendreP_"(", n,m,z)
       jtypeassert(z,ret)
       ret
     legendreQ(n,z) ==
-      ret : R := jbinfunc("W_"LegendreQ_"", n,z)
+      ret : R := jbinfunc("W_"LegendreQ_"(", n,z)
       jtypeassert(z,ret)
       ret
     legendreQ(n,m,z) ==
-      ret : R := jterfunc("W_"LegendreQ_"", n,m,z)
+      ret : R := jterfunc("W_"LegendreQ_"(", n,m,z)
       jtypeassert(z,ret)
       ret
 
     sphericalHarmonicY(l, m, theta, phi) ==
-      ret : R := jquatfunc("W_"SphericalHarmonicY_"", l,m,theta,phi)
+      ret : R := jquatfunc("W_"SphericalHarmonicY_"(", l,m,theta,phi)
       jtypeassert(phi,ret)
       ret
     gegenbauerC(n,z) ==
-      ret : R := jbinfunc("W_"GegenbauerC_"", n,z)
+      ret : R := jbinfunc("W_"GegenbauerC_"(", n,z)
       jtypeassert(z,ret)
       ret
     gegenbauerC(n,lambda,z) ==
-      ret : R := jterfunc("W_"GegenbauerC_"",n,lambda,z)
+      ret : R := jterfunc("W_"GegenbauerC_"(",n,lambda,z)
       jtypeassert(z,ret)
       ret
     chebyshevT(n,z) ==
-      ret : R := jbinfunc("W_"ChebyshevT_"", n,z)
+      ret : R := jbinfunc("W_"ChebyshevT_"(", n,z)
       jtypeassert(z,ret)
       ret
     chebyshevU(n,z) ==
-      ret : R := jbinfunc("W_"ChebyshevU_"", n,z)
+      ret : R := jbinfunc("W_"ChebyshevU_"(", n,z)
       jtypeassert(z,ret)
       ret
     hermiteH(n,z) ==
-      ret : R := jbinfunc("W_"HermiteH_"", n,z)
+      ret : R := jbinfunc("W_"HermiteH_"(", n,z)
       jtypeassert(z,ret)
       ret
     laguerreL(n,z) ==
-      ret : R := jbinfunc("W_"LaguerreL_"", n,z)
+      ret : R := jbinfunc("W_"LaguerreL_"(", n,z)
       jtypeassert(z,ret)
       ret
     laguerreL(n,a,z) ==
-      ret : R := jterfunc("W_"LaguerreL_"", n,a,z)
+      ret : R := jterfunc("W_"LaguerreL_"(", n,a,z)
       jtypeassert(z,ret)
       ret
     zernikeR(n,m,z) ==
-      ret : R := jterfunc("W_"ZernikeR_"", n,m,z)
+      ret : R := jterfunc("W_"ZernikeR_"(", n,m,z)
       jtypeassert(z,ret)
       ret
     jacobiP(n,a,b,z) ==
-      ret : R := jquatfunc("W_"JacobiP_"", n,a,b,z)
+      ret : R := jquatfunc("W_"JacobiP_"(", n,a,b,z)
       jtypeassert(z,ret)
       ret
 
     hypergeometric0F1(a,z) ==
-      ret : R := jbinfunc("W_"Hypergeometric0F1_"", a,z)
+      ret : R := jbinfunc("W_"Hypergeometric0F1_"(", a,z)
       jtypeassert(z,ret)
       ret
     hypergeometric0F1Regularized(a,z) ==
-      ret : R := jbinfunc("W_"Hypergeometric0F1Regularized_"", a,z)
+      ret : R := jbinfunc("W_"Hypergeometric0F1Regularized_"(", a,z)
       jtypeassert(z,ret)
       ret
     hypergeometric1F1(a,b,z) ==
-      ret : R := jterfunc("W_"Hypergeometric1F1_"", a,b,z)
+      ret : R := jterfunc("W_"Hypergeometric1F1_"(", a,b,z)
       jtypeassert(z,ret)
       ret
     hypergeometric1F1Regularized(a,b,z) ==
-      ret : R := jterfunc("W_"Hypergeometric1F1Regularized_"", a,b,z)
+      ret : R := jterfunc("W_"Hypergeometric1F1Regularized_"(", a,b,z)
       jtypeassert(z,ret)
       ret
     hypergeometricU(a,b,z) ==
-      ret : R := jterfunc("W_"HypergeometricU_"", a,b,z)
+      ret : R := jterfunc("W_"HypergeometricU_"(", a,b,z)
       jtypeassert(z,ret)
       ret
     whittakerM(k,m,z) ==
-      ret : R := jterfunc("W_"WhittakerM_"", k,m,z)
+      ret : R := jterfunc("W_"WhittakerM_"(", k,m,z)
       jtypeassert(z,ret)
       ret
     whittakerW(k,m,z) ==
-      ret : R := jterfunc("W_"WhittakerW_"", k,m,z)
+      ret : R := jterfunc("W_"WhittakerW_"(", k,m,z)
       jtypeassert(z,ret)
       ret
     parabolicCylinderD(v,z) ==
-      ret : R := jbinfunc("W_"ParabolicCylinderD_"", v, z)
+      ret : R := jbinfunc("W_"ParabolicCylinderD_"(", v, z)
       jtypeassert(z,ret)
       ret
     coulombF(l,eta,ro) ==
-      ret : R := jterfunc("W_"CoulombF_"", l, eta, ro)
+      ret : R := jterfunc("W_"CoulombF_"(", l, eta, ro)
       jtypeassert(ro,ret)
       ret
     coulombG(l,eta,ro) ==
-      ret : R := jterfunc("W_"CoulombG_"", l, eta, ro)
+      ret : R := jterfunc("W_"CoulombG_"(", l, eta, ro)
       jtypeassert(ro,ret)
       ret
     coulombH1(l,eta,ro) ==
-      ret : R := jterfunc("W_"CoulombH1_"", l, eta, ro)
+      ret : R := jterfunc("W_"CoulombH1_"(", l, eta, ro)
       jtypeassert(ro,ret)
       ret
     coulombH2(l,eta,ro) ==
-      ret : R := jterfunc("W_"CoulombH2_"", l, eta, ro)
+      ret : R := jterfunc("W_"CoulombH2_"(", l, eta, ro)
       jtypeassert(ro,ret)
       ret
 
     QPochhammer(z,q) ==
-      ret : R := jbinfunc("W_"QPochhammer_"", z,q)
+      ret : R := jbinfunc("W_"QPochhammer_"(", z,q)
       jtypeassert(q,ret)
       ret
     QPochhammer(z,q,n) ==
-      ret : R := jterfunc("W_"QPochhammer_"", z,q,n)
+      ret : R := jterfunc("W_"QPochhammer_"(", z,q,n)
       jtypeassert(q,ret)
       ret
     QFactorial(z,q) ==
-      ret : R := jbinfunc("W_"QFactorial_"", z,q)
+      ret : R := jbinfunc("W_"QFactorial_"(", z,q)
       jtypeassert(q,ret)
       ret
     QBinomial(n,m,q) ==
-      ret : R := jterfunc("W_"QBinomial_"", n,m,q)
+      ret : R := jterfunc("W_"QBinomial_"(", n,m,q)
       jtypeassert(q,ret)
       ret
     QGamma(z,q) ==
-      ret : R := jbinfunc("W_"QGamma_"", z,q)
+      ret : R := jbinfunc("W_"QGamma_"(", z,q)
       jtypeassert(q,ret)
       ret
     QPolyGamma(z,q) ==
-      ret : R := jbinfunc("W_"QPolyGamma_"", z,q)
+      ret : R := jbinfunc("W_"QPolyGamma_"(", z,q)
       jtypeassert(q,ret)
       ret
     QPolyGamma(n,z,q) ==
-      ret : R := jterfunc("W_"QPolyGamma_"", n,z,q)
+      ret : R := jterfunc("W_"QPolyGamma_"(", n,z,q)
       jtypeassert(q,ret)
       ret
 
     mathieuC(a,q,z) ==
-      ret : R := jterfunc("W_"MathieuC_"", a,q,z)
+      ret : R := jterfunc("W_"MathieuC_"(", a,q,z)
       jtypeassert(z,ret)
       ret
     mathieuS(b,q,z)==
-      ret : R := jterfunc("W_"MathieuS_"", b,q,z)
+      ret : R := jterfunc("W_"MathieuS_"(", b,q,z)
       jtypeassert(z,ret)
       ret
     mathieuCPrime(a,q,z) ==
-      ret : R := jterfunc("W_"MathieuCPrime_"", a,q,z)
+      ret : R := jterfunc("W_"MathieuCPrime_"(", a,q,z)
       jtypeassert(z,ret)
       ret
     mathieuSPrime(b,q,z) ==
-      ret : R := jterfunc("W_"MathieuSPrime_"", b,q,z)
+      ret : R := jterfunc("W_"MathieuSPrime_"(", b,q,z)
       jtypeassert(z,ret)
       ret
     mathieuCharacteristicA(r,q) ==
-      ret : R := jbinfunc("W_"MathieuCharacteristicA_"", r,q)
+      ret : R := jbinfunc("W_"MathieuCharacteristicA_"(", r,q)
       jtypeassert(q,ret)
       ret
     mathieuCharacteristicB(r,q) ==
-      ret : R := jbinfunc("W_"MathieuCharacteristicB_"", r,q)
+      ret : R := jbinfunc("W_"MathieuCharacteristicB_"(", r,q)
       jtypeassert(q,ret)
       ret
     mathieuCharacteristicExponent(a,q) ==
-      ret : R := jbinfunc("W_"MathieuCharacteristicExponent_"", a,q)
+      ret : R := jbinfunc("W_"MathieuCharacteristicExponent_"(", a,q)
       jtypeassert(q,ret)
       ret
 
     jacobiAmplitude(u,m) ==
-      ret : R := jbinfunc("W_"JacobiAmplitude_"", u,m)
+      ret : R := jbinfunc("W_"JacobiAmplitude_"(", u,m)
       jtypeassert(m,ret)
       ret
     jacobiSn(u,m) ==
-      ret : R := jbinfunc("W_"JacobiSN_"", u,m)
+      ret : R := jbinfunc("W_"JacobiSN_"(", u,m)
       jtypeassert(u,ret)
       ret
     jacobiCn(u,m) ==
-      ret : R := jbinfunc("W_"JacobiCN_"", u,m)
+      ret : R := jbinfunc("W_"JacobiCN_"(", u,m)
       jtypeassert(u,ret)
       ret
     jacobiDn(u,m) ==
-      ret : R := jbinfunc("W_"JacobiDN_"", u,m)
+      ret : R := jbinfunc("W_"JacobiDN_"(", u,m)
       jtypeassert(u,ret)
       ret
     inverseJacobiSn(v,m) ==
-      ret : R := jbinfunc("W_"InverseJacobiSN_"", v,m)
+      ret : R := jbinfunc("W_"InverseJacobiSN_"(", v,m)
       jtypeassert(v,ret)
       ret
     inverseJacobiCn(v,m) ==
-      ret : R := jbinfunc("W_"InverseJacobiCN_"", v,m)
+      ret : R := jbinfunc("W_"InverseJacobiCN_"(", v,m)
       jtypeassert(m,ret)
       ret
     ellipticTheta(a,u,q) ==
-      ret : R := jterfunc("W_"EllipticTheta_"", a,u,q)
+      ret : R := jterfunc("W_"EllipticTheta_"(", a,u,q)
       jtypeassert(a,ret)
       ret
     ellipticThetaPrime(a,u,q) ==
-      ret : R := jterfunc("W_"EllipticThetaPrime_"", a,u,q)
+      ret : R := jterfunc("W_"EllipticThetaPrime_"(", a,u,q)
       jtypeassert(a,ret)
       ret
     --siegelTheta(t,s) ==
-    --  ret : R := jbinfunc("W_"SiegelTheta_"", t,s)
+    --  ret : R := jbinfunc("W_"SiegelTheta_"(", t,s)
     --  jtypeassert(s,ret)
     --  ret
     --siegelTheta(v,t,s) ==
-    --  ret : R := jterfunc("W_"SiegelTheta_"", v,t,s)
+    --  ret : R := jterfunc("W_"SiegelTheta_"(", v,t,s)
     -- jtypeassert(s,ret)
     --  ret
 
     ellipticK(m) ==
-      ret : R := junfunc("W_"EllipticK_"", m)
+      ret : R := junfunc("W_"EllipticK_"(", m)
       jtypeassert(m,ret)
       ret
     ellipticF(z,m) ==
-      ret : R := jbinfunc("W_"EllipticF_"", z,m)
+      ret : R := jbinfunc("W_"EllipticF_"(", z,m)
       jtypeassert(z,ret)
       ret
     ellipticE(m) ==
-      ret : R := junfunc("W_"EllipticE_"", m)
+      ret : R := junfunc("W_"EllipticE_"(", m)
       jtypeassert(m,ret)
       ret
     ellipticE(z,m) ==
-      ret : R := jbinfunc("W_"EllipticE_"", z,m)
+      ret : R := jbinfunc("W_"EllipticE_"(", z,m)
       jtypeassert(z,ret)
       ret
     ellipticPi(n,m) ==
-      ret : R := jbinfunc("W_"EllipticPi_"", n,m)
+      ret : R := jbinfunc("W_"EllipticPi_"(", n,m)
       jtypeassert(m,ret)
       ret
     ellipticPi(n,z,m) ==
-      ret : R := jterfunc("W_"EllipticPi_"", n,z,m)
+      ret : R := jterfunc("W_"EllipticPi_"(", n,z,m)
       jtypeassert(z,ret)
       ret
     jacobiZeta(z,m) ==
-      ret : R := jbinfunc("W_"JacobiZeta_"", z,m)
+      ret : R := jbinfunc("W_"JacobiZeta_"(", z,m)
       jtypeassert(z,ret)
       ret
 
     dedekindEta(tau) ==
-      ret : R := junfunc("W_"DedekindEta_"", tau)
+      ret : R := junfunc("W_"DedekindEta_"(", tau)
       jtypeassert(tau,ret)
       ret
     dirichletEta(z) ==
-      ret : R := junfunc("W_"DirichletEta_"", z)
+      ret : R := junfunc("W_"DirichletEta_"(", z)
       jtypeassert(z,ret)
       ret
     kleinInvariantJ(tau) ==
-      ret : R := junfunc("W_"KleinInvariantJ_"", tau)
+      ret : R := junfunc("W_"KleinInvariantJ_"(", tau)
       jtypeassert(tau,ret)
       ret
     modularLambda(tau) ==
-      ret : R := junfunc("W_"ModularLambda_"", tau)
+      ret : R := junfunc("W_"ModularLambda_"(", tau)
       jtypeassert(tau,ret)
       ret

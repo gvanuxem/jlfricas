@@ -35,9 +35,9 @@ JuliaWSObject() : Category == JuliaObjectType with
     jlEvalString("Interpret=W_`Interpreter_`")@Void
 
     getind(a)  ==> concat(["getindex(refs, _"", jlId a, "_")"])
-    junfunc(func,a) ==> jlref(concat(["weval(",func, "(", getind(a),"))"]))
+    junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
     jbinfunc(func,a,b) ==>
-      jlref(concat(["weval(", func, "(", getind(a), ",", getind(b),"))"]))
+      jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
     jlApply(sym, arg) ==
       jlref(concat(["W_"", sym, "_"(", getind(arg),")"]))
     jlApply(sym, a, b) ==
@@ -66,10 +66,10 @@ JuliaWSObject() : Category == JuliaObjectType with
     jlEval(jws) == jlref(concat ["weval(", getind(jws), ")"])
     jWSInterpret(type, expr) ==
       jlref(concat ["Interpret(_"", type, "_",)(_"", expr, "_")"])
-    jlNumeric(expr) == junfunc("W_"N_"", expr)
+    jlNumeric(expr) == junfunc("W_"N_"(", expr)
     jlNumeric(expr, p) ==
       prec := jlref(concat(["WInteger(_"", string(p), "_")"]))
-      jbinfunc("W_"N_"", expr, prec)
+      jbinfunc("W_"N_"(", expr, prec)
     
 )abbrev category JWSRING JuliaWSRing
 ++ Category for Julia WS rings
@@ -147,7 +147,7 @@ JuliaWSSymbol() : Exports == Implementation where
     jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
     jbinbop(op,a,b) ==>
       jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
-    junfunc(func,a) ==> jlref(concat([func, "(", getind(a),")"]))
+    junfunc(func,a) ==> jlref(concat([func, getind(a),")"]))
     getname(sym) ==>
       jlEvalString(concat(["getproperty(", getind(sym), ",:name,)"]))@String
 
@@ -222,13 +222,13 @@ JuliaWSInteger() : Exports == Implementation where
     import from String
 
     jbinop(op,a,b) ==> jlref(concat(["weval(", getind(a), op, getind(b),")"]))
-    junfunc(func,a) ==> jlref(concat(["weval(",func, "(", getind(a),"))"]))
+    junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
     jbinfunc(func,a,b) ==>
-      jlref(concat(["weval(", func, "(", getind(a), ",", getind(b),"))"]))
+      jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
     jterfunc(func,a,b,c) ==>
-      jlref(concat(["weval(", func, "(", getind(a), ",", getind(b), ",", getind(c)"))"]))
+      jlref(concat(["weval(", func, getind(a), ",", getind(b), ",", getind(c)"))"]))
     jquatfunc(func,a,b,c,d) ==>
-      jlref(concat(["weval(", func, "(", getind(a), ",", getind(b), ",",
+      jlref(concat(["weval(", func, getind(a), ",", getind(b), ",",
         getind(c), ",", getind(d)"))"]))
     jbinbop(op,a,b) ==> jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
 
@@ -245,51 +245,51 @@ JuliaWSInteger() : Exports == Implementation where
     zero? x == x = 0
     one? x == x = 1
 
-    negative? x == junfunc("W_"Negative_"", x) = WT
-    positive? x == junfunc("W_"Positive_"", x) = WT
+    negative? x == junfunc("W_"Negative_"(", x) = WT
+    positive? x == junfunc("W_"Positive_"(", x) = WT
 
     x = y  == jbinbop("==",x,y)
     x ~= y == jbinbop("!=",x,y)
-    x < y  == jbinfunc("W_"Less_"", x,y) = WT
-    x > y  == jbinfunc("W_"Greater_"", x,y) = WT
-    x >= y == jbinfunc("W_"GreaterEqual_"", x,y) = WT
-    x <= y == jbinfunc("W_"LessEqual_"", x,y) = WT
+    x < y  == jbinfunc("W_"Less_"(", x,y) = WT
+    x > y  == jbinfunc("W_"Greater_"(", x,y) = WT
+    x >= y == jbinfunc("W_"GreaterEqual_"(", x,y) = WT
+    x <= y == jbinfunc("W_"LessEqual_"(", x,y) = WT
 
     x + y == jbinop("+", x, y)
     x - y == jbinop("-", x, y)
-    - x   == junfunc("-", x)
+    - x   == junfunc("-(", x)
     x : % * y : % == jbinop("*", x, y)
     x : Integer * y : % == jbinop("*", coerce(x), y)
     x : % ^ y : PositiveInteger == jbinop("^", x, coerce(y))
     x : % ^ y : NonNegativeInteger == jbinop("^", x, coerce(y))
     x : % / y : % == coerce(x)@JuliaWSRational / coerce(y)@JuliaWSRational
-    x quo y == jbinfunc("W_"Quotient_"", x, y)
-    x rem y == jbinfunc("W_"Mod_"", x, y)
-    powmod(x,y,z) == jterfunc("W_"PowerMod_"", x, y, z)
+    x quo y == jbinfunc("W_"Quotient_"(", x, y)
+    x rem y == jbinfunc("W_"Mod_"(", x, y)
+    powmod(x,y,z) == jterfunc("W_"PowerMod_"(", x, y, z)
     divide(x, y) ==
       zero?(y) => error "divide$JuliaWSInteger: division by 0"
-      ret : JuliaWSList(%) := jbinfunc("W_"QuotientRemainder_"", x, y)
+      ret : JuliaWSList(%) := jbinfunc("W_"QuotientRemainder_"(", x, y)
       [first(ret) pretend %, last(ret) pretend %]
 
-    gcd(a,b) == jbinfunc("W_"GCD_"", a, b)
-    lcm(a,b) == jbinfunc("W_"LCM_"", a, b)
+    gcd(a,b) == jbinfunc("W_"GCD_"(", a, b)
+    lcm(a,b) == jbinfunc("W_"LCM_"(", a, b)
 
-    length(i) == junfunc("W_"BitLength_"", i)
-    shift(i,n) == jbinfunc("W_"BitShiftLeft_"", i, n)
+    length(i) == junfunc("W_"BitLength_"(", i)
+    shift(i,n) == jbinfunc("W_"BitShiftLeft_"(", i, n)
 
-    factorial(n)      == junfunc("W_"Factorial_"", n)
-    binomial(n,m)     == jbinfunc("W_"Binomial_"", n, m)
-    hyperFactorial(n) == junfunc("W_"Hyperfactorial_"", n)
-    QFactorial(z,q)   == jbinfunc("W_"QFactorial_"", z,q)
-    fibonacci(n)      == junfunc("W_"Fibonacci_"", n)
+    factorial(n)      == junfunc("W_"Factorial_"(", n)
+    binomial(n,m)     == jbinfunc("W_"Binomial_"(", n, m)
+    hyperFactorial(n) == junfunc("W_"Hyperfactorial_"(", n)
+    QFactorial(z,q)   == jbinfunc("W_"QFactorial_"(", z,q)
+    fibonacci(n)      == junfunc("W_"Fibonacci_"(", n)
     permutation(n,m)  == permutation(n, m)$IntegerCombinatoricFunctions(%)
     -- TODO: length for FriCAS factor function
     -- makeFR()$factored(%)
-    factor(n)         == junfunc("W_"FactorInteger_"", n)
+    factor(n)         == junfunc("W_"FactorInteger_"(", n)
 
-    prime?(z) == junfunc("W_"PrimeQ_"", z) = WT
+    prime?(z) == junfunc("W_"PrimeQ_"(", z) = WT
 
-    random(n) == junfunc("W_"RandomInteger_"",n)
+    random(n) == junfunc("W_"RandomInteger_"(",n)
     integer(i) == parsei(string i)
     convert(i : %) : Integer == parsei(string i)
     coerce(x : %) : JuliaWSRational ==
@@ -328,9 +328,9 @@ JuliaWSRational() : Exports == Implementation where
     import from String
 
     jbinop(op,a,b) ==> jlref(concat(["weval(",getind(a), op, getind(b),")"]))
-    junfunc(func,a) ==> jlref(concat(["weval(",func, "(", getind(a),"))"]))
+    junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
     jbinfunc(func,a,b) ==>
-      jlref(concat(["weval(",func, "(", getind(a), ",", getind(b),"))"]))
+      jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
     jbinbop(op,a,b) ==>
       jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
 
@@ -346,26 +346,26 @@ JuliaWSRational() : Exports == Implementation where
     zero? x == x = 0
     one? x  == x = 1
 
-    negative? x == junfunc("W_"Negative_"", x) = WT
-    positive? x == junfunc("W_"Positive_"", x) = WT
+    negative? x == junfunc("W_"Negative_"(", x) = WT
+    positive? x == junfunc("W_"Positive_"(", x) = WT
 
     x = y  == jbinbop("==",x,y)
     x ~= y == jbinbop("!=",x,y)
-    x < y  == jbinfunc("W_"Less_"", x,y) = WT
-    x > y  == jbinfunc("W_"Greater_"", x,y) = WT
-    x >= y == jbinfunc("W_"GreaterEqual_"", x,y) = WT
-    x <= y == jbinfunc("W_"LessEqual_"", x,y) = WT
+    x < y  == jbinfunc("W_"Less_"(", x,y) = WT
+    x > y  == jbinfunc("W_"Greater_"(", x,y) = WT
+    x >= y == jbinfunc("W_"GreaterEqual_"(", x,y) = WT
+    x <= y == jbinfunc("W_"LessEqual_"(", x,y) = WT
 
-    numer(x) == junfunc("W_"Numerator_"" , x)
-    denom(x) == junfunc("W_"Denominator_"" , x)
+    numer(x) == junfunc("W_"Numerator_"(" , x)
+    denom(x) == junfunc("W_"Denominator_"(" , x)
     numerator(x) ==
-      jlref(concat(["WRAT(", string(junfunc("W_"Numerator_"" , x)), ",1)"]))
+      jlref(concat(["WRAT(", string(junfunc("W_"Numerator_"" , x)), ",1)("]))
     denominator(x) ==
-      jlref(concat(["WRAT(", string(junfunc("W_"Denominator_"" , x)), ",1)"]))
+      jlref(concat(["WRAT(", string(junfunc("W_"Denominator_"" , x)), ",1)("]))
 
     x + y == jbinop("+", x, y)
     x - y == jbinop("-", x, y)
-    - x   == junfunc("-", x)
+    - x   == junfunc("-(", x)
     x : % * y : % == jbinop("*", x, y)
     x : % * y : Fraction(Integer) == jbinop("*", x, coerce(y)@JuliaWSRational)
     x : JuliaWSInteger * y : % == jbinop("/", x, y) 
@@ -384,12 +384,12 @@ JuliaWSRational() : Exports == Implementation where
       denom(x) = 1 => numer(x)
       "failed"
     retract(q : %) : Fraction(Integer) ==
-      n : Integer := parsei(toString(junfunc("W_"Numerator_"" , q)))
-      d : Integer := parsei(toString(junfunc("W_"Denominator_"" , q)))
+      n : Integer := parsei(toString(junfunc("W_"Numerator_"(" , q)))
+      d : Integer := parsei(toString(junfunc("W_"Denominator_"(" , q)))
       n / d
     retractIfCan(x : %) : Union(Fraction(Integer), "failed") ==
-      n : Integer := parsei(toString(junfunc("W_"Numerator_"" , x)))
-      d : Integer := parsei(toString(junfunc("W_"Denominator_"" , x)))
+      n : Integer := parsei(toString(junfunc("W_"Numerator_"(" , x)))
+      d : Integer := parsei(toString(junfunc("W_"Denominator_"(" , x)))
       n / d
 
     coerce(i : Integer) == jlref(concat(["WRAT(", string(i), ",1)"]))
@@ -398,12 +398,12 @@ JuliaWSRational() : Exports == Implementation where
       jlref(concat(["WRAT(", string(numer(rat)), "," ,string(denom(rat)), ")"]))
 
     convert(x : %) : Fraction(Integer) ==
-      numer : Integer := parsei(toString(junfunc("W_"Numerator_"" , x)))
-      denom : Integer := parsei(toString(junfunc("W_"Denominator_"" , x)))
+      numer : Integer := parsei(toString(junfunc("W_"Numerator_"(" , x)))
+      denom : Integer := parsei(toString(junfunc("W_"Denominator_"(" , x)))
       numer / denom
     coerce(x) : OutputForm ==
-      numer : Integer := parsei(toString(junfunc("W_"Numerator_"" , x)))
-      denom : Integer := parsei(toString(junfunc("W_"Denominator_"" , x)))
+      numer : Integer := parsei(toString(junfunc("W_"Numerator_"(" , x)))
+      denom : Integer := parsei(toString(junfunc("W_"Denominator_"(" , x)))
       denom = 1 => numer pretend OutputForm
       (numer pretend OutputForm)  / (denom pretend OutputForm)
       --concat([toString(numer),"/", toString(denom)]) pretend OutputForm
@@ -488,14 +488,14 @@ JuliaWSReal() : Exports == Implementation where
     import from JuliaWSExpression
 
     jbinop(op,a,b) ==> jlref(concat(["weval(",getind(a), op, getind(b),")"]))
-    junfunc(func,a) ==> jlref(concat(["weval(",func, "(", getind(a),"))"]))
+    junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
     jbinfunc(func,a,b) ==>
-      jlref(concat(["weval(",func, "(", getind(a), ",", getind(b),"))"]))
+      jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
     jterfunc(func,a,b,c) ==>
-      jlref(concat(["weval(", func, "(", getind(a), ",",
+      jlref(concat(["weval(", func, getind(a), ",",
         getind(b), ",", getind(c)"))"]))
     jquatfunc(func,a,b,c,d) ==>
-      jlref(concat(["weval(",func, "(", getind(a), ",", getind(b), ",",
+      jlref(concat(["weval(", func, getind(a), ",", getind(b), ",",
         getind(c), ",", getind(d)"))"]))
     jbinbop(op,a,b) ==>
       jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
@@ -523,20 +523,20 @@ JuliaWSReal() : Exports == Implementation where
     zero? x == zero?(x pretend JuliaWSExpression)
     one? x  == x = 1
 
-    negative? x == junfunc("W_"Negative_"", x) = WT
-    positive? x == junfunc("W_"Positive_"", x) = WT
+    negative? x == junfunc("W_"Negative_"(", x) = WT
+    positive? x == junfunc("W_"Positive_"(", x) = WT
 
     x = y  == jbinbop("==",x,y)
     x ~= y == jbinbop("!=",x,y)
-    x < y  == jbinfunc("W_"Less_"", x,y) = WT
-    x > y  == jbinfunc("W_"Greater_"", x,y) = WT
-    x >= y == jbinfunc("W_"GreaterEqual_"", x,y) = WT
-    x <= y == jbinfunc("W_"LessEqual_"", x,y) = WT
-    jlApprox?(x,y) == jbinfunc("W_"Equal_"", x,y) = WT
+    x < y  == jbinfunc("W_"Less_"(", x,y) = WT
+    x > y  == jbinfunc("W_"Greater_"(", x,y) = WT
+    x >= y == jbinfunc("W_"GreaterEqual_"(", x,y) = WT
+    x <= y == jbinfunc("W_"LessEqual_"(", x,y) = WT
+    jlApprox?(x,y) == jbinfunc("W_"Equal_"(", x,y) = WT
 
     x + y == jbinop("+", x, y)
     x - y == jbinop("-", x, y)
-    - x   == junfunc("-", x)
+    - x   == junfunc("-(", x)
     x : % * y : % == jbinop("*", x, y)
     x : Integer * y : % == jbinop("*", coerce(x)@JuliaWSInteger, y)
     x : % / y : % == jbinop("/", x, y)
@@ -546,24 +546,24 @@ JuliaWSReal() : Exports == Implementation where
     x : % ^ y : PositiveInteger == jbinop("^", x, coerce(y)@JuliaWSInteger)
     x : % ^ y : NonNegativeInteger == jbinop("^", x, coerce(y)@JuliaWSInteger)
 
-    round(x)   == junfunc("W_"Round_"", x)
-    ceiling(x) == junfunc("W_"Ceiling_"", x)
-    floor(x)   == junfunc("W_"Floor_"", x)
-    abs(x)     == junfunc("W_"RealAbs_"", x)
+    round(x)   == junfunc("W_"Round_"(", x)
+    ceiling(x) == junfunc("W_"Ceiling_"(", x)
+    floor(x)   == junfunc("W_"Floor_"(", x)
+    abs(x)     == junfunc("W_"RealAbs_"(", x)
 
     rationalApproximation(x) ==
-      ret : JuliaWSRational := junfunc("W_"Rationalize_"", x)
+      ret : JuliaWSRational := junfunc("W_"Rationalize_"(", x)
       jlHead ret = WRational() => ret
       error concat(string(x), " cannot be retracted. Use a tolerance value if needed.")
     rationalApproximation(x, dx) ==
-      ret : JuliaWSRational := jbinfunc("W_"Rationalize_"", x, dx)
+      ret : JuliaWSRational := jbinfunc("W_"Rationalize_"(", x, dx)
       jlHead ret = WRational() => ret
       error1("Cannot be retracted with tolerance: ", dx)
 
     float(m, e, b) == jbinop("*",jWSReal(m), jWSReal(b) ^ e)
-    integerPart(x) == junfunc("W_"IntegerPart_"",x)
-    wholePart(x) == convert(junfunc("W_"IntegerPart_"",x))$JuliaWSInteger
-    fractionPart(x) == junfunc("W_"FractionalPart_"", x)
+    integerPart(x) == junfunc("W_"IntegerPart_"(",x)
+    wholePart(x) == convert(junfunc("W_"IntegerPart_"(",x))$JuliaWSInteger
+    fractionPart(x) == junfunc("W_"FractionalPart_"(", x)
     truncate(x)  == (negative? x => -floor(-x); floor x)
     retractIfCan(x : %):Union(Integer, "failed") ==
       zero? fractionPart(x) => wholePart(x)
@@ -576,88 +576,88 @@ JuliaWSReal() : Exports == Implementation where
     retractIfCan(x:%):Union(Fraction Integer, "failed") ==
       convert(rationalApproximation(x))
 
-    exp(x)   == junfunc("W_"Exp_"",x)
+    exp(x)   == junfunc("W_"Exp_"(",x)
     sqrt(x)  ==
       negative? x => error1("sqrt: result is not real for argument",x)
-      junfunc("W_"Sqrt_"",x)
+      junfunc("W_"Sqrt_"(",x)
     log(x)   ==
       zero?(x) => error1("log2: invalid argument",x)
       not positive?(x) => error1("log: result is not real for argument",x)
-      junfunc("W_"Log_"",x)
+      junfunc("W_"Log_"(",x)
     log2(x)  ==
       zero?(x) => error1("log2: invalid argument",x)
       not positive?(x) => error1("log2: result is not real for argument",x)
-      junfunc("W_"Log2_"",x)
+      junfunc("W_"Log2_"(",x)
     log10(x) ==
       zero?(x) => error1("log10: invalid argument",x)
       not positive?(x) => error1("log10: result is not real for argument",x)
-      junfunc("W_"Log10_"",x)
+      junfunc("W_"Log10_"(",x)
 
-    sin(x) == junfunc("W_"Sin_"",x)
-    cos(x) == junfunc("W_"Cos_"",x)
-    tan(x) == junfunc("W_"Tan_"",x)
-    sec(x) == junfunc("W_"Sec_"",x)
-    csc(x) == junfunc("W_"Csc_"",x)
-    cot(x) == junfunc("W_"Cot_"",x)
-    sinc(x)== junfunc("W_"Sinc_"",x)
+    sin(x) == junfunc("W_"Sin_"(",x)
+    cos(x) == junfunc("W_"Cos_"(",x)
+    tan(x) == junfunc("W_"Tan_"(",x)
+    sec(x) == junfunc("W_"Sec_"(",x)
+    csc(x) == junfunc("W_"Csc_"(",x)
+    cot(x) == junfunc("W_"Cot_"(",x)
+    sinc(x)== junfunc("W_"Sinc_"(",x)
 
     asin(x)   ==
-      abs(x) <= 1 => junfunc("W_"ArcSin_"",x)
+      abs(x) <= 1 => junfunc("W_"ArcSin_"(",x)
       error1("asin: result is not real for argument", x)
     acos(x)   ==
-      abs(x) <= 1 => junfunc("W_"ArcCos_"",x)
+      abs(x) <= 1 => junfunc("W_"ArcCos_"(",x)
       error1("acos: result is not real for argument", x)
-    atan(x)   == junfunc("W_"ArcTan_"",x)
-    atan(x,y) == jbinfunc("W_"ArcTan_"",x, y)
+    atan(x)   == junfunc("W_"ArcTan_"(",x)
+    atan(x,y) == jbinfunc("W_"ArcTan_"(",x, y)
     asec(x)   ==
       abs(x) <= 1 => error1("asec: result is not real for argument", x)
-      junfunc("W_"ArcSec_"",x)
+      junfunc("W_"ArcSec_"(",x)
     acsc(x)   ==
       zero?(x) => error1("acsc: not defined for argument", x)
       abs(x) <= 1 => error1("acsc: result is not real for argument", x)
-      junfunc("W_"ArcCsc_"",x)
-    acot(x)   == junfunc("W_"ArcCot_"",x)
+      junfunc("W_"ArcCsc_"(",x)
+    acot(x)   == junfunc("W_"ArcCot_"(",x)
  
-    sinh(x) == junfunc("W_"Sinh_"",x)
-    cosh(x) == junfunc("W_"Cosh_"",x)
-    tanh(x) == junfunc("W_"Tanh_"",x)
-    sech(x) == junfunc("W_"Sech_"",x)
-    csch(x) == junfunc("W_"Csch_"",x)
-    coth(x) == junfunc("W_"Coth_"",x)
+    sinh(x) == junfunc("W_"Sinh_"(",x)
+    cosh(x) == junfunc("W_"Cosh_"(",x)
+    tanh(x) == junfunc("W_"Tanh_"(",x)
+    sech(x) == junfunc("W_"Sech_"(",x)
+    csch(x) == junfunc("W_"Csch_"(",x)
+    coth(x) == junfunc("W_"Coth_"(",x)
 
-    asinh(x) == junfunc("W_"ArcSinh_"",x)
+    asinh(x) == junfunc("W_"ArcSinh_"(",x)
     acosh(x) ==
       if x < 1 then error1("acosh: result is not real for argument", x)
-      junfunc("W_"ArcCosh_"",x) 
+      junfunc("W_"ArcCosh_"(",x) 
     atanh(x) ==
       if abs(x) > 1 then error1("atanh: result is not real for argument", x)
-      junfunc("W_"ArcTanh_"",x)
+      junfunc("W_"ArcTanh_"(",x)
     asech(x) ==
       if x <= 0 or x > 1 then
           error1("asech: branch cut or singularity detected for argument", x)
-      junfunc("W_"ArcSech_"",x)
+      junfunc("W_"ArcSech_"(",x)
     acsch(x) ==
       if zero? x then error1("acsch: not defined for argument", x)
-      junfunc("W_"ArcCsch_"",x)
+      junfunc("W_"ArcCsch_"(",x)
     acoth(x) ==
       if abs(x) <= 1 then
           error1("acoth: branch cut or singularity detected for argument", x)
-      junfunc("W_"ArcCoth_"",x)
+      junfunc("W_"ArcCoth_"(",x)
 
-    erf(x)      == junfunc("W_"Erf_"",x)
-    erfc(x)     == junfunc("W_"Erfc_"",x)
-    erf(x, y)   == jbinfunc("W_"Erf_"",x, y)
-    erfi(x)     == junfunc("W_"Erfi_"",x)
+    erf(x)      == junfunc("W_"Erf_"(",x)
+    erfc(x)     == junfunc("W_"Erfc_"(",x)
+    erf(x, y)   == jbinfunc("W_"Erf_"(",x, y)
+    erfi(x)     == junfunc("W_"Erfi_"(",x)
 
-    Si(x)       == junfunc("W_"SinIntegral_"",x)
-    Shi(x)       == junfunc("W_"SinhIntegral_"",x)
-    Ci(x)       == junfunc("W_"CosIntegral_"",x)
-    Chi(x)      == junfunc("W_"CoshIntegral_"",x)
-    Ei(x)       == junfunc("W_"ExpIntegralEi_"",x)
-    fresnelC(x) == junfunc("W_"FresnelC_"",x)
-    fresnelS(x) == junfunc("W_"FresnelS_"",x)
-    li(x)       == junfunc("W_"LogIntegral_"",x)
-    dilog(x)    == jbinfunc("W_"PolyLog_"", coerce(2)@JuliaWSInteger, x)
+    Si(x)       == junfunc("W_"SinIntegral_"(",x)
+    Shi(x)       == junfunc("W_"SinhIntegral_"(",x)
+    Ci(x)       == junfunc("W_"CosIntegral_"(",x)
+    Chi(x)      == junfunc("W_"CoshIntegral_"(",x)
+    Ei(x)       == junfunc("W_"ExpIntegralEi_"(",x)
+    fresnelC(x) == junfunc("W_"FresnelC_"(",x)
+    fresnelS(x) == junfunc("W_"FresnelS_"(",x)
+    li(x)       == junfunc("W_"LogIntegral_"(",x)
+    dilog(x)    == jbinfunc("W_"PolyLog_"(", coerce(2)@JuliaWSInteger, x)
 
     urand01() == jlEval jWSExpr("RandomReal[]") pretend %
 
@@ -767,14 +767,14 @@ JuliaWSAPReal(prec : PositiveInteger) : Exports == Implementation where
     import from JuliaWSExpression
 
     jbinop(op,a,b) ==> jlref(concat(["weval(",getind(a), op, getind(b),")"]))
-    junfunc(func,a) ==> jlref(concat(["weval(",func, "(", getind(a),"))"]))
+    junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
     jbinfunc(func,a,b) ==>
-      jlref(concat(["weval(",func, "(", getind(a), ",", getind(b),"))"]))
+      jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
     jterfunc(func,a,b,c) ==>
-      jlref(concat(["weval(",func, "(", getind(a), ",",
+      jlref(concat(["weval(", func, getind(a), ",",
         getind(b), ",", getind(c)"))"]))
     jquatfunc(func,a,b,c,d) ==>
-      jlref(concat(["weval(",func, "(", getind(a), ",", getind(b), ",",
+      jlref(concat(["weval(", func, getind(a), ",", getind(b), ",",
         getind(c), ",", getind(d)"))"]))
     jbinbop(op,a,b) ==>
       jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
@@ -805,22 +805,22 @@ JuliaWSAPReal(prec : PositiveInteger) : Exports == Implementation where
     zero? x == zero?(x pretend JuliaWSExpression)
     one? x  == zero?((x pretend JuliaWSExpression)-1)
 
-    negative? x == junfunc("W_"Negative_"", x) = WT
-    positive? x == junfunc("W_"Positive_"", x) = WT
+    negative? x == junfunc("W_"Negative_"(", x) = WT
+    positive? x == junfunc("W_"Positive_"(", x) = WT
 
     x = y  == jbinbop("==",x,y)
     x ~= y == jbinbop("!=",x,y)
-    x < y  == jbinfunc("W_"Less_"", x,y) = WT
-    x > y  == jbinfunc("W_"Greater_"", x,y) = WT
-    x >= y == jbinfunc("W_"GreaterEqual_"", x,y) = WT
-    x <= y == jbinfunc("W_"LessEqual_"", x,y) = WT
-    jlApprox?(x,y) == jbinfunc("W_"Equal_"", x,y) = WT
+    x < y  == jbinfunc("W_"Less_"(", x,y) = WT
+    x > y  == jbinfunc("W_"Greater_"(", x,y) = WT
+    x >= y == jbinfunc("W_"GreaterEqual_"(", x,y) = WT
+    x <= y == jbinfunc("W_"LessEqual_"(", x,y) = WT
+    jlApprox?(x,y) == jbinfunc("W_"Equal_"(", x,y) = WT
 
     precision() == prec
 
     x + y == jbinop("+", x, y)
     x - y == jbinop("-", x, y)
-    - x   == junfunc("-", x)
+    - x   == junfunc("-(", x)
     x : % * y : % == jbinop("*", x, y)
     x : Integer * y : % == jbinop("*", coerce(x)@JuliaWSInteger, y)
     x : % / y : % == jbinop("/", x, y)
@@ -832,17 +832,17 @@ JuliaWSAPReal(prec : PositiveInteger) : Exports == Implementation where
     x : % ^ y : PositiveInteger == jbinop("^", x, coerce(y)@JuliaWSInteger)
     x : % ^ y : NonNegativeInteger == jbinop("^", x, coerce(y)@JuliaWSInteger)
 
-    round(x)   == junfunc("W_"Round_"", x)
-    ceiling(x) == junfunc("W_"Ceiling_"", x)
-    floor(x)   == junfunc("W_"Floor_"", x)
-    abs(x)     == junfunc("W_"RealAbs_"", x)
+    round(x)   == junfunc("W_"Round_"(", x)
+    ceiling(x) == junfunc("W_"Ceiling_"(", x)
+    floor(x)   == junfunc("W_"Floor_"(", x)
+    abs(x)     == junfunc("W_"RealAbs_"(", x)
     float(m, e, b) == jbinop("*", jWSReal(m), jWSReal(b) ^ e)
 
-    rationalApproximation(x) == junfunc("W_"Rationalize_"", x)
-    rationalApproximation(x, dx) == jbinfunc("W_"Rationalize_"", x, dx)
-    integerPart(x) == junfunc("W_"IntegerPart_"",x)
-    wholePart(x) == convert(junfunc("W_"IntegerPart_"",x))$JuliaWSInteger
-    fractionPart(x) == junfunc("W_"FractionalPart_"", x)
+    rationalApproximation(x) == junfunc("W_"Rationalize_"(", x)
+    rationalApproximation(x, dx) == jbinfunc("W_"Rationalize_"(", x, dx)
+    integerPart(x) == junfunc("W_"IntegerPart_"(",x)
+    wholePart(x) == convert(junfunc("W_"IntegerPart_"(",x))$JuliaWSInteger
+    fractionPart(x) == junfunc("W_"FractionalPart_"(", x)
     truncate x          == (negative? x => -floor(-x); floor x)
     retractIfCan(x : %):Union(Integer, "failed") ==
       zero? fractionPart(x) => wholePart(x)
@@ -855,88 +855,88 @@ JuliaWSAPReal(prec : PositiveInteger) : Exports == Implementation where
     retractIfCan(x:%):Union(Fraction Integer, "failed") ==
       convert(rationalApproximation(x))
 
-    exp(x)   == junfunc("W_"Exp_"",x)
+    exp(x)   == junfunc("W_"Exp_"(",x)
     sqrt(x)  ==
       negative? x => error1("sqrt: result is not real for argument",x)
-      junfunc("W_"Sqrt_"",x)
+      junfunc("W_"Sqrt_"(",x)
     log(x)   ==
       zero?(x) => error1("log2: invalid argument",x)
       not positive?(x) => error1("log: result is not real for argument",x)
-      junfunc("W_"Log_"",x)
+      junfunc("W_"Log_"(",x)
     log2(x)  ==
       zero?(x) => error1("log2: invalid argument",x)
       not positive?(x) => error1("log2: result is not real for argument",x)
-      junfunc("W_"Log2_"",x)
+      junfunc("W_"Log2_"(",x)
     log10(x) ==
       zero?(x) => error1("log10: invalid argument",x)
       not positive?(x) => error1("log10: result is not real for argument",x)
-      junfunc("W_"Log10_"",x)
+      junfunc("W_"Log10_"(",x)
 
-    sin(x) == junfunc("W_"Sin_"",x)
-    cos(x) == junfunc("W_"Cos_"",x)
-    tan(x) == junfunc("W_"Tan_"",x)
-    sec(x) == junfunc("W_"Sec_"",x)
-    csc(x) == junfunc("W_"Csc_"",x)
-    cot(x) == junfunc("W_"Cot_"",x)
-    sinc(x)== junfunc("W_"Sinc_"",x)
+    sin(x) == junfunc("W_"Sin_"(",x)
+    cos(x) == junfunc("W_"Cos_"(",x)
+    tan(x) == junfunc("W_"Tan_"(",x)
+    sec(x) == junfunc("W_"Sec_"(",x)
+    csc(x) == junfunc("W_"Csc_"(",x)
+    cot(x) == junfunc("W_"Cot_"(",x)
+    sinc(x)== junfunc("W_"Sinc_"(",x)
 
     asin(x)   ==
-      abs(x) <= 1 => junfunc("W_"ArcSin_"",x)
+      abs(x) <= 1 => junfunc("W_"ArcSin_"(",x)
       error1("asin: result is not real for argument", x)
     acos(x)   ==
-      abs(x) <= 1 => junfunc("W_"ArcCos_"",x)
+      abs(x) <= 1 => junfunc("W_"ArcCos_"(",x)
       error1("acos: result is not real fo argument", x)
-    atan(x)   == junfunc("W_"ArcTan_"",x)
-    atan(x,y) == jbinfunc("W_"ArcTan_"",x, y)
+    atan(x)   == junfunc("W_"ArcTan_"(",x)
+    atan(x,y) == jbinfunc("W_"ArcTan_"(",x, y)
     asec(x)   ==
       abs(x) <= 1 => error1("asec: result is not real for argument", x)
-      junfunc("W_"ArcSec_"",x)
+      junfunc("W_"ArcSec_"(",x)
     acsc(x)   ==
       zero?(x) => error1("acsc: not defined for argument", x)
       abs(x) <= 1 => error1("acsc: result is not real for argument", x)
-      junfunc("W_"ArcCsc_"",x)
+      junfunc("W_"ArcCsc_"(",x)
     acot(x)   ==
-      junfunc("W_"ArcCot_"",x)
+      junfunc("W_"ArcCot_"(",x)
  
-    sinh(x) == junfunc("W_"Sinh_"",x)
-    cosh(x) == junfunc("W_"Cosh_"",x)
-    tanh(x) == junfunc("W_"Tanh_"",x)
-    sech(x) == junfunc("W_"Sech_"",x)
-    csch(x) == junfunc("W_"Csch_"",x)
-    coth(x) == junfunc("W_"Coth_"",x)
+    sinh(x) == junfunc("W_"Sinh_"(",x)
+    cosh(x) == junfunc("W_"Cosh_"(",x)
+    tanh(x) == junfunc("W_"Tanh_"(",x)
+    sech(x) == junfunc("W_"Sech_"(",x)
+    csch(x) == junfunc("W_"Csch_"(",x)
+    coth(x) == junfunc("W_"Coth_"(",x)
 
-    asinh(x) == junfunc("W_"ArcSinh_"",x)
+    asinh(x) == junfunc("W_"ArcSinh_"(",x)
     acosh(x) ==
       x < 1 => error1("acosh: result is not real for argument", x)
-      junfunc("W_"ArcCosh_"",x) 
+      junfunc("W_"ArcCosh_"(",x) 
     atanh(x) ==
       if abs(x) >= 1 then error1("atanh: result is not real for argument", x)
-      junfunc("W_"ArcTanh_"",x)
+      junfunc("W_"ArcTanh_"(",x)
     asech(x) ==
       one? x => 0
       if (x < 0 or x > 1) then error1("asech: rsult is not real argument", x)
-      junfunc("W_"ArcSech_"",x)
+      junfunc("W_"ArcSech_"(",x)
     acsch(x) ==
       if zero? x then error1("acsch: not defined for argument", x)
-      junfunc("W_"ArcCsch_"",x)
+      junfunc("W_"ArcCsch_"(",x)
     acoth(x) ==
       if abs(x) <= 1 then
           error1("acoth: branch cut or singularity detected for argument", x)
-      junfunc("W_"ArcCoth_"",x)
+      junfunc("W_"ArcCoth_"(",x)
 
-    erf(x)      == junfunc("W_"Erf_"",x)
-    erfc(x)     == junfunc("W_"Erfc_"",x)
-    erf(x, y)   == jbinfunc("W_"Erf_"",x, y)
-    erfi(x)     == junfunc("W_"Erfi_"",x)
-    Si(x)       == junfunc("W_"SinIntegral_"",x)
-    Shi(x)       == junfunc("W_"SinhIntegral_"",x)
-    Ci(x)       == junfunc("W_"CosIntegral_"",x)
-    Chi(x)      == junfunc("W_"CoshIntegral_"",x)
-    Ei(x)       == junfunc("W_"ExpIntegralEi_"",x)
-    fresnelC(x) == junfunc("W_"FresnelC_"",x)
-    fresnelS(x) == junfunc("W_"FresnelS_"",x)
-    li(x)       == junfunc("W_"LogIntegral_"",x)
-    dilog(x)    == jbinfunc("W_"PolyLog_"", coerce(2)@JuliaWSInteger, x)
+    erf(x)      == junfunc("W_"Erf_"(",x)
+    erfc(x)     == junfunc("W_"Erfc_"(",x)
+    erf(x, y)   == jbinfunc("W_"Erf_"(",x, y)
+    erfi(x)     == junfunc("W_"Erfi_"(",x)
+    Si(x)       == junfunc("W_"SinIntegral_"(",x)
+    Shi(x)       == junfunc("W_"SinhIntegral_"(",x)
+    Ci(x)       == junfunc("W_"CosIntegral_"(",x)
+    Chi(x)      == junfunc("W_"CoshIntegral_"(",x)
+    Ei(x)       == junfunc("W_"ExpIntegralEi_"(",x)
+    fresnelC(x) == junfunc("W_"FresnelC_"(",x)
+    fresnelS(x) == junfunc("W_"FresnelS_"(",x)
+    li(x)       == junfunc("W_"LogIntegral_"(",x)
+    dilog(x)    == jbinfunc("W_"PolyLog_"(", coerce(2)@JuliaWSInteger, x)
 
     urand01() ==
       jlEval jWSExpr(concat(["RandomReal[WorkingPrecision->",
@@ -1018,9 +1018,9 @@ JuliaWSGaussianInteger() : Exports == Implementation where
     import from JuliaUtilityFunctions
 
     jbinop(op,a,b) ==> jlref(concat(["weval(",getind(a), op, getind(b),")"]))
-    junfunc(func,a) ==> jlref(concat(["weval(",func, "(", getind(a),"))"]))
+    junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
     jbinfunc(func,a,b) ==>
-      jlref(concat(["weval(",func, "(", getind(a), ",", getind(b),"))"]))
+      jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
     jbinbop(op,a,b) ==>
       jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
     bool(a) ==> coerce(a)$JuliaWSSymbol
@@ -1036,19 +1036,19 @@ JuliaWSGaussianInteger() : Exports == Implementation where
     zero? x == x = 0
     one? x  == x = 1
 
-    real(x)      == junfunc("W_"Re_"", x)
-    imag(x)      == junfunc("W_"Im_"", x)
+    real(x)      == junfunc("W_"Re_"(", x)
+    imag(x)      == junfunc("W_"Im_"(", x)
 
-    conjugate(x) == junfunc("W_"Conjugate_"", x)
+    conjugate(x) == junfunc("W_"Conjugate_"(", x)
     -- norm(z) in FriCAS = re(z)^2+im(z)^2 even for Complex(Float)
     -- Let FriCAS compute it
-    --norm(x)      == junfunc("W_"Norm_"", x)
+    --norm(x)      == junfunc("W_"Norm_"(", x)
 
     x = y  == jbinbop("==",x,y)
     x ~= y == jbinbop("!=",x,y)
     x + y == jbinop("+", x, y)
     x - y == jbinop("-", x, y)
-    - x   == junfunc("-", x)
+    - x   == junfunc("-(", x)
     x : % * y : % == jbinop("*", x, y)
     x : Integer * y : % == jbinop("*", coerce(x)@JuliaWSInteger, y)
     x : JuliaWSInteger * y : % == jbinop("*", coerce(x), y) 
@@ -1069,8 +1069,8 @@ JuliaWSGaussianInteger() : Exports == Implementation where
       im < 0 => [-1, complex(-re, -im) ,-1]
       [imaginary(), complex(im, -re), -imaginary()]
 
-    random(n) == complex(junfunc("W_"RandomInteger_"",n) pretend JuliaWSInteger,
-      junfunc("W_"RandomInteger_"",n) pretend JuliaWSInteger) 
+    random(n) == complex(junfunc("W_"RandomInteger_"(",n) pretend JuliaWSInteger,
+      junfunc("W_"RandomInteger_"(",n) pretend JuliaWSInteger) 
     string(gi) == toString(gi)
     convert(obj) : String == string obj
     coerce(x : %) : JuliaWSExpression == x pretend JuliaWSExpression
@@ -1156,13 +1156,13 @@ JuliaWSComplex() : Exports == Implementation where
     import from JuliaWSExpression
 
     jbinop(op,a,b) ==> jlref(concat(["weval(",getind(a), op, getind(b),")"]))
-    junfunc(func,a) ==> jlref(concat(["weval(",func, "(", getind(a),"))"]))
+    junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
     jbinfunc(func,a,b) ==>
-      jlref(concat(["weval(",func, "(", getind(a), ",", getind(b),"))"]))
+      jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
     jterfunc(func,a,b,c) ==>
       jlref(concat("weval(",[func, "(", getind(a), ",", getind(b), ",", getind(c)"))"]))
     jquatfunc(func,a,b,c,d) ==>
-      jlref(concat(["weval(",func, "(", getind(a), ",", getind(b), ",",
+      jlref(concat(["weval(", func, getind(a), ",", getind(b), ",",
         getind(c), ",", getind(d)"))"]))
     jbinbop(op,a,b) ==> jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
     error1(msg, f) ==> error concat [msg, " ", toString f]
@@ -1183,20 +1183,20 @@ JuliaWSComplex() : Exports == Implementation where
     pi()  == jlref(concat(["W_`Complex[Pi,0.0]_`"]))
     exp() == jlref(concat(["W_`Complex[E,0.0]_`"]))
 
-    real(z)      == junfunc("W_"Re_"", z)
-    imag(z)      == junfunc("W_"Im_"", z)
+    real(z)      == junfunc("W_"Re_"(", z)
+    imag(z)      == junfunc("W_"Im_"(", z)
 
-    conjugate(z) == junfunc("W_"Conjugate_"", z)
+    conjugate(z) == junfunc("W_"Conjugate_"(", z)
     -- norm(z) in FriCAS = re(z)^2+im(z)^2 even for Complex(Float)
     -- Let FriCAS compute it
-    --norm(x)      == junfunc("W_"Norm_"", x)
+    --norm(x)      == junfunc("W_"Norm_"(", x)
 
     x = y  == jbinbop("==",x,y)
     x ~= y == jbinbop("!=",x,y)
-    jlApprox?(x,y) == jbinfunc("W_"Equal_"", x,y) = WT
+    jlApprox?(x,y) == jbinfunc("W_"Equal_"(", x,y) = WT
     x + y == jbinop("+", x, y)
     x - y == jbinop("-", x, y)
-    - x   == junfunc("-", x)
+    - x   == junfunc("-(", x)
     x : % * y : % == jbinop("*", x, y)
     x : JuliaWSInteger * y : % == jbinop("*", coerce(x), y) 
     x : Integer * y : % == jbinop("*", coerce(x), y)
@@ -1216,86 +1216,86 @@ JuliaWSComplex() : Exports == Implementation where
       im < 0 => [-1, complex(-re, -im) ,-1]
       [imaginary(), complex(im, -re), -imaginary()]
 
-    abs(z)     == junfunc("W_"Abs_"", z)
-    argument(z)  == junfunc("W_"Arg_"", z)
+    abs(z)     == junfunc("W_"Abs_"(", z)
+    argument(z)  == junfunc("W_"Arg_"(", z)
 
-    exp(z)   == junfunc("W_"Exp_"",z)
-    sqrt(z)  == junfunc("W_"Sqrt_"",z)
+    exp(z)   == junfunc("W_"Exp_"(",z)
+    sqrt(z)  == junfunc("W_"Sqrt_"(",z)
     log(z)   ==
       zero? z  => error "log: 0 is an invalid argument"
-      junfunc("W_"Log_"",z)
+      junfunc("W_"Log_"(",z)
     log2(z)  ==
       zero? z => error "log2: 0 is an invalid argument"
-      junfunc("W_"Log2_"",z)
+      junfunc("W_"Log2_"(",z)
     log10(z) ==
       zero? z => error "log10: 0 is an invalid argument"     
-      junfunc("W_"Log10_"",z)
+      junfunc("W_"Log10_"(",z)
 
-    sin(z) == junfunc("W_"Sin_"",z)
-    cos(z) == junfunc("W_"Cos_"",z)
-    tan(z) == junfunc("W_"Tan_"",z)
-    sec(z) == junfunc("W_"Sec_"",z)
-    csc(z) == junfunc("W_"Csc_"",z)
-    cot(z) == junfunc("W_"Cot_"",z)
+    sin(z) == junfunc("W_"Sin_"(",z)
+    cos(z) == junfunc("W_"Cos_"(",z)
+    tan(z) == junfunc("W_"Tan_"(",z)
+    sec(z) == junfunc("W_"Sec_"(",z)
+    csc(z) == junfunc("W_"Csc_"(",z)
+    cot(z) == junfunc("W_"Cot_"(",z)
 
-    sinc(z)== junfunc("W_"Sinc_"",z)
+    sinc(z)== junfunc("W_"Sinc_"(",z)
 
-    asin(z)   == junfunc("W_"ArcSin_"",z)
-    acos(z)   == junfunc("W_"ArcCos_"",z)
-    atan(z)   == junfunc("W_"ArcTan_"",z)
-    atan(z1,z2) == jbinfunc("W_"ArcTan_"",z1, z2)
+    asin(z)   == junfunc("W_"ArcSin_"(",z)
+    acos(z)   == junfunc("W_"ArcCos_"(",z)
+    atan(z)   == junfunc("W_"ArcTan_"(",z)
+    atan(z1,z2) == jbinfunc("W_"ArcTan_"(",z1, z2)
     asec(z)   ==
       zero?(z) => error1("asec: not defined for argument", z)
-      junfunc("W_"ArcSec_"",z)
+      junfunc("W_"ArcSec_"(",z)
     acsc(z)   ==
       zero?(z) => error1("acsc: not defined for argument", z)
-      junfunc("W_"ArcCsc_"",z)
-    acot(z)   == junfunc("W_"ArcCot_"",z)
+      junfunc("W_"ArcCsc_"(",z)
+    acot(z)   == junfunc("W_"ArcCot_"(",z)
     
-    sinh(z) == junfunc("W_"Sinh_"",z)
-    cosh(z) == junfunc("W_"Cosh_"",z)
-    tanh(z) == junfunc("W_"Tanh_"",z)
-    sech(z) == junfunc("W_"Sech_"",z)
-    csch(z) == junfunc("W_"Csch_"",z)
-    coth(z) == junfunc("W_"Coth_"",z)
+    sinh(z) == junfunc("W_"Sinh_"(",z)
+    cosh(z) == junfunc("W_"Cosh_"(",z)
+    tanh(z) == junfunc("W_"Tanh_"(",z)
+    sech(z) == junfunc("W_"Sech_"(",z)
+    csch(z) == junfunc("W_"Csch_"(",z)
+    coth(z) == junfunc("W_"Coth_"(",z)
 
-    asinh(z) == junfunc("W_"ArcSinh_"",z)
-    acosh(z) == junfunc("W_"ArcCosh_"",z)
+    asinh(z) == junfunc("W_"ArcSinh_"(",z)
+    acosh(z) == junfunc("W_"ArcCosh_"(",z)
     atanh(z) ==
       if z = 1 or z = -1 then
         error1("atanh: not defined for argument", z)
-      junfunc("W_"ArcTanh_"",z)
+      junfunc("W_"ArcTanh_"(",z)
     asech(z) ==
       if zero? z then error1("asech: not defined for argument", z)
-      junfunc("W_"ArcSech_"",z)
+      junfunc("W_"ArcSech_"(",z)
     acsch(z) ==
       if zero? z then error1("acsch: not defined for argument", z)
-      junfunc("W_"ArcCsch_"",z)
+      junfunc("W_"ArcCsch_"(",z)
     acoth(z) ==
       if z = 1 or z = -1 then
         error1("acoth: not defined for argument", z)
-      junfunc("W_"ArcCoth_"",z)
+      junfunc("W_"ArcCoth_"(",z)
 
-    erf(z)      == junfunc("W_"Erf_"",z)
-    erfc(z)     == junfunc("W_"Erfc_"",z)
-    erf(z1, z2) == jbinfunc("W_"Erf_"",z1, z2)
-    erfi(z)     == junfunc("W_"Erfi_"",z)
-    Si(z)       == junfunc("W_"SinIntegral_"",z)
-    Shi(z)       == junfunc("W_"SinhIntegral_"",z)
-    Ci(z)       == junfunc("W_"CosIntegral_"",z)
-    Chi(z)      == junfunc("W_"CoshIntegral_"",z)
-    Ei(z)       == junfunc("W_"ExpIntegralEi_"",z)
-    fresnelC(z) == junfunc("W_"FresnelC_"",z)
-    fresnelS(z) == junfunc("W_"FresnelS_"",z)
-    li(z)       == junfunc("W_"LogIntegral_"",z)
+    erf(z)      == junfunc("W_"Erf_"(",z)
+    erfc(z)     == junfunc("W_"Erfc_"(",z)
+    erf(z1, z2) == jbinfunc("W_"Erf_"(",z1, z2)
+    erfi(z)     == junfunc("W_"Erfi_"(",z)
+    Si(z)       == junfunc("W_"SinIntegral_"(",z)
+    Shi(z)       == junfunc("W_"SinhIntegral_"(",z)
+    Ci(z)       == junfunc("W_"CosIntegral_"(",z)
+    Chi(z)      == junfunc("W_"CoshIntegral_"(",z)
+    Ei(z)       == junfunc("W_"ExpIntegralEi_"(",z)
+    fresnelC(z) == junfunc("W_"FresnelC_"(",z)
+    fresnelS(z) == junfunc("W_"FresnelS_"(",z)
+    li(z)       == junfunc("W_"LogIntegral_"(",z)
     dilog(z)    ==
       two := jWSReal("2")$JuliaWSReal
-      jbinfunc("W_"PolyLog_"", two, z)
+      jbinfunc("W_"PolyLog_"(", two, z)
 
     urand01() == jWSExpr("RandomComplex[]") pretend %
     string(z) == toString z
     convert(z) : String == string z
-    toString(z, form) == string jbinfunc("W_"ToString_"", z, form)
+    toString(z, form) == string jbinfunc("W_"ToString_"(", z, form)
     coerce(z : %) : Complex(DoubleFloat) ==
       complex(coerce(real(z)), coerce(imag(z)))
     coerce(z : %) : Complex(JuliaFloat64) ==
@@ -1388,14 +1388,14 @@ JuliaWSAPComplex(prec : PositiveInteger) : Exports == Implementation where
     import from JuliaWSExpression
 
     jbinop(op,a,b) ==> jlref(concat(["weval(",getind(a), op, getind(b),")"]))
-    junfunc(func,a) ==> jlref(concat(["weval(",func, "(", getind(a),"))"]))
+    junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
     jbinfunc(func,a,b) ==>
-      jlref(concat(["weval(",func, "(", getind(a), ",", getind(b),"))"]))
+      jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
     jterfunc(func,a,b,c) ==>
-      jlref(concat(["weval(",func, "(", getind(a), ",",
+      jlref(concat(["weval(", func, getind(a), ",",
         getind(b), ",", getind(c)"))"]))
     jquatfunc(func,a,b,c,d) ==>
-      jlref(concat(["weval(",func, "(", getind(a), ",", getind(b), ",",
+      jlref(concat(["weval(", func, getind(a), ",", getind(b), ",",
         getind(c), ",", getind(d)"))"]))
     jbinbop(op,a,b) ==> jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
     error1(msg, f) ==> error concat [msg, " ", toString(f, jWSExpr "OutputForm")]
@@ -1416,20 +1416,20 @@ JuliaWSAPComplex(prec : PositiveInteger) : Exports == Implementation where
     pi()  == jlref(concat(["W_`N[Complex[Pi,0],", string(prec), "]_`"]))
     exp() == jlref(concat(["W_`N[Complex[E,0],", string(prec), "]_`"]))
 
-    real(z)      == junfunc("W_"Re_"", z)
-    imag(z)      == junfunc("W_"Im_"", z)
+    real(z)      == junfunc("W_"Re_"(", z)
+    imag(z)      == junfunc("W_"Im_"(", z)
 
-    conjugate(z) == junfunc("W_"Conjugate_"", z)
+    conjugate(z) == junfunc("W_"Conjugate_"(", z)
     -- norm(z) in FriCAS = re(z)^2+im(z)^2 even for Complex(Float)
     -- Let FriCAS compute it
-    --norm(z)      == junfunc("W_"Norm_"", z)
+    --norm(z)      == junfunc("W_"Norm_"(", z)
 
     x = y  == jbinbop("==",x,y)
     x ~= y == jbinbop("!=",x,y)
-    jlApprox?(x,y) == jbinfunc("W_"Equal_"", x,y) = WT
+    jlApprox?(x,y) == jbinfunc("W_"Equal_"(", x,y) = WT
     x + y == jbinop("+", x, y)
     x - y == jbinop("-", x, y)
-    - x   == junfunc("-", x)
+    - x   == junfunc("-(", x)
     x : % * y : % == jbinop("*", x, y)
     x : JuliaWSInteger * y : % == jbinop("*", x, y) 
     x : Integer * y : % == jbinop("*", coerce(x)@JuliaWSInteger, y)
@@ -1449,88 +1449,88 @@ JuliaWSAPComplex(prec : PositiveInteger) : Exports == Implementation where
       im < 0 => [-1, complex(-re, -im) ,-1]
       [imaginary(), complex(im, -re), -imaginary()]
 
-    abs(z)     == junfunc("W_"Abs_"", z)
-    argument(z)  == junfunc("W_"Arg_"", z)
+    abs(z)     == junfunc("W_"Abs_"(", z)
+    argument(z)  == junfunc("W_"Arg_"(", z)
 
-    exp(z)   == junfunc("W_"Exp_"",z)
-    sqrt(z)  == junfunc("W_"Sqrt_"",z)
+    exp(z)   == junfunc("W_"Exp_"(",z)
+    sqrt(z)  == junfunc("W_"Sqrt_"(",z)
     log(z)   ==
       zero? z  => error "log: 0 is an invalid argument"
-      junfunc("W_"Log_"",z)
+      junfunc("W_"Log_"(",z)
     log2(z)  ==
       zero? z => error "log2: 0 is an invalid argument"
-      junfunc("W_"Log2_"",z)
+      junfunc("W_"Log2_"(",z)
     log10(z) ==
       zero? z => error "log10: 0 is an invalid argument"     
-      junfunc("W_"Log10_"",z)
+      junfunc("W_"Log10_"(",z)
 
-    sin(z) == junfunc("W_"Sin_"",z)
-    cos(z) == junfunc("W_"Cos_"",z)
-    tan(z) == junfunc("W_"Tan_"",z)
-    sec(z) == junfunc("W_"Sec_"",z)
-    csc(z) == junfunc("W_"Csc_"",z)
-    cot(z) == junfunc("W_"Cot_"",z)
+    sin(z) == junfunc("W_"Sin_"(",z)
+    cos(z) == junfunc("W_"Cos_"(",z)
+    tan(z) == junfunc("W_"Tan_"(",z)
+    sec(z) == junfunc("W_"Sec_"(",z)
+    csc(z) == junfunc("W_"Csc_"(",z)
+    cot(z) == junfunc("W_"Cot_"(",z)
 
-    sinc(z)== junfunc("W_"Sinc_"",z)
+    sinc(z)== junfunc("W_"Sinc_"(",z)
 
-    asin(z)   == junfunc("W_"ArcSin_"",z)
-    acos(z)   == junfunc("W_"ArcCos_"",z)
-    atan(z)   == junfunc("W_"ArcTan_"",z)
-    atan(z1,z2) == jbinfunc("W_"ArcTan_"",z1, z2)
+    asin(z)   == junfunc("W_"ArcSin_"(",z)
+    acos(z)   == junfunc("W_"ArcCos_"(",z)
+    atan(z)   == junfunc("W_"ArcTan_"(",z)
+    atan(z1,z2) == jbinfunc("W_"ArcTan_"(",z1, z2)
     asec(z)   ==
       zero?(z) => error1("asec: not defined for argument", z)
-      junfunc("W_"ArcSec_"",z)
+      junfunc("W_"ArcSec_"(",z)
     acsc(z)   ==
       zero?(z) => error1("acsc: not defined for argument", z)
-      junfunc("W_"ArcCsc_"",z)
-    acot(z)   == junfunc("W_"ArcCot_"",z)
+      junfunc("W_"ArcCsc_"(",z)
+    acot(z)   == junfunc("W_"ArcCot_"(",z)
     
-    sinh(z) == junfunc("W_"Sinh_"",z)
-    cosh(z) == junfunc("W_"Cosh_"",z)
-    tanh(z) == junfunc("W_"Tanh_"",z)
-    sech(z) == junfunc("W_"Sech_"",z)
-    csch(z) == junfunc("W_"Csch_"",z)
-    coth(z) == junfunc("W_"Coth_"",z)
+    sinh(z) == junfunc("W_"Sinh_"(",z)
+    cosh(z) == junfunc("W_"Cosh_"(",z)
+    tanh(z) == junfunc("W_"Tanh_"(",z)
+    sech(z) == junfunc("W_"Sech_"(",z)
+    csch(z) == junfunc("W_"Csch_"(",z)
+    coth(z) == junfunc("W_"Coth_"(",z)
 
-    asinh(z) == junfunc("W_"ArcSinh_"",z)
-    acosh(z) == junfunc("W_"ArcCosh_"",z)
+    asinh(z) == junfunc("W_"ArcSinh_"(",z)
+    acosh(z) == junfunc("W_"ArcCosh_"(",z)
     atanh(z) ==
       if z = 1 or z = -1 then
         error1("atanh: not defined for argument", z)
-      junfunc("W_"ArcTanh_"",z)
+      junfunc("W_"ArcTanh_"(",z)
     asech(z) ==
       if zero? z then error1("asech: not defined for argument", z)
-      junfunc("W_"ArcSech_"",z)
+      junfunc("W_"ArcSech_"(",z)
     acsch(z) ==
       if zero? z then error1("acsch: not defined for argument", z)
-      junfunc("W_"ArcCsch_"",z)
+      junfunc("W_"ArcCsch_"(",z)
     acoth(z) ==
       if z = 1 or z = -1 then
         error1("acoth: not defined for argument", z)
-      junfunc("W_"ArcCoth_"",z)
+      junfunc("W_"ArcCoth_"(",z)
   
-    erf(z)      == junfunc("W_"Erf_"",z)
-    erfc(z)     == junfunc("W_"Erfc_"",z)
-    erf(z1, z2)   == jbinfunc("W_"Erf_"",z1, z2)
-    erfi(z)     == junfunc("W_"Erfi_"",z)
-    Si(z)       == junfunc("W_"SinIntegral_"",z)
-    Shi(z)       == junfunc("W_"SinhIntegral_"",z)
-    Ci(z)       == junfunc("W_"CosIntegral_"",z)
-    Chi(z)      == junfunc("W_"CoshIntegral_"",z)
-    Ei(z)       == junfunc("W_"ExpIntegralEi_"",z)
-    fresnelC(z) == junfunc("W_"FresnelC_"",z)
-    fresnelS(z) == junfunc("W_"FresnelS_"",z)
-    li(z)       == junfunc("W_"LogIntegral_"",z)
+    erf(z)      == junfunc("W_"Erf_"(",z)
+    erfc(z)     == junfunc("W_"Erfc_"(",z)
+    erf(z1, z2)   == jbinfunc("W_"Erf_"(",z1, z2)
+    erfi(z)     == junfunc("W_"Erfi_"(",z)
+    Si(z)       == junfunc("W_"SinIntegral_"(",z)
+    Shi(z)       == junfunc("W_"SinhIntegral_"(",z)
+    Ci(z)       == junfunc("W_"CosIntegral_"(",z)
+    Chi(z)      == junfunc("W_"CoshIntegral_"(",z)
+    Ei(z)       == junfunc("W_"ExpIntegralEi_"(",z)
+    fresnelC(z) == junfunc("W_"FresnelC_"(",z)
+    fresnelS(z) == junfunc("W_"FresnelS_"(",z)
+    li(z)       == junfunc("W_"LogIntegral_"(",z)
     dilog(z)    ==
       two := jWSReal("2")$JuliaWSAPReal(prec)
-      jbinfunc("W_"PolyLog_"", two, z)
+      jbinfunc("W_"PolyLog_"(", two, z)
 
     urand01() ==
       jWSExpr(concat(["RandomComplex[WorkingPrecision->",
         string(prec),"]"])) pretend %
     string(z) == toString(z pretend JuliaWSExpression, jWSExpr("OutputForm"))
     convert(obj) : String == string obj
-    toString(z, form) == string jbinfunc("W_"ToString_"", z, form)
+    toString(z, form) == string jbinfunc("W_"ToString_"(", z, form)
     coerce(z : %) : JuliaWSExpression == z pretend JuliaWSExpression
     coerce(i : Integer) ==
       jlref(concat(["weval(W_"Complex_"(",

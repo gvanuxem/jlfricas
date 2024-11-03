@@ -179,20 +179,20 @@ JuliaObjectRing() : Category == Join(JuliaObjectType, JuliaRing) add
     import from String
 
     getind(a)  ==> concat(["getindex(refs,_"", JLREFID(a)$Lisp, "_")"])
-    junfunc(func, a) ==> jlref(concat([func, "(", getind(a),")"]))
+    junfunc(func, a) ==> jlref(concat([func, getind(a),")"]))
     jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
     jbinfunc(func,a,b) ==>
-      jlref(concat([func, "(", getind(a), ",", getind(b),")"]))
+      jlref(concat([func, getind(a), ",", getind(b),")"]))
     jbinbop(op,a,b) ==>
       jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
     junbfunc(bfunc, a) ==>
-      jlEvalString(concat([bfunc, "(", getind(a),")"]))@Boolean
+      jlEvalString(concat([bfunc, getind(a),")"]))@Boolean
 
     zero?(x) == jlEvalString(concat ["iszero(", getind(x), ")"])
-    one?(x) == jlEvalString(concat ["isone", getind(x), ")"])
+    one?(x) == jlEvalString(concat ["isone(", getind(x), ")"])
     x + y == jbinop("+", x, y)
     x - y == jbinop("-", x, y)
-    - x   == junfunc("-", x)
+    - x   == junfunc("-(", x)
     x : % * y : % == jbinop("*", x, y)
     x : Integer * y : % == jlref(concat([string(x), "*", getind(y)]))
     x : PositiveInteger * y : % == jlref(concat([string(x), "*", getind(y)]))
@@ -246,7 +246,6 @@ JuliaObjBoolean() : Exports == Implementation where
     jfalse : () -> %
   Implementation ==> add
     import String
-    getind(a)  ==> concat(["getindex(refs,_"", jlId a, "_")"])
     coerce(bool) : Boolean == jl_string_getindex(jlId bool)$Lisp = "true"
     jtrue() == jlref("true")
     jfalse() == jlref("false")
@@ -314,9 +313,9 @@ JuliaObjFloat64() : Exports == Implementation where
 
     getind(a)  ==> concat(["getindex(refs,_"", jlId a, "_")"])
     jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
-    junfunc(func, a) ==> jlref(concat([func, "(", getind(a),")"]))
+    junfunc(func, a) ==> jlref(concat([func, getind(a),")"]))
     jbinfunc(func,a,b) ==>
-      jlref(concat([func, "(", getind(a), ",", getind(b),")"]))
+      jlref(concat([func, getind(a), ",", getind(b),")"]))
     jbinbop(op,a,b) ==>
       jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
 
@@ -354,8 +353,8 @@ JuliaObjFloat64() : Exports == Implementation where
       jlref(concat ["ccall(", getind(func), 
         ", Float64, (Float64,Float64,Float64),",
           getind(x), ",", getind(y), ",", getind(z), ")"])
-    cis(x)   == junfunc("cis",x)
-    cispi(x) == junfunc("cispi",x)
+    cis(x)   == junfunc("cis(",x)
+    cispi(x) == junfunc("cispi(",x)
     convert(r: Float) ==
       tmp := outputSpacing(0)
       ret := jlref(toString(r))
@@ -403,9 +402,9 @@ JuliaObjComplexF64() : Exports == Implementation where
 
     getind(a)  ==> concat(["getindex(refs,_"", jlId a, "_")"])
     jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
-    junfunc(func,a) ==> jlref(concat([func, "(", getind(a), ")"]))
+    junfunc(func,a) ==> jlref(concat([func, getind(a), ")"]))
     jbinfunc(func,a,b) ==>
-      jlref(concat([func, "(", getind(a), ",", getind(b),")"]))
+      jlref(concat([func, getind(a), ",", getind(b),")"]))
     jbinbop(op,a,b) ==>
       jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
     0 == jlref("0.0+0im")
@@ -416,8 +415,8 @@ JuliaObjComplexF64() : Exports == Implementation where
     x :% / y : % == jbinop("/",x,y)
     x : % / i : Integer == jlref(concat [getind(x) , "/", string(i)])
     i : Integer / x : % == jlref(concat [string(i), "/", getind(x)])
-    cis(x)   == junfunc("cis",x)
-    cispi(x) == junfunc("cispi",x)
+    cis(x)   == junfunc("cis(",x)
+    cispi(x) == junfunc("cispi(",x)
     jcfloat64(str) ==
       ret : % := jlref(str)
       jlType(ret) ~= "ComplexF64" => error "jcfloat64: not a Julia ComplexF64"
@@ -450,7 +449,7 @@ JuliaObjInt64() : Exports == Implementation where
     jbinbop(op,a,b) ==>
       jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
     jbinfunc(func,a,b) ==>
-      jlref(concat([func, "(", getind(a), ",", getind(b),")"]))
+      jlref(concat([func, getind(a), ",", getind(b),")"]))
 
     0 == jlref("0")
     1 == jlref("1")
@@ -464,7 +463,7 @@ JuliaObjInt64() : Exports == Implementation where
       x < 0 => (- (parsei(string x) pretend Integer))::NonNegativeInteger
       parsei(string x)
     divide(a,b) ==
-      ret : JuliaObjTuple := jbinfunc("divrem",a,b)
+      ret : JuliaObjTuple := jbinfunc("divrem(",a,b)
       [ret.1 pretend %, ret.2 pretend %]
     coerce(z : Integer) == jlref(string z)
     jint64(z : Integer) == jlref(string z)
@@ -515,7 +514,7 @@ JuliaObjBigInt() : Exports == Implementation where
     jbinbop(op,a,b) ==>
       jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
     jbinfunc(func,a,b) ==>
-      jlref(concat([func, "(", getind(a), ",", getind(b),")"]))
+      jlref(concat([func, getind(a), ",", getind(b),")"]))
 
     0 == jlref("BigInt(0)")
     1 == jlref("BigInt(1)")
@@ -531,7 +530,7 @@ JuliaObjBigInt() : Exports == Implementation where
       (parsei(string x) pretend Integer)::NonNegativeInteger
     characteristic() == 0
     divide(a,b) ==
-      ret : JuliaObjTuple := jbinfunc("divrem",a,b)
+      ret : JuliaObjTuple := jbinfunc("divrem(",a,b)
       [ret.1 pretend %, ret.2 pretend %]
     jlBICApply(func, x) ==
       ret := jlref("BigInt()")
@@ -709,14 +708,14 @@ JuliaFloat() : Exports == Implementation where
 
     getind(a)  ==> concat(["getindex(refs,_"", jlId a, "_")"])
 
-    junfunc(func, a) ==> jlref(concat([func, "(", getind(a),")"]))
+    junfunc(func, a) ==> jlref(concat([func, getind(a),")"]))
     jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
     jbinfunc(func,a,b) ==>
-      jlref(concat([func, "(", getind(a), ",", getind(b),")"]))
+      jlref(concat([func, getind(a), ",", getind(b),")"]))
     jbinbop(op,a,b) ==>
       jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
     junbfunc(bfunc, a) ==>
-      jlEvalString(concat([bfunc, "(", getind(a),")"]))@Boolean
+      jlEvalString(concat([bfunc, getind(a),")"]))@Boolean
 
     precision() == jlEvalString("precision(BigFloat)")@PI
     precision(p : PI) ==
@@ -751,8 +750,8 @@ JuliaFloat() : Exports == Implementation where
       jlEvalString(concat(["isapprox(", getind(x),
         ",", getind(y), ", atol=", getind(atol),")"]))@Boolean
 
-    finite? x == junbfunc("isfinite",x)
-    integer? x == junbfunc("isinteger",x)
+    finite? x == junbfunc("isfinite(",x)
+    integer? x == junbfunc("isinteger(",x)
 
     x : % / y : % == jbinop("/", x, y)
     x : % ^ y : % == jbinop("^", x, y)
@@ -772,11 +771,11 @@ JuliaFloat() : Exports == Implementation where
     x quo y == jbinop("÷", x, y)
     x rem y == jbinop("%", x, y)
     fractionPart(x) ==
-      ret : JuliaObjTuple := junfunc("modf",x)
+      ret : JuliaObjTuple := junfunc("modf(",x)
       qelt(ret,1) pretend %
     wholePart(x) ==
-      ret : JuliaObjTuple := junfunc("modf",x)
-      parsei toString(junfunc("BigInt", qelt(ret,2)))
+      ret : JuliaObjTuple := junfunc("modf(",x)
+      parsei toString(junfunc("BigInt(", qelt(ret,2)))
     float(m, e, b) == jbinop("*",jfloat(m), jfloat(b)^e)
 
     jllMPFRApply(func, x) ==
@@ -801,47 +800,47 @@ JuliaFloat() : Exports == Implementation where
           getind(ret), ",", getind(x), ",", getind(y), ",", getind(z), ", ROUNDING_MODE[])"])
       ret
 
-    sqrt(x)  == junfunc("√",x)
-    exp(x)   == junfunc("exp",x)
-    log(x)   == junfunc("log",x)
-    expm1(x) == junfunc("expm1",x)
-    exp2(x)  == junfunc("exp2",x)
-    exp10(x) == junfunc("exp10",x)
-    log1p(x) == junfunc("log1p",x)
-    log2(x)  == junfunc("log2",x)
-    log10(x) == junfunc("log10",x)
+    sqrt(x)  == junfunc("√(",x)
+    exp(x)   == junfunc("exp(",x)
+    log(x)   == junfunc("log(",x)
+    expm1(x) == junfunc("expm1(",x)
+    exp2(x)  == junfunc("exp2(",x)
+    exp10(x) == junfunc("exp10(",x)
+    log1p(x) == junfunc("log1p(",x)
+    log2(x)  == junfunc("log2(",x)
+    log10(x) == junfunc("log10(",x)
 
-    sin(x)  == junfunc("sin",x)
-    cos(x)  == junfunc("cos",x)
-    tan(x)  == junfunc("tan",x)
-    sec(x)  == junfunc("sec",x)
-    cot(x)  == junfunc("cot",x)
-    csc(x)  == junfunc("csc",x)
+    sin(x)  == junfunc("sin(",x)
+    cos(x)  == junfunc("cos(",x)
+    tan(x)  == junfunc("tan(",x)
+    sec(x)  == junfunc("sec(",x)
+    cot(x)  == junfunc("cot(",x)
+    csc(x)  == junfunc("csc(",x)
 
-    asin(x)  == junfunc("asin",x)
-    acos(x)  == junfunc("acos",x)
-    atan(x)  == junfunc("atan",x)
-    atan(x,y) == jbinfunc("atan", x, y)
-    asec(x)  == junfunc("asec",x)
-    acot(x)  == junfunc("acot",x)
-    acsc(x)  == junfunc("acsc",x)
+    asin(x)  == junfunc("asin(",x)
+    acos(x)  == junfunc("acos(",x)
+    atan(x)  == junfunc("atan(",x)
+    atan(x,y) == jbinfunc("atan(", x, y)
+    asec(x)  == junfunc("asec(",x)
+    acot(x)  == junfunc("acot(",x)
+    acsc(x)  == junfunc("acsc(",x)
 
-    sinh(x)  == junfunc("sinh",x)
-    cosh(x)  == junfunc("cosh",x)
-    tanh(x)  == junfunc("tanh",x)
-    sech(x)  == junfunc("sech",x)
-    coth(x)  == junfunc("coth",x)
-    csch(x)  == junfunc("csch",x)
+    sinh(x)  == junfunc("sinh(",x)
+    cosh(x)  == junfunc("cosh(",x)
+    tanh(x)  == junfunc("tanh(",x)
+    sech(x)  == junfunc("sech(",x)
+    coth(x)  == junfunc("coth(",x)
+    csch(x)  == junfunc("csch(",x)
 
-    asinh(x)  == junfunc("asinh",x)
-    acosh(x)  == junfunc("acosh",x)
-    atanh(x)  == junfunc("atanh",x)
-    asech(x)  == junfunc("asech",x)
-    acoth(x)  == junfunc("acoth",x)
-    acsch(x)  == junfunc("acsch",x)
+    asinh(x)  == junfunc("asinh(",x)
+    acosh(x)  == junfunc("acosh(",x)
+    atanh(x)  == junfunc("atanh(",x)
+    asech(x)  == junfunc("asech(",x)
+    acoth(x)  == junfunc("acoth(",x)
+    acsch(x)  == junfunc("acsch(",x)
 
-    cis(x)   == junfunc("cis",x)
-    cispi(x) == junfunc("cispi",x)
+    cis(x)   == junfunc("cis(",x)
+    cispi(x) == junfunc("cispi(",x)
 
     convert(x : %) : Float ==
       tmp := jlref(concat(["QQ(rationalize(BigInt,", getind(x),"))"]))$NemoRational
@@ -954,14 +953,14 @@ JuliaComplexFloat() : Exports == Implementation where
     Rep := SExpression
     getind(a)  ==> concat(["getindex(refs,_"", jlId a, "_")"])
 
-    junfunc(func, a) ==> jlref(concat([func, "(", getind(a),")"]))
+    junfunc(func, a) ==> jlref(concat([func, getind(a),")"]))
     jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
     jbinfunc(func,a,b) ==>
-      jlref(concat([func, "(", getind(a), ",", getind(b),")"]))
+      jlref(concat([func, getind(a), ",", getind(b),")"]))
     jbinbop(op,a,b) ==>
       jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
     junbfunc(bfunc, a) ==>
-      jlEvalString(concat([bfunc, "(", getind(a),")"]))@Boolean
+      jlEvalString(concat([bfunc, getind(a),")"]))@Boolean
 
     0           == jlref("zero(Complex{BigFloat})")
     1           == jlref("one(Complex{BigFloat})")
@@ -983,9 +982,9 @@ JuliaComplexFloat() : Exports == Implementation where
       jlEvalString(concat(["isapprox(", getind(x),
         ",", getind(y), ",atol=", getind(atol),")"]))@Boolean
 
-    finite? x == junbfunc("isfinite",x)
-    integer? x == junbfunc("isinteger",x)
-    real? x == junbfunc("isreal",x)
+    finite? x == junbfunc("isfinite(",x)
+    integer? x == junbfunc("isinteger(",x)
+    real? x == junbfunc("isreal(",x)
 
     x : % / y : % == jbinop("/", x, y)
     x : % ^ y : % == jbinop("^", x, y)
@@ -998,47 +997,47 @@ JuliaComplexFloat() : Exports == Implementation where
     x quo y == jbinop("÷", x, y)
     x rem y == jbinop("%", x, y)
 
-    sqrt(x)  == junfunc("√",x)
-    exp(x)   == junfunc("exp",x)
-    log(x)   == junfunc("log",x)
-    expm1(x) == junfunc("expm1",x)
-    exp2(x)  == junfunc("exp2",x)
-    exp10(x) == junfunc("exp10",x)
-    log1p(x) == junfunc("log1p",x)
-    log2(x)  == junfunc("log2",x)
-    log10(x) == junfunc("log10",x)
+    sqrt(x)  == junfunc("√(",x)
+    exp(x)   == junfunc("exp(",x)
+    log(x)   == junfunc("log(",x)
+    expm1(x) == junfunc("expm1(",x)
+    exp2(x)  == junfunc("exp2(",x)
+    exp10(x) == junfunc("exp10(",x)
+    log1p(x) == junfunc("log1p(",x)
+    log2(x)  == junfunc("log2(",x)
+    log10(x) == junfunc("log10(",x)
 
-    sin(x)  == junfunc("sin",x)
-    cos(x)  == junfunc("cos",x)
-    tan(x)  == junfunc("tan",x)
-    sec(x)  == junfunc("sec",x)
-    cot(x)  == junfunc("cot",x)
-    csc(x)  == junfunc("csc",x)
+    sin(x)  == junfunc("sin(",x)
+    cos(x)  == junfunc("cos(",x)
+    tan(x)  == junfunc("tan(",x)
+    sec(x)  == junfunc("sec(",x)
+    cot(x)  == junfunc("cot(",x)
+    csc(x)  == junfunc("csc(",x)
 
-    asin(x)  == junfunc("asin",x)
-    acos(x)  == junfunc("acos",x)
-    atan(x)  == junfunc("atan",x)
-    atan(x,y) == jbinfunc("atan", x, y)
-    asec(x)  == junfunc("asec",x)
-    acot(x)  == junfunc("acot",x)
-    acsc(x)  == junfunc("acsc",x)
+    asin(x)  == junfunc("asin(",x)
+    acos(x)  == junfunc("acos(",x)
+    atan(x)  == junfunc("atan(",x)
+    atan(x,y) == jbinfunc("atan(", x, y)
+    asec(x)  == junfunc("asec(",x)
+    acot(x)  == junfunc("acot(",x)
+    acsc(x)  == junfunc("acsc(",x)
 
-    sinh(x)  == junfunc("sinh",x)
-    cosh(x)  == junfunc("cosh",x)
-    tanh(x)  == junfunc("tanh",x)
-    sech(x)  == junfunc("sech",x)
-    coth(x)  == junfunc("coth",x)
-    csch(x)  == junfunc("csch",x)
+    sinh(x)  == junfunc("sinh(",x)
+    cosh(x)  == junfunc("cosh(",x)
+    tanh(x)  == junfunc("tanh(",x)
+    sech(x)  == junfunc("sech(",x)
+    coth(x)  == junfunc("coth(",x)
+    csch(x)  == junfunc("csch(",x)
 
-    asinh(x)  == junfunc("asinh",x)
-    acosh(x)  == junfunc("acosh",x)
-    atanh(x)  == junfunc("atanh",x)
-    asech(x)  == junfunc("asech",x)
-    acoth(x)  == junfunc("acoth",x)
-    acsch(x)  == junfunc("acsch",x)
+    asinh(x)  == junfunc("asinh(",x)
+    acosh(x)  == junfunc("acosh(",x)
+    atanh(x)  == junfunc("atanh(",x)
+    asech(x)  == junfunc("asech(",x)
+    acoth(x)  == junfunc("acoth(",x)
+    acsch(x)  == junfunc("acsch(",x)
 
-    cis(x)   == junfunc("cis",x)
-    cispi(x) == junfunc("cispi",x)
+    cis(x)   == junfunc("cis(",x)
+    cispi(x) == junfunc("cispi(",x)
 
     urand01() == jlref("rand(Complex{BigFloat})")
     nrand()   == jlref("randn(Complex{BigFloat})")
@@ -1112,7 +1111,7 @@ JuliaDataFrame() : Exports == Implementation where
       jlEvalString("function dfa(obj) DataFrame(obj, :auto) end")@Void
 
       Rep := SExpression
-      junfunc(op, a) ==> jlref(concat([op, "(", getind(a),")"]))
+      junfunc(op, a) ==> jlref(concat([op, getind(a),")"]))
 
       elt(obj : %, jsy : JuliaSymbol) ==
         defined := concat(["hasproperty(", getind(obj), ",",
@@ -1126,10 +1125,10 @@ JuliaDataFrame() : Exports == Implementation where
         jlref(concat([getind(obj), "[!,", string(ind), "]"]))
       qelt(obj : %, ind : Integer) ==
         jlref(concat([getind(obj), "[!,", string(ind), "]"]))
-      jlDescribe(df) == junfunc("describe", df)
-      matrix(df) == junfunc("Matrix", df)
+      jlDescribe(df) == junfunc("describe(", df)
+      matrix(df) == junfunc("Matrix(", df)
       jdframe(array) ==
-        junfunc("dfa", coerce(array)$JuliaMatrix(JuliaObjFloat64))
+        junfunc("dfa(", coerce(array)$JuliaMatrix(JuliaObjFloat64))
       jdframe(array, lnames) ==
         tls := first lines formatExpression(lnames::OutputForm)$Format1D
         jlref(concat(["DataFrame(",
@@ -1178,17 +1177,17 @@ JuliaVector(R : JuliaObjectType) : Exports == Implementation where
 
       getind(a) ==> concat(["getindex(refs,_"", jlId a, "_")"])
       jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
-      junfunc(func,a) ==> jlref(concat([func, "(", getind(a),")"]))
+      junfunc(func,a) ==> jlref(concat([func, getind(a),")"]))
       jbinfunc(func,a,b) ==>
-        jlref(concat([func, "(", getind(a), ",", getind(b),")"]))
+        jlref(concat([func, getind(a), ",", getind(b),")"]))
       jterfunc(func,a,b,c) ==>
-        jlref(concat([func, "(", getind(a), ",", getind(b), ",", getind(c), ")"]))
+        jlref(concat([func, getind(a), ",", getind(b), ",", getind(c), ")"]))
       jbinbop(op,a,b) ==>
         jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
       junbfunc(bfunc, a) ==>
-        jlEvalString(concat([bfunc, "(", getind(a),")"]))@Boolean
+        jlEvalString(concat([bfunc, getind(a),")"]))@Boolean
       jbinbfunc(bfunc, a, b) ==>
-        jlEvalString(concat([bfunc, "(", getind(a), ",",
+        jlEvalString(concat([bfunc, getind(a), ",",
           getind(b),")"]))@Boolean
 
       jlInitialize(true)
@@ -1218,7 +1217,7 @@ JuliaVector(R : JuliaObjectType) : Exports == Implementation where
 
       x + y == jbinop("+", x, y)
       x - y == jbinop("-", x, y)
-      - x   == junfunc("-", x)
+      - x   == junfunc("-(", x)
       a : R * v : % == jbinop("*", a, v)
       v : % * a : R == jbinop("*", v, a)
       x : Integer * y : % == jlref(concat([string(x), "*", getind(y)]))
@@ -1252,10 +1251,10 @@ JuliaVector(R : JuliaObjectType) : Exports == Implementation where
           setelt!(c, i, f(qelt(a, i), qelt(b, i)))
         c
 
-      kroneckerProduct(v1,v2) == jbinfunc("kron",v1,v2)
+      kroneckerProduct(v1,v2) == jbinfunc("kron(",v1,v2)
       copy(v) == jlref(concat(["deepcopy(", getind(v),")"]))
-      sort(v : %) == junfunc("sort",v)
-      sort!(v : %) == junfunc("sort!",v)
+      sort(v : %) == junfunc("sort(",v)
+      sort!(v : %) == junfunc("sort!(",v)
       
       jlDisplay(v) ==
         jlEvalString(concat(["display(", getind(v), ")"]))@Void
@@ -1407,9 +1406,9 @@ JuliaMatrix(R : JuliaObjectRing) :  Exports == Implementation where
 
       getind(m)  ==> concat(["getindex(refs,_"", jlId m, "_")"])
       jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
-      junfunc(op, a) ==> jlref(concat([op, "(", getind(a),")"]))
+      junfunc(op, a) ==> jlref(concat([op, getind(a),")"]))
       jbinfunc(func,a,b) ==> 
-        jlref(concat([func, "(", getind(a), ",", getind(b), ")"]))
+        jlref(concat([func, getind(a), ",", getind(b), ")"]))
       jbinbop(op,a,b) ==>
         jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
 
@@ -1518,7 +1517,7 @@ JuliaMatrix(R : JuliaObjectRing) :  Exports == Implementation where
       zero(m,n) == new(m, n, 0$R)
       x + y == jbinop("+", x, y)
       x - y == jbinop("-", x, y)
-      - x   == junfunc("-", x)
+      - x   == junfunc("-(", x)
       x : % * y : % == jbinop("*", x, y)
       a : R * m : % == jbinop("*", a, m)
       m : % * a : R == jbinop("*", m, a)
@@ -1526,7 +1525,7 @@ JuliaMatrix(R : JuliaObjectRing) :  Exports == Implementation where
       x : Integer * y : % == jlref(concat([string(x), "*", getind(y)]))
 
       if not R has NemoType then
-        kroneckerProduct(m1,m2) == jbinfunc("kron",m1,m2)
+        kroneckerProduct(m1,m2) == jbinfunc("kron(",m1,m2)
         jlApprox?(x, y) ==
           jlEvalString(concat(["isapprox(", getind(x),
             ",", getind(y), ")"]))@Boolean
@@ -1565,7 +1564,7 @@ JuliaMatrix(R : JuliaObjectRing) :  Exports == Implementation where
         if R is JuliaFloat or R is JuliaComplexFloat then
           rank(m) == rank(m)$MLAF
         else
-          rank(m) == parsei string junfunc("rank", m)
+          rank(m) == parsei string junfunc("rank(", m)
         nullity(m) == nullity(m)$MLAF
         nullSpace(m) == nullSpace(m)$MLAF
         invertIfCan(m) == invertIfCan(m)$MLAF
@@ -1573,7 +1572,7 @@ JuliaMatrix(R : JuliaObjectRing) :  Exports == Implementation where
         rowEchelon(m) == rowEchelon(m)$MLAF
 
       -- if R has Field then (is not necessary)
-      inverse(m) == junfunc("inv", m)
+      inverse(m) == junfunc("inv(", m)
 
       if R is JuliaObjInt64 then -- returns a Julia Float64 so convert it
         determinant(m) == jlref(concat(["Int64(det(", getind(m),"))"]))$R
