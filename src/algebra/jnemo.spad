@@ -809,6 +809,8 @@ InnerNemoExactComplexField(Options : JuliaObject) : Exports == Implementation wh
     ++ exp() returns ℯ (exp(1)).
     exp1    : () -> %
     ++ exp() returns ℯ (exp(1)).
+    eulerGamma : () -> %
+    ++ eulerGamma() returns the Euler's constant gamma (γ).
     pi      : () -> %
     ++ pi() returns π.
     infinity : () -> %
@@ -956,6 +958,7 @@ InnerNemoExactComplexField(Options : JuliaObject) : Exports == Implementation wh
     pi() == jlref(concat ["const_pi(",NECF,")"])
     exp1() == jlref(concat ["exp(",NECF,"(1))"])
     exp() == jlref(concat ["exp(",NECF,"(1))"])
+    eulerGamma() == jlref(concat ["const_euler(",NECF,")"])
     infinity() == jlref(concat ["unsigned_infinity(", NECF,")"])
     infinity(x) == junfunc("infinity(", x)
     positiveInfinity() == jlref(concat ["infinity(", NECF,")"])

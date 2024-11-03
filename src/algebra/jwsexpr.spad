@@ -45,6 +45,8 @@ JuliaWSExpression() : Exports == Implementation where
     ++ ceiling(x) returns the smallest integer greater than or equal to x.
     exp     : () -> %
     ++ exp() returns ℯ (%e or exp(1)).
+    eulerGamma : () -> %
+    ++ eulerGamma() returns the Euler's constant gamma (γ).
     sinc    : % -> %
     ++ sinc(x) computes the unormalized sinc of x, sin(x)/x and 0 if x = 0.
     log2    : % -> %
@@ -1005,6 +1007,7 @@ JuliaWSExpression() : Exports == Implementation where
 
     pi()  == jlref("W_"Pi_"")
     exp() == jlref("W_"E_"")
+    eulerGamma() == jlref("W_"EulerGamma_"")
     real(z)      == junfunc("W_"Re_"(", z)
     imag(z)      == junfunc("W_"Im_"(", z)
 
