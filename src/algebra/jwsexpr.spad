@@ -34,7 +34,8 @@ JuliaWSExpression() : Exports == Implementation where
     member? : (%, %) -> Boolean
     ++ member?(list, expr) checks if expr is in list.
     key? : (%, %) -> Boolean
-    ++ key(as,key) checks wheter or not key exist in the assoiation as. 
+    ++ key?(assoc,key) checks wheter or not key exist
+    ++ in the association assoc. 
     "^"     : (%, JuliaWSRational) -> %
     ++ ^ is the exponentiation by a rational.
     round : % -> %
@@ -45,8 +46,16 @@ JuliaWSExpression() : Exports == Implementation where
     ++ ceiling(x) returns the smallest integer greater than or equal to x.
     exp     : () -> %
     ++ exp() returns ℯ (%e or exp(1)).
+    degree : () -> %
+    ++ degree() returns conversion factor from degrees to radians, π/180.
     eulerGamma : () -> %
     ++ eulerGamma() returns the Euler's constant gamma (γ).
+    positiveInfinity : () -> %
+    ++ positiveInfinity() returns positive infinity (∞).
+    catalan : () -> %
+    ++ catalan() returns Catalan's contant.
+    goldenRatio : () -> %
+    ++ goldenRatio() returns the golden ratio.
     sinc    : % -> %
     ++ sinc(x) computes the unormalized sinc of x, sin(x)/x and 0 if x = 0.
     log2    : % -> %
@@ -61,6 +70,14 @@ JuliaWSExpression() : Exports == Implementation where
     ++ erfc(x) computes the complementary error function.
     dawson  : % -> %
     ++ dawson(x) computes the Dawson integral of x.
+    -- TODO: JWSINT package
+    eulerPhi : JuliaWSInteger -> %
+    ++ eulerPhi(n) is the totient function i.e. the number of integers
+    ++ that are relatively prime to n in the range [1,n].
+    eulerE : JuliaWSInteger -> %
+    ++ eulerE(n) returns the Euler number En.
+    eulerE : (JuliaWSInteger, %) -> %
+    ++ eulerE(n,z) return the Euler E polynomial of degree n.
     lambertW : (JuliaWSInteger, %) -> %
     ++ lambertW(k,z) returns the k-th solution to LambertW function.
     haversine : % -> %
@@ -972,6 +989,7 @@ JuliaWSExpression() : Exports == Implementation where
     ++ \example{jWSExpr "Today"}
   Implementation ==> JuliaObject add
     import from JuliaUtilityFunctions
+    import from JuliaWSInteger
 
     jbinop(op,a,b) ==> jlref(concat(["weval(", getind(a), op, getind(b),")"]))
     junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
@@ -1007,7 +1025,12 @@ JuliaWSExpression() : Exports == Implementation where
 
     pi()  == jlref("W_"Pi_"")
     exp() == jlref("W_"E_"")
+    degree() == jlref("W_"Degree_"")
+    positiveInfinity() == jlref("W_"Infinity_"")
     eulerGamma() == jlref("W_"EulerGamma_"")
+    catalan() == jlref("W_"Catalan_"")
+    goldenRatio() == jlref("W_"GoldenRatio_"")
+
     real(z)      == junfunc("W_"Re_"(", z)
     imag(z)      == junfunc("W_"Im_"(", z)
 
@@ -1118,6 +1141,11 @@ JuliaWSExpression() : Exports == Implementation where
 
     riemannZeta(x) == junfunc("W_"Zeta_"(",x)
     riemannZeta(x,y) == jbinfunc("W_"Zeta_"(",x, y)
+
+    eulerPhi(n) == junfunc("W_"EulerPhi_"(", n)
+    eulerE(n) == junfunc("W_"EulerE_"(", n)
+    eulerE(n,x) == jbinfunc("W_"EulerE_"(", n, x)
+
     lambertW(x) == junfunc("W_"ProductLog_"(",x)
     lambertW(x,y) == jbinfunc("W_"ProductLog_"(",x, y)
     polygamma(x,y) == jbinfunc("W_"PolyGamma_"(", x, y)

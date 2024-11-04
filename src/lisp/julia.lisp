@@ -128,6 +128,7 @@
 
 ; double-float array creation
 ; 2D
+ 
 (defmacro |make_df_array2| (sizea sizeb)
      `(make-array (* (the fixnum ,sizea) (the fixnum ,sizeb)) :element-type 'double-float))
 ;    (make-array (list sizeb sizea) :element-type 'double-float))

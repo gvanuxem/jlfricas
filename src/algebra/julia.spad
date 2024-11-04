@@ -108,10 +108,11 @@ JuliaFloat64() : Exports == Implementation where
     PI      ==> PositiveInteger
     JI64    ==> JuliaInt64
     parsef  ==> READ_-FROM_-STRING$Lisp
-    Exports ==> Join (JuliaType, ConvertibleTo(InputForm),FloatingPointSystem,
-                    ElementaryFunctionCategory, TranscendentalFunctionCategory,
-                      DifferentialRing) with
-                      -- SpecialFunctionCategory) with
+    Exports ==> Join (JuliaType, CoercibleTo(DoubleFloat),
+                  CoercibleFrom(DoubleFloat), ConvertibleFrom(Float),
+                  ConvertibleTo(InputForm), FloatingPointSystem,
+                  ElementaryFunctionCategory, TranscendentalFunctionCategory,
+                  DifferentialRing) with
       jlF64Format : String -> String
       ++ change the output format using Lisp format strings.
       jlApprox?: (%, %) -> Boolean
@@ -119,10 +120,6 @@ JuliaFloat64() : Exports == Implementation where
       ++ with default parameters.
       ++ Two numbers compare equal if their relative distance
       ++ or their absolute distance is within tolerance bounds.
-      coerce  : % -> DoubleFloat
-      coerce  : DoubleFloat -> %
-      convert  : Float -> %
-      convert : % -> String
       jf64    : DoubleFloat -> %
       ++ jf64(x) coerces x to a Julia Float64.
       jf64    : Integer -> %
@@ -172,6 +169,12 @@ JuliaFloat64() : Exports == Implementation where
      -- ++ atan(x) computes the inverse tangent of x.
       atan : (%, %) -> %
       ++ atan(x, y) computes the inverse tangent of x/y.
+      eulerGamma : () -> %
+      ++ eulerGamma() returns the Euler's constant gamma (γ).
+      catalan : () -> %
+      ++ catalan() return the Catalan's constant.
+      goldenRation : () -> %
+      ++ goldenRation() returns the golden ratio.
       nan: () -> %
       ++ nan() returns the Julia Float64 NaN (not a number) constant.
       positiveInfinity: () -> %
@@ -182,7 +185,7 @@ JuliaFloat64() : Exports == Implementation where
       ++ negtive infinity constant.
       string : % -> String
       hashUpdate! : (HashState, %) -> HashState
-    Implementation ==> add
+    Implementation ==> DoubleFloat add
       import from JuliaUtilityFunctions
       import from String
 
@@ -215,6 +218,10 @@ JuliaFloat64() : Exports == Implementation where
       positiveInfinity() == POSITIVE_-INFINITY$Lisp
       negativeInfinity() == NEGATIVE_-INFINITY$Lisp
       nan() : % == NAN$Lisp
+      eulerGamma() : % ==
+        jl_dbl_eval_string("Float64(Base.MathConstants.eulergamma)")$Lisp
+      catalan() : % == jl_dbl_eval_string("Float64(Base.MathConstants.catalan)")$Lisp
+      goldenRation() : % == jl_dbl_eval_string("Float64(Base.MathConstants.golden)")$Lisp
 
       urand01()        == jl_dbl_eval_string("rand(Float64)")$Lisp
       nrand()        == jl_dbl_eval_string("randn(Float64)")$Lisp
@@ -229,7 +236,9 @@ JuliaFloat64() : Exports == Implementation where
 
       x < y            == less_DF(x, y)$Lisp
       x = y            == eql_DF(x, y)$Lisp
-      jlApprox?(x, y)  == jl_bool_function_dbl_dbl("isapprox", x, y)$Lisp
+      jlApprox?(x, y)  == jl_bool_function_dbl_dbl("isapprox",x,y)$Lisp
+        -- TODO: ???
+        -- jlBoolFunction2F64("isapprox", x, y)
       - x              == minus_DF(x)$Lisp
       x + y            == add_DF(x, y)$Lisp
       x : % - y : %    == sub_DF(x, y)$Lisp
@@ -355,6 +364,7 @@ JuliaFloat64() : Exports == Implementation where
       convert(x : Float) == convert(x)@DoubleFloat pretend %
       convert(x : %) : String ==
         FORMAT(NIL$Lisp, format, x)$Lisp
+      -- TODO: use Julia formatting routines
       convert(x : %) : String == toString(x pretend DoubleFloat)
       string(x : %) : String == toString(x pretend DoubleFloat)
       toString(x : %) == toString(x pretend DoubleFloat)
@@ -376,7 +386,7 @@ JuliaFloat64() : Exports == Implementation where
 ++ Author: G. Vanuxem
 ++ Date Created:
 ++ Description: \spadtype{JuliaComplexF64} implements complex 64 bits
-++ floating point arithmetic using Julia Float64.
+++ floating point arithmetic using Julia Complex{Float64}.
 JuliaComplexF64() : Exports == Implementation where
     JF64  ==> JuliaFloat64
     Exports ==> Join(JuliaType, ComplexCategory(JuliaFloat64)) with

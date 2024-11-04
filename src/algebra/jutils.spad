@@ -77,6 +77,9 @@ JuliaUtilityFunctions() : Exports == Implementation where
     jlFunction3F64 : (STR, JF64, JF64, JF64) -> Void
     ++ jlFunction3F64(func,x,y,z)
 
+    jlBoolFunction2F64 : (STR, JF64, JF54) -> Boolean
+    ++ jlBoolFunction2F64
+
     jlI64FunctionF64 : (STR, JF64) -> JI64
     ++ jlI64FunctionF64(func,x) 
     jlF64FunctionF64I64 : (STR, JF64, JI64) -> JF64
@@ -217,6 +220,8 @@ JuliaUtilityFunctions() : Exports == Implementation where
     jlEvalString(s : STR)   : STR     == jl_string_eval_string(s)$Lisp
     jlEvalString(s : STR)   : JF64    == jl_dbl_eval_string(s)$Lisp
 
+    jlBoolFunction2F64(func,a,b) == jl_bool_function_dbl_dbl(func,a,b)$Lisp
+
     jlFunctionF64(func,a) == jl_function_dbl(func,a)$Lisp
     jlFunction2F64(func,a,b) == jl_function_dbl_dbl(func,a,b)$Lisp
     jlFunction3F64(func,a,b,c) == jl_function_dbl_dbl_dbl(func,a,b,c)$Lisp
@@ -343,7 +348,7 @@ JuliaStringUtilities() : Exports == Implementation where
       ++ in str with subst. More information in String documentation of Julia.
       ++ For example:
       ++  jlRegexReplace(jlRegex("!"), jlSubstitute(" you"), "hey!")
-    Implementation ==> String add
+    Implementation ==> add
       import from JuliaUtilityFunctions
       import from String
       import from AssociationList(String,String)
