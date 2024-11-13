@@ -778,13 +778,15 @@ NemoFiniteField(p : PositiveInteger, n: PositiveInteger) : Exports == Implementa
 ++  \spadtype{InnerNemoExactComplexField} implements exact complex field
 ++  arithmetic using the Nemo package Inner domain using options,
 ++  see https://fredrikj.net/calcium/ca.html#context-options for hints).
-++  Reference: https://www.nemocas.org (previously https://arblib.org)
-InnerNemoExactComplexField(Options : JuliaObject) : Exports == Implementation where
+++  Reference: https://nemocas.github.io/Nemo.jl
+++  See https://flintlib.org/doc/introduction_calcium.html for the C library.
+InnerNemoExactComplexField(Options : JuliaObject) : Exports ==
+      Implementation where
   JI64      ==> JuliaInt64
   PI        ==> PositiveInteger
   JF64      ==> JuliaFloat64
   Exports ==> Join(NemoRing, CommutativeRing, RadicalCategory,
-            ComplexCategory(NemoRational), TranscendentalFunctionCategory) with
+            ComplexCategory(%), TranscendentalFunctionCategory) with
     real?    : % -> Boolean
     ++ real?(z) checks whether or not z is a real number. 
     integer? : % -> Boolean
@@ -905,7 +907,8 @@ InnerNemoExactComplexField(Options : JuliaObject) : Exports == Implementation wh
     ++ with depth - 1. depth is not used for rationals. type can be one of:
     ++ :rational (returns a rational)
     ++ :null (returns value with default settings)
-    ++ :special (returns a special value o a number - can throw an error if it isn't a number).
+    ++ :special (returns a special value of a number - can
+    ++ throw an error if it isn't a number).
 
     "*"      : (%, Integer) -> %
     "/"      : (Integer, %) -> %
@@ -1105,7 +1108,7 @@ InnerNemoExactComplexField(Options : JuliaObject) : Exports == Implementation wh
         jlref(concat["QQBar(", getind(x),")"])$NemoAlgebraicNumber
       "failed"
 
-    complex(r : NemoRational, i : NemoRational) ==
+    complex(r, i) ==
       jlref(concat([NECFP, getind(r),"+onei(",NECF,")*", getind(i), ")"]))
 
     convert(x) : InputForm == string(x) pretend InputForm
@@ -1137,7 +1140,8 @@ InnerNemoExactComplexField(Options : JuliaObject) : Exports == Implementation wh
 ++ Description:
 ++  \spadtype{NemoExactComplexField} implements exact complex field
 ++  arithmetic using the Nemo package.
-++ Reference: https://www.nemocas.org (previously https://arblib.org)
+++  Reference: https://nemocas.github.io/Nemo.jl
+++  See https://flintlib.org/doc/introduction_calcium.html for the C library.
 NemoExactComplexField() ==
   InnerNemoExactComplexField(jobject("Dict{Symbol,Int64}()"))
 
