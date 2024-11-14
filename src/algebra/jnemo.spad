@@ -7,7 +7,7 @@
 ++ Author: G.Vanuxem
 ++ Date Created: Apr, 2024
 ++ Description:
-++  Parent category of Nemo Ring elements.
+++  Parent category of Nemo elements.
 NemoType() : Category == JuliaObjectType
 
 )abbrev category NRING NemoRing
@@ -20,8 +20,8 @@ NemoRing() : Category == Join(NemoType, JuliaObjectRing)
 
 )abbrev category JARBPR JuliaArbitraryPrecision
 ++ Description:
-++ Approximate numbers for which the user can get the
-++ precision for subsequent calculations.
+++  Approximate numbers for which the user can get the
+++  precision for subsequent calculations.
 JuliaArbitraryPrecision() : Category ==  JuliaType with
     arbitraryPrecision
     precision: () -> PositiveInteger
@@ -161,13 +161,12 @@ NemoRational() : Exports == Implementation where
     ++ factorFraction(r) factors the numerator and the denominator of
     ++ the fraction r.
     "*"     : (%, Integer) -> %
-    -- Force the interpreter:
-    --"/"     : (NemoInteger, NemoInteger) -> %
     coerce  : Fraction(Integer) -> %
     coerce  : NemoInteger -> %
     jnrat   : Integer -> %
     jnrat   : Fraction(Integer) -> %
     jnrat   : NemoInteger -> %
+    jnrat   : (NemoInteger, NemoInteger) -> %
   Implementation ==> add
     import from JuliaUtilityFunctions
     import from String
@@ -257,10 +256,15 @@ NemoRational() : Exports == Implementation where
     coerce(x : Fraction(Integer)) ==
       jlref(concat(["QQ(", string(numer x), "//", string(denom x),")"]))
     coerce(fi : %) : OutputForm ==
-      jlRegexReplace(jlRegex("//"), jlSubstitute("/"),
-        string(fi)) pretend OutputForm
+      --jlRegexReplace(jlRegex("//"), jlSubstitute("/"),
+      --  string(fi)) pretend OutputForm
+      -- A matter of taste (expensive here)
+      coerce(retract(fi)@Fraction(Integer))
     jnrat(i : Integer) == coerce(i)
     jnrat(fi : Fraction Integer) == coerce(fi)
+    -- Don't know to force FriCAS to use "/" on NemoIntegers
+    -- to return a NemoRational
+    jnrat(num : NemoInteger, den : NemoInteger) == jbinop("//", num, den)
     jnrat(ji : NemoInteger) == coerce(ji)
 
 )abbrev domain NAN NemoAlgebraicNumber
@@ -282,12 +286,10 @@ NemoAlgebraicNumber() : Exports == Implementation where
   Exports ==> Join(NemoRing, ExpressionSpace, AlgebraicallyClosedField,
                         RetractableTo NemoInteger, RetractableTo NemoRational,
                         RetractableTo Integer, RetractableTo Fraction(Integer),
-                        LinearlyExplicitOver NemoInteger, -- RealConstant ???,
+                        LinearlyExplicitOver NemoInteger,
                         LinearlyExplicitOver Fraction NemoInteger,
                         PolynomialFactorizationExplicit,
-                        CharacteristicZero,
-                        -- ConvertibleTo InputForm,
-                        DifferentialRing) with
+                        CharacteristicZero, DifferentialRing) with
     "*"     : (%, Integer) -> %
     ++ a*z multitiplies a by the integer z.
     "^"     : (%, %) -> %
@@ -1190,7 +1192,10 @@ NemoFactored(R : Join(NemoType, IntegralDomain)) :
       for i in 1..sz repeat
         c := jlref(concat(["tmp[", string(i), "][1]"]))$R
         e := jlEvalString(concat(["tmp[", string(i), "][2]"]))@NNI
-        ret := concat(["irred", c, e]$FFE, ret)
+        if R is NemoInteger then
+          ret := concat(["prime", c, e]$FFE, ret)
+        else
+          ret := concat(["irred", c, e]$FFE, ret)
       jlEvalString("tmp=nothing")@Void
       makeFR(jlref(concat(["unit(", getind(fr), ")"]))$R, ret)$Factored(R)
       
