@@ -25,7 +25,7 @@ If you want to use [jFriCAS](https://jfricas.readthedocs.io/en/latest/) i.e. Jup
 
 To know which categories/domains/packages are added to FriCAS issue in the
 FriCAS interpreter <code>)what things julia</code> and/or <code>)what things nemo</code> or use HyperDoc. Another source of information can be found in HTML format at [here](https://gvanuxem.github.io/jlfricas.documentation/).
-Take into account that this is absolutely not the official documentation even though it is highly based on the official FriCAS web site which can be build from the FriCAS source code (thanks to Ralf Hemmecke for its amazing work). 
+Take into account that this is absolutely not the official documentation even though it is highly based on the official FriCAS web site which can be build from the FriCAS source code (thanks to Ralf Hemmecke and and Kurt Pagani for their amazing work). 
 
 If you want to build and install the HTML documentation,
 you need to install Sphinx. On a Debian like system, to add it, issue in a
