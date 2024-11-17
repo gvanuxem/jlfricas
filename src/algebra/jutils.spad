@@ -9,7 +9,9 @@ JuliaUtilityFunctions() : Exports == Implementation where
   PI        ==> PositiveInteger
   JSYM      ==> JuliaSymbol
   JI64      ==> JuliaInt64
+  JF32      ==> JuliaFloat32
   JF64      ==> JuliaFloat64
+  JCF32     ==> JuliaComplexF32
   JCF64     ==> JuliaComplexF64
   JF64VEC   ==> JuliaFloat64Vector
   JF64MAT   ==> JuliaFloat64Matrix
@@ -40,6 +42,11 @@ JuliaUtilityFunctions() : Exports == Implementation where
     jlAddPackage  : String -> Void
     ++ jlAddPackage(package) add package to Julia project.
 
+    jlApprox?: (JCF32, JCF32) -> Boolean
+    ++ jlApprox?(x,y) computes inexact equality comparison
+    ++ with default parameters. Two numbers compare equal
+    ++ if their relative distance or their absolute distance
+    ++ is within tolerance bounds. Applied component-wise.
     jlApprox?: (JCF64, JCF64) -> Boolean
     ++ jlApprox?(x,y) computes inexact equality comparison
     ++ with default parameters. Two numbers compare equal
@@ -77,7 +84,7 @@ JuliaUtilityFunctions() : Exports == Implementation where
     jlFunction3F64 : (STR, JF64, JF64, JF64) -> Void
     ++ jlFunction3F64(func,x,y,z)
 
-    jlBoolFunction2F64 : (STR, JF64, JF54) -> Boolean
+    jlBoolFunction2F64 : (STR, JF64, JF64) -> Boolean
     ++ jlBoolFunction2F64
 
     jlI64FunctionF64 : (STR, JF64) -> JI64
@@ -184,23 +191,128 @@ JuliaUtilityFunctions() : Exports == Implementation where
     ++ func to the matrix cmat and returns the result in carray. It is FriCAS
     ++ that puts, at the C level, the resulting matrix in carray.
 
-    median: JF64VEC -> JF64
-    ++ median(vec) returns median of the elements of vector vec.
-    mean  : JF64VEC -> JF64
-    ++ mean(vec) returns mean of the elements of vector vec.
-    var   : JF64VEC -> JF64
-    ++ var(vec) returns variance of the elements of vector vec.
-    std   : JF64VEC -> JF64
-    ++ std(vec) returns standard deviation (sum scaled with n-1)
-    ++ of the elements of vector vec.
+
+
+    jlFunctionF32 : (STR, JF32) -> Void
+    ++ jlFunctionF32(func,x)
+    jlFunction2F32 : (STR, JF32, JF32) -> Void
+    ++ jlFunction2F32(func,x,y)
+    jlFunction3F32 : (STR, JF32, JF32, JF32) -> Void
+    ++ jlFunction3F32(func,x,y,z)
+
+    jlBoolFunction2F32 : (STR, JF32, JF32) -> Boolean
+    ++ jlBoolFunction2F32
+
+    jlI64FunctionF32 : (STR, JF32) -> JI64
+    ++ jlI64FunctionF32(func,x) 
+    jlF32FunctionF32I64 : (STR, JF32, JI64) -> JF32
+    ++ jlF32FunctionF32I64(func,x,i)
+    jlF32FunctionI64F32 : (STR, JI64, JF32) -> JF32
+    ++ jlF32FunctionI64F32(func,i,x)
+    jlF32FunctionF32 : (STR, JF32) -> JF32
+    ++ jlF32FunctionF32(func,x)
+    jlF32Function2F32 : (String, JF32, JF32) -> JF32
+    ++ jlF32Function2F32(func,x,y)
+    jlF32Function3F32 : (STR, JF32, JF32, JF32) -> JF32
+    ++ jlF32Function3F32(func, x, y, z)
+
+    jlFunctionF32Vec : (STR, JF32VEC) -> Void
+    ++ jlFunctionF32Vector(func, vec) applies func to vec.
+    jlFunctionCF32Vec : (STR, JCF32VEC) -> Void
+    ++ jlF32FunctionF32Vec(func, vec) applies func to cvec.
+    jlF32FunctionF32Vec : (STR, JF32VEC) -> JF32
+    ++ jlF32FunctionCF32Vec(func, vec) returns the output value
+    ++ of func applied to vec.
+    jlF32FunctionCF32Vec : (STR, JCF32VEC) -> JF32
+    ++ jlF32FunctionCF32Vec(func, cvec) returns the output value
+    ++ of func applied to cvec.
+    jlF32FunctionF32VecF32 : (STR, JF32VEC, JF32) -> JF32
+    ++ jlF32FunctionCF32Vec(func, vec, p) returns the output value
+    ++ of func applied to vec with parameter p.
+    jlF32FunctionCF32VecF32 : (STR, JCF32VEC, JF32) -> JF32
+    ++ jlF32FunctionCF32Vec(func, cvec, p) returns the output value
+    ++ of func applied to cvec with parameter p.
+
+    jlFunction2F32Vec! : (STR, JF32VEC, JF32VEC) -> Void
+    ++ jlFunction2F32Vec(func, vec1, vec2) applies the Julia function
+    ++ func to vec2 that overwrites vec1 with the result.
+    ++ Please note that the overwriting is done by Julia and not FriCAS.
+    ++ See Julia 'copy!' for example. 
+    jlFunction2CF32Vec! : (STR, JCF32VEC, JCF32VEC) -> Void
+    ++ jlFunction2CF32Vec(func, cvec1, cvec2) applies the Julia function
+    ++ func to cvec2 that overwrites cvec1 with the result.
+    ++ Please note that the overwriting is done by Julia and not FriCAS.
+    ++ See Julia 'copy!' for example. 
+
+    jlFunction2F32Mat! : (STR, JF32MAT, NNI, JF32MAT, NNI) -> Void
+    ++ jlFunction2F32Mat(func, mat1, mat2) applies the Julia function
+    ++ func to mat2 that overwrites mat1 with the result. Please note that
+    ++ the overwriting is done by Julia and not FriCAS.
+    ++ See Julia 'copy!' or transpose! for example. 
+    jlFunction2CF32Mat! : (STR, JCF32MAT, NNI, JCF32MAT, NNI) -> Void
+    ++ jlFunction2CF32Mat(func, cmat1, cmat2) applies the Julia function
+    ++ func to cmat2 that overwrites cmat1 with the result. Please note that
+    ++ the overwriting is done by Julia and not FriCAS.
+    ++ See Julia 'copy!' or adjoint! for example. 
+
+    jlFunctionF32Mat : (STR, JF32VEC, NNI) -> Void
+    ++ jlFunctionF32Mat(func, mat, nr) applies func to the matrix mat,
+    ++ internally a vector, where the numer of rows is nr.
+    jlFunctionCF32Mat : (STR, JCF32VEC, NNI) -> Void
+    ++ jlFunctionF32Mat(func, cmat, nr) applies func to the matrix mat,
+    ++ internally a vector, where the numer of rows is nr.
+    jlF32FunctionF32Mat : (STR, JF32VEC, NNI) -> JF32
+    ++ jlF32FunctionF32Mat(func, mat, nr) returns the output value of
+    ++ func applied to mat, internally a vector, where the number of rows
+    ++ is nr.
+    jlF32FunctionCF32Mat : (STR, JCF32VEC, NNI) -> JF32
+    ++ jlF32FunctionF32Mat(func, cmat, nr) returns the output value of
+    ++ func applied to cmat, internally a vector, where the number of rows
+    ++ is nr.
+    jlF32FunctionF32MatF32 : (STR, JF32VEC, NNI, JF32) -> JF32
+    ++ jlF32FunctionF32Mat(func, mat, nr, p) returns the output value of
+    ++ func applied to mat, internally a vector, where the number of rows
+    ++ is nr and p an additional parameter.
+    jlF32FunctionCF32MatF32 : (STR, JCF32VEC, NNI, JF32) -> JF32
+    ++ jlF32FunctionF32Mat(func, cmat, nr, p) returns the output value of
+    ++ func applied to cmat, internally a vector, where the number of rows
+    ++ is nr and p an additional parameter.
+
+    jlFunction2F32Mat!  : (STR, JF32VEC, NNI, JF32VEC, NNI) -> Void
+    ++ jlFunction2CF32Mat!(func, mat1, nr1, mat2, nr2) applies func to the
+    ++ pair of matrices mat1 and mat2 (internally vectors).
+    ++ nr1 and nr2 are respectively the number of rows.
+    jlFunction2CF32Mat! : (STR, JCF32VEC, NNI, JCF32VEC, NNI) -> Void
+    ++ jlFunction2CF32Mat(func, cmat1, nr1, cmat2, nr2) applies func to the
+    ++ pair of matrices cmat1 and cmat2 (internally vectors).
+    ++ nr1 and nr2 are respectively the number of rows.
+
+    jlFunctionF32ArrayF32Mat : (STR, JF32VEC, JF32VEC, NNI) -> Void
+    ++ jlFunctionF32ArrayF32Mat(func, array, mat, nr) applies the function
+    ++ func to the matrix mat and returns the result in array. It is FriCAS
+    ++ that puts, at the C level, the resulting matrix in array.
+    ++ Can be used with Julia 'inv' for example.
+    jlFunctionCF32ArrayF32Mat : (STR, JCF32VEC, JF32VEC , NNI) -> Void
+    ++ jlFunctionCF32ArrayF32Mat(func, carray, mat, nr) applies the function
+    ++ func to the matrix mat and returns the result in carray. It is FriCAS
+    ++ that puts, at the C level, the resulting matrix in carray.
+    ++ Can be used with Julia 'sqrt' for example.
+    jlFunctionF32ArrayCF32Mat : (STR, JF32VEC, JCF32VEC , NNI) -> Void
+    ++ jlFunctionF32ArrayCF32Mat(func, array, cmat, nr) applies the function
+    ++ func to the matrix cmat and returns the result in array. It is FriCAS
+    ++ that puts, at the C level, the resulting matrix in array.
+    ++ Can be used with Julia 'real' or 'imag' for example.
+    jlFunctionCF32ArrayCF32Mat : (STR, JCF32VEC, JCF32VEC, NNI) -> NNI
+    ++ jlFunctionF32ArrayCF32Mat(func, carray, cmat, nr) applies the function
+    ++ func to the matrix cmat and returns the result in carray. It is FriCAS
+    ++ that puts, at the C level, the resulting matrix in carray.
+
+
   Implementation ==> add
     import from String
     --import from JuliaStringUtilities
 
     jlInitialize(true)
-    jlUsing("Random")
-    jlUsing("Statistics")
-    jlImport("Statistics.var")
     
     defined?(func) ==>
       not jlDefined?(func) =>
@@ -209,8 +321,10 @@ JuliaUtilityFunctions() : Exports == Implementation where
     jlInitialize(init) ==
       if init then init_julia_env()$Lisp
       else clear_julia_env()$Lisp
+
     jlUsing(m) == jl_using_package(m)$Lisp
     jlImport(m) == jl_import_symbol(m)$Lisp
+
     jlEvalString(s : STR)   : Void    == jl_eval_string(s)$Lisp
     jlEvalString(s : STR)   : Boolean == jl_bool_eval_string(s)$Lisp
     jlEvalString(s : STR)   : JI64    == jl_int64_eval_string(s)$Lisp
@@ -271,6 +385,59 @@ JuliaUtilityFunctions() : Exports == Implementation where
     jlFunctionCF64ArrayCF64Mat(func, carray, cmat, nr) ==
       jl_array_2dfunction(1$NNI,1$NNI, func, carray, cmat, nr)$Lisp
 
+    ---------------------------------------------------------
+    jlBoolFunction2F32(func,a,b) == jl_bool_ffunction_flt_flt(func,a,b)$Lisp
+
+    jlFunctionF32(func,a) == jl_ffunction_flt(func,a)$Lisp
+    jlFunction2F32(func,a,b) == jl_ffunction_flt_flt(func,a,b)$Lisp
+    jlFunction3F32(func,a,b,c) == jl_ffunction_flt_flt_flt(func,a,b,c)$Lisp
+
+    jlF32FunctionF32I64(func,a,i) == jl_flt_ffunction_flt_int64(func,a,i)$Lisp
+    jlF32FunctionI64F32(func,i,a) == jl_flt_ffunction_int64_flt(func,i,a)$Lisp
+
+    jlI64FunctionF32(func,a) == jl_int64_ffunction_flt(func,a)$Lisp
+    jlF32FunctionF32(func,a) == jl_flt_ffunction_flt(func,a)$Lisp
+    jlF32Function2F32(func,a,b) == jl_flt_ffunction_flt_flt(func,a,b)$Lisp
+    jlF32Function3F32(func,a,b,c) == jl_flt_ffunction_flt_flt_flt(func,a,b,c)$Lisp
+
+    jlFunctionF32Vec(func, v) == jl_1dffunction(0$NNI,func,v)$Lisp
+    jlFunctionCF32Vec(func, v) == jl_1dffunction(1$NNI,func,v)$Lisp
+    jlF32FunctionF32Vec(func, v)== jl_flt_1dffunction(0$NNI,func,v)$Lisp
+    jlF32FunctionCF32Vec(func, v)== jl_flt_1dffunction(1$NNI,func,v)$Lisp
+    jlF32FunctionF32VecF32(func,v,p)  ==
+      jl_flt_1dffunction_flt(0$NNI,func,v,p)$Lisp
+    jlF32FunctionCF32VecF32(func,v,p)  ==
+      jl_flt_1dffunction_flt(1$NNI,func,v,p)$Lisp
+
+    jlFunction2F32Vec!(func, v1, v2) == jl_1d2ffunction(0$NNI,func,v1,v2)$Lisp
+    jlFunction2CF32Vec!(func, v1, v2) == jl_1d2ffunction(1$NNI,func,v1,v2)$Lisp
+
+    jlFunctionF32Mat(func, mat, nr) == jl_2dffunction(0$NNI,func,mat,nr)$Lisp
+    jlFunctionCF32Mat(func, mat, nr) == jl_2dffunction(1$NNI,func,mat,nr)$Lisp
+    jlF32FunctionF32Mat(func, mat, nr) ==
+      jl_flt_2dffunction(0$NNI,func,mat,nr)$Lisp
+    jlF32FunctionCF32Mat(func, mat, nr) ==
+      jl_flt_2dffunction(1$NNI,func,mat,nr)$Lisp
+    jlF32FunctionF32MatF32(func, mat, nr, p) ==
+      jl_flt_2dffunction_flt(0$NNI,func,mat,nr,p)$Lisp
+    jlF32FunctionCF32MatF32(func, mat, nr, p) ==
+      jl_flt_2dffunction_flt(1$NNI,func,mat,nr,p)$Lisp
+
+    jlFunction2F32Mat!(func, mat1,nr1,mat2,nr2) ==
+      jl_2d2ffunction(0$NNI,func, mat1, nr1, mat2, nr2)$Lisp
+    jlFunction2CF32Mat!(func, mat1,nr1,mat2,nr2) ==
+      jl_2d2ffunction(1$NNI,func, mat1, nr1, mat2, nr2)$Lisp
+
+    jlFunctionF32ArrayF32Mat(func, array, mat, nr) ==
+      jl_array_2dffunction(0$NNI,0$NNI, func, array, mat, nr)$Lisp
+    jlFunctionCF32ArrayF32Mat(func, carray, mat, nr) ==
+      jl_array_2dffunction(1$NNI,0$NNI, func, carray, mat, nr)$Lisp
+    jlFunctionF32ArrayCF32Mat(func, array, cmat, nr) ==
+      jl_array_2dffunction(0$NNI,1$NNI, func, array, cmat, nr)$Lisp
+    jlFunctionCF32ArrayCF32Mat(func, carray, cmat, nr) ==
+      jl_array_2dffunction(1$NNI,1$NNI, func, carray, cmat, nr)$Lisp
+
+
     jlDefined?(sym : JuliaSymbol) ==
       jlEvalString(concat(["isdefined(Main,", string(sym),")"]))
     jlDefined?(str : String) ==
@@ -286,15 +453,12 @@ JuliaUtilityFunctions() : Exports == Implementation where
     jlAddPackage(str : String) ==
       jlEvalString(concat(["import Pkg;Pkg.add(_"", str,"_")"]))@Void
 
-    -- TODO
-    median(v:JF64VEC) : JF64 == jl_dbl_1dfunction(0$NNI, "median", v)$Lisp
-    mean(v:JF64VEC) : JF64   == jl_dbl_1dfunction(0$NNI, "mean", v)$Lisp
-    var(v:JF64VEC) : JF64    == jl_dbl_1dfunction(0$NNI, "var", v)$Lisp
-    std(v:JF64VEC) : JF64    == jl_dbl_1dfunction(0$NNI, "std", v)$Lisp
-
     jlApprox?(x:JCF64, y:JCF64) : Boolean ==
         jl_bool_function_dbl_dbl("isapprox", real(x), real(y))$Lisp
           and jl_bool_function_dbl_dbl("isapprox", imag(x), imag(y))$Lisp
+    jlApprox?(x:JCF32, y:JCF32) : Boolean ==
+        jl_bool_function_flt_flt("isapprox", real(x), real(y))$Lisp
+          and jl_bool_function_flt_flt("isapprox", imag(x), imag(y))$Lisp
 
 )abbrev package JSTRU JuliaStringUtilities
 ++ Utility package for strings using Julia facilities
@@ -344,10 +508,10 @@ JuliaStringUtilities() : Exports == Implementation where
       ++ jlRegexMatch(regex, s, i) returns the matched regular expressions in s,
       ++ starting at index i.
       jlRegexReplace  : (String, String, String) -> String
-      ++ jlRegexReplace(regex,subst,str) will replace captured regular expression
+      ++ jlRegexReplace(regex,subst,str) will replace captured regular expressions
       ++ in str with subst. More information in String documentation of Julia.
       ++ For example:
-      ++  jlRegexReplace(jlRegex("!"), jlSubstitute(" you"), "hey!")
+      ++  jlRegexReplace(jlRegex("$"), jlSubstitute(" you!"), "hey")
     Implementation ==> add
       import from JuliaUtilityFunctions
       import from String

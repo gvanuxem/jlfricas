@@ -178,13 +178,13 @@ JuliaRealLinearAlgebra() : Exports == Implementation where
         trace(m : JF64MAT) ==
             nr := nrows(m)
             nr ~= ncols(m) => error "trace: matrix is not square"
-            jlF64FunctionF64Mat( "tr", jlVector(m), nr)
+            jlF64FunctionF64Mat("tr", jlVector(m), nr)
 
         rank(m, tol) : NNI == count(x +-> x > tol, svdvals(m))$JF64VEC
         rank!(m, tol) : NNI == count(x +-> x > tol, svdvals!(m))$JF64VEC
 
         logDeterminant(m) ==
-            jlF64FunctionF64Mat( "logdet", jlVector(m), nrows(m))
+            jlF64FunctionF64Mat("logdet", jlVector(m), nrows(m))
 
         svd_wrapper: (String, JF64MAT) -> Record(U:JF64MAT, sv:JF64VEC, Vt:JF64MAT)
         svd_wrapper(func, a) ==

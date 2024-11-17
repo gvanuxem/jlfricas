@@ -349,8 +349,10 @@ with this hack and will try to convince the GCL crowd to fix this.
     (bool "bool")
     (int "int")
     (c-string "char *")
+    (float "float")
     (double "double")
     (char-* "char *")
+    (float-* "float *")
     (double-* "double *")
 ))
 
@@ -454,8 +456,10 @@ with this hack and will try to convince the GCL crowd to fix this.
     (bool    (sb-alien::boolean 8))
     (int      sb-alien::int)
     (c-string (sb-alien::c-string))
+    (float    sb-alien:single-float)
     (double   sb-alien::double-float)
     (char-*   (sb-alien:* sb-alien:char))
+    (float-*   (sb-alien:* sb-alien:single-float))
     (double-*   (sb-alien:* sb-alien:double-float))
 ))
 
@@ -482,8 +486,10 @@ with this hack and will try to convince the GCL crowd to fix this.
     (bool :signed-byte)
     (int :int)
     (c-string :address)
+    (float :single-float)
     (double :double-float)
     (char-* :address)
+    (float-* :adress)
     (double-* :address)
 ))
 
