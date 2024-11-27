@@ -128,4 +128,4 @@ stamp
 stamp-*
 
 target/
-.vscode/settings.json
+.vscode/

@@ -44,9 +44,15 @@ JuliaInt64Vector() : Exports == Implementation where
         qnew(n)                     == Qnew(n)
         new(n, x:JI64)              == Qnew1(n, x)
         qelt(x, i)                  == Qelt(x, i)
-        elt(x, i:Integer) : JI64    == Qelt(x, i)
-        qsetelt!(x, i, s:JI64)      == Qsetelt(x, i, s)
-        setelt!(x : %, i : Integer, s : JI64) == Qsetelt(x, i, s)
+        elt(x, i : Integer)         ==
+            i < 1 or i > #x =>
+                error "elt$JuliaInt64Vector: index out of range"
+            Qelt(x, i)
+        qsetelt!(x, i, s)      == Qsetelt(x, i, s)
+        setelt!(x : %, i : Integer, s) ==
+            i < 1 or i > #x =>
+                error "setelt!$JuliaInt64Vector: index out of range"
+            Qsetelt(x, i, s)
         fill!(v, x)       == (for i in 1..Qsize v repeat Qsetelt(v, i, x); v)
         less?(v,n) == #v < n
         vector l == construct l
@@ -136,9 +142,15 @@ JuliaFloat64Vector() : Exports == Implementation where
         qnew(n)                     == Qnew(n)
         new(n, x:JF64)              == Qnew1(n, x)
         qelt(x, i)                  == Qelt(x, i)
-        elt(x, i:Integer) : JF64    == Qelt(x, i)
+        elt(x, i : Integer)         ==
+            i < 1 or i > #x =>
+                error "elt$JuliaFloat64Vector: index out of range"
+            qelt(x, i)
         qsetelt!(x, i, s:JF64)      == Qsetelt(x, i, s)
-        setelt!(x : %, i : Integer, s : JF64) == Qsetelt(x, i, s)
+        setelt!(x : %, i : Integer, s : JF64) ==
+            i < 1 or i > #x =>
+                error "setelt!$JuliaFloat64Vector: index out of range"
+            Qsetelt(x, i, s)
         fill!(v, x)       == (for i in 1..Qsize v repeat Qsetelt(v, i, x); v)
         less?(v,n) == #v < n
         vector l == construct l
@@ -360,9 +372,14 @@ JuliaFloat64Matrix() :  Exports == Implementation where
         #m == #m.elts
 
         qelt(m, i, j) == Qelt2(m.elts, m.ncols, m.nrows, j, i)
-        elt(m:%, i:INT, j:INT) : JF64 == Qelt2(m.elts, m.ncols, m.nrows, j, i)
+        elt(m:%, i:INT, j:INT) : JF64 ==
+            i < 1 or i > m.ncols or j < 1 or j > m.ncols =>
+                error "elt$JuliaFloat64Matrix: index(es) out of ranges"
+            Qelt2(m.elts, m.ncols, m.nrows, j, i)
         qsetelt!(m, i, j, r) == Qsetelt2(m.elts, m.ncols, m.nrows, j, i, r)
         setelt!(m : %, i : Integer, j : Integer, r : JF64) ==
+            i < 1 or i > m.ncols or j < 1 or j > m.ncols =>
+                error "elt$JuliaFloat64Matrix: index(es) out of ranges"
             Qsetelt2(m.elts, m.ncols, m.nrows, j, i, r)
         empty() == error "empty()$JuliaFloat64Matrix is not supported"
         qnew(rows, cols) ==
@@ -620,13 +637,14 @@ JuliaComplexF64Vector() :  Exports == Implementation where
         pprint := true
 
         qelt(x, i)                  == Qelt1(x, i)
-        elt(x, i)                   == Qelt1(x, i)
         elt(x, i : Integer)         ==
-            -- TODO
-            i < 1 => error "elt:JuliaComplexF64Vector: bad index"
+            i < 1 or i > #x =>
+                error "elt$JuliaComplexF64Vector: index out of range"
             Qelt1(x, i)
         qsetelt!(x, i, s)           == Qsetelt1(x, i, s)
         setelt!(x : %, i : Integer, s:JuliaComplexF64) ==
+            i < 1 or i > #x =>
+                error "setelt!$JuliaComplexF64Vector: index out of range"
             Qsetelt1(x, i, s)
         #x                          == Qsize x
         minIndex x                  == 1
@@ -792,11 +810,14 @@ JuliaComplexF64Matrix() : Exports == Implementation where
 
         qelt(m, i, j) == Qelt2(m.elts, m.ncols, j, i)
         elt(m : %, i : Integer, j : Integer) : JCF64 ==
+            i < 1 or i > m.ncols or j < 1 or j > m.ncols =>
+                error "elt$JuliaComplexF64Matrix: index(es) out of ranges"
             Qelt2(m.elts, m.ncols, j, i)
         qsetelt!(m, i, j, r) == Qsetelt2(m.elts, m.ncols, j, i, r)
         setelt!(m : %, i : Integer, j : Integer, r : JCF64) ==
+            i < 1 or i > m.ncols or j < 1 or j > m.ncols =>
+                error "setelt!$JuliaComplexF64Matrix: index(es) out of ranges"
             Qsetelt2(m.elts, m.ncols, j, i, r)
-
         empty() == error "empty()$JuliaComplexF64Matrix is not supported"
         qnew(rows, cols) ==
             vec : JCF64VEC := Qnew(rows*cols)

@@ -72,9 +72,15 @@ JuliaFloat32Vector() : Exports == Implementation where
         qnew(n)                     == Qnew(n)
         new(n, x:JF32)              == Qnew1(n, x)
         qelt(x, i)                  == Qelt(x, i)
-        elt(x, i:Integer) : JF32    == Qelt(x, i)
+        elt(x, i : Integer)         ==
+            i < 1 or i > #x =>
+                error "elt$JuliaFloat32Vector: index out of range"
+            Qelt(x, i)
         qsetelt!(x, i, s:JF32)      == Qsetelt(x, i, s)
-        setelt!(x : %, i : Integer, s : JF32) == Qsetelt(x, i, s)
+        setelt!(x : %, i : Integer, s : JF32) ==
+            i < 1 or i > #x =>
+                error "setelt!$JuliaFloat32Vector: index out of range"
+            Qsetelt(x, i, s)
         fill!(v, x)       == (for i in 1..Qsize v repeat Qsetelt(v, i, x); v)
         less?(v,n) == #v < n
         vector l == construct l
@@ -298,9 +304,14 @@ JuliaFloat32Matrix() :  Exports == Implementation where
         #m == #m.elts
 
         qelt(m, i, j) == Qelt2(m.elts, m.ncols, m.nrows, j, i)
-        elt(m:%, i:INT, j:INT) : JF32 == Qelt2(m.elts, m.ncols, m.nrows, j, i)
+        elt(m:%, i:INT, j:INT) : JF32 ==
+            i < 1 or i > m.ncols or j < 1 or j > m.nrows=>
+                error "elt$JuliaFloat32Matrix: index(es) out of range"
+            Qelt2(m.elts, m.ncols, m.nrows, j, i)
         qsetelt!(m, i, j, r) == Qsetelt2(m.elts, m.ncols, m.nrows, j, i, r)
         setelt!(m : %, i : Integer, j : Integer, r : JF32) ==
+            i < 1 or i > m.ncols or j < 1 or j > m.nrows=>
+                error "setelt!$JuliaFloat32Matrix: index(es) out of range"
             Qsetelt2(m.elts, m.ncols, m.nrows, j, i, r)
         empty() == error "empty()$JuliaFloat32Matrix is not supported"
         qnew(rows, cols) ==
@@ -510,8 +521,8 @@ JuliaComplexF32Vector() :  Exports == Implementation where
     JF32VEC     ==> JuliaFloat32Vector
     Qelt1       ==> JCFELT$Lisp
     Qsetelt1    ==> JCFSETELT$Lisp
-    Qsize       ==> CFLEN$Lisp
-    Qnew        ==> MAKE_CFLOAT_VECTOR$Lisp
+    Qsize       ==> JCFLEN$Lisp
+    Qnew        ==> MAKE_CF_ARRAY1$Lisp
     Exports ==> JuliaVectorCategory(JuliaComplexF32) with
         qnew : NNI -> %
           ++ qnew(n) creates a new uninitialized vector of length n.
@@ -560,15 +571,18 @@ JuliaComplexF32Vector() :  Exports == Implementation where
         pprint := true
 
         qelt(x, i)                  == Qelt1(x, i)
-        elt(x, i)                   == Qelt1(x, i)
         elt(x, i : Integer)         ==
-            i < 1 => error "elt:JuliaComplexF32Vector: bad index"
+            i < 1 or i > #x =>
+                error "elt$JuliaComplexF32Vector: index out of range"
             Qelt1(x, i)
         qsetelt!(x, i, s)           == Qsetelt1(x, i, s)
         setelt!(x : %, i : Integer, s:JuliaComplexF32) ==
+            i < 1 or i > #x =>
+                error "setelt!$JuliaComplexF32Vector: index out of range"
             Qsetelt1(x, i, s)
-        #x                          == Qsize x
+        #x                          == Qsize(x)
         minIndex x                  == 1
+        maxIndex x                  == Qsize(x)
         empty()                     == Qnew(0$Lisp)
         qnew(n)                     == Qnew(n)
         new(n, x)                   ==
@@ -647,7 +661,7 @@ JuliaComplexF32Matrix() : Exports == Implementation where
     NNI         ==> NonNegativeInteger
     Qelt2       ==> JCFELT2$Lisp
     Qsetelt2    ==> JCFSETELT2$Lisp
-    Qnew        ==> MAKE_CFLOAT_VECTOR$Lisp
+    Qnew        ==> MAKE_CF_ARRAY1$Lisp
     Row         ==> JuliaComplexF32Vector
     Col         ==> JuliaComplexF32Vector
     MLAF        ==> MatrixLinearAlgebraFunctions(JCF32, Row, Col, %)
@@ -732,12 +746,15 @@ JuliaComplexF32Matrix() : Exports == Implementation where
         maxColIndex x == x.nrows
 
         qelt(m, i, j) == Qelt2(m.elts, m.ncols, j, i)
-        elt(m : %, i : Integer, j : Integer) : JCF32 ==
+        elt(m:%, i : Integer, j : Integer) ==
+            i < 1 or i > m.ncols or j < 1 or j > m.nrows =>
+                error "elt$JuliaComplexF32Matrix: index(es) out of range"
             Qelt2(m.elts, m.ncols, j, i)
         qsetelt!(m, i, j, r) == Qsetelt2(m.elts, m.ncols, j, i, r)
         setelt!(m : %, i : Integer, j : Integer, r : JCF32) ==
+            i < 1 or i > m.ncols or j < 1 or j > m.nrows =>
+                error "setelt!$JuliaComplexF32Matrix: index(es) out of range"
             Qsetelt2(m.elts, m.ncols, j, i, r)
-
         empty() == error "empty()$JuliaComplexF32Matrix is not supported"
         qnew(rows, cols) ==
             vec : JCF32VEC := Qnew(rows*cols)

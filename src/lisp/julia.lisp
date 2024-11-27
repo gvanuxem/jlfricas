@@ -211,6 +211,9 @@
 (defmacro |make_sf_iarray1| (size val)
     `(make-array ,size :element-type 'single-float :initial-element ,val))
 
+(defmacro make_cf_array1 (n)
+   `(make-array (list (* 2 ,n)) :element-type 'single-float))
+
 ; int 64 array creation
 ; 1D
 
@@ -253,11 +256,6 @@
         (1- (the fixnum ,i))) (the double-float ,s)))
 
 ; 32 bits
-(defmacro MAKE_CFLOAT_VECTOR (n)
-   `(make-array (list (* 2 ,n)) :element-type 'single-float))
-
-(defmacro MAKE_CFLOAT_VECTOR (n)
-   `(make-array (list (* 2 ,n)) :element-type 'single-float))
 
 (defmacro sfvsize (x)
  `(the fixnum (length (the (simple-array single-float (*)) ,x))))
@@ -344,6 +342,9 @@
         ,s)))
 
 ; 32 bits
+(defmacro JCFLEN(v)
+    `(truncate (length (the (simple-array single-float (*)) ,v)) 2))
+
 (defmacro jcfelt(ov oi)
    (let ((v (gensym))
          (i (gensym)))
