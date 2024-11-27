@@ -13,10 +13,14 @@ JuliaUtilityFunctions() : Exports == Implementation where
   JF64      ==> JuliaFloat64
   JCF32     ==> JuliaComplexF32
   JCF64     ==> JuliaComplexF64
+  JF32VEC   ==> JuliaFloat32Vector
+  JF32MAT   ==> JuliaFloat32Matrix
   JF64VEC   ==> JuliaFloat64Vector
   JF64MAT   ==> JuliaFloat64Matrix
+  JCF32VEC  ==> JuliaComplexF32Vector
+  JCF32MAT  ==> JuliaComplexF32Matrix
   JCF64VEC  ==> JuliaComplexF64Vector
-  JCF64MAT  ==> JuliaComplexF64Matrix  
+  JCF64MAT  ==> JuliaComplexF64Matrix
   STR       ==> String
   Exports ==> with
     jlInitialize  : Boolean -> Boolean
@@ -33,9 +37,9 @@ JuliaUtilityFunctions() : Exports == Implementation where
     ++ Returns false if it can not be imported.
 
     jlDefined?    : JuliaSymbol -> Boolean
-    ++ jlDefined?(sym) tests whether or not sym is defined in Julia.
+    ++ jlDefined?(sym) checks whether or not sym is defined in Julia.
     jlDefined?    : String -> Boolean
-    ++ jlDefined?(str) tests whether or not str is defined in Julia.
+    ++ jlDefined?(str) cheks whether or not str is defined in Julia.
 
     jlAddPackage  : String -> Void
     ++ jlAddPackage(package) add package to Julia project.
@@ -310,7 +314,6 @@ JuliaUtilityFunctions() : Exports == Implementation where
 
   Implementation ==> add
     import from String
-    --import from JuliaStringUtilities
 
     jlInitialize(true)
     
