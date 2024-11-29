@@ -78,9 +78,6 @@ NemoInteger() : Exports == Implementation where
     1 == jlref("one(ZZ)")
     random(n) == coerce(random(convert n)$Z)
 
-    x = y  == jbinbop("==",x,y)
-    x ~= y  == jbinbop("!=",x,y)
-
     x < y  == jbinbop("<",x,y)
     x > y  == jbinbop(">",x,y)
     x >= y == jbinbop(">=",x,y)
@@ -188,9 +185,6 @@ NemoRational() : Exports == Implementation where
     numer(x) == junfunc("numerator(", x)
     denom(x) == junfunc("denominator(", x)
 
-    x = y  == jbinbop("==",x,y)
-    x ~= y  == jbinbop("!=",x,y)
-
     x < y  == jbinbop("<",x,y)
     x > y  == jbinbop(">",x,y)
     x >= y == jbinbop(">=",x,y)
@@ -279,16 +273,18 @@ NemoRational() : Exports == Implementation where
 -- TODO: relative stuff to UniPoly*, reducedSystem*
 NemoAlgebraicNumber() : Exports == Implementation where
   NNI       ==> NonNegativeInteger
-  K         ==> Kernel %
   JI64      ==> JuliaInt64
   NUP       ==> NemoUnivariatePolynomial
   parsei    ==> PARSE_-INTEGER$Lisp
-  Exports ==> Join(NemoRing, ExpressionSpace, AlgebraicallyClosedField,
+  Exports ==> Join(NemoRing, ExpressionSpace, NemoAlgebraicallyClosedField,
                         RetractableTo NemoInteger, RetractableTo NemoRational,
                         RetractableTo Integer, RetractableTo Fraction(Integer),
+                        LinearlyExplicitOver Integer,
                         LinearlyExplicitOver NemoInteger,
-                        LinearlyExplicitOver Fraction NemoInteger,
-                        PolynomialFactorizationExplicit,
+                        LinearlyExplicitOver Fraction Integer,
+                        LinearlyExplicitOver NemoRational,
+                        -- TODO
+                        -- PolynomialFactorizationExplicit,
                         CharacteristicZero, DifferentialRing) with
     "*"     : (%, Integer) -> %
     ++ a*z multitiplies a by the integer z.
@@ -346,9 +342,8 @@ NemoAlgebraicNumber() : Exports == Implementation where
     denominator: % -> NemoInteger
     ++ numeraor(a) returns the denominator of a, the leading coefficient
     ++ of the minimal polynomial of a.
-    coerce  : % -> Expression NemoRational
-    ++ 
     coerce  : % -> AlgebraicNumber
+    ++ 
     jnan    : NemoInteger -> %
     jnan    : NemoRational -> %
     jnan    : String -> %
@@ -359,7 +354,7 @@ NemoAlgebraicNumber() : Exports == Implementation where
 
     jlInitialize(true)
     Rep := SExpression
-    ALGOP := '%alg
+    --ALGOP := '%alg
 
     getind(a) ==> concat(["getindex(refs,_"", jlId(a), "_")"])
     jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
@@ -374,6 +369,12 @@ NemoAlgebraicNumber() : Exports == Implementation where
 
     0 == jlref("zero(QQBar)")
     1 == jlref("one(QQBar)")
+
+    zero? x == junbfunc("iszero(",x)
+    one? x == junbfunc("isone(",x)
+    x = y  == jbinbop("==",x,y)
+    x ~= y  == jbinbop("!=",x,y)
+
     characteristic() == 0
     rootOfUnity(n) == jlref(concat(["root_of_unity(QQBar,", string(n),")"]))
     rootOfUnity(n,k) ==
@@ -394,16 +395,27 @@ NemoAlgebraicNumber() : Exports == Implementation where
     rootOfUnity? x == junbfunc("is_root_of_unity(",x)
     algebraicInteger? x == junbfunc("is_algebraic_integer(",x)
     smaller?(x,y) == jbinbop("<", x, y)
+    definingPolynomial(an) ==
+      error concat("definingPolynomial is not defined for ",
+        "the NemoAlgebraicNumber type. Coerce it first.")
+      -- TODO: interpret a SUP()?
 
     inv(x) == junfunc("inv(", x)
+    - x   == junfunc("-(", x)
+    x : % + y : % == jbinop("+", x, y)
+    x : % - y : % == jbinop("-", x, y)
+    x : % * y : % == jbinop("*", x, y)
     x / y : % == jbinop("/", x, y)
-    x : % * y : Integer == jlref(concat [getind(x),"*", string(y)])
-    x : % * y : NemoInteger == jbinop("*", x, y)
     x : % ^ y : % == jbinop("^", x, y)
+    x : % * y : Integer == jlref(concat [getind(x),"*", string(y)])
+    x : NonNegativeInteger * y : % == jlref(concat [string(x),"*", getind(y)])
+    x : % * y : NemoInteger == jbinop("*", x, y)
+    x * y : Fraction Integer == jbinop("*", x, coerce(y)@NemoRational)
 
     x ^ y : Fraction Integer == jbinop("^", x, coerce(y)@NemoRational)
+    x ^ y : PositiveInteger == jlref(concat [getind(x), "^", string(y)])
+    x ^ y : NonNegativeInteger == jlref(concat [getind(x), "^", string(y)])
     x ^ y : Integer == jlref(concat [getind(x), "^", string(y)])
-    x : % ^ y : % ==  jbinop("^", x, y)
 
     -- x quo y == jbinop("div", x, y)
     x quo y == jbinop("÷", x, y)
@@ -426,14 +438,15 @@ NemoAlgebraicNumber() : Exports == Implementation where
     acospi(a) == junfunc("acospi(",a)
     atanpi(a) == junfunc("atanpi(",a)
 
-    conjugates(a) == jlref(concat(["conjugates(",
-      getind(a),")"]))$JuliaVector(%)
+    conjugates(a) ==
+      jlref(concat(["conjugates(", getind(a),")"]))$JuliaVector(%)
     numerator(a) == junfunc("numerator(", a)
     denominator(a) == jlref(concat(["denominator(", getind(a),")"]))$NemoInteger
     degree(a : %) == jlEvalString(concat(["degree(", getind(a), ")"]))@JuliaInt64
-    belong?(op) == belong?(op)$ExpressionSpace2_&(%, K) or has?(op, ALGOP)
+    belong?(op) == false 
+    --belong?(op) == belong?(op)$ExpressionSpace2_&(%, K) or has?(op, ALGOP)
 
-    kernels(an) == [constantKernel(an)@Kernel(%)]
+    kernels(an) == []
 
     retractIfCan(x : %) : Union(Integer, "failed") ==
       not integer? x => "failed"
@@ -462,11 +475,16 @@ NemoAlgebraicNumber() : Exports == Implementation where
       jlref(concat(["QQBar(",string(i),")"]))
     coerce(i : NemoInteger) : % == junfunc("QQBar(", i)
     coerce(fi : NemoRational) : % == junfunc("QQBar(", fi)
+    coerce(an : Kernel(%)) == --Should not happen
+      -- TODO
+      (ret := constantIfCan(an)) case "failed" =>
+        error "coerce$NemoAlgebraicNumber: Unconstant kernel"
+      ret
     coerce(x : Fraction(Integer)) == coerce(coerce(x)@NemoRational)
     coerce(i : %) : OutputForm == string(i) pretend OutputForm
-    coerce(x : %) : Expression(NemoRational)  ==
-      coerce(retract(x)@NemoRational)@Expression(NemoRational)
     coerce(x : %) : AlgebraicNumber ==
+      -- TODO: interpret string minpoly(x) ?
+      not rational?(x) => error "Can not be coerced to an AlgebraicNumber"
       coerce(retract(retract(x)@NemoRational)@Fraction(Integer))
     jnan(i : NemoInteger) : % == coerce(i)
     jnan(fi : NemoRational) == coerce(fi)
@@ -1117,7 +1135,7 @@ InnerNemoExactComplexField(Options : JuliaObject) : Exports ==
     coerce(i : Integer) == jlref(concat([NECFP, string(i),")"]))
     coerce(z : Complex(Integer)) ==
       jlref(concat([NECFP, string(real(z)),"+im*", string(imag(z)), ")"]))
-    coerce(i : PositiveInteger) == jlref(concat(["NECF(", string(i),")"]))
+    coerce(i : PositiveInteger) == jlref(concat([NECFP, string(i),")"]))
     coerce(fi : Fraction(Integer)) ==
       jlref(concat([NECF,"(QQ(", string(numer(fi)), "//", string(denom(fi)), "))"]))
     coerce(nfi : NemoRational) == junfunc(NECFP, nfi)

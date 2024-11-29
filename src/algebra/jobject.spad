@@ -188,8 +188,8 @@ JuliaObjectRing() : Category == Join(JuliaObjectType, JuliaRing) add
     junbfunc(bfunc, a) ==>
       jlEvalString(concat([bfunc, getind(a),")"]))@Boolean
 
-    zero?(x) == jlEvalString(concat ["iszero(", getind(x), ")"])
-    one?(x) == jlEvalString(concat ["isone(", getind(x), ")"])
+    zero?(x) == junbfunc("iszero(", x)
+    one?(x) == junbfunc("isone(", x)
     x + y == jbinop("+", x, y)
     x - y == jbinop("-", x, y)
     - x   == junfunc("-(", x)

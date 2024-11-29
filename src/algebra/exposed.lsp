@@ -539,6 +539,8 @@
   (|MultiDictionary| . MDAGG)
   (|MultisetAggregate| . MSETAGG)
   (|MultivariateTaylorSeriesCategory| . MTSCAT)
+  (|NemoAlgebraicallyClosedField| . NACF)
+  (|NemoAlgebraicallyClosedFunctionSpace| . NACFS)
   (|NemoRing| . NRING)
   (|NemoType| . NTYPE)
   (|NonAssociativeAlgebra| . NAALG)

@@ -1,3 +1,20 @@
+)abbrev category NACF NemoAlgebraicallyClosedField
+++ Author: G. Vanuxem (based on work of Manuel Bronstein)
+++ Date Created: Nov. 2024
+++ Description:
+++   Model for Nemo algebraically closed fields.
+++ Keywords: algebraic, closure, field.
+NemoAlgebraicallyClosedField() : Category == Join(Field, RadicalCategory)
+
+)abbrev category NACFS NemoAlgebraicallyClosedFunctionSpace
+++ Author: G. Vanuxem (base on work of Manuel Bronstein)
+++ Date Created: 31 October 1988
+++ Description:
+++   Model for algebraically closed function spaces.
+++ Keywords: algebraic, closure, field.
+NemoAlgebraicallyClosedFunctionSpace(R : Join(Comparable, IntegralDomain)):
+ Category == Join(NemoAlgebraicallyClosedField, FunctionSpace R)
+
 )abbrev domain NUP NemoUnivariatePolynomial
 ++ Univariate polynomial domain using the Julia Nemo package
 ++ Author: G. Vanuxem
@@ -45,8 +62,7 @@ NemoUnivariatePolynomial(R : NemoRing, x : Symbol):
 
         tmp : SExpression := devaluate(R)$Lisp
         op_of_Ring : Symbol := CAR(tmp)$Lisp
-        -- For an unknown reason NemoRealBall is recognized whereas
-        -- NemoPrimeField or NemoIntegerMod are not, so use String instead.
+
         NRing : String := string(op_of_Ring)
         NUPRing := concat("UP",FORMAT(false, "~a", tmp)$Lisp)
         NUPRing := jlRegexReplace(jlRegex("[(|)|\s]"),
@@ -248,11 +264,10 @@ NemoMultivariatePolynomial(R : NemoRing, VarSet : List Symbol,
 
         tmp : SExpression := devaluate(R)$Lisp
         op_of_Ring : Symbol := CAR(tmp)$Lisp
-        -- For an unknown reason NemoRealBall is recognized whereas
-        -- NemoPrimeField or NemoIntegerMod are not, so use String instead.
+
         NRing : String := string(op_of_Ring)
         NMPRing := concat("MP", FORMAT(false, "~a", tmp)$Lisp)
-        NMPRing := jlRegexReplace(jlRegex("[(|)|\s]"), 
+        NMPRing := jlRegexReplace(jlRegex("[(|)|\s]"),
           jlSubstitute(""), NMPRing)
 
         -- Cleanup VarSet (TODO: reflect SMP)
