@@ -475,7 +475,7 @@ NemoAlgebraicNumber() : Exports == Implementation where
       jlref(concat(["QQBar(",string(i),")"]))
     coerce(i : NemoInteger) : % == junfunc("QQBar(", i)
     coerce(fi : NemoRational) : % == junfunc("QQBar(", fi)
-    coerce(an : Kernel(%)) == --Should not happen
+    coerce(an : Kernel(%)) == -- Should not happen
       -- TODO
       (ret := constantIfCan(an)) case "failed" =>
         error "coerce$NemoAlgebraicNumber: Unconstant kernel"
@@ -933,6 +933,9 @@ InnerNemoExactComplexField(Options : JuliaObject) : Exports ==
     "*"      : (%, Integer) -> %
     "/"      : (Integer, %) -> %
     "/"      : (%, Integer) -> %
+    jlOptions : % -> JuliaObject
+    ++ jlOptions(x) returns the options set at startup time that affect
+    ++ different aspects of computations using this object. 
     retractIfCan  : % -> Union(NemoInteger, "failed")
     ++ retractIfCan(z) retracts if possible z to a Integer.
     retractIfCan  : % -> Union(NemoRational, "failed")
@@ -970,12 +973,14 @@ InnerNemoExactComplexField(Options : JuliaObject) : Exports ==
     jbinbop(op,a,b) ==>
       jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
     junbfunc(bfunc, a) ==>
-      jlEvalString(concat([bfunc, getind(a),")"]))@Boolean
+      jlEvalString(concat([bfunc, getind(a),")"]))@Boolean 
 
     -- initialize (see Calcium constructor options)
     NECF := concat ["NECF", jlEvalString(concat ["string(hash(", getind(Options),"))"])@String]
     jlEvalString(concat [NECF,"=CalciumField(extended=true,options=",getind(Options),")"])@Void
     NECFP := concat(NECF,"(")
+
+    jlOptions(x) == jlref(concat ["options(",NECF,")"])$JuliaObject
 
     0    == jlref(concat ["zero(", NECF,")"])
     1    == jlref(concat ["one(", NECF,")"])
