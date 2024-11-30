@@ -21,7 +21,7 @@ JuliaObjectType() : Category == JuliaType() with
     ++ mutable?(obj) checks wheter or not obj is mutable.
     nothing? : % -> Boolean
     ++ nothing?(obj) checks whether or not obj is nothing.
-    jlApply : (String, %) -> % 
+    jlApply : (String, %) -> %
     ++jlApply(func, obj) executes the function func with obj as parameter
     ++ and returns the result as a FriCAS JuliaObjectType.
     jlApply : (String, %, %) -> %
@@ -31,17 +31,17 @@ JuliaObjectType() : Category == JuliaType() with
     ++ \example{M:=nrand(4,4);jlApply("getproperty",
     ++ jlApply("svd", M::JOBJECT), jsym "S")}
     ++ should be "equivalent" to svdvals(M)
-    jlApply : (String, %, %, %) -> % 
+    jlApply : (String, %, %, %) -> %
     ++ jlApply(func, obj1, obj2, obj3) executes the function func with obj1, obj2
     ++ and obj3 as parameters and returns the result as a FriCAS JuliaObjectType.
-    jlApply : (String, %, %, %, %) -> % 
+    jlApply : (String, %, %, %, %) -> %
     ++ jlApply(func, obj1, obj2, obj3, obj4) executes the function func with obj1, obj2,
     ++ obj3 and obj4 as parameters and returns the result as a FriCAS JuliaObjectType.
-    jlApply : (String, %, %, %, %, %) -> % 
+    jlApply : (String, %, %, %, %, %) -> %
     ++ jlApply(func, obj1, obj2, obj3, obj4, obj5) executes the function func with obj1,
     ++ obj2, obj3, obj4 and obj5 as parameters and returns the result as a FriCAS
     ++ JuliaObjectType.
-    jlApply : (String, %, %, %, %, %, %) -> % 
+    jlApply : (String, %, %, %, %, %, %) -> %
     ++ jlApply(func, obj1, obj2, obj3, obj4, obj5, obj6) executes the function func
     ++ with obj1, obj2, obj3, obj4, obj5 and obj6 as parameters and returns
     ++ the result as a FriCAS JuliaObjectType.
@@ -131,18 +131,18 @@ See the JuliaObjectType category for information")
 ++ Description:
 ++  Category for arbitrary Julia aggregates.
 JuliaObjectAggregate() : Category == Join(JuliaObjectType, Aggregate) with
-    elt : (%, JuliaSymbol) -> %
+    elt : (%, JuliaSymbol) -> JuliaObject
     ++ elt(obj, sym) returns the property sym of obj.
     ++ For example:
     ++ \example{ret := jlApply("svd",jobject("rand(4,4)")); ret.U}
-    qelt : (%, JuliaSymbol) -> %
+    qelt : (%, JuliaSymbol) -> JuliaObject
     ++ qelt(obj, sym) returns the property sym of obj. No checks are done
     ++ regarding the existence of the sym property. If it does not exist,
     ++ Julia throws an error.
-    elt : (%, Integer) -> %
+    elt : (%, Integer) -> JuliaObject
     ++ elt(obj, ind) returns the element at index ind of obj.
     ++ It can be used, for example, with a Tuple or a Vector.
-    qelt : (%, Integer) -> %
+    qelt : (%, Integer) -> JuliaObject
     ++ qelt(obj, ind) returns the element at index ind of obj.
     ++ It can be used, for example, with a Tuple or a Vector.
   add
@@ -158,7 +158,7 @@ JuliaObjectAggregate() : Category == Join(JuliaObjectType, Aggregate) with
         error concat("elt: undefined symbol ", str)
       jlref(concat(["getproperty(", getind(obj), ",", string(jsy), ")"]))
     qelt(obj : %, jsy : JuliaSymbol) ==
-      jlref(concat(["getproperty(", getind(obj), ",", string(jsy), ")"]))
+      jlref(concat(["get(", getind(obj), ",", string(jsy), ", missing)"]))
     elt(obj : %, ind : Integer) ==
       -- TDOD: do some checks
       jlref(concat([getind(obj), "[", string(ind), "]"]))
@@ -558,17 +558,18 @@ JuliaObjBigInt() : Exports == Implementation where
 ++ Author: G.Vanuxem
 ++ Date Created: Aug. 2024
 ++ Description:
-++  Convenience domain for Julia Tuple, objects that are used
+++  Convenience domain for Julia Tuples, objects that are used
 ++ within Julia, and not directly by the underlying FriCAS Common LISP.
 ++ It is not meant to be used directly, but rather for returned value
 ++ or function argument for example.
 JuliaObjTuple() : Exports == Implementation where
   Exports ==> JuliaObjectAggregate() with
     jtuple : List(Any) -> %
-    ++ jtuple(lst) returns a Julia tuple of the List lst.
+    ++ jtuple(lst) returns a Julia Tuple from the List lst.
     ++ lst must be compatible with 1D format.
     jtuple : String -> %
-    ++ jtuple(str) returns a Julia tuple from the Julia command str.
+    ++ jtuple(str) returns a Julia Tuple
+    ++ from the evaluation of the Julia command str.
   Implementation ==> add
     import from JuliaUtilityFunctions
     import from JuliaStringUtilities
@@ -577,10 +578,92 @@ JuliaObjTuple() : Exports == Implementation where
     Rep := SExpression
 
     jtuple(l : List(Any)) ==
-      jlref(jlRegexReplace(jlRegex("\[(.*)\]"),
-        jlSubstitute("(\1)"), first lines formatExpression(l::OutputForm)$Format1D))
+      jlref(concat ["Tuple(",
+        first lines formatExpression(l::OutputForm)$Format1D,")"])
     -- TODO: string NRB without bracket
     jtuple(str : String) == jlref str
+
+)abbrev domain JOBDICT JuliaObjDict
+++ Convenience domain for Julia Dict.
+++ Author: G.Vanuxem
+++ Date Created: Aug. 2024
+++ Description:
+++  Convenience domain for Julia Dictionaries, objects that are used
+++ within Julia, and not directly by the underlying FriCAS Common LISP.
+++ It is not meant to be used directly, but rather for returned value
+++ or function argument for example.
+JuliaObjDict() : Exports == Implementation where
+  Exports ==> JuliaObjectAggregate() with
+    elt : (%, Any) -> JuliaObject
+    ++ elt(dict, key) returns the value associated to the key of dict.
+    qelt : (%, Any) -> JuliaObject
+    ++ qelt(dict, key) returns the value associated to the key of dict.
+    ++ No checks are done regarding the existence of the key at
+    ++ the FriCAS level. Returns the Julia missing value if the
+    ++ key does not exist.
+    elt : (%, JuliaSymbol) -> JuliaObject
+    ++ elt(dict, sym) returns the value associated to the key sym of dict.
+    qelt : (%, JuliaSymbol) -> JuliaObject
+    ++ qelt(dict, sym) returns the value associated to the key sym of dict.
+    ++ No checks are done regarding the existence of the key sym at
+    ++ the FriCAS level. Returns the Julia missing value if the
+    ++ key does not exist.
+    setelt! : (%, Any, JuliaObject) -> %
+    ++ setelt!(dict, key, val) sets the val to the key of dict.
+    ++ If the key does not exist it will be created.
+    setelt! : (%, JuliaSymbol, JuliaObject) -> %
+    ++ setelt!(dict, key, val) sets the val to the key of dict.
+    ++ If the key does not exist it will be created.  
+    delete! : (%, Any) -> JuliaObject
+    ++ delete!(dict, key) delete the mapping corresponding to the
+    ++ the  key of dict.
+    delete! : (%, JuliaSymbol) -> JuliaObject
+    ++ delete!(dict, key) delete the mapping corresponding to the
+    ++ the  key of dict.
+    jdict : String -> %
+    ++ jdict(str) returns a Julia Dict from the Julia command str.
+  Implementation ==> add
+    import from JuliaUtilityFunctions
+    import from String
+
+    jlInitialize(true)
+    Rep := SExpression
+
+    getind(a) ==> concat(["getindex(refs,_"",
+      JLREFID(a)$Lisp pretend String, "_")"])
+    elt(obj : %, jany : Any) ==
+      key : String := first lines formatExpression(jany::OutputForm)$Format1D
+      defined := concat(["haskey(", getind(obj), ",", key, ")"])
+      not jlEvalString(defined)@Boolean =>
+        error concat("elt: undefined symbol ", key)
+      jlref(concat(["get(", getind(obj), ",", key, ", missing)"]))
+    qelt(obj : %, jany : Any) ==
+      key : String := first lines formatExpression(jany::OutputForm)$Format1D
+      jlref(concat(["get(", getind(obj), ",", key, ", missing)"]))
+    elt(obj : %, jsy : JuliaSymbol) ==
+      defined := concat(["haskey(", getind(obj), ",",
+        str := string(jsy), ")"])
+      not jlEvalString(defined)@Boolean =>
+        error concat("elt: undefined symbol ", str)
+      jlref(concat(["get(", getind(obj), ",", string(jsy), ", missing)"]))
+    qelt(obj : %, jsy : JuliaSymbol) ==
+      jlref(concat(["get(", getind(obj), ",", string(jsy), ", missing)"]))
+
+    setelt!(obj : %, jany : Any, val : JuliaObject) ==
+      key : String := first lines formatExpression(jany::OutputForm)$Format1D
+      jlref(concat(["setindex!(", getind(obj), ",",
+        getind(val) , "," , key, ")"]))
+    setelt!(obj : %, jsy : JuliaSymbol, val : JuliaObject) ==
+      jlref(concat(["setindex!(", getind(obj), ",",
+        getind(val) , "," , string(jsy), ")"]))
+
+    delete!(obj : %, jany : Any) ==
+      key : String := first lines formatExpression(jany::OutputForm)$Format1D
+      jlref(concat(["delete!(", getind(obj), ",", key, ")"]))
+    delete!(obj : %, jsy : JuliaSymbol) ==
+      jlref(concat(["delete!(", getind(obj), ",", string(jsy), ")"]))
+
+    jdict(str : String) == jlref str
       
 )abbrev domain JFLOAT JuliaFloat
 ++ Domain for Julia (Big) floats
@@ -1080,8 +1163,6 @@ JuliaDataFrame() : Exports == Implementation where
     Exports ==> JuliaObjectAggregate() with
       elt : (%, JuliaSymbol) -> JuliaVector(JuliaObject)
       ++ elt(obj, sym) returns the property sym of obj.
-      ++ For example, using JuliaObject:
-      ++ \example{ret := jlApply("svd",jobject("rand(4,4)")); ret.U}
       qelt : (%, JuliaSymbol) -> JuliaVector(JuliaObject)
       ++ elt(obj, sym) returns the property sym of obj. No checks are done
       ++ regarding the existence of the sym property. If it does not exist,

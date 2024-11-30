@@ -185,6 +185,10 @@
     (|jl_bool_eval_string| (concatenate 'string "try import " sym
         " catch; return false else return true end")))
 
+(defun |jl_include_file| (file)
+    (|jl_bool_eval_string| (concatenate 'string "try include(\"" file "\")"
+        " catch; return false else return true end")))
+
 (defmacro get_ncols (cplx a nrows)
     `(if (zerop ,cplx)
         (/ (array-dimension ,a 0) ,nrows)

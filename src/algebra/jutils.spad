@@ -35,11 +35,14 @@ JuliaUtilityFunctions() : Exports == Implementation where
     ++ jlImport(modpackfunc) imports the module, package or function
     ++ modpackfunc and makes its exported name(s) available.
     ++ Returns false if it can not be imported.
+    jlInclude     : String -> Boolean
+    ++ jlInclude(file.jl) loads and evaluates the content of the Julia
+    ++ file file.jl in the current global scope.
 
     jlDefined?    : JuliaSymbol -> Boolean
     ++ jlDefined?(sym) checks whether or not sym is defined in Julia.
     jlDefined?    : String -> Boolean
-    ++ jlDefined?(str) cheks whether or not str is defined in Julia.
+    ++ jlDefined?(str) checks whether or not str is defined in Julia.
 
     jlAddPackage  : String -> Void
     ++ jlAddPackage(package) add package to Julia project.
@@ -327,6 +330,7 @@ JuliaUtilityFunctions() : Exports == Implementation where
 
     jlUsing(m) == jl_using_package(m)$Lisp
     jlImport(m) == jl_import_symbol(m)$Lisp
+    jlInclude(file) == jl_include_file(file)$Lisp
 
     jlEvalString(s : STR)   : Void    == jl_eval_string(s)$Lisp
     jlEvalString(s : STR)   : Boolean == jl_bool_eval_string(s)$Lisp

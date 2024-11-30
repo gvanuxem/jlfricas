@@ -47,9 +47,9 @@ NemoArbField(p: PositiveInteger) : Exports == Implementation where
     hurwitzZeta: (%, %) -> %
     ++ hurwitzZeta(s,a) returns the Hurwitz zeta function of s and a.
     "*"      : (%, Integer) -> %
-    ++ 
+    ++ * \undocumented
     "/"      : (Integer, %) -> %
-    ++ 
+    ++ / \undocumented
     overlaps? : (%, %) -> Boolean
     ++ overlaps?(x,y) checks whether or not any part of x and y balls overlaps. 
     contains? : (%, %) -> Boolean 
@@ -99,23 +99,31 @@ NemoArbField(p: PositiveInteger) : Exports == Implementation where
     setUnion : (%, %) -> %
     ++ setUnion(x,y) returns the unions of the intervals x and y.
     guess    : (%, NonNegativeInteger) -> NemoAlgebraicNumber
-    ++ guess(a, deg) returns the reconstructed algebraic number found if it succeeds.
-    ++ Up to degree deg.
-    retractIfCan : NemoAlgebraicNumber -> Union(%, "failed")
+    ++ guess(a, deg) returns the reconstructed algebraic
+    ++ number found if it succeeds. Up to degree deg.
     convert  : % -> NemoRational
+    ++ convert(x) converts x.
     convert  : % -> JuliaFloat
+    ++ convert(x) converts x.
     coerce   : JF64 -> %
+    ++ coerces(x) coerces x.
     coerce   : Float -> %
+    ++ coerces(x) coerces x.
     jnball : (%, %) -> %
     ++ jnball(x,r) returns a ball with midpoint x and radius r.
+    jnrb   : NemoAlgebraicNumber -> %
+    ++ jnrb(an) evaluates numerically an by converting it to a real Arb field.
+    jnrb   : NemoExactComplexField -> %
+    ++ jnrb(necf) evaluates numerically necf by converting it
+    ++ to a real Arb field.
     jnrb   : String -> %
-    ++ jnrb(str) returns str as a real ball. 
+    ++ jnrb(str) evaluates str by converting it to a real Arb field. 
     jnrb   : Integer -> %
-    ++ jnrb(i) returns i as a real ball.
+    ++ jnrb(i) returns i as a real Arb ball.
     jnrb   : Fraction(Integer) -> %
-    ++ jnrb(fi) returns fi as a real ball.
+    ++ jnrb(fi) returns fi as a real Arb ball.
     jnrb   : Float -> %
-    ++ jnrb(fl) returns fl as a real ball.
+    ++ jnrb(fl) returns fl as a real Arb ball.
   Implementation ==> add
     import from JuliaUtilityFunctions
     import from String
@@ -254,10 +262,6 @@ NemoArbField(p: PositiveInteger) : Exports == Implementation where
       not integer?(x) => "failed"
       convert(jlref(concat(["ZZ(", getind(x),")"]))$NemoInteger)
 
-    retractIfCan(x : NemoAlgebraicNumber) : Union(%, "failed") ==
-      real?(x) => junfunc(NARBP, x)
-      "failed"
-
     retractIfCan(x) : Union(Fraction Integer, "failed") ==
       tmp := jlref(concat(["QQ(rationalize(BigInt,BigFloat(",
         getind(x),")))"]))$NemoRational
@@ -293,6 +297,8 @@ NemoArbField(p: PositiveInteger) : Exports == Implementation where
     coerce(i : Integer) ==
       jlref(concat([NARBP, string(i),")"]))
     jnball(a,b) == jbinfunc("ball(", a, b)
+    jnrb(an : NemoAlgebraicNumber) == junfunc(NARBP, an)
+    jnrb(necf : NemoExactComplexField) == junfunc(NARBP, necf)
     jnrb(s : String) == jlref(concat([NARBP, "_"", s,"_")"]))
     jnrb(i : Integer) == coerce(i)
     jnrb(q : Fraction(Integer)) == coerce(q)
@@ -341,9 +347,9 @@ NemoAcbField(p: PositiveInteger) : Exports == Implementation where
     pi      : () -> %
     ++ pi() returns the JuliaFloat representation of π.
     "*"   : (%, Integer) -> %
-    ++ 
+    ++ * \undocumented
     "/"   : (Integer, %) -> %
-    ++ 
+    ++ / \undocumented
     expm1   :  % -> %
     ++ expm1(x) computes accurately e^x-1. It avoids the loss of precision
     ++ involved in the direct evaluation of exp(x)-1 for small values of x.
@@ -387,20 +393,29 @@ NemoAcbField(p: PositiveInteger) : Exports == Implementation where
     guess    : (%, NonNegativeInteger) -> NemoAlgebraicNumber
     ++ guess(a, deg) returns the reconstructed algebraic number found if it succeeds.
     ++ Up to degree deg.
-    convert  : NemoExactComplexField -> %
-    ++ convert(z) converts z.
     coerce   : Complex(Integer) -> % -- for %i operations
     ++ coerce(z) coerces z. Convenience function.
-    coerce    : NemoAlgebraicNumber -> %
-    ++ coerce(an) coerces the algebraic number an.
     coerce    : Float -> %
     ++ coerce(r) coerce the floating point number r.
+    jncb   : NemoAlgebraicNumber -> %
+    ++ jncb(an) evaluates numerically an by converting it to a complex Arb field.
+    jncb   : NemoExactComplexField -> %
+    ++ jncb(necf) evaluates numerically necf by converting it to a complex Arb field.
     jncb   : String -> %
+    ++ jncb(str) evaluates str to a complex Arb field.
     jncb   : (String, String) -> %
+    ++ jncb(strr, stri) evaluates strr and stri to a complex Arb field.
+    ++ using real and imaginary part.
     jncb   : Integer -> %
+    ++ jncb(r) returns r as a complex complex Arb ball.
     jncb   : (Integer, Integer) -> %
+    ++ jncb(r,i) returns r and i as a complex Arb ball using
+    ++ real and imaginary part.
     jncb   : Float -> %
+    ++ jncb(r) returns r as a complex complex Arb ball.
     jncb   : (Float, Float) -> %
+    ++ jncb(r,i) returns r and i as a complex Arb ball using
+    ++ real and imaginary part.
   Implementation ==> add
     import from JuliaUtilityFunctions
     import from String
@@ -530,8 +545,6 @@ NemoAcbField(p: PositiveInteger) : Exports == Implementation where
     complex(r:NemoArbField(p), i:NemoArbField(p)) ==
       jlref(concat([NACBP, getind(r),",",getind(i),")"]))
 
-    convert(z : NemoExactComplexField) ==
-      jlref(concat([NACB,"(", getind(z),")"]))
     coerce(f : Float) ==
       tmp := outputSpacing(0)
       ret := jlref(concat([NACBP,"_"", convert(f),"_")"]))
@@ -540,7 +553,8 @@ NemoAcbField(p: PositiveInteger) : Exports == Implementation where
     coerce(i : Integer) == jlref(concat([NACBP, "_"", string(i),"_")"]))
     coerce(gi : Complex(Integer)) ==
       jbinfunc(NACBP, coerce(real gi)@NemoArbField(p), coerce(imag gi)@NemoArbField(p))
-    coerce(an : NemoAlgebraicNumber) == junfunc(NACBP, an)
+    jncb(an : NemoAlgebraicNumber) == junfunc(NACBP, an)
+    jncb(necf : NemoExactComplexField) == junfunc(NACBP, necf)
     jncb(s : String) == jlref(concat([NACBP, "_"", s,"_")"]))
     jncb(r : String, i : String) ==
       jlref(concat([NACBP, "_"", r, "_",_"", i, "_")"]))

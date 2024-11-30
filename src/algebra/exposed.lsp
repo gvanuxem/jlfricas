@@ -179,6 +179,7 @@
   (|JuliaObject| . JOBJECT)
   (|JuliaObjBigInt| . JOBBINT)
   (|JuliaObjBoolean| . JOBBOOL)
+  (|JuliaObjDict| . JOBDICT)
   (|JuliaObjDynamicLinker| . JOBDLINK)
   (|JuliaObjFloat64| . JOBF64)
   (|JuliaObjInt64| . JOBI64)

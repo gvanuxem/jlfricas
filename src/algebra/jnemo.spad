@@ -800,7 +800,7 @@ NemoFiniteField(p : PositiveInteger, n: PositiveInteger) : Exports == Implementa
 ++  see https://fredrikj.net/calcium/ca.html#context-options for hints).
 ++  Reference: https://nemocas.github.io/Nemo.jl
 ++  See https://flintlib.org/doc/introduction_calcium.html for the C library.
-InnerNemoExactComplexField(Options : JuliaObject) : Exports ==
+InnerNemoExactComplexField(Options : JuliaObjDict) : Exports ==
       Implementation where
   JI64      ==> JuliaInt64
   PI        ==> PositiveInteger
@@ -861,9 +861,9 @@ InnerNemoExactComplexField(Options : JuliaObject) : Exports ==
     ++ csign(x) is an extension of the real sign function, x/sqrt(x^2) unless x is 0
     ++ (0 in this case).
     floor : % -> %
-    ++ floor(z)
+    ++ floor(z) returns the largest integer below or equal ot z.
     ceiling : % -> %
-    ++ ceiling(z) 
+    ++ ceiling(z) returns the smallest integer above or equal to z. 
     pow     : (%, Integer, JuliaSymbol) -> %
     ++ pow(x, i, repr) x raised to power i using one of the repr representations:
     ++ :default (since 'default' is a FriCAS keyword use jsym(String) to coerce it)
@@ -933,9 +933,9 @@ InnerNemoExactComplexField(Options : JuliaObject) : Exports ==
     "*"      : (%, Integer) -> %
     "/"      : (Integer, %) -> %
     "/"      : (%, Integer) -> %
-    jlOptions : % -> JuliaObject
-    ++ jlOptions(x) returns the options set at startup time that affect
-    ++ different aspects of computations using this object. 
+    jlOptions : % -> JuliaObjDict
+    ++ jlOptions(x) returns the options set at instantion time
+    ++ that affect different aspects of computations using this object.
     retractIfCan  : % -> Union(NemoInteger, "failed")
     ++ retractIfCan(z) retracts if possible z to a Integer.
     retractIfCan  : % -> Union(NemoRational, "failed")
@@ -976,11 +976,13 @@ InnerNemoExactComplexField(Options : JuliaObject) : Exports ==
       jlEvalString(concat([bfunc, getind(a),")"]))@Boolean 
 
     -- initialize (see Calcium constructor options)
-    NECF := concat ["NECF", jlEvalString(concat ["string(hash(", getind(Options),"))"])@String]
-    jlEvalString(concat [NECF,"=CalciumField(extended=true,options=",getind(Options),")"])@Void
+    NECF := concat ["NECF",
+      jlEvalString(concat ["string(hash(", getind(Options),"))"])@String]
+    jlEvalString(concat [NECF,
+      "=CalciumField(extended=true,options=",getind(Options),")"])@Void
     NECFP := concat(NECF,"(")
 
-    jlOptions(x) == jlref(concat ["options(",NECF,")"])$JuliaObject
+    jlOptions(x) == jlref(concat ["options(",NECF,")"])$JuliaObjDict
 
     0    == jlref(concat ["zero(", NECF,")"])
     1    == jlref(concat ["one(", NECF,")"])
@@ -1168,7 +1170,7 @@ InnerNemoExactComplexField(Options : JuliaObject) : Exports ==
 ++  Reference: https://nemocas.github.io/Nemo.jl
 ++  See https://flintlib.org/doc/introduction_calcium.html for the C library.
 NemoExactComplexField() ==
-  InnerNemoExactComplexField(jobject("Dict{Symbol,Int64}()"))
+  InnerNemoExactComplexField(jdict("Dict{Symbol,Int64}(:verbose=>0,:print_flags=>3)"))
 
 )abbrev domain NFR NemoFactored
 ++ Domain for factored Nemo elements

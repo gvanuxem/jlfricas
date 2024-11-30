@@ -2173,7 +2173,7 @@ readSpad2Cmd l ==
       l := first(l)
   if SYMBOLP(l) then l := SYMBOL_-NAME(l)
 
-  devFTs := '("input" "INPUT" "boot" "BOOT" "lisp" "LISP")
+  devFTs := '("input" "INPUT" "boot" "BOOT" "lisp" "LISP" "jl" "JL")
   fileTypes :=
     $UserLevel = 'interpreter => '("input" "INPUT")
     $UserLevel = 'compiler    => '("input" "INPUT")
@@ -2211,6 +2211,10 @@ read_or_compile(quiet, i_name) ==
         LOAD(fricas_compile_fasl(input_file, ffile))
     type = '"bbin" => LOAD(input_file)
     type = '"input" => ncINTERPFILE(input_file, not(quiet))
+    if type = '"jl" then
+        if not _*JULIA_-INITIALIZED_* then
+            init_julia_env()
+        _*JULIA_-INITIALIZED_* => jl_include_file input_file
 
 --% )show
 
