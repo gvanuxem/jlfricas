@@ -1,4 +1,4 @@
-#include <julia.h>
+#include <julia/julia.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>

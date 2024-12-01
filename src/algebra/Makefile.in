@@ -60,12 +60,12 @@ SPAD_SRCS= \
      groebsol gseries hashstate html ideal idecomp indexedp \
      intaf intalg intaux intclos intden intef integer \
      integrat interval intfact intlocp intpar intpm intrf intspec irexpand \
-     irsn ituple jarray32 jarray64 jcfsf jla jnemo jnpoly jobject jplot jfsf jfsf2 \
-     jf64sf jf64sf2 jnball julia jutils jet jws jwsagg jwsexpr jwsnsf jwsutils \
-     kl kovacic laplace laurent leadcdet lie limitps lindep lingrob linpen \
-     liouv listgcd list lll lmdict lodof lodof2 lodo logic \
-     mama manip mantepse math_sym mathml mappkg matcat matfuns matrix \
-     matstor mesh mfinfact mkfunc mkrecord \
+     irsn ituple jarray32 jarray64 jcfsf jla32 jla64 jnemo jnpoly jobject \
+	 jplot jfsf jfsf2 jf64sf jf64sf2 jnball julia jutils jet jws jwsagg \
+	 jwsexpr jwsnsf jwsutils kl kovacic laplace laurent leadcdet lie \
+	 limitps lindep lingrob linpen liouv listgcd list lll lmdict lodof \
+	 lodof2 lodo logic mama manip mantepse math_sym mathml mappkg matcat \
+	 matfuns matrix matstor mesh mfinfact mkfunc mkrecord \
      mlift modgcd modhpsol modmonom modmon modring \
      moebius mring mrv_limit mset mts muldep multfact multpoly \
      multsqfr naalgc naalg newdata newpoint newpoly \
@@ -395,12 +395,12 @@ GUESSLIST= SMPEXPR FAMR2 NEWTON UFPS GOPT GUESSF1 GUESSP1\
 
 ifdef JULIA_WRAP_SO_TARGET
 JULIALIST = INECF JARBPR JCF32 JCF32VEC JCF32MAT JCF32SMA JCF64 JCF64MAT \
-            JCF64MTF JCF64SMA JCF64VEC JCFSF JCFLOAT \
-            JCLA JDFRAME JDRAW JF32 JF32VEC JF32VEC2 JF32MAT JF32SMAT  JF64 \
+            JCF64MTF JCF64SMA JCF64VEC JCFSF JCFLOAT JCF32LA JCF64LA \
+			JDFRAME JDRAW JF32 JF32VEC JF32VEC2 JF32MAT JF32SMAT  JF64 \
             JF64MAT JF64MTF JF64SF JF64SF2 JF64SMAT JF64VEC \
             JF64VEC2 JFLOAT JFSF JFSF2 JI64 JI64VEC JMATCAT JMATRIX JOBJECT JOBAGG \
             JOBBOOL JOBBINT JOBCF64 JOBDICT JOBDLINK JOBF64 JOBI64 JOBRING JOBTPLE \
-            JOBTYPE JPLOT JRING JRLA JSTRU JSYM JTYPE JVECCAT \
+            JOBTYPE JPLOT JRING JF32LA JF64LA JSTRU JSYM JTYPE JVECCAT \
             JVECTOR JVECTOR2 NACF NACFS JUF NAN NACB NARB NCB NCF NECF NFF \
             NFR NINT NMP NPF NRAT NRB NRF NRING NTYPE NUP NZMOD
 JULIACATLIST = JARBPR JMATCAT JOBAGG JOBRING JOBTYPE JRING JTYPE JVECCAT \

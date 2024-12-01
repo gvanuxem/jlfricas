@@ -88,7 +88,7 @@ JuliaFloat32Vector() : Exports == Implementation where
             ~pprint =>
                 bracket [qelt(v, k)::OutputForm for k in 1$Lisp .. maxIndex v]
             ret: List OutputForm := jl_stringify_1dffunction(0$NNI, "show", "_"text/plain_"", v)$Lisp
-            pile(append(["" pretend OutputForm],rest ret))
+            pile(append(["" pretend OutputForm], rest ret))
 
         copy!(b, a) ==
             jl_1d2ffunction(0$NNI,"copy!", b, a)$Lisp
@@ -283,7 +283,7 @@ JuliaFloat32Matrix() :  Exports == Implementation where
         ++ transpose!(b, a) stores transposed a in b.
     Implementation ==> add
         import from JuliaUtilityFunctions
-        import from JuliaRealLinearAlgebra
+        import from JuliaF32LinearAlgebra
         import from JuliaFloat32Vector
         jlInitialize(true)
 
@@ -394,11 +394,9 @@ JuliaFloat32Matrix() :  Exports == Implementation where
 
         -- ??? why the pretend?
         rank(m) ==
-        --    prec : JF32 := DOUBLE_-FLOAT_-EPSILON$Lisp
-        --    rank(m pretend JuliaFloat32Matrix,
-        --        prec * jf32(10))$JuliaRealLinearAlgebra
-            -- Temporary
-            rank(m)$MLAF
+            prec : JF32 := SINGLE_-FLOAT_-EPSILON$Lisp
+            rank(m pretend JuliaFloat32Matrix,
+                prec * jf32(10))$JuliaF32LinearAlgebra
 
         inverse(m) ==
             m.nrows ~= m.ncols => error "inverse: matrix is not square"
@@ -563,7 +561,7 @@ JuliaComplexF32Vector() :  Exports == Implementation where
         ++ By default it is the Julia version.
     Implementation ==> add
         import from JuliaUtilityFunctions
-        import from JuliaComplexLinearAlgebra
+        import from JuliaCF32LinearAlgebra
         jlInitialize(true)
         defined?(func) ==>
             not jlDefined?(func) =>
@@ -725,7 +723,7 @@ JuliaComplexF32Matrix() : Exports == Implementation where
         ++ By default it is the Julia version.
     Implementation ==> add
         import from JuliaUtilityFunctions
-        import from JuliaComplexLinearAlgebra
+        import from JuliaCF32LinearAlgebra
         import from JuliaFloat32Vector
         import from JuliaFloat32Matrix
         jlInitialize(true)
@@ -856,11 +854,9 @@ JuliaComplexF32Matrix() : Exports == Implementation where
 
         -- ??? why the pretend?
         rank(m) ==
-        --    prec : JF32 := DOUBLE_-FLOAT_-EPSILON$Lisp
-        --    rank(m pretend JuliaComplexF32Matrix,
-        --        prec * jf32(10))$JuliaComplexLinearAlgebra
-            -- Temporary
-            rank(m)$MLAF
+            prec : JF32 := SINGLE_-FLOAT_-EPSILON$Lisp
+            rank(m pretend JuliaComplexF32Matrix,
+                prec * jf32(10))$JuliaCF32LinearAlgebra
 
         inverse(m) ==
             m.nrows ~= m.ncols => error "inverse: matrix is not square"

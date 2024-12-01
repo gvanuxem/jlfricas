@@ -271,10 +271,13 @@ NemoRational() : Exports == Implementation where
 ++  for Julia (Calcium based).
 ++  https://fredrikj.net/calcium/
 -- TODO: relative stuff to UniPoly*, reducedSystem*
+-- norm, height etc...
 NemoAlgebraicNumber() : Exports == Implementation where
   NNI       ==> NonNegativeInteger
   JI64      ==> JuliaInt64
   NUP       ==> NemoUnivariatePolynomial
+  NINT      ==> NemoInteger
+  Z         ==> Integer
   parsei    ==> PARSE_-INTEGER$Lisp
   Exports ==> Join(NemoRing, ExpressionSpace, NemoAlgebraicallyClosedField,
                         RetractableTo NemoInteger, RetractableTo NemoRational,
@@ -342,8 +345,30 @@ NemoAlgebraicNumber() : Exports == Implementation where
     denominator: % -> NemoInteger
     ++ numeraor(a) returns the denominator of a, the leading coefficient
     ++ of the minimal polynomial of a.
+    minimalPolynomial : % -> SparseUnivariatePolynomial(%)
+    -- ??
+    ++ minimalPolynomial(an) returns the minimal polynomial of an
+    ++ over algebraic number.
+    minimalPolynomial : % -> SparseUnivariatePolynomial(Z)
+    ++ minimalPolynomial(an) returns the minimal polynomial of an.
+    abs : % -> %
+    ++ abs(a) returns the absolute value of a.
+    abs2 : % -> %
+    ++ abs(a) returns the squared absolute value of a.
+    floor : % -> %
+    ++ floor(a) returns the largest integer below or equal ot a.
+    ceiling : % -> %
+    ++ ceiling(a) returns the smallest integer above or equal to a.
+    conj : % -> %
+    ++ conj(a) returns the complex conjugate of a.
+    sign : % -> %
+    ++ sign(a) returns the complex sign of a.
+    csgn : % -> %
+    ++ csgn(a) returns an extension of the real sign function
+    ++ equivalent to a/sqrt(a^2).
     coerce  : % -> AlgebraicNumber
-    ++ 
+    -- TODO
+    ++ coerce(nan) coerces nan to AlgebraicNumber if it is rational.
     jnan    : NemoInteger -> %
     jnan    : NemoRational -> %
     jnan    : String -> %
@@ -381,6 +406,18 @@ NemoAlgebraicNumber() : Exports == Implementation where
       jlref(concat(["root_of_unity(QQBar,", string(n), ",",string(k) ")"]))
     real(x) == junfunc("real(",x)
     imag(x) == junfunc("imag(",x)
+    minimalPolynomial(an) : SparseUnivariatePolynomial(%) ==
+      AN  := NemoAlgebraicNumber
+      UP := UnivariatePolynomial('x, AN)
+      p := minimalPolynomial(an pretend AN)$NUP(NINT, 'x)
+      strp := string p; inp := parse(strp)$InputForm
+      interpret(inp)$InputFormFunctions1(UP) pretend SparseUnivariatePolynomial(%)
+    minimalPolynomial(an) : SparseUnivariatePolynomial(Integer) ==
+      AN  := NemoAlgebraicNumber
+      UP := UnivariatePolynomial('x, Integer)
+      p := minimalPolynomial(an pretend AN)$NUP(NINT, 'x)
+      strp := string p; inp := parse(strp)$InputForm
+      interpret(inp)$InputFormFunctions1(UP) pretend SparseUnivariatePolynomial(Z)
 
     random(deg, bits) ==
       jlref(concat(["rand(QQBar,degree=", string(deg),
@@ -428,6 +465,14 @@ NemoAlgebraicNumber() : Exports == Implementation where
     height(an) ==
       ret := jlref(concat ["height(", getind(an),")"])$NemoInteger
       convert(ret)@Integer pretend NNI
+    abs(an) == junfunc("abs(", an)
+    abs2(an) == junfunc("abs2(", an)
+    floor(an) == junfunc("floor(", an)
+    ceiling(an) == junfunc("ceil(", an)
+    conj(an) == junfunc("conj(", an)
+    sign(an) == junfunc("sign(", an)
+    csgn(an) == junfunc("csgn(", an)
+
 
     expPiI(a) == junfunc("exp_pi_i(",a)
     logPiI(a) == junfunc("log_pi_i(",a)
@@ -863,7 +908,7 @@ InnerNemoExactComplexField(Options : JuliaObjDict) : Exports ==
     floor : % -> %
     ++ floor(z) returns the largest integer below or equal ot z.
     ceiling : % -> %
-    ++ ceiling(z) returns the smallest integer above or equal to z. 
+    ++ ceiling(z) returns the smallest integer above or equal to z.
     pow     : (%, Integer, JuliaSymbol) -> %
     ++ pow(x, i, repr) x raised to power i using one of the repr representations:
     ++ :default (since 'default' is a FriCAS keyword use jsym(String) to coerce it)

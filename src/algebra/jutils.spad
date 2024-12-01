@@ -125,23 +125,23 @@ JuliaUtilityFunctions() : Exports == Implementation where
     ++ of func applied to cvec with parameter p.
 
     jlFunction2F64Vec! : (STR, JF64VEC, JF64VEC) -> Void
-    ++ jlFunction2F64Vec(func, vec1, vec2) applies the Julia function
+    ++ jlFunction2F64Vec!(func, vec1, vec2) applies the Julia function
     ++ func to vec2 that overwrites vec1 with the result.
     ++ Please note that the overwriting is done by Julia and not FriCAS.
     ++ See Julia 'copy!' for example. 
     jlFunction2CF64Vec! : (STR, JCF64VEC, JCF64VEC) -> Void
-    ++ jlFunction2CF64Vec(func, cvec1, cvec2) applies the Julia function
+    ++ jlFunction2CF64Vec!(func, cvec1, cvec2) applies the Julia function
     ++ func to cvec2 that overwrites cvec1 with the result.
     ++ Please note that the overwriting is done by Julia and not FriCAS.
     ++ See Julia 'copy!' for example. 
 
-    jlFunction2F64Mat! : (STR, JF64MAT, NNI, JF64MAT, NNI) -> Void
-    ++ jlFunction2F64Mat(func, mat1, mat2) applies the Julia function
+    jlFunction2F64Mat! : (STR, JF64VEC, NNI, JF64VEC, NNI) -> Void
+    ++ jlFunction2F64Mat!(func, mat1, mat2) applies the Julia function
     ++ func to mat2 that overwrites mat1 with the result. Please note that
     ++ the overwriting is done by Julia and not FriCAS.
     ++ See Julia 'copy!' or transpose! for example. 
-    jlFunction2CF64Mat! : (STR, JCF64MAT, NNI, JCF64MAT, NNI) -> Void
-    ++ jlFunction2CF64Mat(func, cmat1, cmat2) applies the Julia function
+    jlFunction2CF64Mat! : (STR, JCF64VEC, NNI, JCF64VEC, NNI) -> Void
+    ++ jlFunction2CF64Mat!(func, cmat1, cmat2) applies the Julia function
     ++ func to cmat2 that overwrites cmat1 with the result. Please note that
     ++ the overwriting is done by Julia and not FriCAS.
     ++ See Julia 'copy!' or adjoint! for example. 
@@ -168,15 +168,6 @@ JuliaUtilityFunctions() : Exports == Implementation where
     ++ jlF64FunctionF64Mat(func, cmat, nr, p) returns the output value of
     ++ func applied to cmat, internally a vector, where the number of rows
     ++ is nr and p an additional parameter.
-
-    jlFunction2F64Mat!  : (STR, JF64VEC, NNI, JF64VEC, NNI) -> Void
-    ++ jlFunction2CF64Mat!(func, mat1, nr1, mat2, nr2) applies func to the
-    ++ pair of matrices mat1 and mat2 (internally vectors).
-    ++ nr1 and nr2 are respectively the number of rows.
-    jlFunction2CF64Mat! : (STR, JCF64VEC, NNI, JCF64VEC, NNI) -> Void
-    ++ jlFunction2CF64Mat(func, cmat1, nr1, cmat2, nr2) applies func to the
-    ++ pair of matrices cmat1 and cmat2 (internally vectors).
-    ++ nr1 and nr2 are respectively the number of rows.
 
     jlFunctionF64ArrayF64Mat : (STR, JF64VEC, JF64VEC, NNI) -> Void
     ++ jlFunctionF64ArrayF64Mat(func, array, mat, nr) applies the function
@@ -251,12 +242,12 @@ JuliaUtilityFunctions() : Exports == Implementation where
     ++ Please note that the overwriting is done by Julia and not FriCAS.
     ++ See Julia 'copy!' for example. 
 
-    jlFunction2F32Mat! : (STR, JF32MAT, NNI, JF32MAT, NNI) -> Void
-    ++ jlFunction2F32Mat(func, mat1, mat2) applies the Julia function
+    jlFunction2F32Mat! : (STR, JF32VEC, NNI, JF32VEC, NNI) -> Void
+    ++ jlFunction2F32Mat!(func, mat1, mat2) applies the Julia function
     ++ func to mat2 that overwrites mat1 with the result. Please note that
     ++ the overwriting is done by Julia and not FriCAS.
     ++ See Julia 'copy!' or transpose! for example. 
-    jlFunction2CF32Mat! : (STR, JCF32MAT, NNI, JCF32MAT, NNI) -> Void
+    jlFunction2CF32Mat! : (STR, JCF32VEC, NNI, JCF32VEC, NNI) -> Void
     ++ jlFunction2CF32Mat(func, cmat1, cmat2) applies the Julia function
     ++ func to cmat2 that overwrites cmat1 with the result. Please note that
     ++ the overwriting is done by Julia and not FriCAS.
@@ -284,15 +275,6 @@ JuliaUtilityFunctions() : Exports == Implementation where
     ++ jlF32FunctionF32Mat(func, cmat, nr, p) returns the output value of
     ++ func applied to cmat, internally a vector, where the number of rows
     ++ is nr and p an additional parameter.
-
-    jlFunction2F32Mat!  : (STR, JF32VEC, NNI, JF32VEC, NNI) -> Void
-    ++ jlFunction2CF32Mat!(func, mat1, nr1, mat2, nr2) applies func to the
-    ++ pair of matrices mat1 and mat2 (internally vectors).
-    ++ nr1 and nr2 are respectively the number of rows.
-    jlFunction2CF32Mat! : (STR, JCF32VEC, NNI, JCF32VEC, NNI) -> Void
-    ++ jlFunction2CF32Mat(func, cmat1, nr1, cmat2, nr2) applies func to the
-    ++ pair of matrices cmat1 and cmat2 (internally vectors).
-    ++ nr1 and nr2 are respectively the number of rows.
 
     jlFunctionF32ArrayF32Mat : (STR, JF32VEC, JF32VEC, NNI) -> Void
     ++ jlFunctionF32ArrayF32Mat(func, array, mat, nr) applies the function

@@ -351,7 +351,7 @@ JuliaFloat64Matrix() :  Exports == Implementation where
         ++ transpose!(b, a) stores transposed a in b.
     Implementation ==> add
         import from JuliaUtilityFunctions
-        import from JuliaRealLinearAlgebra
+        import from JuliaF64LinearAlgebra
         import from JuliaFloat64Vector
         jlInitialize(true)
 
@@ -471,7 +471,7 @@ JuliaFloat64Matrix() :  Exports == Implementation where
         rank(m) ==
             prec : JF64 := DOUBLE_-FLOAT_-EPSILON$Lisp
             rank(m pretend JuliaFloat64Matrix,
-                prec * jf64(10))$JuliaRealLinearAlgebra
+                prec * jf64(10))$JuliaF64LinearAlgebra
 
         inverse(m) ==
             m.nrows ~= m.ncols => error "inverse: matrix is not square"
@@ -629,7 +629,7 @@ JuliaComplexF64Vector() :  Exports == Implementation where
         ++ By default it is the Julia version.
     Implementation ==> add
         import from JuliaUtilityFunctions
-        import from JuliaComplexLinearAlgebra
+        import from JuliaCF64LinearAlgebra
         jlInitialize(true)
         defined?(func) ==>
             not jlDefined?(func) =>
@@ -788,7 +788,7 @@ JuliaComplexF64Matrix() : Exports == Implementation where
         ++ By default it is the Julia version.
     Implementation ==> add
         import from JuliaUtilityFunctions
-        import from JuliaComplexLinearAlgebra
+        import from JuliaCF64LinearAlgebra
         import from JuliaFloat64Vector
         import from JuliaFloat64Matrix
         jlInitialize(true)
@@ -921,7 +921,7 @@ JuliaComplexF64Matrix() : Exports == Implementation where
         rank(m) ==
             prec : JF64 := DOUBLE_-FLOAT_-EPSILON$Lisp
             rank(m pretend JuliaComplexF64Matrix,
-                prec * jf64(10))$JuliaComplexLinearAlgebra
+                prec * jf64(10))$JuliaCF64LinearAlgebra
 
         inverse(m) ==
             m.nrows ~= m.ncols => error "inverse: matrix is not square"
