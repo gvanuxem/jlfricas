@@ -549,7 +549,7 @@
                         (sb-alien::integer)))
                 cplx func (dpointer array) m n (dpointer array1) o p))))
 
-(defun |jl_flt_2dfunction_flt| (cplx func array m val)
+(defun |jl_flt_2dffunction_flt| (cplx func array m val)
     (let ((n (get_ncols cplx array m)))
       (sb-sys:with-pinned-objects (array)
            (sb-alien:alien-funcall

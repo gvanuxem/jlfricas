@@ -1733,7 +1733,7 @@ double jl_call_dbl_2dfunction(int64_t cplx, const char* func, double *array,
     return jl_unbox_float64(ret);
 }
 
-float jl_call_dbl_2dffunction_flt(int64_t cplx, const char* func, float *array,
+float jl_call_flt_2dffunction_flt(int64_t cplx, const char* func, float *array,
         int64_t m, int64_t n, float val){
     char cdims[50];
     jl_array_t *mat;

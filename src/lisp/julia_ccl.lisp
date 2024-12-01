@@ -425,7 +425,7 @@
                     :int cplx :address s :address ptr :int m :int n
                         :double-float)))))
 
-(defun |jl_flt_2dffunction_dbl| (cplx func array m val)
+(defun |jl_flt_2dffunction_flt| (cplx func array m val)
     (let ((n (get_ncols cplx array m)))
         (ccl::with-encoded-cstrs :utf-8 ((s func))
             (ccl:with-pointer-to-ivector (ptr array)

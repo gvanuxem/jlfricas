@@ -363,6 +363,10 @@ NemoAlgebraicNumber() : Exports == Implementation where
     ++ conj(a) returns the complex conjugate of a.
     sign : % -> %
     ++ sign(a) returns the complex sign of a.
+    realSign : % -> %
+    ++ realSign(a) returns the sign of the real part.
+    imagSign : % -> %
+    ++ imagSign(a) returns the sign of the imaginary part.
     csgn : % -> %
     ++ csgn(a) returns an extension of the real sign function
     ++ equivalent to a/sqrt(a^2).
@@ -472,6 +476,8 @@ NemoAlgebraicNumber() : Exports == Implementation where
     conj(an) == junfunc("conj(", an)
     sign(an) == junfunc("sign(", an)
     csgn(an) == junfunc("csgn(", an)
+    realSign(an) == junfunc("sign_real(", an)
+    imagSign(an) == junfunc("sign_imag(", an)
 
 
     expPiI(a) == junfunc("exp_pi_i(",a)
