@@ -364,7 +364,8 @@ JuliaFloat32() : Exports == Implementation where
 ++ Author: G. Vanuxem
 ++ Date Created: novemebr 2024
 ++ Description: \spadtype{JuliaComplexF32} implements complex 32 bits
-++ floating point arithmetic using Julia Complex{Float32}.
+++ floating point arithmetic. Only basic arithmetic is supported.
+++ Convenience domain.
 JuliaComplexF32() : Exports == Implementation where
     JF32  ==> JuliaFloat32
     Exports ==> Join(JuliaType, ComplexCategory(JuliaFloat32)) with
@@ -431,9 +432,9 @@ JuliaFloat64() : Exports == Implementation where
       jlCApply : (String, JuliaSymbol, %, %, %) -> %
       ++ jlCApply(lib, func, x, y, z) applies the C function func from
       ++ the library lib to arguments x, y and z.
-      ++ For example if you have the GNU Scientific Library (GSl-2.8)
+      ++ For example if you have the GNU Scientific Library
       ++ installed:
-      ++ \example{jlCApply("libgsl.so.28",jsym(gsl_hypot3),2.0,7.0,9.0)}
+      ++ \example{jlCApply("libgsl",jsym(gsl_hypot3),jf64(2.0),jf64(7.0),jf64(9.0))}
       urand01 : () -> %
       ++ urand01() returns an uniformly distributed random number
       ++ contained in [0,1].
@@ -642,7 +643,8 @@ JuliaFloat64() : Exports == Implementation where
 ++ Author: G. Vanuxem
 ++ Date Created:
 ++ Description: \spadtype{JuliaComplexF64} implements complex 64 bits
-++ floating point arithmetic using Julia Complex{Float64}.
+++ floating point arithmetic. Only basic arithmetic is supported.
+++ Convenience domain.
 JuliaComplexF64() : Exports == Implementation where
     JF64  ==> JuliaFloat64
     Exports ==> Join(JuliaType, ComplexCategory(JuliaFloat64)) with

@@ -18,33 +18,33 @@ JuliaObjectType() : Category == JuliaType() with
     ++ jlRef(obj) returns the pretty printed internal Lisp representation
     ++ of the Julia object obj.
     mutable? : % -> Boolean
-    ++ mutable?(obj) checks wheter or not obj is mutable.
+    ++ mutable?(obj) checks whether or not obj is mutable.
     nothing? : % -> Boolean
     ++ nothing?(obj) checks whether or not obj is nothing.
-    jlApply : (String, %) -> %
-    ++jlApply(func, obj) executes the function func with obj as parameter
-    ++ and returns the result as a FriCAS JuliaObjectType.
-    jlApply : (String, %, %) -> %
-    ++jlApply(func, obj1, obj2) executes the function func with obj1 and obj2
-    ++ as parameters and returns the result as a FriCAS JuliaObjectType.
-    ++ For example, using JuliaObject:
-    ++ \example{M:=nrand(4,4);jlApply("getproperty",
-    ++ jlApply("svd", M::JOBJECT), jsym "S")}
+    jlApply : (String, %) -> JuliaObject
+    ++jlApply(func, obj) applies the function func with obj as parameter
+    ++ and returns the result as a FriCAS JuliaObject.
+    ++ For example, using JuliaMatrix(JuliaObjFloat64):
+    ++ \example{M:=nrand(4,4);}
+    ++ \example{jlApply("svd", M::JuliaMatrix(JuliaObjFloat64)).S}
     ++ should be "equivalent" to svdvals(M)
-    jlApply : (String, %, %, %) -> %
-    ++ jlApply(func, obj1, obj2, obj3) executes the function func with obj1, obj2
-    ++ and obj3 as parameters and returns the result as a FriCAS JuliaObjectType.
-    jlApply : (String, %, %, %, %) -> %
-    ++ jlApply(func, obj1, obj2, obj3, obj4) executes the function func with obj1, obj2,
-    ++ obj3 and obj4 as parameters and returns the result as a FriCAS JuliaObjectType.
-    jlApply : (String, %, %, %, %, %) -> %
-    ++ jlApply(func, obj1, obj2, obj3, obj4, obj5) executes the function func with obj1,
+    jlApply : (String, %, %) -> JuliaObject
+    ++jlApply(func, obj1, obj2) applies the function func with obj1 and obj2
+    ++ as parameters and returns the result as a FriCAS JuliaObject.
+    jlApply : (String, %, %, %) -> JuliaObject
+    ++ jlApply(func, obj1, obj2, obj3) applies the function func with obj1, obj2
+    ++ and obj3 as parameters and returns the result as a FriCAS JuliaObject.
+    jlApply : (String, %, %, %, %) -> JuliaObject
+    ++ jlApply(func, obj1, obj2, obj3, obj4) applies the function func with obj1, obj2,
+    ++ obj3 and obj4 as parameters and returns the result as a FriCAS JuliaObject.
+    jlApply : (String, %, %, %, %, %) -> JuliaObject
+    ++ jlApply(func, obj1, obj2, obj3, obj4, obj5) applies the function func with obj1,
     ++ obj2, obj3, obj4 and obj5 as parameters and returns the result as a FriCAS
-    ++ JuliaObjectType.
-    jlApply : (String, %, %, %, %, %, %) -> %
-    ++ jlApply(func, obj1, obj2, obj3, obj4, obj5, obj6) executes the function func
+    ++ JuliaObject.
+    jlApply : (String, %, %, %, %, %, %) -> JuliaObject
+    ++ jlApply(func, obj1, obj2, obj3, obj4, obj5, obj6) applies the function func
     ++ with obj1, obj2, obj3, obj4, obj5 and obj6 as parameters and returns
-    ++ the result as a FriCAS JuliaObjectType.
+    ++ the result as a FriCAS JuliaObject.
     string  : % -> String
     ++ string(obj) returns the Julia corresponding value of the object obj
     ++ as a string. Convenience function.
@@ -119,7 +119,7 @@ See the JuliaObjectType category for information")
     coerce(obj : %) : OutputForm ==
       ret : List OutputForm := jl_stringify_wrapped_index("show",
         "_"text/plain_"", getind(obj))$Lisp
-      -- first line length only 
+      -- first line length only
       #ret ~= 1 or more?(elt(ret,1) pretend String, _$LINELENGTH$Lisp)
         => pile(append(["" pretend OutputForm], ret))
       vconcat ret
@@ -134,7 +134,7 @@ JuliaObjectAggregate() : Category == Join(JuliaObjectType, Aggregate) with
     elt : (%, JuliaSymbol) -> JuliaObject
     ++ elt(obj, sym) returns the property sym of obj.
     ++ For example:
-    ++ \example{ret := jlApply("svd",jobject("rand(4,4)")); ret.U}
+    ++ \example{ret := jlApply("svd", jobject("rand(4,4)")); ret.U}
     qelt : (%, JuliaSymbol) -> JuliaObject
     ++ qelt(obj, sym) returns the property sym of obj. No checks are done
     ++ regarding the existence of the sym property. If it does not exist,
