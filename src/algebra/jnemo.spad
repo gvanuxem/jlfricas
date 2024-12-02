@@ -340,15 +340,15 @@ NemoAlgebraicNumber() : Exports == Implementation where
     degree     : % -> JuliaInt64
     ++ degree(a) returns the degree of the minimal polynomial of a.
     numerator  : % -> %
-    ++ numerator(a) returns a multiplied by its denominator
+    ++ numerator(anum) returns anum multiplied by its denominator
     ++ i.e. an algebraic integer.
     denominator: % -> NemoInteger
-    ++ numeraor(a) returns the denominator of a, the leading coefficient
+    ++ numeraor(anum) returns the denominator of anum, i.e. the leading coefficient
     ++ of the minimal polynomial of a.
     minimalPolynomial : % -> SparseUnivariatePolynomial(%)
     -- ??
     ++ minimalPolynomial(an) returns the minimal polynomial of an
-    ++ over algebraic number.
+    ++ over algebraic numbers.
     minimalPolynomial : % -> SparseUnivariatePolynomial(Z)
     ++ minimalPolynomial(an) returns the minimal polynomial of an.
     abs : % -> %
@@ -466,6 +466,7 @@ NemoAlgebraicNumber() : Exports == Implementation where
     sqrt(a : %)  == junfunc("sqrt(", a)
     nthRoot(x, i) == jlref(concat(["root(", getind(x),",",string(i),")"]))
     differentiate(x : %) : % == 0
+    -- Different complexity here (minimal polynomial based)
     height(an) ==
       ret := jlref(concat ["height(", getind(an),")"])$NemoInteger
       convert(ret)@Integer pretend NNI
@@ -1222,6 +1223,7 @@ InnerNemoExactComplexField(Options : JuliaObjDict) : Exports ==
 ++  See https://flintlib.org/doc/introduction_calcium.html for the C library.
 NemoExactComplexField() ==
   InnerNemoExactComplexField(jdict("Dict{Symbol,Int64}(:verbose=>0,:print_flags=>3)"))
+  --InnerNemoExactComplexField(jdict("Dict{Symbol,Int64}(:verbose=>0,:print_flags=>643)"))
 
 )abbrev domain NFR NemoFactored
 ++ Domain for factored Nemo elements

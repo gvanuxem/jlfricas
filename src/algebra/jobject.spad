@@ -1401,7 +1401,7 @@ JuliaVectorFunctions2(A, B) : Exports == Implementation where
 ++ Nemo follows the convention of the C libraries, it wraps and uses
 ++ row major representation.
 ++ See https://nemocas.github.io/Nemo.jl/stable/developer/interfaces/#Column-major-vs-row-major-matrices
-++ for more informatiions.
+++ for more information.
 JuliaMatrix(R : JuliaObjectRing) :  Exports == Implementation where
     PI      ==> PositiveInteger
     NNI     ==> NonNegativeInteger
@@ -1413,7 +1413,8 @@ JuliaMatrix(R : JuliaObjectRing) :  Exports == Implementation where
     parsei    ==> PARSE_-INTEGER$Lisp
     Exports ==> Join(JuliaObjectAggregate,
                   JuliaMatrixCategory(R, Row, Col)) with
-      if R has IntegerNumberSystem or R has QuotientFieldCategory(NINT) then
+      if R has NemoRing and (R has IntegerNumberSystem or
+          R has QuotientFieldCategory(NINT)) then
         radicalEigenvalues: % -> JuliaVector(NemoAlgebraicNumber)
       if R has ComplexCategory(NemoRealField) then
         eigenvalues: % -> JuliaVector(R)
@@ -1425,7 +1426,7 @@ JuliaMatrix(R : JuliaObjectRing) :  Exports == Implementation where
         ++ Error: if the matrix is not square.
       if not R has NemoType then
         jlApprox?: (%, %) -> Boolean
-        ++ jlApprox?(A,B) computes component-wise inexact equalit
+        ++ jlApprox?(A,B) computes component-wise inexact equality
         ++ with default parameters.
         ++ Two numbers compare equal if their relative distance
         ++ or their absolute distance is within tolerance bounds.
@@ -1459,7 +1460,7 @@ JuliaMatrix(R : JuliaObjectRing) :  Exports == Implementation where
       jlDisplay: % -> Void
       ++ jldisplay(m) pretty prints m (à la Julia).
       identity:    NNI -> %
-      ++ identity(n) returns a n by n identity matrix.S
+      ++ identity(n) returns a n by n identity matrix.
       diagonalMatrix:   JuliaVector(R) -> %
       ++ diagonalMatrix(v) returns a diagonal matrix with elements of v.
       coerce: % -> Matrix(R)
