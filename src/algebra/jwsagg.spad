@@ -199,7 +199,7 @@ JuliaWSAggregate(E : JuliaWSObject) : Category == JuliaWSObject with
     jWSAggregate(l : List(E)) ==
       -- Temporary (and dirty) hack
       -- TODO : use getind and List
-      lstr := map(obj +-> string(obj), l)$ListFunctions2(E, String)
+      lstr := map(obj +-> toString(obj), l)$ListFunctions2(E, String)
       str : String := "{"
       for i in 1..(#lstr - 1) repeat
         str := concat([str, lstr.i, ","])
