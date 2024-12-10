@@ -1,0 +1,14 @@
+)set break resume
+)set mess type off
+)expose UnittestCount UnittestAux Unittest
+)expose JuliaComplexF64Matrix
+
+testsuite "Julia Linear Algebra"
+
+testcase "Inverse"
+a := nrand(4,4)$JF64MAT;
+testTrue("jlApprox?(diagonalMatrix new(4,1)$JF64VEC, inverse(a)*a)")
+testTrue("jlApprox?(inverse(a),jlApply(_"inv_",a)@JuliaFloat64Matrix)")
+--testTrue("jlApprox?(sin(a)*asin(a),asin(a)*sin(a))")
+
+statistics()

@@ -1,0 +1,654 @@
+)abbrev category JTYPE JuliaType
+++ Category for Julia types
+++ Author: G.Vanuxem
+++ Date Created: December 2022
+++ Description:
+++  Parent category of Julia elements.
+JuliaType() : Category == Join(SetCategory, ConvertibleTo(String))
+
+)abbrev category JRING JuliaRing
+++ Category for Julia rings
+++ Author: G.Vanuxem
+++ Date Created: May 2024
+++ Description:
+++  Parent category of Julia ring elements.
+JuliaRing() : Category == Join(JuliaType, Ring) with
+  one?  : % -> Boolean
+  ++ one?(x) checks whether or not x is the multiplicative identity.
+  zero? : % -> Boolean
+  ++ zero?(x) checks whether or not x is the additive identity.
+
+)abbrev domain JSYM JuliaSymbol
+++ Domain for the Julia symbols
+++ Author: G. Vanuxem
+++ Date Created:
+++ Description:
+++  This domain allows the manipulation of Julia symbols.
+JuliaSymbol() : Exports == Implementation where
+    STR ==> String
+    Exports ==> Join(JuliaType, ConvertibleTo(InputForm)) with
+      string  : % -> String
+      coerce  : String -> %
+      coerce  : Symbol -> %
+      jsym    : String -> %
+      ++ jsym(str) converts str to a Julia symbol.
+      jsym    : Symbol -> %
+      ++ jsym(sym) converts sym to a Julia symbol.
+    Implementation ==> add
+      import from JuliaUtilityFunctions
+      import from String
+      jlInitialize(true)
+
+      x:% = y:% == EQUAL(x,y)$Lisp
+      convert(sy : %) : InputForm == sy pretend InputForm
+      convert(sy : %) : String == PNAME(sy)$Lisp
+      coerce(s : String) : %  ==
+        VALUES(INTERN(concat(":",s))$Lisp)$Lisp
+      coerce(sy : Symbol) : %  ==
+          VALUES(INTERN(concat(":", string(sy)))$Lisp)$Lisp
+      string(sy : %) : String  == PNAME(sy)$Lisp
+      jsym(sy : String) : %  == coerce(sy pretend STR)
+      jsym(sym : Symbol) == VALUES(INTERN(concat(":", string(sym)))$Lisp)$Lisp
+      coerce(sy : %) : OutputForm == sy pretend OutputForm
+
+)abbrev domain JI64 JuliaInt64
+++ Domain for the Julia Int64
+++ Author: G. Vanuxem
+++ Date Created:
+++ Description:
+++  This domain allows the manipulation of Julia Int64.
+++  Beware of internal Lisp implementations of machine integer,
+++  usually they differ, for example Lisp MOST-POSITIVE-FIXNUM on 
+++  x86_64 GNU/Linux is 4611686018427387903 with SBCL whereas it is
+++  1152921504606846975 with Clozure CL. They will be passed as an Int64
+++  to Julia nevertheless, but returned value can not fit in a Lisp fixnum. 
+++  In Julia, typemax(Int64) is 9223372036854775807 on this arch. 
+++  This domain is therefore not intented to perfom "advanced" computation,
+++  it just includes basic arthmetic and is used, for example,
+++  for returned pivot vectors in linear algebra.
+JuliaInt64() : Exports == Implementation where
+  Exports ==> Join(JuliaType, IntegerNumberSystem) with
+    min     : () -> %
+    max     : () -> %
+    string  : % -> String
+    coerce  : SingleInteger -> %
+    coerce  : % -> SingleInteger
+    ji64    : SingleInteger -> %
+    ji64    : Integer -> %
+    hashUpdate! : (HashState, %) -> HashState
+  Implementation ==> SingleInteger add
+    import JuliaUtilityFunctions
+    jlInitialize(true)
+    Rep := SingleInteger
+
+    jlsi(x) ==> x pretend %   
+    coerce(jsi : %) : SingleInteger == jsi pretend SingleInteger
+    coerce(si : SingleInteger) == jlsi(si)
+    convert(x : %) : Integer  == x pretend Integer
+    string(i) == convert(i)
+    ji64(x : SingleInteger) : % == jlsi(x)
+    ji64(x : Integer) : % == coerce(x)
+
+
+)abbrev domain JF32 JuliaFloat32
+++ Domain for Julia Float32
+++ Author: G. Vanuxem
+++ Date Created: november 2024
+++ Description:
+++  \spadtype{JuliaFloat32} implements 32 bits floating
+++  point arithmetic using Julia Float32 type. Bear in mind that,
+++  like JuliaInt64, the internal representation depends on the
+++  underlying Lisp implementation, so the usual pure arithmetic
+++  operations occur there. For other functions like sqrt, log, exp,
+++  transcendental functions etc. the computation is performed
+++  at machine level (generally in C language, or even using
+++  assembly language).
+JuliaFloat32() : Exports == Implementation where
+    JSF   ==> JuliaSpecialFunctions
+    PI      ==> PositiveInteger
+    JI64    ==> JuliaInt64
+    parsef  ==> READ_-FROM_-STRING$Lisp
+    Exports ==> Join (JuliaType, ConvertibleTo(InputForm), --CoercibleTo(JuliaFloat64),
+                  ConvertibleFrom(JuliaFloat64), ConvertibleFrom(DoubleFloat),
+                  FloatingPointSystem, ElementaryFunctionCategory,
+                  TranscendentalFunctionCategory, DifferentialRing) with
+      jlApprox?: (%, %) -> Boolean
+      ++ jlApprox?(x,y) computes inexact equality comparison
+      ++ with default parameters.
+      ++ Two numbers compare equal if their relative distance
+      ++ or their absolute distance is within tolerance bounds.
+      exp     : () -> %
+      ++ exp() returns the JuliaFloat32 ℯ (%e or exp(1)).
+      jlApply : (String, %) -> %
+      ++ jlApply(func, x) applies func to argument x.
+      jlApply : (String, %, %) -> %
+      ++ jlApply(func, x, y) applies func to arguments x and y.
+      jlApply : (String, %, %, %) -> %
+      ++ jlApply(func, x, y, z) applies func to arguments x, y and z.
+      jlCApply : (String, JuliaSymbol, %) -> %
+      ++ jlCApply(lib, func, x) applies the C function func from the library
+      ++ lib to argument x. For example:
+      ++ \example{jlCApply("libm.so.6",jsym(sqrt),jf32(2.0))}
+      jlCApply : (String, JuliaSymbol, %, %) -> %
+      ++ jlCApply(lib, func, x, y) applies the C function func from the library
+      ++ lib to arguments x and y. For example:
+      ++ \example{jlCApply("libopenlibm", jsym(pow),2.7,3.0)}
+      ++ OpenLibm library is provided by Julia.
+      jlCApply : (String, JuliaSymbol, %, %, %) -> %
+      ++ jlCApply(lib, func, x, y, z) applies the C function func from
+      ++ the library lib to arguments x, y and z.
+      ++ For example if you have the GNU Scientific Library (GSl-2.8)
+      ++ installed:
+      ++ \example{jlCApply("libgsl.so.28",jsym(gsl_hypot3),2.0,7.0,9.0)}
+      urand01 : () -> %
+      ++ urand01() returns an uniformly distributed random number
+      ++ contained in [0,1].
+      nrand : () -> %
+      ++ nrand() returns a normally distributed random number.
+      expm1   :  % -> %
+      ++ expm1(x) computes accurately e^x-1.
+      log2  : % -> %
+      ++ log2(x) computes the base 2 logarithm of x.
+      log10 : % -> %
+      ++ log10(x) computes the base 10 logarithm of x.  
+      --atan : % -> %
+     -- ++ atan(x) computes the inverse tangent of x.
+      atan : (%, %) -> %
+      ++ atan(x, y) computes the inverse tangent of x/y.
+      eulerGamma : () -> %
+      ++ eulerGamma() returns the Euler's constant gamma (γ).
+      catalan : () -> %
+      ++ catalan() return the Catalan's constant.
+      goldenRation : () -> %
+      ++ goldenRation() returns the golden ratio.
+      nan: () -> %
+      ++ nan() returns the Julia Float32 NaN (not a number) constant.
+      positiveInfinity: () -> %
+      ++ positiveInfinity() returns the Julia Float32
+      ++ positive infinity constant.
+      negativeInfinity: () -> %
+      ++ negativeInfinity() returns the Julia Float32
+      ++ negtive infinity constant.
+      string : % -> String
+      ++ string(x) stringify(x) using default format.
+      ++ See jlF32Format(String).
+      jf32    : DoubleFloat -> %
+      ++ jf32(x) coerces x to a Julia Float32.
+      jf32    : Integer -> %
+      ++ jf32(i) coerces i to a Julia Float32.
+      jf32    : JuliaFloat64 -> %
+      ++ jf32(x) coerces x to a Julia Float32.
+    Implementation ==> add
+      import from JuliaUtilityFunctions
+      import from String
+
+      jlInitialize(true)
+  
+      defined?(func) ==>
+        not jlDefined?(func) =>
+          error concat(func, " is not defined in Julia")
+      
+      MAX ==> MOST_-POSITIVE_-SINGLE_-FLOAT$Lisp      
+      MER ==> Record(MANTISSA : Integer, EXPONENT : Integer)
+
+      manexp : % -> MER
+      -- TODO
+      0                == FLOAT(0$Lisp, MAX)$Lisp pretend %
+      1                == FLOAT(1$Lisp, MAX)$Lisp pretend %
+      exp()            == jl_flt_function_flt("exp", 1$%)$Lisp
+      pi()             == convertDFToSF(pi()$DoubleFloat)$Lisp
+      positiveInfinity() == SINGLE_-POSITIVE_-INFINITY$Lisp
+      negativeInfinity() == SINGLE_-NEGATIVE_-INFINITY$Lisp
+      nan() : % == FNAN$Lisp
+      eulerGamma() : % ==
+        jl_flt_eval_string("Float32(Base.MathConstants.eulergamma)")$Lisp
+      catalan() : % == jl_flt_eval_string("Float32(Base.MathConstants.catalan)")$Lisp
+      goldenRation() : % == jl_flt_eval_string("Float32(Base.MathConstants.golden)")$Lisp
+
+      urand01()        == jl_flt_eval_string("rand(Float32)")$Lisp
+      nrand()        == jl_flt_eval_string("randn(Float32)")$Lisp
+
+      manexp(x) ==
+        zero? x => [0, 0]
+        s := sign x; x := abs x
+        if x > max()$% then return [s*mantissa(max())+1, exponent max()]
+        me : Record(man : %, exp : Integer) := MANEXP(x)$Lisp
+        two53 := base()^precision()
+        [s*wholePart(two53 * me.man ), me.exp-precision()]
+
+      x = y            == eql_SF(x, y)$Lisp
+      x < y            == less_SF(x, y)$Lisp
+
+      jlApprox?(x, y)  == jl_bool_function_flt_flt("isapprox",x,y)$Lisp
+        -- TODO: ???
+        -- jlBoolFunction2F32("isapprox", x, y)
+
+      - x              == minus_SF(x)$Lisp
+      x + y            == add_SF(x, y)$Lisp
+      x : % - y : %    == sub_SF(x, y)$Lisp
+      x : % * y : %    == mul_SF(x, y)$Lisp
+      i : Integer * x : %  == mul_SF_I(x, i)$Lisp
+      x : % / y : %    == div_SF(x, y)$Lisp
+      x : % / i : Integer  == div_SF_I(x, i)$Lisp
+      x : % ^ i : Integer == jl_flt_function_flt_int64("^", x, i)$Lisp
+      x : % ^ i : PI   == jl_flt_function_flt_int64("^", x, i)$Lisp
+      x : % ^ y : %    == jl_flt_function_flt_flt("^", x, y)$Lisp
+
+      jlApply(func, x)  ==
+        defined?(func)
+        jl_flt_function_flt(func, x)$Lisp
+      jlApply(func, x, y)  ==
+        defined?(func)
+        jl_flt_function_flt_flt(func, x, y)$Lisp
+      jlApply(func, x, y, z)  ==
+        defined?(func)
+        jl_flt_function_flt_flt_flt(func, x, y, z)$Lisp
+      jlCApply(lib, func, x) ==
+        jl_flt_eval_string(concat ["ccall((", string(func), ", _"", lib,
+          "_"), Cdouble, (Cdouble,),", string(x),")"])$Lisp
+      jlCApply(lib, func, x, y) ==
+        jl_flt_eval_string(concat ["ccall((", string(func), ", _"", lib,
+          "_"), Cdouble, (Cdouble, Cdouble),",
+            string(x), ",", string(y), ")"])$Lisp
+      jlCApply(lib, func, x, y, z) ==
+        jl_flt_eval_string(concat ["ccall((", string(func), ", _"", lib,
+          "_"), Cdouble, (Cdouble, Cdouble,Cdouble),", string(x), ",",
+            string(y), ",", string(z), ")"])$Lisp
+
+      x : % ^ r : Fraction Integer ==
+         zero? x =>
+            zero? r => 1
+            negative? r => error "division by 0"
+            0
+         zero? r or (x = 1) => 1
+         (r = 1) => x
+         n := numer r
+         d := denom r
+         negative? x =>
+            odd? d =>
+               odd? n => return -((-x)^r)
+               return ((-x)^r)
+            error "negative root"
+         d = 2 => sqrt(x) ^ n
+         x ^ (n::% / d::%)
+
+      negative? x      == negative?_SF(x)$Lisp
+      zero? x          == zero?_SF(x)$Lisp
+      recip(x)         == (zero? x => "failed"; 1 / x)
+      differentiate x  == 0
+
+      exp(x : %)     == jl_flt_function_flt("exp", x)$Lisp
+      expm1(x : %)   == jl_flt_function_flt("expm1", x)$Lisp
+      log(x : %)     == jl_flt_function_flt("log", x)$Lisp
+      log2(x : %)    == jl_flt_function_flt("log2", x)$Lisp
+      log10(x : %)   == jl_flt_function_flt("log10", x)$Lisp
+      sqrt(x : %)    == jl_flt_function_flt("sqrt", x)$Lisp
+
+      sin(x : %)   == jl_flt_function_flt("sin", x)$Lisp
+      cos(x : %)   == jl_flt_function_flt("cos", x)$Lisp
+      tan(x : %)   == jl_flt_function_flt("tan", x)$Lisp
+      cot(x : %)   == jl_flt_function_flt("cot", x)$Lisp
+      sec(x : %)   == jl_flt_function_flt("sec", x)$Lisp
+      csc(x : %)   == jl_flt_function_flt("csc", x)$Lisp
+
+      asin(x : %) == jl_flt_function_flt("asin", x)$Lisp
+      acos(x : %) == jl_flt_function_flt("acos", x)$Lisp
+      atan(x : %) == jl_flt_function_flt("atan", x)$Lisp
+      atan(x : %, y : %) == jl_flt_function_flt_flt("atan", x, y)$Lisp
+      acot(x : %) == jl_flt_function_flt("acot", x)$Lisp
+      asec(x : %) == jl_flt_function_flt("asec", x)$Lisp
+      acsc(x : %) == jl_flt_function_flt("acsc", x)$Lisp
+
+      sinh(x : %) == jl_flt_function_flt("sinh", x)$Lisp
+      cosh(x : %) == jl_flt_function_flt("cosh", x)$Lisp
+      tanh(x : %) == jl_flt_function_flt("tanh", x)$Lisp
+      coth(x : %) == jl_flt_function_flt("coth", x)$Lisp
+      sech(x : %) == jl_flt_function_flt("sech", x)$Lisp
+      csch(x : %) == jl_flt_function_flt("csch", x)$Lisp
+
+      asinh(x : %) == jl_flt_function_flt("asinh", x)$Lisp
+      acosh(x : %) == jl_flt_function_flt("acosh", x)$Lisp
+      atanh(x : %) == jl_flt_function_flt("atanh", x)$Lisp
+      acoth(x : %) == jl_flt_function_flt("acoth", x)$Lisp
+      asech(x : %) == jl_flt_function_flt("asech", x)$Lisp
+      acsch(x : %) == jl_flt_function_flt("acsch", x)$Lisp
+
+      base()           == FLOAT_-RADIX(0$%)$Lisp
+      mantissa x       == manexp(x).MANTISSA
+      exponent x       == manexp(x).EXPONENT
+      precision()      == FLOAT_-DIGITS(0$%)$Lisp
+      bits()           == FLOAT_-DIGITS(0$%)$Lisp
+      wholePart x      == TRUNCATE(x)$Lisp
+      float(ma, ex, b) == ma*(b::%)^ex
+      max(x, y)        == max_SF(x, y)$Lisp
+      min(x, y)        == min_SF(x, y)$Lisp
+      abs(x)           == abs_SF(x)$Lisp
+
+      max()            == MAX
+      min()            == MOST_-NEGATIVE_-SINGLE_-FLOAT$Lisp
+      order(a)         == precision() + exponent a - 1
+      
+      retract(x : %) : Integer ==
+        x = ((n := wholePart x)::%) => n
+        error "Not an integer"
+
+      retractIfCan(x:%):Union(Integer, "failed") ==
+        x = ((n := wholePart x)::%) => n
+        "failed"
+
+      retract(x : %) : Fraction(Integer) ==
+        rationalApproximation(convert(x)@DoubleFloat,
+          (precision() - 1)::NonNegativeInteger, base())
+   
+      retractIfCan(x:%):Union(Fraction Integer, "failed") ==
+        rationalApproximation(convert(x)@DoubleFloat,
+          (precision() - 1)::NonNegativeInteger, base())
+
+      convert(x) : String == jl_string_function_flt("string", x)$Lisp
+      convert(x) : DoubleFloat == parsef(convert(x)@String)
+      convert(x : DoubleFloat)  == convertDFToSF(x)$Lisp
+      convert(x : JuliaFloat64 ) == convertDFToSF(x)$Lisp
+      string(x : %) : String == convert(x)
+      toString(x : %) == convert(x)
+      toString(x, n) == toString(convert(x)@DoubleFloat, n)
+      convert(x : %) : InputForm == convert(convert(x)@String)
+      coerce(i : Integer) == makeF32(i, 0)$Lisp
+      coerce(x : %) : OutputForm == convert(x)@String pretend OutputForm
+      jf32(x : JuliaFloat64) == convertDFToSF(x)$Lisp
+      jf32(x : DoubleFloat) == convertDFToSF(x)$Lisp
+      jf32(x : Integer) == makeF32(x,0)$Lisp
+
+)abbrev domain JCF32 JuliaComplexF32
+++ Domain for the Complex Julia F32
+++ Author: G. Vanuxem
+++ Date Created: novemebr 2024
+++ Description: \spadtype{JuliaComplexF32} implements complex 32 bits
+++ floating point arithmetic. Only basic arithmetic is supported.
+++ Convenience domain.
+JuliaComplexF32() : Exports == Implementation where
+    JF32  ==> JuliaFloat32
+    Exports ==> Join(JuliaType, ComplexCategory(JuliaFloat32)) with
+      jcf32 : JuliaFloat32 -> %
+      jcf32 : (JuliaFloat32, JuliaFloat32) -> %
+    Implementation ==> Complex(JuliaFloat32) add
+      jcf32(r) == complex(r, 0$JuliaFloat32)
+      jcf32(r,i) == complex(r,i)
+
+)abbrev domain JF64 JuliaFloat64
+++ Domain for Julia Float64
+++ Author: G. Vanuxem
+++ Date Created:
+++ Description:
+++  \spadtype{JuliaFloat64} implements 64 bits floating
+++  point arithmetic using Julia Float64 type. Bear in mind that,
+++  like JuliaInt64, the internal representation depends on the
+++  underlying Lisp implementation, so the usual pure arithmetic
+++  operations occur there. For other functions like sqrt, log, exp,
+++  transcendental functions etc. the computation is performed
+++  at machine level (generally in C language, or even using
+++  assembly language).
+JuliaFloat64() : Exports == Implementation where
+    JSF   ==> JuliaSpecialFunctions
+    PI      ==> PositiveInteger
+    JI64    ==> JuliaInt64
+    parsef  ==> READ_-FROM_-STRING$Lisp
+    Exports ==> Join (JuliaType, CoercibleTo(DoubleFloat),
+                  CoercibleFrom(DoubleFloat), ConvertibleFrom(Float),
+                  ConvertibleTo(InputForm), FloatingPointSystem,
+                  ElementaryFunctionCategory, TranscendentalFunctionCategory,
+                  DifferentialRing) with
+      jlApprox?: (%, %) -> Boolean
+      ++ jlApprox?(x,y) computes inexact equality comparison
+      ++ with default parameters.
+      ++ Two numbers compare equal if their relative distance
+      ++ or their absolute distance is within tolerance bounds.
+      jf64    : DoubleFloat -> %
+      ++ jf64(x) coerces x to a Julia Float64.
+      jf64    : Integer -> %
+      ++ jf64(i) coerces i to a Julia Float64.
+      jf64    : String -> %
+      ++ jf64(str) read the string at the Common Lisp level using
+      ++ read-from-string. It is expected that the string represent a CL
+      ++ floating point number and not for example an integer.
+      ++ Convenience function.
+      exp     : () -> %
+      ++ exp() returns the JuliaFloat64 ℯ (%e or exp(1)).
+      jlApply : (String, %) -> %
+      ++ jlApply(func, x) applies func to argument x.
+      jlApply : (String, %, %) -> %
+      ++ jlApply(func, x, y) applies func to arguments x and y.
+      jlApply : (String, %, %, %) -> %
+      ++ jlApply(func, x, y, z) applies func to arguments x, y and z.
+      jlCApply : (String, JuliaSymbol, %) -> %
+      ++ jlCApply(lib, func, x) applies the C function func from the library
+      ++ lib to argument x. For example:
+      ++ \example{jlCApply("libm.so.6",jsym(sqrt),jf64(2.0))}
+      jlCApply : (String, JuliaSymbol, %, %) -> %
+      ++ jlCApply(lib, func, x, y) applies the C function func from the library
+      ++ lib to arguments x and y. For example:
+      ++ \example{jlCApply("libopenlibm", jsym(pow),2.7,3.0)}
+      ++ OpenLibm library is provided by Julia.
+      jlCApply : (String, JuliaSymbol, %, %, %) -> %
+      ++ jlCApply(lib, func, x, y, z) applies the C function func from
+      ++ the library lib to arguments x, y and z.
+      ++ For example if you have the GNU Scientific Library
+      ++ installed:
+      ++ \example{jlCApply("libgsl",jsym(gsl_hypot3),jf64(2.0),jf64(7.0),jf64(9.0))}
+      urand01 : () -> %
+      ++ urand01() returns an uniformly distributed random number
+      ++ contained in [0,1].
+      nrand : () -> %
+      ++ nrand() returns a normally distributed random number.
+      expm1   :  % -> %
+      ++ expm1(x) computes accurately e^x-1.
+      log2  : % -> %
+      ++ log2(x) computes the base 2 logarithm of x.
+      log10 : % -> %
+      ++ log10(x) computes the base 10 logarithm of x.  
+      --atan : % -> %
+     -- ++ atan(x) computes the inverse tangent of x.
+      atan : (%, %) -> %
+      ++ atan(x, y) computes the inverse tangent of x/y.
+      eulerGamma : () -> %
+      ++ eulerGamma() returns the Euler's constant gamma (γ).
+      catalan : () -> %
+      ++ catalan() return the Catalan's constant.
+      goldenRation : () -> %
+      ++ goldenRation() returns the golden ratio.
+      nan: () -> %
+      ++ nan() returns the Julia Float64 NaN (not a number) constant.
+      positiveInfinity: () -> %
+      ++ positiveInfinity() returns the Julia Float64
+      ++ positive infinity constant.
+      negativeInfinity: () -> %
+      ++ negativeInfinity() returns the Julia Float64
+      ++ negtive infinity constant.
+      string : % -> String
+      hashUpdate! : (HashState, %) -> HashState
+    Implementation ==> DoubleFloat add
+      import from JuliaUtilityFunctions
+      import from String
+
+      jlInitialize(true)
+  
+      defined?(func) ==>
+        not jlDefined?(func) =>
+          error concat(func, " is not defined in Julia")
+      
+      max_SF ==> MOST_-POSITIVE_-DOUBLE_-FLOAT$Lisp      
+      MER ==> Record(MANTISSA : Integer, EXPONENT : Integer)
+
+      manexp : % -> MER
+
+      0                == FLOAT(0$Lisp, max_SF)$Lisp pretend %
+      1                == FLOAT(1$Lisp, max_SF)$Lisp pretend %
+      exp()           == exp1()$DoubleFloat pretend %
+      pi()             == pi()$DoubleFloat pretend %
+      positiveInfinity() == DOUBLE_-POSITIVE_-INFINITY$Lisp
+      negativeInfinity() == DOUBLE_-NEGATIVE_-INFINITY$Lisp
+      nan() : % == DNAN$Lisp
+      eulerGamma() : % ==
+        jl_dbl_eval_string("Float64(Base.MathConstants.eulergamma)")$Lisp
+      catalan() : % == jl_dbl_eval_string("Float64(Base.MathConstants.catalan)")$Lisp
+      goldenRation() : % == jl_dbl_eval_string("Float64(Base.MathConstants.golden)")$Lisp
+
+      urand01()        == jl_dbl_eval_string("rand(Float64)")$Lisp
+      nrand()        == jl_dbl_eval_string("randn(Float64)")$Lisp
+
+      manexp(x) ==
+        zero? x => [0, 0]
+        s := sign x; x := abs x
+        if x > max()$% then return [s*mantissa(max())+1, exponent max()]
+        me : Record(man : %, exp : Integer) := MANEXP(x)$Lisp
+        two53 := base()^precision()
+        [s*wholePart(two53 * me.man ), me.exp-precision()]
+
+      x < y            == less_DF(x, y)$Lisp
+      x = y            == eql_DF(x, y)$Lisp
+      jlApprox?(x, y)  == jl_bool_function_dbl_dbl("isapprox",x,y)$Lisp
+        -- TODO: ???
+        -- jlBoolFunction2F64("isapprox", x, y)
+      - x              == minus_DF(x)$Lisp
+      x + y            == add_DF(x, y)$Lisp
+      x : % - y : %    == sub_DF(x, y)$Lisp
+      x : % * y : %    == mul_DF(x, y)$Lisp
+      i : Integer * x : %  == mul_DF_I(x, i)$Lisp
+      x : % / y : %    == div_DF(x, y)$Lisp
+      x : % / i : Integer  == div_DF_I(x, i)$Lisp
+      x : % ^ i : Integer == jl_dbl_function_dbl_int64("^", x, i)$Lisp
+      x : % ^ i : PI   == jl_dbl_function_dbl_int64("^", x, i)$Lisp
+      x : % ^ y : %    == jl_dbl_function_dbl_dbl("^", x, y)$Lisp
+
+
+      jlApply(func, x)  ==
+        defined?(func)
+        jl_dbl_function_dbl(func, x)$Lisp
+      jlApply(func, x, y)  ==
+        defined?(func)
+        jl_dbl_function_dbl_dbl(func, x, y)$Lisp
+      jlApply(func, x, y, z)  ==
+        defined?(func)
+        jl_dbl_function_dbl_dbl_dbl(func, x, y, z)$Lisp
+      jlCApply(lib, func, x) ==
+        jl_dbl_eval_string(concat ["ccall((", string(func), ", _"", lib,
+          "_"), Cdouble, (Cdouble,),", string(x),")"])$Lisp
+      jlCApply(lib, func, x, y) ==
+        jl_dbl_eval_string(concat ["ccall((", string(func), ", _"", lib,
+          "_"), Cdouble, (Cdouble, Cdouble),",
+            string(x), ",", string(y), ")"])$Lisp
+      jlCApply(lib, func, x, y, z) ==
+        jl_dbl_eval_string(concat ["ccall((", string(func), ", _"", lib,
+          "_"), Cdouble, (Cdouble, Cdouble,Cdouble),", string(x), ",",
+            string(y), ",", string(z), ")"])$Lisp
+
+      x : % ^ r : Fraction Integer ==
+         zero? x =>
+            zero? r => 1
+            negative? r => error "division by 0"
+            0
+         zero? r or (x = 1) => 1
+         (r = 1) => x
+         n := numer r
+         d := denom r
+         negative? x =>
+            odd? d =>
+               odd? n => return -((-x)^r)
+               return ((-x)^r)
+            error "negative root"
+         d = 2 => sqrt(x) ^ n
+         x ^ (n::% / d::%)
+
+      retract(x : %) : Integer ==
+        x = ((n := wholePart x)::%) => n
+        error "Not an integer"
+
+      retractIfCan(x:%):Union(Integer, "failed") ==
+        x = ((n := wholePart x)::%) => n
+        "failed"
+
+      negative? x      == negative?_DF(x)$Lisp
+      zero? x          == zero?_DF(x)$Lisp
+      recip(x)         == (zero? x => "failed"; 1 / x)
+      differentiate x  == 0
+
+      exp(x : %)     == jl_dbl_function_dbl("exp", x)$Lisp
+      expm1(x : %)   == jl_dbl_function_dbl("expm1", x)$Lisp
+      log(x : %)     == jl_dbl_function_dbl("log", x)$Lisp
+      log2(x : %)    == jl_dbl_function_dbl("log2", x)$Lisp
+      log10(x : %)   == jl_dbl_function_dbl("log10", x)$Lisp
+      sqrt(x : %)    == jl_dbl_function_dbl("sqrt", x)$Lisp
+
+      sin(x : %)   == jl_dbl_function_dbl("sin", x)$Lisp
+      cos(x : %)   == jl_dbl_function_dbl("cos", x)$Lisp
+      tan(x : %)   == jl_dbl_function_dbl("tan", x)$Lisp
+      cot(x : %)   == jl_dbl_function_dbl("cot", x)$Lisp
+      sec(x : %)   == jl_dbl_function_dbl("sec", x)$Lisp
+      csc(x : %)   == jl_dbl_function_dbl("csc", x)$Lisp
+
+      asin(x : %) == jl_dbl_function_dbl("asin", x)$Lisp
+      acos(x : %) == jl_dbl_function_dbl("acos", x)$Lisp
+      atan(x : %) == jl_dbl_function_dbl("atan", x)$Lisp
+      atan(x : %, y : %) == jl_dbl_function_dbl_dbl("atan", x, y)$Lisp
+      acot(x : %) == jl_dbl_function_dbl("acot", x)$Lisp
+      asec(x : %) == jl_dbl_function_dbl("asec", x)$Lisp
+      acsc(x : %) == jl_dbl_function_dbl("acsc", x)$Lisp
+
+      sinh(x : %) == jl_dbl_function_dbl("sinh", x)$Lisp
+      cosh(x : %) == jl_dbl_function_dbl("cosh", x)$Lisp
+      tanh(x : %) == jl_dbl_function_dbl("tanh", x)$Lisp
+      coth(x : %) == jl_dbl_function_dbl("coth", x)$Lisp
+      sech(x : %) == jl_dbl_function_dbl("sech", x)$Lisp
+      csch(x : %) == jl_dbl_function_dbl("csch", x)$Lisp
+
+      asinh(x : %) == jl_dbl_function_dbl("asinh", x)$Lisp
+      acosh(x : %) == jl_dbl_function_dbl("acosh", x)$Lisp
+      atanh(x : %) == jl_dbl_function_dbl("atanh", x)$Lisp
+      acoth(x : %) == jl_dbl_function_dbl("acoth", x)$Lisp
+      asech(x : %) == jl_dbl_function_dbl("asech", x)$Lisp
+      acsch(x : %) == jl_dbl_function_dbl("acsch", x)$Lisp
+
+      base()           == FLOAT_-RADIX(0$%)$Lisp
+      mantissa x       == manexp(x).MANTISSA
+      exponent x       == manexp(x).EXPONENT
+      precision()      == FLOAT_-DIGITS(0$%)$Lisp
+      bits()           == FLOAT_-DIGITS(0$%)$Lisp
+      wholePart x      == TRUNCATE(x)$Lisp
+      float(ma, ex, b) == ma*(b::%)^ex
+      max(x, y)        == max_DF(x, y)$Lisp
+      min(x, y)        == min_DF(x, y)$Lisp
+      abs(x)           == abs_DF(x)$Lisp
+
+      max()            == max_SF
+      min()            == MOST_-NEGATIVE_-DOUBLE_-FLOAT$Lisp
+
+      coerce(x : %) : DoubleFloat == x pretend DoubleFloat
+      coerce(x : DoubleFloat) :%  == x pretend %
+      convert(x : Float) == convert(x)@DoubleFloat pretend %
+      convert(x : %) : String == jl_string_function_dbl("string", x)$Lisp
+      string(x : %) : String == convert(x)
+      toString(x, n) == toString(x pretend DoubleFloat, n)
+      convert(x : %) : InputForm == convert(convert(x)@String)
+      convert(x : %) : Float == convert(x pretend DoubleFloat)$Float
+      coerce(x : %) : OutputForm == convert(x)@String pretend OutputForm
+      jf64(x : DoubleFloat) == x pretend %
+      jf64(x : Integer) == coerce(x)@DoubleFloat pretend %
+      jf64(str : String) ==
+        ret : SExpression := parsef(str)
+        float?(ret) => ret pretend %
+        error "jf64(String): not a 64 bits floating point number."
+
+)abbrev domain JCF64 JuliaComplexF64
+++ Domain for the Complex Julia F64
+++ Author: G. Vanuxem
+++ Date Created:
+++ Description: \spadtype{JuliaComplexF64} implements complex 64 bits
+++ floating point arithmetic. Only basic arithmetic is supported.
+++ Convenience domain.
+JuliaComplexF64() : Exports == Implementation where
+    JF64  ==> JuliaFloat64
+    Exports ==> Join(JuliaType, ComplexCategory(JuliaFloat64)) with
+      jcf64 : JuliaFloat64 -> %
+      jcf64 : (JuliaFloat64, JuliaFloat64) -> %
+    Implementation ==> Complex(JuliaFloat64) add
+      jcf64(r) == complex(r,0$JuliaFloat64)
+      jcf64(r,i) == complex(r,i)

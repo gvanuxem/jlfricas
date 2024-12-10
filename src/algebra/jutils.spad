@@ -1,0 +1,794 @@
+)abbrev package JUF JuliaUtilityFunctions
+++ Utility package for Julia related data.
+++ Author: G. Vanuxem
+++ Date Created:
+++ Description:
+++  This package provides different Julia utility functions.
+JuliaUtilityFunctions() : Exports == Implementation where
+  NNI       ==> NonNegativeInteger
+  PI        ==> PositiveInteger
+  JSYM      ==> JuliaSymbol
+  JI64      ==> JuliaInt64
+  JF32      ==> JuliaFloat32
+  JF64      ==> JuliaFloat64
+  JCF32     ==> JuliaComplexF32
+  JCF64     ==> JuliaComplexF64
+  JF32VEC   ==> JuliaFloat32Vector
+  JF32MAT   ==> JuliaFloat32Matrix
+  JF64VEC   ==> JuliaFloat64Vector
+  JF64MAT   ==> JuliaFloat64Matrix
+  JCF32VEC  ==> JuliaComplexF32Vector
+  JCF32MAT  ==> JuliaComplexF32Matrix
+  JCF64VEC  ==> JuliaComplexF64Vector
+  JCF64MAT  ==> JuliaComplexF64Matrix
+  STR       ==> String
+  Exports ==> with
+    jlInitialize  : Boolean -> Boolean
+    ++ jlInitialize(init) initializes the Julia environment if init is true,
+    ++ otherwise clears the Julia environment. Normally, it should
+    ++ not be used since it is automatically called.
+    jlUsing       : String -> Boolean
+    ++ jlUsing(modpack) loads the module or package modpack
+    ++ and makes its exported names available.
+    ++ Returns false if it can not be loaded.
+    jlImport      : String -> Boolean
+    ++ jlImport(modpackfunc) imports the module, package or function
+    ++ modpackfunc and makes its exported name(s) available.
+    ++ Returns false if it can not be imported.
+    jlInclude     : String -> Boolean
+    ++ jlInclude(file.jl) loads and evaluates the content of the Julia
+    ++ file file.jl in the current global scope.
+
+    jlDefined?    : JuliaSymbol -> Boolean
+    ++ jlDefined?(sym) checks whether or not sym is defined in Julia.
+    jlDefined?    : String -> Boolean
+    ++ jlDefined?(str) checks whether or not str is defined in Julia.
+
+    jlAddPackage  : String -> Void
+    ++ jlAddPackage(package) add package to Julia project.
+    jlAddPackage  : String -> Void
+    ++ jlAddPackage(package) add package to Julia project.
+
+    jlApprox?: (JCF32, JCF32) -> Boolean
+    ++ jlApprox?(x,y) computes inexact equality comparison
+    ++ with default parameters. Two numbers compare equal
+    ++ if their relative distance or their absolute distance
+    ++ is within tolerance bounds. Applied component-wise.
+    jlApprox?: (JCF64, JCF64) -> Boolean
+    ++ jlApprox?(x,y) computes inexact equality comparison
+    ++ with default parameters. Two numbers compare equal
+    ++ if their relative distance or their absolute distance
+    ++ is within tolerance bounds. Applied component-wise.
+
+    jlEvalString   : STR -> Void
+    ++ jlEvalString(str) evaluates str in Julia with no output.
+    jlEvalString   : STR -> Boolean
+    ++ jlEvalString(str) evaluates str in Julia,
+    ++ where the output is a Boolean.
+    jlEvalString   : STR -> JI64
+    ++ jlEvalString(str) evaluates str in Julia,
+    ++ where the output is a JuliaInt64.
+    jlEvalString   : STR -> Integer
+    ++ jlEvalString(str) evaluates str in Julia,
+    ++ where the output is an Integer.
+    jlEvalString   : STR -> NonNegativeInteger
+    ++ jlEvalString(str) evaluates str in Julia,
+    ++ where the output is an Non Negative Integer.
+    jlEvalString   : STR -> PositiveInteger
+    ++ jlEvalString(str) evaluates str in Julia,
+    ++ where the output is an Positive Integer.
+    jlEvalString   : STR -> STR
+    ++ jlEvalString(str) evaluates str in Julia,
+    ++ where the output is a String.
+    jlEvalString   : STR -> JF64
+    ++ jlEvalString(str) evaluates str in Julia,
+    ++ where the output is a JuliaFloat64.
+
+    jlFunctionF64 : (STR, JF64) -> Void
+    ++ jlFunctionF64(func,x)
+    jlFunction2F64 : (STR, JF64, JF64) -> Void
+    ++ jlFunction2F64(func,x,y)
+    jlFunction3F64 : (STR, JF64, JF64, JF64) -> Void
+    ++ jlFunction3F64(func,x,y,z)
+
+    jlBoolFunction2F64 : (STR, JF64, JF64) -> Boolean
+    ++ jlBoolFunction2F64
+
+    jlI64FunctionF64 : (STR, JF64) -> JI64
+    ++ jlI64FunctionF64(func,x) 
+    jlF64FunctionF64I64 : (STR, JF64, JI64) -> JF64
+    ++ jlF64FunctionF64I64(func,x,i)
+    jlF64FunctionI64F64 : (STR, JI64, JF64) -> JF64
+    ++ jlF64FunctionI64F64(func,i,x)
+    jlF64FunctionF64 : (STR, JF64) -> JF64
+    ++ jlF64FunctionF64(func,x)
+    jlF64Function2F64 : (String, JF64, JF64) -> JF64
+    ++ jlF64Function2F64(func,x,y)
+    jlF64Function3F64 : (STR, JF64, JF64, JF64) -> JF64
+    ++ jlF64Function3F64(func, x, y, z)
+
+    jlFunctionF64Vec : (STR, JF64VEC) -> Void
+    ++ jlFunctionF64Vector(func, vec) applies func to vec.
+    jlFunctionCF64Vec : (STR, JCF64VEC) -> Void
+    ++ jlF64FunctionF64Vec(func, vec) applies func to cvec.
+    jlF64FunctionF64Vec : (STR, JF64VEC) -> JF64
+    ++ jlF64FunctionCF64Vec(func, vec) returns the output value
+    ++ of func applied to vec.
+    jlF64FunctionCF64Vec : (STR, JCF64VEC) -> JF64
+    ++ jlF64FunctionCF64Vec(func, cvec) returns the output value
+    ++ of func applied to cvec.
+    jlF64FunctionF64VecF64 : (STR, JF64VEC, JF64) -> JF64
+    ++ jlF64FunctionCF64Vec(func, vec, p) returns the output value
+    ++ of func applied to vec with parameter p.
+    jlF64FunctionCF64VecF64 : (STR, JCF64VEC, JF64) -> JF64
+    ++ jlF64FunctionCF64Vec(func, cvec, p) returns the output value
+    ++ of func applied to cvec with parameter p.
+
+    jlFunction2F64Vec! : (STR, JF64VEC, JF64VEC) -> Void
+    ++ jlFunction2F64Vec!(func, vec1, vec2) applies the Julia function
+    ++ func to vec2 that overwrites vec1 with the result.
+    ++ Please note that the overwriting is done by Julia and not FriCAS.
+    ++ See Julia 'copy!' for example. 
+    jlFunction2CF64Vec! : (STR, JCF64VEC, JCF64VEC) -> Void
+    ++ jlFunction2CF64Vec!(func, cvec1, cvec2) applies the Julia function
+    ++ func to cvec2 that overwrites cvec1 with the result.
+    ++ Please note that the overwriting is done by Julia and not FriCAS.
+    ++ See Julia 'copy!' for example. 
+
+    jlFunction2F64Mat! : (STR, JF64VEC, NNI, JF64VEC, NNI) -> Void
+    ++ jlFunction2F64Mat!(func, mat1, mat2) applies the Julia function
+    ++ func to mat2 that overwrites mat1 with the result. Please note that
+    ++ the overwriting is done by Julia and not FriCAS.
+    ++ See Julia 'copy!' or transpose! for example. 
+    jlFunction2CF64Mat! : (STR, JCF64VEC, NNI, JCF64VEC, NNI) -> Void
+    ++ jlFunction2CF64Mat!(func, cmat1, cmat2) applies the Julia function
+    ++ func to cmat2 that overwrites cmat1 with the result. Please note that
+    ++ the overwriting is done by Julia and not FriCAS.
+    ++ See Julia 'copy!' or adjoint! for example. 
+
+    jlFunctionF64Mat : (STR, JF64VEC, NNI) -> Void
+    ++ jlFunctionF64Mat(func, mat, nr) applies func to the matrix mat,
+    ++ internally a vector, where the numer of rows is nr.
+    jlFunctionCF64Mat : (STR, JCF64VEC, NNI) -> Void
+    ++ jlFunctionF64Mat(func, cmat, nr) applies func to the matrix mat,
+    ++ internally a vector, where the numer of rows is nr.
+    jlF64FunctionF64Mat : (STR, JF64VEC, NNI) -> JF64
+    ++ jlF64FunctionF64Mat(func, mat, nr) returns the output value of
+    ++ func applied to mat, internally a vector, where the number of rows
+    ++ is nr.
+    jlF64FunctionCF64Mat : (STR, JCF64VEC, NNI) -> JF64
+    ++ jlF64FunctionF64Mat(func, cmat, nr) returns the output value of
+    ++ func applied to cmat, internally a vector, where the number of rows
+    ++ is nr.
+    jlF64FunctionF64MatF64 : (STR, JF64VEC, NNI, JF64) -> JF64
+    ++ jlF64FunctionF64Mat(func, mat, nr, p) returns the output value of
+    ++ func applied to mat, internally a vector, where the number of rows
+    ++ is nr and p an additional parameter.
+    jlF64FunctionCF64MatF64 : (STR, JCF64VEC, NNI, JF64) -> JF64
+    ++ jlF64FunctionF64Mat(func, cmat, nr, p) returns the output value of
+    ++ func applied to cmat, internally a vector, where the number of rows
+    ++ is nr and p an additional parameter.
+
+    jlFunctionF64ArrayF64Mat : (STR, JF64VEC, JF64VEC, NNI) -> Void
+    ++ jlFunctionF64ArrayF64Mat(func, array, mat, nr) applies the function
+    ++ func to the matrix mat and returns the result in array. It is FriCAS
+    ++ that puts, at the C level, the resulting matrix in array.
+    ++ Can be used with Julia 'inv' for example.
+    jlFunctionCF64ArrayF64Mat : (STR, JCF64VEC, JF64VEC , NNI) -> Void
+    ++ jlFunctionCF64ArrayF64Mat(func, carray, mat, nr) applies the function
+    ++ func to the matrix mat and returns the result in carray. It is FriCAS
+    ++ that puts, at the C level, the resulting matrix in carray.
+    ++ Can be used with Julia 'sqrt' for example.
+    jlFunctionF64ArrayCF64Mat : (STR, JF64VEC, JCF64VEC , NNI) -> Void
+    ++ jlFunctionF64ArrayCF64Mat(func, array, cmat, nr) applies the function
+    ++ func to the matrix cmat and returns the result in array. It is FriCAS
+    ++ that puts, at the C level, the resulting matrix in array.
+    ++ Can be used with Julia 'real' or 'imag' for example.
+    jlFunctionCF64ArrayCF64Mat : (STR, JCF64VEC, JCF64VEC, NNI) -> NNI
+    ++ jlFunctionF64ArrayCF64Mat(func, carray, cmat, nr) applies the function
+    ++ func to the matrix cmat and returns the result in carray. It is FriCAS
+    ++ that puts, at the C level, the resulting matrix in carray.
+
+
+
+    jlFunctionF32 : (STR, JF32) -> Void
+    ++ jlFunctionF32(func,x)
+    jlFunction2F32 : (STR, JF32, JF32) -> Void
+    ++ jlFunction2F32(func,x,y)
+    jlFunction3F32 : (STR, JF32, JF32, JF32) -> Void
+    ++ jlFunction3F32(func,x,y,z)
+
+    jlBoolFunction2F32 : (STR, JF32, JF32) -> Boolean
+    ++ jlBoolFunction2F32
+
+    jlI64FunctionF32 : (STR, JF32) -> JI64
+    ++ jlI64FunctionF32(func,x) 
+    jlF32FunctionF32I64 : (STR, JF32, JI64) -> JF32
+    ++ jlF32FunctionF32I64(func,x,i)
+    jlF32FunctionI64F32 : (STR, JI64, JF32) -> JF32
+    ++ jlF32FunctionI64F32(func,i,x)
+    jlF32FunctionF32 : (STR, JF32) -> JF32
+    ++ jlF32FunctionF32(func,x)
+    jlF32Function2F32 : (String, JF32, JF32) -> JF32
+    ++ jlF32Function2F32(func,x,y)
+    jlF32Function3F32 : (STR, JF32, JF32, JF32) -> JF32
+    ++ jlF32Function3F32(func, x, y, z)
+
+    jlFunctionF32Vec : (STR, JF32VEC) -> Void
+    ++ jlFunctionF32Vector(func, vec) applies func to vec.
+    jlFunctionCF32Vec : (STR, JCF32VEC) -> Void
+    ++ jlF32FunctionF32Vec(func, vec) applies func to cvec.
+    jlF32FunctionF32Vec : (STR, JF32VEC) -> JF32
+    ++ jlF32FunctionCF32Vec(func, vec) returns the output value
+    ++ of func applied to vec.
+    jlF32FunctionCF32Vec : (STR, JCF32VEC) -> JF32
+    ++ jlF32FunctionCF32Vec(func, cvec) returns the output value
+    ++ of func applied to cvec.
+    jlF32FunctionF32VecF32 : (STR, JF32VEC, JF32) -> JF32
+    ++ jlF32FunctionCF32Vec(func, vec, p) returns the output value
+    ++ of func applied to vec with parameter p.
+    jlF32FunctionCF32VecF32 : (STR, JCF32VEC, JF32) -> JF32
+    ++ jlF32FunctionCF32Vec(func, cvec, p) returns the output value
+    ++ of func applied to cvec with parameter p.
+
+    jlFunction2F32Vec! : (STR, JF32VEC, JF32VEC) -> Void
+    ++ jlFunction2F32Vec(func, vec1, vec2) applies the Julia function
+    ++ func to vec2 that overwrites vec1 with the result.
+    ++ Please note that the overwriting is done by Julia and not FriCAS.
+    ++ See Julia 'copy!' for example. 
+    jlFunction2CF32Vec! : (STR, JCF32VEC, JCF32VEC) -> Void
+    ++ jlFunction2CF32Vec(func, cvec1, cvec2) applies the Julia function
+    ++ func to cvec2 that overwrites cvec1 with the result.
+    ++ Please note that the overwriting is done by Julia and not FriCAS.
+    ++ See Julia 'copy!' for example. 
+
+    jlFunction2F32Mat! : (STR, JF32VEC, NNI, JF32VEC, NNI) -> Void
+    ++ jlFunction2F32Mat!(func, mat1, mat2) applies the Julia function
+    ++ func to mat2 that overwrites mat1 with the result. Please note that
+    ++ the overwriting is done by Julia and not FriCAS.
+    ++ See Julia 'copy!' or transpose! for example. 
+    jlFunction2CF32Mat! : (STR, JCF32VEC, NNI, JCF32VEC, NNI) -> Void
+    ++ jlFunction2CF32Mat(func, cmat1, cmat2) applies the Julia function
+    ++ func to cmat2 that overwrites cmat1 with the result. Please note that
+    ++ the overwriting is done by Julia and not FriCAS.
+    ++ See Julia 'copy!' or adjoint! for example. 
+
+    jlFunctionF32Mat : (STR, JF32VEC, NNI) -> Void
+    ++ jlFunctionF32Mat(func, mat, nr) applies func to the matrix mat,
+    ++ internally a vector, where the numer of rows is nr.
+    jlFunctionCF32Mat : (STR, JCF32VEC, NNI) -> Void
+    ++ jlFunctionF32Mat(func, cmat, nr) applies func to the matrix mat,
+    ++ internally a vector, where the numer of rows is nr.
+    jlF32FunctionF32Mat : (STR, JF32VEC, NNI) -> JF32
+    ++ jlF32FunctionF32Mat(func, mat, nr) returns the output value of
+    ++ func applied to mat, internally a vector, where the number of rows
+    ++ is nr.
+    jlF32FunctionCF32Mat : (STR, JCF32VEC, NNI) -> JF32
+    ++ jlF32FunctionF32Mat(func, cmat, nr) returns the output value of
+    ++ func applied to cmat, internally a vector, where the number of rows
+    ++ is nr.
+    jlF32FunctionF32MatF32 : (STR, JF32VEC, NNI, JF32) -> JF32
+    ++ jlF32FunctionF32Mat(func, mat, nr, p) returns the output value of
+    ++ func applied to mat, internally a vector, where the number of rows
+    ++ is nr and p an additional parameter.
+    jlF32FunctionCF32MatF32 : (STR, JCF32VEC, NNI, JF32) -> JF32
+    ++ jlF32FunctionF32Mat(func, cmat, nr, p) returns the output value of
+    ++ func applied to cmat, internally a vector, where the number of rows
+    ++ is nr and p an additional parameter.
+
+    jlFunctionF32ArrayF32Mat : (STR, JF32VEC, JF32VEC, NNI) -> Void
+    ++ jlFunctionF32ArrayF32Mat(func, array, mat, nr) applies the function
+    ++ func to the matrix mat and returns the result in array. It is FriCAS
+    ++ that puts, at the C level, the resulting matrix in array.
+    ++ Can be used with Julia 'inv' for example.
+    jlFunctionCF32ArrayF32Mat : (STR, JCF32VEC, JF32VEC , NNI) -> Void
+    ++ jlFunctionCF32ArrayF32Mat(func, carray, mat, nr) applies the function
+    ++ func to the matrix mat and returns the result in carray. It is FriCAS
+    ++ that puts, at the C level, the resulting matrix in carray.
+    ++ Can be used with Julia 'sqrt' for example.
+    jlFunctionF32ArrayCF32Mat : (STR, JF32VEC, JCF32VEC , NNI) -> Void
+    ++ jlFunctionF32ArrayCF32Mat(func, array, cmat, nr) applies the function
+    ++ func to the matrix cmat and returns the result in array. It is FriCAS
+    ++ that puts, at the C level, the resulting matrix in array.
+    ++ Can be used with Julia 'real' or 'imag' for example.
+    jlFunctionCF32ArrayCF32Mat : (STR, JCF32VEC, JCF32VEC, NNI) -> NNI
+    ++ jlFunctionF32ArrayCF32Mat(func, carray, cmat, nr) applies the function
+    ++ func to the matrix cmat and returns the result in carray. It is FriCAS
+    ++ that puts, at the C level, the resulting matrix in carray.
+
+
+  Implementation ==> add
+    import from String
+
+    jlInitialize(true)
+    
+    defined?(func) ==>
+      not jlDefined?(func) =>
+        error concat(string(func), " is not defined in Julia")
+
+    jlInitialize(init) ==
+      if init then init_julia_env()$Lisp
+      else clear_julia_env()$Lisp
+
+    jlUsing(m) == jl_using_package(m)$Lisp
+    jlImport(m) == jl_import_symbol(m)$Lisp
+    jlInclude(file) == jl_include_file(file)$Lisp
+
+    jlEvalString(s : STR)   : Void    == jl_eval_string(s)$Lisp
+    jlEvalString(s : STR)   : Boolean == jl_bool_eval_string(s)$Lisp
+    jlEvalString(s : STR)   : JI64    == jl_int64_eval_string(s)$Lisp
+    jlEvalString(s : STR)   : Integer == jl_int64_eval_string(s)$Lisp
+    jlEvalString(s : STR)   : NNI     == jl_int64_eval_string(s)$Lisp
+    jlEvalString(s : STR)   : PI      == jl_int64_eval_string(s)$Lisp
+    jlEvalString(s : STR)   : STR     == jl_string_eval_string(s)$Lisp
+    jlEvalString(s : STR)   : JF64    == jl_dbl_eval_string(s)$Lisp
+
+    jlBoolFunction2F64(func,a,b) == jl_bool_function_dbl_dbl(func,a,b)$Lisp
+
+    jlFunctionF64(func,a) == jl_function_dbl(func,a)$Lisp
+    jlFunction2F64(func,a,b) == jl_function_dbl_dbl(func,a,b)$Lisp
+    jlFunction3F64(func,a,b,c) == jl_function_dbl_dbl_dbl(func,a,b,c)$Lisp
+
+    jlF64FunctionF64I64(func,a,i) == jl_dbl_function_dbl_int64(func,a,i)$Lisp
+    jlF64FunctionI64F64(func,i,a) == jl_dbl_function_int64_dbl(func,i,a)$Lisp
+
+    jlI64FunctionF64(func,a) == jl_int64_function_dbl(func,a)$Lisp
+    jlF64FunctionF64(func,a) == jl_dbl_function_dbl(func,a)$Lisp
+    jlF64Function2F64(func,a,b) == jl_dbl_function_dbl_dbl(func,a,b)$Lisp
+    jlF64Function3F64(func,a,b,c) == jl_dbl_function_dbl_dbl_dbl(func,a,b,c)$Lisp
+
+    jlFunctionF64Vec(func, v) == jl_1dfunction(0$NNI,func,v)$Lisp
+    jlFunctionCF64Vec(func, v) == jl_1dfunction(1$NNI,func,v)$Lisp
+    jlF64FunctionF64Vec(func, v)== jl_dbl_1dfunction(0$NNI,func,v)$Lisp
+    jlF64FunctionCF64Vec(func, v)== jl_dbl_1dfunction(1$NNI,func,v)$Lisp
+    jlF64FunctionF64VecF64(func,v,p)  ==
+      jl_dbl_1dfunction_dbl(0$NNI,func,v,p)$Lisp
+    jlF64FunctionCF64VecF64(func,v,p)  ==
+      jl_dbl_1dfunction_dbl(1$NNI,func,v,p)$Lisp
+
+    jlFunction2F64Vec!(func, v1, v2) == jl_1d2function(0$NNI,func,v1,v2)$Lisp
+    jlFunction2CF64Vec!(func, v1, v2) == jl_1d2function(1$NNI,func,v1,v2)$Lisp
+
+    jlFunctionF64Mat(func, mat, nr) == jl_2dfunction(0$NNI,func,mat,nr)$Lisp
+    jlFunctionCF64Mat(func, mat, nr) == jl_2dfunction(1$NNI,func,mat,nr)$Lisp
+    jlF64FunctionF64Mat(func, mat, nr) ==
+      jl_dbl_2dfunction(0$NNI,func,mat,nr)$Lisp
+    jlF64FunctionCF64Mat(func, mat, nr) ==
+      jl_dbl_2dfunction(1$NNI,func,mat,nr)$Lisp
+    jlF64FunctionF64MatF64(func, mat, nr, p) ==
+      jl_dbl_2dfunction_dbl(0$NNI,func,mat,nr,p)$Lisp
+    jlF64FunctionCF64MatF64(func, mat, nr, p) ==
+      jl_dbl_2dfunction_dbl(1$NNI,func,mat,nr,p)$Lisp
+
+    jlFunction2F64Mat!(func, mat1,nr1,mat2,nr2) ==
+      jl_2d2function(0$NNI,func, mat1, nr1, mat2, nr2)$Lisp
+    jlFunction2CF64Mat!(func, mat1,nr1,mat2,nr2) ==
+      jl_2d2function(1$NNI,func, mat1, nr1, mat2, nr2)$Lisp
+
+    jlFunctionF64ArrayF64Mat(func, array, mat, nr) ==
+      jl_array_2dfunction(0$NNI,0$NNI, func, array, mat, nr)$Lisp
+    jlFunctionCF64ArrayF64Mat(func, carray, mat, nr) ==
+      jl_array_2dfunction(1$NNI,0$NNI, func, carray, mat, nr)$Lisp
+    jlFunctionF64ArrayCF64Mat(func, array, cmat, nr) ==
+      jl_array_2dfunction(0$NNI,1$NNI, func, array, cmat, nr)$Lisp
+    jlFunctionCF64ArrayCF64Mat(func, carray, cmat, nr) ==
+      jl_array_2dfunction(1$NNI,1$NNI, func, carray, cmat, nr)$Lisp
+
+    ---------------------------------------------------------
+    jlBoolFunction2F32(func,a,b) == jl_bool_ffunction_flt_flt(func,a,b)$Lisp
+
+    jlFunctionF32(func,a) == jl_ffunction_flt(func,a)$Lisp
+    jlFunction2F32(func,a,b) == jl_ffunction_flt_flt(func,a,b)$Lisp
+    jlFunction3F32(func,a,b,c) == jl_ffunction_flt_flt_flt(func,a,b,c)$Lisp
+
+    jlF32FunctionF32I64(func,a,i) == jl_flt_ffunction_flt_int64(func,a,i)$Lisp
+    jlF32FunctionI64F32(func,i,a) == jl_flt_ffunction_int64_flt(func,i,a)$Lisp
+
+    jlI64FunctionF32(func,a) == jl_int64_ffunction_flt(func,a)$Lisp
+    jlF32FunctionF32(func,a) == jl_flt_ffunction_flt(func,a)$Lisp
+    jlF32Function2F32(func,a,b) == jl_flt_ffunction_flt_flt(func,a,b)$Lisp
+    jlF32Function3F32(func,a,b,c) == jl_flt_ffunction_flt_flt_flt(func,a,b,c)$Lisp
+
+    jlFunctionF32Vec(func, v) == jl_1dffunction(0$NNI,func,v)$Lisp
+    jlFunctionCF32Vec(func, v) == jl_1dffunction(1$NNI,func,v)$Lisp
+    jlF32FunctionF32Vec(func, v)== jl_flt_1dffunction(0$NNI,func,v)$Lisp
+    jlF32FunctionCF32Vec(func, v)== jl_flt_1dffunction(1$NNI,func,v)$Lisp
+    jlF32FunctionF32VecF32(func,v,p)  ==
+      jl_flt_1dffunction_flt(0$NNI,func,v,p)$Lisp
+    jlF32FunctionCF32VecF32(func,v,p)  ==
+      jl_flt_1dffunction_flt(1$NNI,func,v,p)$Lisp
+
+    jlFunction2F32Vec!(func, v1, v2) == jl_1d2ffunction(0$NNI,func,v1,v2)$Lisp
+    jlFunction2CF32Vec!(func, v1, v2) == jl_1d2ffunction(1$NNI,func,v1,v2)$Lisp
+
+    jlFunctionF32Mat(func, mat, nr) == jl_2dffunction(0$NNI,func,mat,nr)$Lisp
+    jlFunctionCF32Mat(func, mat, nr) == jl_2dffunction(1$NNI,func,mat,nr)$Lisp
+    jlF32FunctionF32Mat(func, mat, nr) ==
+      jl_flt_2dffunction(0$NNI,func,mat,nr)$Lisp
+    jlF32FunctionCF32Mat(func, mat, nr) ==
+      jl_flt_2dffunction(1$NNI,func,mat,nr)$Lisp
+    jlF32FunctionF32MatF32(func, mat, nr, p) ==
+      jl_flt_2dffunction_flt(0$NNI,func,mat,nr,p)$Lisp
+    jlF32FunctionCF32MatF32(func, mat, nr, p) ==
+      jl_flt_2dffunction_flt(1$NNI,func,mat,nr,p)$Lisp
+
+    jlFunction2F32Mat!(func, mat1,nr1,mat2,nr2) ==
+      jl_2d2ffunction(0$NNI,func, mat1, nr1, mat2, nr2)$Lisp
+    jlFunction2CF32Mat!(func, mat1,nr1,mat2,nr2) ==
+      jl_2d2ffunction(1$NNI,func, mat1, nr1, mat2, nr2)$Lisp
+
+    jlFunctionF32ArrayF32Mat(func, array, mat, nr) ==
+      jl_array_2dffunction(0$NNI,0$NNI, func, array, mat, nr)$Lisp
+    jlFunctionCF32ArrayF32Mat(func, carray, mat, nr) ==
+      jl_array_2dffunction(1$NNI,0$NNI, func, carray, mat, nr)$Lisp
+    jlFunctionF32ArrayCF32Mat(func, array, cmat, nr) ==
+      jl_array_2dffunction(0$NNI,1$NNI, func, array, cmat, nr)$Lisp
+    jlFunctionCF32ArrayCF32Mat(func, carray, cmat, nr) ==
+      jl_array_2dffunction(1$NNI,1$NNI, func, carray, cmat, nr)$Lisp
+
+
+    jlDefined?(sym : JuliaSymbol) ==
+      jlEvalString(concat(["isdefined(Main,", string(sym),")"]))
+    jlDefined?(str : String) ==
+      lsym := split(str, char ".")
+      (size:=#lsym) = 1 => jlEvalString(concat(["isdefined(Main,",
+        string(coerce(str)@JSYM),")"]))
+      sym := coerce(last lsym)@JSYM
+      nspace : String := first lsym
+      for i in 2..(size-1) repeat nspace := concat(concat(nspace, "."), lsym.i)
+      jlEvalString(concat(["isdefined(", nspace, ","
+        string(sym),")"]))
+
+    jlAddPackage(str : String) ==
+      jlEvalString(concat(["import Pkg;Pkg.add(_"", str,"_")"]))@Void
+
+    jlApprox?(x:JCF64, y:JCF64) : Boolean ==
+        jl_bool_function_dbl_dbl("isapprox", real(x), real(y))$Lisp
+          and jl_bool_function_dbl_dbl("isapprox", imag(x), imag(y))$Lisp
+    jlApprox?(x:JCF32, y:JCF32) : Boolean ==
+        jl_bool_function_flt_flt("isapprox", real(x), real(y))$Lisp
+          and jl_bool_function_flt_flt("isapprox", imag(x), imag(y))$Lisp
+
+)abbrev package JSTRU JuliaStringUtilities
+++ Utility package for strings using Julia facilities
+++ Author: G. Vanuxem
+++ Date Created: Oct, 2024
+++ Description:
+++  This package provides Julia facilities that operate on
+++  strings.
+JuliaStringUtilities() : Exports == Implementation where
+    STR  ==> String
+    PI   ==> PositiveInteger
+    NNI  ==> NonNegativeInteger
+    Exports ==> with
+      jlSplit  :(String, String, NNI) -> List(String)
+      ++ jlSplit(str, delims, n) split str with delimiter(s) delims
+      ++ (a string or a regular expression). Return a list of size n.
+      ++ Parse entirely str if n = 0.
+      jlSplit  :(String, String) -> List(String)
+      ++ jlSplit(str, delims) split str with delimiter(s) delims
+      ++ (a string or a regular expression). Equivalent to
+      ++ jlSplit(str, delims, 0).
+      jlRegex  : String -> String
+      ++ jlRegex(str) returns the String corresponding to a Julia
+      ++ regular expression, that is, "r"str"". Convenience function.
+      jlSubstitute  : String -> String
+      ++ jlSubstitute(str) returns the String corresponding to a Julia
+      ++ subtitute expression, that is, "s"str""". Convenience function.
+      jlLatex  : String -> String
+      ++ jlLatex(str) returns the String corresponding to a Julia
+      ++ LaTeX expression, that is, "L"str"" if your Julia support it
+      ++ (LaTeXStrings package). Convenience function.
+      jlRegexMatch?   : (String, String) -> Boolean
+      ++ jlRegexMatch(regex,s) checks if the regular expression matches in s.
+      jlRegexMatch    : (String, String) -> String
+      ++ jlRegexMatch(regex, s) returns the matched regular expression in s.
+      jlRegexMatch    : (String, String, PI) -> String
+      ++ jlRegexMatch(regex, s, i) returns the matched regular expression in s,
+      ++ starting at index i.
+      jlRegexMatch    : (String, String) -> List(String)
+      ++ jlRegexMatch(regex, s) returns the matched regular expressions in s.
+      jlRegexMatch    : (String, String, PI) -> List(String)
+      ++ jlRegexMatch(regex, s, i) returns the matched regular expressions in s,
+      ++ starting at index i.
+      jlRegexMatch    : (String, String) -> AssociationList(String,String)
+      ++ jlRegexMatch(regex, s) returns the matched regular expressions in s.
+      jlRegexMatch    : (String, String, PI) -> AssociationList(String,String)
+      ++ jlRegexMatch(regex, s, i) returns the matched regular expressions in s,
+      ++ starting at index i.
+      jlRegexReplace  : (String, String, String) -> String
+      ++ jlRegexReplace(regex,subst,str) will replace captured regular expressions
+      ++ in str with subst. More information in String documentation of Julia.
+      ++ For example:
+      ++  jlRegexReplace(jlRegex("$"), jlSubstitute(" you!"), "hey")
+    Implementation ==> add
+      import from JuliaUtilityFunctions
+      import from String
+      import from AssociationList(String,String)
+      jlInitialize(true)
+
+      jlRegex(s) == concat ["r_"", s, "_""]
+      jlSubstitute(s) == concat ["s_"", s, "_""]
+      jlLatex(s) == concat ["L_"", s, "_""]
+
+      jlSplit(str, delims, n) == 
+        resl : List(String) := []
+        estr : String :=
+          concat(["splt=split(_"", str, "_",_"", delims, "_", limit=", 
+            string(n),");"])
+        jlEvalString(estr)@Void
+        n: Integer := jlEvalString("length(splt)")
+        for i in 1..n repeat
+          estr := concat(["string(if((ret=splt[",string(i), _
+            "])===nothing) _"_" else ret end)"])
+          resl := concat!(resl, jlEvalString(estr)@String)
+        jlEvalString("splt=nothing")@Void     
+        resl
+
+      jlSplit(str, delims) == jlSplit(str, delims, 0)
+
+      jlRegexMatch?(r, s)  ==
+        estr : String := concat(
+          ["occursin(", r, ",", string(s::OutputForm)$OutputFormTools,")"])
+        jlEvalString(estr)@Boolean
+
+      jlRegexMatch(r, s) : String == jlRegexMatch(r, s, 1)
+
+      jlRegexMatch(r, s, ind) : String ==
+        estr : String := concat(
+          ["string(match(", r, ",_"", s, "_",", string(ind), ").match)"])
+        jlEvalString(estr)@String
+
+      jlRegexMatch(r, s) : List(String) == jlRegexMatch(r, s, 1)
+
+      jlRegexMatch(r, s, ind) : List(String) ==
+        resl : List(String) := []
+        estr : String :=
+          concat(["reg=match(", r, ",_"", s, "_",", string(ind),");"])
+        jlEvalString(estr)@Void
+        n := jlEvalString("size(reg.captures,1)")@Integer
+        for i in 1..n repeat
+          estr := concat(["string(if((ret=reg.captures[", string(i), _
+            "])===nothing) _"_" else ret end)"])
+          resl := concat!(resl, jlEvalString(estr)@String)   
+        jlEvalString("reg=nothing")@Void    
+        resl
+
+      jlRegexMatch(r: String, s : String) : AssociationList(String,String) ==
+        jlRegexMatch(r,s,1)
+
+      jlRegexMatch(r: String, s : String, ind : PI) : AssociationList(String,String) ==
+        name : String  
+        --  StringTable?
+        resal : AssociationList(String, String) := table()
+        estr : String :=
+          concat(["reg=match(", r, ",_"",
+            s, "_",", string(ind), ");"])
+        jlEvalString(estr)@Void
+        -- TODO: check bad regex, actually Julia throws error(s).
+        -- if (reg===nothing) ...
+        n := jlEvalString("size(reg.captures,1)")@Integer
+        for i in n..1 by -1 repeat
+          if not empty?(name:=jlEvalString(concat(["keys(reg)[",
+              string(i), "];"]))@String) then
+            estr := concat(["string(reg.captures[",string(i), "])"])  
+            resal.name := jlEvalString(estr)@String
+        jlEvalString("reg=nothing")@Void
+        resal
+
+      jlRegexReplace(r, s, str) ==
+        t : String := concat(["replace(_"", str,
+          "_",", r, "=>", s, ")"])
+        jlEvalString(t)@String
+
+)abbrev domain JOBDLINK JuliaObjDynamicLinker
+++ Domain for dynamic linking shared libraries using Julia
+++ Author: G.Vanuxem
+++ Date Created: Oct. 2024
+++ Description:
+++  Generic Julia objects used for dynamically linking shared libraries.
+JuliaObjDynamicLinker() : Exports == Implementation where
+  INT  ==> Integer
+  NNI  ==> NonNegativeInteger
+  JOBJ ==> JuliaObject
+  STR  ==> String
+  Exports ==> JuliaObjectType with
+    jlDlCApply : (%, JOBJ) -> JOBJ
+    ++ jlDlCApply(func,x) applies the function pointer func to x.
+    ++ The Julia type of x must be compatible with the Libdl
+    ++ Julia module. Type of the returned value is assumed to be
+    ++ the same than the type of x. For example:
+    ++ \example{libm:= jlDlOpen "libopenlibm"}
+    ++ \example{squareRoot:=jlDlSym(libm,jsym(sqrt))}
+    ++ \example{jlDlCApply(squareRoot,jobject("2."))}
+    jlDlCApply : (%, STR, JOBJ, STR) -> JOBJ
+    ++ jlDlCApply(func, ctype, x, xctype) applies the function
+    ++ pointer func to x given its Julia C type (xctype) or its
+    ++ supported Julia type, for example "Float64" or "Cdouble".
+    ++ Returned value is assumed to be a C type ctype
+    ++ (or any Julia supported types). For example:
+    ++ \example{libm:= jlDlOpen "libopenlibm"}
+    ++ \example{squareRoot:= jlDlSym(libm,jsym(sqrt))}
+    ++ \example{jlDlCApply(squareRoot, "Cdouble" jobject("2."), "Cdouble")}
+    ++ \example{sinus:=jlDlSym(libm,jsym(sin))}
+    ++ \example{jlDlCApply(sinus,"Float64"), jobject("2."), "Float64")}
+    jlDlCApply : (%, JOBJ, JOBJ) -> JOBJ
+    ++ jlDlCApply(func,x,y) applies the function pointer func to x and y.
+    ++ Type of the returned value is assumed to be the same than the type of x.
+    ++ For example:
+    ++ \example{libgsl:= jlDlOpen "libgsl"}
+    ++ \example{ipower:=jlDlSym(libgsl, gsl_pow_int)}
+    ++ \example{jlDlCApply(ipower,jobject("2.0"),jobject("7"))}
+    jlDlCApply : (%, STR, JOBJ, STR, JOBJ, STR) -> JOBJ
+    ++ jlDlCApply(func, ctype, x, xctype, y, xctype) applies the
+    ++ function pointer func to x and y given their Julia C type
+    ++ (xctype and xctype) or their supported Julia type,
+    ++ for example "Float64" or "Cdouble".
+    ++ Returned value is assumed to be a C type ctype
+    ++ (or any Julia supported types).
+    jlDlCApply : (%, JOBJ, JOBJ, JOBJ) -> JOBJ
+    ++ jlDlCApply(func,x,y,z) applies the function pointer func to x, y and z.
+    ++ Returned value is assumed the same type than type of x. Use jlDlCApply
+    ++ with type options if necessary.
+    ++ For example with GSL:
+    ++ \example{gsl:= jlDlOpen "libgsl"}
+    ++ \example{hypot3:= jlDlSym(gsl,jsym(gsl_hypot3))}
+    ++ \example{jlDlCApply(hypot3,jobject("2."),jobject("7."),jobjet("9.0"))}
+    jlDlCApply : (%, STR, JOBJ, STR, JOBJ, STR, JOBJ, STR) -> JOBJ
+    ++ jlDlCApply(func, ctype, x, xctype, y, xctype, z, ztype) applies the
+    ++ function pointer func to x given its Julia C type (xctype) or its
+    ++ supported Julia type, for example "Float64" or "Cdouble".
+    ++ Returned value is assumed to be a C type ctype
+    ++ (or any Julia supported types).
+    jlDlOpen : STR -> %
+    ++ jlDlOpen(lib) opens/loads the dynamic shared library lib and
+    ++ returns a reference pointer that can
+    ++ be used to obtain adress to symbols in it using jlDlSym.
+    ++ It is up to the user to unload the shared object when it is
+    ++ no longer used. Does not throw an error if the library can not
+    ++ be loaded and returns 'nothing' in this case. Use
+    ++ the nothing? operation on the returned value if necessary.
+    jlDlOpen : (STR, JOBJ) -> %
+    ++ jlDlOpen(lib, flags) opens/loads the dynamic shared library lib and
+    ++ returns a reference pointer that can
+    ++ be used to obtain adress to symbols in it using jlDlSym.
+    ++ It is up to the user to unload the shared object when it is
+    ++ no longer used. Does not throw an error if the library can not
+    ++ be loaded by default and returns nothing in this case. Use
+    ++ the nothing? operation on the returned value if necessary.
+    ++ \example{jlUsing "Libdl" -- for flags}
+    ++ \example{jlDlOpen("libopenlibm", jobject "Libdl.RTLD_NOW")}
+    ++ flags can be one or combinaison of:
+    ++ RTLD_DEEPBIND
+    ++ RTLD_FIRST
+    ++ RTLD_GLOBAL
+    ++ RTLD_LAZY
+    ++ RTLD_LOCAL
+    ++ RTLD_NODELETE
+    ++ RTLD_NOLOAD
+    ++ RTLD_NOW
+    ++ Note: the Libdl must be loaded or imported before using
+    ++ these flags.
+    jlDlOpen : (STR, Boolean) -> %
+    ++ jlDlOpen(lib, throw) opens/loads the dynamic shared library lib and
+    ++ returns a reference pointer that can
+    ++ be used to obtain adress to symbols in it using jlDlSym.
+    ++ It is up to the user to unload the shared object when it is
+    ++ no longer used. 'throw' determines whether or not Julia throws an error
+    ++ if the library can not be loaded.
+    ++ \example{jlDlOpen("libopenlibm", true)}
+    jlDlOpen : (STR, JOBJ, Boolean) -> %
+    ++ jlDlOpen(lib, flags, throw) opens/loads the dynamic shared library lib and
+    ++ returns a reference pointer that can
+    ++ be used to obtain adress to symbols in it using jlDlSym.
+    ++ It is up to the user to unload the shared object when it is
+    ++ no longer used. Does not throw an error if the library can not
+    ++ be loaded by default and returns nothing in this case. Use
+    ++ the nothing? operation on the returned value if necessary.
+    ++ 'throw' determines whether or not Julia throws an error
+    ++ if the library can not be loaded.
+    ++ \example{jlDlOpen("libopenlibm", jobject "Libdl.RTLD_NOW", false)}
+    ++ flags can be one or combinaison of:
+    ++ RTLD_DEEPBIND
+    ++ RTLD_FIRST
+    ++ RTLD_GLOBAL
+    ++ RTLD_LAZY
+    ++ RTLD_LOCAL
+    ++ RTLD_NODELETE
+    ++ RTLD_NOLOAD
+    ++ RTLD_NOW
+    ++ Note: the Libdl must be loaded or imported before using
+    ++ these flags.
+    jlDlClose : % -> Boolean
+    ++ jlDlClose(libPtr) unload explicitely the shared library
+    ++ referenced by libPtr.
+    jlDlSym : (%, JuliaSymbol) -> %
+    ++ jlDlSym(lib, sym) returns the pointer to the symbol sym in
+    ++ the library referenced by lib. See jlDlOpen.
+    ++ \example{lnk:=jdlink "libjulia"}
+    ++ \example{sym := jlDlSym(lnk,"jl_eval_string")}
+    ++ \example{TODO}
+    jlDlList : () -> JOBJ
+    ++ jlDlList() returns the list of loaded shared objects
+    ++ by the currect processus in a JuliaObject referencing
+    ++ a Julia vector of strings.
+    jlDlPath : String -> String
+    ++ jlDlPath(lib) returns the path of the library lib.
+    ++ Julia warns if it is not found and returns an empty string.
+    jlDlPath : % -> String
+    ++ jlDlPath(lib) returns the path of the loaded library lib.
+    jlDlFindLib : String -> String
+    ++ jlDlFindLib(lib) returns the the library lib.
+    ++ Returns an empty string if it is not found.
+    jdlink : STR -> %
+    ++ jdlink(lib) opens/loads the dynamic shared library lib and
+    ++ returns a reference pointer that can
+    ++ be used to obtain adress to symbols in it using jlDlSym.
+    ++ It is up to the user to unload the shared object when it is
+    ++ no longer necessary using jlDlClose.
+    ++ \example{jdlink "libopenlibm"}
+    ++ Throws a Julia error if it is not found. Use jlDlOpen
+    ++ for a version with options and/or without Julia errors.
+  Implementation ==> add
+    import from JuliaUtilityFunctions
+    import from String
+    import from JuliaObject
+
+    jlInitialize(true)
+    jlUsing("Libdl")
+
+    Rep := SExpression
+    getind(a)  ==> concat(["getindex(refs,_"", jlId a, "_")"])
+    jlDlCApply(func, x) ==
+      type := jlType x
+      jlref(concat ["ccall(", getind(func),
+        ",", type, ",(", type, ",),", getind(x),")"])
+    jlDlCApply(func, type, x, xtype : String) ==
+        jlref(concat ["ccall(", getind(func),
+          ",", type, ",(", xtype, ",),", getind(x),")"])
+    jlDlCApply(func, x : JOBJ, y : JOBJ) ==
+      xtype := jlType x
+      ytype := jlType y
+      jlref(concat ["ccall(", getind(func),
+        ",", xtype, ",(", xtype, ",", ytype, "),", getind(x), ",", getind(y),")"])
+    jlDlCApply(func, type, x, xtype, y, ytype) ==
+        jlref(concat ["ccall(", getind(func),
+          ",", type, ",(", xtype, ",", ytype, "),", getind(x), ",", getind(y),")"])
+    jlDlCApply(func, x, y, z) ==
+      xtype := jlType x
+      ytype := jlType y
+      ztype := jlType z
+      jlref(concat ["ccall(", getind(func), 
+        ",", xtype, ",(", xtype, ",", ytype, "," , ztype,"),",
+          getind(x), ",", getind(y), ",", getind(z), ")"])
+    jlDlCApply(func, type, x, xtype,  y, ytype, z, ztype) ==
+      jlref(concat ["ccall(", getind(func), 
+        ",", type, ",(", xtype, ",", ytype, "," , ztype,"),",
+          getind(x), ",", getind(y), ",", getind(z), ")"])
+    jlDlOpen(library) ==
+      jlref(concat(["Libdl.dlopen(_"", library, "_",throw_error=false)"]))
+    jlDlOpen(library, throw : Boolean) ==
+      if throw then
+        jlref(concat(["Libdl.dlopen(_"", library, "_")"]))
+      else
+        jlref(concat(["Libdl.dlopen(_"", library, "_",throw_error=false)"]))
+    jlDlOpen(library, flags : JOBJ) ==
+      jlref(concat(["Libdl.dlopen(_"", library, "_",", getind(flags), ")"]))
+    jlDlOpen(library, flags : JOBJ, throw : Boolean) ==
+      if throw then
+        jlref(concat(["Libdl.dlopen(_"", library, "_",", getind(flags), ")"]))
+      else
+        jlref(concat(["Libdl.dlopen(_"", library, "_",", 
+          getind(flags), ",throw_error=false)"]))
+    jlDlClose(library) ==
+      jlEvalString(concat ["Libdl.dlclose(", getind(library),")"])@Boolean
+    jlDlSym(library, sym) == jlref(concat(["Libdl.dlsym(",
+      getind(library),",", string(sym),")"]))
+    jlDlList() == jobject("dllist()")
+    jlDlPath(lib : String) ==
+      jlEvalString(concat ["dlpath(_"", lib, "_")"])@String
+    jlDlPath(lib : %) ==
+      jlEvalString(concat ["dlpath(", getind(lib), ")"])@String
+    jlDlFindLib(str) ==
+      jlEvalString(concat ["find_library(_"", str, "_")"])@String
+    jdlink(str: String) == jlref(concat(["Libdl.dlopen(_"", str, "_")"]))
