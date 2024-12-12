@@ -21,6 +21,8 @@ JuliaObjectType() : Category == JuliaType() with
     ++ mutable?(obj) checks whether or not obj is mutable.
     nothing? : % -> Boolean
     ++ nothing?(obj) checks whether or not obj is nothing.
+    jlDisplay: % -> Void
+    ++ jlDisplay(v) pretty prints v (à la Julia).
     jlApply : (String, %) -> JuliaObject
     ++jlApply(func, obj) applies the function func with obj as parameter
     ++ and returns the result as a FriCAS JuliaObject.
@@ -96,6 +98,8 @@ JuliaObjectType() : Category == JuliaType() with
     -- TODO
     string(obj)  == jl_string_getindex(jlId obj)$Lisp
     convert(obj)  == jl_string_getindex(jlId obj)$Lisp
+    jlDisplay(v) ==
+      jlEvalString(concat(["display(", getind(v), ")"]))@Void
     jlApply(func, a) ==
       defined?(func)
       junfunc(func, a)
@@ -1250,8 +1254,6 @@ JuliaVector(R : JuliaObjectType) : Exports == Implementation where
           nrand : (n : PI) -> JuliaVector(JuliaComplexFloat)
           ++ rand(n) returns a JuliaVector of size n with normally
           ++ distributed random numbers.
-      jlDisplay: % -> Void
-      ++ jlDisplay(v) pretty prints v (à la Julia).
       coerce  : JuliaFloat64Vector -> JuliaVector(JuliaObjFloat64)
       ++ coerce(x): convenience function.
       coerce  : JuliaComplexF64Vector -> JuliaVector(JuliaObjComplexF64)
@@ -1344,8 +1346,6 @@ JuliaVector(R : JuliaObjectType) : Exports == Implementation where
       sort(v : %) == junfunc("sort(",v)
       sort!(v : %) == junfunc("sort!(",v)
       
-      jlDisplay(v) ==
-        jlEvalString(concat(["display(", getind(v), ")"]))@Void
       coerce(v : JuliaFloat64Vector) ==
         make_jlref_from_vec(0$NNI, v)$Lisp
       coerce(v : JuliaComplexF64Vector) ==
@@ -1470,8 +1470,6 @@ JuliaMatrix(R : JuliaObjectRing) :  Exports == Implementation where
           ++ \example{mat := nrand(4,4)$JuliaMatrix(JuliaComplexFloat)}
           ++ \example{qr := jlApply("qr", mat)}
           ++ \example{qr.Q * qr.R}
-      jlDisplay: % -> Void
-      ++ jldisplay(m) pretty prints m (à la Julia).
       identity:    NNI -> %
       ++ identity(n) returns a n by n identity matrix.
       diagonalMatrix:   JuliaVector(R) -> %
@@ -1640,9 +1638,6 @@ JuliaMatrix(R : JuliaObjectRing) :  Exports == Implementation where
         radicalEigenvaluesWithMultiplicities(m) ==
           jlref(concat ["eigenvalues_with_multiplicities(QQBar,",
             getind(m), ")"])$JuliaVector(JuliaObjTuple)
-
-      jlDisplay(m : %) ==
-        jlEvalString(concat(["display(", getind(m), ")"]))@Void
 
       square?(m) == nrows(m) = ncols(m)
       zero?(m) : Boolean == jlEvalString(concat(["iszero(", getind(m), ")"]))

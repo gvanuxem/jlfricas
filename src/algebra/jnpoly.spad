@@ -38,6 +38,9 @@ NemoUnivariatePolynomial(R : NemoRing, x : Symbol):
           roots : % -> JuliaVector(NemoAlgebraicNumber)
           ++ roots(p) returns the roots of p.
           ++ Convenience function.
+        --unit : % -> %
+        ---- Force its use using Nemo
+        --++
         if R has QuotientFieldCategory(NINT) then
           "+" : (%, Fraction(Integer)) -> %
           "*" : (%, Fraction(Integer)) -> %
@@ -75,6 +78,8 @@ NemoUnivariatePolynomial(R : NemoRing, x : Symbol):
           jlref(concat([func, getind(a), ",", getind(b), ")"]))
         jbinbop(op,a,b) ==>
           jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
+        junbfunc(bfunc, a) ==>
+          jlEvalString(concat([bfunc, getind(a),")"]))@Boolean
 
         if R is NemoInteger then
           jlEvalString(concat([NUPRing,",",string(x),"=polynomial_ring(ZZ,_"",
@@ -172,22 +177,47 @@ NemoUnivariatePolynomial(R : NemoRing, x : Symbol):
         gcd(p1,p2)  == jbinfunc("gcd(",p1,p2)
         content(p : %)  == jlref(concat(["content(", getind(p), ")"]))$R
         primitivePart(p) == junfunc("primpart(", p)
-        factor(a : %) : NemoFactored(%) == factor(a)$NemoFactored(%)
-        (p1:% exquo p2:%): Union(%,"failed") ==
+        factor(p : %) : NemoFactored(%) == factor(p)$NemoFactored(%)
+        factor(p : %) : Factored(%) == factor(p)$NemoFactored(%)
+        -- Using Nemo factorisation (different on NRAT for example)
+        -- unit(p) == unit factor(p)
+        (p1:% exquo p2:%) ==
+          -- TODO
           -- Julia Tuple
           ret : JuliaObject := jbinfunc("divides(", p1, p2)
           not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
             => "failed"
-          junfunc("last(", ret)       
+          junfunc("last(", ret)
+        divide(a,b) ==
+          ret : JuliaObjTuple := jbinfunc("divrem(",a,b)
+          [ret.1 pretend %, ret.2 pretend %]
 
         degree(p) == jlEvalString(concat(["degree(", getind(p),")"]))@NNI
         leadingCoefficient(p : %) ==
           junfunc("leading_coefficient(", p)
+        if R has DivisionRing then
+          recip(p) ==
+            -- TODO
+            ret : JuliaObject := jbinfunc("divides(", 1, p)
+            not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
+              => "failed"
+            junfunc("last(", ret)
+          p/r : R == inv(r)*p
+          unitNormal(p) ==
+            unitC : R := junfunc("canonical_unit(", p)
+            a := inv unitC
+            [unitC::%, p * a , a::%]
+          unitCanonical(p) ==
+            a : R := junfunc("canonical_unit(", p)
+            p * inv a
+        else
+          recip(p) ==
+            one?(p) => p
+            "failed"
 
         coerce(p : %) : OutputForm ==
           jlRegexReplace(jlRegex("//"), jlSubstitute("/"),
             string(p)) pretend OutputForm
-
         coerce(v : Variable(x)) == jlref(string(v::Symbol))
         coerce(i : Integer) == jlref(concat([NUPRing,"(",string(i),")"]))
         coerce(c : R) == jlref(concat([NUPRing,"(", getind(c),")"]))
@@ -394,6 +424,8 @@ NemoMultivariatePolynomial(R : NemoRing, VarSet : List Symbol,
 
         leadingCoefficient(p : %) ==
           junfunc("leading_coefficient(", p)
+        unitCanonical(p) == junfunc("canonical_unit(", p)
+
         jmp2nmp(mp) : % ==
           p: String := first(lines formatExpression(mp::OutputForm)$Format1D)
           -- handle NRAT case
