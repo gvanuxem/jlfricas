@@ -54,6 +54,20 @@ int64_t jl_int64_eval_string(char* code)
     return jl_unbox_int64(result);
 }
 
+float jl_flt_eval_string(char* code)
+{
+    jl_value_t *result = jl_eval_string(code);
+    if (jl_exception_occurred()) {
+        jl_call2(jl_get_function(jl_base_module, "showerror"),
+                jl_stderr_obj(),
+                jl_exception_occurred());
+        jl_printf(jl_stderr_stream(), "\n");
+        jl_exception_clear();
+        return(NAN);
+    }
+    return jl_unbox_float32(result);
+}
+
 double jl_dbl_eval_string(char* code)
 {
     jl_value_t *result = jl_eval_string(code);
@@ -2317,8 +2331,8 @@ void jl_init_env(void){
     // Quick & dirty hack
     // Set some default functions to avoid conflicts with the Nemo ones
     // TODO: use 'import' instead of 'using' and module call them
-    jl_eval_str("import Random.randn!, Random.rand!");
-    jl_eval_str("using LinearAlgebra;using SpecialFunctions;using Suppressor;import REPL; import InteractiveUtils.run");
+    jl_eval_str("using Random, LinearAlgebra, SpecialFunctions, Suppressor");
+    jl_eval_str("import REPL; import InteractiveUtils.run");
     jl_eval_str("a=[1.0 2;3 3];b=similar(a);mul!(b,a,a);gamma(1);polygamma(1,1);digamma(1);erf(0);erfi(0);erfc(0);zeta(0)");
     jl_eval_str("@suppress_err using Nemo");
     //jl_eval_str("using Nemo");

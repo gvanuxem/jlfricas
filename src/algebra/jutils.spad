@@ -49,6 +49,10 @@ JuliaUtilityFunctions() : Exports == Implementation where
     jlAddPackage  : String -> Void
     ++ jlAddPackage(package) add package to Julia project.
 
+    jlSeed! : JuliaInt64 -> Void
+    ++ jlSeed!(n) reseeds the Julia random number generator,
+    ++ if applicable.
+
     jlApprox?: (JCF32, JCF32) -> Boolean
     ++ jlApprox?(x,y) computes inexact equality comparison
     ++ with default parameters. Two numbers compare equal
@@ -313,6 +317,8 @@ JuliaUtilityFunctions() : Exports == Implementation where
     jlUsing(m) == jl_using_package(m)$Lisp
     jlImport(m) == jl_import_symbol(m)$Lisp
     jlInclude(file) == jl_include_file(file)$Lisp
+
+    jlSeed!(n) == jl_eval_string(concat ["Random.seed!(", string(n),")"])$Lisp
 
     jlEvalString(s : STR)   : Void    == jl_eval_string(s)$Lisp
     jlEvalString(s : STR)   : Boolean == jl_bool_eval_string(s)$Lisp
