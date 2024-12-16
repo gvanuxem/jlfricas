@@ -1,0 +1,137 @@
+)abbrev package JFSF2 JuliaFloatSpecialFunctions2
+++ Special functions computed using Julia's ecosystem.
+++ They are here essentially for "completeness" purpose with
+++ JuliaFloat.
+JuliaFloatSpecialFunctions2() : Exports == Implementation where
+  JF ==> JuliaFloat
+  Exports ==> with
+
+    -- Gamma Function
+  
+    Gamma : JF -> JF
+    ++ Gamma(z) computes gamma function \Gamma(z).
+    logGamma : JF -> JF
+    ++ logGamma(x) computes accurate log(gamma(x)) for large x.
+    digamma : JF -> JF
+    ++ digamma(x) computes digamma function (i.e. the derivative of logGamma at x).
+    Gamma : (JF, JF) -> JF
+    ++ Gamma(a,z) computes upper incomplete gamma function \Gamma(a,z).
+    logGamma : (JF, JF) -> JF
+    ++ logGamma(a,z) computes accurate log(gamma(a,x)) for large arguments.
+    Beta : (JF, JF) -> JF
+    ++ Beta(x,y) computes beta function at x,y.
+    logBeta : (JF, JF) -> JF
+    ++ logBeta(x,y) computes accurate log(beta(x,y)) for large x or y.
+    
+    -- Exponential and Trigonometric Integrals
+    
+    expint : (JF, JF) -> JF
+    ++ expint(nu, z) computes exponential integral E\nu(z).
+    Ei : JF -> JF
+    ++ Ei(x) computes exponential integral Ei(x).
+
+    -- Error Functions, Dawson’s and Fresnel Integrals
+
+    erf : JF -> JF
+    ++ erf(x) computes error function at x.
+    erf : (JF, JF) -> JF
+    ++ erf(x,y) computes accurate version of erf(y) - erf(x).
+    erfc : JF -> JF
+    ++ erfc(x) computes complementary error function,
+    ++ i.e. the accurate version of 1-erf(x) for large x.
+    inverseErfc : JF -> JF
+    ++ inverseErfc(x) computes the inverse function of erfc.
+    erfcx : JF -> JF
+    ++ erfcx(x) computes scaled complementary error function,
+    ++ i.e. accurate e^{x^2} erfc(x) for large x.
+    logerfc : JF -> JF
+    ++ logerfc(x) computes log of the complementary error function,
+    ++ i.e. accurate ln(erfc(x)) for large x.
+    logerfcx : JF -> JF
+    ++ logerfcx(x) computes log of the scaled complementary error function,
+    ++ i.e. accurate ln(erfcx(x)) for large negative x.
+    inverseErf : JF -> JF
+    ++ inverseErf(x) computes inverse function of erf.
+
+    -- Airy
+
+    airyAi : JF -> JF
+    ++ airyAi(z) computes Airy Ai function at z
+
+    -- Bessel Functions
+
+    besselJ0 : JF -> JF
+    ++ besselJ0(z) computes besselj(0,z).
+    besselJ1 : JF -> JF
+    ++ besselJ1(z) computes besselj(1,z).
+    besselY0 : JF -> JF
+    ++ besselY0(z) computes bessely(0,z).
+    besselY1 : JF -> JF
+    ++ besselY1(z) computes bessely(1,z).
+    jinc : JF -> JF
+    ++ jinc(x) computes scaled Bessel function of the first kind
+    ++ divided by x. A.k.a. sombrero or besinc.
+    
+    -- Zeta and Related Functions
+ 
+    eta : JF -> JF
+    ++ eta(x) computes Dirichlet eta function at x.
+    riemannZeta : JF -> JF
+    ++ riemannZeta(x) computes Riemann zeta function at x.
+
+  Implementation ==> add
+    import from String
+    import from JuliaUtilityFunctions
+    
+    jlUsing("SpecialFunctions")
+
+    getind(a) ==> concat(["getindex(", "refs,_"", jlId(a), "_")"])
+    jl_float_function_float(func, fl) ==>
+      jlref(concat([func, "(", getind(fl),")"]))$JF
+    jl_float_function_float_float(func,a,b) ==> 
+      jlref(concat([func, "(", getind(a), ",", getind(b), ")"]))$JF
+    -- Gamma Functions
+
+    Gamma(z) == jl_float_function_float("gamma", z)
+    logGamma(x) == jl_float_function_float("loggamma", x)
+    digamma(x) == jl_float_function_float("digamma", x)
+    Gamma(a,z) == jl_float_function_float_float("gamma", a, z)
+    logGamma(a,z) == jl_float_function_float_float("loggamma", a, z)
+    Beta(x,y) == jl_float_function_float_float("beta", x, y)
+    logBeta(x,y) == jl_float_function_float_float("logbeta", x, y)
+
+    -- Exponential and Trigonometric Integrals
+
+    expint(nu, z) == jl_float_function_float_float("expint", nu, z)
+    Ei(x) == jl_float_function_float("expinti", x)
+    
+    -- Error Functions, Dawson’s and Fresnel Integrals
+
+    erf(x) == jl_float_function_float("erf", x)
+    erf(x,y) == jl_float_function_float_float("erf", x, y)
+    erfc(x) == jl_float_function_float("erfc", x)
+    inverseErfc(x) == jl_float_function_float("erfcinv", x)
+    erfcx(x) == jl_float_function_float("erfcx", x)
+    logerfc(x) == jl_float_function_float("logerfc", x)
+    logerfcx(x) == jl_float_function_float("logerfcx", x)
+    inverseErf(x) == jl_float_function_float("erfinv", x)
+
+    -- Airy and Related Functions
+
+    airyAi(z) == jl_float_function_float("airyai", z)
+  
+    -- Bessel Functions
+
+    besselJ0(z) == jl_float_function_float("besselj0", z)
+    besselJ1(z) == jl_float_function_float("besselj1", z)
+    besselY0(z) == jl_float_function_float("bessely0", z)
+    besselY1(z) == jl_float_function_float("bessely1", z)
+    jinc(x) == jl_float_function_float("jinc", x)
+
+    -- Zeta and Related Functions
+
+    eta(x) == jl_float_function_float("eta", x)
+    riemannZeta(x) == jl_float_function_float("zeta", x)
+
+
+

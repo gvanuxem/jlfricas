@@ -1,0 +1,97 @@
+)abbrev package JFSF JuliaFloatSpecialFunctions
+++ Special functions computed using Julia's ecosystem.
+JuliaFloatSpecialFunctions() : Exports == Implementation where
+  JF ==> JuliaFloat
+  NI ==> NemoInteger -- for now?
+  Exports ==> with
+
+    ldexp : (JF, NI) -> JF
+    ++ ldexp(x,n) computes x*2^n
+
+    sind   : JF -> JF
+    ++ sind(x) computes sine of x, where x is in degrees.
+    sinpi  : JF -> JF
+    ++ sinpi(x) computes sin(pi*x) more accurately.
+    sinc   : JF -> JF
+    ++ sinc(x) computes the normalized sinc, i.e.
+    ++ sin(pi*x)/(pi*x) if x~=0, and 1 if x=0.
+    cosd  : JF -> JF
+    ++ cosd(x) computes cosine of x, where x is in degrees.
+    cospi : JF -> JF
+    ++ cospi(x) computes cos(pi*x) more accurately.
+    cosc  : JF -> JF
+    ++ cosc(x) computes cos(pi*x)/x−sin(pi*x)/(pi*x^2)
+    ++ if x~=0, and 0 if x=0 i.e. the derivative of sinc(x).
+    tand  : JF -> JF
+    ++ tand(x) computes tangent of x, where x is in degrees.
+    tanpi : JF -> JF
+    ++ tanpi(x) computes tan(pi*x) more accurately.
+    cotd  : JF -> JF
+    ++ cotd(x) computes cotangent of x, where x is in degrees.
+    secd  : JF -> JF
+    ++ secd(x) computes secant of x, where x is in degrees.
+    cscd  : JF -> JF
+    ++ cscd(x) computes cosecant of x, where x is in degrees.
+    hypot : (JF, JF) -> JF
+    ++ hypot(x,y) computes the hypotenuse avoiding overflow and underflow.
+
+    asind : JF -> JF
+    ++ asind(x) computes the inverse sine of x, where output is in degrees.
+    acosd : JF -> JF
+    ++ acosd(x) computes the inverse cosine of x, where output is in degrees.
+    atand : JF -> JF
+    ++ atand(x) computes the inverse tangent of x, where output is in degrees.
+    atand  : (JF, JF) -> JF
+    ++ atand(x, y) computes the inverse tangent of x/y, where output is in degrees.
+    acotd : JF -> JF
+    ++ acotd(x) computes the inverse cotangent of x, where output is in degrees.
+    asecd : JF -> JF
+    ++ asecd(x) computes the inverse secant of x, where output is in degrees.
+    acscd : JF -> JF
+    ++ acscd(x) computes the inverse cosecant of x, where output is in degrees.
+    rad2Deg  : JF -> JF
+    ++ rad2deg(x) converts x to degrees, where x is in radians.
+    deg2Rad  : JF -> JF
+    ++ deg2rad(x) converts x to radian, where x is in degrees.
+
+  Implementation ==> add
+    import from String
+    import from JuliaUtilityFunctions
+
+
+    jlInitialize(true)
+
+    getind(a) ==> concat(["getindex(refs,_"", jlId(a), "_")"])
+    jl_float_function_float(func, fl) ==>
+      jlref(concat([func, "(", getind(fl),")"]))$JF
+    jl_float_function_float_float(func, a, b) ==> 
+      jlref(concat([func, "(", getind(a), ",", getind(b), ")"]))$JF
+
+
+    ldexp(x,n) == jlref(concat(["ldexp(", getind(x), ", BigInt(",
+      getind(n), "))"]))$JF
+
+    sinpi(x) == jl_float_function_float("sinpi", x)
+    sinc(x)  == jl_float_function_float("sinc", x)
+    cospi(x) == jl_float_function_float("cospi", x)
+    cosc(x)  == jl_float_function_float("cosc", x)
+    tanpi(x) == jl_float_function_float("tanpi", x)
+    hypot(x,y) == jl_float_function_float_float("hypot", x, y)
+
+    sind(x) == jl_float_function_float("sind", x)
+    cosd(x) == jl_float_function_float("cosd", x)
+    tand(x) == jl_float_function_float("tand", x)
+    cotd(x) == jl_float_function_float("cotd", x)
+    secd(x) == jl_float_function_float("secd", x)
+    cscd(x) == jl_float_function_float("cscd", x)
+  
+    asind(x) == jl_float_function_float("asind", x)
+    acosd(x) == jl_float_function_float("acosd", x)
+    atand(x) == jl_float_function_float("atand", x)
+    atand(x,y) == jl_float_function_float_float("atand", x, y)
+    acotd(x) == jl_float_function_float("acotd", x)
+    asecd(x) == jl_float_function_float("asecd", x)
+    acscd(x) == jl_float_function_float("acscd", x)
+
+    rad2Deg(x) == jl_float_function_float("rad2deg", x)
+    deg2Rad(x) == jl_float_function_float("deg2rad", x)

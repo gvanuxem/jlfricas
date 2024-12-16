@@ -4,8 +4,14 @@
 *.DAASE/
 *.erlib/
 *.fasl
+*.lx64fsl
 *.NRLIB/
 *.o
+*.output
+*.data
+*.fn
+*.dat
+*.KAF
 
 build/
 
@@ -123,4 +129,8 @@ src/lisp/num_gmpx.lisp
 stamp
 stamp-*
 
+src/input/*.asy
+src/input/*.lsp
+
 target/
+.vscode/

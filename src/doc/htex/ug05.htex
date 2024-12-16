@@ -1482,11 +1482,11 @@ new lists.
 }{
 \spadcommand{[i/j for i in 3.. by 10 for j in 2..]}
 }
-\xtc{
-Iteration stops if the end of a list or stream is reached.
-}{
-\spadcommand{[i^j for i in 1..7 for j in 2.. ]}
-}
+%\xtc{
+%Iteration stops if the end of a list or stream is reached.
+%}{
+%\spadcommand{[i^j for i in 1..7 for j in 2.. ]}
+%}
 %\xtc{
 %or a while condition fails.
 %}{
