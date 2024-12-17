@@ -132,9 +132,9 @@ JuliaWSAggregate(E : JuliaWSObject) : Category == JuliaWSObject with
     x ~= y == jbinbop("!=", x, y)
     part(agg, i) == jbinfunc("W_"Part_"(", agg, i)
     take(agg : %, i : Integer) == jbinfunc("W_"Take_"(", agg, jWSExpr(i))
-    take(agg : %, elems : JuliaWSList(JuliaWSInteger)) == jbinfunc("W_"Take_"(", agg, elems)
-    extract(agg : %, elems) ==
-      jbinfunc("W_"Extract_"(", agg, elems)
+    take(agg : %, elems : JuliaWSList(JuliaWSInteger)) ==
+      jbinfunc("W_"Take_"(", agg, elems)
+    extract(agg : %, elems) == jbinfunc("W_"Extract_"(", agg, elems)
     first(agg) == junfunc("W_"First_"(",agg)
     last(agg) == junfunc("W_"Last_"(",agg)
     rest(agg) == junfunc("W_"Rest_"(",agg)
@@ -150,8 +150,10 @@ JuliaWSAggregate(E : JuliaWSObject) : Category == JuliaWSObject with
     riffle(agg, elts, inds)== jterfunc("W_"Riffle_"(", agg, elts, inds)
     removeDuplicates(agg)  == junfunc("W_"DeleteDuplicates_"(", agg)
     reverse(agg)           ==  junfunc("W_"Reverse_"(", agg)
-    reverse(agg, level : JuliaWSInteger) == jbinfunc("W_"Reverse_"(", agg, level)
-    reverse(agg, levels : JuliaWSList(JuliaWSInteger)) == jbinfunc("W_"Reverse_"(", agg, levels)
+    reverse(agg, level : JuliaWSInteger) ==
+      jbinfunc("W_"Reverse_"(", agg, level)
+    reverse(agg, levels : JuliaWSList(JuliaWSInteger)) ==
+      jbinfunc("W_"Reverse_"(", agg, levels)
 
     append(agg, elt)       == jbinfunc("W_"Append_"(", agg, elt)
     --append!(l, elt)      == jbinfunc("W_"AppendTo_"(", l, elt)
@@ -176,7 +178,8 @@ JuliaWSAggregate(E : JuliaWSObject) : Category == JuliaWSObject with
       jbinfunc("W_"ReplacePart_"(", agg, jWSRule(jWSExpr(i),
         elem pretend JuliaWSExpression))
 
-    -- Works on copy...
+    -- TODO
+    -- Works on copy and assign it to the Julia IdDict index (refs)
     setelt!(agg,i,elem) ==
       i > integer length(agg) => error "setelt!: index too large"
       cmd := concat(["weval(W_"ReplacePart_"(", getind(agg), ",",
@@ -201,8 +204,7 @@ JuliaWSAggregate(E : JuliaWSObject) : Category == JuliaWSObject with
       -- TODO : use getind and List
       lstr := map(obj +-> toString(obj), l)$ListFunctions2(E, String)
       str : String := "{"
-      for i in 1..(#lstr - 1) repeat
-        str := concat([str, lstr.i, ","])
+      for i in 1..(#lstr - 1) repeat str := concat([str, lstr.i, ","])
       jlref(concat(["W_`", concat([str, lstr.(#lstr) ,"}"]), "_`"]))
     coerce(agg) : OutputForm ==
       coerce(agg pretend JuliaWSExpression)@OutputForm
@@ -352,7 +354,7 @@ JuliaWSMatrix(E : JuliaWSRing) : Exports == Implementation where
   parsei    ==> PARSE_-INTEGER$Lisp
   Exports ==> Join(JuliaWSAggregate(JuliaWSVector(E)),
             MatrixCategory(E, Row, Col)) with
-  --JuliaWSObject with TODO:adapt to aggregates
+  --JuliaWSObject with -- TODO:adapt to aggregates
     square?  : % -> Boolean
     ++ \spad{square?(m)} returns true if m is a square matrix
     ++ (i.e. if m has the same number of rows as columns) and false otherwise.
@@ -649,8 +651,7 @@ JuliaWSMatrix(E : JuliaWSRing) : Exports == Implementation where
       not square?(mat) => error "inverse$JuliaWSMatrix: not a square matrix"
       junfunc("W_"Inverse_"(", mat)
     generalizedInverse(mat) == junfunc("W_"PseudoInverse_"(", mat)
-    linearSolve(mat, b) ==
-      jbinfunc("W_"LinearSolve_"(", mat, b)
+    linearSolve(mat, b) == jbinfunc("W_"LinearSolve_"(", mat, b)
     matrixFunction(func, mat) == jbinfunc("W_"MatrixFunction_"(", func, mat) 
 
     minors(mat) == junfunc("W_"Minors_"(", mat)
@@ -666,7 +667,7 @@ JuliaWSMatrix(E : JuliaWSRing) : Exports == Implementation where
       not square?(mat) => error "eigenSystem: not a square matrix"
       ret : JuliaWSList(JuliaWSExpression) := junfunc("W_"Eigensystem_"(", mat)
       [first(ret) pretend JuliaWSVector(JuliaWSExpression),
-            last(ret) pretend JuliaWSMatrix(JuliaWSExpression)]
+        last(ret) pretend JuliaWSMatrix(JuliaWSExpression)]
     svd(mat) ==
       ret : JuliaWSList(%) := junfunc("W_"SingularValueDecomposition_"(", mat)
       [first(ret), qelt(ret,2), last(ret)]
@@ -712,7 +713,8 @@ JuliaWSMatrix(E : JuliaWSRing) : Exports == Implementation where
     permanent(mat) ==
       not square?(mat) => error "permanent: not a square matrix"
       junfunc("W_"Permanent_"(", mat)
-    kroneckerProduct(mat1, mat2) == jbinfunc("W_"KroneckerProduct_"(", mat1, mat2)
+    kroneckerProduct(mat1, mat2) ==
+      jbinfunc("W_"KroneckerProduct_"(", mat1, mat2)
 
     toString(mat, form) == string jbinfunc("W_"ToString_"(", mat, form)
     qnew(m,n) ==
@@ -721,7 +723,8 @@ JuliaWSMatrix(E : JuliaWSRing) : Exports == Implementation where
     matrix(vec) : %  == vec pretend %
     diagonalMatrix(l) == junfunc("W_"DiagonalMatrix_"(", l)
     randomRealMatrix(range, dims) == jbinfunc("W_"RandomReal_"(", range, dims)
-    randomComplexMatrix(range, dims) == jbinfunc("W_"RandomComplex_"(", range, dims)
+    randomComplexMatrix(range, dims) ==
+      jbinfunc("W_"RandomComplex_"(", range, dims)
     jWSMatrix(str : String) == jlref(concat(["W_`", str, "_`"]))
     coerce(obj) : OutputForm ==
       coerce(matrixForm(obj pretend JuliaWSExpression))@OutputForm

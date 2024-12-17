@@ -3,7 +3,6 @@
 JuliaComplexFloatSpecialFunctions() : Exports == Implementation where
   JCF ==> JuliaComplexFloat
   Exports ==> with
-
     sind   : JCF -> JCF
     ++ sind(x) computes sine of x, where x is in degrees.
     sinpi  : JCF -> JCF
@@ -50,13 +49,9 @@ JuliaComplexFloatSpecialFunctions() : Exports == Implementation where
     ++ deg2rad(x) converts x to radian, where x is in degrees.
 
   Implementation ==> add
-    import from String
-    import from JuliaUtilityFunctions
-
-
-    jlInitialize(true)
 
     getind(a) ==> concat(["getindex(refs,_"", jlId(a), "_")"])
+
     jl_cfloat_function_cfloat(func, fl) ==>
       jlref(concat([func, "(", getind(fl),")"]))$JCF
     jl_cfloat_function_cfloat_cfloat(func, a, b) ==> 

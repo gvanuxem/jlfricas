@@ -23,10 +23,10 @@ NemoRing() : Category == Join(NemoType, JuliaObjectRing)
 ++  Approximate numbers for which the user can get the
 ++  precision for subsequent calculations.
 JuliaArbitraryPrecision() : Category ==  JuliaType with
-    arbitraryPrecision
-    precision: () -> PositiveInteger
-    ++ precision() returns the precision defined at instantiation time or
-    ++ later if its modification is allowed.
+  arbitraryPrecision
+  precision: () -> PositiveInteger
+  ++ precision() returns the precision defined at instantiation time or
+  ++ later if its modification is allowed.
 
 )abbrev domain NINT NemoInteger
 ++ Domain for Nemo Integers (ZZ)
@@ -53,11 +53,11 @@ NemoInteger() : Exports == Implementation where
     coerce  : % -> JI64
     ++ coerce(ni) ro a JuliaInt64 if possible.
     coerce  : % -> Expression Integer
-    ++ 
+    ++ coerce \undocumented
     coerce  : % -> AlgebraicNumber
-    ++ 
+    ++ coerce \undocumented
     jnint   : Integer -> %
-    ++ 
+    ++ jnint \undocumented
   Implementation ==> add
     import from JuliaUtilityFunctions
     import from String
@@ -173,12 +173,19 @@ NemoRational() : Exports == Implementation where
     ++ random(p) returns a Nemo rational with numerator and denominator having
     ++ p bits before before canonicalisation.
     "*"     : (%, Integer) -> %
+    ++ * \undocumented
     coerce  : Fraction(Integer) -> %
+    ++ coerce \undocumented
     coerce  : NemoInteger -> %
+    ++ coerce \undocumented
     jnrat   : Integer -> %
+    ++ jnrat \undocumented
     jnrat   : Fraction(Integer) -> %
+    ++ jnrat \undocumented
     jnrat   : NemoInteger -> %
+    ++ jnrat \undocumented
     jnrat   : (NemoInteger, NemoInteger) -> %
+    ++ jnrat \undocumented
   Implementation ==> add
     import from JuliaUtilityFunctions
     import from String
@@ -401,8 +408,11 @@ NemoAlgebraicNumber() : Exports == Implementation where
     -- TODO
     ++ coerce(nan) coerces nan to AlgebraicNumber if it is rational.
     jnan    : NemoInteger -> %
+    ++ jnan \undocumented
     jnan    : NemoRational -> %
+    ++ jnan \undocumented
     jnan    : String -> %
+    ++ jnan \undocumented
   Implementation ==> add
     import from JuliaUtilityFunctions
     import from String
@@ -589,14 +599,23 @@ NemoIntegerMod(p : PositiveInteger) : Exports == Implementation where
   Exports ==> Join(NemoRing, CommutativeRing, Finite,
         ConvertibleTo(Integer), StepThrough) with
     "*"     : (%, Integer) -> %
+    ++ * \undocumented
     "*"     : (Integer, %) -> %
+    ++ * \undocumented
     "*"     : (%, NemoInteger) -> %
+    ++ * \undocumented
     "*"     : (NemoInteger, %) -> %
+    ++ * \undocumented
     "*"     : (%, Integer) -> %
+    ++ * \undocumented
     coerce  : Integer -> %
+    ++ coerce \undocumented
     coerce  : NemoInteger -> %
+    ++ coerce \undocumented
     jnzmod   : Integer -> %
+    ++ jnzmod \undocumented
     jnzmod   : NemoInteger -> %
+    ++ jnzmod \undocumented
   Implementation ==> add
     import from JuliaUtilityFunctions
     import from String
@@ -662,17 +681,26 @@ NemoPrimeField(p : PositiveInteger) : Exports == Implementation where
                    ConvertibleTo(Integer)) with
     generator? : % -> Boolean
     order    : () -> NNI
+    ++ order \undocumented
     "*"      : (%, NemoInteger) -> %
+    ++ * \undocumented
     "*"      : (NemoInteger, %) -> %
+    ++ * \undocumented
     "*"      : (Integer, %) -> %
+    ++ * \undocumented
     "*"      : (%, Integer) -> %
+    ++ * \undocumented
     sqrt     : % -> %
     ++ sqrt(x) returns a square root of x.
     ++ Throw a Julia error if there is no square root and returns 0.
     coerce  : Integer -> %
+    ++ coerce \undocumented
     coerce  : NemoInteger -> %
+    ++ coerce \undocumented
     jnpf   : Integer -> %
+    ++ jnpf \undocumented
     jnpf   : NemoInteger -> %
+    ++ jnpf \undocumented
   Implementation ==> add
     import from JuliaUtilityFunctions
     import from String
@@ -770,25 +798,36 @@ NemoFiniteField(p : PositiveInteger, n: PositiveInteger) : Exports == Implementa
                    FiniteAlgebraicExtensionField(NemoPrimeField(p)),
                    ConvertibleTo(Integer)) with
     generator?    : % -> Boolean
+    ++ generator? \undocumented
     absolute?     : () -> Boolean
+    ++ absolute? \undocumented
     trace         : % -> NemoPrimeField(p)
+    ++ trace \undocumented
     absoluteTrace : % -> NemoPrimeField(p)
+    ++ absoluteTrace \undocumented
     norm          : % -> NemoPrimeField(p)
+    ++ norm \undocumented
     absoluteNorm  : % -> NemoPrimeField(p)
+    ++ absoluteNorm \undocumented
     order    : () -> NNI
+    ++ order \undocumented
     "*"      : (%, NemoInteger) -> %
-    ++ 
+    ++ * \undocumented
     "*"      : (NemoInteger, %) -> %
-    ++ 
+    ++ * \undocumented
     "*"      : (%, Integer) -> %
-    ++ 
+    ++ * \undocumented
     sqrt     : % -> %
     ++ sqrt(x) returns a square root of x.
     ++ Throw a Julia error if there is no square root and returns 0.
     coerce  : Integer -> %
+    ++ coerce \undocumented
     coerce  : NemoInteger -> %
+    ++ coerce \undocumented
     jnff   : Integer -> %
+    ++ jnff \undocumented
     jnff   : NemoInteger -> %
+    ++ jnff \undocumented
   Implementation ==> add
     import from JuliaUtilityFunctions
     import from String
@@ -1013,12 +1052,16 @@ InnerNemoExactComplexField(Options : JuliaObjDict) : Exports ==
     ++ :special (returns a special value of a number - can
     ++ throw an error if it isn't a number).
 
-    "*"      : (%, Integer) -> % ++ x*n is the product of x by the integer n.
-    "/"      : (Integer, %) -> % 
+    "*"      : (%, Integer) -> %
+    ++ x*n is the product of x by the integer n.
+    "/"      : (Integer, %) -> %
+    ++ / \undocumented
     "/"      : (%, Integer) -> %
+    ++ / \undocumented
     jlOptions : % -> JuliaObjDict
-    ++ jlOptions(x) returns the options set at instantion time
-    ++ that affect different aspects of computations using this object.
+    ++ jlOptions(x) returns the options set at instantiation time
+    ++ that affect different aspects of computations. See Nemo
+    ++ documentation.
     retractIfCan  : % -> Union(NemoInteger, "failed")
     ++ retractIfCan(z) retracts if possible z to a Integer.
     retractIfCan  : % -> Union(NemoRational, "failed")
@@ -1036,10 +1079,17 @@ InnerNemoExactComplexField(Options : JuliaObjDict) : Exports ==
     coerce   : Complex(Integer) -> % -- for %i operations
     ++ coerce(z) coerces z. Convenience function.
     jnecf    : NemoAlgebraicNumber -> %
+    ++ jnecf(qbar) coerces qbar to a Nemo exact real or complex number.
     jnecf    : Fraction(Integer) -> %
+    ++ jnecf(fi) coerces fi to a Nemo real exact number.
     jnecf    : (Fraction(Integer), Fraction(Integer)) -> %
+    ++ jnecf(real,cplx) coerces real and cplx to a Nemo exact complex number
+    ++ where real is the real part and cplx the complex part.
     jnecf    : NemoRational -> %
+    ++ jnecf(nr) coerces nr to a Nemo exact real number.
     jnecf    : (NemoRational, NemoRational) -> %
+    ++ jnecf(real,cplx) coerces real and cplx to a Nemo exact
+    ++ where real is the real part and cplx the complex part.
   Implementation ==> add
     import from JuliaUtilityFunctions
     import from String
@@ -1314,5 +1364,3 @@ NemoFactored(R : Join(NemoType, IntegralDomain)) :
     coerce(ob : %) : OutputForm ==
       jlRegexReplace(jlRegex("//"), jlSubstitute("/"),
         string(ob)) pretend OutputForm
-
-

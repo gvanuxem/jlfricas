@@ -469,129 +469,130 @@ JuliaUtilityFunctions() : Exports == Implementation where
 ++  This package provides Julia facilities that operate on
 ++  strings.
 JuliaStringUtilities() : Exports == Implementation where
-    STR  ==> String
-    PI   ==> PositiveInteger
-    NNI  ==> NonNegativeInteger
-    Exports ==> with
-      jlSplit  :(String, String, NNI) -> List(String)
-      ++ jlSplit(str, delims, n) split str with delimiter(s) delims
-      ++ (a string or a regular expression). Return a list of size n.
-      ++ Parse entirely str if n = 0.
-      jlSplit  :(String, String) -> List(String)
-      ++ jlSplit(str, delims) split str with delimiter(s) delims
-      ++ (a string or a regular expression). Equivalent to
-      ++ jlSplit(str, delims, 0).
-      jlRegex  : String -> String
-      ++ jlRegex(str) returns the String corresponding to a Julia
-      ++ regular expression, that is, "r"str"". Convenience function.
-      jlSubstitute  : String -> String
-      ++ jlSubstitute(str) returns the String corresponding to a Julia
-      ++ subtitute expression, that is, "s"str""". Convenience function.
-      jlLatex  : String -> String
-      ++ jlLatex(str) returns the String corresponding to a Julia
-      ++ LaTeX expression, that is, "L"str"" if your Julia support it
-      ++ (LaTeXStrings package). Convenience function.
-      jlRegexMatch?   : (String, String) -> Boolean
-      ++ jlRegexMatch(regex,s) checks if the regular expression matches in s.
-      jlRegexMatch    : (String, String) -> String
-      ++ jlRegexMatch(regex, s) returns the matched regular expression in s.
-      jlRegexMatch    : (String, String, PI) -> String
-      ++ jlRegexMatch(regex, s, i) returns the matched regular expression in s,
-      ++ starting at index i.
-      jlRegexMatch    : (String, String) -> List(String)
-      ++ jlRegexMatch(regex, s) returns the matched regular expressions in s.
-      jlRegexMatch    : (String, String, PI) -> List(String)
-      ++ jlRegexMatch(regex, s, i) returns the matched regular expressions in s,
-      ++ starting at index i.
-      jlRegexMatch    : (String, String) -> AssociationList(String,String)
-      ++ jlRegexMatch(regex, s) returns the matched regular expressions in s.
-      jlRegexMatch    : (String, String, PI) -> AssociationList(String,String)
-      ++ jlRegexMatch(regex, s, i) returns the matched regular expressions in s,
-      ++ starting at index i.
-      jlRegexReplace  : (String, String, String) -> String
-      ++ jlRegexReplace(regex,subst,str) will replace captured regular expressions
-      ++ in str with subst. More information in String documentation of Julia.
-      ++ For example:
-      ++  jlRegexReplace(jlRegex("$"), jlSubstitute(" you!"), "hey")
-    Implementation ==> add
-      import from JuliaUtilityFunctions
-      import from String
-      import from AssociationList(String,String)
-      jlInitialize(true)
+  STR  ==> String
+  PI   ==> PositiveInteger
+  NNI  ==> NonNegativeInteger
+  Exports ==> with
+    jlSplit  :(String, String, NNI) -> List(String)
+    ++ jlSplit(str, delims, n) split str with delimiter(s) delims
+    ++ (a string or a regular expression). Return a list of size n.
+    ++ Parse entirely str if n = 0.
+    jlSplit  :(String, String) -> List(String)
+    ++ jlSplit(str, delims) split str with delimiter(s) delims
+    ++ (a string or a regular expression). Equivalent to
+    ++ jlSplit(str, delims, 0).
+    jlRegex  : String -> String
+    ++ jlRegex(str) returns the String corresponding to a Julia
+    ++ regular expression, that is, "r"str"". Convenience function.
+    jlSubstitute  : String -> String
+    ++ jlSubstitute(str) returns the String corresponding to a Julia
+    ++ subtitute expression, that is, "s"str""". Convenience function.
+    jlLatex  : String -> String
+    ++ jlLatex(str) returns the String corresponding to a Julia
+    ++ LaTeX expression, that is, "L"str"" if your Julia support it
+    ++ (LaTeXStrings package). Convenience function.
+    jlRegexMatch?   : (String, String) -> Boolean
+    ++ jlRegexMatch(regex,s) checks if the regular expression matches in s.
+    jlRegexMatch    : (String, String) -> String
+    ++ jlRegexMatch(regex, s) returns the matched regular expression in s.
+    jlRegexMatch    : (String, String, PI) -> String
+    ++ jlRegexMatch(regex, s, i) returns the matched regular expression in s,
+    ++ starting at index i.
+    jlRegexMatch    : (String, String) -> List(String)
+    ++ jlRegexMatch(regex, s) returns the matched regular expressions in s.
+    jlRegexMatch    : (String, String, PI) -> List(String)
+    ++ jlRegexMatch(regex, s, i) returns the matched regular expressions in s,
+    ++ starting at index i.
+    jlRegexMatch    : (String, String) -> AssociationList(String,String)
+    ++ jlRegexMatch(regex, s) returns the matched regular expressions in s.
+    jlRegexMatch    : (String, String, PI) -> AssociationList(String,String)
+    ++ jlRegexMatch(regex, s, i) returns the matched regular expressions in s,
+    ++ starting at index i.
+    jlRegexReplace  : (String, String, String) -> String
+    ++ jlRegexReplace(regex,subst,str) will replace captured regular expressions
+    ++ in str with subst. More information in String documentation of Julia.
+    ++ For example:
+    ++  jlRegexReplace(jlRegex("$"), jlSubstitute(" you!"), "hey")
+  Implementation ==> add
+    import from JuliaUtilityFunctions
+    import from String
+    import from AssociationList(String,String)
+    jlInitialize(true)
 
-      jlRegex(s) == concat ["r_"", s, "_""]
-      jlSubstitute(s) == concat ["s_"", s, "_""]
-      jlLatex(s) == concat ["L_"", s, "_""]
+    jlRegex(s) == concat ["r_"", s, "_""]
+    jlSubstitute(s) == concat ["s_"", s, "_""]
+    jlLatex(s) == concat ["L_"", s, "_""]
 
-      jlSplit(str, delims, n) == 
-        resl : List(String) := []
-        estr : String :=
-          concat(["splt=split(_"", str, "_",_"", delims, "_", limit=", 
-            string(n),");"])
-        jlEvalString(estr)@Void
-        n: Integer := jlEvalString("length(splt)")
-        for i in 1..n repeat
-          estr := concat(["string(if((ret=splt[",string(i), _
-            "])===nothing) _"_" else ret end)"])
-          resl := concat!(resl, jlEvalString(estr)@String)
-        jlEvalString("splt=nothing")@Void     
-        resl
+    jlSplit(str, delims, n) == 
+      resl : List(String) := []
+      estr : String :=
+        concat(["splt=split(_"", str, "_",_"", delims, "_", limit=", 
+          string(n),");"])
+      jlEvalString(estr)@Void
+      n: Integer := jlEvalString("length(splt)")
+      for i in 1..n repeat
+        estr := concat(["string(if((ret=splt[",string(i), _
+          "])===nothing) _"_" else ret end)"])
+        resl := concat!(resl, jlEvalString(estr)@String)
+      jlEvalString("splt=nothing")@Void     
+      resl
 
-      jlSplit(str, delims) == jlSplit(str, delims, 0)
+    jlSplit(str, delims) == jlSplit(str, delims, 0)
 
-      jlRegexMatch?(r, s)  ==
-        estr : String := concat(
-          ["occursin(", r, ",", string(s::OutputForm)$OutputFormTools,")"])
-        jlEvalString(estr)@Boolean
+    jlRegexMatch?(r, s)  ==
+      estr : String := concat(
+        ["occursin(", r, ",", string(s::OutputForm)$OutputFormTools,")"])
+      jlEvalString(estr)@Boolean
 
-      jlRegexMatch(r, s) : String == jlRegexMatch(r, s, 1)
+    jlRegexMatch(r, s) : String == jlRegexMatch(r, s, 1)
 
-      jlRegexMatch(r, s, ind) : String ==
-        estr : String := concat(
-          ["string(match(", r, ",_"", s, "_",", string(ind), ").match)"])
-        jlEvalString(estr)@String
+    jlRegexMatch(r, s, ind) : String ==
+      estr : String := concat(
+        ["string(match(", r, ",_"", s, "_",", string(ind), ").match)"])
+      jlEvalString(estr)@String
 
-      jlRegexMatch(r, s) : List(String) == jlRegexMatch(r, s, 1)
+    jlRegexMatch(r, s) : List(String) == jlRegexMatch(r, s, 1)
 
-      jlRegexMatch(r, s, ind) : List(String) ==
-        resl : List(String) := []
-        estr : String :=
-          concat(["reg=match(", r, ",_"", s, "_",", string(ind),");"])
-        jlEvalString(estr)@Void
-        n := jlEvalString("size(reg.captures,1)")@Integer
-        for i in 1..n repeat
-          estr := concat(["string(if((ret=reg.captures[", string(i), _
-            "])===nothing) _"_" else ret end)"])
-          resl := concat!(resl, jlEvalString(estr)@String)   
-        jlEvalString("reg=nothing")@Void    
-        resl
+    jlRegexMatch(r, s, ind) : List(String) ==
+      resl : List(String) := []
+      estr : String :=
+        concat(["reg=match(", r, ",_"", s, "_",", string(ind),");"])
+      jlEvalString(estr)@Void
+      n := jlEvalString("size(reg.captures,1)")@Integer
+      for i in 1..n repeat
+        estr := concat(["string(if((ret=reg.captures[", string(i), _
+          "])===nothing) _"_" else ret end)"])
+        resl := concat!(resl, jlEvalString(estr)@String)   
+      jlEvalString("reg=nothing")@Void    
+      resl
 
-      jlRegexMatch(r: String, s : String) : AssociationList(String,String) ==
-        jlRegexMatch(r,s,1)
+    jlRegexMatch(r: String, s : String) : AssociationList(String,String) ==
+      jlRegexMatch(r,s,1)
 
-      jlRegexMatch(r: String, s : String, ind : PI) : AssociationList(String,String) ==
-        name : String  
-        --  StringTable?
-        resal : AssociationList(String, String) := table()
-        estr : String :=
-          concat(["reg=match(", r, ",_"",
-            s, "_",", string(ind), ");"])
-        jlEvalString(estr)@Void
-        -- TODO: check bad regex, actually Julia throws error(s).
-        -- if (reg===nothing) ...
-        n := jlEvalString("size(reg.captures,1)")@Integer
-        for i in n..1 by -1 repeat
-          if not empty?(name:=jlEvalString(concat(["keys(reg)[",
-              string(i), "];"]))@String) then
-            estr := concat(["string(reg.captures[",string(i), "])"])  
-            resal.name := jlEvalString(estr)@String
-        jlEvalString("reg=nothing")@Void
-        resal
+    jlRegexMatch(r: String, s : String, ind : PI) :
+        AssociationList(String,String) ==
+      name : String  
+      --  StringTable?
+      resal : AssociationList(String, String) := table()
+      estr : String :=
+        concat(["reg=match(", r, ",_"",
+          s, "_",", string(ind), ");"])
+      jlEvalString(estr)@Void
+      -- TODO: check bad regex, actually Julia throws error(s).
+      -- if (reg===nothing) ...
+      n := jlEvalString("size(reg.captures,1)")@Integer
+      for i in n..1 by -1 repeat
+        if not empty?(name:=jlEvalString(concat(["keys(reg)[",
+            string(i), "];"]))@String) then
+          estr := concat(["string(reg.captures[",string(i), "])"])  
+          resal.name := jlEvalString(estr)@String
+      jlEvalString("reg=nothing")@Void
+      resal
 
-      jlRegexReplace(r, s, str) ==
-        t : String := concat(["replace(_"", str,
-          "_",", r, "=>", s, ")"])
-        jlEvalString(t)@String
+    jlRegexReplace(r, s, str) ==
+      t : String := concat(["replace(_"", str,
+        "_",", r, "=>", s, ")"])
+      jlEvalString(t)@String
 
 )abbrev domain JOBDLINK JuliaObjDynamicLinker
 ++ Domain for dynamic linking shared libraries using Julia

@@ -80,11 +80,8 @@ JuliaFloatSpecialFunctions2() : Exports == Implementation where
     ++ riemannZeta(x) computes Riemann zeta function at x.
 
   Implementation ==> add
-    import from String
     import from JuliaUtilityFunctions
     
-    jlUsing("SpecialFunctions")
-
     getind(a) ==> concat(["getindex(", "refs,_"", jlId(a), "_")"])
     jl_float_function_float(func, fl) ==>
       jlref(concat([func, "(", getind(fl),")"]))$JF

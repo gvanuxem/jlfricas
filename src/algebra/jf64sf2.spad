@@ -160,8 +160,6 @@ JuliaFloat64SpecialFunctions2() : Exports == Implementation where
 
   Implementation ==> add
     import from JuliaUtilityFunctions
-    
-    jlUsing("SpecialFunctions")
 
     -- Gamma Functions
 
@@ -247,6 +245,3 @@ JuliaFloat64SpecialFunctions2() : Exports == Implementation where
 
     eta(x) == jlF64FunctionF64("eta", x)
     riemannZeta(x) == jlF64FunctionF64("zeta", x)
-
-
-

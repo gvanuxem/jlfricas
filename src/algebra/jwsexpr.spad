@@ -266,7 +266,7 @@ JuliaWSExpression() : Exports == Implementation where
     ++ for odd Mathieu function.
     mathieuCharacteristicExponent : (%, %) -> %
     ++ mathieuCharacteristicExponent(a,q) returns the characterisitc exponent
-    ++ o he Mathieu function. 
+    ++ of the Mathieu function. 
     jacobiAmplitude : (%, %) -> %
     ++ jacobiAmplitude(u,m) computes the amplitude function am.
     inverseJacobiSn : (%, %) -> %
@@ -1010,7 +1010,7 @@ JuliaWSExpression() : Exports == Implementation where
 
     if not jlUsing("MathLink") then
       error "The Julia MathLink package is not installed."
-    jlEvalString("import MathLink: WExpr, WSymbol, WReal, WRational, WInteger")@Void
+    jlEvalString("import MathLink: WExpr, WSymbol, WReal, WRational, WInteger")
     
     Rep := SExpression
 
@@ -1211,8 +1211,10 @@ JuliaWSExpression() : Exports == Implementation where
     Gamma(a, z1, z2) == jterfunc("W_"Gamma_"(", a, z1,z2)
     -- Checks?
     GammaRegularized(a,z) == jbinfunc("W_"GammaRegularized_"(", a,z) 
-    inverseBetaRegularized(s,a,b) == jterfunc("W_"InverseBetaRegularized_"(", s,a,b)
-    inverseGammaRegularized(a,s) == jbinfunc("W_"InverseGammaRegularized_"(", a,s)
+    inverseBetaRegularized(s,a,b) ==
+      jterfunc("W_"InverseBetaRegularized_"(", s,a,b)
+    inverseGammaRegularized(a,s) ==
+      jbinfunc("W_"InverseGammaRegularized_"(", a,s)
 
     pochhammer(a,n) == jbinfunc("W_"Pochhammer_"(", a, n)
     digamma(x) == junfunc("W_"PolyGamma_"(", x)
@@ -1241,9 +1243,11 @@ JuliaWSExpression() : Exports == Implementation where
     jacobiP(n,a,b,x) == jquatfunc("W_"JacobiP_"(", n,a,b,x)
 
     hypergeometric0F1(a,z) == jbinfunc("W_"Hypergeometric0F1_"(", a,z)
-    hypergeometric0F1Regularized(a,z) == jbinfunc("W_"Hypergeometric0F1Regularized_"(", a,z)
+    hypergeometric0F1Regularized(a,z) ==
+      jbinfunc("W_"Hypergeometric0F1Regularized_"(", a,z)
     hypergeometric1F1(a,b,z) == jterfunc("W_"Hypergeometric1F1_"(", a,b,z)
-    hypergeometric1F1Regularized(a,b,z) == jterfunc("W_"Hypergeometric1F1Regularized_"(", a,b,z)
+    hypergeometric1F1Regularized(a,b,z) ==
+      jterfunc("W_"Hypergeometric1F1Regularized_"(", a,b,z)
     hypergeometricU(a,b,z) == jterfunc("W_"HypergeometricU_"(", a,b,z)
     whittakerM(k,m,z) == jterfunc("W_"WhittakerM_"(", k,m,z)
     whittakerW(k,m,z) == jterfunc("W_"WhittakerW_"(", k,m,z)
@@ -1265,9 +1269,12 @@ JuliaWSExpression() : Exports == Implementation where
     mathieuS(b,q,z)== jterfunc("W_"MathieuS_"(", b,q,z)
     mathieuCPrime(a,q,z) == jterfunc("W_"MathieuCPrime_"(", a,q,z)
     mathieuSPrime(b,q,z) == jterfunc("W_"MathieuSPrime_"(", b,q,z)
-    mathieuCharacteristicA(r,q) == jbinfunc("W_"MathieuCharacteristicA_"(", r,q)
-    mathieuCharacteristicB(r,q) == jbinfunc("W_"MathieuCharacteristicB_"(", r,q)
-    mathieuCharacteristicExponent(a,q) == jbinfunc("W_"MathieuCharacteristicExponent_"(", a,q)
+    mathieuCharacteristicA(r,q) ==
+      jbinfunc("W_"MathieuCharacteristicA_"(", r,q)
+    mathieuCharacteristicB(r,q) ==
+      jbinfunc("W_"MathieuCharacteristicB_"(", r,q)
+    mathieuCharacteristicExponent(a,q) ==
+      jbinfunc("W_"MathieuCharacteristicExponent_"(", a,q)
 
     jacobiAmplitude(u,m) == jbinfunc("W_"JacobiAmplitude_"(", u,m)
     jacobiSn(u,m) == jbinfunc("W_"JacobiSN_"(", u,m)
@@ -1295,7 +1302,8 @@ JuliaWSExpression() : Exports == Implementation where
     modularLambda(tau) == junfunc("W_"ModularLambda_"(", tau)
 
 
-    D(expr : %, sym : Symbol) == jbinfunc("W_"D_"(", expr, jWSExpr(string(sym)))
+    D(expr : %, sym : Symbol) ==
+      jbinfunc("W_"D_"(", expr, jWSExpr(string(sym)))
     differentiate(expr : %, args : %) == jbinfunc("W_"D_"(", expr, args)
     differentiate(expr : %, sym : Symbol) ==
       jbinfunc("W_"D_"(", expr, jWSExpr(string(sym)))
@@ -1307,38 +1315,42 @@ JuliaWSExpression() : Exports == Implementation where
     integrate(expr : %, sym : Symbol) ==
       jbinfunc("W_"Integrate_"(", expr, jWSExpr(string(sym)))
     integrate(expr, sym, range: Segment(Integer)) ==
-      arg : % := jlref(concat(["W_`List[", string(sym), ",", string(low(range)),
-        ",", string(high(range)),"]_`"]))
+      arg : % := jlref(concat(["W_`List[", string(sym), ",",
+        string(low(range)), ",", string(high(range)),"]_`"]))
       jbinfunc("W_"Integrate_"(", expr, arg)
-    numericIntegrate(expr, range : %) == jbinfunc("W_"NIntegrate_"(", expr, range)
+    numericIntegrate(expr, range : %) ==
+      jbinfunc("W_"NIntegrate_"(", expr, range)
     numericIntegrate(expr, sym, range: Segment(Integer)) ==
-      args : % := jlref(concat(["W_`List[", string(sym), ",", string(low(range)),
-        ",", string(high(range)),"]_`"]))
+      args : % := jlref(concat(["W_`List[", string(sym), ",",
+        string(low(range)), ",", string(high(range)),"]_`"]))
       jbinfunc("W_"NIntegrate_"(", expr, args)
 
     series(expr, range : %) == jbinfunc("W_"Series_"(", expr, range)
 
     sum(expr, range : %) == jbinfunc("W_"Sum_"(", expr, range)
     sum(expr, sym, range: Segment(Integer)) ==
-      arg : % := jlref(concat(["W_`List[", string(sym), ",", string(low(range)),
-        ",", string(high(range)),"]_`"]))
+      arg : % := jlref(concat(["W_`List[", string(sym), ",",
+        string(low(range)), ",", string(high(range)),"]_`"]))
       jbinfunc("W_"Sum_"(", expr, arg)
-    sum(expr, sym : Symbol) == jbinfunc("W_"Sum_"(", expr, jWSExpr(string(sym)))
-    numericSum(expr, range : %) == jbinfunc("W_"NSum_"(", expr, range)
+    sum(expr, sym : Symbol) == jbinfunc("W_"Sum_"(",
+      expr, jWSExpr(string(sym)))
+    numericSum(expr, range : %) == jbinfunc("W_"NSum_"(",
+      expr, range)
     numericSum(expr, sym, range: Segment(Integer)) ==
-      arg : % := jlref(concat(["W_`List[", string(sym), ",", string(low(range)),
-        ",", string(high(range)),"]_`"]))
+      arg : % := jlref(concat(["W_`List[", string(sym), ",",
+        string(low(range)), ",", string(high(range)),"]_`"]))
       jbinfunc("W_"NSum_"(", expr, arg)
     product(expr, range : %) == jbinfunc("W_"Product_"(", expr, range)
     product(expr, sym, range: Segment(Integer)) ==
-      arg : % := jlref(concat(["W_`List[", string(sym), ",", string(low(range)),
-        ",", string(high(range)),"]_`"]))
+      arg : % := jlref(concat(["W_`List[", string(sym), ",",
+        string(low(range)), ",", string(high(range)),"]_`"]))
       jbinfunc("W_"Product_"(", expr, arg)
-    product(expr, sym : Symbol) == jbinfunc("W_"Product_"(", expr, jWSExpr(string(sym)))
+    product(expr, sym : Symbol) == jbinfunc("W_"Product_"(",
+      expr, jWSExpr(string(sym)))
     numericProduct(expr, range : %) == jbinfunc("W_"NProduct_"(", expr, range)
     numericProduct(expr, sym, range: Segment(Integer)) ==
-      arg : % := jlref(concat(["W_`List[", string(sym), ",", string(low(range)),
-        ",", string(high(range)),"]_`"]))
+      arg : % := jlref(concat(["W_`List[", string(sym), ",",
+        string(low(range)), ",", string(high(range)),"]_`"]))
       jbinfunc("W_"NProduct_"(", expr, arg)
 
     minimize(expr, vars : %) == jbinfunc("W_"Minimize_"(", expr, vars)
@@ -1433,7 +1445,8 @@ JuliaWSExpression() : Exports == Implementation where
     reduce(eq : Equation(%),lvars,dom) ==
       expr : String := concat([toString(lhs eq), "==", toString(rhs eq)])
       jterfunc("W_"Reduce_"(", jWSExpr(expr), lvars, dom)
-    reduce(expr:%, lvars:%, dom : %) == jterfunc("W_"Reduce_"(", expr, lvars,dom)
+    reduce(expr:%, lvars:%, dom : %) ==
+      jterfunc("W_"Reduce_"(", expr, lvars,dom)
     reduce(expr,rel,cmp,lvars) ==
       if rel = "=" then rel := "=="
       expr : String := concat([toString(expr), rel, toString(cmp)])
@@ -1442,7 +1455,8 @@ JuliaWSExpression() : Exports == Implementation where
       if rel = "=" then rel := "=="
       expr : String := concat([toString(expr), rel, toString(cmp)])
       jterfunc("W_"Reduce_"(", jWSExpr(expr), lvars, dom)
-    findInstance(expr:%, lvars:%) == jbinfunc("W_"FindInstance_"(", expr, lvars)
+    findInstance(expr:%, lvars:%) ==
+      jbinfunc("W_"FindInstance_"(", expr, lvars)
     findInstance(eq : Equation(%),lvars) ==
       expr : String := concat([toString(lhs eq), "==", toString(rhs eq)])
       jbinfunc("W_"FindInstance_"(", jWSExpr(expr), lvars)
@@ -1489,7 +1503,8 @@ JuliaWSExpression() : Exports == Implementation where
       jterfunc("W_"PolynomialRemainder_"(",p1,p2,var)
     polynomialQuotientRemainder(p1,p2,var) ==
       jterfunc("W_"PolynomialQuotientRemainder_"(",p1,p2,var)
-    padeApproximant(expr, param) == jbinfunc("W_"PadeApproximant_"(",expr,param)
+    padeApproximant(expr, param) ==
+      jbinfunc("W_"PadeApproximant_"(",expr,param)
     symmetricPolynomial(order, vars) ==
       jbinfunc("W_"SymmetricPolynomial_"(",order,vars)
     symmetricReduction(p, vars) ==
@@ -1560,7 +1575,8 @@ JuliaWSExpression() : Exports == Implementation where
     simplify(expr) == junfunc("W_"Simplify_"(", expr)
     simplify(expr, assume) == jbinfunc("W_"Simplify_"(", expr, assume)
     extendedSimplify(expr) == junfunc("W_"FullSimplify_"(", expr)
-    extendedSimplify(expr, assume) == jbinfunc("W_"FullSimplify_"(", expr, assume)
+    extendedSimplify(expr, assume) ==
+      jbinfunc("W_"FullSimplify_"(", expr, assume)
     refine(expr, assume) == jbinfunc("W_"Refine_"(", expr, assume)
 
     expand(expr) == junfunc("W_"Expand_"(", expr)
@@ -1571,7 +1587,8 @@ JuliaWSExpression() : Exports == Implementation where
     complexExpand(expr, cvars) == jbinfunc("W_"ComplexExpand_"(", expr, cvars)
     trigExpand(expr) == junfunc("W_"TrigExpand_"(", expr)
     functionExpand(expr) == junfunc("W_"FunctionExpand_"(", expr)
-    functionExpand(expr, assum) == jbinfunc("W_"FunctionExpand_"(", expr, assum)
+    functionExpand(expr, assum) ==
+      jbinfunc("W_"FunctionExpand_"(", expr, assum)
 
     trigToExp(expr) == junfunc("W_"TrigToExp_"(", expr)
     expToTrig(expr) == junfunc("W_"ExpToTrig_"(", expr)
@@ -1641,7 +1658,8 @@ JuliaWSExpression() : Exports == Implementation where
       strToExpr(str)
     retract(expr : %) : Expression(Integer) ==
       (out := retractIfCan(expr)@Union(Expression(Integer), "failed"))
-        case "failed" => error1("Unable to retract to an Expression(Integer)", expr)
+        case "failed" =>
+          error1("Unable to retract to an Expression(Integer)", expr)
       out
     -- TODO: breaks output
     --string(expr) : String == toString expr

@@ -64,8 +64,6 @@ JuliaFloat64SpecialFunctions() : Exports == Implementation where
   Implementation ==> add
     import from JuliaUtilityFunctions
 
-    jlUsing("SpecialFunctions")
-
     ldexp(x,n) == jlF64FunctionF64I64("ldexp", x, n)
     exp2(x)    == jlF64FunctionF64("exp2", x)
     exp10(x)   == jlF64FunctionF64("exp10", x)

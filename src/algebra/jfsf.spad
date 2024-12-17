@@ -55,18 +55,13 @@ JuliaFloatSpecialFunctions() : Exports == Implementation where
     ++ deg2rad(x) converts x to radian, where x is in degrees.
 
   Implementation ==> add
-    import from String
     import from JuliaUtilityFunctions
-
-
-    jlInitialize(true)
 
     getind(a) ==> concat(["getindex(refs,_"", jlId(a), "_")"])
     jl_float_function_float(func, fl) ==>
       jlref(concat([func, "(", getind(fl),")"]))$JF
     jl_float_function_float_float(func, a, b) ==> 
       jlref(concat([func, "(", getind(a), ",", getind(b), ")"]))$JF
-
 
     ldexp(x,n) == jlref(concat(["ldexp(", getind(x), ", BigInt(",
       getind(n), "))"]))$JF

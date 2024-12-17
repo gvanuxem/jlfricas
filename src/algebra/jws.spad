@@ -46,14 +46,14 @@ JuliaWSObject() : Category == JuliaObjectType with
       jlref(concat(["W_"", sym, "_"(", getind(a), ",", getind(b),
         ",", getind(c),")"]))
     jlApply(sym, a, b, c, d) ==
-        jlref(concat(["W_"", sym, "_"(", getind(a), ",", getind(b),
-          ",", getind(c), ",", getind(d),")"]))
+      jlref(concat(["W_"", sym, "_"(", getind(a), ",", getind(b),
+        ",", getind(c), ",", getind(d),")"]))
     jlApply(sym, a, b, c, d, e) ==
-        jlref(concat(["W_"", sym, "_"(", getind(a), ",", getind(b),
-          ",", getind(c), ",", getind(d), ",", getind(e),")"]))
+      jlref(concat(["W_"", sym, "_"(", getind(a), ",", getind(b),
+        ",", getind(c), ",", getind(d), ",", getind(e),")"]))
     jlApply(sym, a, b, c, d, e, f) ==
-        jlref(concat(["W_"", sym, "_"(", getind(a), ",", getind(b), ",",
-          getind(c), ",", getind(d), ",", getind(e), ",", getind(f),")"]))
+      jlref(concat(["W_"", sym, "_"(", getind(a), ",", getind(b), ",",
+        getind(c), ",", getind(d), ",", getind(e), ",", getind(f),")"]))
 
     jlSymbolic(jws) ==
       -- subject to change
@@ -895,8 +895,7 @@ JuliaWSAPReal(prec : PositiveInteger) : Exports == Implementation where
       zero?(x) => error1("acsc: not defined for argument", x)
       abs(x) <= 1 => error1("acsc: result is not real for argument", x)
       junfunc("W_"ArcCsc_"(",x)
-    acot(x)   ==
-      junfunc("W_"ArcCot_"(",x)
+    acot(x)   == junfunc("W_"ArcCot_"(",x)
  
     sinh(x) == junfunc("W_"Sinh_"(",x)
     cosh(x) == junfunc("W_"Cosh_"(",x)
@@ -921,7 +920,7 @@ JuliaWSAPReal(prec : PositiveInteger) : Exports == Implementation where
       junfunc("W_"ArcCsch_"(",x)
     acoth(x) ==
       if abs(x) <= 1 then
-          error1("acoth: branch cut or singularity detected for argument", x)
+        error1("acoth: branch cut or singularity detected for argument", x)
       junfunc("W_"ArcCoth_"(",x)
 
     erf(x)      == junfunc("W_"Erf_"(",x)
@@ -961,7 +960,8 @@ JuliaWSAPReal(prec : PositiveInteger) : Exports == Implementation where
       jlref(concat(["weval(NN(_"", str, "_`", string(prec), "_"))"]))
     coerce(f : Float) ==
       tmp := outputSpacing(0)
-      ret : % := jlref(concat(["weval(NN(_"", convert(f)@String, "_`", string(prec),"_"))"]))
+      ret : % := jlref(concat(["weval(NN(_"", convert(f)@String,
+        "_`", string(prec),"_"))"]))
       outputSpacing(tmp)
       ret
     coerce(f : JuliaFloat) ==
@@ -1010,7 +1010,7 @@ JuliaWSGaussianInteger() : Exports == Implementation where
     coerce   : Integer  -> %
     ++ coerce(x): convenience function.
     coerce  : % -> JuliaWSExpression
-    ++ 
+    ++ coerce(x): convenience function. 
     jWSGI    : (JuliaWSInteger, JuliaWSInteger) -> %
     ++ jWSGI(re, im) constructs a JuliaWSGaussianInteger from real
     ++ part re and imaginary part im.
@@ -1064,8 +1064,8 @@ JuliaWSGaussianInteger() : Exports == Implementation where
       re := real(x); im := imag(x)
       zero? re and im > 0 => [imaginary(), complex(im,0), -imaginary()]
       re > 0 =>
-       im >= 0 => [1, x, 1]
-       im < 0 => [-imaginary(), complex(-im, re), imaginary()]
+        im >= 0 => [1, x, 1]
+        im < 0 => [-imaginary(), complex(-im, re), imaginary()]
       im < 0 => [-1, complex(-re, -im) ,-1]
       [imaginary(), complex(im, -re), -imaginary()]
 
@@ -1125,9 +1125,9 @@ JuliaWSComplex() : Exports == Implementation where
     atan    : (%, %) -> %
     ++ atan(z1,z2) computes the arc tangent of z2/z1.
     erf     : (%, %) -> %
-    ++ 
+    ++ erf \undocumented
     erfc    : % -> %
-    ++ 
+    ++ erfc \undocuemented
     toString: (%, JuliaWSExpression) -> String
     ++ toString(expr, form) returns the string representation of expr
     ++ with WS language format form.
@@ -1211,8 +1211,8 @@ JuliaWSComplex() : Exports == Implementation where
       re := real(x); im := imag(x)
       zero? re and im > 0 => [imaginary(), complex(im,0), -imaginary()]
       re > 0 =>
-       im >= 0 => [1, x, 1]
-       im < 0 => [-imaginary(), complex(-im, re), imaginary()]
+        im >= 0 => [1, x, 1]
+        im < 0 => [-imaginary(), complex(-im, re), imaginary()]
       im < 0 => [-1, complex(-re, -im) ,-1]
       [imaginary(), complex(im, -re), -imaginary()]
 
@@ -1444,8 +1444,8 @@ JuliaWSAPComplex(prec : PositiveInteger) : Exports == Implementation where
       re := real(x); im := imag(x)
       zero? re and im > 0 => [imaginary(), complex(im,0), -imaginary()]
       re > 0 =>
-       im >= 0 => [1, x, 1]
-       im < 0 => [-imaginary(), complex(-im, re), imaginary()]
+        im >= 0 => [1, x, 1]
+        im < 0 => [-imaginary(), complex(-im, re), imaginary()]
       im < 0 => [-1, complex(-re, -im) ,-1]
       [imaginary(), complex(im, -re), -imaginary()]
 
