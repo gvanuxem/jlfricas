@@ -1203,7 +1203,7 @@ JuliaComplexFloat() : Exports == Implementation where
 
 -- TODO: Interact.jl
 )abbrev domain JDFRAME JuliaDataFrame
-++ Description: Julia DataFrame support
+++ Description: Julia DataFrames support
 ++ Author: G. Vanuxem
 ++ Date Created: May. 2024
 ++ Keywords: tabular data, sciences, statistics, description
@@ -1218,18 +1218,18 @@ JuliaDataFrame() : Exports == Implementation where
   Z   ==> Integer
   getind(a)  ==> concat(["getindex(refs,_"", jlId a, "_")"])
   Exports ==> JuliaObjectAggregate() with
-    elt : (%, JuliaSymbol) -> JuliaVector(JuliaObject)
-    ++ elt(obj, sym) returns the property sym of obj.
-    qelt : (%, JuliaSymbol) -> JuliaVector(JuliaObject)
-    ++ elt(obj, sym) returns the property sym of obj. No checks are done
-    ++ regarding the existence of the sym property. If it does not exist,
-    ++ Julia will throw an error.
-    elt : (%, Integer) -> JuliaVector(JuliaObject)
-    ++ elt(obj, ind) returns the element at index ind of obj.
-    ++ For example for a Tuple or a vector.
-    qelt : (%, Integer) -> JuliaVector(JuliaObject)
-    ++ qelt(obj, ind) returns the element at index ind of obj.
-    ++ For example for a Tuple or a vector.
+    --elt : (%, JuliaSymbol) -> JuliaVector(JuliaObject)
+    --++ elt(obj, sym) returns the property sym of obj.
+    --qelt : (%, JuliaSymbol) -> JuliaVector(JuliaObject)
+    --++ elt(obj, sym) returns the property sym of obj. No checks are done
+    --++ regarding the existence of the sym property. If it does not exist,
+    --++ Julia will throw an error.
+    --elt : (%, Integer) -> JuliaVector(JuliaObject)
+    --++ elt(obj, ind) returns the element at index ind of obj.
+    --++ For example for a Tuple or a vector.
+    --qelt : (%, Integer) -> JuliaVector(JuliaObject)
+    --++ qelt(obj, ind) returns the element at index ind of obj.
+    --++ For example for a Tuple or a vector.
     jlDescribe: % -> %
     ++ jlDescribe(df) returns basic statistics about df.
     matrix : % -> JuliaObject
