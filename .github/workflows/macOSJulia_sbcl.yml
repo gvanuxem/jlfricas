@@ -36,7 +36,9 @@ jobs:
         ../jlfricas/configure --with-lisp=sbcl --with-gmp=`brew --prefix` --enable-julia  --enable-mathlink || cat config.log
 
     - name: make
-      run: cd ../build && make all htmldoc
+      run: |
+        export PATH=/opt/homebrew/opt/sphinx-doc/bin:$PATH
+        cd ../build && make all htmldoc
 
     - name: make check
       run: cd ../build && make check -j4
