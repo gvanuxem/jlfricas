@@ -18,11 +18,13 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - uses: julia-actions/setup-julia@latest
+
     - name: download and install prerequities
       run: |
         wget https://downloads.sourceforge.net/project/sbcl/sbcl/${SBCL_VER}/sbcl-${SBCL_VER}-${ARCH}-darwin-binary.tar.bz2
         tar xvf sbcl-${SBCL_VER}-${ARCH}-darwin-binary.tar.bz2
         cd sbcl-${SBCL_VER}-${ARCH}-darwin && sudo ./install.sh
+        brew install sphinx-doc
 
     - name: install Julia libraries
       run: |
@@ -34,7 +36,7 @@ jobs:
         ../jlfricas/configure --with-lisp=sbcl --with-gmp=`brew --prefix` --enable-julia  --enable-mathlink || cat config.log
 
     - name: make
-      run: cd ../build && make -j4
+      run: cd ../build && make all htmldoc
 
     - name: make check
       run: cd ../build && make check -j4
