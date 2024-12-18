@@ -2,12 +2,14 @@
 
 [![FriCAS CI on x64 Linux (with Julia support - SBCL based)](https://github.com/gvanuxem/jlfricas/actions/workflows/linuxJulia_sbcl.yml/badge.svg)](https://github.com/gvanuxem/jlfricas/actions/workflows/linuxJulia_sbcl.yml)\
 [![FriCAS CI on x64 Linux (with Julia support - Clozure CL based)](https://github.com/gvanuxem/jlfricas/actions/workflows/linuxJulia_ccl.yml/badge.svg)](https://github.com/gvanuxem/jlfricas/actions/workflows/linuxJulia_ccl.yml)\
-[![FriCAS CI on Windows (with Julia support - SBCL based)](https://github.com/gvanuxem/jlfricas/actions/workflows/windowsJulia_sbcl.yml/badge.svg)](https://github.com/gvanuxem/jlfricas/actions/workflows/windowsJulia_sbcl.yml)
+[![FriCAS CI on Windows (with Julia support - SBCL based)](https://github.com/gvanuxem/jlfricas/actions/workflows/windowsJulia_sbcl.yml/badge.svg)](https://github.com/gvanuxem/jlfricas/actions/workflows/windowsJulia_sbcl.yml)\
+[![FriCAS CI on macOS (with Julia support - SBCL based)](https://github.com/gvanuxem/jlfricas/actions/workflows/macOSJulia_sbcl.yml/badge.svg)](https://github.com/gvanuxem/jlfricas/actions/workflows/macOSJulia_sbcl.yml)
+
 
 [FriCAS](https://fricas.github.io) is a general purpose computer algebra
 system (CAS).
 
-In this work-in-progress repository, a C wrapper using libjulia is embedded in [FriCAS](https://fricas.github.io/) to support some [Julia](https://julialang.org) specialized operations (for example, system optimized BLAS and LAPACK libraries). The build process supports Clozure CL and SBCL, but only Julia 1.10.0 and Julia 1.11.* are supported with SBCL, see [Caveats](#caveats). It must not be considered production-ready.
+In this work-in-progress repository, a C wrapper using libjulia is embedded in [FriCAS](https://fricas.github.io/) to support some [Julia](https://julialang.org) specialized operations (for example, hardware architecture optimized BLAS and LAPACK libraries). The build process supports Clozure CL and SBCL, but only Julia 1.10.0 and Julia 1.11.* are supported with SBCL, see [Caveats](#caveats). It must not be considered production-ready.
 
 ## Building and Installing
 
@@ -27,7 +29,7 @@ FriCAS interpreter <code>)what things julia</code> and/or <code>)what things nem
 Take into account that this is absolutely not the official documentation even though it is highly based on the official FriCAS web site which can be built from the FriCAS source code (thanks to Ralf Hemmecke and Kurt Pagani for their amazing work). 
 
 If you want to build and install the HTML documentation,
-you need to install Sphinx. On a Debian like system, to add it, issue in a
+you need to install [Sphinx](https://www.sphinx-doc.org/en/master/). On a Debian like system, to add it, issue in a
 terminal <code>sudo apt install python3 python3-sphinx</code>.
 After building FriCAS, and before the installation, issue in your terminal
 <code>make htmldoc</code>.
@@ -65,4 +67,4 @@ Current development goals:
 
 ## Caveats
 
-Julia support with FriCAS built with SBCL is/was erratic, depending on the Julia version used and the loaded libraries by Julia. The 1.10.0 version seems to have solved some issues related to memory management interactions with SBCL, but with Julia 1.10.1 and 1.10.2 some problems occur again. Note that with Julia 1.11.0-* and later, FriCAS seems to work fine again. More work needs to be done in this regard. So, if you use SBCL to build FriCAS, imperatively use a version of Julia that is known to be compatible.
+Julia support for FriCAS built with SBCL is/was erratic, depending on the Julia version used and the loaded libraries by Julia. The 1.10.0 version seems to have solved some issues related to memory management interactions with SBCL, but with Julia 1.10.1 and 1.10.2 some problems occur again. Note that with Julia 1.11.* and later, FriCAS seems to work fine again. More work needs to be done in this regard. So, if you use SBCL to build FriCAS, imperatively use a version of Julia that is known to be compatible.

@@ -1526,6 +1526,14 @@ JuliaMatrix(R : JuliaObjectRing) :  Exports == Implementation where
     ++ coerce(x): convenience function.
     coerce  : JuliaComplexF64Matrix -> JuliaMatrix(JuliaObjComplexF64)
     ++ coerce(x): convenience function.
+    factorize : JuliaMatrix(JuliaObjFloat64) -> JuliaObject
+    ++ factorize(m) factorizes m using a suited matrix factorization for m.
+    ++ For a symmetric matrix the Bunch-Kaufman factorization will be choosen
+    ++ whereas for generic matrices, a LU or a QR factorization will be used.
+    factorize : JuliaMatrix(JuliaObjComplexF64) -> JuliaObject
+    ++ factorize(m) factorizes m using a suited matrix factorization for m.
+    ++ For a symmetric matrix the Bunch-Kaufman factorization will be choosen
+    ++ whereas for generic matrices, a LU or a QR factorization will be used.
     jmatrix:    String -> %
     ++ jmatrix(str) evaluates the string str and returns the generated matrix.
     ++ No checks are done at the FriCAS level.
@@ -1729,6 +1737,9 @@ JuliaMatrix(R : JuliaObjectRing) :  Exports == Implementation where
       u := new(n, n, 0$R)
       for i in 1..n repeat setelt!(u, i, i, elt(v,i))
       u
+
+    factorize(m : JuliaMatrix(JuliaObjFloat64)) == junfunc("factorize(", m)
+    factorize(m : JuliaMatrix(JuliaObjComplexF64)) == junfunc("factorize(", m)
 
     matrix(l : List List R) ==
       empty?(l) => error "matrix: empty matrix is not supported"
