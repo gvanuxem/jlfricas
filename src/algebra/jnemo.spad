@@ -99,9 +99,6 @@ NemoInteger() : Exports == Implementation where
       sh > 0 => jlref(concat(["<<(", getind(a), ",", string(sh), ")"])) 
       jlref(concat([">>(", getind(a), ",", string(abs sh), ")"]))
 
-    -- x quo y == jbinop("div", x, y)
-    x quo y == jbinop("÷", x, y)
-    x rem y == jbinop("%", x, y)
     addmod(a, b, p) ==
       (c := a + b) >= p => c - p
       c
@@ -124,16 +121,17 @@ NemoInteger() : Exports == Implementation where
     factorial(a)      == junfunc("factorial(", a)
     binomial(a, b)    == jbinfunc("binomial(", a, b)
     permutation(n, m) == permutation(n, m)$IntegerCombinatoricFunctions(%)
-    
+
+    -- x quo y == jbinop("div", x, y)
+    x quo y == jbinop("÷", x, y)
+    x rem y == jbinop("%", x, y)    
     divide(a,b) ==
       ret : JuliaObjTuple := jbinfunc("divrem(",a,b)
       [ret.1 pretend %, ret.2 pretend %]
     gcd(a,b) == jbinfunc("gcd(",a,b)
     lcm(a,b) == jbinfunc("lcm(",a,b)
     (p1:% exquo p2:%): Union(%,"failed") ==
-      -- TODO
-      -- Julia Tuple
-      ret : JuliaObject := jbinfunc("divides(", p1, p2)
+      ret : JuliaObjTuple := jbinfunc("divides(", p1, p2)
       not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
         => "failed"
       junfunc("last(", ret)
@@ -229,9 +227,13 @@ NemoRational() : Exports == Implementation where
 
     abs(x)  == junfunc("abs(", x)
 
+    divide(a,b) ==
+      ret : JuliaObjTuple := jbinfunc("divrem(",a,b)
+      [ret.1 pretend %, ret.2 pretend %]
     x quo y == jbinop("÷", x, y)
     -- x quo y == jbinop("div", x, y)
     x rem y == jbinop("%", x, y)
+
     wholePart x ==
       (denom(x) = 1) => numer(x)
       numer(x) quo denom(x)
@@ -239,15 +241,10 @@ NemoRational() : Exports == Implementation where
     ceiling x == junfunc("ceil(",x)
     gcd(x,y)  == jbinfunc("gcd(",x,y)
     (p1:% exquo p2:%): Union(%,"failed") ==
-      -- TODO
-      -- Julia Tuple
-      ret : JuliaObject := jbinfunc("divides(", p1, p2)
+      ret : JuliaObjTuple := jbinfunc("divides(", p1, p2)
       not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
         => "failed"
       junfunc("last(", ret)
-    divide(a,b) ==
-      ret : JuliaObjTuple := jbinfunc("divrem(",a,b)
-      [ret.1 pretend %, ret.2 pretend %]
 
     D(x) == 0
     D(x, nni) == 0

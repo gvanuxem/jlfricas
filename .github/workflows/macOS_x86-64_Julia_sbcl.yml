@@ -4,16 +4,11 @@ on: [push, pull_request]
 
 jobs:
   build:
-
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [macos-13, macos-14]
-    runs-on: ${{ matrix.os }}
+    runs-on: macos-latest-large
     timeout-minutes: 30
     env:
-      SBCL_VER: ${{ matrix.os == 'macos-13' && '2.2.9' || '2.4.0' }}
-      ARCH: ${{ matrix.os == 'macos-13' && 'x86-64' || 'arm64' }}
+      SBCL_VER: '2.2.9'
+      ARCH: 'x86-64'
 
     steps:
     - uses: actions/checkout@v4
@@ -37,7 +32,6 @@ jobs:
 
     - name: make
       run: |
-        export PATH=$PATH:/opt/homebrew/opt/sphinx-doc/bin
         cd ../build && make all htmldoc
 
     - name: make check
@@ -51,11 +45,11 @@ jobs:
         cp -v `brew list gmp | grep libgmp.10.dylib` FriCAS.app/Contents/Resources/usr/local/lib/fricas/target/*/lib/
         ## reduce chance of error caused by "hdiutil: Resource busy"
         make dist-macos-dmg || make dist-macos-dmg
-        mv FriCAS.dmg ../jlfricas/FriCAS-macOS-${ARCH}-${{ github.sha }}.dmg
+        mv FriCAS.dmg ../jlfricas/FriCAS-macOS-julia-${ARCH}-${{ github.sha }}.dmg
 
     - name: Upload macOS binary
       uses: actions/upload-artifact@v4
       with:
-        name: FriCAS-macOS-${{ env.ARCH }}-binary
-        path: FriCAS-macOS-${{ env.ARCH }}-${{ github.sha }}.dmg
+        name: FriCAS-macOS-julia-${{ env.ARCH }}-binary
+        path: FriCAS-macOS-julia-${{ env.ARCH }}-${{ github.sha }}.dmg
 

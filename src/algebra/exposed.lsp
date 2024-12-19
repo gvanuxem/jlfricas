@@ -247,6 +247,7 @@
   (|NemoRealBall| . NRB) 
   (|NemoMultivariatePolynomial| . NMP)
   (|NemoRealBall| . NRB) 
+  (|NemoUnivariateLaurentPolynomial| . NULP)
   (|NemoUnivariatePolynomial| . NUP)
   (|NemoRational| . NRAT)
   (|NemoRealField| . NRF) 
