@@ -233,6 +233,7 @@
   (|MPolyCatRationalFunctionFactorizer| . MPRFF)
   (|Multiset| . MSET)
   (|MultivariateFactorize| . MULTFACT)
+  (|NemoMultivariateLaurentPolynomial| . NMLP)
   (|MultivariatePolynomial| . MPOLY)
   (|MultFiniteFactorize| . MFINFACT)
   (|NemoAlgebraicNumber| . NAN)
