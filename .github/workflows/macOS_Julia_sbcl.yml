@@ -1,15 +1,18 @@
-name: FriCAS CI on macOS_x86-64 (with Julia support - SBCL based)
+name: FriCAS CI on macOS (with Julia support - SBCL based)
 
 on: [push, pull_request]
 
 jobs:
   build:
-    runs-on: macos-latest-large
+    strategy:
+        fail-fast: false
+        matrix:
+          os: [macos-13, macos-14]
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 30
     env:
-      SBCL_VER: '2.2.9'
-      ARCH: 'x86-64'
-
+      SBCL_VER: ${{ matrix.os == 'macos-13' && '2.2.9' || '2.4.0' }}
+      ARCH: ${{ matrix.os == 'macos-13' && 'x86-64' || 'arm64' }}
     steps:
     - uses: actions/checkout@v4
     - uses: julia-actions/setup-julia@latest
@@ -27,11 +30,13 @@ jobs:
 
     - name: configure
       run: |
+        
         mkdir ../build && cd ../build
         ../jlfricas/configure --with-lisp=sbcl --with-gmp=`brew --prefix` --enable-julia  --enable-mathlink || cat config.log
 
     - name: make
       run: |
+        export PATH=/opt/homebrew/opt/sphinx-doc/bin/:$PATH
         cd ../build && make all htmldoc
 
     - name: make check
