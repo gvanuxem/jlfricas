@@ -1,22 +1,27 @@
 )abbrev category JTYPE JuliaType
 ++ Category for Julia types
 ++ Author: G.Vanuxem
-++ Date Created: December 2022
+++ Date Created: December, 2022
 ++ Description:
-++  Parent category of Julia elements.
+++  Parent category of Julia domains.
 JuliaType() : Category == Join(SetCategory, ConvertibleTo(String))
 
 )abbrev category JRING JuliaRing
 ++ Category for Julia rings
 ++ Author: G.Vanuxem
-++ Date Created: May 2024
+++ Date Created: May, 2024
 ++ Description:
-++  Parent category of Julia ring elements.
-JuliaRing() : Category == Join(JuliaType, Ring) with
-  one?  : % -> Boolean
-  ++ one?(x) checks whether or not x is the multiplicative identity.
-  zero? : % -> Boolean
-  ++ zero?(x) checks whether or not x is the additive identity.
+++  Parent category of Julia ring domains.
+JuliaRing() : Category == Join(JuliaType, Ring)
+
+)abbrev category JCRING JuliaCommutativeRing
+++ Category for Julia commuative rings
+++ Author: G.Vanuxem
+++ Date Created: Dec, 2024
+++ Description:
+++  Parent category of Julia commutative ring domains.
+JuliaCommutativeRing() : Category == Join(JuliaType, CommutativeRing)
+
 
 )abbrev domain JSYM JuliaSymbol
 ++ Domain for the Julia symbols
@@ -26,7 +31,7 @@ JuliaRing() : Category == Join(JuliaType, Ring) with
 ++  This domain allows the manipulation of Julia symbols.
 JuliaSymbol() : Exports == Implementation where
   STR ==> String
-  Exports ==> Join(JuliaType, ConvertibleTo(InputForm)) with
+  Exports ==> JuliaType with
     string  : % -> String
     ++ string \undocumented
     coerce  : String -> %
@@ -43,7 +48,6 @@ JuliaSymbol() : Exports == Implementation where
     jlInitialize(true)
 
     x:% = y:% == EQUAL(x,y)$Lisp
-    convert(sy : %) : InputForm == sy pretend InputForm
     convert(sy : %) : String == PNAME(sy)$Lisp
     coerce(s : String) : %  == VALUES(INTERN(concat(":",s))$Lisp)$Lisp
     coerce(sy : Symbol) : %  ==
@@ -115,7 +119,7 @@ JuliaFloat32() : Exports == Implementation where
   PI      ==> PositiveInteger
   JI64    ==> JuliaInt64
   parsef  ==> READ_-FROM_-STRING$Lisp
-  Exports ==> Join (JuliaType, ConvertibleTo(InputForm), --CoercibleTo(JuliaFloat64),
+  Exports ==> Join (JuliaType, --ConvertibleTo(InputForm), --CoercibleTo(JuliaFloat64),
                 ConvertibleFrom(JuliaFloat64), ConvertibleFrom(DoubleFloat),
                 FloatingPointSystem, ElementaryFunctionCategory,
                 TranscendentalFunctionCategory, DifferentialRing) with
@@ -135,18 +139,16 @@ JuliaFloat32() : Exports == Implementation where
     jlCApply : (String, JuliaSymbol, %) -> %
     ++ jlCApply(lib, func, x) applies the C function func from the library
     ++ lib to argument x. For example:
-    ++ \example{jlCApply("libm.so.6",jsym(sqrt),jf32(2.0))}
+    ++ \example{jlCApply("libm.so.6",jsym(sqrtf),jf32(2.0))}
     jlCApply : (String, JuliaSymbol, %, %) -> %
     ++ jlCApply(lib, func, x, y) applies the C function func from the library
     ++ lib to arguments x and y. For example:
-    ++ \example{jlCApply("libopenlibm", jsym(pow),2.7,3.0)}
+    ++ \example{jlCApply("libopenlibm", jsym(powf),jf32(2.7),jf32(3))}
     ++ OpenLibm library is provided by Julia.
     jlCApply : (String, JuliaSymbol, %, %, %) -> %
     ++ jlCApply(lib, func, x, y, z) applies the C function func from
     ++ the library lib to arguments x, y and z.
-    ++ For example if you have the GNU Scientific Library (GSl-2.8)
-    ++ installed:
-    ++ \example{jlCApply("libgsl.so.28",jsym(gsl_hypot3),2.0,7.0,9.0)}
+    ++ \example{jlCApply("libopenlibm",jsym(fmaf),jf32(2),jf32(7),jf32(9))}
     urand01 : () -> %
     ++ urand01() returns an uniformly distributed random number
     ++ contained in [0,1].
@@ -208,8 +210,10 @@ JuliaFloat32() : Exports == Implementation where
     nan() : % == FNAN$Lisp
     eulerGamma() : % ==
       jl_flt_eval_string("Float32(Base.MathConstants.eulergamma)")$Lisp
-    catalan() : % == jl_flt_eval_string("Float32(Base.MathConstants.catalan)")$Lisp
-    goldenRation() : % == jl_flt_eval_string("Float32(Base.MathConstants.golden)")$Lisp
+    catalan() : % ==
+      jl_flt_eval_string("Float32(Base.MathConstants.catalan)")$Lisp
+    goldenRation() : % ==
+      jl_flt_eval_string("Float32(Base.MathConstants.golden)")$Lisp
 
     urand01() == jl_flt_eval_string("rand(Float32)")$Lisp
     nrand()   == jl_flt_eval_string("randn(Float32)")$Lisp
@@ -251,15 +255,16 @@ JuliaFloat32() : Exports == Implementation where
       jl_flt_function_flt_flt_flt(func, x, y, z)$Lisp
     jlCApply(lib, func, x) ==
       jl_flt_eval_string(concat ["ccall((", string(func), ", _"", lib,
-        "_"), Cdouble, (Cdouble,),", string(x),")"])$Lisp
+        "_"), Cfloat, (Cfloat,),", PRINC_-TO_-STRING(x)$Lisp,")"])$Lisp
     jlCApply(lib, func, x, y) ==
       jl_flt_eval_string(concat ["ccall((", string(func), ", _"", lib,
-        "_"), Cdouble, (Cdouble, Cdouble),",
-          string(x), ",", string(y), ")"])$Lisp
+        "_"), Cfloat, (Cfloat, Cfloat),", PRINC_-TO_-STRING(x)$Lisp, ",",
+          PRINC_-TO_-STRING(y)$Lisp, ")"])$Lisp
     jlCApply(lib, func, x, y, z) ==
       jl_flt_eval_string(concat ["ccall((", string(func), ", _"", lib,
-        "_"), Cdouble, (Cdouble, Cdouble,Cdouble),", string(x), ",",
-          string(y), ",", string(z), ")"])$Lisp
+        "_"), Cfloat, (Cfloat, Cfloat, Cfloat),", PRINC_-TO_-STRING(x)$Lisp,
+          ",", PRINC_-TO_-STRING(y)$Lisp, ",",
+            PRINC_-TO_-STRING(z)$Lisp, ")"])$Lisp
 
     x : % ^ r : Fraction Integer ==
       zero? x =>
@@ -354,10 +359,10 @@ JuliaFloat32() : Exports == Implementation where
     convert(x) : DoubleFloat == parsef(convert(x)@String)
     convert(x : DoubleFloat)  == convertDFToSF(x)$Lisp
     convert(x : JuliaFloat64 ) == convertDFToSF(x)$Lisp
+    --convert(x) : InputForm == convert(x pretend SExpression)
     string(x : %) : String == convert(x)
     toString(x : %) == convert(x)
     toString(x, n) == toString(convert(x)@DoubleFloat, n)
-    convert(x : %) : InputForm == convert(convert(x)@String)
     coerce(i : Integer) == makeF32(i, 0)$Lisp
     coerce(x : %) : OutputForm == convert(x)@String pretend OutputForm
     jf32(x : JuliaFloat64) == convertDFToSF(x)$Lisp
@@ -626,12 +631,12 @@ JuliaFloat64() : Exports == Implementation where
     min()            == MOST_-NEGATIVE_-DOUBLE_-FLOAT$Lisp
 
     coerce(x : %) : DoubleFloat == x pretend DoubleFloat
-    coerce(x : DoubleFloat) :%  == x pretend %
+    coerce(x : DoubleFloat) : %  == x pretend %
     convert(x : Float) == convert(x)@DoubleFloat pretend %
     convert(x : %) : String == jl_string_function_dbl("string", x)$Lisp
     string(x : %) : String == convert(x)
     toString(x, n) == toString(x pretend DoubleFloat, n)
-    convert(x : %) : InputForm == convert(convert(x)@String)
+    convert(x : % ) : InputForm  == convert(x pretend DoubleFloat)
     convert(x : %) : Float == convert(x pretend DoubleFloat)$Float
     coerce(x : %) : OutputForm == convert(x)@String pretend OutputForm
     jf64(x : DoubleFloat) == x pretend %

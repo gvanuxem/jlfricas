@@ -60,7 +60,7 @@ JuliaObjectType() : Category == JuliaType() with
     ++ with ']' and issue:
     ++ pkg> add "https://github.com/tecosaur/About.jl"
     coerce  : % -> JuliaObject
-    ++ coerce(obj) coerce obj ot JuliaObject.
+    ++ coerce(obj) coerce obj to JuliaObject.
     ++ Convenience function.
   add
     import from JuliaUtilityFunctions
@@ -132,7 +132,7 @@ See the JuliaObjectType category for information")
       -- first line length only
       #ret ~= 1 or more?(elt(ret,1) pretend String, _$LINELENGTH$Lisp)
         => pile(append(["" pretend OutputForm], ret))
-      vconcat ret
+      vconcat(ret)
     coerce(obj : %) == obj pretend JuliaObject
 
 )abbrev category JOBAGG JuliaObjectAggregate
@@ -228,17 +228,22 @@ JuliaObject() : Exports == Implementation where
     -- TODO: use a specific JuliaObjType domain
     coerce  : String -> %
     ++ coerce(str) coerces str as a JuliaObject.
-    ++ Convenience function.
+    ++ See 'jobject(String)' for more information. Convenience function.
     coerce  : Integer -> %
     ++ coerce(i) coerces i as a JuliaObject.
     ++ Convenience function.
+    jlCollect : % -> JuliaVector(%)
+    ++ jlCollect(obj) collects element of a Julia iterator
+    ++ in a JuliaVector.
     jobject : Integer -> %
-    ++ jobject(n) return the JuliaObject representing the integer n.
+    ++ jobject(n) returns the JuliaObject representing the integer n.
     jobject : String -> %
-    ++ jlObject(string) constructs an arbirary Julia object depending
+    ++ jlObject(str) constructs an arbitrary Julia object depending
     ++ on string used (evaluated by Julia). For example:
     ++ \example{jobject("rand(Float64,(2,3,4))")}
-    ++ a 2x3x4 array of Float64 elements.
+    ++ returns a 2x3x4 array of Float64 elements.
+    ++ A Julia exception is raised if error(s) occur(s)
+    ++ during parsing/evalution.
   Implementation ==> add
     import from JuliaUtilityFunctions
     import from String
@@ -246,6 +251,7 @@ JuliaObject() : Exports == Implementation where
     jlInitialize(true)
     Rep := SExpression
     getind(a)  ==> concat(["getindex(refs,_"", jlId a, "_")"])
+    jlCollect(obj) == jlref(concat ["collect(", getind(obj),")"])
     coerce(jsy : JuliaSymbol ) == jlref(convert(jsy))
     coerce(i: Integer) == jlref(string i)
     coerce(str : String) : % == jlref(str)
@@ -737,8 +743,7 @@ JuliaFloat() : Exports == Implementation where
   PI        ==> PositiveInteger
   JF64      ==> JuliaFloat64
   parsei    ==> PARSE_-INTEGER$Lisp
-  Exports ==> Join(JuliaObjectRing, ConvertibleTo(InputForm),
-            FloatingPointSystem, arbitraryPrecision,
+  Exports ==> Join(JuliaObjectRing, FloatingPointSystem, arbitraryPrecision,
             ElementaryFunctionCategory, TranscendentalFunctionCategory,
             DifferentialRing) with
             -- SpecialFunctionCategory) with
@@ -991,8 +996,6 @@ JuliaFloat() : Exports == Implementation where
     retractIfCan(x) : Union (Fraction(Integer), "failed") ==
       tmp := jlref(concat(["QQ(rationalize(BigInt,", getind(x),"))"]))$NemoRational
       coerce(retract(tmp)@Fraction(Integer))
-
-    convert(x : %) : InputForm == string(x) pretend InputForm
 
     coerce(jf : JF64) : % == jfloat(convert(jf)@String)
     coerce(i : Integer) : % == jlref(concat(["BigFloat(", string(i),")"]))

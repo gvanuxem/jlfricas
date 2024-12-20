@@ -507,6 +507,7 @@
   (|IntegralDomain| . INTDOM)
   (|IntervalCategory| . INTCAT)
   (|JuliaArbitraryPrecision| . JARBPR)
+  (|JuliaCommutativeRing| . JCRING)
   (|JuliaMatrixCategory| . JMATCAT)
   (|JuliaObjectAggregate| . JOBAGG)
   (|JuliaObjectType| . JOBJTYP)

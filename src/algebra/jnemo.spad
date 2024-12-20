@@ -7,7 +7,7 @@
 ++ Author: G.Vanuxem
 ++ Date Created: Apr, 2024
 ++ Description:
-++  Parent category of Nemo elements.
+++  Parent category of Nemo domains.
 NemoType() : Category == JuliaObjectType
 
 )abbrev category NRING NemoRing
@@ -15,7 +15,7 @@ NemoType() : Category == JuliaObjectType
 ++ Author: G.Vanuxem
 ++ Date Created: Mar, 2024
 ++ Description:
-++  Parent category of Nemo Ring elements.
+++  Parent category of Nemo Ring domains.
 NemoRing() : Category == Join(NemoType, JuliaObjectRing)
 
 )abbrev category JARBPR JuliaArbitraryPrecision
@@ -593,7 +593,7 @@ NemoIntegerMod(p : PositiveInteger) : Exports == Implementation where
   PI      ==> PositiveInteger
   NNI     ==> NonNegativeInteger
   parsei  ==> PARSE_-INTEGER$Lisp
-  Exports ==> Join(NemoRing, CommutativeRing, Finite,
+  Exports ==> Join(NemoRing, CommutativeStar, Finite,
         ConvertibleTo(Integer), StepThrough) with
     "*"     : (%, Integer) -> %
     ++ * \undocumented
