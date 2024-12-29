@@ -9,6 +9,7 @@
 ++ Reference: https://nemocas.github.io/Nemo.jl/stable/
 NemoArbField(p: PositiveInteger) : Exports == Implementation where
   PI        ==> PositiveInteger
+  NNI       ==> NonNegativeInteger
   JI64      ==> JuliaInt64
   JF64      ==> JuliaFloat64
   Exports ==> Join(NemoRing, CommutativeRing, FloatingPointSystem,
@@ -213,9 +214,15 @@ NemoArbField(p: PositiveInteger) : Exports == Implementation where
     x : % * y : Integer == jlref(concat([getind(x), "*", string(y)]))
     x : Integer / y : % == jlref(concat([string(x), "/", getind(y)]))
     x : % / y : Integer == jlref(concat([getind(x), "/", string(y)]))
+    x ^ y : PI == jlref(concat [getind(x), "^", string(y)])
+    x ^ y : NNI == jlref(concat [getind(x), "^", string(y)])
     x ^ y : Integer == jlref(concat [getind(x), "^", string(y)])
     x ^ y : Fraction(Integer) ==
-      jbinop("^", x, coerce(y)@NemoFraction(NemoInteger))
+      jlref(concat[getind(x), "^(", string(numer(y)),"//", string(denom(y)),")"])
+    recip(x) ==
+      zero?(x) => "failed"
+      junfunc("recip(",x)
+
 
     abs(x) == junfunc("abs(", x)
     -- x quo y == jbinop("div", x, y)
@@ -324,6 +331,7 @@ NemoRealBall() == NemoArbField(256)
 ++ Reference: https://nemocas.github.io/Nemo.jl/stable/
 NemoAcbField(p: PositiveInteger) : Exports == Implementation where
   PI        ==> PositiveInteger
+  NNI       ==> NonNegativeInteger
   JI64      ==> JuliaInt64
   JF64      ==> JuliaFloat64
   Exports ==> Join(NemoRing, CommutativeRing, ComplexCategory(NemoArbField(p)),
@@ -489,9 +497,14 @@ NemoAcbField(p: PositiveInteger) : Exports == Implementation where
     x : % ^ y : % == jbinop("^", x, y)
     x : % * y : Integer == jlref(concat([getind(x), "*", string(y)]))
     x : Integer / y : % == jlref(concat([string(x), "/", getind(y)]))
+    x ^ y : PI == jlref(concat [getind(x), "^", string(y)])
+    x ^ y : NNI == jlref(concat [getind(x), "^", string(y)])
     x ^ y : Integer == jlref(concat [getind(x), "^", string(y)])
     x ^ y : Fraction(Integer) ==
-      jbinop("^", x, coerce(y)@NemoFraction(NemoInteger))
+      jlref(concat[getind(x), "^(", string(numer(y)),"//", string(denom(y)),")"])
+    recip(x) ==
+      zero?(x) => "failed"
+      junfunc("recip(",x)
 
     -- x quo y == jbinop("div", x, y)
     x quo y == jbinop("÷", x, y)
@@ -589,6 +602,7 @@ NemoComplexBall() == NemoAcbField(256)
 ++ Reference: https://nemocas.github.io/Nemo.jl/stable/
 NemoRealField() : Exports == Implementation where
   PI        ==> PositiveInteger
+  NNI       ==> NonNegativeInteger
   JI64      ==> JuliaInt64
   JF64      ==> JuliaFloat64
   Exports ==> Join(NemoRing, CommutativeRing, FloatingPointSystem,
@@ -782,9 +796,14 @@ NemoRealField() : Exports == Implementation where
     x : % * y : Integer == jlref(concat([getind(x), "*", string(y)]))
     x : Integer / y : % == jlref(concat([string(x), "/", getind(y)]))
     x : % / y : Integer == jlref(concat([getind(x), "/", string(y)]))
+    x ^ y : PI == jlref(concat [getind(x), "^", string(y)])
+    x ^ y : NNI == jlref(concat [getind(x), "^", string(y)])
     x ^ y : Integer == jlref(concat [getind(x), "^", string(y)])
     x ^ y : Fraction(Integer) ==
-      jbinop("^", x, coerce(y)@NemoFraction(NemoInteger))
+      jlref(concat[getind(x), "^(", string(numer(y)),"//", string(denom(y)),")"])
+    recip(x) ==
+      zero?(x) => "failed"
+      junfunc("recip(",x)
    
     abs(x) == junfunc("abs(", x)
     -- x quo y == jbinop("div", x, y)

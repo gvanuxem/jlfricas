@@ -10,7 +10,7 @@ JuliaWSUtilityFunctions() : Exports == Implementation where
   getind(a)  ==> concat(["getindex(refs, _"", jlId a, "_")"])
   Exports ==> with
     seedRandom : JuliaWSInteger -> JuliaWSExpression
-    ++ seedRandom(n) reseed the random number generator with n as seed.
+    ++ seedRandom(n) reseeds the random number generator with n as seed.
     ++ Returns the random generator state.
     urand01Real : PositiveInteger -> JuliaWSVector(JuliaWSReal)
     ++ urand01Real(n) returns a Julia WS vector with uniformly

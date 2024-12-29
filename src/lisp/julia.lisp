@@ -247,13 +247,13 @@
 ; 32 bits
 (defmacro |make_sf_array2| (sizea sizeb)
      `(make-array (* (the fixnum ,sizea) (the fixnum ,sizeb)) :element-type 'single-float))
-;    (make-array (list sizeb sizea) :element-type 'double-float))
+;    (make-array (list sizeb sizea) :element-type 'single-float))
 
 (defmacro |make_sf_iarray2| (sizea sizeb val)
     `(make-array (* (the fixnum ,sizea) (the fixnum ,sizeb))
         :element-type 'single-float :initial-element ,val))
 
-; Double-float 1D array access - 1 based index
+; Double-float 1D array access - 1-based index
 
 (defmacro dfvsize (x)
  `(the fixnum (length (the (simple-array double-float (*)) ,x))))
@@ -290,7 +290,7 @@
         (1- (the (signed-byte 64) ,i))) (the (signed-byte 64) ,s)))
 
 
-; 2D array emulation - 1 based index - row major ordering access
+; 2D array emulation - 1-based index - row major ordering access
 ; column major order done in Spad
 
 ; sizea: row length

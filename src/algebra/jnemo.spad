@@ -363,10 +363,13 @@ NemoAlgebraicNumber() : Exports == Implementation where
     x : % * y : NemoInteger == jbinop("*", x, y)
     x * y : Fraction Integer == jbinop("*", x, coerce(y)@NemoFraction(NemoInteger))
 
-    x ^ y : Fraction Integer == jbinop("^", x, coerce(y)@NemoFraction(NemoInteger))
-    x ^ y : PositiveInteger == jlref(concat [getind(x), "^", string(y)])
-    x ^ y : NonNegativeInteger == jlref(concat [getind(x), "^", string(y)])
+    x ^ y : NNI == jlref(concat [getind(x), "^", string(y)])
     x ^ y : Integer == jlref(concat [getind(x), "^", string(y)])
+    x ^ y : Fraction(Integer) ==
+      jlref(concat[ getind(x), "^(", string(numer(y)),"//", string(denom(y)),")"])
+    recip(x) ==
+      zero?(x) => "failed"
+      junfunc("recip(",x)
 
     -- x quo y == jbinop("div", x, y)
     x quo y == jbinop("÷", x, y)
@@ -517,9 +520,11 @@ NemoIntegerMod(p : PositiveInteger) : Exports == Implementation where
     x : NemoInteger * y : % == jbinop("*", x, y)
     x : % * y : Integer == jlref(concat [getind(x), "*", string(y)])
 
+    x ^ y : PI == jlref(concat [getind(x), "^", string(y)])
+    x ^ y : NNI == jlref(concat [getind(x), "^", string(y)])
     recip(x) ==
       zero?(x) => "failed"
-      junfunc("inv(", x)
+      junfunc("recip(",x)
 
     size()           == p
     characteristic() == p
@@ -604,13 +609,13 @@ NemoPrimeField(p : PositiveInteger) : Exports == Implementation where
     x : NemoInteger * y : % == jbinop("*", x, y)
     x : % * y : Integer == jlref(concat [getind(x), "*", string(y)])
     x : % / y : % == jbinop("/", x, y)
-
-    x quo y == jbinop("÷", x, y)
-    -- x quo y == jbinop("div", x, y)
-    x rem y == jbinop("%", x, y)
     recip x ==
       zero? x => "failed"
       junfunc("inv(", x)
+    x quo y == jbinop("÷", x, y)
+    -- x quo y == jbinop("div", x, y)
+    x rem y == jbinop("%", x, y)
+
 
     nextItem(n) ==
       m := n+1
@@ -800,6 +805,7 @@ InnerNemoExactComplexField(Options : JuliaObjDict) : Exports ==
       Implementation where
   JI64      ==> JuliaInt64
   PI        ==> PositiveInteger
+  NNI       ==> NonNegativeInteger
   JF64      ==> JuliaFloat64
   Exports ==> Join(NemoCommutativeRing, Field, RadicalCategory,
             ComplexCategory(%), TranscendentalFunctionCategory) with
@@ -1052,12 +1058,18 @@ InnerNemoExactComplexField(Options : JuliaObjDict) : Exports ==
     x : Integer / y : % == jlref(concat([string(x), "//", getind(y)]))
     x : % / y : Integer == jlref(concat([getind(x), "//", string(y)]))
 
+    x ^ y : PI ==
+      jlref(concat [getind(x), "^", string(y)])
+    x ^ y : NNI ==
+      jlref(concat [getind(x), "^", string(y)])
     x ^ y : Integer ==
-      jbinop("^", x, coerce(y))
+      jlref(concat [getind(x),"^" string(y)])
     x ^ y : Fraction(Integer) ==
-      jbinop("^", x, coerce(y)@NemoFraction(NemoInteger))
+      jlref(concat [getind(x), "^(",
+        string(numer(y)),"//", string(denom(y)), ")"])
     pow(x, i, repr) ==
-      jlref(concat ["pow(", getind(x),",", string(i) ",form=", string(repr),")"])
+      jlref(concat ["pow(", getind(x),",", string(i),
+        ",form=", string(repr),")"])
 
     -- x quo y == jbinop("div", x, y)
     x quo y == jbinop("÷", x, y)
@@ -1066,6 +1078,9 @@ InnerNemoExactComplexField(Options : JuliaObjDict) : Exports ==
     sqrt(x)  == junfunc("√(",x)
     exp(x)   == junfunc("exp(",x)
     log(x)   == junfunc("log(",x)
+    recip(x) ==
+      zero? x => "failed"
+      junfunc("inv(",x)
 
     sin(x)  == junfunc("sin(",x)
     sin(x,repr)  == jlref(concat ["sin(",getind(x), ",form=", string(repr),")"])
@@ -1224,6 +1239,7 @@ NemoFraction(R : Join(NemoCommutativeRing, IntegralDomain)) :
     import from JuliaStringUtilities
     import from NemoFactored(R)
 
+    NNI ==> NonNegativeInteger
     getind(a)  ==> concat(["getindex(refs,_"", jlId a, "_")"])
     junfunc(func, a) ==> jlref(concat([func, getind(a),")"]))
     jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
@@ -1262,6 +1278,11 @@ NemoFraction(R : Join(NemoCommutativeRing, IntegralDomain)) :
     a : R / b : R == jbinop("//",a,b)
     a : R / b : % == jbinop("//",a,b)
     a : % / b : % == jbinop("//",a,b)
+    x ^ y : NNI == jlref(concat [getind(x), "^", string(y)])
+    x ^ y : Integer == jlref(concat [getind(x), "^", string(y)])
+    recip(x) ==
+      zero?(x) => "failed"
+      junfunc("recip(",x)
     if R is NemoInteger then
       random(p : PositiveInteger) ==
         jlref(concat ["rand_bits(QQ,",string(p), ")"])
@@ -1287,9 +1308,6 @@ NemoFraction(R : Join(NemoCommutativeRing, IntegralDomain)) :
       floor x == junfunc("floor(",x)
       ceiling x == junfunc("ceil(",x)
     gcd(x,y)  == jbinfunc("gcd(",x,y)
-    recip x ==
-      zero? x => "failed"
-      junfunc("inv(", x)
     divide(a,b) ==
       ret : JuliaObjTuple := jbinfunc("divrem(",a,b)
       [ret.1 pretend %, ret.2 pretend %]
