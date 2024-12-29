@@ -185,29 +185,31 @@ JuliaObjectAggregate() : Category == Join(JuliaObjectType, Aggregate) with
 ++ Date Created: Aug, 2024
 ++ Description:
 ++  Category of rings whose elements are of type JuliaOjectType.
-JuliaObjectRing() : Category == Join(JuliaObjectType, JuliaRing) add
-  import JuliaUtilityFunctions
-  import from String
-
-  getind(a)  ==> concat(["getindex(refs,_"", JLREFID(a)$Lisp, "_")"])
-  junfunc(func, a) ==> jlref(concat([func, getind(a),")"]))
-  jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
-  jbinbop(op,a,b) ==>
-    jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
-  junbfunc(bfunc, a) ==>
-    jlEvalString(concat([bfunc, getind(a),")"]))@Boolean
-
-  zero?(x) == junbfunc("iszero(", x)
-  one?(x) == junbfunc("isone(", x)
-  x + y == jbinop("+", x, y)
-  x - y == jbinop("-", x, y)
-  - x   == junfunc("-(", x)
-  x : % * y : % == jbinop("*", x, y)
-  x : Integer * y : % == jlref(concat([string(x), "*", getind(y)]))
-  x : PositiveInteger * y : % == jlref(concat([string(x), "*", getind(y)]))
-  x : NonNegativeInteger * y : % == jlref(concat([string(x), "*", getind(y)]))
-  x ^ y : PositiveInteger == jlref(concat [getind(x), "^", string(y)])
-  x ^ y : NonNegativeInteger == jlref(concat [getind(x), "^", string(y)])
+JuliaObjectRing() : Category == Join(JuliaObjectType, JuliaRing) with
+    "*" : (NemoInteger, %) -> %
+    ++ i*x is the integer multiplication.
+  add
+    import JuliaUtilityFunctions
+    import from String
+    getind(a)  ==> concat(["getindex(refs,_"", JLREFID(a)$Lisp, "_")"])
+    junfunc(func, a) ==> jlref(concat([func, getind(a),")"]))
+    jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
+    jbinbop(op,a,b) ==>
+      jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
+    junbfunc(bfunc, a) ==>
+      jlEvalString(concat([bfunc, getind(a),")"]))@Boolean
+    zero?(x) == junbfunc("iszero(", x)
+    one?(x) == junbfunc("isone(", x)
+    x + y == jbinop("+", x, y)
+    x - y == jbinop("-", x, y)
+    - x   == junfunc("-(", x)
+    x : % * y : % == jbinop("*", x, y)
+    x : NemoInteger * y : % == jbinop("*", x, y)
+    x : Integer * y : % == jlref(concat([string(x), "*", getind(y)]))
+    x : PositiveInteger * y : % == jlref(concat([string(x), "*", getind(y)]))
+    x : NonNegativeInteger * y : % == jlref(concat([string(x), "*", getind(y)]))
+    x ^ y : PositiveInteger == jlref(concat [getind(x), "^", string(y)])
+    x ^ y : NonNegativeInteger == jlref(concat [getind(x), "^", string(y)])
 
 )abbrev domain JOBJECT JuliaObject
 ++ Generic domain for Julia objects
@@ -360,8 +362,10 @@ JuliaObjFloat64() : Exports == Implementation where
     x <= y == jbinbop("<=",x,y)
     characteristic() == 0
     x : % * a : Integer == jlref(concat [getind(x),"*",string(a)])
-    q : Fraction(Integer) * x : % ==
-      jlref(concat [toString(coerce(q)@JuliaFloat64), "*", getind(x)])
+    x : Fraction(Integer) * y : % ==
+      jlref(concat ["(",string(numer x), "//" , string(denom(x)) ")*", getind(y)])
+    x : % * y : Fraction(Integer) ==
+      jlref(concat [getind(x), "*(", string(numer(y)),"//", string(denom(y)), ")"])
     x : % / y : % == jbinop("/",x,y)
     x : % / i : Integer == jlref(concat [getind(x) , "/", string(i)])
     i : Integer / x : % == jlref(concat [string(i), "/", getind(x)])
@@ -414,6 +418,13 @@ JuliaObjComplexF64() : Exports == Implementation where
     "*" : (%, Integer) -> %
     "/" : (%, Integer) -> %
     "/" : (Integer, %) -> %
+    jlApply : (String, %) -> %
+    ++jlApply(func, x) applies the function func with x as parameter.
+    jlApply : (String, %, %) -> %
+    ++jlApply(func, x, y) applies the function func to x and y.
+    jlApply : (String, %, %, %) -> %
+    ++ jlApply(func, x, y, z) applies the function func to x,
+    ++ y and z.
     cis : % -> %
     ++ cis(x) returns exp(%i*x) computed efficiently.
     cispi : % -> %
@@ -440,8 +451,10 @@ JuliaObjComplexF64() : Exports == Implementation where
     0 == jlref("0.0+0im")
     1 == jlref("1.0+0im")
     x : % * a : Integer == jlref(concat [getind(x),"*",string(a)])
-    q : Fraction(Integer) * x : % ==
-      jlref(concat [toString(coerce(q)@JuliaFloat64), "*", getind(x)])
+    x : Fraction(Integer) * y : % ==
+      jlref(concat ["(",string(numer x), "//" , string(denom(x)) ")*", getind(y)])
+    x : % * y : Fraction(Integer) ==
+      jlref(concat [getind(x), "*(", string(numer(y)),"//", string(denom(y)), ")"])
     x :% / y : % == jbinop("/",x,y)
     x : % / i : Integer == jlref(concat [getind(x) , "/", string(i)])
     i : Integer / x : % == jlref(concat [string(i), "/", getind(x)])
@@ -641,7 +654,6 @@ JuliaObjTuple() : Exports == Implementation where
     jtuple(l : List(Any)) ==
       jlref(concat ["Tuple(",
         first lines formatExpression(l::OutputForm)$Format1D,")"])
-    -- TODO: string NRB without bracket
     jtuple(str : String) == jlref str
 
 )abbrev domain JOBDICT JuliaObjDict
@@ -709,7 +721,6 @@ JuliaObjDict() : Exports == Implementation where
       jlref(concat(["get(", getind(obj), ",", string(jsy), ", missing)"]))
     qelt(obj : %, jsy : JuliaSymbol) ==
       jlref(concat(["get(", getind(obj), ",", string(jsy), ", missing)"]))
-
     setelt!(obj : %, jany : Any, val : JuliaObject) ==
       key : String := first lines formatExpression(jany::OutputForm)$Format1D
       jlref(concat(["setindex!(", getind(obj), ",",
@@ -717,13 +728,11 @@ JuliaObjDict() : Exports == Implementation where
     setelt!(obj : %, jsy : JuliaSymbol, val : JuliaObject) ==
       jlref(concat(["setindex!(", getind(obj), ",",
         getind(val) , "," , string(jsy), ")"]))
-
     delete!(obj : %, jany : Any) ==
       key : String := first lines formatExpression(jany::OutputForm)$Format1D
       jlref(concat(["delete!(", getind(obj), ",", key, ")"]))
     delete!(obj : %, jsy : JuliaSymbol) ==
       jlref(concat(["delete!(", getind(obj), ",", string(jsy), ")"]))
-
     jdict(str : String) == jlref str
       
 )abbrev domain JFLOAT JuliaFloat
@@ -739,6 +748,7 @@ JuliaFloat() : Exports == Implementation where
   INT       ==> Integer
   JI64      ==> JuliaInt64
   PI        ==> PositiveInteger
+  NNI       ==> NonNegativeInteger
   JF64      ==> JuliaFloat64
   parsei    ==> PARSE_-INTEGER$Lisp
   Exports ==> Join(JuliaObjectRing, FloatingPointSystem, arbitraryPrecision,
@@ -755,13 +765,6 @@ JuliaFloat() : Exports == Implementation where
     ++ with absolute tolerance atol.
     ++ Two numbers compare equal if their relative distance
     ++ or their absolute distance is within tolerance bounds.
-    jlApply : (String, %) -> %
-    ++jlApply(func, obj) applies the function func with obj as parameter.
-    jlApply : (String, %, %) -> %
-    ++jlApply(func, obj1, obj2) applies the function func to obj1 and obj2.
-    jlApply : (String, %, %, %) -> %
-    ++ jlApply(func, obj1, obj2, obj3) applies the function func to obj1,
-    ++ obj2 and obj3.
     finite?   : % -> Boolean
     ++ finite?(x) tests whether or not x is finite.
     integer?  : % -> Boolean
@@ -770,6 +773,13 @@ JuliaFloat() : Exports == Implementation where
     ++ precision(x) returns the precision of x.
     precision: (%, PI) -> %
     ++ precision(x, p) returns a copy of x with precision p.
+    jlApply : (String, %) -> %
+    ++jlApply(func, x) applies the function func with x as parameter.
+    jlApply : (String, %, %) -> %
+    ++jlApply(func, x, y) applies the function func to x and y.
+    jlApply : (String, %, %, %) -> %
+    ++ jlApply(func, x, y, z) applies the function func to x,
+    ++ y and z.
     jlMPFRApply : (JuliaObject, %) -> %
     ++ jlMPFRApply(func,x) applies the function pointer func to x.
     ++ It is expected that the C function modifies the first parameters
@@ -883,7 +893,6 @@ JuliaFloat() : Exports == Implementation where
     pi()      == jlref("BigFloat(π)")
     exp1()    == jlref("BigFloat(ℯ)")
     exp()    == jlref("BigFloat(ℯ)")
-    exp()     == jlref("BigFloat(ℯ)")
     urand01() == jlref("rand(BigFloat)")
     nrand()   == jlref("randn(BigFloat)")
 
@@ -902,17 +911,22 @@ JuliaFloat() : Exports == Implementation where
 
     x : % / y : % == jbinop("/", x, y)
     x : % ^ y : % == jbinop("^", x, y)
-    x : % ^ y : Fraction(Integer) ==
-      jlref(concat [getind(x),"^(",
-        getind(coerce(numer(y))@JuliaObjBigInt), "//", _
-        getind(coerce(denom(y))@JuliaObjBigInt),")"])
     x : % * y : Integer ==
       jlref(concat([getind(x), "*", getind(coerce(y)@JuliaObjBigInt)]))
+    x : Fraction(Integer) * y : % ==
+      jlref(concat ["(",string(numer x), "//" , string(denom(x)) ")*", getind(y)])
+    x : % * y : Fraction(Integer) ==
+      jlref(concat [getind(x), "*(", string(numer(y)),"//", string(denom(y)), ")"])
     x : Integer / y : % ==
       jlref(concat([getind(coerce(x)@JuliaObjBigInt), "/", getind(y)]))
     x : % / y : Integer ==
       jlref(concat([getind(x), "/", getind(coerce(y)@JuliaObjBigInt)]))
-    x ^ y : Integer == jbinop("^", x, coerce(y)@JuliaObjBigInt)
+    x ^ y : PI == jlref(concat [getind(x), "^", string(y)])
+    x ^ y : NNI == jlref(concat [getind(x), "^", string(y)])
+    x ^ y : Integer == jlref(concat [getind(x), "^", string(y)])
+    x : % ^ y : Fraction(Integer) ==
+      jlref(concat [getind(x),"^(", string(numer(y)), "//",
+        string(denom(y)),")"])
 
     -- x quo y == jbinop("div", x, y)
     x quo y == jbinop("÷", x, y)
@@ -930,6 +944,7 @@ JuliaFloat() : Exports == Implementation where
       jlref(concat[func, "(", getind(x),",", getind(y),")"])
     jlApply(func, x, y, z) : % ==
       jlref(concat[func, "(", getind(x),",", getind(y),", ",getind(z),")"])
+
     jlMPFRApply(func, x) ==
       ret := jlref("BigFloat()")
       jlref(concat ["ccall(", getind(func),
@@ -1030,6 +1045,7 @@ JuliaComplexFloat() : Exports == Implementation where
   INT       ==> Integer
   JI64      ==> JuliaInt64
   PI        ==> PositiveInteger
+  NNI       ==> NonNegativeInteger
   JF64      ==> JuliaFloat64
   Exports ==> Join(JuliaObjectRing, ComplexCategory(JuliaFloat)) with
     jlApprox?: (%, %) -> Boolean
@@ -1042,13 +1058,6 @@ JuliaComplexFloat() : Exports == Implementation where
     ++ with absolute tolerance atol.
     ++ Two numbers compare equal if their relative distance
     ++ or their absolute distance is within tolerance bounds.
-    jlApply : (String, %) -> %
-    ++jlApply(func, obj) applies the function func with obj as parameter.
-    jlApply : (String, %, %) -> %
-    ++jlApply(func, obj1, obj2) applies the function func to obj1 and obj2.
-    jlApply : (String, %, %, %) -> %
-    ++ jlApply(func, obj1, obj2, obj3) applies the function func to obj1,
-    ++ obj2 and obj3.
     finite?   : % -> Boolean
     ++ finite?(x) tests whether or not x is finite.
     integer?  : % -> Boolean
@@ -1059,6 +1068,13 @@ JuliaComplexFloat() : Exports == Implementation where
     ++ precision(x) returns the precision of x.
     precision: (%, PI) -> %
     ++ precision(x, p) returns a copy of x with precision p.
+    jlApply : (String, %) -> %
+    ++jlApply(func, x) applies the function func with x as parameter.
+    jlApply : (String, %, %) -> %
+    ++jlApply(func, x, y) applies the function func to x and y.
+    jlApply : (String, %, %, %) -> %
+    ++ jlApply(func, x, y, z) applies the function func to x,
+    ++ y and z.
     expm1   :  % -> %
     ++ expm1(x) computes accurately ℯ^x-1. It avoids the loss of precision
     ++ involved in the direct evaluation of exp(x)-1 for small values of x.
@@ -1142,20 +1158,29 @@ JuliaComplexFloat() : Exports == Implementation where
 
     x : % / y : % == jbinop("/", x, y)
     x : % ^ y : % == jbinop("^", x, y)
-    x : % * y : Integer == jlref(concat([getind(x), "*", getind(coerce(y))]))
+    x : % * y : Integer == jlref(concat([getind(x), "*", string(y)]))
+    x : Fraction(Integer) * y : % ==
+      jlref(concat ["(",string(numer x), "//" , string(denom(x)) ")*", getind(y)])
+    x : % * y : Fraction(Integer) ==
+      jlref(concat [getind(x), "*(", string(numer(y)),"//", string(denom(y)), ")"])
     x : Integer / y : % == jlref(concat([getind(coerce(x)), "/", getind(y)]))
     x : % / y : Integer == jlref(concat([getind(x), "/", getind(coerce(y))]))
-    x ^ y : Integer == jbinop("^", x, coerce(y))
-
-    -- x quo y == jbinop("div", x, y)
-    x quo y == jbinop("÷", x, y)
-    x rem y == jbinop("%", x, y)
+    x ^ y : PI == jlref(concat [getind(x), "^", string(y)])
+    x ^ y : NNI == jlref(concat [getind(x), "^", string(y)])
+    x ^ y : Integer == jlref(concat [getind(x), "^", string(y)])
+    x : % ^ y : Fraction(Integer) ==
+      jlref(concat [getind(x),"^(", string(numer(y)), "//",
+        string(denom(y)),")"])
 
     jlApply(func, x) : % == jlref(concat[func, "(", getind(x),")"])
     jlApply(func, x, y) : % ==
       jlref(concat[func, "(", getind(x),",", getind(y),")"])
     jlApply(func, x, y, z) : % ==
       jlref(concat[func, "(", getind(x),",", getind(y),", ",getind(z),")"])
+
+    -- x quo y == jbinop("div", x, y)
+    x quo y == jbinop("÷", x, y)
+    x rem y == jbinop("%", x, y)
 
     sqrt(x)  == junfunc("√(",x)
     exp(x)   == junfunc("exp(",x)

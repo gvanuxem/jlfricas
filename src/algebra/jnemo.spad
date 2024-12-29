@@ -196,8 +196,6 @@ NemoAlgebraicNumber() : Exports == Implementation where
       -- TODO
       -- PolynomialFactorizationExplicit,
       CharacteristicZero, DifferentialRing) with
-    "*"     : (%, Integer) -> %
-    ++ a*z multitiplies a by the integer z.
     "^"     : (%, %) -> %
     ++ a^b returns the value of a raised to power b.
     integer?  : % -> Boolean
@@ -352,18 +350,14 @@ NemoAlgebraicNumber() : Exports == Implementation where
       -- TODO: interpret a SUP()?
 
     inv(x) == junfunc("inv(", x)
-    - x   == junfunc("-(", x)
-    x : % + y : % == jbinop("+", x, y)
-    x : % - y : % == jbinop("-", x, y)
-    x : % * y : % == jbinop("*", x, y)
-    x / y : % == jbinop("/", x, y)
+    x :% / y : % == jbinop("/", x, y)
     x : % ^ y : % == jbinop("^", x, y)
     x : % * y : Integer == jlref(concat [getind(x),"*", string(y)])
-    x : NonNegativeInteger * y : % == jlref(concat [string(x),"*", getind(y)])
     x : % * y : NemoInteger == jbinop("*", x, y)
-    x * y : Fraction Integer == jbinop("*", x, coerce(y)@NemoFraction(NemoInteger))
-
-    x ^ y : NNI == jlref(concat [getind(x), "^", string(y)])
+    x : % * y : NemoFraction(NemoInteger) == jbinop("*", x, y)
+    x * y : Fraction Integer ==
+      jlref(concat [getind(x), "*(", string(numer(y)),
+        "//", string(denom(y)),")"])
     x ^ y : Integer == jlref(concat [getind(x), "^", string(y)])
     x ^ y : Fraction(Integer) ==
       jlref(concat[ getind(x), "^(", string(numer(y)),"//", string(denom(y)),")"])
@@ -472,13 +466,7 @@ NemoIntegerMod(p : PositiveInteger) : Exports == Implementation where
         ConvertibleTo(Integer), StepThrough) with
     "*"     : (%, Integer) -> %
     ++ * \undocumented
-    "*"     : (Integer, %) -> %
-    ++ * \undocumented
     "*"     : (%, NemoInteger) -> %
-    ++ * \undocumented
-    "*"     : (NemoInteger, %) -> %
-    ++ * \undocumented
-    "*"     : (%, Integer) -> %
     ++ * \undocumented
     coerce  : Integer -> %
     ++ coerce \undocumented
@@ -517,11 +505,7 @@ NemoIntegerMod(p : PositiveInteger) : Exports == Implementation where
         m
 
     x : % * y : NemoInteger == jbinop("*", x, y)
-    x : NemoInteger * y : % == jbinop("*", x, y)
     x : % * y : Integer == jlref(concat [getind(x), "*", string(y)])
-
-    x ^ y : PI == jlref(concat [getind(x), "^", string(y)])
-    x ^ y : NNI == jlref(concat [getind(x), "^", string(y)])
     recip(x) ==
       zero?(x) => "failed"
       junfunc("recip(",x)
@@ -539,7 +523,7 @@ NemoIntegerMod(p : PositiveInteger) : Exports == Implementation where
     coerce(i : %) : OutputForm == string(i) pretend OutputForm
 
 )abbrev domain NPF NemoPrimeField
-++ Experimental domain for Nemo Galois Fields
+++ Domain for Nemo Galois Fields
 ++ Author: G. Vanuxem
 ++ Date Created: Feb. 2024
 ++ Description:
@@ -558,10 +542,6 @@ NemoPrimeField(p : PositiveInteger) : Exports == Implementation where
     order    : () -> NNI
     ++ order \undocumented
     "*"      : (%, NemoInteger) -> %
-    ++ * \undocumented
-    "*"      : (NemoInteger, %) -> %
-    ++ * \undocumented
-    "*"      : (Integer, %) -> %
     ++ * \undocumented
     "*"      : (%, Integer) -> %
     ++ * \undocumented
@@ -606,16 +586,18 @@ NemoPrimeField(p : PositiveInteger) : Exports == Implementation where
     generator? x == junbfunc("is_gen(",x)
 
     x : % * y : NemoInteger == jbinop("*", x, y)
-    x : NemoInteger * y : % == jbinop("*", x, y)
     x : % * y : Integer == jlref(concat [getind(x), "*", string(y)])
     x : % / y : % == jbinop("/", x, y)
-    recip x ==
-      zero? x => "failed"
-      junfunc("inv(", x)
+    x * y : Fraction Integer ==
+      jlref(concat [getind(x), "*(", string(numer(y)),
+        "//", string(denom(y)),")"])
+    x ^ y : Integer == jlref(concat [getind(x), "^", string(y)])
+    recip(x) ==
+      zero?(x) => "failed"
+      junfunc("recip(",x)
     x quo y == jbinop("÷", x, y)
     -- x quo y == jbinop("div", x, y)
     x rem y == jbinop("%", x, y)
-
 
     nextItem(n) ==
       m := n+1
@@ -690,8 +672,6 @@ NemoFiniteField(p : PositiveInteger, n: PositiveInteger) : Exports == Implementa
     ++ order \undocumented
     "*"      : (%, NemoInteger) -> %
     ++ * \undocumented
-    "*"      : (NemoInteger, %) -> %
-    ++ * \undocumented
     "*"      : (%, Integer) -> %
     ++ * \undocumented
     sqrt     : % -> %
@@ -737,7 +717,6 @@ NemoFiniteField(p : PositiveInteger, n: PositiveInteger) : Exports == Implementa
       jlEvalString(concat(["is_absolute(", NFF,")"]))@Boolean   
 
     x : % * y : NemoInteger == jbinop("*", x, y)
-    x : NemoInteger * y : % == jbinop("*", x, y)
     x : % * y : Integer == jlref(concat [getind(x), "*", string(y)])
     x : % / y : % == jbinop("/", x, y)
 
@@ -1048,20 +1027,15 @@ InnerNemoExactComplexField(Options : JuliaObjDict) : Exports ==
     floor x == junfunc("floor(",x)
     ceiling x == junfunc("ceil(",x) 
 
-    x + y == jbinop("+", x, y)
-    x - y == jbinop("-", x, y)
-    - x   == junfunc("-(", x)
-    x : % * y : % == jbinop("*", x, y)
     x : % / y : % == jbinop("//", x, y)
     x : % ^ y : % == jbinop("^", x, y)
     x : % * y : Integer == jlref(concat([getind(x), "*", string(y)]))
+    x : % * y : Fraction(Integer) ==
+      jlref(concat [getind(x), "*(",
+        string(numer(y)),"//", string(denom(y)), ")"])
     x : Integer / y : % == jlref(concat([string(x), "//", getind(y)]))
     x : % / y : Integer == jlref(concat([getind(x), "//", string(y)]))
 
-    x ^ y : PI ==
-      jlref(concat [getind(x), "^", string(y)])
-    x ^ y : NNI ==
-      jlref(concat [getind(x), "^", string(y)])
     x ^ y : Integer ==
       jlref(concat [getind(x),"^" string(y)])
     x ^ y : Fraction(Integer) ==
