@@ -176,12 +176,15 @@ NemoArbField(p: PositiveInteger) : Exports == Implementation where
       "failed"
     setUnion(x,y) == jbinfunc("setunion(",x,y)
 
-    x = y  == jbinbop("==",x,y)
-    x ~= y == jbinbop("!=",x,y)
-    x < y  == jbinbop("<",x,y)
-    x > y  == jbinbop(">",x,y)
-    x >= y == jbinbop(">=",x,y)
-    x <= y == jbinbop("<=",x,y)
+    -- Why??? Only Arb
+    x = y  == jbinbfunc("isequal(",x,y)
+    x ~= y == jbinbfunc("!isequal(",x,y)
+    x < y  == jbinbfunc("isless(",x,y)
+    x > y  ==
+      jlEvalString(concat ["!isless(", getind(x),",",getind(y),")&&!isequal(",getind(x),",", getind(y),")"])
+    x >= y == jbinbfunc("!isless(",x,y)
+    x <= y ==
+      jlEvalString(concat ["isless(", getind(x),",",getind(y),")||isequal(",getind(x),",", getind(y),")"])
 
     zero? x == junbfunc("iszero(", x)
     one? x == junbfunc("isone(", x)
@@ -479,8 +482,9 @@ NemoAcbField(p: PositiveInteger) : Exports == Implementation where
     real(x) == junfunc("real(", x)
     imag(x) == junfunc("imag(", x)
 
-    x = y  == jbinbop("==",x,y)
-    x ~= y == jbinbop("!=",x,y)
+    -- Why??? Only Arb
+    x = y  == jbinbfunc("isequal(",x,y)
+    x ~= y == jbinbfunc("!isequal(",x,y)
 
     zero? x == junbfunc("iszero(",x)
     one? x == junbfunc("isone(",x)
@@ -763,12 +767,15 @@ NemoRealField() : Exports == Implementation where
       "failed"
     setUnion(x,y) == jbinfunc("setunion(",x,y)
 
-    x = y  == jbinbop("==",x,y)
-    x ~= y == jbinbop("!=",x,y)
-    x < y  == jbinbop("<",x,y)
-    x > y  == jbinbop(">",x,y)
-    x >= y == jbinbop(">=",x,y)
-    x <= y == jbinbop("<=",x,y)
+    -- Why??? Only Arb
+    x = y  == jbinbfunc("isequal(",x,y)
+    x ~= y == jbinbfunc("!isequal(",x,y)
+    x < y  == jbinbfunc("isless(",x,y)
+    x > y  ==
+      jlEvalString(concat ["!isless(", getind(x),",",getind(y),")&&!isequal(",getind(x),",", getind(y),")"])
+    x >= y == jbinbfunc("!isless(",x,y)
+    x <= y ==
+      jlEvalString(concat ["isless(", getind(x),",",getind(y),")||isequal(",getind(x),",", getind(y),")"])
 
     zero? x == junbfunc("iszero(", x)
     one? x == junbfunc("isone(", x)
@@ -1051,8 +1058,9 @@ NemoComplexField() : Exports == Implementation where
     exp1() == jlref("exp(NCF(1))")
     exp() == jlref("exp(NCF(1))")
 
-    x = y  == jbinbop("==",x,y)
-    x ~= y == jbinbop("!=",x,y)
+    -- Why??? Only Arb
+    x = y  == jbinbfunc("isequal(",x,y)
+    x ~= y == jbinbfunc("!isequal(",x,y)
 
     zero? x == junbfunc("iszero(",x)
     one? x == junbfunc("isone(",x)

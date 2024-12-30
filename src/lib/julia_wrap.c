@@ -35,7 +35,7 @@ int8_t jl_bool_eval_string(char* code)
                 jl_exception_occurred());
         jl_printf(jl_stderr_stream(), "\n");
         jl_exception_clear();
-        return(0);
+        return(-1);
     }
     return jl_unbox_bool(result);
 }
@@ -525,7 +525,7 @@ int8_t jl_call_bool_function_flt_flt(const char* function, float arg1, float arg
                 jl_exception_occurred());
         jl_printf(jl_stderr_stream(), "\n");
         jl_exception_clear();
-        return(0);
+        return(-1);
     }
     return jl_unbox_bool(ret);
 }
@@ -541,7 +541,7 @@ int8_t jl_call_bool_function_dbl_dbl(const char* function, double arg1, double a
                 jl_exception_occurred());
         jl_printf(jl_stderr_stream(), "\n");
         jl_exception_clear();
-        return(0);
+        return(-1);
     }
     return jl_unbox_bool(ret);
 }
@@ -865,7 +865,7 @@ int8_t jl_call_bool_1d2ffunction(int64_t cplx, const char* func,
                 jl_exception_occurred());
         jl_printf(jl_stderr_stream(), "\n");
         jl_exception_clear();
-        return(0);
+        return(-1);
     }
     return jl_unbox_bool(ret);
 }
@@ -890,7 +890,7 @@ int8_t jl_call_bool_1d2function(int64_t cplx, const char* func,
                 jl_exception_occurred());
         jl_printf(jl_stderr_stream(), "\n");
         jl_exception_clear();
-        return(0);
+        return(-1);
     }
     return jl_unbox_bool(ret);
 }
@@ -1663,7 +1663,7 @@ int8_t jl_call_bool_2dffunction(int64_t cplx, const char* func,
                 jl_exception_occurred());
         jl_printf(jl_stderr_stream(), "\n");
         jl_exception_clear();
-        return(0);
+        return(-1);
     }
     return jl_unbox_bool(ret);
 }
@@ -1690,7 +1690,7 @@ int8_t jl_call_bool_2dfunction(int64_t cplx, const char* func,
                 jl_exception_occurred());
         jl_printf(jl_stderr_stream(), "\n");
         jl_exception_clear();
-        return(0);
+        return(-1);
     }
     return jl_unbox_bool(ret);
 }
@@ -2038,7 +2038,7 @@ int8_t jl_call_bool_2d2ffunction(int64_t cplx, const char* func,
                 jl_exception_occurred());
         jl_printf(jl_stderr_stream(), "\n");
         jl_exception_clear();
-        return(0);
+        return(-1);
     }
     return jl_unbox_bool(ret);
 }
@@ -2072,7 +2072,7 @@ int8_t jl_call_bool_2d2function(int64_t cplx, const char* func,
                 jl_exception_occurred());
         jl_printf(jl_stderr_stream(), "\n");
         jl_exception_clear();
-        return(0);
+        return(-1);
     }
     return jl_unbox_bool(ret);
 }
