@@ -34,7 +34,7 @@ JuliaWSObject() : Category == JuliaObjectType with
 
     jlEvalString("Interpret=W_`Interpreter_`")@Void
 
-    getind(a)  ==> concat(["getindex(refs, _"", jlId a, "_")"])
+    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
     jbinfunc(func,a,b) ==>
       jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
@@ -100,7 +100,7 @@ JuliaWSNumber() : Category == JuliaWSRing
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 JuliaWSSymbol() : Exports == Implementation where
   INT ==> Integer
-  getind(a)  ==> concat(["getindex(refs, _"", jlId a, "_")"])
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
   Exports ==> JuliaWSObject with
     WReal     : () -> %
     ++ WReal() returns the WS Real symbol.
@@ -192,7 +192,7 @@ JuliaWSSymbol() : Exports == Implementation where
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 JuliaWSInteger() : Exports == Implementation where
   INT       ==> Integer
-  getind(a) ==> concat(["getindex(refs, _"", jlId a, "_")"])
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
   parsei ==> PARSE_-INTEGER$Lisp
   Exports ==> Join(JuliaWSNumber, IntegerNumberSystem,
                   Canonical, canonicalsClosed) with
@@ -311,7 +311,7 @@ JuliaWSInteger() : Exports == Implementation where
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 JuliaWSRational() : Exports == Implementation where
   INT ==> Integer
-  getind(a)  ==> concat(["getindex(refs, _"", jlId a, "_")"])
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
   parsei ==> PARSE_-INTEGER$Lisp
   Exports ==> Join(JuliaWSNumber,
       QuotientFieldCategory(JuliaWSInteger)) with
@@ -422,7 +422,7 @@ JuliaWSRational() : Exports == Implementation where
 JuliaWSReal() : Exports == Implementation where
   INT   ==> Integer
   JF64  ==> JuliaFloat64
-  getind(a) ==> concat(["getindex(refs, _"", jlId a, "_")"])
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
   Exports ==> Join(JuliaWSNumber, FloatingPointSystem,
                     DifferentialRing, ElementaryFunctionCategory,
                     TranscendentalFunctionCategory,
@@ -707,7 +707,7 @@ JuliaWSReal() : Exports == Implementation where
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 JuliaWSAPReal(prec : PositiveInteger) : Exports == Implementation where
   INT ==> Integer
-  getind(a) ==> concat(["getindex(refs, _"", jlId a, "_")"])
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
   Exports ==> Join(JuliaWSNumber, FloatingPointSystem, arbitraryPrecision,
                     DifferentialRing, ElementaryFunctionCategory,
                     TranscendentalFunctionCategory,
@@ -1002,7 +1002,7 @@ JuliaWSAPReal(prec : PositiveInteger) : Exports == Implementation where
 JuliaWSGaussianInteger() : Exports == Implementation where
   INT ==> Integer
   parsei ==> PARSE_-INTEGER$Lisp
-  getind(a)  ==> concat(["getindex(refs, _"", jlId a, "_")"])
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
   Exports ==> Join(JuliaWSNumber, ComplexCategory(JuliaWSInteger)) with
     random   : JuliaWSInteger -> %
     ++ random(n) returns a gaussian integer where real part is in the range 0..n
@@ -1103,7 +1103,7 @@ JuliaWSGaussianInteger() : Exports == Implementation where
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 JuliaWSComplex() : Exports == Implementation where
   INT ==> Integer
-  getind(a)  ==> concat(["getindex(refs, _"", jlId a, "_")"])
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
   Exports ==> Join(JuliaWSNumber, ComplexCategory(JuliaWSReal),
                 ElementaryFunctionCategory, TranscendentalFunctionCategory,
                 LiouvillianFunctionCategory) with
@@ -1339,7 +1339,7 @@ JuliaWSComplex() : Exports == Implementation where
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 JuliaWSAPComplex(prec : PositiveInteger) : Exports == Implementation where
   INT ==> Integer
-  getind(a)  ==> concat(["getindex(refs, _"", jlId a, "_")"])
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
   Exports ==> Join(JuliaWSNumber, ComplexCategory(JuliaWSAPReal(prec)),
                 ElementaryFunctionCategory, TranscendentalFunctionCategory,
                 LiouvillianFunctionCategory) with

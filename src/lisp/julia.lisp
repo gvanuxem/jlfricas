@@ -19,7 +19,7 @@
 (foreign-defs
 (fricas-foreign-call boot::|jl_eval_string| "jl_eval_str" void
         (command c-string))
-(fricas-foreign-call boot::|jl_int64_eval_string| "jl_int64_eval_string" int
+(fricas-foreign-call boot::|jl_int64_eval_string| "jl_int64_eval_string" long
         (command c-string))
 (fricas-foreign-call boot::|jl_dbl_eval_string| "jl_dbl_eval_string" double
         (command c-string))
@@ -29,7 +29,7 @@
         (func c-string) (arg1 double) (arg2 double))
 (fricas-foreign-call boot::|jl_function_dbl_dbl_dbl| "jl_call_function_dbl_dbl_dbl" void
         (func c-string) (arg1 double) (arg2 double) (arg3 double))
-(fricas-foreign-call boot::|jl_int64_function_dbl| "jl_call_int64_function_dbl" int
+(fricas-foreign-call boot::|jl_int64_function_dbl| "jl_call_int64_function_dbl" long
         (func c-string) (arg double))
 (fricas-foreign-call boot::|jl_dbl_function_dbl| "jl_call_dbl_function_dbl" double
         (func c-string) (arg double))
@@ -38,11 +38,11 @@
 (fricas-foreign-call boot::|jl_dbl_function_dbl_dbl_dbl| "jl_call_dbl_function_dbl_dbl_dbl" double
         (func c-string) (arg1 double) (arg2 double) (arg3 double))
 (fricas-foreign-call boot::|jl_dbl_function_dbl_int64| "jl_call_dbl_function_dbl_int64" double
-        (func c-string) (arg1 double) (arg2 int))
+        (func c-string) (arg1 double) (arg2 long))
 (fricas-foreign-call boot::|jl_dbl_function_int64_dbl| "jl_call_dbl_function_int64_dbl" double
-        (func c-string) (arg1 int) (arg2 double))
+        (func c-string) (arg1 long) (arg2 double))
 (fricas-foreign-call boot::|jl_delete_wrapped_index| "jl_delete_wrapped_index"
-        void (idx c-string))
+        void (idx long))
 
 ; 32 bits floating point numbers
 (fricas-foreign-call boot::|jl_flt_eval_string| "jl_flt_eval_string" float
@@ -53,7 +53,7 @@
         (func c-string) (arg1 float) (arg2 float))
 (fricas-foreign-call boot::|jl_function_flt_flt_flt| "jl_call_function_flt_flt_flt" void
         (func c-string) (arg1 float) (arg2 float) (arg3 float))
-(fricas-foreign-call boot::|jl_int64_function_flt| "jl_call_int64_function_flt" int
+(fricas-foreign-call boot::|jl_int64_function_flt| "jl_call_int64_function_flt" long
         (func c-string) (arg float))
 (fricas-foreign-call boot::|jl_flt_function_flt| "jl_call_flt_function_flt" float
         (func c-string) (arg float))
@@ -62,9 +62,9 @@
 (fricas-foreign-call boot::|jl_flt_function_flt_flt_flt| "jl_call_flt_function_flt_flt_flt" float
         (func c-string) (arg1 float) (arg2 float) (arg3 float))
 (fricas-foreign-call boot::|jl_flt_function_flt_int64| "jl_call_flt_function_flt_int64" float
-        (func c-string) (arg1 float) (arg2 int))
+        (func c-string) (arg1 float) (arg2 long))
 (fricas-foreign-call boot::|jl_flt_function_int64_flt| "jl_call_flt_function_int64_flt" float
-        (func c-string) (arg1 int) (arg2 float))
+        (func c-string) (arg1 long) (arg2 float))
 
 #+:sbcl
 (progn
@@ -78,10 +78,10 @@
     c-string (func c-string) (arg float))
 (fricas-foreign-call boot::|jl_string_function_dbl| "jl_call_string_function_dbl"
     c-string (func c-string) (arg double))
-(fricas-foreign-call boot::|jl_string_getindex| "jl_getindex_wrapped_index"
-    c-string (index c-string))
+(fricas-foreign-call boot::|jl_string_getindex| "jl_stringify_wrapped_index"
+    c-string (index long))
 (fricas-foreign-call boot::|jl_setindex_wrap_eval_string| "jl_setindex_wrap_eval_string"
-    c-string (index c-string) (command c-string))
+    long (index long) (command c-string))
 (fricas-foreign-call boot::|jl_bool_function_flt_flt| "jl_call_bool_function_flt_flt"
     bool (func c-string) (arg1 float) (arg2 float))
 )
@@ -98,10 +98,10 @@
         (func c-string) (arg float))
 (fricas-foreign-call jl_string_function_dbl "jl_call_string_function_dbl" c-string
         (func c-string) (arg double))
-(fricas-foreign-call jl_getindex_wrapped_index "jl_getindex_wrapped_index" c-string
-    (index c-string))
+(fricas-foreign-call jl_stringify_wrapped_index "jl_stringify_wrapped_index" c-string
+    (index long))
 (fricas-foreign-call jl_setindex_wrap_eval_string "jl_setindex_wrap_eval_string"
-    c-string (index c-string) (command c-string))
+    long (index long) (command c-string))
 (fricas-foreign-call jl_bool_function_flt_flt "jl_call_bool_function_flt_flt" bool
         (func c-string) (arg1 float) (arg2 float))
 )
@@ -120,14 +120,81 @@
 (defmacro boot::|jl_string_function_dbl| (func dbl)
     `(ccl::%get-utf-8-cstring (jl_string_function_dbl ,func ,dbl)))
 (defmacro boot::|jl_string_getindex| (index)
-    `(ccl::%get-utf-8-cstring (jl_getindex_wrapped_index ,index)))
-(defmacro boot::|jl_setindex_wrap_eval_string| (index str)
-    `(ccl::%get-utf-8-cstring (jl_setindex_wrap_eval_string ,index ,str)))
+    `(ccl::%get-utf-8-cstring (jl_stringify_wrapped_index ,index)))
 (defmacro boot::|jl_bool_function_flt_flt| (func arg1 arg2)
     `(if (eq (jl_bool_function_flt_flt ,func ,arg1 ,arg2)  0) nil t))
+(defmacro boot::|jl_setindex_wrap_eval_string| (index str)
+    `(jl_setindex_wrap_eval_string ,index ,str))
 )
 
 (in-package "BOOT")
+
+(defclass jlref ()
+    ((id  :reader jlrefId   :initarg :id)
+    (jtype :accessor jlrefType :initarg :jtype))
+    (:default-initargs :id nil :jtype nil))
+
+(defmethod print-object((obj jlref) stream)
+    (print-unreadable-object (obj stream :type t :identity t)
+        (princ (concatenate 'string (jlrefType obj) " ") stream)
+        (princ (jlrefId obj) stream)))
+
+(defun |make_jlref| (str)
+    (let* ((index (random most-positive-fixnum))
+            (id (|jl_setindex_wrap_eval_string| index str)))
+        (if (not (eq id 0)) ; unless str code is wrong
+            (let ((ret (make-instance 'jlref :id id
+                    :jtype (|jl_string_eval_string|
+                        (concatenate 'string "string(typeof(getindex(refs," (princ-to-string id) ")))")))))
+                    #+:sbcl (sb-ext:finalize ret (lambda ()
+                        (sb-concurrency:enqueue index *jqueue*)))
+                ret)
+            (error "Invalid command given to Julia"))))
+
+(defun |make_jlref_from_fvec| (cplx vec)
+    (let ((id (|jl_wrap_1dfarray| cplx vec)))
+        (if (not (equal id ""))
+            (let ((ret (make-instance 'jlref :id id
+                    :jtype (|jl_string_eval_string|
+                        (concatenate 'string "string(typeof(getindex(refs," (princ-to-string id) ")))")))))
+                    #+:sbcl (sb-ext:finalize ret (lambda ()
+                        (sb-concurrency:enqueue index *jqueue*)))
+                ret)
+            (error "Invalid vector given to Julia"))))
+
+(defun |make_jlref_from_vec| (cplx vec)
+    (let ((id (|jl_wrap_1darray| cplx vec)))
+        (if (not (equal id ""))
+            (let ((ret (make-instance 'jlref :id id
+                    :jtype (|jl_string_eval_string|
+                        (concatenate 'string "string(typeof(getindex(refs," (princ-to-string id) ")))")))))
+                    #+:sbcl (sb-ext:finalize ret (lambda ()
+                        (sb-concurrency:enqueue index *jqueue*)))
+                ret)
+            (error "Invalid vector given to Julia"))))
+
+(defun |make_jlref_from_fmat| (cplx mat m)
+    (let ((id (|jl_wrap_2dfarray| cplx mat m)))
+        (if (not (equal id ""))
+            (let ((ret (make-instance 'jlref :id id
+                    :jtype (|jl_string_eval_string|
+                        (concatenate 'string "string(typeof(getindex(refs," (princ-to-string id) ")))")))))
+                    #+:sbcl (sb-ext:finalize ret (lambda ()
+                        (sb-concurrency:enqueue index *jqueue*)))
+                ret)
+            (error "Invalid matrix given to Julia"))))
+
+(defun |make_jlref_from_mat| (cplx mat m)
+    (let ((id (|jl_wrap_2darray| cplx mat m)))
+        (if (not (equal id ""))
+            (let ((ret (make-instance 'jlref :id id
+                    :jtype (|jl_string_eval_string|
+                        (concatenate 'string "string(typeof(getindex(refs," (princ-to-string id) ")))")))))
+                    #+:sbcl (sb-ext:finalize ret (lambda ()
+                        (sb-concurrency:enqueue index *jqueue*)))
+                ret)
+            (error "Invalid matrix given to Julia"))))
+
 
 ;;; Floating point macros
 
@@ -176,6 +243,7 @@
 (defmacro |zero?_SF| (x) `(ZEROP (the single-float ,x)))
 (defmacro |negative?_SF| (x) `(MINUSP (the single-float ,x)))
 
+; TODO: also a C function (why ?)
 (defun |jl_stringify_wrapped_index| (func mime index)
     ;(concatenate 'string (string #\newline)
     (uiop:split-string
@@ -224,7 +292,7 @@
 (defmacro make_cf_array1 (n)
    `(make-array (list (* 2 ,n)) :element-type 'single-float))
 
-; int 64 array creation
+; Int 64 array creation
 ; 1D
 
 (defmacro |make_int64_array1| (size)

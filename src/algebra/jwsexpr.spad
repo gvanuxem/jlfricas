@@ -11,7 +11,7 @@
 -- interval({-2, 2})
 -- limit etc. "x=0" assignment vs. jlEval
 JuliaWSExpression() : Exports == Implementation where
-  getind(a)  ==> concat(["getindex(refs, _"", jlId a, "_")"])
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
   JWSL  ==> JuliaWSList
   JF64  ==> JuliaFloat64
   Exports ==> Join(JuliaWSAggregate(%), PartialOrder, JuliaWSRing,

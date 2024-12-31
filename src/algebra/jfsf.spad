@@ -55,7 +55,7 @@ JuliaFloatSpecialFunctions() : Exports == Implementation where
     ++ deg2rad(x) converts x to radian, where x is in degrees.
 
   Implementation ==> add
-    getind(a)  ==> concat(["getindex(refs,_"", jlId a, "_")"])
+    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     ldexp(x,n) == jlref(concat(["ldexp(", getind(x), ",", string(n), ")"]))$JF
 
     sinpi(x) == jlApply("sinpi", x)

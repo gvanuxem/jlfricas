@@ -145,7 +145,7 @@ NemoUnivariatePolynomial(R : NemoRing, x : Symbol):
     NUPRing := jlRegexReplace(jlRegex("[(|)|\s]"),
       jlSubstitute(""), NUPRing)
 
-    getind(a) ==> concat(["getindex(refs,_"", jlId(a), "_")"])
+    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
     junfunc(op, a) ==> jlref(concat([op, getind(a),")"]))
     jbinfunc(func,a,b) ==> 
@@ -437,7 +437,7 @@ NemoUnivariateLaurentPolynomial(R : NemoRing, x : Symbol):
     NULPRing := concat(["ULP",FORMAT(false, "~a", tmp)$Lisp,string(x)])
     NULPRing := jlRegexReplace(jlRegex("[(|)|\s]"), jlSubstitute(""), NULPRing)
 
-    getind(a) ==> concat(["getindex(refs,_"", jlId(a), "_")"])
+    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
     junfunc(op, a) ==> jlref(concat([op, getind(a),")"]))
     jbinfunc(func,a,b) ==> 
@@ -728,7 +728,7 @@ NemoMultivariatePolynomial(R : NemoRing, VarSet : List Symbol,
     -- Our Julia ring
     NMPRing := concat([NMPRing, concat(lvars)])
 
-    getind(a) ==> concat(["getindex(refs,_"", jlId(a), "_")"])
+    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
     junfunc(op, a) ==> jlref(concat([op, getind(a),")"]))
     jbinfunc(func,a,b) ==> 
@@ -1103,7 +1103,7 @@ NemoMultivariateLaurentPolynomial(R : NemoRing,
     -- Our Julia ring
     NMLPRing := concat([NMLPRing, concat(lvars)])
 
-    getind(a) ==> concat(["getindex(refs,_"", jlId(a), "_")"])
+    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
     junfunc(op, a) ==> jlref(concat([op, getind(a),")"]))
     jbinfunc(func,a,b) ==> 

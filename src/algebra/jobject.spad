@@ -9,7 +9,7 @@ JuliaObjectType() : Category == JuliaType() with
     jlref   : String -> %
     ++ jlref(str) evaluates the Julia command str and returns
     ++ the corresponding FriCAS Julia object.
-    jlId    : % -> String
+    jlId    : % -> JuliaInt64
     ++ jlId(obj) returns the Julia indexed dictionary index related
     ++ to the object obj.
     jlType  : % -> String
@@ -67,7 +67,7 @@ JuliaObjectType() : Category == JuliaType() with
     import from JuliaSymbol
     import from String
 
-    getind(a) ==> concat(["getindex(refs,_"", jlId(a), "_")"])
+    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     junfunc(func, a) ==> jlref(concat([func, "(", getind(a),")"]))
     jbinfunc(func,a,b) ==>
       jlref(concat([func, "(", getind(a), ",", getind(b),")"]))
@@ -86,8 +86,8 @@ JuliaObjectType() : Category == JuliaType() with
         error concat(func, " is not defined in Julia")
 
     jlref(cmd)   == make_jlref(cmd)$Lisp  
-    jlId(obj)    == JLREFID(obj)$Lisp pretend String
-    jlType(obj)  == JLREFTYPE(obj)$Lisp pretend String
+    jlId(obj)    == JLREFID(obj)$Lisp
+    jlType(obj)  == JLREFTYPE(obj)$Lisp
     jlRef(obj)   == obj pretend SExpression
 
     x = y ==
@@ -160,8 +160,7 @@ JuliaObjectAggregate() : Category == Join(JuliaObjectType, Aggregate) with
     import from JuliaUtilityFunctions
     import from String
 
-    getind(a) ==> concat(["getindex(refs,_"",
-      JLREFID(a)$Lisp pretend String, "_")"])
+    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     elt(obj : %, jsy : JuliaSymbol) ==
       defined := concat(["hasproperty(", getind(obj), ",",
         str := string(jsy), ")"])
@@ -191,7 +190,7 @@ JuliaObjectRing() : Category == Join(JuliaObjectType, JuliaRing) with
   add
     import JuliaUtilityFunctions
     import from String
-    getind(a)  ==> concat(["getindex(refs,_"", JLREFID(a)$Lisp, "_")"])
+    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     junfunc(func, a) ==> jlref(concat([func, getind(a),")"]))
     jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
     jbinbop(op,a,b) ==>
@@ -250,7 +249,7 @@ JuliaObject() : Exports == Implementation where
 
     jlInitialize(true)
     Rep := SExpression
-    getind(a)  ==> concat(["getindex(refs,_"", jlId a, "_")"])
+    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     jlCollect(obj) == jlref(concat ["collect(", getind(obj),")"])
     coerce(jsy : JuliaSymbol ) == jlref(convert(jsy))
     coerce(i: Integer) == jlref(string i)
@@ -343,7 +342,7 @@ JuliaObjFloat64() : Exports == Implementation where
     import from JuliaUtilityFunctions
     import from String
 
-    getind(a)  ==> concat(["getindex(refs,_"", jlId a, "_")"])
+    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
     junfunc(func, a) ==> jlref(concat([func, getind(a),")"]))
     jbinfunc(func,a,b) ==>
@@ -441,7 +440,7 @@ JuliaObjComplexF64() : Exports == Implementation where
     jlInitialize(true)
     Rep := SExpression
 
-    getind(a)  ==> concat(["getindex(refs,_"", jlId a, "_")"])
+    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
     junfunc(func,a) ==> jlref(concat([func, getind(a), ")"]))
     jbinfunc(func,a,b) ==>
@@ -488,7 +487,7 @@ JuliaObjInt64() : Exports == Implementation where
     jlInitialize(true)
     Rep := SExpression
 
-    getind(a)  ==> concat(["getindex(refs,_"", jlId a, "_")"])
+    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     jbinbop(op,a,b) ==>
       jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
     jbinfunc(func,a,b) ==>
@@ -553,7 +552,7 @@ JuliaObjBigInt() : Exports == Implementation where
     jlInitialize(true)
     Rep := SExpression
 
-    getind(a)  ==> concat(["getindex(refs,_"", jlId a, "_")"])
+    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     jbinbop(op,a,b) ==>
       jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
     jbinfunc(func,a,b) ==>
@@ -621,8 +620,7 @@ JuliaObjPair(F : JuliaObjectType, L : JuliaObjectType)
 
     jlInitialize(true)
     Rep := SExpression
-    getind(a) ==> concat(["getindex(refs,_"",
-      JLREFID(a)$Lisp pretend String, "_")"])    
+    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])   
     first(pair) : F == jlref(concat [getind(pair), "[1]" ])$F
     last(pair) : L == jlref(concat [getind(pair), "[2]" ])$L
     jpair(str : String) == jlref str
@@ -702,8 +700,7 @@ JuliaObjDict() : Exports == Implementation where
     jlInitialize(true)
     Rep := SExpression
 
-    getind(a) ==> concat(["getindex(refs,_"",
-      JLREFID(a)$Lisp pretend String, "_")"])
+    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     elt(obj : %, jany : Any) ==
       key : String := first lines formatExpression(jany::OutputForm)$Format1D
       defined := concat(["haskey(", getind(obj), ",", key, ")"])
@@ -864,7 +861,7 @@ JuliaFloat() : Exports == Implementation where
     -- For direct access to MPFR via C call (LLVM)
     jlEvalString("using Base.MPFR: MPFRRoundingMode, ROUNDING_MODE")@Void
 
-    getind(a)  ==> concat(["getindex(refs,_"", jlId a, "_")"])
+    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     junfunc(func, a) ==> jlref(concat([func, getind(a),")"]))
     jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
     jbinfunc(func,a,b) ==>
@@ -1121,7 +1118,7 @@ JuliaComplexFloat() : Exports == Implementation where
 
     jlInitialize(true)
     Rep := SExpression
-    getind(a)  ==> concat(["getindex(refs,_"", jlId a, "_")"])
+    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
 
     junfunc(func, a) ==> jlref(concat([func, getind(a),")"]))
     jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
@@ -1260,7 +1257,7 @@ JuliaDataFrame() : Exports == Implementation where
   PI  ==> PositiveInteger
   NNI ==> NonNegativeInteger
   Z   ==> Integer
-  getind(a)  ==> concat(["getindex(refs,_"", jlId a, "_")"])
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
   Exports ==> JuliaObjectAggregate() with
     --elt : (%, JuliaSymbol) -> JuliaVector(JuliaObject)
     --++ elt(obj, sym) returns the property sym of obj.
@@ -1355,7 +1352,7 @@ JuliaVector(R : JuliaObjectType) : Exports == Implementation where
     import from JuliaUtilityFunctions
     import from String
 
-    getind(a) ==> concat(["getindex(refs,_"", jlId a, "_")"])
+    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
     junfunc(func,a) ==> jlref(concat([func, getind(a),")"]))
     jbinfunc(func,a,b) ==>
@@ -1594,7 +1591,7 @@ JuliaMatrix(R : JuliaObjectRing) :  Exports == Implementation where
 
     NRing : String := string(op_of_Ring)
 
-    getind(m)  ==> concat(["getindex(refs,_"", jlId m, "_")"])
+    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
     junfunc(op, a) ==> jlref(concat([op, getind(a),")"]))
     jbinfunc(func,a,b) ==> 

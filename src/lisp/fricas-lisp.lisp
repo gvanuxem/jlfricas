@@ -348,6 +348,7 @@ with this hack and will try to convince the GCL crowd to fix this.
     (void "void")
     (bool "bool")
     (int "int")
+    (long "long")
     (c-string "char *")
     (float "float")
     (double "double")
@@ -455,6 +456,7 @@ with this hack and will try to convince the GCL crowd to fix this.
     (void    sb-alien::void)
     (bool    (sb-alien::boolean 8))
     (int      sb-alien::int)
+    (long     sb-alien::integer)
     (c-string (sb-alien::c-string))
     (float    sb-alien:single-float)
     (double   sb-alien::double-float)
@@ -484,7 +486,8 @@ with this hack and will try to convince the GCL crowd to fix this.
 (setf *c-type-to-ffi* '(
     (void :void)
     (bool :signed-byte)
-    (int :int)
+    (int  :int)
+    (long :signed-doubleword)
     (c-string :address)
     (float :single-float)
     (double :double-float)
@@ -1047,7 +1050,7 @@ with this hack and will try to convince the GCL crowd to fix this.
 )
 
 (defparameter *julia-initialized* nil)
-
+; TODO
 #+(and :sbcl :fricas_has_julia)
 (progn
 (defparameter *jqueue* (sb-concurrency:make-queue :name "JuliaQueue"))
@@ -1059,7 +1062,7 @@ with this hack and will try to convince the GCL crowd to fix this.
 (progn
 (require 'queues.simple-cqueue)
 (defparameter *jqueue*
-  (queues:make-queue :simple-cqueue :comparison #'string-equal))
+  (queues:make-queue :simple-cqueue :comparison #'eq))
 (defun jgc ()
   (loop while (> (queues:qsize *jqueue*) 0)
   do (|jl_delete_wrapped_index| (queues:qpop *jqueue*))))

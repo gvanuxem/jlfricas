@@ -103,7 +103,7 @@ JuliaWSAggregate(E : JuliaWSObject) : Category == JuliaWSObject with
     jWSAggregate : List(E) -> %
     ++ jWSAggregate(list) constructs agg as a JuliaWSAggregate.
   add
-    getind(a)  ==> concat(["getindex(refs, _"", jlId a, "_")"])
+    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     import from JuliaUtilityFunctions
     import from JuliaWSExpression
     import from JuliaWSInteger
@@ -217,7 +217,7 @@ JuliaWSAggregate(E : JuliaWSObject) : Category == JuliaWSObject with
 ++  Julia Wolfram Symbolic lists using Wolfram Symbolic Transport Protocol.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 JuliaWSList(E : JuliaWSObject) : Exports == Implementation where
-  getind(a)  ==> concat(["getindex(refs, _"", jlId a, "_")"])
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
   Exports ==> JuliaWSAggregate(E) with
     coerce  : % -> List(E)
     ++ coerce(l) coerces l to a FriCAS List.
@@ -253,7 +253,7 @@ JuliaWSList(E : JuliaWSObject) : Exports == Implementation where
 ++  Julia Wolfram Symbolic vectors using Wolfram Symbolic Transport Protocol.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 JuliaWSVector(E : JuliaWSObject) : Exports == Implementation where
-  getind(a)  ==> concat(["getindex(refs, _"", jlId a, "_")"])
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
   Exports ==> Join(JuliaWSAggregate(E), VectorCategory(E)) with
     --cross Length_
     "+" : (%, %) -> %
@@ -524,7 +524,7 @@ JuliaWSMatrix(E : JuliaWSRing) : Exports == Implementation where
     import from JuliaWSExpression
     import from JuliaWSInteger
 
-    getind(a)  ==> concat(["getindex(refs, _"", jlId a, "_")"])
+    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     jbinop(op,a,b) ==> jlref(concat(["weval(", getind(a), op, getind(b),")"]))
     junfunc(func,a) ==> jlref(concat(["weval(",func, getind(a),"))"]))
     jbinfunc(func,a,b) ==>

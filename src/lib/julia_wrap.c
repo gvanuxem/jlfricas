@@ -9,7 +9,7 @@
 static jl_value_t *jl_complex64_type, *jl_complex32_type, *V, *refs; // *irefs;
 static jl_value_t *array_int64, *array_dbl, *array_cdbl, *array2_dbl, *array2_cdbl;
 static jl_value_t *array_flt, *array_cflt, *array2_flt, *array2_cflt;
-static jl_function_t *setind, *getind, *del, *stringify, *MIME, *Stringify;
+static jl_function_t *setind, *getind, *delind, *stringify, *Stringify, *MIME;
 
 // We use '_str' instead of '_string' to avoid conflict with Julia
 void jl_eval_str(char* code)
@@ -136,45 +136,38 @@ char* jl_call_string_function_dbl(const char* function, double arg)
     return(jl_string_data(str));
 }
 
-char* jl_setindex_wrap_eval_string(const char* index, const char* code)
+int64_t jl_setindex_wrap_eval_string(int64_t index, const char* code)
 {
-    char* nstr = "";
-    jl_value_t *res, *var, *ret;
-
-    if (!strcmp(nstr, index)){
-        jl_printf(jl_stderr_stream(), "ERROR: setindex: empty index\n");
-        return(nstr);
-    }else if (!strcmp(nstr, code)){
+    if (index == 0){
+        jl_printf(jl_stderr_stream(), "ERROR: setindex: index is 0\n");
+        return(0);
+    }else if (code == NULL){
         jl_printf(jl_stderr_stream(), "ERROR: jl_eval_string: empty code string\n");
-        return(nstr);  
+        return(0);  
     }
-    var = jl_eval_string(code);
+    jl_value_t *res = jl_eval_string(code);
     if (jl_exception_occurred()) {
         jl_call2(jl_get_function(jl_base_module, "showerror"),
                 jl_stderr_obj(),
                 jl_exception_occurred());
         jl_printf(jl_stderr_stream(), "\n");
         jl_exception_clear();
-        return(nstr);
+        return(0);
     }
-    JL_GC_PUSH1(&var);
-    ret = jl_cstr_to_string(index);
-    jl_call3(setind, refs, var, ret);
+    JL_GC_PUSH1(&res);
+    jl_call3(setind, refs, res, jl_box_int64(index));
     JL_GC_POP();
-    return(jl_string_data(ret));    
+    return(index);    
 }
 
-void jl_delete_wrapped_index(const char *index)
+void jl_delete_wrapped_index(int64_t index)
 {
-    jl_value_t *res;
-    char* nstr = "";
-
-    if (!strcmp(nstr, index)){
-        jl_printf(jl_stderr_stream(), "ERROR: delete(index): empty index\n");
+    if (index == 0){
+        jl_printf(jl_stderr_stream(), "ERROR: delete(index): index is 0\n");
         return;
     }
 
-    res = jl_call2(del, refs, jl_cstr_to_string(index));
+    jl_call2(delind, refs, jl_box_int64(index));
 
     if (jl_exception_occurred()) {
         jl_call2(jl_get_function(jl_base_module, "showerror"),
@@ -187,16 +180,17 @@ void jl_delete_wrapped_index(const char *index)
     return;
 }
 
-char* jl_getindex_wrapped_index(const char *index)
+//TODO: NULL string
+char* jl_stringify_wrapped_index(int64_t index)
 {
     char* nstr = "";
-    jl_value_t *result, *ret;
 
-    if (!strcmp(nstr, index)){
-        jl_printf(jl_stderr_stream(), "ERROR: getindex: empty index\n");
+    if (index == 0){
+        jl_printf(jl_stderr_stream(), "ERROR: getindex: index is 0\n");
         return(nstr);
     }
-    result = jl_call2(getind, refs, jl_cstr_to_string(index));
+
+    jl_value_t *result = jl_call2(getind, refs, jl_box_int64(index));
     if (jl_exception_occurred()) {
         jl_call2(jl_get_function(jl_base_module, "showerror"),
                 jl_stderr_obj(),
@@ -205,7 +199,7 @@ char* jl_getindex_wrapped_index(const char *index)
         jl_exception_clear();
         return(nstr);
     }
-    ret = jl_call1(stringify, result);
+    result = jl_call1(stringify, result);
     if (jl_exception_occurred()) {
         jl_call2(jl_get_function(jl_base_module, "showerror"),
                 jl_stderr_obj(),
@@ -214,7 +208,7 @@ char* jl_getindex_wrapped_index(const char *index)
         jl_exception_clear();
         return(nstr);
     }
-    return(jl_string_data(ret));
+    return(jl_string_data(result));
 }
 
 
@@ -1084,10 +1078,8 @@ void jl_call_array_1dfunction(int64_t acplx, int64_t cplx,
     return;
 }
 
-char* jl_call_wrap_1dfarray(int64_t cplx, float *array, int64_t n)
+int64_t jl_call_wrap_1dfarray(int64_t cplx, float *array, int64_t n)
 {
-    char* nstr = "";
-    jl_value_t *var, *rnd;
     jl_array_t *v;
 
     if(cplx)
@@ -1096,26 +1088,24 @@ char* jl_call_wrap_1dfarray(int64_t cplx, float *array, int64_t n)
         v = jl_ptr_to_array_1d(array_flt, array, n, 0);
     
     jl_function_t *function = jl_get_function(jl_main_module, "deepcopy");
-    var = jl_call1(function, (jl_value_t*) v);
+    jl_value_t *var = jl_call1(function, (jl_value_t*) v);
     if (jl_exception_occurred()) {
         jl_call2(jl_get_function(jl_base_module, "showerror"),
                 jl_stderr_obj(),
                 jl_exception_occurred());
         jl_printf(jl_stderr_stream(), "\n");
         jl_exception_clear();
-        return(nstr);
+        return(0);
     }
-    rnd = jl_eval_string("string(rand(Int))");
+    jl_value_t *rnd = jl_eval_string("Int64(rand(Int32))");
     JL_GC_PUSH2(&var, &rnd);
     jl_call3(setind, refs, var, rnd);
     JL_GC_POP();
-    return(jl_string_data(rnd));    
+    return(jl_unbox_int64(rnd));    
 }
 
-char* jl_call_wrap_1darray(int64_t cplx, double *array, int64_t n)
+int64_t jl_call_wrap_1darray(int64_t cplx, double *array, int64_t n)
 {
-    char* nstr = "";
-    jl_value_t *var, *rnd;
     jl_array_t *v;
 
     if(cplx)
@@ -1124,20 +1114,20 @@ char* jl_call_wrap_1darray(int64_t cplx, double *array, int64_t n)
         v = jl_ptr_to_array_1d(array_dbl, array, n, 0);
     
     jl_function_t *function = jl_get_function(jl_main_module, "deepcopy");
-    var = jl_call1(function, (jl_value_t*) v);
+    jl_value_t *var = jl_call1(function, (jl_value_t*) v);
     if (jl_exception_occurred()) {
         jl_call2(jl_get_function(jl_base_module, "showerror"),
                 jl_stderr_obj(),
                 jl_exception_occurred());
         jl_printf(jl_stderr_stream(), "\n");
         jl_exception_clear();
-        return(nstr);
+        return(0);
     }
-    rnd = jl_eval_string("string(rand(Int))");
+    jl_value_t *rnd = jl_eval_string("Int64(rand(Int32))");
     JL_GC_PUSH2(&var, &rnd);
     jl_call3(setind, refs, var, rnd);
     JL_GC_POP();
-    return(jl_string_data(rnd));    
+    return(jl_unbox_int64(rnd));    
 }
 
 //////////////////////////////////////////////////////////
@@ -1941,12 +1931,10 @@ void jl_call_2d2function(int64_t cplx, const char* func, double *array,
     return;
 }
 
-char* jl_call_wrap_2dfarray(int64_t cplx, float *array, int64_t m, int64_t n)
+int64_t jl_call_wrap_2dfarray(int64_t cplx, float *array, int64_t m, int64_t n)
 {
-    char* nstr = "";
     char cdims[50];
     jl_array_t *mat;
-    jl_value_t *var, *rnd;
 
     sprintf(cdims, "(%ld, %ld)", m, n);
     jl_value_t* dims = (jl_value_t *) jl_eval_string(cdims);
@@ -1957,7 +1945,7 @@ char* jl_call_wrap_2dfarray(int64_t cplx, float *array, int64_t m, int64_t n)
         mat = jl_ptr_to_array(array2_flt, array, dims, 0);
 
     jl_function_t *function = jl_get_function(jl_main_module, "deepcopy");
-    var = jl_call1(function, (jl_value_t*) mat);
+    jl_value_t *var = jl_call1(function, (jl_value_t*) mat);
 
     if (jl_exception_occurred()) {
         jl_call2(jl_get_function(jl_base_module, "showerror"),
@@ -1965,22 +1953,20 @@ char* jl_call_wrap_2dfarray(int64_t cplx, float *array, int64_t m, int64_t n)
                 jl_exception_occurred());
         jl_printf(jl_stderr_stream(), "\n");
         jl_exception_clear();
-        return(nstr);
+        return(0);
     }
 
-    rnd = jl_eval_string("string(rand(Int))");
+    jl_value_t *rnd = jl_eval_string("Int64(rand(Int32))");
     JL_GC_PUSH2(&var, &rnd);
     jl_call3(setind, refs, var, rnd);
     JL_GC_POP();
-    return(jl_string_data(rnd));    
+    return(jl_unbox_int64(rnd));    
 }
 
-char* jl_call_wrap_2darray(int64_t cplx, double *array, int64_t m, int64_t n)
+int64_t jl_call_wrap_2darray(int64_t cplx, double *array, int64_t m, int64_t n)
 {
-    char* nstr = "";
     char cdims[50];
     jl_array_t *mat;
-    jl_value_t *var, *rnd;
 
     sprintf(cdims, "(%ld, %ld)", m, n);
     jl_value_t* dims = (jl_value_t *) jl_eval_string(cdims);
@@ -1991,7 +1977,7 @@ char* jl_call_wrap_2darray(int64_t cplx, double *array, int64_t m, int64_t n)
         mat = jl_ptr_to_array(array2_dbl, array, dims, 0);
 
     jl_function_t *function = jl_get_function(jl_main_module, "deepcopy");
-    var = jl_call1(function, (jl_value_t*) mat);
+    jl_value_t *var = jl_call1(function, (jl_value_t*) mat);
 
     if (jl_exception_occurred()) {
         jl_call2(jl_get_function(jl_base_module, "showerror"),
@@ -1999,14 +1985,14 @@ char* jl_call_wrap_2darray(int64_t cplx, double *array, int64_t m, int64_t n)
                 jl_exception_occurred());
         jl_printf(jl_stderr_stream(), "\n");
         jl_exception_clear();
-        return(nstr);
+        return(0);
     }
 
-    rnd = jl_eval_string("string(rand(Int))");
+    jl_value_t *rnd = jl_eval_string("Int64(rand(Int32))");
     JL_GC_PUSH2(&var, &rnd);
     jl_call3(setind, refs, var, rnd);
     JL_GC_POP();
-    return(jl_string_data(rnd));    
+    return(jl_unbox_int64(rnd));    
 }
 
 int8_t jl_call_bool_2d2ffunction(int64_t cplx, const char* func,
@@ -2305,8 +2291,8 @@ void jl_init_env(void){
     jl_complex32_type = (jl_value_t *) jl_eval_string("ComplexF32");
     jl_complex64_type = (jl_value_t *) jl_eval_string("ComplexF64");
 
-    refs = jl_eval_string("refs = Dict{String, Any}()");
-    //irefs = jl_eval_string("irefs = IdDict{String, Any}()");
+    refs = jl_eval_string("refs = Dict{Int64, Any}()");
+    //irefs = jl_eval_string("irefs = IdDict{Int64, Any}()");
     V = (jl_value_t *) jl_eval_string("'V'");
     array_int64 = jl_apply_array_type((jl_value_t*) jl_int64_type, 1);
     array_dbl = jl_apply_array_type((jl_value_t*) jl_float64_type, 1);
@@ -2323,7 +2309,7 @@ void jl_init_env(void){
 
     setind = jl_get_function(jl_base_module, "setindex!");
     getind = jl_get_function(jl_base_module, "getindex");
-    del = jl_get_function(jl_base_module, "delete!");
+    delind = jl_get_function(jl_base_module, "delete!");
     stringify = jl_get_function(jl_base_module, "string");
     MIME = jl_get_function(jl_base_module, "MIME");
     Stringify = jl_get_function(jl_base_module, "String");
@@ -2335,7 +2321,6 @@ void jl_init_env(void){
     jl_eval_str("import REPL; import InteractiveUtils.run");
     jl_eval_str("cgM0yG8bklq9FmsK=[1.0 2;3 3];evET3JUgH1R2h9yC=similar(cgM0yG8bklq9FmsK);mul!(evET3JUgH1R2h9yC,cgM0yG8bklq9FmsK,cgM0yG8bklq9FmsK);gamma(1);polygamma(1,1);digamma(1);erf(0);erfi(0);erfc(0);zeta(0)");
     jl_eval_str("@suppress_err using Nemo");
-    //jl_eval_str("using Nemo");
 }
 
 void jl_clear_env(void){

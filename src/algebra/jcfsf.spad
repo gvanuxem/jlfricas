@@ -50,7 +50,7 @@ JuliaComplexFloatSpecialFunctions() : Exports == Implementation where
 
   Implementation ==> add
 
-    getind(a) ==> concat(["getindex(refs,_"", jlId(a), "_")"])
+    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
 
     jl_cfloat_function_cfloat(func, fl) ==>
       jlref(concat([func, "(", getind(fl),")"]))$JCF

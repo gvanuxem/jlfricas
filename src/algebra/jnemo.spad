@@ -77,7 +77,7 @@ NemoInteger() : Exports == Implementation where
     jlInitialize(true)
     Rep := SExpression
 
-    getind(a) ==> concat(["getindex(refs,_"", jlId a, "_")"])
+    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
     junfunc(func,a) ==> jlref(concat([func, getind(a),")"]))
     jbinfunc(func,a,b) ==>
@@ -278,6 +278,8 @@ NemoAlgebraicNumber() : Exports == Implementation where
     coerce  : % -> AlgebraicNumber
     -- TODO
     ++ coerce(nan) coerces nan to AlgebraicNumber if it is rational.
+    jnan    : Integer -> %
+    ++ jnan \undocumented
     jnan    : NemoInteger -> %
     ++ jnan \undocumented
     jnan    : NemoFraction(NemoInteger) -> %
@@ -293,7 +295,7 @@ NemoAlgebraicNumber() : Exports == Implementation where
     Rep := SExpression
     --ALGOP := '%alg
 
-    getind(a) ==> concat(["getindex(refs,_"", jlId(a), "_")"])
+    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
     junfunc(func,a) ==> jlref(concat([func, getind(a),")"]))
     jbinfunc(func,a,b) ==>
@@ -429,9 +431,7 @@ NemoAlgebraicNumber() : Exports == Implementation where
     retract(x : %) : NemoFraction(NemoInteger) ==
       jlref(concat(["QQFieldElem(", getind(x),")"]))$NemoFraction(NemoInteger)
 
-    --    coerce(coerce(x)@Integer)
-    coerce(i : Integer) ==
-      jlref(concat(["QQBar(",string(i),")"]))
+    coerce(i : Integer) == jlref(concat(["QQBar(",string(i),")"]))
     coerce(i : NemoInteger) : % == junfunc("QQBar(", i)
     coerce(fi : NemoFraction(NemoInteger)) : % == junfunc("QQBar(", fi)
     coerce(an : Kernel(%)) == -- Should not happen
@@ -445,7 +445,8 @@ NemoAlgebraicNumber() : Exports == Implementation where
       -- TODO: interpret string minpoly(x) ?
       not rational?(x) => error "Can not be coerced to an AlgebraicNumber"
       coerce(retract(retract(x)@NemoFraction(NemoInteger))@Fraction(Integer))
-    jnan(i : NemoInteger) : % == coerce(i)
+    jnan(i : Integer) == jlref(concat(["QQBar(",string(i),")"]))
+    jnan(i : NemoInteger) == coerce(i)
     jnan(fi : NemoFraction(NemoInteger)) == coerce(fi)
     jnan(s: String) == jlref(concat(["QQBar(", s,")"]))
 
@@ -489,7 +490,7 @@ NemoIntegerMod(p : PositiveInteger) : Exports == Implementation where
     jlEvalString(concat([NZMOD,",=residue_ring(ZZ,", string(p),")"]))@Void
     NZMODP := concat(NZMOD,"(")
 
-    getind(a) ==> concat(["getindex(refs,_"", jlId a, "_")"])
+    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
     junfunc(func, a) ==> jlref(concat([func, getind(a),")"]))
     jbinbop(op,a,b) ==>
@@ -569,7 +570,7 @@ NemoPrimeField(p : PositiveInteger) : Exports == Implementation where
     jlEvalString(concat([NPF,"=GF(", string(p),")"]))@Void
     NPFP := concat(NPF,"(")
 
-    getind(a) ==> concat(["getindex(refs,_"", jlId a, "_")"])
+    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
 
     jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
     junfunc(func, a) ==> jlref(concat([func, getind(a),")"]))
@@ -698,7 +699,7 @@ NemoFiniteField(p : PositiveInteger, n: PositiveInteger) : Exports == Implementa
     jlEvalString(concat([NFF, "=GF(", string(p^n),")"]))@Void
     NFFP := concat(NFF,"(")
 
-    getind(a) ==> concat(["getindex(refs,_"", jlId a, "_")"])
+    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
 
     jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
     junfunc(func, a) ==> jlref(concat([func, getind(a),")"]))
@@ -957,7 +958,7 @@ InnerNemoExactComplexField(Options : JuliaObjDict) : Exports ==
     jlInitialize(true)
     Rep := SExpression
 
-    getind(a) ==> concat(["getindex(refs,_"", jlId a, "_")"])
+    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
     junfunc(func,a) ==> jlref(concat([func, getind(a),")"]))
     jbinfunc(func,a,b) ==>
@@ -1214,7 +1215,7 @@ NemoFraction(R : Join(NemoCommutativeRing, IntegralDomain)) :
     import from NemoFactored(R)
 
     NNI ==> NonNegativeInteger
-    getind(a)  ==> concat(["getindex(refs,_"", jlId a, "_")"])
+    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     junfunc(func, a) ==> jlref(concat([func, getind(a),")"]))
     jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
     jbinfunc(func,a,b) ==>
@@ -1342,7 +1343,7 @@ NemoFactored(R : Join(NemoRing, IntegralDomain)) :
     jlInitialize(true)
 
     Rep := SExpression
-    getind(a)  ==> concat(["getindex(refs,_"", jlId a, "_")"])
+    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     junfunc(func, a) ==> jlref(concat([func, getind(a),")"]))
 
     unit(fac) == junfunc("unit(", fac)

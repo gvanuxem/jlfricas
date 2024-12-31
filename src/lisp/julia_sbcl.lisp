@@ -18,67 +18,6 @@
 ;(defun |run_shell_command| (s)
 ;    (boot::|jl_eval_string| (concatenate 'string "run(\`" s "\`)")))
 
-(defclass jlref()
-    ((id  :reader jlrefId   :initarg :id)
-    (type :accessor jlrefType :initarg :type))
-    (:default-initargs :id nil :type nil))
-
-(defmethod print-object((obj jlref) stream)
-    (print-unreadable-object (obj stream :type t :identity t)
-        (princ (concatenate 'string " " (jlrefType obj)) stream)
-        (princ (concatenate 'string " " (jlrefId obj)) stream)))
-
-(defun |make_jlref| (str)
-    (let* ((index (write-to-string (random most-positive-fixnum)))
-            (id (|jl_setindex_wrap_eval_string| index str)))
-        (if (not (equal id "")) ; unless str code is wrong
-            (let ((ret (make-instance 'jlref :id id
-                    :type (|jl_string_eval_string|
-                        (concatenate 'string "string(typeof(getindex(refs,\"" id "\")))")))))
-                    #+:sbcl (sb-ext:finalize ret (lambda ()
-                        (sb-concurrency:enqueue index *jqueue*))) ret)
-            (error "Invalid command given to Julia"))))
-
-(defun |make_jlref_from_fvec| (cplx vec)
-    (let ((id (|jl_wrap_1dfarray| cplx vec)))
-        (if (not (equal id ""))
-            (let ((ret (make-instance 'jlref :id id
-                    :type (|jl_string_eval_string|
-                        (concatenate 'string "string(typeof(getindex(refs,\"" id "\")))")))))
-                    #+:sbcl (sb-ext:finalize ret (lambda ()
-                        (sb-concurrency:enqueue index *jqueue*))) ret)
-            (error "Invalid vector given to Julia"))))
-
-(defun |make_jlref_from_vec| (cplx vec)
-    (let ((id (|jl_wrap_1darray| cplx vec)))
-        (if (not (equal id ""))
-            (let ((ret (make-instance 'jlref :id id
-                    :type (|jl_string_eval_string|
-                        (concatenate 'string "string(typeof(getindex(refs,\"" id "\")))")))))
-                    #+:sbcl (sb-ext:finalize ret (lambda ()
-                        (sb-concurrency:enqueue index *jqueue*))) ret)
-            (error "Invalid vector given to Julia"))))
-
-(defun |make_jlref_from_fmat| (cplx mat m)
-    (let ((id (|jl_wrap_2dfarray| cplx mat m)))
-        (if (not (equal id ""))
-            (let ((ret (make-instance 'jlref :id id
-                    :type (|jl_string_eval_string|
-                        (concatenate 'string "string(typeof(getindex(refs,\"" id "\")))")))))
-                    #+:sbcl (sb-ext:finalize ret (lambda ()
-                        (sb-concurrency:enqueue index *jqueue*))) ret)
-            (error "Invalid matrix given to Julia"))))
-
-(defun |make_jlref_from_mat| (cplx mat m)
-    (let ((id (|jl_wrap_2darray| cplx mat m)))
-        (if (not (equal id ""))
-            (let ((ret (make-instance 'jlref :id id
-                    :type (|jl_string_eval_string|
-                        (concatenate 'string "string(typeof(getindex(refs,\"" id "\")))")))))
-                    #+:sbcl (sb-ext:finalize ret (lambda ()
-                        (sb-concurrency:enqueue index *jqueue*))) ret)
-            (error "Invalid matrix given to Julia"))))
-
 (defmacro fpointer (array) `(sb-alien:sap-alien
     (sb-sys:vector-sap (sb-ext:array-storage-vector ,array)) (* single-float)))
 
@@ -418,7 +357,7 @@
         (sb-sys:with-pinned-objects (array)
            (sb-alien:alien-funcall
                (sb-alien::extern-alien "jl_call_wrap_2dfarray"
-                   (sb-alien::function (sb-alien::c-string)
+                   (sb-alien::function (sb-alien::integer)
                        (sb-alien::integer)
                        (* single-float)
                        (sb-alien::integer)
@@ -430,7 +369,7 @@
         (sb-sys:with-pinned-objects (array)
            (sb-alien:alien-funcall
                (sb-alien::extern-alien "jl_call_wrap_2darray"
-                   (sb-alien::function (sb-alien::c-string)
+                   (sb-alien::function (sb-alien::integer)
                        (sb-alien::integer)
                        (* double-float)
                        (sb-alien::integer)

@@ -134,7 +134,7 @@ NemoArbField(p: PositiveInteger) : Exports == Implementation where
     jlInitialize(true)
     Rep := SExpression
 
-    getind(a) ==> concat(["getindex(refs,_"", jlId a, "_")"])
+    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
     junfunc(func,a) ==> jlref(concat([func, getind(a),")"]))
     jbinfunc(func,a,b) ==>
@@ -434,7 +434,7 @@ NemoAcbField(p: PositiveInteger) : Exports == Implementation where
     import from String
     import from NemoFraction(NemoInteger)
 
-    getind(a) ==> concat(["getindex(refs,_"", jlId a, "_")"])
+    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
     junfunc(func,a) ==> jlref(concat([func, getind(a),")"]))
     jbinfunc(func,a,b) ==>
@@ -721,7 +721,7 @@ NemoRealField() : Exports == Implementation where
     -- initialize
     jlEvalString("NRF=RealField()")@Void
 
-    getind(a) ==> concat(["getindex(refs,_"", jlId a, "_")"])
+    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
     junfunc(func,a) ==> jlref(concat([func, getind(a),")"]))
     jbinfunc(func,a,b) ==>
@@ -1015,7 +1015,7 @@ NemoComplexField() : Exports == Implementation where
     -- initialize
     jlEvalString("NCF=ComplexField()")@Void
 
-    getind(a) ==> concat(["getindex(refs,_"", jlId a, "_")"])
+    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
     junfunc(func,a) ==> jlref(concat([func, getind(a),")"]))
     jbinfunc(func,a,b) ==>

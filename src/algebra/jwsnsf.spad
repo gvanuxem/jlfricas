@@ -9,7 +9,7 @@
 -- TODO: check duplicate signatures, missing implementations
 -- integer arguments
 JuliaWSNumericalSpecialFunctions(R : JuliaWSNumber) : Exports ==Implementation where
-  getind(a)  ==> concat(["getindex(refs, _"", jlId a, "_")"])
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
   Exports ==> with --SpecialFunctionCategory with
     Gamma :     R -> R
         ++ Gamma(z) is the Euler Gamma function.

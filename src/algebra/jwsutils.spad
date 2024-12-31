@@ -7,7 +7,7 @@
 ++  Wolfram Symbolic Transport Protocol.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 JuliaWSUtilityFunctions() : Exports == Implementation where
-  getind(a)  ==> concat(["getindex(refs, _"", jlId a, "_")"])
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
   Exports ==> with
     seedRandom : JuliaWSInteger -> JuliaWSExpression
     ++ seedRandom(n) reseeds the random number generator with n as seed.

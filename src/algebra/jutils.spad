@@ -411,7 +411,7 @@ JuliaObjDynamicLinker() : Exports == Implementation where
     jlUsing("Libdl")
 
     Rep := SExpression
-    getind(a)  ==> concat(["getindex(refs,_"", jlId a, "_")"])
+    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     jlDlCApply(func, x) ==
       type := jlType x
       jlref(concat ["ccall(", getind(func),
