@@ -1612,9 +1612,9 @@ JuliaMatrix(R : JuliaObjectRing) :  Exports == Implementation where
     minRowIndex x == 1
     minColIndex x == 1
     nrows(a : %) : NNI ==
-      jlEvalString(concat(["size(", getind(a), ",1)"]))@NNI
+      jlEvalString(concat(["size(", getind(a), ",1)"]))
     ncols(a : %) : NNI ==
-      jlEvalString(concat(["size(", getind(a), ",2)"]))@NNI
+      jlEvalString(concat(["size(", getind(a), ",2)"]))
     maxRowIndex x == nrows(x)
     maxColIndex x == ncols(x)
     #m == nrows(m) * ncols(m)

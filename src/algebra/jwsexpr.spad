@@ -35,7 +35,15 @@ JuliaWSExpression() : Exports == Implementation where
     ++ member?(list, expr) checks if expr is in list.
     key? : (%, %) -> Boolean
     ++ key?(assoc,key) checks wheter or not key exist
-    ++ in the association assoc. 
+    ++ in the association assoc.
+    missing? : % -> Boolean
+    ++ missing?(data) checks whether or not data is Missing.
+    jlWSDefined? : String -> Boolean
+    ++ jlWSDefined?(sym) checks whether or not the symbol sym is defined
+    ++ in the WS language.
+    ++ For example:
+    ++ \example{jlWSDefied? "Sin"}
+    ++ => true
     "^"     : (%, JuliaWSRational) -> %
     ++ ^ is the exponentiation by a rational.
     round : % -> %
@@ -913,7 +921,7 @@ JuliaWSExpression() : Exports == Implementation where
     ++ coerce(z) coerces the integer z to a JuliaWSExpression.
     ++ Convenience function.
     coerce   : Complex(Integer) -> % -- %i operations for example
-    ++ coerce(gi) coerce gi to a JuliaWSExpression. Convenience function.
+    ++ coerce(gi) coerces gi to a JuliaWSExpression. Convenience function.
     coerce  : Fraction(Integer)  -> %
     ++ coerce(q) coerces the rational q to a JuliaWSExpression.
     ++ Convenience function.
@@ -941,6 +949,20 @@ JuliaWSExpression() : Exports == Implementation where
     jlWSSetOptions : (%, %) -> %
     ++ jlWSSetOptions(type, opts) sets some internal engine options.
     -- SetAttributes Hold*
+    jWSData : () -> %
+    ++ jWSData() returns the list of WS symbols. Note: Unprintable. 
+    jWSData : String -> %
+    ++ jWSData(sym) returns the entity(ies) associated to sym(s).
+    jWSData : (String, String) -> %
+    ++  jWSData(sym, prop) returns the property of sym.
+    jWSData : (String, String, String) -> %
+    ++ jWSData(sym, prop, ann) returns the annotation for the property of sym.
+    jWSData : % -> %
+    ++ jWSData(sym) returns the entity(ies) associated to sym(s).
+    jWSData : (%, %) -> %
+    ++  jWSData(sym, prop) returns the property of sym.
+    jWSData : (%, %, %) -> %
+    ++ jWSData(sym, prop, ann) returns the annotation for the property of sym.
     jWSTable : (%, %) -> JuliaWSList(%)
     ++ jWSTable(expr, range) applies the expr to the define range.
     jWSTable : (%, %, %) -> JuliaWSList(JuliaWSList(%))
@@ -1044,6 +1066,8 @@ JuliaWSExpression() : Exports == Implementation where
 
     member?(list, expr) == jbinfunc("W_"MemberQ_"(", list, expr) = WT
     key?(assoc,key) == jbinfunc("W_"KeyExistsQ_"(",assoc,key) = WT
+    missing?(x) == junfunc("W_"MissingQ_"(", x) = WT
+    jlWSDefined?(str) == not missing?(jWSData(str))
 
     zero? expr == junfunc("W_"PossibleZeroQ_"(",expr) = WT
     one? x == jbinfunc("W_"Equal_"(", x, 1) = WT
@@ -1681,6 +1705,20 @@ JuliaWSExpression() : Exports == Implementation where
       for i in 1..(#lstr - 1) repeat
         str := concat([str, lstr.i, ","])
       jlref(concat(["W_`", concat([str, lstr.(#lstr) ,"}"]), "_`"]))
+    jWSData() == jWSExpr "WolframLanguageData[]"
+    jWSData(ents : String) ==
+      junfunc("W_"WolframLanguageData_"(", jWSString(ents))
+    jWSData(ent : String, prop : String) ==
+      jbinfunc("W_"WolframLanguageData_"(", jWSString(ent), jWSString(prop))
+    jWSData(ent : String, prop : String, ann : String) ==
+      jterfunc("W_"WolframLanguageData_"(", jWSString(ent),
+        jWSString(prop), jWSString(ann))
+    jWSData(ents : %) ==
+        junfunc("W_"WolframLanguageData_"(", ents)
+    jWSData(ents : %, prop : %) ==
+      jbinfunc("W_"WolframLanguageData_"(", ents, prop)
+    jWSData(ent : %, prop : %, ann : %) ==
+      jterfunc("W_"WolframLanguageData_"(", ent, prop, ann)
     jWSTable(expr, range) == jbinfunc("W_"Table_"(", expr, range)
     jWSTable(expr, range1, range2) ==
       jterfunc("W_"Table_"(", expr, range1, range2)
