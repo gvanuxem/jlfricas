@@ -51,9 +51,6 @@ JuliaWSObject() : Category == JuliaObjectType with
     jlApply(sym, a, b, c, d, e) ==
       jlref(concat(["W_"", sym, "_"(", getind(a), ",", getind(b),
         ",", getind(c), ",", getind(d), ",", getind(e),")"]))
-    jlApply(sym, a, b, c, d, e, f) ==
-      jlref(concat(["W_"", sym, "_"(", getind(a), ",", getind(b), ",",
-        getind(c), ",", getind(d), ",", getind(e), ",", getind(f),")"]))
 
     jlSymbolic(jws) ==
       -- subject to change
@@ -63,7 +60,7 @@ JuliaWSObject() : Category == JuliaObjectType with
       jlEvalString(concat(["weval(W_"ToString_"(W_"InputForm_"(",
         getind(jws),")))"]))
     jlHead(jws) == jlref(concat(["weval(W_"Head_"(", getind(jws), "))"]))
-    jlEval(jws) == jlref(concat ["weval(", getind(jws), ")"])
+    jlEval(jws) == make_jlref_wcall1("weval", jws)$Lisp
     jWSInterpret(type, expr) ==
       jlref(concat ["Interpret(_"", type, "_",)(_"", expr, "_")"])
     jlNumeric(expr) == junfunc("W_"N_"(", expr)

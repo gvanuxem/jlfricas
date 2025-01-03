@@ -157,7 +157,7 @@ int64_t jl_setindex_wrap_eval_string(int64_t index, const char* code)
     JL_GC_PUSH1(&res);
     jl_call3(setind, refs, res, jl_box_int64(index));
     JL_GC_POP();
-    return(index);    
+    return(index); 
 }
 
 void jl_delete_wrapped_index(int64_t index)
@@ -211,6 +211,142 @@ char* jl_stringify_wrapped_index(int64_t index)
     return(jl_string_data(result));
 }
 
+int8_t jl_call1_bool_wrapped_index(const char* function, int64_t varind){
+    jl_value_t *arg = jl_call2(getind, refs, jl_box_int64(varind));
+    jl_function_t *func = jl_get_function(jl_main_module, function);
+    jl_value_t *res = jl_call1(func, arg);
+    if (jl_exception_occurred()) {
+        jl_call2(jl_get_function(jl_base_module, "showerror"),
+                jl_stderr_obj(),
+                jl_exception_occurred());
+        jl_printf(jl_stderr_stream(), "\n");
+        jl_exception_clear();
+        return(-1);
+    }
+    return(jl_unbox_bool(res));
+}
+
+int8_t jl_call2_bool_wrapped_index(const char* function, int64_t varind1, int64_t varind2){
+    jl_value_t *arg1 = jl_call2(getind, refs, jl_box_int64(varind1));
+    jl_value_t *arg2 = jl_call2(getind, refs, jl_box_int64(varind2));
+    jl_function_t *func = jl_get_function(jl_main_module, function);
+    jl_value_t *res = jl_call2(func, arg1, arg2);
+    if (jl_exception_occurred()) {
+        jl_call2(jl_get_function(jl_base_module, "showerror"),
+                jl_stderr_obj(),
+                jl_exception_occurred());
+        jl_printf(jl_stderr_stream(), "\n");
+        jl_exception_clear();
+        return(-1);
+    }
+    return(jl_unbox_bool(res));
+}
+
+int64_t jl_call1_wrapped_index(const char* function, int64_t index,
+        int64_t varind){
+    jl_value_t *arg = jl_call2(getind, refs, jl_box_int64(varind));
+    jl_function_t *func = jl_get_function(jl_main_module, function);
+    jl_value_t *res = jl_call1(func, arg);
+    if (jl_exception_occurred()) {
+        jl_call2(jl_get_function(jl_base_module, "showerror"),
+                jl_stderr_obj(),
+                jl_exception_occurred());
+        jl_printf(jl_stderr_stream(), "\n");
+        jl_exception_clear();
+        return(0);
+    }
+    JL_GC_PUSH1(&res);
+    jl_call3(setind, refs, res, jl_box_int64(index));
+    JL_GC_POP();
+    return(index);
+}
+
+int64_t jl_call2_wrapped_index(const char* function, int64_t index,
+        int64_t varind1, int64_t varind2){
+    jl_value_t *arg1 = jl_call2(getind, refs, jl_box_int64(varind1));
+    jl_value_t *arg2 = jl_call2(getind, refs, jl_box_int64(varind2));
+    jl_function_t *func = jl_get_function(jl_main_module, function);
+    jl_value_t *res = jl_call2(func, arg1, arg2);
+    if (jl_exception_occurred()) {
+        jl_call2(jl_get_function(jl_base_module, "showerror"),
+                jl_stderr_obj(),
+                jl_exception_occurred());
+        jl_printf(jl_stderr_stream(), "\n");
+        jl_exception_clear();
+        return(0);
+    }
+    JL_GC_PUSH1(&res);
+    jl_call3(setind, refs, res, jl_box_int64(index));
+    JL_GC_POP();
+    return(index);
+}
+
+int64_t jl_call3_wrapped_index(const char* function, int64_t index,
+        int64_t varind1, int64_t varind2, int64_t varind3){
+    jl_value_t *arg1 = jl_call2(getind, refs, jl_box_int64(varind1));
+    jl_value_t *arg2 = jl_call2(getind, refs, jl_box_int64(varind2));
+    jl_value_t *arg3 = jl_call2(getind, refs, jl_box_int64(varind3));
+    jl_function_t *func = jl_get_function(jl_main_module, function);
+    jl_value_t *res = jl_call3(func, arg1, arg2, arg3);
+    if (jl_exception_occurred()) {
+        jl_call2(jl_get_function(jl_base_module, "showerror"),
+                jl_stderr_obj(),
+                jl_exception_occurred());
+        jl_printf(jl_stderr_stream(), "\n");
+        jl_exception_clear();
+        return(0);
+    }
+    JL_GC_PUSH1(&res);
+    jl_call3(setind, refs, res, jl_box_int64(index));
+    JL_GC_POP();
+    return(index);
+}
+
+int64_t jl_call4_wrapped_index(const char* function, int64_t index,
+        int64_t varind1, int64_t varind2, int64_t varind3, int64_t varind4){
+    jl_value_t *args[4]={jl_call2(getind, refs, jl_box_int64(varind1)),
+        jl_call2(getind, refs, jl_box_int64(varind2)),
+        jl_call2(getind, refs, jl_box_int64(varind3)),
+        jl_call2(getind, refs, jl_box_int64(varind4))};
+    jl_function_t *func = jl_get_function(jl_main_module, function);
+    jl_value_t *res = jl_call(func, args, 4);
+    if (jl_exception_occurred()) {
+        jl_call2(jl_get_function(jl_base_module, "showerror"),
+                jl_stderr_obj(),
+                jl_exception_occurred());
+        jl_printf(jl_stderr_stream(), "\n");
+        jl_exception_clear();
+        return(0);
+    }
+    JL_GC_PUSH1(&res);
+    jl_call3(setind, refs, res, jl_box_int64(index));
+    JL_GC_POP();
+    return(index);
+}
+
+int64_t jl_call5_wrapped_index(const char* function, int64_t index,
+        int64_t varind1, int64_t varind2, int64_t varind3, int64_t varind4,
+            int64_t varind5){
+    jl_value_t *args[5]={jl_call2(getind, refs, jl_box_int64(varind1)),
+        jl_call2(getind, refs, jl_box_int64(varind2)),
+        jl_call2(getind, refs, jl_box_int64(varind3)),
+        jl_call2(getind, refs, jl_box_int64(varind4)),
+        jl_call2(getind, refs, jl_box_int64(varind5))};
+    jl_function_t *func = jl_get_function(jl_main_module, function);
+    jl_value_t *res = jl_call(func, args, 5);
+    if (jl_exception_occurred()) {
+        jl_call2(jl_get_function(jl_base_module, "showerror"),
+                jl_stderr_obj(),
+                jl_exception_occurred());
+        jl_printf(jl_stderr_stream(), "\n");
+        jl_exception_clear();
+        return(0);
+    }
+    JL_GC_PUSH1(&res);
+    jl_call3(setind, refs, res, jl_box_int64(index));
+    JL_GC_POP();
+    return(index);
+}
 
 ///////////////////////////////////////////////////////////
 // Scalars
@@ -1101,7 +1237,7 @@ int64_t jl_call_wrap_1dfarray(int64_t cplx, float *array, int64_t n)
     JL_GC_PUSH2(&var, &rnd);
     jl_call3(setind, refs, var, rnd);
     JL_GC_POP();
-    return(jl_unbox_int64(rnd));    
+    return(jl_unbox_int64(rnd));
 }
 
 int64_t jl_call_wrap_1darray(int64_t cplx, double *array, int64_t n)

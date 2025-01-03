@@ -78,26 +78,22 @@ NemoInteger() : Exports == Implementation where
     Rep := SExpression
 
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-    jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
-    junfunc(func,a) ==> jlref(concat([func, getind(a),")"]))
-    jbinfunc(func,a,b) ==>
-      jlref(concat([func, getind(a), ",", getind(b),")"]))
-    jbinbop(op,a,b) ==>
-      jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
-    junbfunc(bfunc, a) ==>
-      jlEvalString(concat([bfunc, getind(a),")"]))@Boolean
+    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+    jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+    jbinbfunc(op,a,b) ==>
+      jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
     jlNemoRing() == "ZZ"
 
     0 == jlref("zero(ZZ)")
     1 == jlref("one(ZZ)")
-    random(n : %) == junfunc("rand(", n)
+    random(n : %) == junfunc("rand", n)
     random(seg : Segment(Integer)) ==
       jlref(concat ["rand(ZZ,",string(low(seg)), ":", string(high(seg)),")"])
-    x < y  == jbinbop("<",x,y)
-    x > y  == jbinbop(">",x,y)
-    x >= y == jbinbop(">=",x,y)
-    x <= y == jbinbop("<=",x,y)
+    x < y  == jbinbfunc("<",x,y)
+    x > y  == jbinbfunc(">",x,y)
+    x >= y == jbinbfunc(">=",x,y)
+    x <= y == jbinbfunc("<=",x,y)
 
     odd? x == jlEvalString(concat ["isodd(",getind(x),")"])
     even? x == jlEvalString(concat ["iseven(",getind(x),")"])
@@ -107,7 +103,7 @@ NemoInteger() : Exports == Implementation where
 
     x  * y : Integer == jlref(concat([getind(x), "*", string(y)]))
 
-    abs(x) == junfunc("abs(", x)
+    abs(x) == junfunc("abs", x)
     length(x) == coerce(jlEvalString(concat(["nbits(", getind(x),")"]))@Integer)
     shift(a, sh) ==
       zero? sh => a
@@ -124,7 +120,7 @@ NemoInteger() : Exports == Implementation where
       jlref(concat(["mulmod(", getind(a), ",", getind(b), ",", getind(p), ")"]))
     powmod(a, b, p) ==
       jlref(concat(["powermod(", getind(a), ",", string(b), ",", getind(p), ")"]))
-    invmod(a, p) == jbinfunc("invmod(", a, p)
+    invmod(a, p) == jbinfunc("invmod", a, p)
 
     factor(a : %) : Factored(%) ==
       factor(a)$NemoFactored(%)
@@ -133,23 +129,23 @@ NemoInteger() : Exports == Implementation where
       sfree := squareFree(convert(a)@Z)$IntegerFactorizationPackage(Z)
       map_preserving(coerce, sfree)$FactoredFunctions2(Z,%)
 
-    factorial(a)      == junfunc("factorial(", a)
-    binomial(a, b)    == jbinfunc("binomial(", a, b)
+    factorial(a)      == junfunc("factorial", a)
+    binomial(a, b)    == jbinfunc("binomial", a, b)
     permutation(n, m) == permutation(n, m)$IntegerCombinatoricFunctions(%)
 
-    -- x quo y == jbinop("div", x, y)
-    x quo y == jbinop("÷", x, y)
-    x rem y == jbinop("%", x, y)    
+    -- x quo y == jbinfuncdiv", x, y)
+    x quo y == jbinfunc("÷", x, y)
+    x rem y == jbinfunc("%", x, y)    
     divide(a,b) ==
-      ret : JuliaObjTuple := jbinfunc("divrem(",a,b)
+      ret : JuliaObjTuple := jbinfunc("divrem",a,b)
       [ret.1 pretend %, ret.2 pretend %]
-    gcd(a,b) == jbinfunc("gcd(",a,b)
-    lcm(a,b) == jbinfunc("lcm(",a,b)
+    gcd(a,b) == jbinfunc("gcd",a,b)
+    lcm(a,b) == jbinfunc("lcm",a,b)
     (p1:% exquo p2:%): Union(%,"failed") ==
-      ret : JuliaObjTuple := jbinfunc("divides(", p1, p2)
+      ret : JuliaObjTuple := jbinfunc("divides", p1, p2)
       not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
         => "failed"
-      junfunc("last(", ret)
+      junfunc("last", ret)
 
     coerce(jsi : %) : JI64 ==
       ret : Integer := parsei string jsi 
@@ -296,14 +292,11 @@ NemoAlgebraicNumber() : Exports == Implementation where
     --ALGOP := '%alg
 
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-    jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
-    junfunc(func,a) ==> jlref(concat([func, getind(a),")"]))
-    jbinfunc(func,a,b) ==>
-      jlref(concat([func, getind(a), ",", getind(b),")"]))
-    jbinbop(op,a,b) ==>
-      jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
-    junbfunc(bfunc, a) ==>
-      jlEvalString(concat([bfunc, getind(a),")"]))@Boolean
+    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+    jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+    junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
+    jbinbfunc(op,a,b) ==>
+      jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
     jlNemoRing() == "QQBar"
 
@@ -314,8 +307,8 @@ NemoAlgebraicNumber() : Exports == Implementation where
     rootOfUnity(n) == jlref(concat(["root_of_unity(QQBar,", string(n),")"]))
     rootOfUnity(n,k) ==
       jlref(concat(["root_of_unity(QQBar,", string(n), ",",string(k) ")"]))
-    real(x) == junfunc("real(",x)
-    imag(x) == junfunc("imag(",x)
+    real(x) == junfunc("real",x)
+    imag(x) == junfunc("imag",x)
     minimalPolynomial(an) : SparseUnivariatePolynomial(%) ==
       -- Temporary
       AN  := NemoAlgebraicNumber
@@ -340,68 +333,68 @@ NemoAlgebraicNumber() : Exports == Implementation where
       jlref(concat(["rand(QQBar,degree=", string(deg),
         ",bits=", string(bits), ",randtype=:nonreal)"]))
 
-    integer? x == junbfunc("isinteger(",x)
-    rational? x == junbfunc("is_rational(",x)
-    real? x == junbfunc("isreal(",x)
-    rootOfUnity? x == junbfunc("is_root_of_unity(",x)
-    algebraicInteger? x == junbfunc("is_algebraic_integer(",x)
-    smaller?(x,y) == jbinbop("<", x, y)
+    integer? x == junbfunc("isinteger",x)
+    rational? x == junbfunc("is_rational",x)
+    real? x == junbfunc("isreal",x)
+    rootOfUnity? x == junbfunc("is_root_of_unity",x)
+    algebraicInteger? x == junbfunc("is_algebraic_integer",x)
+    smaller?(x,y) == jbinbfunc("<", x, y)
     definingPolynomial(an) ==
       error concat("definingPolynomial is not defined for ",
         "the NemoAlgebraicNumber type. Coerce it first.")
       -- TODO: interpret a SUP()?
 
-    inv(x) == junfunc("inv(", x)
-    x :% / y : % == jbinop("/", x, y)
-    x : % ^ y : % == jbinop("^", x, y)
+    inv(x) == junfunc("inv", x)
+    x :% / y : % == jbinfunc("/", x, y)
+    x : % ^ y : % == jbinfunc("^", x, y)
     x : % * y : Integer == jlref(concat [getind(x),"*", string(y)])
-    x : % * y : NemoInteger == jbinop("*", x, y)
-    x : % * y : NemoFraction(NemoInteger) == jbinop("*", x, y)
+    x : % * y : NemoInteger == jbinfunc("*", x, y)
+    x : % * y : NemoFraction(NemoInteger) == jbinfunc("*", x, y)
     x * y : Fraction Integer ==
       jlref(concat [getind(x), "*(", string(numer(y)),
         "//", string(denom(y)),")"])
     x ^ y : Integer == jlref(concat [getind(x), "^", string(y)])
     x ^ y : Fraction(Integer) ==
-      jlref(concat[ getind(x), "^(", string(numer(y)),"//", string(denom(y)),")"])
+      jlref(concat [ getind(x), "^(", string(numer(y)),"//", string(denom(y)),")"])
     recip(x) ==
       zero?(x) => "failed"
-      junfunc("recip(",x)
+      junfunc("recip",x)
 
-    -- x quo y == jbinop("div", x, y)
-    x quo y == jbinop("÷", x, y)
+    -- x quo y == jbinfunc("div", x, y)
+    x quo y == jbinfunc("÷", x, y)
     x rem y == 0
-    gcd(a,b) == jbinfunc("gcd(",a,b)
-    lcm(a,b) == jbinfunc("lcm(",a,b)
-    sqrt(a : %)  == junfunc("sqrt(", a)
+    gcd(a,b) == jbinfunc("gcd",a,b)
+    lcm(a,b) == jbinfunc("lcm",a,b)
+    sqrt(a : %)  == junfunc("sqrt", a)
     nthRoot(x, i) == jlref(concat(["root(", getind(x),",",string(i),")"]))
     differentiate(x : %) : % == 0
     -- Different complexity here (minimal polynomial based)
     height(an) ==
       ret := jlref(concat ["height(", getind(an),")"])$NemoInteger
       convert(ret)@Integer pretend NNI
-    abs(an) == junfunc("abs(", an)
-    abs2(an) == junfunc("abs2(", an)
-    floor(an) == junfunc("floor(", an)
-    ceiling(an) == junfunc("ceil(", an)
-    conj(an) == junfunc("conj(", an)
-    sign(an) == junfunc("sign(", an)
-    csgn(an) == junfunc("csgn(", an)
-    realSign(an) == junfunc("sign_real(", an)
-    imagSign(an) == junfunc("sign_imag(", an)
+    abs(an) == junfunc("abs", an)
+    abs2(an) == junfunc("abs2", an)
+    floor(an) == junfunc("floor", an)
+    ceiling(an) == junfunc("ceil", an)
+    conj(an) == junfunc("conj", an)
+    sign(an) == junfunc("sign", an)
+    csgn(an) == junfunc("csgn", an)
+    realSign(an) == junfunc("sign_real", an)
+    imagSign(an) == junfunc("sign_imag", an)
 
 
-    expPiI(a) == junfunc("exp_pi_i(",a)
-    logPiI(a) == junfunc("log_pi_i(",a)
-    sinpi(a) == junfunc("sinpi(",a)
-    cospi(a) == junfunc("cospi(",a)
-    tanpi(a) == junfunc("tanpi(",a)
-    asinpi(a) == junfunc("asinpi(",a)
-    acospi(a) == junfunc("acospi(",a)
-    atanpi(a) == junfunc("atanpi(",a)
+    expPiI(a) == junfunc("exp_pi_i",a)
+    logPiI(a) == junfunc("log_pi_i",a)
+    sinpi(a) == junfunc("sinpi",a)
+    cospi(a) == junfunc("cospi",a)
+    tanpi(a) == junfunc("tanpi",a)
+    asinpi(a) == junfunc("asinpi",a)
+    acospi(a) == junfunc("acospi",a)
+    atanpi(a) == junfunc("atanpi",a)
 
     conjugates(a) ==
       jlref(concat(["conjugates(", getind(a),")"]))$JuliaVector(%)
-    numerator(a) == junfunc("numerator(", a)
+    numerator(a) == junfunc("numerator", a)
     denominator(a) == jlref(concat(["denominator(", getind(a),")"]))$NemoInteger
     degree(a : %) == jlEvalString(concat(["degree(", getind(a), ")"]))@JuliaInt64
     belong?(op) == false 
@@ -432,8 +425,8 @@ NemoAlgebraicNumber() : Exports == Implementation where
       jlref(concat(["QQFieldElem(", getind(x),")"]))$NemoFraction(NemoInteger)
 
     coerce(i : Integer) == jlref(concat(["QQBar(",string(i),")"]))
-    coerce(i : NemoInteger) : % == junfunc("QQBar(", i)
-    coerce(fi : NemoFraction(NemoInteger)) : % == junfunc("QQBar(", fi)
+    coerce(i : NemoInteger) : % == junfunc("QQBar", i)
+    coerce(fi : NemoFraction(NemoInteger)) : % == junfunc("QQBar", fi)
     coerce(an : Kernel(%)) == -- Should not happen
       -- TODO
       (ret := constantIfCan(an)) case "failed" =>
@@ -491,10 +484,8 @@ NemoIntegerMod(p : PositiveInteger) : Exports == Implementation where
     NZMODP := concat(NZMOD,"(")
 
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-    jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
-    junfunc(func, a) ==> jlref(concat([func, getind(a),")"]))
-    jbinbop(op,a,b) ==>
-      jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
+    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+    jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
 
     jlNemoRing() == NZMOD
     0 == jlref(concat(["zero(", NZMOD, ")"]))
@@ -505,11 +496,11 @@ NemoIntegerMod(p : PositiveInteger) : Exports == Implementation where
         m = 0 => "failed"
         m
 
-    x : % * y : NemoInteger == jbinop("*", x, y)
+    x : % * y : NemoInteger == jbinfunc("*", x, y)
     x : % * y : Integer == jlref(concat [getind(x), "*", string(y)])
     recip(x) ==
       zero?(x) => "failed"
-      junfunc("recip(",x)
+      junfunc("recip",x)
 
     size()           == p
     characteristic() == p
@@ -517,7 +508,7 @@ NemoIntegerMod(p : PositiveInteger) : Exports == Implementation where
     random() == coerce(random(p)$Integer)
     index(n) == coerce(positiveRemainder(n,p) pretend Integer)
     convert(x) : Integer == parsei string(x)
-    coerce(x : NemoInteger) : % == junfunc(NZMODP, x)
+    coerce(x : NemoInteger) : % == junfunc(NZMOD, x)
     coerce(i : Integer) == jlref(concat([NZMODP, string(i), ")"]))
     jnzmod(i : Integer) == coerce(i)
     jnzmod(ji : NemoInteger) == coerce(ji)
@@ -572,33 +563,30 @@ NemoPrimeField(p : PositiveInteger) : Exports == Implementation where
 
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
 
-    jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
-    junfunc(func, a) ==> jlref(concat([func, getind(a),")"]))
-    jbinfunc(func,a,b) ==>
-      jlref(concat([func, getind(a), ",", getind(b),")"]))
-    junbfunc(bfunc, a) ==>
-      jlEvalString(concat([bfunc, getind(a),")"]))@Boolean
+    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+    jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+    junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
 
     jlNemoRing() == NPF
 
     0 == jlref(concat(["zero(", NPF,")"]))
     1 == jlref(concat(["one(", NPF,")"]))
 
-    generator? x == junbfunc("is_gen(",x)
+    generator? x == junbfunc("is_gen",x)
 
-    x : % * y : NemoInteger == jbinop("*", x, y)
+    x : % * y : NemoInteger == jbinfunc("*", x, y)
     x : % * y : Integer == jlref(concat [getind(x), "*", string(y)])
-    x : % / y : % == jbinop("/", x, y)
+    x : % / y : % == jbinfunc("/", x, y)
     x * y : Fraction Integer ==
       jlref(concat [getind(x), "*(", string(numer(y)),
         "//", string(denom(y)),")"])
     x ^ y : Integer == jlref(concat [getind(x), "^", string(y)])
     recip(x) ==
       zero?(x) => "failed"
-      junfunc("recip(",x)
-    x quo y == jbinop("÷", x, y)
-    -- x quo y == jbinop("div", x, y)
-    x rem y == jbinop("%", x, y)
+      junfunc("recip",x)
+    x quo y == jbinfunc("÷", x, y)
+    -- x quo y == jbinfunc("div", x, y)
+    x rem y == jbinfunc("%", x, y)
 
     nextItem(n) ==
       m := n+1
@@ -632,10 +620,10 @@ NemoPrimeField(p : PositiveInteger) : Exports == Implementation where
     minimalPolynomial(x) ==
       monomial(1, 1)$(SUP %) - monomial(x, 0)$(SUP %)
 
-    sqrt(x) == junfunc("sqrt(", x)
+    sqrt(x) == junfunc("sqrt", x)
 
     convert(x : %) : Integer == parsei string(x)
-    coerce(x : NemoInteger) : % == junfunc(NPFP, x)
+    coerce(x : NemoInteger) : % == junfunc(NPF, x)
     coerce(i : Integer) == jlref(concat([NPFP, string(i), ")"]))
     jnpf(i : Integer) == coerce(i)
     jnpf(ji : NemoInteger) == coerce(ji)
@@ -700,33 +688,29 @@ NemoFiniteField(p : PositiveInteger, n: PositiveInteger) : Exports == Implementa
     NFFP := concat(NFF,"(")
 
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-
-    jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
-    junfunc(func, a) ==> jlref(concat([func, getind(a),")"]))
-    jbinfunc(func,a,b) ==>
-      jlref(concat([func, getind(a), ",", getind(b),")"]))
-    junbfunc(bfunc, a) ==>
-      jlEvalString(concat([bfunc, getind(a),")"]))@Boolean
+    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+    jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+    junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
 
     jlNemoRing() == NFF
 
     0 == jlref(concat(["zero(", NFF,")"]))
     1 == jlref(concat(["one(", NFF,")"]))
 
-    generator? x == junbfunc("is_gen(",x)
+    generator? x == junbfunc("is_gen",x)
     absolute? ==
       jlEvalString(concat(["is_absolute(", NFF,")"]))@Boolean   
 
-    x : % * y : NemoInteger == jbinop("*", x, y)
+    x : % * y : NemoInteger == jbinfunc("*", x, y)
     x : % * y : Integer == jlref(concat [getind(x), "*", string(y)])
-    x : % / y : % == jbinop("/", x, y)
+    x : % / y : % == jbinfunc("/", x, y)
 
-    x quo y == jbinop("÷", x, y)
-    -- x quo y == jbinop("div", x, y)
-    x rem y == jbinop("%", x, y)
+    x quo y == jbinfunc("÷", x, y)
+    -- x quo y == jbinfunc("div", x, y)
+    x rem y == jbinfunc("%", x, y)
     recip(x) ==
       zero? x => "failed"
-      junfunc("inv(", x)
+      junfunc("inv", x)
 
     generator() == jlref(concat(["gen(", NFF,")"]))
     trace(a) == jlref(concat(["tr(", getind(a),")"]))$NemoPrimeField(p)
@@ -760,10 +744,10 @@ NemoFiniteField(p : PositiveInteger, n: PositiveInteger) : Exports == Implementa
     --minimalPolynomial(x) ==
     --  monomial(1, 1)$(SUP %) - monomial(x, 0)$(SUP %)
 
-    sqrt(x) == junfunc("sqrt(", x)
+    sqrt(x) == junfunc("sqrt", x)
 
     convert(x : %) : Integer == parsei(string(x))
-    coerce(x : NemoInteger) : % == junfunc(NFFP, x)
+    coerce(x : NemoInteger) : % == junfunc(NFF, x)
     coerce(i : Integer) == jlref(concat([NFFP, string(i), ")"]))
     jnff(i : Integer) == coerce(i)
     jnff(ji : NemoInteger) == coerce(ji)
@@ -959,14 +943,11 @@ InnerNemoExactComplexField(Options : JuliaObjDict) : Exports ==
     Rep := SExpression
 
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-    jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
-    junfunc(func,a) ==> jlref(concat([func, getind(a),")"]))
-    jbinfunc(func,a,b) ==>
-      jlref(concat([func, getind(a), ",", getind(b),")"]))
-    jbinbop(op,a,b) ==>
-      jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
-    junbfunc(bfunc, a) ==>
-      jlEvalString(concat([bfunc, getind(a),")"]))@Boolean 
+    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+    jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+    junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
+    jbinbfunc(op,a,b) ==>
+      jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
     -- initialize (see Calcium constructor options)
     NECF := concat ["NECF",
@@ -988,48 +969,48 @@ InnerNemoExactComplexField(Options : JuliaObjDict) : Exports ==
     x ~= y ==
       jlEvalString(concat [getind(x),"!=",getind(y)])@Boolean
     imaginary() == jlref(concat ["onei(", NECF,")"]) 
-    real(x) == junfunc("real(", x)
-    imag(x) == junfunc("imag(", x)
+    real(x) == junfunc("real", x)
+    imag(x) == junfunc("imag", x)
     pi() == jlref(concat ["const_pi(",NECF,")"])
     exp1() == jlref(concat ["exp(",NECF,"(1))"])
     exp() == jlref(concat ["exp(",NECF,"(1))"])
     eulerGamma() == jlref(concat ["const_euler(",NECF,")"])
     infinity() == jlref(concat ["unsigned_infinity(", NECF,")"])
-    infinity(x) == junfunc("infinity(", x)
+    infinity(x) == junfunc("infinity", x)
     positiveInfinity() == jlref(concat ["infinity(", NECF,")"])
     negativeInfinity() == - jlref(concat ["infinity(", NECF,")"])
     undefined() == jlref(concat ["undefined(", NECF,")"])
     unknown() == jlref(concat ["unknown(", NECF,")"])
 
-    integer? x == junbfunc("isinteger(",x)
-    rational? x == junbfunc("is_rational(",x)
-    algebraic? x == junbfunc("is_algebraic(",x)
-    real? x == junbfunc("isreal(",x)
-    imaginary? x == junbfunc("is_imaginary(",x)
-    number? x == junbfunc("is_number(",x)
-    undefined? x == junbfunc("is_undefined(",x)
-    unknown? x == junbfunc("is_unknown(",x)
-    infinity? x == junbfunc("isinf(",x)
-    unsignedInfinity? x == junbfunc("is_uinf(",x)
-    signedInfinity? x == junbfunc("is_signed_inf(",x)
+    integer? x == junbfunc("isinteger",x)
+    rational? x == junbfunc("is_rational",x)
+    algebraic? x == junbfunc("is_algebraic",x)
+    real? x == junbfunc("isreal",x)
+    imaginary? x == junbfunc("is_imaginary",x)
+    number? x == junbfunc("is_number",x)
+    undefined? x == junbfunc("is_undefined",x)
+    unknown? x == junbfunc("is_unknown",x)
+    infinity? x == junbfunc("isinf",x)
+    unsignedInfinity? x == junbfunc("is_uinf",x)
+    signedInfinity? x == junbfunc("is_signed_inf",x)
 
-    --x < y  == jbinbop("<",x,y)
-    --x > y  == jbinbop(">",x,y)
-    --x >= y == jbinbop(">=",x,y)
-    --x <= y == jbinbop("<=",x,y)
-    smaller?(x, y)  == jbinbop("<",x,y)
-    sign x == junfunc("sign(",x)
-    csign x == junfunc("csgn(",x) 
-    abs x == junfunc("abs(",x)
-    argument x == junfunc("angle(",x)
-    conjugate(x) == junfunc("conj(",x)
+    --x < y  == jbinbfunc("<",x,y)
+    --x > y  == jbinbfunc(">",x,y)
+    --x >= y == jbinbfunc(">=",x,y)
+    --x <= y == jbinbfunc("<=",x,y)
+    smaller?(x, y)  == jbinbfunc("<",x,y)
+    sign x == junfunc("sign",x)
+    csign x == junfunc("csgn",x) 
+    abs x == junfunc("abs",x)
+    argument x == junfunc("angle",x)
+    conjugate(x) == junfunc("conj",x)
     conjugate(x,repr) ==
       jlref(concat ["conj(",getind(x), ",form=", string(repr),")"])
-    floor x == junfunc("floor(",x)
-    ceiling x == junfunc("ceil(",x) 
+    floor x == junfunc("floor",x)
+    ceiling x == junfunc("ceil",x) 
 
-    x : % / y : % == jbinop("//", x, y)
-    x : % ^ y : % == jbinop("^", x, y)
+    x : % / y : % == jbinfunc("//", x, y)
+    x : % ^ y : % == jbinfunc("^", x, y)
     x : % * y : Integer == jlref(concat([getind(x), "*", string(y)]))
     x : % * y : Fraction(Integer) ==
       jlref(concat [getind(x), "*(",
@@ -1046,22 +1027,22 @@ InnerNemoExactComplexField(Options : JuliaObjDict) : Exports ==
       jlref(concat ["pow(", getind(x),",", string(i),
         ",form=", string(repr),")"])
 
-    -- x quo y == jbinop("div", x, y)
-    x quo y == jbinop("÷", x, y)
-    x rem y == jbinop("%", x, y)
+    -- x quo y == jbinfunc("div", x, y)
+    x quo y == jbinfunc("÷", x, y)
+    x rem y == jbinfunc("%", x, y)
 
-    sqrt(x)  == junfunc("√(",x)
-    exp(x)   == junfunc("exp(",x)
-    log(x)   == junfunc("log(",x)
+    sqrt(x)  == junfunc("√",x)
+    exp(x)   == junfunc("exp",x)
+    log(x)   == junfunc("log",x)
     recip(x) ==
       zero? x => "failed"
-      junfunc("inv(",x)
+      junfunc("inv",x)
 
-    sin(x)  == junfunc("sin(",x)
+    sin(x)  == junfunc("sin",x)
     sin(x,repr)  == jlref(concat ["sin(",getind(x), ",form=", string(repr),")"])
-    cos(x)  == junfunc("cos(",x)
+    cos(x)  == junfunc("cos",x)
     cos(x,repr)  == jlref(concat ["cos(",getind(x), ",form=", string(repr),")"])
-    tan(x)  == junfunc("tan(",x)
+    tan(x)  == junfunc("tan",x)
     tan(x,repr)  == jlref(concat ["tan(",getind(x), ",form=", string(repr),")"])
 
     cot x == cos x * csc x
@@ -1072,11 +1053,11 @@ InnerNemoExactComplexField(Options : JuliaObjDict) : Exports ==
       (a := recip(cos x)) case "failed" => error "sec: no reciprocal"
       a@%
 
-    asin(x)  == junfunc("asin(",x)
+    asin(x)  == junfunc("asin",x)
     asin(x,repr)  == jlref(concat ["asin(",getind(x), ",form=", string(repr),")"])
-    acos(x)  == junfunc("acos(",x)
+    acos(x)  == junfunc("acos",x)
     acos(x,repr)  == jlref(concat ["acos(",getind(x), ",form=", string(repr),")"])
-    atan(x)  == junfunc("atan(",x)
+    atan(x)  == junfunc("atan",x)
     atan(x,repr)  == jlref(concat ["atan(",getind(x), ",form=", string(repr),")"])
 
     sinh x : % ==
@@ -1108,12 +1089,13 @@ InnerNemoExactComplexField(Options : JuliaObjDict) : Exports ==
       (a := recip x) case "failed" => error "acoth: no reciprocal"
       atanh(a@%)
 
-    Gamma(x)  == junfunc("Nemo.gamma(",x)
-    erf(x)  == junfunc("Nemo.erf(",x)
-    erfi(x)  == junfunc("Nemo.erfi(",x)
-    erfc(x)  == junfunc("Nemo.erfc(",x)
+    -- TODO: checks
+    Gamma(x)  == junfunc("Nemo.gamma",x)
+    erf(x)  == junfunc("Nemo.erf",x)
+    erfi(x)  == junfunc("Nemo.erfi",x)
+    erfc(x)  == junfunc("Nemo.erfc",x)
 
-    complexNormalForm(x) == junfunc("complex_normal_form(", x)
+    complexNormalForm(x) == junfunc("complex_normal_form", x)
 
     random(depth, bits) ==
       jlref(concat ["rand(",NECF,",depth=", string(depth), ",bits=", string(bits),")"])
@@ -1123,15 +1105,15 @@ InnerNemoExactComplexField(Options : JuliaObjDict) : Exports ==
   
     retractIfCan(x : %) : Union(NemoInteger, "failed") ==
       integer?(x) =>   
-        jlref(concat["ZZ(", getind(x),")"])$NemoInteger
+        jlref(concat ["ZZ(", getind(x),")"])$NemoInteger
       "failed"
     retractIfCan(x : %) : Union(NemoFraction(NemoInteger), "failed") ==
       rational?(x) =>   
-        jlref(concat["QQ(", getind(x),")"])$NemoFraction(NemoInteger)
+        jlref(concat ["QQ(", getind(x),")"])$NemoFraction(NemoInteger)
       "failed"
     retractIfCan(x : %) : Union(NemoAlgebraicNumber, "failed") ==
       algebraic?(x) =>   
-        jlref(concat["QQBar(", getind(x),")"])$NemoAlgebraicNumber
+        jlref(concat ["QQBar(", getind(x),")"])$NemoAlgebraicNumber
       "failed"
 
     complex(r, i) ==
@@ -1144,15 +1126,15 @@ InnerNemoExactComplexField(Options : JuliaObjDict) : Exports ==
     coerce(i : PositiveInteger) == jlref(concat([NECFP, string(i),")"]))
     coerce(fi : Fraction(Integer)) ==
       jlref(concat([NECF,"(QQ(", string(numer(fi)), "//", string(denom(fi)), "))"]))
-    coerce(nfi : NemoFraction(NemoInteger)) == junfunc(NECFP, nfi)
-    coerce(an : NemoAlgebraicNumber) == junfunc(NECFP, an)
-    jnecf(an : NemoAlgebraicNumber) == junfunc(NECFP, an)
+    coerce(nfi : NemoFraction(NemoInteger)) == junfunc(NECF, nfi)
+    coerce(an : NemoAlgebraicNumber) == junfunc(NECF, an)
+    jnecf(an : NemoAlgebraicNumber) == junfunc(NECF, an)
     jnecf(fi : Fraction(Integer)) ==
       jlref(concat([NECF,"(QQ(", string(numer(fi)), "//", string(denom(fi)), "))"]))
     jnecf(r : Fraction Integer, i : Fraction Integer) ==
       jlref(concat([NECF,"(QQ(", string(numer(r)), "//", string(denom(r)), ")",
         "+onei(",NECF,")*", "QQ(", string(numer(i)), "//", string(denom(i)), "))"]))
-    jnecf(nfi : NemoFraction(NemoInteger)) == junfunc(NECFP, nfi)
+    jnecf(nfi : NemoFraction(NemoInteger)) == junfunc(NECF, nfi)
     jnecf(r : NemoFraction(NemoInteger), i : NemoFraction(NemoInteger)) ==
       jlref(concat([NECFP, getind(r),"+onei(", NECF,")*", getind(i), ")"]))
     coerce(i : %) : OutputForm == string(i) pretend OutputForm
@@ -1216,14 +1198,10 @@ NemoFraction(R : Join(NemoCommutativeRing, IntegralDomain)) :
 
     NNI ==> NonNegativeInteger
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-    junfunc(func, a) ==> jlref(concat([func, getind(a),")"]))
-    jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
-    jbinfunc(func,a,b) ==>
-      jlref(concat([func, getind(a), ",", getind(b),")"]))
-    jbinbop(op,a,b) ==>
-      jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
-    junbfunc(bfunc, a) ==>
-      jlEvalString(concat([bfunc, getind(a),")"]))@Boolean
+    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+    jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+    jbinbfunc(op,a,b) ==>
+      jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
     NFR := concat("NFR", jlNemoRing()$R)
     NFRP := concat(NFR,"(")
@@ -1232,46 +1210,46 @@ NemoFraction(R : Join(NemoCommutativeRing, IntegralDomain)) :
     jlNemoRing() == NFR
     0 == jlref(concat(["zero(",NFR,")"]))
     1 == jlref(concat(["one(",NFR,")"]))
-    numer(p) == junfunc("numerator(", p)
-    denom(p) == junfunc("denominator(", p)
-    numerator(p) == jlref(concat [NFRP, getind(junfunc("numerator(", p)),")"])
-    denominator(p) == jlref(concat [NFRP, getind(junfunc("denominator(", p)),")"])
+    numer(p) == junfunc("numerator", p)
+    denom(p) == junfunc("denominator", p)
+    numerator(p) == jlref(concat [NFRP, getind(junfunc("numerator", p)),")"])
+    denominator(p) == jlref(concat [NFRP, getind(junfunc("denominator", p)),")"])
 
     if R has OrderedSet then
-      x < y  == jbinbop("<",x,y)
-      x > y  == jbinbop(">",x,y)
-      x >= y == jbinbop(">=",x,y)
-      x <= y == jbinbop("<=",x,y)
+      x < y  == jbinbfunc("<",x,y)
+      x > y  == jbinbfunc(">",x,y)
+      x >= y == jbinbfunc(">=",x,y)
+      x <= y == jbinbfunc("<=",x,y)
 
-    a : R * b : % == jbinop("*",a,b)
-    a :% * b : R == jbinop("*",a,b)
-    a : % * b : % == jbinop("*",a,b)
-    x : % * y : NemoInteger == jbinop("*", x, y)
-    x : NemoInteger * y : % == jbinop("*", x, y)
+    a : R * b : % == jbinfunc("*",a,b)
+    a :% * b : R == jbinfunc("*",a,b)
+    a : % * b : % == jbinfunc("*",a,b)
+    x : % * y : NemoInteger == jbinfunc("*", x, y)
+    x : NemoInteger * y : % == jbinfunc("*", x, y)
     a : % * b : Integer == jlref(concat [getind(a), "*" , string(b)])
     a : Integer * b : % == jlref(concat [string(a), "*" , getind(b)])
-    a : R / b : R == jbinop("//",a,b)
-    a : R / b : % == jbinop("//",a,b)
-    a : % / b : % == jbinop("//",a,b)
+    a : R / b : R == jbinfunc("//",a,b)
+    a : R / b : % == jbinfunc("//",a,b)
+    a : % / b : % == jbinfunc("//",a,b)
     x ^ y : NNI == jlref(concat [getind(x), "^", string(y)])
     x ^ y : Integer == jlref(concat [getind(x), "^", string(y)])
     recip(x) ==
       zero?(x) => "failed"
-      junfunc("recip(",x)
+      junfunc("recip",x)
     if R is NemoInteger then
       random(p : PositiveInteger) ==
         jlref(concat ["rand_bits(QQ,",string(p), ")"])
       wholePart x ==
         (denom(x) = 1) => numer(x)
         numer(x) quo denom(x)
-      x quo y == jbinop("÷", x, y)
-      -- x quo y == jbinop("div", x, y)
-      x rem y == jbinop("%", x, y)
+      x quo y == jbinfunc("÷", x, y)
+      -- x quo y == jbinfunc("div", x, y)
+      x rem y == jbinfunc("%", x, y)
       (p1:% exquo p2:%): Union(%,"failed") ==
-        ret : JuliaObjTuple := jbinfunc("divides(", p1, p2)
+        ret : JuliaObjTuple := jbinfunc("divides", p1, p2)
         not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
           => "failed"
-        junfunc("last(", ret)
+        junfunc("last", ret)
       D(x) == 0
       D(x, nni) == 0
       -- Temporary hack
@@ -1279,12 +1257,12 @@ NemoFraction(R : Join(NemoCommutativeRing, IntegralDomain)) :
         ret := differentiate((numer(x)/denom(x))@Fraction(NemoInteger), deriv)
         jlref(concat([getind(numer(ret)),"//", getind(denom(ret))]))
       init() == jlref(concat(["QQ(", getind(init()$NemoInteger),")"]))
-      abs(x)  == junfunc("abs(", x)
-      floor x == junfunc("floor(",x)
-      ceiling x == junfunc("ceil(",x)
-    gcd(x,y)  == jbinfunc("gcd(",x,y)
+      abs(x)  == junfunc("abs", x)
+      floor x == junfunc("floor",x)
+      ceiling x == junfunc("ceil",x)
+    gcd(x,y)  == jbinfunc("gcd",x,y)
     divide(a,b) ==
-      ret : JuliaObjTuple := jbinfunc("divrem(",a,b)
+      ret : JuliaObjTuple := jbinfunc("divrem",a,b)
       [ret.1 pretend %, ret.2 pretend %]
 
     random(seg : Segment(Integer)) ==
@@ -1333,6 +1311,10 @@ NemoFactored(R : Join(NemoRing, IntegralDomain)) :
     ++ Currently its printed OutputForm can be difficult to "interpret".
     ++ Use factorList(factor(intd)@Factored(%)) to have a more
     ++ understandable representation.
+    factorSquareFree : R -> %
+    ++ factorSquareFree(intd) returns the factorization of intd.
+    factorSquareFree : R -> Factored(R)
+    ++ factorSquareFree(intd) returns the factorization of intd.
     unit    : % -> R
     ++ unit(fr) returns the unit part of the factorization.
   Implementation ==> JuliaObject add
@@ -1344,32 +1326,61 @@ NemoFactored(R : Join(NemoRing, IntegralDomain)) :
 
     Rep := SExpression
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-    junfunc(func, a) ==> jlref(concat([func, getind(a),")"]))
+    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
 
-    unit(fac) == junfunc("unit(", fac)
-    factor(intd : R) : % == junfunc("factor(", intd)
+    unit(fac) == junfunc("unit", fac)
+    factor(intd : R) : % == junfunc("factor", intd)
+    factorSquareFree(intd : R) : % == junfunc("factor_squarefree", intd)
+    unit(fr) == junfunc("unit",fr) pretend R
 
     -- TODO: not as an integer factorization (OutputForm)
     mkFF : (R, List FFE) -> Record(unt : R, fct : List FFE)
     mkFF(r, x) == [r, x]
     factor(intd : R) : Factored(R) ==
+      sz : NNI
       zero?(intd) => 0
-      fr := junfunc("factor(", intd)
-      res := mkFF(jlref(concat(["unit(", getind(fr), ")"]))$R,
-        empty()$List(FFE)) pretend Factored(R)
-      sz :=
-        jlEvalString(concat(["tmp=collect(", getind(fr),");length(tmp)"]))@NNI
-      sz = 0 => res
+      ret := empty()$List(FFE)
+      fr : % := junfunc("factor", intd)
+      if R has OrderedSet then
+        sz :=
+          jlEvalString(concat(["tmp=sort(collect(", getind(fr),"));length(tmp)"]))@NNI
+      else
+        sz :=
+          jlEvalString(concat(["tmp=collect(", getind(fr),");length(tmp)"]))@NNI
+      sz = 0 => mkFF(jlref(concat(["unit(", getind(fr), ")"]))$R,
+        ret) pretend Factored(R)
       c := jlref("tmp[1][1]")$R
       e := jlEvalString("tmp[1][2]")@NNI
-      res := res * primeFactor(c,e) 
+      ret := concat(ret, ["irred", c, e]$FFE)
       for i in 2..sz repeat
         c := jlref(concat(["tmp[", string(i), "][1]"]))$R
         e := jlEvalString(concat(["tmp[", string(i), "][2]"]))@NNI
-        res := mergeFactors(res, primeFactor(c,e))
+        ret := concat(ret, ["irred", c, e]$FFE)
       jlEvalString("tmp=nothing")@Void
-      res
-      
+      mkFF(jlref(concat(["unit(", getind(fr), ")"]))$R, ret) pretend Factored(R)
+
+    factorSquareFree(intd : R) : Factored(R) ==
+      sz : NNI
+      zero?(intd) => 0
+      ret := empty()$List(FFE)
+      fr : % := junfunc("factor_squarefree", intd)
+      if R has OrderedSet then
+        sz :=
+          jlEvalString(concat(["tmp=sort(collect(", getind(fr),"));length(tmp)"]))@NNI
+      else
+        sz :=
+          jlEvalString(concat(["tmp=collect(", getind(fr),");length(tmp)"]))@NNI
+      sz = 0 => mkFF(jlref(concat(["unit(", getind(fr), ")"]))$R,
+        ret) pretend Factored(R)
+      c := jlref("tmp[1][1]")$R
+      e := jlEvalString("tmp[1][2]")@NNI
+      ret := concat(ret, ["sqfr", c, e]$FFE)
+      for i in 2..sz repeat
+        c := jlref(concat(["tmp[", string(i), "][1]"]))$R
+        e := jlEvalString(concat(["tmp[", string(i), "][2]"]))@NNI
+        ret := concat(ret, ["sqfr", c, e]$FFE)
+      jlEvalString("tmp=nothing")@Void
+      mkFF(jlref(concat(["unit(", getind(fr), ")"]))$R, ret) pretend Factored(R)
     coerce(ob : %) : OutputForm ==
       jlRegexReplace(jlRegex("//"), jlSubstitute("/"),
         string(ob)) pretend OutputForm

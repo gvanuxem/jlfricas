@@ -135,17 +135,11 @@ NemoArbField(p: PositiveInteger) : Exports == Implementation where
     Rep := SExpression
 
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-    jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
-    junfunc(func,a) ==> jlref(concat([func, getind(a),")"]))
-    jbinfunc(func,a,b) ==>
-      jlref(concat([func, getind(a), ",", getind(b),")"]))
-    jbinbop(op,a,b) ==>
-      jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
-    junbfunc(bfunc, a) ==>
-      jlEvalString(concat([bfunc, getind(a),")"]))@Boolean
-    jbinbfunc(bfunc, a, b) ==>
-      jlEvalString(concat([bfunc, getind(a), ",",
-        getind(b),")"]))@Boolean
+    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+    jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+    junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
+    jbinbfunc(op,a,b) ==>
+      jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
     -- initialize
     NARB := concat(["NARB", string(p)])
@@ -164,7 +158,7 @@ NemoArbField(p: PositiveInteger) : Exports == Implementation where
     midpoint(x) == junfunc("midpoint(", x)
     radius(x) == junfunc("radius(", x)
     addError!(x, y) ==
-      jbinbfunc("add_error!(",x,y)
+      jlEvalString(concat ["add_error!(", getind(x), ",", getind(y),")"])
       x
     trim(x) == junfunc("trim(",x)
     uniqueInteger(x) == --TODO: Julia boolean and tuples
@@ -176,44 +170,39 @@ NemoArbField(p: PositiveInteger) : Exports == Implementation where
       "failed"
     setUnion(x,y) == jbinfunc("setunion(",x,y)
 
-    -- Why??? Only Arb
-    x = y  == jbinbfunc("isequal(",x,y)
-    x ~= y == jbinbfunc("!isequal(",x,y)
-    x < y  == jbinbfunc("isless(",x,y)
-    x > y  ==
-      jlEvalString(concat ["!isless(", getind(x),",",getind(y),")&&!isequal(",getind(x),",", getind(y),")"])
-    x >= y == jbinbfunc("!isless(",x,y)
-    x <= y ==
-      jlEvalString(concat ["isless(", getind(x),",",getind(y),")||isequal(",getind(x),",", getind(y),")"])
+    x < y  == jbinbfunc("<",x,y)
+    x > y  == jbinbfunc(">",x,y)
+    x >= y == jbinbfunc(">=",x,y)
+    x <= y == jbinbfunc("<=",x,y)
 
-    zero? x == junbfunc("iszero(", x)
-    one? x == junbfunc("isone(", x)
-    integer? x == junbfunc("isinteger(", x)
-    nonZero? x == junbfunc("is_nonzero(", x)
-    finite? x == junbfunc("isfinite(", x)
-    exact? x == junbfunc("is_exact(", x)
-    positive? x == junbfunc("is_positive(", x)
-    nonNegative? x == junbfunc("is_nonnegative(",x)
-    negative? x == junbfunc("is_negative(", x)
-    nonPositive? x == junbfunc("is_nonpositive(", x)
-    containsZero? x == junbfunc("contains_zero(", x)
-    containsPositive? x == junbfunc("contains_positive(", x)
-    containsNonPositive? x == junbfunc("contains_nonpositive(", x)
-    containsNegative? x == junbfunc("contains_negative(", x)
-    containsNonNegative? x == junbfunc("contains_nonnegative(", x)
-    overlaps?(x,y) == jbinbfunc("overlaps(", x, y)
-    contains?(x : %, y : %) == jbinbfunc("contains(", x, y)
-    contains?(x : %, y : NemoInteger) == jbinbfunc("contains(", x, y)
-    contains?(x : %, y : NemoFraction(NemoInteger)) == jbinbfunc("contains(", x, y)
-    contains?(x : %, y : JuliaFloat) == jbinbfunc("contains(", x, y)
+    zero? x == junbfunc("iszero", x)
+    one? x == junbfunc("isone", x)
+    integer? x == junbfunc("isinteger", x)
+    nonZero? x == junbfunc("is_nonzero", x)
+    finite? x == junbfunc("isfinite", x)
+    exact? x == junbfunc("is_exact", x)
+    positive? x == junbfunc("is_positive", x)
+    nonNegative? x == junbfunc("is_nonnegative",x)
+    negative? x == junbfunc("is_negative", x)
+    nonPositive? x == junbfunc("is_nonpositive", x)
+    containsZero? x == junbfunc("contains_zero", x)
+    containsPositive? x == junbfunc("contains_positive", x)
+    containsNonPositive? x == junbfunc("contains_nonpositive", x)
+    containsNegative? x == junbfunc("contains_negative", x)
+    containsNonNegative? x == junbfunc("contains_nonnegative", x)
+    overlaps?(x,y) == jbinbfunc("overlaps", x, y)
+    contains?(x : %, y : %) == jbinbfunc("contains", x, y)
+    contains?(x : %, y : NemoInteger) == jbinbfunc("contains", x, y)
+    contains?(x : %, y : NemoFraction(NemoInteger)) ==
+      jbinbfunc("contains", x, y)
+    contains?(x : %, y : JuliaFloat) == jbinbfunc("contains", x, y)
 
     precision() == p
     bits(x) == jlEvalString(concat(["bits(", getind(x),")"]))
-    accuracyBits(x) == jlEvalString(concat(["accuracy_bits(",
-      getind(x),")"]))
+    accuracyBits(x) == jlEvalString(concat(["accuracy_bits(", getind(x),")"]))
 
-    x : % / y : % == jbinop("/", x, y)
-    x : % ^ y : % == jbinop("^", x, y)
+    x : % / y : % == jbinfunc("/", x, y)
+    x : % ^ y : % == jbinfunc("^", x, y)
     x : % * y : Integer == jlref(concat([getind(x), "*", string(y)]))
     x : Integer / y : % == jlref(concat([string(x), "/", getind(y)]))
     x : % / y : Integer == jlref(concat([getind(x), "/", string(y)]))
@@ -221,17 +210,17 @@ NemoArbField(p: PositiveInteger) : Exports == Implementation where
     x ^ y : NNI == jlref(concat [getind(x), "^", string(y)])
     x ^ y : Integer == jlref(concat [getind(x), "^", string(y)])
     x ^ y : Fraction(Integer) ==
-      jlref(concat[getind(x), "^(", string(numer(y)),"//", string(denom(y)),")"])
+      jlref(concat [getind(x), "^(", string(numer(y)),"//", string(denom(y)),")"])
     recip(x) ==
       zero?(x) => "failed"
       junfunc("recip(",x)
 
 
     abs(x) == junfunc("abs(", x)
-    -- x quo y == jbinop("div", x, y)
-    x quo y == jbinop("÷", x, y)
-    x rem y == jbinop("%", x, y)
-    float(m, e, b) == jbinop("*", jnrb(m), jnrb(b)^e)
+    -- x quo y == jbinfunc("div", x, y)
+    x quo y == jbinfunc("÷", x, y)
+    x rem y == jbinfunc("%", x, y)
+    float(m, e, b) == jbinfunc("*", jnrb(m), jnrb(b)^e)
 
     sqrt(x)  == junfunc("√(",x)
     exp(x)   == junfunc("exp(",x)
@@ -291,7 +280,7 @@ NemoArbField(p: PositiveInteger) : Exports == Implementation where
     convert(x) : JuliaFloat ==
       jlref(concat(["BigFloat(", getind(x),")"]))$JuliaFloat
     convert(x) : DoubleFloat ==
-      jlEvalString(concat["convert(Float64,",
+      jlEvalString(concat ["convert(Float64,",
         getind(x), ")"])@JF64 pretend DoubleFloat
     convert(x : %) : Float ==
       tmp := jlref(concat(["QQ(rationalize(BigInt,BigFloat(",
@@ -435,19 +424,13 @@ NemoAcbField(p: PositiveInteger) : Exports == Implementation where
     import from NemoFraction(NemoInteger)
 
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-    jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
-    junfunc(func,a) ==> jlref(concat([func, getind(a),")"]))
-    jbinfunc(func,a,b) ==>
-      jlref(concat([func, getind(a), ",", getind(b),")"]))
-    jterfunc(func,a,b,c) ==>
-      jlref(concat([func, getind(a), ",", getind(b), ",", getind(c), ")"]))
-    jbinbop(op,a,b) ==>
-      jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
-    junbfunc(bfunc, a) ==>
-      jlEvalString(concat([bfunc, getind(a),")"]))@Boolean
-    jbinbfunc(bfunc, a, b) ==>
-      jlEvalString(concat([bfunc, getind(a), ",",
-        getind(b),")"]))@Boolean
+
+    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+    jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+    jterfunc(func,a,b,c) ==> make_jlref_wcall3(func, a, b, c)$Lisp
+    junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
+    jbinbfunc(op,a,b) ==>
+      jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
     jlInitialize(true)
     Rep := SExpression
@@ -479,40 +462,36 @@ NemoAcbField(p: PositiveInteger) : Exports == Implementation where
     exp1() == jlref(concat(["exp(", NACB, "(1))"]))
     exp() == jlref(concat(["exp(", NACB, "(1))"]))
 
-    real(x) == junfunc("real(", x)
-    imag(x) == junfunc("imag(", x)
+    real(x) == junfunc("real", x)
+    imag(x) == junfunc("imag", x)
 
-    -- Why??? Only Arb
-    x = y  == jbinbfunc("isequal(",x,y)
-    x ~= y == jbinbfunc("!isequal(",x,y)
-
-    zero? x == junbfunc("iszero(",x)
+    zero? x == junbfunc("iszero",x)
     one? x == junbfunc("isone(",x)
-    integer? x == junbfunc("isinteger(", x)
-    finite? x == junbfunc("isfinite(", x)
-    exact? x == junbfunc("is_exact(", x)
-    overlaps?(x,y) == jbinbfunc("overlaps(", x, y)
-    contains?(x : %, y : %) == jbinbfunc("contains(", x, y)
-    contains?(x : %, y : NemoInteger) == jbinbfunc("contains(", x, y)
-    contains?(x : %, y : NemoFraction(NemoInteger)) == jbinbfunc("contains(", x, y)
-    containsZero? x == junbfunc("contains_zero(", x)
+    integer? x == junbfunc("isinteger", x)
+    finite? x == junbfunc("isfinite", x)
+    exact? x == junbfunc("is_exact", x)
+    overlaps?(x,y) == jbinbfunc("overlaps", x, y)
+    contains?(x : %, y : %) == jbinbfunc("contains", x, y)
+    contains?(x : %, y : NemoInteger) == jbinbfunc("contains", x, y)
+    contains?(x : %, y : NemoFraction(NemoInteger)) == jbinbfunc("contains", x, y)
+    containsZero? x == junbfunc("contains_zero", x)
 
-    x : % / y : % == jbinop("/", x, y)
-    x : % ^ y : % == jbinop("^", x, y)
+    x : % / y : % == jbinfunc("/", x, y)
+    x : % ^ y : % == jbinfunc("^", x, y)
     x : % * y : Integer == jlref(concat([getind(x), "*", string(y)]))
     x : Integer / y : % == jlref(concat([string(x), "/", getind(y)]))
     x ^ y : PI == jlref(concat [getind(x), "^", string(y)])
     x ^ y : NNI == jlref(concat [getind(x), "^", string(y)])
     x ^ y : Integer == jlref(concat [getind(x), "^", string(y)])
     x ^ y : Fraction(Integer) ==
-      jlref(concat[getind(x), "^(", string(numer(y)),"//", string(denom(y)),")"])
+      jlref(concat [getind(x), "^(", string(numer(y)),"//", string(denom(y)),")"])
     recip(x) ==
       zero?(x) => "failed"
       junfunc("recip(",x)
 
-    -- x quo y == jbinop("div", x, y)
-    x quo y == jbinop("÷", x, y)
-    x rem y == jbinop("%", x, y)
+    -- x quo y == jbinfunc("div", x, y)
+    x quo y == jbinfunc("÷", x, y)
+    x rem y == jbinfunc("%", x, y)
 
     sqrt(x)  == junfunc("√(",x)
     exp(x)   == junfunc("exp(",x)
@@ -722,17 +701,11 @@ NemoRealField() : Exports == Implementation where
     jlEvalString("NRF=RealField()")@Void
 
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-    jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
-    junfunc(func,a) ==> jlref(concat([func, getind(a),")"]))
-    jbinfunc(func,a,b) ==>
-      jlref(concat([func, getind(a), ",", getind(b),")"]))
-    jbinbop(op,a,b) ==>
-      jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
-    junbfunc(bfunc, a) ==>
-      jlEvalString(concat([bfunc, getind(a),")"]))@Boolean
-    jbinbfunc(bfunc, a, b) ==>
-      jlEvalString(concat([bfunc, getind(a), ",",
-        getind(b),")"]))@Boolean
+    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+    jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+    junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
+    jbinbfunc(op,a,b) ==>
+      jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
     precision() == jlEvalString("precision(NRF)")
     bits() == jlEvalString("precision(NRF)")
@@ -756,7 +729,7 @@ NemoRealField() : Exports == Implementation where
     midpoint(x) == junfunc("midpoint(", x)
     radius(x) == junfunc("radius(", x)
     addError!(x, y) ==
-      jbinbfunc("add_error!(",x,y)
+      jlEvalString(concat ["add_error!(", getind(x), ",", getind(y),")"])
       x
     uniqueInteger(x) == --TODO: Julia boolean and tuples
       ret : JuliaObject := junfunc("unique_integer(",x)
@@ -767,39 +740,34 @@ NemoRealField() : Exports == Implementation where
       "failed"
     setUnion(x,y) == jbinfunc("setunion(",x,y)
 
-    -- Why??? Only Arb
-    x = y  == jbinbfunc("isequal(",x,y)
-    x ~= y == jbinbfunc("!isequal(",x,y)
-    x < y  == jbinbfunc("isless(",x,y)
-    x > y  ==
-      jlEvalString(concat ["!isless(", getind(x),",",getind(y),")&&!isequal(",getind(x),",", getind(y),")"])
-    x >= y == jbinbfunc("!isless(",x,y)
-    x <= y ==
-      jlEvalString(concat ["isless(", getind(x),",",getind(y),")||isequal(",getind(x),",", getind(y),")"])
+    x < y  == jbinbfunc("<",x,y)
+    x > y  == jbinbfunc(">",x,y)
+    x >= y == jbinbfunc(">=",x,y)
+    x <= y == jbinbfunc("<=",x,y)
 
-    zero? x == junbfunc("iszero(", x)
-    one? x == junbfunc("isone(", x)
-    integer? x == junbfunc("isinteger(", x)
-    nonZero? x == junbfunc("is_nonzero(", x)
-    finite? x == junbfunc("isfinite(", x)
-    exact? x == junbfunc("is_exact(", x)
-    positive? x == junbfunc("is_positive(", x)
-    nonNegative? x == junbfunc("is_nonnegative(",x)
-    negative? x == junbfunc("is_negative(", x)
-    nonPositive? x == junbfunc("is_nonpositive(", x)
-    containsZero? x == junbfunc("contains_zero(", x)
-    containsPositive? x == junbfunc("contains_positive(", x)
-    containsNonPositive? x == junbfunc("contains_nonpositive(", x)
-    containsNegative? x == junbfunc("contains_negative(", x)
-    containsNonNegative? x == junbfunc("contains_nonnegative(", x)
-    overlaps?(x,y) == jbinbfunc("overlaps(", x, y)
-    contains?(x : %, y : %) == jbinbfunc("contains(", x, y)
-    contains?(x : %, y : NemoInteger) == jbinbfunc("contains(", x, y)
-    contains?(x : %, y : NemoFraction(NemoInteger)) == jbinbfunc("contains(", x, y)
-    contains?(x : %, y : JuliaFloat) == jbinbfunc("contains(", x, y)
+    zero? x == junbfunc("iszero", x)
+    one? x == junbfunc("isone", x)
+    integer? x == junbfunc("isinteger", x)
+    nonZero? x == junbfunc("is_nonzero", x)
+    finite? x == junbfunc("isfinite", x)
+    exact? x == junbfunc("is_exact", x)
+    positive? x == junbfunc("is_positive", x)
+    nonNegative? x == junbfunc("is_nonnegative",x)
+    negative? x == junbfunc("is_negative", x)
+    nonPositive? x == junbfunc("is_nonpositive", x)
+    containsZero? x == junbfunc("contains_zero", x)
+    containsPositive? x == junbfunc("contains_positive", x)
+    containsNonPositive? x == junbfunc("contains_nonpositive", x)
+    containsNegative? x == junbfunc("contains_negative", x)
+    containsNonNegative? x == junbfunc("contains_nonnegative", x)
+    overlaps?(x,y) == jbinbfunc("overlaps", x, y)
+    contains?(x : %, y : %) == jbinbfunc("contains", x, y)
+    contains?(x : %, y : NemoInteger) == jbinbfunc("contains", x, y)
+    contains?(x : %, y : NemoFraction(NemoInteger)) == jbinbfunc("contains", x, y)
+    contains?(x : %, y : JuliaFloat) == jbinbfunc("contains", x, y)
 
-    x : % / y : % == jbinop("/", x, y)
-    x : % ^ y : % == jbinop("^", x, y)
+    x : % / y : % == jbinfunc("/", x, y)
+    x : % ^ y : % == jbinfunc("^", x, y)
     x : % * y : Integer == jlref(concat([getind(x), "*", string(y)]))
     x : Integer / y : % == jlref(concat([string(x), "/", getind(y)]))
     x : % / y : Integer == jlref(concat([getind(x), "/", string(y)]))
@@ -807,16 +775,16 @@ NemoRealField() : Exports == Implementation where
     x ^ y : NNI == jlref(concat [getind(x), "^", string(y)])
     x ^ y : Integer == jlref(concat [getind(x), "^", string(y)])
     x ^ y : Fraction(Integer) ==
-      jlref(concat[getind(x), "^(", string(numer(y)),"//", string(denom(y)),")"])
+      jlref(concat [getind(x), "^(", string(numer(y)),"//", string(denom(y)),")"])
     recip(x) ==
       zero?(x) => "failed"
       junfunc("recip(",x)
    
     abs(x) == junfunc("abs(", x)
-    -- x quo y == jbinop("div", x, y)
-    x quo y == jbinop("÷", x, y)
-    x rem y == jbinop("%", x, y)
-    float(m, e, b) == jbinop("*",jnrf(m), jnrf(b)^e)
+    -- x quo y == jbinfunc("div", x, y)
+    x quo y == jbinfunc("÷", x, y)
+    x rem y == jbinfunc("%", x, y)
+    float(m, e, b) == jbinfunc("*",jnrf(m), jnrf(b)^e)
 
     sqrt(x)  == junfunc("√(",x)
     exp(x)   == junfunc("exp(",x)
@@ -872,7 +840,7 @@ NemoRealField() : Exports == Implementation where
         jlref(concat(["QQ(rationalize(BigInt,BigFloat(",
           getind(x),")))"]))$NemoFraction(NemoInteger)
     convert(x) : DoubleFloat ==
-      jlEvalString(concat["convert(Float64,",
+      jlEvalString(concat ["convert(Float64,",
         getind(x), ")"])@JF64 pretend DoubleFloat
     convert(x) : JuliaFloat ==
       jlref(concat(["BigFloat(", getind(x),")"]))$JuliaFloat
@@ -1016,19 +984,12 @@ NemoComplexField() : Exports == Implementation where
     jlEvalString("NCF=ComplexField()")@Void
 
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-    jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
-    junfunc(func,a) ==> jlref(concat([func, getind(a),")"]))
-    jbinfunc(func,a,b) ==>
-      jlref(concat([func, getind(a), ",", getind(b),")"]))
-    jterfunc(func,a,b,c) ==>
-      jlref(concat([func, getind(a), ",", getind(b), ",", getind(c), ")"]))
-    jbinbop(op,a,b) ==>
-      jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
-    junbfunc(bfunc, a) ==>
-      jlEvalString(concat([bfunc, getind(a),")"]))@Boolean
-    jbinbfunc(bfunc, a, b) ==>
-      jlEvalString(concat([bfunc, getind(a), ",",
-        getind(b),")"]))@Boolean
+    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+    jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+    jterfunc(func,a,b,c) ==> make_jlref_wcall3(func, a, b, c)$Lisp
+    junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
+    jbinbfunc(op,a,b) ==>
+      jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
   
     precision() == jlEvalString("precision(NCF)")
@@ -1058,33 +1019,29 @@ NemoComplexField() : Exports == Implementation where
     exp1() == jlref("exp(NCF(1))")
     exp() == jlref("exp(NCF(1))")
 
-    -- Why??? Only Arb
-    x = y  == jbinbfunc("isequal(",x,y)
-    x ~= y == jbinbfunc("!isequal(",x,y)
+    zero? x == junbfunc("iszero",x)
+    one? x == junbfunc("isone",x)
+    integer? x == junbfunc("isinteger", x)
+    finite? x == junbfunc("isfinite", x)
+    exact? x == junbfunc("is_exact", x)
+    overlaps?(x,y) == jbinbfunc("overlaps", x, y)
+    contains?(x : %, y : %) == jbinbfunc("contains", x, y)
+    contains?(x : %, y : NemoInteger) == jbinbfunc("contains", x, y)
+    contains?(x : %, y : NemoFraction(NemoInteger)) == jbinbfunc("contains", x, y)
+    containsZero? x == junbfunc("contains_zero", x)
 
-    zero? x == junbfunc("iszero(",x)
-    one? x == junbfunc("isone(",x)
-    integer? x == junbfunc("isinteger(", x)
-    finite? x == junbfunc("isfinite(", x)
-    exact? x == junbfunc("is_exact(", x)
-    overlaps?(x,y) == jbinbfunc("overlaps(", x, y)
-    contains?(x : %, y : %) == jbinbfunc("contains(", x, y)
-    contains?(x : %, y : NemoInteger) == jbinbfunc("contains(", x, y)
-    contains?(x : %, y : NemoFraction(NemoInteger)) == jbinbfunc("contains(", x, y)
-    containsZero? x == junbfunc("contains_zero(", x)
-
-    x : % / y : % == jbinop("/", x, y)
-    x : % ^ y : % == jbinop("^", x, y)
+    x : % / y : % == jbinfunc("/", x, y)
+    x : % ^ y : % == jbinfunc("^", x, y)
     x : % * y : Integer == jlref(concat([getind(x), "*", string(y)]))
     x : Integer / y : % == jlref(concat([string(x), "/", getind(y)]))
     x : % / y : Integer == jlref(concat([getind(x), "/", string(y)]))
     x ^ y : Integer == jlref(concat [getind(x), "^", string(y)])
     x ^ y : Fraction(Integer) ==
-      jbinop("^", x, coerce(y)@NemoFraction(NemoInteger))
+      jbinfunc("^", x, coerce(y)@NemoFraction(NemoInteger))
 
-    -- x quo y == jbinop("div", x, y)
-    x quo y == jbinop("÷", x, y)
-    x rem y == jbinop("%", x, y)
+    -- x quo y == jbinfunc("div", x, y)
+    x quo y == jbinfunc("÷", x, y)
+    x rem y == jbinfunc("%", x, y)
 
     sqrt(x)  == junfunc("√(",x)
     exp(x)   == junfunc("exp(",x)

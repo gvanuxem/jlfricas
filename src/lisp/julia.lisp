@@ -23,6 +23,20 @@
         (command c-string))
 (fricas-foreign-call boot::|jl_dbl_eval_string| "jl_dbl_eval_string" double
         (command c-string))
+(fricas-foreign-call boot::|jl_call1_wrapped_index| "jl_call1_wrapped_index" long
+        (func c-string) (index long) (ind long))
+(fricas-foreign-call boot::|jl_call2_wrapped_index| "jl_call2_wrapped_index" long
+        (func c-string) (index long) (ind1 long) (ind2 long))
+(fricas-foreign-call boot::|jl_call3_wrapped_index| "jl_call3_wrapped_index" long
+        (func c-string) (index long) (ind1 long) (ind2 long) (ind3 long))
+(fricas-foreign-call boot::|jl_call4_wrapped_index| "jl_call4_wrapped_index" long
+        (func c-string) (index long) (ind1 long) (ind2 long) (ind3 long)
+            (ind4 long))
+(fricas-foreign-call boot::|jl_call5_wrapped_index| "jl_call5_wrapped_index" long
+        (func c-string) (index long) (ind1 long) (ind2 long) (ind3 long)
+            (ind4 long) (ind5 long))
+
+; 64 bits floating point numbers
 (fricas-foreign-call boot::|jl_function_dbl| "jl_call_function_dbl" void
         (func c-string) (arg double))
 (fricas-foreign-call boot::|jl_function_dbl_dbl| "jl_call_function_dbl_dbl" void
@@ -84,6 +98,10 @@
     long (index long) (command c-string))
 (fricas-foreign-call boot::|jl_bool_function_flt_flt| "jl_call_bool_function_flt_flt"
     bool (func c-string) (arg1 float) (arg2 float))
+(fricas-foreign-call boot::|jl_call1_bool_wrapped_index| "jl_call1_bool_wrapped_index"
+    bool (func c-string) (arg1 long))
+(fricas-foreign-call boot::|jl_call2_bool_wrapped_index| "jl_call2_bool_wrapped_index"
+    bool (func c-string) (arg1 long) (arg2 long))
 )
 
 #+:openmcl
@@ -104,17 +122,21 @@
     long (index long) (command c-string))
 (fricas-foreign-call jl_bool_function_flt_flt "jl_call_bool_function_flt_flt" bool
         (func c-string) (arg1 float) (arg2 float))
+(fricas-foreign-call jl_call1_bool_wrapped_index "jl_call1_bool_wrapped_index" bool
+        (func c-string) (arg1 long))
+(fricas-foreign-call jl_call2_bool_wrapped_index "jl_call2_bool_wrapped_index" bool
+        (func c-string) (arg1 long) (arg2 long))
 )
 )
 
 #+:openmcl
 (progn
 (defmacro boot::|jl_bool_eval_string| (str)
-    `(if (eq (jl_bool_eval_string ,str)  0) nil t))
+    `(if (eq (jl_bool_eval_string ,str)  1) t nil))
 (defmacro boot::|jl_string_eval_string| (str)
     `(ccl::%get-utf-8-cstring (jl_string_eval_string ,str)))
 (defmacro boot::|jl_bool_function_dbl_dbl| (func arg1 arg2)
-    `(if (eq (jl_bool_function_dbl_dbl ,func ,arg1 ,arg2)  0) nil t))
+    `(if (eq (jl_bool_function_dbl_dbl ,func ,arg1 ,arg2)  1) t nil))
 (defmacro boot::|jl_string_function_flt| (func  flt)
     `(ccl::%get-utf-8-cstring (jl_string_function_flt ,func ,flt)))
 (defmacro boot::|jl_string_function_dbl| (func dbl)
@@ -122,9 +144,11 @@
 (defmacro boot::|jl_string_getindex| (index)
     `(ccl::%get-utf-8-cstring (jl_stringify_wrapped_index ,index)))
 (defmacro boot::|jl_bool_function_flt_flt| (func arg1 arg2)
-    `(if (eq (jl_bool_function_flt_flt ,func ,arg1 ,arg2)  0) nil t))
-(defmacro boot::|jl_setindex_wrap_eval_string| (index str)
-    `(jl_setindex_wrap_eval_string ,index ,str))
+    `(if (eq (jl_bool_function_flt_flt ,func ,arg1 ,arg2)  1) t nil))
+(defmacro boot::|jl_call1_bool_wrapped_index| (func index)
+    `(if (eq (jl_call1_bool_wrapped_index ,func ,index) 1) t nil))
+(defmacro boot::|jl_call2_bool_wrapped_index| (func index1 index2)
+    `(if (eq (jl_call2_bool_wrapped_index ,func ,index1 ,index2) 1) t nil))
 )
 
 (in-package "BOOT")
@@ -145,7 +169,77 @@
         (if (not (eq id 0)) ; unless str code is wrong
             (let ((ret (make-instance 'jlref :id id
                     :jtype (|jl_string_eval_string|
-                        (concatenate 'string "string(typeof(getindex(refs," (princ-to-string id) ")))")))))
+                        (concatenate 'string "string(typeof(getindex(refs," 
+                            (princ-to-string id) ")))")))))
+                    #+:sbcl (sb-ext:finalize ret (lambda ()
+                        (sb-concurrency:enqueue index *jqueue*)))
+                ret)
+            (error "Invalid command given to Julia"))))
+
+(defun |make_jlref_wcall1| (func var1)
+    (let* ((index (random most-positive-fixnum))
+            (id (|jl_call1_wrapped_index| func index (jlrefId var1))))
+        (if (not (eq id 0)) ; unless str code is wrong
+            (let ((ret (make-instance 'jlref :id id
+                    :jtype (|jl_string_eval_string|
+                        (concatenate 'string "string(typeof(getindex(refs,"
+                            (princ-to-string id) ")))")))))
+                    #+:sbcl (sb-ext:finalize ret (lambda ()
+                        (sb-concurrency:enqueue index *jqueue*)))
+                ret)
+            (error "Invalid command given to Julia"))))
+
+(defun |make_jlref_wcall2| (func var1 var2)
+    (let* ((index (random most-positive-fixnum))
+            (id (|jl_call2_wrapped_index| func index (jlrefId var1) (jlrefId var2))))
+        (if (not (eq id 0)) ; unless str code is wrong
+            (let ((ret (make-instance 'jlref :id id
+                    :jtype (|jl_string_eval_string|
+                        (concatenate 'string "string(typeof(getindex(refs,"
+                            (princ-to-string id) ")))")))))
+                    #+:sbcl (sb-ext:finalize ret (lambda ()
+                        (sb-concurrency:enqueue index *jqueue*)))
+                ret)
+            (error "Invalid command given to Julia"))))
+
+(defun |make_jlref_wcall3| (func var1 var2 var3)
+    (let* ((index (random most-positive-fixnum))
+            (id (|jl_call3_wrapped_index| func index
+                (jlrefId var1) (jlrefId var2) (jlrefId var3))))
+        (if (not (eq id 0)) ; unless str code is wrong
+            (let ((ret (make-instance 'jlref :id id
+                    :jtype (|jl_string_eval_string|
+                        (concatenate 'string "string(typeof(getindex(refs,"
+                            (princ-to-string id) ")))")))))
+                    #+:sbcl (sb-ext:finalize ret (lambda ()
+                        (sb-concurrency:enqueue index *jqueue*)))
+                ret)
+            (error "Invalid command given to Julia"))))
+
+(defun |make_jlref_wcall4| (func var1 var2 var3 var4)
+    (let* ((index (random most-positive-fixnum))
+            (id (|jl_call4_wrapped_index| func index
+                (jlrefId var1) (jlrefId var2) (jlrefId var3) (jlrefId var4))))
+        (if (not (eq id 0)) ; unless str code is wrong
+            (let ((ret (make-instance 'jlref :id id
+                    :jtype (|jl_string_eval_string|
+                        (concatenate 'string "string(typeof(getindex(refs,"
+                            (princ-to-string id) ")))")))))
+                    #+:sbcl (sb-ext:finalize ret (lambda ()
+                        (sb-concurrency:enqueue index *jqueue*)))
+                ret)
+            (error "Invalid command given to Julia"))))
+
+(defun |make_jlref_wcall5| (func var1 var2 var3 var4 var5)
+    (let* ((index (random most-positive-fixnum))
+            (id (|jl_call5_wrapped_index| func index
+                (jlrefId var1) (jlrefId var2) (jlrefId var3)
+                (jlrefId var4) (jlrefId var5))))
+        (if (not (eq id 0)) ; unless str code is wrong
+            (let ((ret (make-instance 'jlref :id id
+                    :jtype (|jl_string_eval_string|
+                        (concatenate 'string "string(typeof(getindex(refs,"
+                            (princ-to-string id) ")))")))))
                     #+:sbcl (sb-ext:finalize ret (lambda ()
                         (sb-concurrency:enqueue index *jqueue*)))
                 ret)
@@ -156,7 +250,8 @@
         (if (not (equal id ""))
             (let ((ret (make-instance 'jlref :id id
                     :jtype (|jl_string_eval_string|
-                        (concatenate 'string "string(typeof(getindex(refs," (princ-to-string id) ")))")))))
+                        (concatenate 'string "string(typeof(getindex(refs,"
+                            (princ-to-string id) ")))")))))
                     #+:sbcl (sb-ext:finalize ret (lambda ()
                         (sb-concurrency:enqueue index *jqueue*)))
                 ret)
@@ -167,7 +262,8 @@
         (if (not (equal id ""))
             (let ((ret (make-instance 'jlref :id id
                     :jtype (|jl_string_eval_string|
-                        (concatenate 'string "string(typeof(getindex(refs," (princ-to-string id) ")))")))))
+                        (concatenate 'string "string(typeof(getindex(refs,"
+                            (princ-to-string id) ")))")))))
                     #+:sbcl (sb-ext:finalize ret (lambda ()
                         (sb-concurrency:enqueue index *jqueue*)))
                 ret)
@@ -178,7 +274,8 @@
         (if (not (equal id ""))
             (let ((ret (make-instance 'jlref :id id
                     :jtype (|jl_string_eval_string|
-                        (concatenate 'string "string(typeof(getindex(refs," (princ-to-string id) ")))")))))
+                        (concatenate 'string "string(typeof(getindex(refs,"
+                            (princ-to-string id) ")))")))))
                     #+:sbcl (sb-ext:finalize ret (lambda ()
                         (sb-concurrency:enqueue index *jqueue*)))
                 ret)
@@ -189,7 +286,8 @@
         (if (not (equal id ""))
             (let ((ret (make-instance 'jlref :id id
                     :jtype (|jl_string_eval_string|
-                        (concatenate 'string "string(typeof(getindex(refs," (princ-to-string id) ")))")))))
+                        (concatenate 'string "string(typeof(getindex(refs,"
+                            (princ-to-string id) ")))")))))
                     #+:sbcl (sb-ext:finalize ret (lambda ()
                         (sb-concurrency:enqueue index *jqueue*)))
                 ret)
@@ -248,8 +346,9 @@
     ;(concatenate 'string (string #\newline)
     (uiop:split-string
         (|jl_string_eval_string| (concatenate 'string
-            "io = IOBuffer();" func "(io," mime "," index ");String(take!(io))"))
-            :separator (string #\newline)))
+            "io = IOBuffer();" func "(io," mime ", getindex(refs,"
+                (princ-to-string index) "));String(take!(io))"))
+                    :separator (string #\newline)))
       
 (defun |jl_using_package|(pack)
     (|jl_bool_eval_string| (concatenate 'string "try using " pack
