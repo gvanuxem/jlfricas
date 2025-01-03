@@ -27,6 +27,20 @@ JuliaWSExpression() : Exports == Implementation where
     ++ zero? x tries to determine if x is 0.
     ++ For example:
     ++ \example{expr:=0$JWSEXPR/1*sqrt(17::JWSEXPR); zero? expr}
+    real? : % -> Boolean
+    ++ \undocumented
+    realNumeric? : % -> Boolean
+    ++ \undocumented
+    integer? : % -> Boolean
+    ++ \undocumented
+    rational? : % -> Boolean
+    ++ \undocumented
+    number? : % -> Boolean
+    ++ \undocumented
+    machineNumber? : % -> Boolean
+    ++ \undocumented
+    exactNumber? : % -> Boolean
+    ++ \undocumented
     positive? : % -> Boolean
     ++ positive?(expr) checks whether or not expr is positive.
     negative? : % -> Boolean
@@ -917,6 +931,11 @@ JuliaWSExpression() : Exports == Implementation where
     retract : % -> Expression(Integer)
     ++ retract(expr) tries to retract expr to an Expression(Integer).
     ++ Throws an error otherwise.
+    retractIfCan : % -> Union(Expression(Float), "failed")
+    ++ retractIfCan(expr) tries to retract expr to an Expression(Float).
+    retract : % -> Expression(Float)
+    ++ retract(expr) tries to retract expr to an Expression(Integer).
+    ++ Throws an error otherwise.
     coerce  : Integer  -> %
     ++ coerce(z) coerces the integer z to a JuliaWSExpression.
     ++ Convenience function.
@@ -950,7 +969,8 @@ JuliaWSExpression() : Exports == Implementation where
     ++ jlWSSetOptions(type, opts) sets some internal engine options.
     -- SetAttributes Hold*
     jWSData : () -> %
-    ++ jWSData() returns the list of WS symbols. Note: Unprintable. 
+    ++ jWSData() returns the list of WS symbols.
+    ++ Note: Currently unprintable. 
     jWSData : String -> %
     ++ jWSData(sym) returns the entity(ies) associated to sym(s).
     jWSData : (String, String) -> %
@@ -1015,6 +1035,7 @@ JuliaWSExpression() : Exports == Implementation where
     ++ \example{jWSExpr "Today"}
   Implementation ==> JuliaObject add
     import from JuliaUtilityFunctions
+    import from JuliaStringUtilities
 
     jbinop(op,a,b) ==> jlref(concat(["weval(", getind(a), op, getind(b),")"]))
     junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
@@ -1036,13 +1057,17 @@ JuliaWSExpression() : Exports == Implementation where
     
     Rep := SExpression
 
-    strToExpr(s : String) : Union(Expression(Integer), "failed") ==
-      -- Give up if there are arbitrary precision numbers
-      -- jlRegexMatch?(jlRegex("_`[1-9]|\bi\b"), s) => "failed"
+    strToExprInt(s : String) : Union(Expression(Integer), "failed") ==
       str := concat("0$Expression(Integer)+", s)
       af := parse(str)$InputForm
       av := interpret_in_new_env(af)$InputForm
       retractIfCan(av)$AnyFunctions1(Expression(Integer))
+
+    strToExprFloat(s : String) : Union(Expression(Float), "failed") ==
+      str := concat("0$Expression(Float)+", s)
+      af := parse(str)$InputForm
+      av := interpret_in_new_env(af)$InputForm
+      retractIfCan(av)$AnyFunctions1(Expression(Float))
 
     0 == jlref("W_`0_`")
     1 == jlref("W_`1_`")
@@ -1067,6 +1092,14 @@ JuliaWSExpression() : Exports == Implementation where
     member?(list, expr) == jbinfunc("W_"MemberQ_"(", list, expr) = WT
     key?(assoc,key) == jbinfunc("W_"KeyExistsQ_"(",assoc,key) = WT
     missing?(x) == junfunc("W_"MissingQ_"(", x) = WT
+    real?(x)    == junfunc("W_"RealValuedNumberQ_"(", x) = WT
+    realNumeric?(x) == junfunc("W_"RealValuedNumericQ_"(", x) = WT
+    integer?(x) == junfunc("W_"IntegerQ_"(", x) = WT
+    rational?(x) == junfunc("W_"RationalQ_"(", x) = WT
+    number?(x) == junfunc("W_"NumberQ_"(", x) = WT
+    machineNumber?(x) == junfunc("W_"MachineNumberQ_"(", x) = WT
+    exactNumber?(x) == junfunc("W_"ExactNumberQ_"(", x) = WT
+
     jlWSDefined?(str) == not missing?(jWSData(str))
 
     zero? expr == junfunc("W_"PossibleZeroQ_"(",expr) = WT
@@ -1673,17 +1706,31 @@ JuliaWSExpression() : Exports == Implementation where
     retractIfCan(expr : %) : Union(DoubleFloat, "failed") ==
       jlType(expr) = "Float64" => jlEvalString(getind(expr))@JF64 pretend DoubleFloat
       "failed"
-    retractIfCan(expr : %) : Union(Expression(Integer), "failed") ==
+    retractIfCan(expr) : Union(Expression(Integer), "failed") ==
       str : String := jlEvalString(concat(["replace(_"",
         toString(expr, jWSExpr "InputForm"),
-          "_", r_"\b[A-Z]_" => x -> lowercase(x))"]))
-      str := jlEvalString(concat(["replace(_"", str,
-        "_", '[' => '(', ']' => ')', _"arcS_" => _"as_", _"arcC_" => _"ac_", _"arct_" => _"at_")"]))
-      strToExpr(str)
+        "_", '[' => '(', ']' => ')', _"ArcS_" => _"as_", _"ArcC_" => _"ac_",",
+        " _"ArcT_" => _"at_" , r_"\b[A-Z][a-z]{2}_" => x -> lowercase(x))"]))
+      jlRegexMatch?(str,jlRegex("[0-9]\.|0-9]")) => "failed"
+      strToExprInt(str)
     retract(expr : %) : Expression(Integer) ==
       (out := retractIfCan(expr)@Union(Expression(Integer), "failed"))
         case "failed" =>
-          error1("Unable to retract to an Expression(Integer)", expr)
+          error(concat("Unable to retract to an Expression(Integer).",
+            " Maybe Epression(Float) should be used."))
+      out
+    retractIfCan(expr : %) : Union(Expression(Float), "failed") ==
+      str : String := jlEvalString(concat(["replace(_"",
+        toString(expr, jWSExpr "InputForm"),
+        "_", '[' => '(', ']' => ')', _"ArcS_" => _"as_", _"ArcC_" => _"ac_",",
+        " _"ArcT_" => _"at_" , r_"\b[A-Z][a-z]{2}_" => x -> lowercase(x))"]))
+      -- TODO: to be improved `
+      jlRegexMatch?(str, jlRegex("`")) => "failed"
+      strToExprFloat(str)
+    retract(expr : %) : Expression(Float) ==
+      (out := retractIfCan(expr)@Union(Expression(Float), "failed"))
+        case "failed" =>
+          error1("Unable to retract to an Expression(Float): ", expr)
       out
     -- TODO: breaks output
     --string(expr) : String == toString expr
@@ -1746,15 +1793,12 @@ JuliaWSExpression() : Exports == Implementation where
     quantityForm(expr, form : JWSL(%)) ==
       jbinfunc("W_"QuantityForm_"(", expr, form)
     coerce(expr) : OutputForm ==
-      -- Computationally too expensive
-      -- error: middle word lowercasing
       jlHead(expr) = WS => coerce(string(expr))@OutputForm
       pagew := string(_$LINELENGTH$Lisp pretend Integer - 2)
       sexpr := toString(expr, jWSExpr concat("PageWidth -> ", pagew))
       str : String := jlEvalString(concat(["replace(_"", sexpr,
-        "_", r_"\b[A-Z][a-z]{2}_" => x -> lowercase(x))"]))
-      str : String := jlEvalString(concat(["replace(_"", str,
-        "_", '[' => '(', ']' => ')', _"arcS_" => _"as_", _"arcC_" => _"ac_", _"arcT_" => _"at_")"]))
+        "_", '[' => '(', ']' => ')', _"ArcS_" => _"as_", _"ArcC_" => _"ac_",",
+        " _"ArcT_" => _"at_" , r_"\b[A-Z][a-z]{2}_" => x -> lowercase(x))"]))
       l := split(str, newline())
       #l > 1 => pile(append([""],l) pretend List(OutputForm))
       str pretend OutputForm

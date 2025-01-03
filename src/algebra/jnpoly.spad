@@ -142,8 +142,8 @@ NemoUnivariatePolynomial(R : NemoRing, x : Symbol):
 
     NRing : String := string(op_of_Ring)
     NUPRing := concat(["UP",FORMAT(false, "~a", tmp)$Lisp, string(x)])
-    NUPRing := jlRegexReplace(jlRegex("[(|)|\s]"),
-      jlSubstitute(""), NUPRing)
+    NUPRing := jlRegexReplace(NUPRing,jlRegex("[(|)|\s]"),
+      jlSubstitute(""))
 
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     junfunc(func,a) ==> make_jlref_wcall1(func, a)$Lisp
@@ -185,7 +185,7 @@ NemoUnivariatePolynomial(R : NemoRing, x : Symbol):
 
     jnup(up) : % ==
       p: String := first(lines formatExpression(up::OutputForm)$Format1D)
-      ret := jlRegexReplace(jlRegex("/"), jlSubstitute("//"),p)
+      ret := jlRegexReplace(p, jlRegex("/"), jlSubstitute("//"))
       jlref(ret)
 
     jlNemoRing() == NUPRing
@@ -233,7 +233,7 @@ NemoUnivariatePolynomial(R : NemoRing, x : Symbol):
         not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
           => "failed"
         junfunc("last", ret)
-      p/r : R == inv(r)*p
+      p/(r : R) == inv(r)*p
       unitNormal(p) ==
         unitC : R := junfunc("canonical_unit", p)
         a := inv unitC
@@ -301,8 +301,7 @@ NemoUnivariatePolynomial(R : NemoRing, x : Symbol):
       jlref(concat ["integral(", getind(p),")"])
 
     coerce(p : %) : OutputForm ==
-      jlRegexReplace(jlRegex("//"), jlSubstitute("/"),
-        string(p)) pretend OutputForm
+      jlRegexReplace(string(p), jlRegex("//"), jlSubstitute("/")) pretend OutputForm
     coerce(v : Variable(x)) == jlref(string(v::Symbol))
     coerce(i : Integer) == jlref(concat([NUPRing,"(",string(i),")"]))
     coerce(c : R) == junfunc("NUPRing",c)
@@ -425,7 +424,7 @@ NemoUnivariateLaurentPolynomial(R : NemoRing, x : Symbol):
 
     NRing : String := string(op_of_Ring)
     NULPRing := concat(["ULP",FORMAT(false, "~a", tmp)$Lisp,string(x)])
-    NULPRing := jlRegexReplace(jlRegex("[(|)|\s]"), jlSubstitute(""), NULPRing)
+    NULPRing := jlRegexReplace(NULPRing, jlRegex("[(|)|\s]"), jlSubstitute(""))
 
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
@@ -548,7 +547,7 @@ NemoUnivariateLaurentPolynomial(R : NemoRing, x : Symbol):
     --  jlref(concat ["truncate(", getind(p),",", string(n),")"])
     --mullow(p1, p2, n) ==
     --  jlref(concat ["mullow(", getind(p1),",", getind(p2) , ",", string(n),")"])
-    --reverse(p) == junfunc("reverse(",p)
+    --reverse(p) == junfunc("reverse",p)
     --reverse(p,n) == jlref(concat ["reverse(", getind(p),",", string(n),")"])
 
     -- ... error in Nemo apparently
@@ -562,12 +561,12 @@ NemoUnivariateLaurentPolynomial(R : NemoRing, x : Symbol):
     jnulp(up) : % ==
       p: String := first(lines formatExpression(up::OutputForm)$Format1D)
       -- handle NRAT case
-      ret := jlRegexReplace(jlRegex("/"), jlSubstitute("//"), p)
+      ret := jlRegexReplace(p, jlRegex("/"), jlSubstitute("//"))
       jlref(ret)
 
     coerce(p : %) : OutputForm ==
-      jlRegexReplace(jlRegex("//"), jlSubstitute("/"),
-        string(p)) pretend OutputForm
+      jlRegexReplace(string(p),
+        jlRegex("//"), jlSubstitute("/")) pretend OutputForm
     coerce(v : Variable(x)) == jlref(string(v::Symbol))
     coerce(i : Integer) == jlref(concat([NULPRing,"(",string(i),")"]))
     coerce(c : R) == junfunc("NULPRing",c)
@@ -687,8 +686,8 @@ NemoMultivariatePolynomial(R : NemoRing, VarSet : List Symbol,
     -- FriCAS NemoRing of R
     NRing : String := string(op_of_Ring)
     -- Our Nemo Ring
-    NMPRing := jlRegexReplace(jlRegex("[(|)|\s]"), jlSubstitute(""),
-      concat("MP", FORMAT(false, "~a", tmp)$Lisp))
+    NMPRing := jlRegexReplace(concat("MP", FORMAT(false, "~a", tmp)$Lisp),
+      jlRegex("[(|)|\s]"), jlSubstitute(""))
 
     -- Check VarSet (TODO: reflect SMP)
     #VarSet ~= #removeDuplicates(VarSet) =>
@@ -696,8 +695,9 @@ NemoMultivariatePolynomial(R : NemoRing, VarSet : List Symbol,
 
     -- FriCAS defined vars in Julia
     -- Correct? "(\1,)" -> "(\1)"
-    vars := jlRegexReplace(jlRegex("\[(.*)\]"), jlSubstitute("(\1)"),
-        first lines formatExpression(VarSet::OutputForm)$Format1D)
+    vars := jlRegexReplace(
+      first lines formatExpression(VarSet::OutputForm)$Format1D,
+        jlRegex("\[(.*)\]"), jlSubstitute("(\1)"))
     
     -- List of double-quoted vars     
     lvars := map(v +-> string(v), VarSet)$ListFunctions2(Symbol, String)
@@ -716,7 +716,7 @@ NemoMultivariatePolynomial(R : NemoRing, VarSet : List Symbol,
 
     --strToExpr(s : String) : Union(Expression(Integer), "failed") ==
       -- Give up if there are arbitrary precision numbers
-      -- jlRegexMatch?(jlRegex("_`[1-9]|\bi\b"), s) => "failed"
+      -- jlRegexMatch?(s,jlRegex("_`[1-9]|\bi\b")) => "failed"
     --  str := concat("0$Expression(Integer)+", s)
     --  af := parse(str)$InputForm
     --  av := interpret_in_new_env(af)$InputForm
@@ -859,13 +859,10 @@ NemoMultivariatePolynomial(R : NemoRing, VarSet : List Symbol,
       jlEvalString(concat(["degree(", getind(p),",", string(index),")"]))@NNI
 
     -- unitCanonical(p) == junfunc("canonical_unit", p) -- The Nemo one 
-
+    recip(p) ==
+      unit?(p) => p
+      "failed"
     if R has DivisionRing then
-      recip(p) ==
-        ret : JuliaObjTuple := jbinfunc("divides", 1, p)
-        not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
-          => "failed"
-        junfunc("last", ret)
       p/r : R == inv(r)*p
       unitNormal(p) ==
         unitC : R := junfunc("canonical_unit", p)
@@ -874,15 +871,11 @@ NemoMultivariatePolynomial(R : NemoRing, VarSet : List Symbol,
       unitCanonical(p) ==
         a : R := junfunc("canonical_unit", p)
         p * inv a
-    else
-      recip(p) ==
-        one?(p) => p
-        "failed"
 
     jmp2nmp(mp) : % ==
       p: String := first(lines formatExpression(mp::OutputForm)$Format1D)
       -- handle NRAT case
-      ret := jlRegexReplace(jlRegex("/"), jlSubstitute("//"),p)
+      ret := jlRegexReplace(p,jlRegex("/"), jlSubstitute("//"))
       jlref(ret)
 
     retractIfCan(p : %) : Union(R,"failed") ==
@@ -891,13 +884,12 @@ NemoMultivariatePolynomial(R : NemoRing, VarSet : List Symbol,
       "failed"
 
     coerce(p : %) : OutputForm ==
-      jlRegexReplace(jlRegex("//"),jlSubstitute("/"),
-        string(p)) pretend OutputForm
+      jlRegexReplace(string(p),
+        jlRegex("//"),jlSubstitute("/")) pretend OutputForm
       --if R is NemoInteger then
       --  coerce(strToExpr(string(p)))
       --else
-      --  jlRegexReplace(jlRegex("//"),jlSubstitute("/"),
-      --    string(p)) pretend OutputForm
+      --  jlRegexReplace(string(p),jlRegex("//"),jlSubstitute("/")) pretend OutputForm
     coerce(v: OrderedVariableList(VarSet)) == jlref(string(convert(v)@Symbol))
     coerce(i : Integer) == jlref(concat([NMPRing, "(", string(i), ")"]))
     coerce(c : R) == jlref(concat([NMPRing, "(", getind(c),")"]))
@@ -1053,8 +1045,9 @@ NemoMultivariateLaurentPolynomial(R : NemoRing,
 
     -- FriCAS NemoRing of R
     NRing : String := string(op_of_Ring)
-    NMLPRing := jlRegexReplace(jlRegex("[(|)|\s]"), jlSubstitute(""),
-      concat("MP", FORMAT(false, "~a", tmp)$Lisp))
+    NMLPRing := jlRegexReplace(
+      concat("MP", FORMAT(false, "~a", tmp)$Lisp),
+        jlRegex("[(|)|\s]"), jlSubstitute(""))
 
     -- Check VarSet (TODO: reflect SMP)
     #VarSet ~= #removeDuplicates(VarSet) =>
@@ -1062,8 +1055,9 @@ NemoMultivariateLaurentPolynomial(R : NemoRing,
     
     -- FriCAS defined vars in Julia
     -- Correct? "(\1,)" -> "(\1)"
-    vars := jlRegexReplace(jlRegex("\[(.*)\]"), jlSubstitute("(\1)"),
-        first lines formatExpression(VarSet::OutputForm)$Format1D)
+    vars := jlRegexReplace(
+        first lines formatExpression(VarSet::OutputForm)$Format1D,
+          jlRegex("\[(.*)\]"), jlSubstitute("(\1)"))
     
     -- List of double-quoted vars     
     lvars := map(v +-> string(v), VarSet)$ListFunctions2(Symbol, String)
@@ -1082,7 +1076,7 @@ NemoMultivariateLaurentPolynomial(R : NemoRing,
 
     --strToExpr(s : String) : Union(Expression(Integer), "failed") ==
       -- Give up if there are arbitrary precision numbers
-      -- jlRegexMatch?(jlRegex("_`[1-9]|\bi\b"), s) => "failed"
+      -- jlRegexMatch?(s, jlRegex("_`[1-9]|\bi\b")) => "failed"
     --  str := concat("0$Expression(Integer)+", s)
     --  af := parse(str)$InputForm
     --  av := interpret_in_new_env(af)$InputForm
@@ -1096,7 +1090,6 @@ NemoMultivariateLaurentPolynomial(R : NemoRing,
       q : Fraction(Integer) + p : % == jbinfunc("+", coerce(q)@NRAT, p)
       q : Fraction(Integer) * p : % == jbinfunc("*", coerce(q)@NRAT, p)
       (p / q) : % == jbinfunc("/", p, q)
-    else error "Unimplemented ring."
 
     jlNemoRing() == NMLPRing
 
@@ -1261,8 +1254,8 @@ NemoMultivariateLaurentPolynomial(R : NemoRing,
         ret : JuliaObjTuple := jbinfunc("divides", 1$R, p)
         not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
           => "failed"
-        junfunc("last", ret)
-      p/r : R == inv(r)*p
+        junfunc("last",ret)
+      p/(r : R) == inv(r)*p
       unitNormal(p) ==
         unitC : R := junfunc("canonical_unit", p)
         a := inv unitC
@@ -1278,7 +1271,7 @@ NemoMultivariateLaurentPolynomial(R : NemoRing,
     jmp2nmlp(mp) : % ==
       p: String := first(lines formatExpression(mp::OutputForm)$Format1D)
       -- handle NRAT case
-      ret := jlRegexReplace(jlRegex("/"), jlSubstitute("//"),p)
+      ret := jlRegexReplace(p, jlRegex("/"), jlSubstitute("//"))
       jlref(ret)
 
     --retractIfCan(p : %) : Union(R,"failed") ==
@@ -1287,13 +1280,12 @@ NemoMultivariateLaurentPolynomial(R : NemoRing,
     --  "failed"
 
     coerce(p : %) : OutputForm ==
-      jlRegexReplace(jlRegex("//"),jlSubstitute("/"),
-        string(p)) pretend OutputForm
+      jlRegexReplace(string(p),
+        jlRegex("//"),jlSubstitute("/")) pretend OutputForm
       --if R is NemoInteger then
       --  coerce(strToExpr(string(p)))
       --else
-      --  jlRegexReplace(jlRegex("//"),jlSubstitute("/"),
-      --    string(p)) pretend OutputForm
+      --  jlRegexReplace(string(p), jlRegex("//"),jlSubstitute("/")) pretend OutputForm
     coerce(v: OrderedVariableList(VarSet)) == jlref(string(convert(v)@Symbol))
     coerce(i : Integer) == jlref(concat([NMLPRing, "(", string(i), ")"]))
     coerce(c : R) == jlref(concat([NMLPRing, "(", getind(c),")"]))

@@ -146,7 +146,7 @@ NemoArbField(p: PositiveInteger) : Exports == Implementation where
     jlEvalString(concat([NARB, "=ArbField(", string(p),")"]))@Void
     NARBP := concat(NARB,"(")
 
-    jlNemoRing() == "NARB"
+    jlNemoRing() == NARB
 
     0 == jlref(concat(["zero(", NARB, ")"]))
     1 == jlref(concat(["one(", NARB, ")"]))
@@ -155,20 +155,20 @@ NemoArbField(p: PositiveInteger) : Exports == Implementation where
     exp() == jlref(concat(["const_e(", NARB, ")"]))
     urand01() == jlref(concat(["rand(", NARB, ")"]))
 
-    midpoint(x) == junfunc("midpoint(", x)
-    radius(x) == junfunc("radius(", x)
+    midpoint(x) == junfunc("midpoint", x)
+    radius(x) == junfunc("radius", x)
     addError!(x, y) ==
       jlEvalString(concat ["add_error!(", getind(x), ",", getind(y),")"])
       x
-    trim(x) == junfunc("trim(",x)
+    trim(x) == junfunc("trim",x)
     uniqueInteger(x) == --TODO: Julia boolean and tuples
-      ret : JuliaObject := junfunc("unique_integer(",x)
+      ret : JuliaObject := junfunc("unique_integer",x)
       str: String := jlEvalString(concat(["string(getproperty(",
         getind(ret),",1))"]))
       str = "true" => jlref(concat(["getproperty(",
         getind(ret),",2)"]))$NemoInteger
       "failed"
-    setUnion(x,y) == jbinfunc("setunion(",x,y)
+    setUnion(x,y) == jbinfunc("setunion",x,y)
 
     x < y  == jbinbfunc("<",x,y)
     x > y  == jbinbfunc(">",x,y)
@@ -213,47 +213,48 @@ NemoArbField(p: PositiveInteger) : Exports == Implementation where
       jlref(concat [getind(x), "^(", string(numer(y)),"//", string(denom(y)),")"])
     recip(x) ==
       zero?(x) => "failed"
-      junfunc("recip(",x)
+      junfunc("inv",x) pretend %
 
 
-    abs(x) == junfunc("abs(", x)
+    abs(x) == junfunc("abs", x)
     -- x quo y == jbinfunc("div", x, y)
     x quo y == jbinfunc("÷", x, y)
     x rem y == jbinfunc("%", x, y)
     float(m, e, b) == jbinfunc("*", jnrb(m), jnrb(b)^e)
 
-    sqrt(x)  == junfunc("√(",x)
-    exp(x)   == junfunc("exp(",x)
-    log(x)   == junfunc("log(",x)
-    expm1(x) == junfunc("expm1(",x)
-    log1p(x) == junfunc("log1p(",x)
+    sqrt(x)  == junfunc("√",x)
+    exp(x)   == junfunc("exp",x)
+    log(x)   == junfunc("log",x)
+    expm1(x) == junfunc("expm1",x)
+    log1p(x) == junfunc("log1p",x)
     nthRoot(x, i) == jlref(concat(["root(", getind(x), ",", string(i), ")"]))
-    ldexp(x,n) == jbinfunc("ldexp(",x,n)
+    ldexp(x,n) == jbinfunc("ldexp",x,n)
 
-    sin(x)  == junfunc("sin(",x)
-    cos(x)  == junfunc("cos(",x)
-    tan(x)  == junfunc("tan(",x)
-    cot(x)  == junfunc("cot(",x)
+    sin(x)  == junfunc("sin",x)
+    cos(x)  == junfunc("cos",x)
+    tan(x)  == junfunc("tan",x)
+    cot(x)  == junfunc("cot",x)
 
-    asin(x)  == junfunc("asin(",x)
-    acos(x)  == junfunc("acos(",x)
-    atan(x)  == junfunc("atan(",x)
-    atan(x,y) == jbinfunc("atan(",x,y)
+    asin(x)  == junfunc("asin",x)
+    acos(x)  == junfunc("acos",x)
+    atan(x)  == junfunc("atan",x)
+    atan(x,y) == jbinfunc("atan",x,y)
 
-    sinh(x)  == junfunc("sinh(",x)
-    cosh(x)  == junfunc("cosh(",x)
-    tanh(x)  == junfunc("tanh(",x)
-    coth(x)  == junfunc("coth(",x)
+    sinh(x)  == junfunc("sinh",x)
+    cosh(x)  == junfunc("cosh",x)
+    tanh(x)  == junfunc("tanh",x)
+    coth(x)  == junfunc("coth",x)
 
-    asinh(x)  == junfunc("asinh(",x)
-    acosh(x)  == junfunc("acosh(",x)
-    atanh(x)  == junfunc("atanh(",x)
+    asinh(x)  == junfunc("asinh",x)
+    acosh(x)  == junfunc("acosh",x)
+    atanh(x)  == junfunc("atanh",x)
 
-    Gamma(x)  == junfunc("Nemo.gamma(",x)
-    Gamma(x,y) == jbinfunc("Nemo.gamma(",x, y)
-    hurwitzZeta(x,y) == jbinfunc("Nemo.zeta(",x, y)
+    Gamma(x)  == jlref(concat ["Nemo.gamma(", getind(x),")"])
+    Gamma(x,y) == jlref(concat ["Nemo.gamma(",getind(x),",",getind(y)])
+    hurwitzZeta(x,y) == jlref(concat ["Nemo.zeta(",getind(x),",",getind(y)])
+    polygamma(x,y) == jlref(concat ["Nemo.polygamma(",getind(x),",",getind(y)])
 
-    polylog(n,x) == jbinfunc("polylog(",n, x)
+    polylog(n,x) == jbinfunc("polylog",n, x)
 
     guess(a, deg) ==
       jlref(concat(["guess(QQBar,", getind(a), ",",
@@ -294,12 +295,12 @@ NemoArbField(p: PositiveInteger) : Exports == Implementation where
       outputSpacing(tmp)
       ret
     coerce(q : Fraction Integer) == 
-      jlref(concat([NARBP, getind(coerce(q)@NemoFraction(NemoInteger)),")"]))
+      junfunc(NARB, coerce(q)@NemoFraction(NemoInteger))
     coerce(i : Integer) ==
       jlref(concat([NARBP, string(i),")"]))
-    jnball(a,b) == jbinfunc("ball(", a, b)
-    jnrb(an : NemoAlgebraicNumber) == junfunc(NARBP, an)
-    jnrb(necf : NemoExactComplexField) == junfunc(NARBP, necf)
+    jnball(a,b) == jbinfunc("ball", a, b)
+    jnrb(an : NemoAlgebraicNumber) == junfunc(NARB, an)
+    jnrb(necf : NemoExactComplexField) == junfunc(NARB, necf)
     jnrb(s : String) == jlref(concat([NARBP, "_"", s,"_")"]))
     jnrb(i : Integer) == coerce(i)
     jnrb(q : Fraction(Integer)) == coerce(q)
@@ -444,16 +445,16 @@ NemoAcbField(p: PositiveInteger) : Exports == Implementation where
     bits(x) == jlEvalString(concat(["bits(", getind(x),")"]))
     accuracyBits(x) == jlEvalString(concat(["accuracy_bits(",
         getind(x),")"]))
-    trim(x) == junfunc("trim(",x)
+    trim(x) == junfunc("trim",x)
     uniqueInteger(x) == --TODO: Julia boolean and tuples
-      ret : JuliaObject := junfunc("unique_integer(",x)
+      ret : JuliaObject := junfunc("unique_integer",x)
       str: String := jlEvalString(concat(["string(getproperty(",
         getind(ret),",1))"]))
       str = "true" => jlref(concat(["getproperty(",
         getind(ret),",2)"]))$NemoInteger
       "failed"
 
-    jlNemoRing() == "NACB"
+    jlNemoRing() == NACB
 
     0 == jlref(concat(["zero(", NACB, ")"]))
     1 == jlref(concat(["one(", NACB, ")"]))
@@ -466,7 +467,7 @@ NemoAcbField(p: PositiveInteger) : Exports == Implementation where
     imag(x) == junfunc("imag", x)
 
     zero? x == junbfunc("iszero",x)
-    one? x == junbfunc("isone(",x)
+    one? x == junbfunc("isone",x)
     integer? x == junbfunc("isinteger", x)
     finite? x == junbfunc("isfinite", x)
     exact? x == junbfunc("is_exact", x)
@@ -476,6 +477,16 @@ NemoAcbField(p: PositiveInteger) : Exports == Implementation where
     contains?(x : %, y : NemoFraction(NemoInteger)) == jbinbfunc("contains", x, y)
     containsZero? x == junbfunc("contains_zero", x)
 
+    x + y == jbinfunc("+", x, y)
+    x - y == jbinfunc("-", x, y)
+    - x   == junfunc("-", x)
+    x : % * y : % == jbinfunc("*", x, y)
+    x : NemoInteger * y : % == jbinfunc("*", x, y)
+    x : Integer * y : % == jlref(concat([string(x), "*", getind(y)]))
+    x : PositiveInteger * y : % == jlref(concat([string(x), "*", getind(y)]))
+    x : NonNegativeInteger * y : % == jlref(concat([string(x), "*", getind(y)]))
+    x ^ y : PositiveInteger == jlref(concat [getind(x), "^", string(y)])
+    x ^ y : NonNegativeInteger == jlref(concat [getind(x), "^", string(y)])
     x : % / y : % == jbinfunc("/", x, y)
     x : % ^ y : % == jbinfunc("^", x, y)
     x : % * y : Integer == jlref(concat([getind(x), "*", string(y)]))
@@ -487,54 +498,54 @@ NemoAcbField(p: PositiveInteger) : Exports == Implementation where
       jlref(concat [getind(x), "^(", string(numer(y)),"//", string(denom(y)),")"])
     recip(x) ==
       zero?(x) => "failed"
-      junfunc("recip(",x)
+      junfunc("inv",x) pretend %
 
     -- x quo y == jbinfunc("div", x, y)
     x quo y == jbinfunc("÷", x, y)
     x rem y == jbinfunc("%", x, y)
 
-    sqrt(x)  == junfunc("√(",x)
-    exp(x)   == junfunc("exp(",x)
-    log(x)   == junfunc("log(",x)
-    expm1(x) == junfunc("expm1(",x)
-    log1p(x) == junfunc("log1p(",x)
-    ldexp(x,n) == jbinfunc("ldexp(",x,n)
+    sqrt(x)  == junfunc("√",x)
+    exp(x)   == junfunc("exp",x)
+    log(x)   == junfunc("log",x)
+    expm1(x) == junfunc("expm1",x)
+    log1p(x) == junfunc("log1p",x)
+    ldexp(x,n) == jbinfunc("ldexp",x,n)
 
-    sin(x)  == junfunc("sin(",x)
-    cos(x)  == junfunc("cos(",x)
-    tan(x)  == junfunc("tan(",x)
-    cot(x)  == junfunc("cot(",x)
-    atan(x)  == junfunc("atan(",x)
+    sin(x)  == junfunc("sin",x)
+    cos(x)  == junfunc("cos",x)
+    tan(x)  == junfunc("tan",x)
+    cot(x)  == junfunc("cot",x)
+    atan(x)  == junfunc("atan",x)
 
-    sinh(x)  == junfunc("sinh(",x)
-    cosh(x)  == junfunc("cosh(",x)
-    tanh(x)  == junfunc("tanh(",x)
-    coth(x)  == junfunc("coth(",x)
+    sinh(x)  == junfunc("sinh",x)
+    cosh(x)  == junfunc("cosh",x)
+    tanh(x)  == junfunc("tanh",x)
+    coth(x)  == junfunc("coth",x)
 
-    polylog(n,x) == jbinfunc("polylog(",n, x)
+    polylog(n,x) == jbinfunc("polylog",n, x)
 
-    Gamma(x)  == junfunc("Nemo.gamma(",x)
-    Gamma(x,y) == jbinfunc("Nemo.gamma(",x, y)
-    hurwitzZeta(x,y) == jbinfunc("Nemo.zeta(",x, y)
-    polygamma(x,y) == jbinfunc("Nemo.polygamma(",x, y)
+    Gamma(x)  == jlref(concat ["Nemo.gamma(", getind(x),")"])
+    Gamma(x,y) == jlref(concat ["Nemo.gamma(",getind(x),",",getind(y)])
+    hurwitzZeta(x,y) == jlref(concat ["Nemo.zeta(",getind(x),",",getind(y)])
+    polygamma(x,y) == jlref(concat ["Nemo.polygamma(",getind(x),",",getind(y)])
 
-    airyAi(x) == junfunc("airy_ai(", x)
-    airyBi(x) == junfunc("airy_bi(", x)
-    airyAiPrime(x) == junfunc("airy_ai_prime(", x)
-    airyBiPrime(x) == junfunc("airy_bi_prime(", x)
+    airyAi(x) == junfunc("airy_ai", x)
+    airyBi(x) == junfunc("airy_bi", x)
+    airyAiPrime(x) == junfunc("airy_ai_prime", x)
+    airyBiPrime(x) == junfunc("airy_bi_prime", x)
 
-    ellipticE(x) == junfunc("elliptic_e(", x)
-    ellipticK(x) == junfunc("elliptic_k(", x)
+    ellipticE(x) == junfunc("elliptic_e", x)
+    ellipticK(x) == junfunc("elliptic_k", x)
   
-    besselI(x,y) == jbinfunc("bessel_i(", x, y)
-    besselJ(x,y) == jbinfunc("bessel_j(", x, y)
-    besselK(x,y) == jbinfunc("bessel_k(", x, y)
-    besselY(x,y) == jbinfunc("bessel_y(", x, y)
+    besselI(x,y) == jbinfunc("bessel_i", x, y)
+    besselJ(x,y) == jbinfunc("bessel_j", x, y)
+    besselK(x,y) == jbinfunc("bessel_k", x, y)
+    besselY(x,y) == jbinfunc("bessel_y", x, y)
 
-    hypergeometric1F1(x,y,z) == jterfunc("hypergeometric_1f1(", x, y, z)
+    hypergeometric1F1(x,y,z) == jterfunc("hypergeometric_1f1", x, y, z)
     hypergeometric1F1Regularized(x,y,z) ==
-      jterfunc("hypergeometric_1f1_regularized(", x, y, z)
-    hypergeometricU(x,y,z) == jterfunc("hypergeometric_u(", x, y, z)
+      jterfunc("hypergeometric_1f1_regularized", x, y, z)
+    hypergeometricU(x,y,z) == jterfunc("hypergeometric_u", x, y, z)
 
     guess(a, deg) ==
       jlref(concat(["guess(QQBar,", getind(a), ",",
@@ -553,19 +564,19 @@ NemoAcbField(p: PositiveInteger) : Exports == Implementation where
       ret
     coerce(i : Integer) == jlref(concat([NACBP, "_"", string(i),"_")"]))
     coerce(gi : Complex(Integer)) ==
-      jbinfunc(NACBP, coerce(real gi)@NemoArbField(p), coerce(imag gi)@NemoArbField(p))
-    jncb(an : NemoAlgebraicNumber) == junfunc(NACBP, an)
-    jncb(necf : NemoExactComplexField) == junfunc(NACBP, necf)
+      jbinfunc(NACB, coerce(real gi)@NemoArbField(p), coerce(imag gi)@NemoArbField(p))
+    jncb(an : NemoAlgebraicNumber) == junfunc(NACB, an)
+    jncb(necf : NemoExactComplexField) == junfunc(NACB, necf)
     jncb(s : String) == jlref(concat([NACBP, "_"", s,"_")"]))
     jncb(r : String, i : String) ==
       jlref(concat([NACBP, "_"", r, "_",_"", i, "_")"]))
     jncb(f : Float) == coerce(f)
     jncb(r : Float, i : Float) ==
-      jbinfunc(NACBP, coerce(r)@NemoArbField(p),
+      jbinfunc(NACB, coerce(r)@NemoArbField(p),
         coerce(i)@NemoArbField(p))
     jncb(i : Integer) == coerce(i)
     jncb(r : Integer, i : Integer) ==
-      jbinfunc(NACBP, coerce(r)@NemoArbField(p), coerce(i)@NemoArbField(p))
+      jbinfunc(NACB, coerce(r)@NemoArbField(p), coerce(i)@NemoArbField(p))
     coerce(z : %) : OutputForm == string(z) pretend OutputForm
 
 )abbrev domain NCB NemoComplexBall
@@ -675,6 +686,8 @@ NemoRealField() : Exports == Implementation where
     ++ convert \undocumented
     convert  : % -> NemoFraction(NemoInteger)
     ++ convert \undocumented
+    coerce   : Fraction(Integer) -> %
+    ++ coerce \undocumented    
     coerce   : JF64 -> %
     ++ coerce \undocumented
     coerce   : Float -> %
@@ -715,7 +728,7 @@ NemoRealField() : Exports == Implementation where
       oldp
     accuracyBits(x) ==
       jlEvalString(concat(["accuracy_bits(", getind(x),")"]))
-    trim(x) == junfunc("trim(",x)
+    trim(x) == junfunc("trim",x)
 
     jlNemoRing() == "NRF"
 
@@ -726,19 +739,19 @@ NemoRealField() : Exports == Implementation where
     exp() == jlref("const_e(NRF)")
     urand01() == jlref("rand(NRF)")
 
-    midpoint(x) == junfunc("midpoint(", x)
-    radius(x) == junfunc("radius(", x)
+    midpoint(x) == junfunc("midpoint", x)
+    radius(x) == junfunc("radius", x)
     addError!(x, y) ==
       jlEvalString(concat ["add_error!(", getind(x), ",", getind(y),")"])
       x
     uniqueInteger(x) == --TODO: Julia boolean and tuples
-      ret : JuliaObject := junfunc("unique_integer(",x)
+      ret : JuliaObject := junfunc("unique_integer",x)
       str: String := jlEvalString(concat(["string(getproperty(",
         getind(ret),",1))"]))
       str = "true" => jlref(concat(["getproperty(",
         getind(ret),",2)"]))$NemoInteger
       "failed"
-    setUnion(x,y) == jbinfunc("setunion(",x,y)
+    setUnion(x,y) == jbinfunc("setunion",x,y)
 
     x < y  == jbinbfunc("<",x,y)
     x > y  == jbinbfunc(">",x,y)
@@ -778,46 +791,47 @@ NemoRealField() : Exports == Implementation where
       jlref(concat [getind(x), "^(", string(numer(y)),"//", string(denom(y)),")"])
     recip(x) ==
       zero?(x) => "failed"
-      junfunc("recip(",x)
+      junfunc("inv",x) pretend %
    
-    abs(x) == junfunc("abs(", x)
+    abs(x) == junfunc("abs", x)
     -- x quo y == jbinfunc("div", x, y)
     x quo y == jbinfunc("÷", x, y)
     x rem y == jbinfunc("%", x, y)
     float(m, e, b) == jbinfunc("*",jnrf(m), jnrf(b)^e)
 
-    sqrt(x)  == junfunc("√(",x)
-    exp(x)   == junfunc("exp(",x)
-    log(x)   == junfunc("log(",x)
-    expm1(x) == junfunc("expm1(",x)
-    log1p(x) == junfunc("log1p(",x)
+    sqrt(x)  == junfunc("√",x)
+    exp(x)   == junfunc("exp",x)
+    log(x)   == junfunc("log",x)
+    expm1(x) == junfunc("expm1",x)
+    log1p(x) == junfunc("log1p",x)
     nthRoot(x, i) == jlref(concat(["root(", getind(x), ",", string(i), ")"]))
-    ldexp(x,n) == jbinfunc("ldexp(",x,n)
+    ldexp(x,n) == jbinfunc("ldexp",x,n)
 
-    sin(x)  == junfunc("sin(",x)
-    cos(x)  == junfunc("cos(",x)
-    tan(x)  == junfunc("tan(",x)
-    cot(x)  == junfunc("cot(",x)
+    sin(x)  == junfunc("sin",x)
+    cos(x)  == junfunc("cos",x)
+    tan(x)  == junfunc("tan",x)
+    cot(x)  == junfunc("cot",x)
 
-    asin(x)  == junfunc("asin(",x)
-    acos(x)  == junfunc("acos(",x)
-    atan(x)  == junfunc("atan(",x)
-    atan(x,y) == jbinfunc("atan(",x,y)
+    asin(x)  == junfunc("asin",x)
+    acos(x)  == junfunc("acos",x)
+    atan(x)  == junfunc("atan",x)
+    atan(x,y) == jbinfunc("atan",x,y)
 
-    sinh(x)  == junfunc("sinh(",x)
-    cosh(x)  == junfunc("cosh(",x)
-    tanh(x)  == junfunc("tanh(",x)
-    coth(x)  == junfunc("coth(",x)
+    sinh(x)  == junfunc("sinh",x)
+    cosh(x)  == junfunc("cosh",x)
+    tanh(x)  == junfunc("tanh",x)
+    coth(x)  == junfunc("coth",x)
 
-    asinh(x)  == junfunc("asinh(",x)
-    acosh(x)  == junfunc("acosh(",x)
-    atanh(x)  == junfunc("atanh(",x)
+    asinh(x)  == junfunc("asinh",x)
+    acosh(x)  == junfunc("acosh",x)
+    atanh(x)  == junfunc("atanh",x)
 
-    Gamma(x)  == junfunc("Nemo.gamma(",x)
-    Gamma(x,y) == jbinfunc("Nemo.gamma(",x, y)
-    hurwitzZeta(x,y) == jbinfunc("Nemo.zeta(",x, y)
+    Gamma(x)  == jlref(concat ["Nemo.gamma(", getind(x),")"])
+    Gamma(x,y) == jlref(concat ["Nemo.gamma(",getind(x),",",getind(y)])
+    hurwitzZeta(x,y) == jlref(concat ["Nemo.zeta(",getind(x),",",getind(y)])
+    polygamma(x,y) == jlref(concat ["Nemo.polygamma(",getind(x),",",getind(y)])
  
-    polylog(n,x) == jbinfunc("polylog(",n, x)
+    polylog(n,x) == jbinfunc("polylog",n, x)
 
     guess(a, deg) ==
       jlref(concat(["guess(QQBar,", getind(a), ",",
@@ -828,7 +842,7 @@ NemoRealField() : Exports == Implementation where
       convert(jlref(concat(["ZZ(", getind(x),")"]))$NemoInteger)
 
     retractIfCan(x : NemoAlgebraicNumber) : Union(%, "failed") ==
-      real?(x) => junfunc("NRF(", x)
+      real?(x) => junfunc("NRF", x)
       "failed"
 
     retractIfCan(x) : Union(Fraction Integer, "failed") ==
@@ -857,8 +871,8 @@ NemoRealField() : Exports == Implementation where
       ret
     coerce(i : Integer) == jlref(concat(["NRF(", string(i),")"]))
     coerce(q : Fraction(Integer)) ==
-      junfunc("NRF(", coerce(q)@NemoFraction(NemoInteger))
-    jnball(a,b) == jbinfunc("ball(", a, b)
+      junfunc("NRF", coerce(q)@NemoFraction(NemoInteger))
+    jnball(a,b) == jbinfunc("ball", a, b)
     jnrf(s : String) : % == jlref(concat(["NRF(_"", s,"_")"]))
     jnrf(i : Integer) : % == coerce(i)
     jnrf(q : Fraction Integer) : % == coerce(q)
@@ -999,9 +1013,9 @@ NemoComplexField() : Exports == Implementation where
       oldp
     accuracyBits(x) == jlEvalString(concat(["accuracy_bits(",
       getind(x),")"]))
-    trim(x) == junfunc("trim(",x)
+    trim(x) == junfunc("trim",x)
     uniqueInteger(x) == --TODO: Julia boolean and tuples
-      ret : JuliaObject := junfunc("unique_integer(",x)
+      ret : JuliaObject := junfunc("unique_integer",x)
       str: String := jlEvalString(concat(["string(getproperty(",
         getind(ret),",1))"]))
       str = "true" => jlref(concat(["getproperty(",
@@ -1013,8 +1027,8 @@ NemoComplexField() : Exports == Implementation where
     0    == jlref("zero(NCF)")
     1    == jlref("one(NCF)")
     imaginary() == jlref("onei(NCF)")
-    real(x) == junfunc("real(", x)
-    imag(x) == junfunc("imag(", x)
+    real(x) == junfunc("real", x)
+    imag(x) == junfunc("imag", x)
     pi() == jlref("const_pi(NCF)")
     exp1() == jlref("exp(NCF(1))")
     exp() == jlref("exp(NCF(1))")
@@ -1030,6 +1044,16 @@ NemoComplexField() : Exports == Implementation where
     contains?(x : %, y : NemoFraction(NemoInteger)) == jbinbfunc("contains", x, y)
     containsZero? x == junbfunc("contains_zero", x)
 
+    x + y == jbinfunc("+", x, y)
+    x - y == jbinfunc("-", x, y)
+    - x   == junfunc("-", x)
+    x : % * y : % == jbinfunc("*", x, y)
+    x : NemoInteger * y : % == jbinfunc("*", x, y)
+    x : Integer * y : % == jlref(concat([string(x), "*", getind(y)]))
+    x : PositiveInteger * y : % == jlref(concat([string(x), "*", getind(y)]))
+    x : NonNegativeInteger * y : % == jlref(concat([string(x), "*", getind(y)]))
+    x ^ y : PositiveInteger == jlref(concat [getind(x), "^", string(y)])
+    x ^ y : NonNegativeInteger == jlref(concat [getind(x), "^", string(y)])
     x : % / y : % == jbinfunc("/", x, y)
     x : % ^ y : % == jbinfunc("^", x, y)
     x : % * y : Integer == jlref(concat([getind(x), "*", string(y)]))
@@ -1038,52 +1062,55 @@ NemoComplexField() : Exports == Implementation where
     x ^ y : Integer == jlref(concat [getind(x), "^", string(y)])
     x ^ y : Fraction(Integer) ==
       jbinfunc("^", x, coerce(y)@NemoFraction(NemoInteger))
+    recip(x) ==
+      zero?(x) => "failed"
+      junfunc("inv",x) pretend %
 
     -- x quo y == jbinfunc("div", x, y)
     x quo y == jbinfunc("÷", x, y)
     x rem y == jbinfunc("%", x, y)
 
-    sqrt(x)  == junfunc("√(",x)
-    exp(x)   == junfunc("exp(",x)
-    log(x)   == junfunc("log(",x)
-    expm1(x) == junfunc("expm1(",x)
-    log1p(x) == junfunc("log1p(",x)
+    sqrt(x)  == junfunc("√",x)
+    exp(x)   == junfunc("exp",x)
+    log(x)   == junfunc("log",x)
+    expm1(x) == junfunc("expm1",x)
+    log1p(x) == junfunc("log1p",x)
     nthRoot(x, i) == jlref(concat(["root(", getind(x), ",", string(i), ")"]))
-    ldexp(x,n) == jbinfunc("ldexp(",x,n)
+    ldexp(x,n) == jbinfunc("ldexp",x,n)
 
-    sin(x)  == junfunc("sin(",x)
-    cos(x)  == junfunc("cos(",x)
-    tan(x)  == junfunc("tan(",x)
-    cot(x)  == junfunc("cot(",x)
-    atan(x) == junfunc("atan(",x)
+    sin(x)  == junfunc("sin",x)
+    cos(x)  == junfunc("cos",x)
+    tan(x)  == junfunc("tan",x)
+    cot(x)  == junfunc("cot",x)
+    atan(x) == junfunc("atan",x)
 
-    sinh(x)  == junfunc("sinh(",x)
-    cosh(x)  == junfunc("cosh(",x)
-    tanh(x)  == junfunc("tanh(",x)
-    coth(x)  == junfunc("coth(",x)
+    sinh(x)  == junfunc("sinh",x)
+    cosh(x)  == junfunc("cosh",x)
+    tanh(x)  == junfunc("tanh",x)
+    coth(x)  == junfunc("coth",x)
 
-    Gamma(x) == junfunc("Nemo.gamma(",x)
-    Gamma(x,y) == jbinfunc("Nemo.gamma(",x, y)
-    hurwitzZeta(x,y) == jbinfunc("Nemo.zeta(",x, y)
-    polygamma(x,y) == jbinfunc("Nemo.polygamma(",x, y)
+    Gamma(x)  == jlref(concat ["Nemo.gamma(", getind(x),")"])
+    Gamma(x,y) == jlref(concat ["Nemo.gamma(",getind(x),",",getind(y)])
+    hurwitzZeta(x,y) == jlref(concat ["Nemo.zeta(",getind(x),",",getind(y)])
+    polygamma(x,y) == jlref(concat ["Nemo.polygamma(",getind(x),",",getind(y)])
 
-    airyAi(x) == junfunc("airy_ai(", x)
-    airyBi(x) == junfunc("airy_bi(", x)
-    airyAiPrime(x) == junfunc("airy_ai_prime(", x)
-    airyBiPrime(x) == junfunc("airy_bi_prime(", x)
+    airyAi(x) == junfunc("airy_ai", x)
+    airyBi(x) == junfunc("airy_bi", x)
+    airyAiPrime(x) == junfunc("airy_ai_prime", x)
+    airyBiPrime(x) == junfunc("airy_bi_prime", x)
 
-    ellipticE(x) == junfunc("elliptic_e(", x)
-    ellipticK(x) == junfunc("elliptic_k(", x)
+    ellipticE(x) == junfunc("elliptic_e", x)
+    ellipticK(x) == junfunc("elliptic_k", x)
   
-    besselI(x,y) == jbinfunc("bessel_i(", x, y)
-    besselJ(x,y) == jbinfunc("bessel_j(", x, y)
-    besselK(x,y) == jbinfunc("bessel_k(", x, y)
-    besselY(x,y) == jbinfunc("bessel_y(", x, y)
+    besselI(x,y) == jbinfunc("bessel_i", x, y)
+    besselJ(x,y) == jbinfunc("bessel_j", x, y)
+    besselK(x,y) == jbinfunc("bessel_k", x, y)
+    besselY(x,y) == jbinfunc("bessel_y", x, y)
 
-    hypergeometric1F1(x,y,z) == jterfunc("hypergeometric_1f1(", x, y, z)
+    hypergeometric1F1(x,y,z) == jterfunc("hypergeometric_1f1", x, y, z)
     hypergeometric1F1Regularized(x,y,z) ==
-      jterfunc("hypergeometric_1f1_regularized(", x, y, z)
-    hypergeometricU(x,y,z) == jterfunc("hypergeometric_u(", x, y, z)
+      jterfunc("hypergeometric_1f1_regularized", x, y, z)
+    hypergeometricU(x,y,z) == jterfunc("hypergeometric_u", x, y, z)
 
     rootOfUnity(n) == jlref(concat(["root_of_unity(NCF,",
       string(n),")"]))
@@ -1106,7 +1133,7 @@ NemoComplexField() : Exports == Implementation where
       ret := jlref(concat(["NCF(_"", convert(f),"_")"]))
       outputSpacing(tmp)
       ret
-    coerce(an : NemoAlgebraicNumber) == junfunc("NCF(", an)
+    coerce(an : NemoAlgebraicNumber) == junfunc("NCF", an)
     jncf(s : String) : % == jlref(concat(["NCF(_"", s,"_")"]))
     jncf(r : String, i : String) : % ==
       jlref(concat(["NCF(_"", r, "_",_"", i, "_")"]))

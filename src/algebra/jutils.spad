@@ -36,8 +36,6 @@ JuliaUtilityFunctions() : Exports == Implementation where
 
     jlAddPackage  : String -> Void
     ++ jlAddPackage(package) add package to Julia project.
-    jlAddPackage  : String -> Void
-    ++ jlAddPackage(package) add package to Julia project.
 
     jlSeed! : JuliaInt64 -> Void
     ++ jlSeed!(n) reseeds the Julia random number generator,
@@ -72,7 +70,6 @@ JuliaUtilityFunctions() : Exports == Implementation where
     jlEvalString   : STR -> JF64
     ++ jlEvalString(str) evaluates str in Julia,
     ++ where the output is a JuliaFloat64.
-
 
   Implementation ==> add
     import from String
@@ -152,27 +149,27 @@ JuliaStringUtilities() : Exports == Implementation where
     ++ LaTeX expression, that is, "L"str"" if your Julia support it
     ++ (LaTeXStrings package). Convenience function.
     jlRegexMatch?   : (String, String) -> Boolean
-    ++ jlRegexMatch(regex,s) checks if the regular expression matches in s.
+    ++ jlRegexMatch(s, regex) checks if the regular expression matches in s.
     jlRegexMatch    : (String, String) -> String
-    ++ jlRegexMatch(regex, s) returns the matched regular expression in s.
+    ++ jlRegexMatch(s, regex) returns the matched regular expression in s.
     jlRegexMatch    : (String, String, PI) -> String
-    ++ jlRegexMatch(regex, s, i) returns the matched regular expression in s,
+    ++ jlRegexMatch(s, regex, i) returns the matched regular expression in s,
     ++ starting at index i.
     jlRegexMatch    : (String, String) -> List(String)
-    ++ jlRegexMatch(regex, s) returns the matched regular expressions in s.
+    ++ jlRegexMatch(s, regex) returns the matched regular expressions in s.
     jlRegexMatch    : (String, String, PI) -> List(String)
-    ++ jlRegexMatch(regex, s, i) returns the matched regular expressions in s,
+    ++ jlRegexMatch(s, regex, i) returns the matched regular expressions in s,
     ++ starting at index i.
     jlRegexMatch    : (String, String) -> AssociationList(String,String)
-    ++ jlRegexMatch(regex, s) returns the matched regular expressions in s.
+    ++ jlRegexMatch(s, regex) returns the matched regular expressions in s.
     jlRegexMatch    : (String, String, PI) -> AssociationList(String,String)
-    ++ jlRegexMatch(regex, s, i) returns the matched regular expressions in s,
+    ++ jlRegexMatch(s, regex, i) returns the matched regular expressions in s,
     ++ starting at index i.
     jlRegexReplace  : (String, String, String) -> String
-    ++ jlRegexReplace(regex,subst,str) will replace captured regular expressions
+    ++ jlRegexReplace(str, regex, subst) will replace captured regular expressions
     ++ in str with subst. More information in String documentation of Julia.
     ++ For example:
-    ++  jlRegexReplace(jlRegex("$"), jlSubstitute(" you!"), "hey")
+    ++  jlRegexReplace("hey", jlRegex("$"), jlSubstitute(" you!"))
   Implementation ==> add
     import from JuliaUtilityFunctions
     import from String
@@ -185,8 +182,10 @@ JuliaStringUtilities() : Exports == Implementation where
 
     jlSplit(str, delims, n) == 
       resl : List(String) := []
+      if #delims = 1 or (delims.1 ~= char("r") and delims.2 ~= char"_"") then
+        delims := jlRegex delims
       estr : String :=
-        concat(["splt=split(_"", str, "_",_"", delims, "_", limit=", 
+        concat(["splt=split(_"", str, "_",", delims, ", limit=", 
           string(n),");"])
       jlEvalString(estr)@Void
       n: Integer := jlEvalString("length(splt)")
@@ -199,21 +198,21 @@ JuliaStringUtilities() : Exports == Implementation where
 
     jlSplit(str, delims) == jlSplit(str, delims, 0)
 
-    jlRegexMatch?(r, s)  ==
+    jlRegexMatch?(s, r)  ==
       estr : String := concat(
         ["occursin(", r, ",", string(s::OutputForm)$OutputFormTools,")"])
       jlEvalString(estr)@Boolean
 
-    jlRegexMatch(r, s) : String == jlRegexMatch(r, s, 1)
+    jlRegexMatch(s, r) : String == jlRegexMatch(s, r, 1)
 
-    jlRegexMatch(r, s, ind) : String ==
+    jlRegexMatch(s, r, ind) : String ==
       estr : String := concat(
         ["string(match(", r, ",_"", s, "_",", string(ind), ").match)"])
       jlEvalString(estr)@String
 
-    jlRegexMatch(r, s) : List(String) == jlRegexMatch(r, s, 1)
+    jlRegexMatch(s, r) : List(String) == jlRegexMatch(s, r, 1)
 
-    jlRegexMatch(r, s, ind) : List(String) ==
+    jlRegexMatch(s, r, ind) : List(String) ==
       resl : List(String) := []
       estr : String :=
         concat(["reg=match(", r, ",_"", s, "_",", string(ind),");"])
@@ -226,10 +225,10 @@ JuliaStringUtilities() : Exports == Implementation where
       jlEvalString("reg=nothing")@Void    
       resl
 
-    jlRegexMatch(r: String, s : String) : AssociationList(String,String) ==
-      jlRegexMatch(r,s,1)
+    jlRegexMatch(s : String, r : String) : AssociationList(String,String) ==
+      jlRegexMatch(s,r,1)
 
-    jlRegexMatch(r: String, s : String, ind : PI) :
+    jlRegexMatch(s : String, r : String, ind : PI) :
         AssociationList(String,String) ==
       name : String  
       --  StringTable?
@@ -249,7 +248,7 @@ JuliaStringUtilities() : Exports == Implementation where
       jlEvalString("reg=nothing")@Void
       resal
 
-    jlRegexReplace(r, s, str) ==
+    jlRegexReplace(str, r, s) ==
       t : String := concat(["replace(_"", str,
         "_",", r, "=>", s, ")"])
       jlEvalString(t)@String

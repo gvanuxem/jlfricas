@@ -35,6 +35,8 @@
 (fricas-foreign-call boot::|jl_call5_wrapped_index| "jl_call5_wrapped_index" long
         (func c-string) (index long) (ind1 long) (ind2 long) (ind3 long)
             (ind4 long) (ind5 long))
+(fricas-foreign-call boot::|jl_setindex_wrap_eval_string| "jl_setindex_wrap_eval_string"
+    long (index long) (command c-string))
 
 ; 64 bits floating point numbers
 (fricas-foreign-call boot::|jl_function_dbl| "jl_call_function_dbl" void
@@ -82,35 +84,33 @@
 
 #+:sbcl
 (progn
-(fricas-foreign-call boot::|jl_bool_eval_string| "jl_bool_eval_string" bool
+(fricas-foreign-call jl_bool_eval_string "jl_bool_eval_string" jbool
         (command c-string))
+(fricas-foreign-call jl_bool_function_flt_flt "jl_call_bool_function_flt_flt"
+    jbool (func c-string) (arg1 float) (arg2 float))
+(fricas-foreign-call jl_bool_function_dbl_dbl "jl_call_bool_function_dbl_dbl"
+    jbool (func c-string) (arg1 double) (arg2 double))
+(fricas-foreign-call jl_call1_bool_wrapped_index "jl_call1_bool_wrapped_index"
+    jbool (func c-string) (arg1 long))
+(fricas-foreign-call jl_call2_bool_wrapped_index "jl_call2_bool_wrapped_index"
+    jbool (func c-string) (arg1 long) (arg2 long))
 (fricas-foreign-call boot::|jl_string_eval_string| "jl_string_eval_string"
     c-string (command c-string))
-(fricas-foreign-call boot::|jl_bool_function_dbl_dbl| "jl_call_bool_function_dbl_dbl"
-    bool (func c-string) (arg1 double) (arg2 double))
 (fricas-foreign-call boot::|jl_string_function_flt| "jl_call_string_function_flt"
     c-string (func c-string) (arg float))
 (fricas-foreign-call boot::|jl_string_function_dbl| "jl_call_string_function_dbl"
     c-string (func c-string) (arg double))
 (fricas-foreign-call boot::|jl_string_getindex| "jl_stringify_wrapped_index"
     c-string (index long))
-(fricas-foreign-call boot::|jl_setindex_wrap_eval_string| "jl_setindex_wrap_eval_string"
-    long (index long) (command c-string))
-(fricas-foreign-call boot::|jl_bool_function_flt_flt| "jl_call_bool_function_flt_flt"
-    bool (func c-string) (arg1 float) (arg2 float))
-(fricas-foreign-call boot::|jl_call1_bool_wrapped_index| "jl_call1_bool_wrapped_index"
-    bool (func c-string) (arg1 long))
-(fricas-foreign-call boot::|jl_call2_bool_wrapped_index| "jl_call2_bool_wrapped_index"
-    bool (func c-string) (arg1 long) (arg2 long))
 )
 
 #+:openmcl
 (progn
-(fricas-foreign-call jl_bool_eval_string "jl_bool_eval_string" bool
+(fricas-foreign-call jl_bool_eval_string "jl_bool_eval_string" jbool
         (command c-string))
 (fricas-foreign-call jl_string_eval_string "jl_string_eval_string" c-string
         (command c-string))
-(fricas-foreign-call jl_bool_function_dbl_dbl "jl_call_bool_function_dbl_dbl" bool
+(fricas-foreign-call jl_bool_function_dbl_dbl "jl_call_bool_function_dbl_dbl" jbool
         (func c-string) (arg1 double) (arg2 double))
 (fricas-foreign-call jl_string_function_flt "jl_call_string_function_flt" c-string
         (func c-string) (arg float))
@@ -118,37 +118,49 @@
         (func c-string) (arg double))
 (fricas-foreign-call jl_stringify_wrapped_index "jl_stringify_wrapped_index" c-string
     (index long))
-(fricas-foreign-call jl_setindex_wrap_eval_string "jl_setindex_wrap_eval_string"
-    long (index long) (command c-string))
-(fricas-foreign-call jl_bool_function_flt_flt "jl_call_bool_function_flt_flt" bool
+(fricas-foreign-call jl_bool_function_flt_flt "jl_call_bool_function_flt_flt" jbool
         (func c-string) (arg1 float) (arg2 float))
-(fricas-foreign-call jl_call1_bool_wrapped_index "jl_call1_bool_wrapped_index" bool
+(fricas-foreign-call jl_call1_bool_wrapped_index "jl_call1_bool_wrapped_index" jbool
         (func c-string) (arg1 long))
-(fricas-foreign-call jl_call2_bool_wrapped_index "jl_call2_bool_wrapped_index" bool
+(fricas-foreign-call jl_call2_bool_wrapped_index "jl_call2_bool_wrapped_index" jbool
         (func c-string) (arg1 long) (arg2 long))
 )
+)
+
+#+sbcl
+(progn
+(defmacro boot::|jl_bool_eval_string| (str)
+    `(if (eq (jl_bool_eval_string ,str)  1) t nil))
+(defmacro boot::|jl_bool_function_flt_flt| (func arg1 arg2)
+    `(if (eq (jl_bool_function_flt_flt ,func ,arg1 ,arg2)  1) t nil))
+(defmacro boot::|jl_bool_function_dbl_dbl| (func arg1 arg2)
+    `(if (eq (jl_bool_function_dbl_dbl ,func ,arg1 ,arg2)  1) t nil))
+(defmacro boot::|jl_call1_bool_wrapped_index| (func index)
+    `(if (eq (jl_call1_bool_wrapped_index ,func ,index) 1) t nil))
+(defmacro boot::|jl_call2_bool_wrapped_index| (func index1 index2)
+    `(if (eq (jl_call2_bool_wrapped_index ,func ,index1 ,index2) 1) t nil))
 )
 
 #+:openmcl
 (progn
 (defmacro boot::|jl_bool_eval_string| (str)
     `(if (eq (jl_bool_eval_string ,str)  1) t nil))
-(defmacro boot::|jl_string_eval_string| (str)
-    `(ccl::%get-utf-8-cstring (jl_string_eval_string ,str)))
+(defmacro boot::|jl_bool_function_flt_flt| (func arg1 arg2)
+    `(if (eq (jl_bool_function_flt_flt ,func ,arg1 ,arg2)  1) t nil))
 (defmacro boot::|jl_bool_function_dbl_dbl| (func arg1 arg2)
     `(if (eq (jl_bool_function_dbl_dbl ,func ,arg1 ,arg2)  1) t nil))
+(defmacro boot::|jl_call1_bool_wrapped_index| (func index)
+    `(if (eq (jl_call1_bool_wrapped_index ,func ,index) 1) t nil))
+(defmacro boot::|jl_call2_bool_wrapped_index| (func index1 index2)
+    `(if (eq (jl_call2_bool_wrapped_index ,func ,index1 ,index2) 1) t nil))
+(defmacro boot::|jl_string_eval_string| (str)
+    `(ccl::%get-utf-8-cstring (jl_string_eval_string ,str)))
 (defmacro boot::|jl_string_function_flt| (func  flt)
     `(ccl::%get-utf-8-cstring (jl_string_function_flt ,func ,flt)))
 (defmacro boot::|jl_string_function_dbl| (func dbl)
     `(ccl::%get-utf-8-cstring (jl_string_function_dbl ,func ,dbl)))
 (defmacro boot::|jl_string_getindex| (index)
     `(ccl::%get-utf-8-cstring (jl_stringify_wrapped_index ,index)))
-(defmacro boot::|jl_bool_function_flt_flt| (func arg1 arg2)
-    `(if (eq (jl_bool_function_flt_flt ,func ,arg1 ,arg2)  1) t nil))
-(defmacro boot::|jl_call1_bool_wrapped_index| (func index)
-    `(if (eq (jl_call1_bool_wrapped_index ,func ,index) 1) t nil))
-(defmacro boot::|jl_call2_bool_wrapped_index| (func index1 index2)
-    `(if (eq (jl_call2_bool_wrapped_index ,func ,index1 ,index2) 1) t nil))
 )
 
 (in-package "BOOT")

@@ -276,6 +276,8 @@ NemoAlgebraicNumber() : Exports == Implementation where
     ++ coerce(nan) coerces nan to AlgebraicNumber if it is rational.
     jnan    : Integer -> %
     ++ jnan \undocumented
+    jnan    : Fraction(Integer) -> %
+    ++ jnan \undocumented
     jnan    : NemoInteger -> %
     ++ jnan \undocumented
     jnan    : NemoFraction(NemoInteger) -> %
@@ -358,7 +360,7 @@ NemoAlgebraicNumber() : Exports == Implementation where
       jlref(concat [ getind(x), "^(", string(numer(y)),"//", string(denom(y)),")"])
     recip(x) ==
       zero?(x) => "failed"
-      junfunc("recip",x)
+      junfunc("inv",x)
 
     -- x quo y == jbinfunc("div", x, y)
     x quo y == jbinfunc("÷", x, y)
@@ -407,22 +409,22 @@ NemoAlgebraicNumber() : Exports == Implementation where
       convert(retract(x)@NemoInteger)
     retractIfCan(x : %) : Union(NemoInteger, "failed") ==
       not integer? x => "failed"
-      jlref(concat(["ZZRingElem(", getind(x),")"]))$NemoInteger
+      junfunc("ZZRingElem",x) pretend NemoInteger
     retractIfCan(x : %) : Union(Fraction Integer, "failed") ==
       not rational? x => "failed"
-      retract(retract(x)@NemoFraction(NemoInteger))
+      retract(junfunc("QQFieldElem",x) pretend NemoFraction(NemoInteger))
     retractIfCan(x : %) : Union(NemoFraction(NemoInteger), "failed") ==
       not rational? x => "failed"
-      jlref(concat(["QQFieldElem(", getind(x),")"]))$NemoFraction(NemoInteger)
+      junfunc("QQFieldElem", x) pretend NemoFraction(NemoInteger)
 
     retract(x : %) : Integer ==
       convert(retract(x)@NemoInteger)
     retract(x : %) : NemoInteger ==
-      jlref(concat(["ZZRingElem(", getind(x),")"]))$NemoInteger
+      junfunc("ZZRingElem", x)
     retract(x : %) : Fraction Integer ==
-      retract(retract(x)@NemoFraction(NemoInteger))
+      retract(junfunc("QQFieldElem",x) pretend NemoFraction(NemoInteger)) 
     retract(x : %) : NemoFraction(NemoInteger) ==
-      jlref(concat(["QQFieldElem(", getind(x),")"]))$NemoFraction(NemoInteger)
+      junfunc("QQFieldElem", x) pretend NemoFraction(NemoInteger)
 
     coerce(i : Integer) == jlref(concat(["QQBar(",string(i),")"]))
     coerce(i : NemoInteger) : % == junfunc("QQBar", i)
@@ -439,6 +441,7 @@ NemoAlgebraicNumber() : Exports == Implementation where
       not rational?(x) => error "Can not be coerced to an AlgebraicNumber"
       coerce(retract(retract(x)@NemoFraction(NemoInteger))@Fraction(Integer))
     jnan(i : Integer) == jlref(concat(["QQBar(",string(i),")"]))
+    jnan(fi : Fraction(Integer)) == coerce(fi)
     jnan(i : NemoInteger) == coerce(i)
     jnan(fi : NemoFraction(NemoInteger)) == coerce(fi)
     jnan(s: String) == jlref(concat(["QQBar(", s,")"]))
@@ -498,9 +501,10 @@ NemoIntegerMod(p : PositiveInteger) : Exports == Implementation where
 
     x : % * y : NemoInteger == jbinfunc("*", x, y)
     x : % * y : Integer == jlref(concat [getind(x), "*", string(y)])
-    recip(x) ==
-      zero?(x) => "failed"
-      junfunc("recip",x)
+    --recip(x) ==
+    --  -- TODO: compute an euclidean dvision to check
+    --  zero?(x) => "failed"
+    --  junfunc("inv",x)
 
     size()           == p
     characteristic() == p
@@ -912,6 +916,10 @@ InnerNemoExactComplexField(Options : JuliaObjDict) : Exports ==
     ++ retractIfCan(z) retracts if possible z to a NemoFraction(NemoInteger).
     retractIfCan  : % -> Union(NemoAlgebraicNumber, "failed")
     ++ retractIfCan(z) retracts if possible z to a NemoAlgebraicNumber.
+    retractIfCan  : % -> Union(NemoRealBall,"failed")
+    ++ convert(x) converts x.
+    retract  : % -> NemoComplexBall
+    ++ convert(x) converts x.
     coerce   : Fraction(Integer) -> %
     ++ coerce(q) coerces q. Convenience function.
     coerce   : NemoFraction(NemoInteger) -> %
@@ -1009,6 +1017,18 @@ InnerNemoExactComplexField(Options : JuliaObjDict) : Exports ==
     floor x == junfunc("floor",x)
     ceiling x == junfunc("ceil",x) 
 
+    zero?(x) == junbfunc("iszero", x)
+    one?(x) == junbfunc("isone", x)
+    x + y == jbinfunc("+", x, y)
+    x - y == jbinfunc("-", x, y)
+    - x   == junfunc("-", x)
+    x : % * y : % == jbinfunc("*", x, y)
+    x : NemoInteger * y : % == jbinfunc("*", x, y)
+    x : Integer * y : % == jlref(concat([string(x), "*", getind(y)]))
+    x : PositiveInteger * y : % == jlref(concat([string(x), "*", getind(y)]))
+    x : NonNegativeInteger * y : % == jlref(concat([string(x), "*", getind(y)]))
+    x ^ y : PositiveInteger == jlref(concat [getind(x), "^", string(y)])
+    x ^ y : NonNegativeInteger == jlref(concat [getind(x), "^", string(y)])
     x : % / y : % == jbinfunc("//", x, y)
     x : % ^ y : % == jbinfunc("^", x, y)
     x : % * y : Integer == jlref(concat([getind(x), "*", string(y)]))
@@ -1089,11 +1109,11 @@ InnerNemoExactComplexField(Options : JuliaObjDict) : Exports ==
       (a := recip x) case "failed" => error "acoth: no reciprocal"
       atanh(a@%)
 
-    -- TODO: checks
-    Gamma(x)  == junfunc("Nemo.gamma",x)
-    erf(x)  == junfunc("Nemo.erf",x)
-    erfi(x)  == junfunc("Nemo.erfi",x)
-    erfc(x)  == junfunc("Nemo.erfc",x)
+    -- TODO: improve
+    Gamma(x) == jlref(concat(["Nemo.gamma(", getind(x),")"]))
+    erf(x)   == jlref(concat(["Nemo.erf(", getind(x),")"]))
+    erfi(x)  == jlref(concat(["Nemo.erfi(", getind(x),")"]))
+    erfc(x)  == jlref(concat(["Nemo.erfc(", getind(x),")"]))
 
     complexNormalForm(x) == junfunc("complex_normal_form", x)
 
@@ -1115,11 +1135,14 @@ InnerNemoExactComplexField(Options : JuliaObjDict) : Exports ==
       algebraic?(x) =>   
         jlref(concat ["QQBar(", getind(x),")"])$NemoAlgebraicNumber
       "failed"
-
+    retractIfCan(x) : Union(NemoRealBall, "failed") ==
+      real?(x) =>
+        junfunc(jlNemoRing()$NemoRealBall(), x) pretend NemoRealBall
+      "failed"
+    retract(x) : NemoComplexBall ==
+      junfunc(jlNemoRing()$NemoComplexBall(), x) 
     complex(r, i) ==
       jlref(concat([NECFP, getind(r),"+onei(",NECF,")*", getind(i), ")"]))
-
-    convert(x) : InputForm == string(x) pretend InputForm
     coerce(i : Integer) == jlref(concat([NECFP, string(i),")"]))
     coerce(z : Complex(Integer)) ==
       jlref(concat([NECFP, string(real(z)),"+im*", string(imag(z)), ")"]))
@@ -1233,9 +1256,10 @@ NemoFraction(R : Join(NemoCommutativeRing, IntegralDomain)) :
     a : % / b : % == jbinfunc("//",a,b)
     x ^ y : NNI == jlref(concat [getind(x), "^", string(y)])
     x ^ y : Integer == jlref(concat [getind(x), "^", string(y)])
+    inv(q) == junfunc("inv",q)
     recip(x) ==
       zero?(x) => "failed"
-      junfunc("recip",x)
+      junfunc("inv",x)
     if R is NemoInteger then
       random(p : PositiveInteger) ==
         jlref(concat ["rand_bits(QQ,",string(p), ")"])
@@ -1260,6 +1284,10 @@ NemoFraction(R : Join(NemoCommutativeRing, IntegralDomain)) :
       abs(x)  == junfunc("abs", x)
       floor x == junfunc("floor",x)
       ceiling x == junfunc("ceil",x)
+      retract(x) : Fraction(Integer) ==
+        num : Integer := convert(junfunc("numerator", x) pretend NemoInteger)
+        den : Integer := convert(junfunc("denominator", x) pretend NemoInteger)
+        num/den
     gcd(x,y)  == jbinfunc("gcd",x,y)
     divide(a,b) ==
       ret : JuliaObjTuple := jbinfunc("divrem",a,b)
@@ -1284,8 +1312,8 @@ NemoFraction(R : Join(NemoCommutativeRing, IntegralDomain)) :
       error "retract$NemoFraction: denominator is not 1"
     coerce(r : R) == jlref(concat([NFRP, getind(r),")"]))
     coerce(p) : OutputForm ==
-      --jlRegexReplace(jlRegex("//"), jlSubstitute("/"),
-      --  string(p)) pretend OutputForm
+      --jlRegexReplace(string(p),
+      --  jlRegex("//"), jlSubstitute("/")) pretend OutputForm
       ret : Fraction(R)  := numer(p)/denom(p) 
       coerce(ret)
 
@@ -1382,5 +1410,5 @@ NemoFactored(R : Join(NemoRing, IntegralDomain)) :
       jlEvalString("tmp=nothing")@Void
       mkFF(jlref(concat(["unit(", getind(fr), ")"]))$R, ret) pretend Factored(R)
     coerce(ob : %) : OutputForm ==
-      jlRegexReplace(jlRegex("//"), jlSubstitute("/"),
-        string(ob)) pretend OutputForm
+      jlRegexReplace(string(ob),
+        jlRegex("//"), jlSubstitute("/")) pretend OutputForm

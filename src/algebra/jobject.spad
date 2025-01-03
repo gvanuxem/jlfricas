@@ -424,6 +424,7 @@ JuliaObjComplexF64() : Exports == Implementation where
 
     0 == jlref("0.0+0im")
     1 == jlref("1.0+0im")
+
     x : % * a : Integer == jlref(concat [getind(x),"*",string(a)])
     x : Fraction(Integer) * y : % ==
       jlref(concat ["(",string(numer x), "//" , string(denom(x)) ")*", getind(y)])
@@ -1114,6 +1115,18 @@ JuliaComplexFloat() : Exports == Implementation where
     integer? x == junbfunc("isinteger",x)
     real? x == junbfunc("isreal",x)
 
+    zero?(x) == junbfunc("iszero", x)
+    one?(x) == junbfunc("isone", x)
+    x + y == jbinfunc("+", x, y)
+    x - y == jbinfunc("-", x, y)
+    - x   == junfunc("-", x)
+    x : % * y : % == jbinfunc("*", x, y)
+    x : NemoInteger * y : % == jbinfunc("*", x, y)
+    x : Integer * y : % == jlref(concat([string(x), "*", getind(y)]))
+    x : PositiveInteger * y : % == jlref(concat([string(x), "*", getind(y)]))
+    x : NonNegativeInteger * y : % == jlref(concat([string(x), "*", getind(y)]))
+    x ^ y : PositiveInteger == jlref(concat [getind(x), "^", string(y)])
+    x ^ y : NonNegativeInteger == jlref(concat [getind(x), "^", string(y)])
     x : % / y : % == jbinfunc("/", x, y)
     x : % ^ y : % == jbinfunc("^", x, y)
     x : % * y : Integer == jbinfunc("*", x, coerce(y)@JuliaObjBigInt)
