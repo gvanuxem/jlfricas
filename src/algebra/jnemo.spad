@@ -1204,7 +1204,7 @@ NemoFraction(R : Join(NemoCommutativeRing, IntegralDomain)) :
       ++ \undocumented
     factorFraction : % -> Fraction(Factored(R))
     ++ factorFraction(p) factors the numerator and the denominator
-    ++ of the fraction p. 
+    ++ of the fraction p.
     random : Segment(Integer) -> %
     ++ random(x, seg) returns a random fraction depending on the base
     ++ ring.
@@ -1379,11 +1379,11 @@ NemoFactored(R : Join(NemoRing, IntegralDomain)) :
         ret) pretend Factored(R)
       c := jlref("tmp[1][1]")$R
       e := jlEvalString("tmp[1][2]")@NNI
-      ret := concat(ret, ["irred", c, e]$FFE)
+      ret := concat(ret, ["prime", c, e]$FFE)
       for i in 2..sz repeat
         c := jlref(concat(["tmp[", string(i), "][1]"]))$R
         e := jlEvalString(concat(["tmp[", string(i), "][2]"]))@NNI
-        ret := concat(ret, ["irred", c, e]$FFE)
+        ret := concat(ret, ["prime", c, e]$FFE)
       jlEvalString("tmp=nothing")@Void
       mkFF(jlref(concat(["unit(", getind(fr), ")"]))$R, ret) pretend Factored(R)
 
