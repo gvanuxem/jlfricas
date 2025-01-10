@@ -1,3 +1,26 @@
+2025-01-10  Waldek Hebisch  <cas@fricas.org>
+
+	* src/algebra/vsbasis.spad: Fix 'isBasis?' and
+	'complementSpace'
+
+2025-01-09  Waldek Hebisch  <cas@fricas.org>
+
+	* src/algebra/Makefile.in, src/algebra/fops.spad,
+	src/interp/bc-matrix.boot, src/interp/bc-misc.boot,
+	src/interp/bc-solve.boot, src/interp/br-con.boot,
+	src/interp/br-saturn.boot, src/interp/br-search.boot,
+	src/interp/ht-util.boot, src/interp/i-funsel.boot:
+	Minor cleanups
+
+2025-01-08  Waldek Hebisch  <cas@fricas.org>
+
+	* src/interp/bc-solve.boot: Correct a typo
+
+2025-01-05  Gregory Vanuxem  <g.vanuxem@gmail.com>
+
+	* src/etc/SPADEDIT, src/hyper/spadint.c,
+	src/sman/sman.c: Allow choice of terminal emulator
+
 2024-12-23  Waldek Hebisch  <cas@fricas.org>
 
 	* src/interp/htsetvar.boot: Fix recent change
