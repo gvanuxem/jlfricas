@@ -1,3 +1,22 @@
+2025-01-15  Waldek Hebisch  <cas@fricas.org>
+
+	* src/algebra/rsimp.spad: Slighty simpler results
+
+2025-01-13  Waldek Hebisch  <cas@fricas.org>
+
+	* src/algebra/fops.spad: Fix writing specialized arrays
+	in GCL
+
+2025-01-11  Waldek Hebisch  <cas@fricas.org>
+
+	* src/algebra/charpol.spad: Implement Berkowitz algorithm
+	src/algebra/eigen.spad: Use it
+	src/algebra/Makefile.in: Adjust
+
+2025-01-11  Waldek Hebisch  <cas@fricas.org>
+
+	* src/interp/bc-misc.boot: Correct a typo
+
 2025-01-10  Waldek Hebisch  <cas@fricas.org>
 
 	* src/algebra/vsbasis.spad: Fix 'isBasis?' and
