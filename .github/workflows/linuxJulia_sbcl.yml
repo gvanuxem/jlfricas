@@ -22,7 +22,7 @@ jobs:
     - name: make and check packages
       run: |
         dpkg-buildpackage -b -us -uc      
-        mv ../jlfricas_1.3.12-julia-20241216_amd64.deb .
+        mv ../jlfricas_1.3.11-julia-20250123_amd64.deb .
     - name: Create artifact archives
       run: |
         rm -r target/*/src
@@ -34,4 +34,4 @@ jobs:
         name: jlFriCAS-linux-x86_64-binary
         path: |
           jlFriCAS-linux-x86_64-${{ github.sha }}.tar.bz2
-          jlfricas_1.3.12-julia-20241216_amd64.deb
+          jlfricas_1.3.11-julia-20250123_amd64.deb
