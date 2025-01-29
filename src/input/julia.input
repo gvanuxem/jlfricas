@@ -1,0 +1,69 @@
+)set break resume
+)set mess type off
+)expose UnittestCount UnittestAux Unittest
+
+testsuite "Julia"
+testcase "Julia availability"
+testTrue("jlInitialize(true)")
+
+testcase "JuliaStringUtilities"
+str := "hello"
+testTrue("jlRegexMatch?(_"hello world_", jlRegex(str))")
+testEquals("jlRegexMatch(_"hello world_" , jlRegex(str))", "_"hello_"")
+ret := jlRegexMatch("hello world", jlRegex "(h[a-z]+)\s*(the)?\s+(world)")@List(String);
+testEquals("#ret", "3")
+testEquals("ret.2", "_"_"")
+
+ret := jlRegexMatch("18:00", jlRegex("(?<hours>\d+):(?<minutes>\d+)"))@AssociationList(String,String);
+testEquals("qelt(ret, _"hours_")", "_"18_"")
+testEquals("jlRegexReplace(_"herro world_", jlRegex(_"rr_"),_
+    jlSubstitute(_"ll_"))", "_"hello world_"")
+
+testcase "JuliaSymbol"
+sym   := jsym "mysym";
+ssym  := ":mysym"; 
+testEquals("string(sym)","ssym")
+testEquals("coerce(coerce(_"mysym_")@Symbol)@JSYM","sym")
+
+testcase "JuliaInt64"
+testEquals("coerce(0$JI64)@SINT","0$SINT")
+testEquals("coerce(0$SINT)@JI64","0$JI64")
+testEquals("convert(0$JI64)@Integer","0$Integer")
+testEquals("ji64(0$SINT)","0$JI64")
+testEquals("ji64(0$INT)","0$Integer")
+
+testcase "JuliaFloat64"
+testEquals("coerce(0$JF64)@SF","0$SF")
+testEquals("coerce(0$SF)@JF64","0$JF64")
+testEquals("convert(0$JF64)@Float","0$Float")
+testEquals("jf64(0$SF)","0$JF64")
+testEquals("jf64(0$Integer)","0$JF64")
+
+testcase "JuliaUtilityFunctions"
+
+testTrue("jlEvalString(_"isnothing(using LinearAlgebra)_")@Boolean")
+testTrue("jlEvalString(_"isnothing(import LinearAlgebra.svd)_")@Boolean")
+testEquals("jlEvalString(_"0.0_")@JF64","0$JF64")
+
+czero := coerce(0$JF64)@JCF64;
+cone  := coerce(1$JF64)@JCF64;
+vec   := vector([0$JF64, 1$JF64]);
+mat   := matrix([[1$JF64, 0$JF64],[0$JF64, 1$JF64]]);
+cvec  := vector([czero, cone])@JCF64VEC;
+cmat  := matrix([[cone, czero],[czero, cone]])@JCF64MAT;
+testTrue("jlApprox?(0$JF64,0$JF64)")
+testTrue("jlApprox?(cone,cone)")
+testTrue("jlApprox?(vec,vec)")
+testTrue("jlApprox?(mat,mat)")
+testTrue("jlApprox?(cvec,cvec)")
+testTrue("jlApprox?(cmat,cmat)")
+
+testTrue("jlDefined?(jsym _"showerror_")")
+testTrue("jlDefined?( _"showerror_")")
+testTrue("jlDefined?(_"showerror_")")
+
+testEquals("jlApply(_"exp_",1$JF64)","exp(1$JF64)")
+testEquals("jlApply(_"-_",1$JF64,1$JF64)","0$JF64")
+testEquals("jlApply(_"+_",0$JF64,0$JF64,1$JF64)","1$JF64")
+
+statistics()

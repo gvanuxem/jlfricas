@@ -19,17 +19,16 @@ sys.path.insert(0, os.path.abspath('_ext'))
 PACKAGE_VERSION = os.environ.get('PACKAGE_VERSION', '0.0.0')
 PACKAGE_NAME = os.environ.get('PACKAGE_NAME', 'FriCAS')
 PACKAGE_TARNAME = os.environ.get('PACKAGE_TARNAME', PACKAGE_NAME.lower())
-PACKAGE_BUGREPORT = os.environ.get('PACKAGE_BUGREPORT',
-                                   'fricas-devel@googlegroups.com')
+PACKAGE_BUGREPORT = 'https://github.com/gvanuxem/jlfricas/issues'
 
 # The official place of the documentation.
-PACKAGE_URL = os.environ.get('PACKAGE_URL', 'https://fricas.github.io')
+PACKAGE_URL = 'https://gvanuxem.github.io/jlfricas'
 FRICAS_URL = PACKAGE_URL
 
 # Place of the official code repository.
 # It should be possible to clone the repository from this URL.
-PACKAGE_SOURCE = os.environ.get('PACKAGE_SOURCE',
-                                'https://github.com/fricas/fricas')
+PACKAGE_SOURCE = os.environ.get(
+    'PACKAGE_SOURCE', 'https://github.com/gvanuxem/jlfricas')
 
 # Adding the path to a file to PACKAGE_SOURCE_VIEW should give a URL to
 # show the respective source file.
@@ -101,7 +100,7 @@ master_doc = 'index'
 
 highlight_language = 'none'
 
-# The theme to use for HTML and HTML Help pages.  See the documentation for
+# The theme to use for HTML and HTML Help pages. See the documentation for
 # a list of builtin themes.
 #
 html_theme = 'fricas-theme'
@@ -148,7 +147,7 @@ rst_epilog = """
 .. |PACKAGE_TARNAME| replace:: %s
 .. |PACKAGE_NAME| replace:: %s
 .. |FriCAS| replace:: `%s`_
-.. _%s: %s/index.html
+.. _%s: %s/
 .. |PACKAGE_BUGREPORT| replace:: %s
 .. |PACKAGE_URL| replace:: %s/index.html
 .. |PACKAGE_SOURCE| replace:: %s
@@ -156,11 +155,11 @@ rst_epilog = """
 .. _%s Book: %s
 
 .. |mailing list| replace:: `%s mailing list`_
-.. _%s mailing list: https://groups.google.com/forum/#!forum/fricas-devel
+.. _%s mailing list:
 .. |git repository| replace:: `%s git repository`_
 .. _%s git repository: %s
 .. |home page| replace:: `%s home page`_
-.. _%s home page: %s/index.html
+.. _%s home page: %s/
 """ % (PACKAGE_VERSION,
        PACKAGE_TARNAME,
        PACKAGE_NAME,
