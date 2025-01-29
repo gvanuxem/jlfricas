@@ -18,7 +18,7 @@ consult <https://fricas.github.io>.
 
 To build FriCAS with Julia support, the <code>julia</code> executable needs to be available in your PATH, and a simple <code>./configure --enable-julia</code> should do the trick. We require Julia 1.6 or higher. Please see https://julialang.org/downloads/ for instructions on how to obtain Julia for your system. The required Julia packages are Suppressor, Nemo and SpecialFunctions.
 
-As of now with Clozure CL [queues](https://github.com/oconnore/queues) and [bordeaux-threads](https://sionescu.github.io/bordeaux-threads/) are also required. Use installed [quicklisp](https://www.quicklisp.org/beta/) with `queues` and `bordeaux-threads`, and at configure time use the `--with-quicklisp` option, see the `quicklisp` documentation for how to load it and install them. Another possibility, easier, is to use [roswell](https://roswell.github.io/) with added `ccl-bin`, `queues` and `bordeaux-threads`. GitHub actions for Clozure CL use them to build jlFriCAS.
+As of now with Clozure CL [queues](https://github.com/oconnore/queues) and [bordeaux-threads](https://sionescu.github.io/bordeaux-threads/) are also required. Use installed [quicklisp](https://www.quicklisp.org/beta/) with `queues` and `bordeaux-threads`, and at configure time use the `--with-quicklisp` option, see the `quicklisp` documentation for how to load it and install them. Another possibility, easier, is to use [roswell](https://roswell.github.io/) with added `ccl-bin` and `queues`. GitHub actions for Clozure CL use them to build jlFriCAS.
 
 If you want to visualize your data using Julia, small support is provided using `Plots` and eventually `LaTeXStrings` Julia packages.
 
