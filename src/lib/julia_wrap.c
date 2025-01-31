@@ -9,7 +9,8 @@
 static jl_value_t *jl_complex64_type, *jl_complex32_type, *V, *refs; // *irefs;
 static jl_value_t *array_int64, *array_dbl, *array_cdbl, *array2_dbl, *array2_cdbl;
 static jl_value_t *array_flt, *array_cflt, *array2_flt, *array2_cflt;
-static jl_function_t *setind, *getind, *delind, *stringify, *Stringify, *MIME;
+static jl_function_t *setind, *getind, *delind, *stringify, *Stringify, *MIME, *printstyle;
+
 
 // We use '_str' instead of '_string' to avoid conflict with Julia
 void jl_eval_str(char* code)
@@ -2442,6 +2443,7 @@ void jl_init_env(void){
     stringify = jl_get_function(jl_base_module, "string");
     MIME = jl_get_function(jl_base_module, "MIME");
     Stringify = jl_get_function(jl_base_module, "String");
+    printstyle = jl_get_function(jl_base_module, "printstyled");
 
     // Quick & dirty hack
     // Set some default functions to avoid conflicts with the Nemo ones

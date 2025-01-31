@@ -23,26 +23,26 @@ JuliaObjectType() : Category == JuliaType() with
     ++ nothing?(obj) checks whether or not obj is nothing.
     jlDisplay: % -> Void
     ++ jlDisplay(v) pretty prints v (à la Julia).
-    jlApply : (String, %) -> JuliaObject
+    jlApply : (String, %) -> %
     ++jlApply(func, obj) applies the function func with obj as parameter
     ++ and returns the result as a FriCAS JuliaObject.
     ++ For example, using JuliaMatrix(JuliaObjFloat64):
     ++ \example{M:=nrand(4,4);}
     ++ \example{jlApply("svd", M::JuliaMatrix(JuliaObjFloat64)).S}
     ++ should be "equivalent" to svdvals(M)
-    jlApply : (String, %, %) -> JuliaObject
+    jlApply : (String, %, %) -> %
     ++jlApply(func, obj1, obj2) applies the function func with obj1 and obj2
     ++ as parameters and returns the result as a FriCAS JuliaObject.
     ++ For example (equivalent to map(cos, v)):
     ++ \example{v:=urand01(5)$JuliaVector(JuliaFloat)}
     ++ \example{jlApply("map", "cos", coerce v)}
-    jlApply : (String, %, %, %) -> JuliaObject
+    jlApply : (String, %, %, %) -> %
     ++ jlApply(func, obj1, obj2, obj3) applies the function func with obj1, obj2
     ++ and obj3 as parameters and returns the result as a FriCAS JuliaObject.
-    jlApply : (String, %, %, %, %) -> JuliaObject
+    jlApply : (String, %, %, %, %) -> %
     ++ jlApply(func, obj1, obj2, obj3, obj4) applies the function func with obj1, obj2,
     ++ obj3 and obj4 as parameters and returns the result as a FriCAS JuliaObject.
-    jlApply : (String, %, %, %, %, %) -> JuliaObject
+    jlApply : (String, %, %, %, %, %) -> %
     ++ jlApply(func, obj1, obj2, obj3, obj4, obj5) applies the function func with obj1,
     ++ obj2, obj3, obj4 and obj5 as parameters and returns the result as a FriCAS
     ++ JuliaObject.
@@ -260,6 +260,119 @@ JuliaObjBoolean() : Exports == Implementation where
     coerce(bool) : Boolean == jl_string_getindex(jlId bool)$Lisp = "true"
     jtrue() == jlref("true")
     jfalse() == jlref("false")
+ 
+)abbrev domain JOBF32 JuliaObjFloat32
+++ Convenience domain for Julia Float32
+++ Author: G.Vanuxem
+++ Date Created: Aug. 2024
+++ Description:
+++  Convenience domain for Julia Float32, objects that are used
+++ within Julia, and not directly by the underlying FriCAS Common LISP.
+++ It is not meant to be used directly, but rather, for returned value
+++ or function argument for example.
+++ Only basic arithmetic operations are supported.
+JuliaObjFloat32() : Exports == Implementation where
+  Exports ==> Join(OrderedSet, JuliaObjectRing, Field) with
+    "*" : (%, Integer) -> %
+    "/" : (%, Integer) -> %
+    "/" : (Integer, %) -> %
+    jlApprox?: (%, %) -> Boolean
+    ++ jlApprox?(x,y) computes inexact equality comparison
+    ++ with default parameters.
+    ++ Two numbers compare equal if their relative distance
+    ++ or their absolute distance is within tolerance bounds.
+    jlApprox?: (%, %, %) -> Boolean
+    ++ jlApprox?(x,y,atol) computes inexact equality comparison
+    ++ with absolute tolerance atol.
+    ++ Two numbers compare equal if their relative distance
+    ++ or their absolute distance is within tolerance bounds.
+    jlF32CApply : (JuliaObjDynamicLinker, %) -> %
+    ++ jlF32CApply(func,x) applies the function pointer func to x.
+    ++ For example:
+    ++ \example{libm:= jlDlOpen "libopenlibm"}
+    ++ \example{squareRoot:=jlDlSym(libm,jsym(sqrtf))}
+    ++ \example{jlF32CApply(squareRoot,jfloat32(2))}
+    jlF32CApply : (JuliaObjDynamicLinker, %, %) -> %
+    ++ jlF32CApply(func,x,y) applies the function pointer func to x and y.
+    ++ For example:
+    ++ \example{libm:= jlDlOpen "libopenlibm"}
+    ++ \example{power:=jlDlSym(libm,jsym(powf))}
+    ++ \example{jlF32CApply(power,jfloat32(2),jfloat32(7))}
+    jlF32CApply : (JuliaObjDynamicLinker, %, %, %) -> %
+    ++ jlF32CApply(func,x,y,z) applies the function pointer func to x, y and z.
+    cis : % -> JuliaObjComplexF32
+    ++ cis(x) returns exp(%i*x) computed efficiently.
+    cispi : % -> JuliaObjComplexF32
+    ++ cispi(x) returns cis(%pi*x) computed efficiently.
+    convert : Float -> %
+    coerce : DoubleFloat -> %
+    coerce : Float -> %
+    jfloat32 : Float -> %
+    jfloat32 : JuliaFloat32 -> %
+    jfloat32 : String -> %
+    ++ jfloat32(str) evaluates str in Julia and returns the
+    ++ Julia Float32 object. For example:
+    ++\example{jfloat32("sin(pi)")}
+    ++\example{jfloat32("0.7")}
+  Implementation ==> add
+    import from JuliaUtilityFunctions
+    import from String
+
+    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+    jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+    jbinbfunc(op,a,b) ==>
+      jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
+
+    jlInitialize(true)
+    Rep := SExpression
+
+    0 == jlref("0.0")
+    1 == jlref("1.0")
+    x < y  == jbinbfunc("<",x,y)
+    x > y  == jbinbfunc(">",x,y)
+    x >= y == jbinbfunc(">=",x,y)
+    x <= y == jbinbfunc("<=",x,y)
+    characteristic() == 0
+    x : % * a : Integer == jlref(concat [getind(x),"*",string(a)])
+    x : Fraction(Integer) * y : % ==
+      jlref(concat ["(",string(numer x), "//" , string(denom(x)) ")*", getind(y)])
+    x : % * y : Fraction(Integer) ==
+      jlref(concat [getind(x), "*(", string(numer(y)),"//", string(denom(y)), ")"])
+    x : % / y : % == jbinfunc("/",x,y)
+    x : % / i : Integer == jlref(concat [getind(x) , "/", string(i)])
+    i : Integer / x : % == jlref(concat [string(i), "/", getind(x)])
+
+    jlApprox?(x, y) == jbinbfunc("isapprox",x,y)
+    jlApprox?(x, y, atol) ==
+      jlEvalString(concat(["isapprox(", getind(x),
+        ",", getind(y), ", atol=", getind(atol),")"]))@Boolean
+
+    jlF32CApply(func, x) ==
+      jlref(concat ["ccall(", getind(func),
+        ", Float32, (Float32,),", getind(x),")"])
+    jlF32CApply(func, x, y) ==
+      jlref(concat ["ccall(", getind(func),
+        ", Float32, (Float32,Float32),", getind(x), ",", getind(y),")"])
+    jlF32CApply(func, x, y, z) ==
+      jlref(concat ["ccall(", getind(func), 
+        ", Float32, (Float32,Float32,Float32),",
+          getind(x), ",", getind(y), ",", getind(z), ")"])
+    cis(x)   == junfunc("cis",x)
+    cispi(x) == junfunc("cispi",x)
+    convert(r: Float) ==
+      tmp := outputSpacing(0)
+      ret := jlref(toString(r))
+      outputSpacing(tmp)
+      ret
+    coerce(r : DoubleFloat) == jlref(toString(r))
+    coerce(r : Float) == convert(r)
+    jfloat32(r : Float) == convert(r)
+    jfloat32(r : JuliaFloat32) == jlref(toString(r))
+    jfloat32(str : String) ==
+      ret : % := jlref(str)
+      jlType(ret) ~= "Float32" => error "jfloat32: not a Julia Float32"
+      ret
 
 )abbrev domain JOBF64 JuliaObjFloat64
 ++ Convenience domain for Julia Float64
@@ -376,6 +489,68 @@ JuliaObjFloat64() : Exports == Implementation where
     jfloat64(str : String) ==
       ret : % := jlref(str)
       jlType(ret) ~= "Float64" => error "jfloat64: not a Julia Float64"
+      ret
+
+)abbrev domain JOBCF32 JuliaObjComplexF32
+++ Convenience domain for Julia ComplexF32
+++ Author: G.Vanuxem
+++ Date Created: Aug. 2024
+++ Description:
+++  Convenience domain for Julia ComplexF32, objects that are used
+++ within Julia, and not directly by the underlying FriCAS Common LISP.
+++ It is not meant to be used directly, but rather for returned value
+++ or function argument for example.
+++ Only basic arithmetic operations are supported.
+JuliaObjComplexF32() : Exports == Implementation where
+  Exports ==> Join(JuliaObjectRing, Field) with
+    "*" : (%, Integer) -> %
+    "/" : (%, Integer) -> %
+    "/" : (Integer, %) -> %
+    jlApply : (String, %) -> %
+    ++jlApply(func, x) applies the function func with x as parameter.
+    jlApply : (String, %, %) -> %
+    ++jlApply(func, x, y) applies the function func to x and y.
+    jlApply : (String, %, %, %) -> %
+    ++ jlApply(func, x, y, z) applies the function func to x,
+    ++ y and z.
+    cis : % -> %
+    ++ cis(x) returns exp(%i*x) computed efficiently.
+    cispi : % -> %
+    ++ cispi(x) returns cis(%pi*x) computed efficiently.
+    jcfloat32 : String -> %
+    ++ jcfloat32(str) evaluates str in Julia and returns the Julia
+    ++ Complex{Float32} object.
+    ++ For example:
+    ++ \example{jcfloat32 "cos(2pi)im"}
+  Implementation ==> add
+    import from JuliaUtilityFunctions
+    import from String
+
+    jlInitialize(true)
+    Rep := SExpression
+
+    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+    jbinfunc(func, a, b) ==> make_jlref_wcall2(func, a, b)$Lisp
+    jbinbfunc(op,a,b) ==>
+      jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
+
+    0 == jlref("0.0+0im")
+    1 == jlref("1.0+0im")
+
+    x : % * a : Integer == jlref(concat [getind(x),"*",string(a)])
+    x : Fraction(Integer) * y : % ==
+      jlref(concat ["(",string(numer x), "//" , string(denom(x)) ")*", getind(y)])
+    x : % * y : Fraction(Integer) ==
+      jlref(concat [getind(x), "*(", string(numer(y)),"//", string(denom(y)), ")"])
+    x :% / y : % == jbinfunc("/",x,y)
+    x : % / i : Integer == jlref(concat [getind(x) , "/", string(i)])
+    i : Integer / x : % == jlref(concat [string(i), "/", getind(x)])
+    cis(x)   == junfunc("cis",x)
+    cispi(x) == junfunc("cispi",x)
+    jcfloat32(str) ==
+      ret : % := jlref(str)
+      jlType(ret) ~= "ComplexF32" => error "jcfloat32: not a Julia ComplexF32"
       ret
 
 )abbrev domain JOBCF64 JuliaObjComplexF64
@@ -1470,6 +1645,7 @@ JuliaMatrix(R : JuliaObjectRing) :  Exports == Implementation where
                 JuliaMatrixCategory(R, Row, Col)) with
     new : (NNI, NNI, R) -> %
     ++ new(m, n, x) creates a matrix of size m by n with all elements x.
+    matrix : JuliaObject -> %
     if R has NemoRing and (R has IntegerNumberSystem or
         R has QuotientFieldCategory(NINT)) then
       radicalEigenvalues: % -> JuliaVector(NemoAlgebraicNumber)
@@ -1533,6 +1709,18 @@ JuliaMatrix(R : JuliaObjectRing) :  Exports == Implementation where
     ++ coerce(x): convenience function.
     coerce  : JuliaComplexF64Matrix -> JuliaMatrix(JuliaObjComplexF64)
     ++ coerce(x): convenience function.
+    coerce  : JuliaFloat32Matrix -> JuliaMatrix(JuliaObjFloat32)
+    ++ coerce(x): convenience function.
+    coerce  : JuliaComplexF32Matrix -> JuliaMatrix(JuliaObjComplexF32)
+    ++ coerce(x): convenience function.
+    factorize : JuliaMatrix(JuliaObjFloat32) -> JuliaObject
+    ++ factorize(m) factorizes m using a suited matrix factorization for m.
+    ++ For a symmetric matrix the Bunch-Kaufman factorization will be choosen
+    ++ whereas for generic matrices, a LU or a QR factorization will be used.
+    factorize : JuliaMatrix(JuliaObjComplexF32) -> JuliaObject
+    ++ factorize(m) factorizes m using a suited matrix factorization for m.
+    ++ For a symmetric matrix the Bunch-Kaufman factorization will be choosen
+    ++ whereas for generic matrices, a LU or a QR factorization will be used.
     factorize : JuliaMatrix(JuliaObjFloat64) -> JuliaObject
     ++ factorize(m) factorizes m using a suited matrix factorization for m.
     ++ For a symmetric matrix the Bunch-Kaufman factorization will be choosen
@@ -1677,6 +1865,8 @@ JuliaMatrix(R : JuliaObjectRing) :  Exports == Implementation where
       for i in 1..n repeat setelt!(u, i, i, elt(v,i))
       u
 
+    factorize(m : JuliaMatrix(JuliaObjFloat32)) == junfunc("factorize", m)
+    factorize(m : JuliaMatrix(JuliaObjComplexF32)) == junfunc("factorize", m)
     factorize(m : JuliaMatrix(JuliaObjFloat64)) == junfunc("factorize", m)
     factorize(m : JuliaMatrix(JuliaObjComplexF64)) == junfunc("factorize", m)
 
@@ -1699,6 +1889,11 @@ JuliaMatrix(R : JuliaObjectRing) :  Exports == Implementation where
           for i in 1 .. ncols(m)] _
           for j in 1 .. nrows(m)]
       matrix l
+
+    coerce(m : JuliaFloat32Matrix) : JuliaMatrix(JuliaObjFloat32) ==
+      make_jlref_from_fmat(0$NNI, jlVector(m), nrows m)$Lisp
+    coerce(m : JuliaComplexF32Matrix) : JuliaMatrix(JuliaObjComplexF32) ==
+      make_jlref_from_fmat(1$NNI, jlVector(m), nrows m)$Lisp
     coerce(m : JuliaFloat64Matrix) : JuliaMatrix(JuliaObjFloat64) ==
       make_jlref_from_mat(0$NNI, jlVector(m), nrows m)$Lisp
     coerce(m : JuliaComplexF64Matrix) : JuliaMatrix(JuliaObjComplexF64) ==

@@ -61,8 +61,8 @@ SPAD_SRCS= \
      intaf intalg intaux intclos intden intef integer \
      integrat interval intfact intlocp intpar intpm intrf intspec irexpand \
      irsn ituple jarray32 jarray64 jcfsf jla32 jla64 jnemo jnpoly jobject \
-	 jplot jfsf jfsf2 jf64sf jf64sf2 jnball julia jutils jet jws jwsagg \
-	 jwsexpr jwsnsf jwsutils kl kovacic laplace laurent leadcdet lie \
+	 jplot jfsf jfsf2 jf32sf jf64sf jf32sf2 jf64sf2 jnball julia jutils jet \
+	 jws jwsagg jwsexpr jwsnsf jwsutils kl kovacic laplace laurent leadcdet lie \
 	 limitps lindep lingrob linpen liouv listgcd list lll lmdict lodof \
 	 lodof2 lodo logic mama manip mantepse math_sym mathml mappkg matcat \
 	 matfuns matrix matstor mesh mfinfact mkfunc mkrecord \
@@ -398,11 +398,11 @@ ifdef JULIA_WRAP_SO_TARGET
 JULIALIST = INECF JARBPR JCF32 JCF32VEC JCF32MAT JCF32SMA \
             JCF64 JCF64MAT JCF64MTF JCF64SMA JCF64VEC JCFSF JCFLOAT JCF32LA \
             JCF64LA JCRING JDFRAME JDRAW JF32 JF32AF JF32VEC JF32VEC2 JF32MAT \
-            JF32SMAT  JF64 JF64AF JF64MAT JF64MTF JF64SF JF64SF2 JF64SMAT \
-            JF64VEC JF64VEC2 JFLOAT JFSF JFSF2 JI64 JI64VEC JMATCAT JMATRIX \
-            JMFLOAT JMTYPE JOBJECT JOBAGG JOBBOOL JOBBINT JOBCF64 JOBDICT \
-            JOBDLINK JOBF64 JOBI64 JOBPAIR JOBRING JOBTPLE JOBTYPE JPLOT \
-            JRING JF32LA JF64LA JSTRU JSYM JTYPE JVECCAT JVECTOR JVECTOR2 \
+            JF32SMAT  JF64 JF64AF JF64MAT JF64MTF JF32SF JF64SF JF32SF2 JF64SF2 \
+			JF64SMAT JF64VEC JF64VEC2 JFLOAT JFSF JFSF2 JI64 JI64VEC JMATCAT \
+			JMATRIX JMFLOAT JMTYPE JOBJECT JOBAGG JOBBOOL JOBBINT JOBCF32 JOBCF64 \
+			JOBDICT JOBDLINK JOBF32 JOBF64 JOBI64 JOBPAIR JOBRING JOBTPLE JOBTYPE \
+			JPLOT JRING JF32LA JF64LA JSTRU JSYM JTYPE JVECCAT JVECTOR JVECTOR2 \
             NACF NACFS JUF NAN NACB NARB NCB NCF NCRING NECF NFF NFR NFRAC \
             NINT NMLP NMP NPF NRB NRF NRING NTYPE NULP NUP NZMOD
 JULIACATLIST = JARBPR JCRING JMATCAT JMFLOAT JMTYPE JOBAGG JOBRING JOBTYPE \

@@ -141,14 +141,18 @@ JuliaStringUtilities() : Exports == Implementation where
     ++ jlSplit(str, delims, 0).
     jlRegex  : String -> String
     ++ jlRegex(str) returns the String corresponding to a Julia
-    ++ regular expression, that is, "r"str"". Convenience function.
+    ++ regular expression, that is, "r_"str_"". Convenience function.
     jlSubstitute  : String -> String
     ++ jlSubstitute(str) returns the String corresponding to a Julia
-    ++ subtitute expression, that is, "s"str""". Convenience function.
+    ++ subtitute expression, that is, "s_"str_"". Convenience function.
     jlLatex  : String -> String
     ++ jlLatex(str) returns the String corresponding to a Julia
     ++ LaTeX expression, that is, "L"str"" if your Julia support it
     ++ (LaTeXStrings package). Convenience function.
+    jlStyled  : String -> String
+    ++ jlLatex(str) returns the String corresponding to a Julia
+    ++ LaTeX expression, that is, "styled_"str_"" if your Julia support it.
+    ++ (StyledStrings official package). Convenience function.
     jlRegexMatch?   : (String, String) -> Boolean
     ++ jlRegexMatch(s, regex) checks if the regular expression matches in s.
     jlRegexMatch    : (String, String) -> String
@@ -180,6 +184,7 @@ JuliaStringUtilities() : Exports == Implementation where
     jlRegex(s) == concat ["r_"", s, "_""]
     jlSubstitute(s) == concat ["s_"", s, "_""]
     jlLatex(s) == concat ["L_"", s, "_""]
+    jlStyled(s) == concat ["styled_"", s, "_""]
 
     jlSplit(str, delims, n) == 
       resl : List(String) := []

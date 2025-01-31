@@ -175,9 +175,8 @@ JuliaPlotFunctions() : Exports == Implementation where
       error "JuliaPlotFunctions: the Julia package Plots is not installed"
 
     if not jlUsing("LaTeXStrings") then
-      messagePrint(concat ["Warning: JuliaPlotFunctions: ",
-        "LaTeXStrings is not installed",
-          " in Julia, do not use LaTeX strings_""])$OutputForm
+      jlEvalString(concat("printstyled(_"LaTexStrings is not installed, ",
+      "do not use it._", color=:green)"))
     -- jlEvalString("gaston()")
     -- jlEvalString("WGLMakie.activate!()")
     -- jlEvalString("plotly()")

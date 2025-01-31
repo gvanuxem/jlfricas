@@ -27,6 +27,8 @@ JuliaWSExpression() : Exports == Implementation where
     ++ zero? x tries to determine if x is 0.
     ++ For example:
     ++ \example{expr:=0$JWSEXPR/1*sqrt(17::JWSEXPR); zero? expr}
+    defined? :  % -> Boolean
+    ++ defined?(sym) checks whether or not sym is a WS symbol.
     real? : % -> Boolean
     ++ \undocumented
     realNumeric? : % -> Boolean
@@ -332,7 +334,7 @@ JuliaWSExpression() : Exports == Implementation where
     ++ modularLambda() computes the lambda modular function.
     series : (%, %) -> %
     ++ series(expr, opt) returns a serie from expr.
-    ++ \example{x:=jWSExpr(x)}
+    ++ \example{x:=jWSExpr(x);a:=jWSExpr(a);}
     ++ \example{opt:=jWSList [x,pi()$JWSEXPR/4,7]}
     ++ \example{series(sin(a*x),opt)}
     ++ \example{series(cos(x),"\{x, 0, 12\}")}
@@ -852,9 +854,17 @@ JuliaWSExpression() : Exports == Implementation where
     expToTrig : % -> %
     ++ expToTrig(expr) returns expr with exponentials converted to
     ++ (hyperbolic) trigonometric functions.
-    toString: (%, %) -> String
+    toString : (%, %) -> String
     ++ toString(expr, form) returns the string representation of expr
     ++ with WS language format form.
+    toExpression : String -> %
+    ++ toExpression(expr) converts expr to a WS expression and evaluates it.
+    toExpression : (String, %) -> %
+    ++ toExpression(expr, form) converts expr to a WS expression and evaluates it
+    ++ with output in the format form.
+    toExpression : (String, %, %) -> %
+    ++ toExpression(expr, form, h) converts expr to a WS expression and evaluates it
+    ++ with output in the format form but wrap the head with h. `Hold` for example. 
     rationalApproximation : % -> %
     ++ rationalApproximation(expr) try to find a rational approximation
     ++ of the expression expr.
@@ -899,6 +909,12 @@ JuliaWSExpression() : Exports == Implementation where
     quantityMagnitude : % -> %
     ++ quantityMagnitude(val) returns magnitude of val.
 
+    jlDisplay : JuliaWSExpression -> JuliaWSExpression
+    ++ jlDisplay(expr) returns the traditional form of expr:
+    ++ jWSExpr "Format[Sin[x]]" => sin(x)
+    jlDisplay : (JuliaWSExpression, JuliaWSExpression) -> JuliaWSExpression
+    ++ jlDisplay(expr, form) returns the `form` form of expr:
+    ++ jWSExpr "Format[Sin[x], TeXForm]" => \sin x())
     matrixForm : % -> %
     ++ matrixForm(mat) returns a pretty-printable form of mat i.e.
     ++ its WS 'MatrixForm'.
@@ -957,6 +973,8 @@ JuliaWSExpression() : Exports == Implementation where
     ++ \example{expr := "Sqrt[x]"::JWSEXPR;jlEval(expr,"x=2.0")}
     -- The following breaks build process in src/doc and likely in src/input
     coerce : Symbol -> %
+    ++ coerce(sym) coerces sym to a JuliaWSExpression.
+    coerce : JuliaWSSymbol -> %
     ++ coerce(sym) coerces sym to a JuliaWSExpression.
     coerce : List(%) -> %
     ++ coerce(list) coerces list of JuliaWSExpression.
@@ -1095,36 +1113,34 @@ JuliaWSExpression() : Exports == Implementation where
     real(z)      == junfunc("W_"Re_"(", z)
     imag(z)      == junfunc("W_"Im_"(", z)
 
-    WT : JuliaWSSymbol := WTrue()
-    WL : JuliaWSSymbol := WList()
-    WR : JuliaWSSymbol := WRule()
     WS : JuliaWSSymbol := WString()
 
-    member?(list, expr) == jbinfunc("W_"MemberQ_"(", list, expr) = WT
-    key?(assoc,key) == jbinfunc("W_"KeyExistsQ_"(",assoc,key) = WT
-    missing?(x) == junfunc("W_"MissingQ_"(", x) = WT
-    real?(x)    == junfunc("W_"RealValuedNumberQ_"(", x) = WT
-    realNumeric?(x) == junfunc("W_"RealValuedNumericQ_"(", x) = WT
-    integer?(x) == junfunc("W_"IntegerQ_"(", x) = WT
-    rational?(x) == junfunc("W_"RationalQ_"(", x) = WT
-    number?(x) == junfunc("W_"NumberQ_"(", x) = WT
-    machineNumber?(x) == junfunc("W_"MachineNumberQ_"(", x) = WT
-    exactNumber?(x) == junfunc("W_"ExactNumberQ_"(", x) = WT
+    defined?(x) == junfunc("W_"NameQ_"(", x) = WTrue()
+    member?(list, expr) == jbinfunc("W_"MemberQ_"(", list, expr) = WTrue() 
+    key?(assoc,key) == jbinfunc("W_"KeyExistsQ_"(",assoc,key) = WTrue()
+    missing?(x) == junfunc("W_"MissingQ_"(", x) = WTrue()
+    real?(x)    == junfunc("W_"RealValuedNumberQ_"(", x) = WTrue()
+    realNumeric?(x) == junfunc("W_"RealValuedNumericQ_"(", x) = WTrue()
+    integer?(x) == junfunc("W_"IntegerQ_"(", x) = WTrue()
+    rational?(x) == junfunc("W_"RationalQ_"(", x) = WTrue()
+    number?(x) == junfunc("W_"NumberQ_"(", x) = WTrue()
+    machineNumber?(x) == coerce junfunc("W_"MachineNumberQ_"(", x)
+    exactNumber?(x) == coerce junfunc("W_"ExactNumberQ_"(", x)
 
     jlWSDefined?(str) == not missing?(jWSData(str))
 
-    zero? expr == junfunc("W_"PossibleZeroQ_"(",expr) = WT
-    one? x == jbinfunc("W_"Equal_"(", x, 1) = WT
+    zero? expr == coerce junfunc("W_"PossibleZeroQ_"(",expr)
+    one? x == coerce jbinfunc("W_"Equal_"(", x, 1)
 
-    negative? x == junfunc("W_"Negative_"(", x) = WT
-    positive? x == junfunc("W_"Positive_"(", x) = WT
+    negative? x == junfunc("W_"Negative_"(", x) = WTrue()
+    positive? x == junfunc("W_"Positive_"(", x) = WTrue()
 
     x = y  == jbinbop("==",x,y)
     x ~= y == jbinbop("!=",x,y)
-    x < y  == jbinfunc("W_"Less_"(", x,y) = WT
-    x > y  == jbinfunc("W_"Greater_"(", x,y) = WT
-    x >= y == jbinfunc("W_"GreaterEqual_"(", x,y) = WT
-    x <= y == jbinfunc("W_"LessEqual_"(", x,y) = WT
+    x < y  == jbinfunc("W_"Less_"(", x,y) = WTrue()
+    x > y  == jbinfunc("W_"Greater_"(", x,y) = WTrue()
+    x >= y == jbinfunc("W_"GreaterEqual_"(", x,y) = WTrue()
+    x <= y == jbinfunc("W_"LessEqual_"(", x,y) = WTrue()
 
     -- TODO: fix space after LaTeX command, \sin, x for (Stats)Plots
     -- Use TeXForm?
@@ -1544,9 +1560,9 @@ JuliaWSExpression() : Exports == Implementation where
     numerDenom(rexpr) ==  junfunc("W_"NumeratorDenominator_"(", rexpr)
 
     polynomial?(expr, var : %) ==
-      jbinfunc("W_"PolynomialQ_"(", expr, var) = WT
+      jbinfunc("W_"PolynomialQ_"(", expr, var) = WTrue()
     polynomial?(expr, vars : JWSL(%)) ==
-      jbinfunc("W_"PolynomialQ_"(", expr, vars) = WT
+      jbinfunc("W_"PolynomialQ_"(", expr, vars) = WTrue()
     variables(p) : JWSL(%) == junfunc("W_"Variables_"(", p)
     variables(p) : List(Symbol) ==
       l : List(Symbol) := []
@@ -1606,9 +1622,9 @@ JuliaWSExpression() : Exports == Implementation where
     factorList(p) == junfunc("W_"FactorList_"(", p)
     factorSquareFree(p) == junfunc("W_"FactorSquareFree_"(", p)
     factorSquareFreeList(p) == junfunc("W_"FactorSquareFreeList_"(", p)
-    irreducible?(p) == junfunc("W_"IrreduciblePolynomialQ_"(", p) = WT
+    irreducible?(p) == junfunc("W_"IrreduciblePolynomialQ_"(", p) = WTrue()
     irreducible?(p, param) ==
-      jbinfunc("W_"IrreduciblePolynomialQ_"(", p, param) = WT
+      jbinfunc("W_"IrreduciblePolynomialQ_"(", p, param) = WTrue()
     decompose(p,var) == jbinfunc("W_"Decompose_"(", p, var)
 
     interpolatingPolynomial(polys,var) ==
@@ -1690,7 +1706,7 @@ JuliaWSExpression() : Exports == Implementation where
     quantityMagnitude(val) == junfunc("W_"QuantityMagnitude_"(", val)
     keys(expr) ==
       -- TODO
-      (head := jlHead(expr)) ~= WL and head ~= WR
+      (head := jlHead(expr)) ~= WList() and head ~= WRule()
         => error1("No rule(s) detected in ", expr)
       junfunc("W_"Keys_"(", expr)
     values(expr) ==
@@ -1710,7 +1726,12 @@ JuliaWSExpression() : Exports == Implementation where
     jlWSAccuracy(expr) == junfunc("W_"Accuracy_"(", expr)
     jlWSSetPrecision(expr, n) == jbinfunc("W_"SetPrecision_"(", expr, n)
     jlWSSetAccuracy(expr, n) == jbinfunc("W_"SetAccuracy_"(", expr, n)
+    jlDisplay(expr) == junfunc("W_"Format_"(", expr)
+    jlDisplay(expr, form) == jbinfunc("W_"Format_"(", expr, form)
     toString(expr, form) == string jbinfunc("W_"ToString_"(", expr, form)
+    toExpression(expr) == junfunc("W_"ToExpression_"(", jWSString(expr))
+    toExpression(expr, form) == jbinfunc("W_"ToExpression_"(", jWSString(expr), form)
+    toExpression(expr, form, h) == jterfunc("W_"ToExpression_"(", jWSString(expr), form, h)
     retractIfCan(expr : %) : Union(JuliaFloat64, "failed") ==
       jlType(expr) = "Float64" => jlEvalString(getind(expr))
       "failed"
@@ -1747,6 +1768,7 @@ JuliaWSExpression() : Exports == Implementation where
     --string(expr) : String == toString expr
     --convert(expr) : String == toString expr
     coerce(sym : Symbol) == jlref(concat(["W_`", string(sym),  "_`"]))
+    coerce(sym : JuliaWSSymbol) == sym pretend %
     coerce(i : Integer) == jlref(concat(["WInteger(_"", string(i), "_")"]))
     coerce(z : Complex(Integer)) ==
       jlref(concat(["weval(W_"Complex_"(",
@@ -1810,6 +1832,6 @@ JuliaWSExpression() : Exports == Implementation where
       str : String := jlEvalString(concat(["replace(_"", sexpr,
         "_", '[' => '(', ']' => ')', _"ArcS_" => _"as_", _"ArcC_" => _"ac_",",
         " _"ArcT_" => _"at_" , r_"\b[A-Z][a-z]{2}_" => x -> lowercase(x))"]))
-      l := split(str, newline())
+      l := split(sexpr, newline())
       #l > 1 => pile(append([""],l) pretend List(OutputForm))
       str pretend OutputForm
