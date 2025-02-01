@@ -131,6 +131,16 @@ JuliaStringUtilities() : Exports == Implementation where
   PI   ==> PositiveInteger
   NNI  ==> NonNegativeInteger
   Exports ==> with
+    jlMessageStyled : String -> Void
+    ++ jlMessageStyled(message) print the message with formatted 
+    ++ style within braces (I am {red:here}).
+    ++ For example:
+    ++ jlMessageStyled("{red:■} {green:■} {yellow:■} {blue:■} {magenta:■} {cyan:■}")
+    jlMessageStyled : (String, JuliaSymbol) -> Void
+    ++ jlMessageStyled(message, color) print the message with formatted 
+    ++ `color` (english color).
+    ++ For example
+    ++ jlMessageStyled("I AM HERE!!!", "red")
     jlSplit  :(String, String, NNI) -> List(String)
     ++ jlSplit(str, delims, n) split str with delimiter(s) delims
     ++ (a string or a regular expression). Return a list of size n.
@@ -177,14 +187,20 @@ JuliaStringUtilities() : Exports == Implementation where
     ++  jlRegexReplace("hey", jlRegex("$"), jlSubstitute(" you!"))
   Implementation ==> add
     import from JuliaUtilityFunctions
-    import from String
+    import from JuliaStringUtilities
     import from AssociationList(String,String)
     jlInitialize(true)
+    jlUsing "StyledStrings"
 
     jlRegex(s) == concat ["r_"", s, "_""]
     jlSubstitute(s) == concat ["s_"", s, "_""]
     jlLatex(s) == concat ["L_"", s, "_""]
     jlStyled(s) == concat ["styled_"", s, "_""]
+    jlMessageStyled(mess, color) ==
+      jlEvalString(concat ["printstyled(" "_"\n     ", mess,
+        "\n_";color=", string(color), ")"])
+    jlMessageStyled(mess) ==
+      jl_eval_string(concat(["println(styled_"\n     ",mess,"_")"]))$Lisp
 
     jlSplit(str, delims, n) == 
       resl : List(String) := []
