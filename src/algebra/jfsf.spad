@@ -1,7 +1,7 @@
-)abbrev package JFSF JuliaFloatSpecialFunctions
-++ Special functions computed using Julia's ecosystem.
-JuliaFloatSpecialFunctions() : Exports == Implementation where
-  JF ==> JuliaFloat
+)abbrev package JFSF JLFloatSpecialFunctions
+++ Special functions computed using JL's ecosystem.
+JLFloatSpecialFunctions() : Exports == Implementation where
+  JF ==> JLFloat
   INT ==> Integer
   Exports ==> with
 

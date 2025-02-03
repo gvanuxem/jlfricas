@@ -1,35 +1,35 @@
-)abbrev category NACF NemoAlgebraicallyClosedField
+)abbrev category NACF NMAlgebraicallyClosedField
 ++ Author: G. Vanuxem (based on work of Manuel Bronstein)
 ++ Date Created: Nov. 2024
 ++ Description:
-++   Model for Nemo algebraically closed fields.
+++   Model for NM algebraically closed fields.
 ++ Keywords: algebraic, closure, field.
-NemoAlgebraicallyClosedField() : Category == Join(Field, RadicalCategory)
+NMAlgebraicallyClosedField() : Category == Join(Field, RadicalCategory)
 
-)abbrev category NACFS NemoAlgebraicallyClosedFunctionSpace
+)abbrev category NACFS NMAlgebraicallyClosedFunctionSpace
 ++ Author: G. Vanuxem (base on work of Manuel Bronstein)
 ++ Date Created: 31 October 1988
 ++ Description:
 ++   Model for algebraically closed function spaces.
 ++ Keywords: algebraic, closure, field.
-NemoAlgebraicallyClosedFunctionSpace(R : Join(Comparable, IntegralDomain)):
-  Category == Join(NemoAlgebraicallyClosedField, FunctionSpace R)
+NMAlgebraicallyClosedFunctionSpace(R : Join(Comparable, IntegralDomain)):
+  Category == Join(NMAlgebraicallyClosedField, FunctionSpace R)
 
-)abbrev domain NUP NemoUnivariatePolynomial
-++ Univariate polynomial domain using the Julia pakage Nemo
+)abbrev domain NUP NMUnivariatePolynomial
+++ Univariate polynomial domain using the JL pakage NM
 ++ Author: G. Vanuxem
 ++ Date created: mar, 2024
 -- TODO: eval, elt, subst, compose, evaluate
-NemoUnivariatePolynomial(R : NemoRing, x : Symbol):
+NMUnivariatePolynomial(R : NMRing, x : Symbol):
       Exports == Implementation where
-  NINT      ==> NemoInteger
-  NRAT      ==> NemoFraction(NemoInteger)
-  JI64      ==> JuliaInt64
+  NINT      ==> NMInteger
+  NRAT      ==> NMFraction(NMInteger)
+  JI64      ==> JLInt64
   INT       ==> Integer
   PI        ==> PositiveInteger
   NNI       ==> NonNegativeInteger
   parsei    ==> PARSE_-INTEGER$Lisp
-  Exports ==> Join(NemoCommutativeRing,
+  Exports ==> Join(NMCommutativeRing,
       UnivariatePolynomialCategory(R)) with
     constant? : % -> Boolean
     ++ constant?(p) checks whether or not p is a constant polynomial.
@@ -51,10 +51,10 @@ NemoUnivariatePolynomial(R : NemoRing, x : Symbol):
     ++ square?(p) checks whether or not p is a perfect square.
     if R has IntegerNumberSystem or R has
         QuotientFieldCategory(NINT) then
-      minimalPolynomial : NemoAlgebraicNumber -> %
+      minimalPolynomial : NMAlgebraicNumber -> %
       ++ minimalPolynomial(algn) returns the minimal polynomial of algn.
       ++ Convenience function.
-      roots : % -> JuliaVector(NemoAlgebraicNumber)
+      roots : % -> JLVector(NMAlgebraicNumber)
       ++ roots(p) returns the roots of p.
       ++ Convenience function.
     if R has IntegerNumberSystem then
@@ -104,10 +104,10 @@ NemoUnivariatePolynomial(R : NemoRing, x : Symbol):
     ++ pseudo-remainder of the pseudo-division of p1 by p2.
     jnup  : UnivariatePolynomial(x, R) -> %
     ++ jnup(p) converts the univariate polynomial p to
-    ++ a Nemo univariate polynomial.
-    factor   : % -> NemoFactored(%)
+    ++ a NM univariate polynomial.
+    factor   : % -> NMFactored(%)
     ++ factor(p) returns the factorization of p using the
-    ++ NemoFactored domain.
+    ++ NMFactored domain.
     length   : % -> NNI
     ++ length(p) returns the number of coefficients
     ++ in its dense representation. It includes zero coefficients.
@@ -129,10 +129,10 @@ NemoUnivariatePolynomial(R : NemoRing, x : Symbol):
     ++ the resulting polynomial is trucated or padded with zeroes before
     ++ the leading term if necessary
     coerce   : Variable(x) -> %
-    ++ coerce(x) converts the variable x to a Nemo univariate polynomial.
+    ++ coerce(x) converts the variable x to a NM univariate polynomial.
   Implementation ==> add
-    import from JuliaUtilityFunctions
-    import from JuliaStringUtilities
+    import from JLUtilityFunctions
+    import from JLStringUtilities
 
     jlInitialize(true)
     Rep := SExpression
@@ -154,12 +154,12 @@ NemoUnivariatePolynomial(R : NemoRing, x : Symbol):
 
     -- Set up the ring
     jlEvalString(concat([NUPRing,",",string(x),"=polynomial_ring(",
-      jlNemoRing()$R, ",_"", string(x), "_")"]))
-    if R is NemoInteger then
+      jlNMRing()$R, ",_"", string(x), "_")"]))
+    if R is NMInteger then
       roots(p) ==
         jlref(concat(["roots(QQBar,",
-          getind(p),")"]))$JuliaVector(NemoAlgebraicNumber)
-      minimalPolynomial(p : NemoAlgebraicNumber) : % ==
+          getind(p),")"]))$JLVector(NMAlgebraicNumber)
+      minimalPolynomial(p : NMAlgebraicNumber) : % ==
         jlref(concat(["minpoly(", NUPRing, ",", getind(p),")"]))
       cyclotomicPolynomial(n,p) ==
         jlref(concat ["cyclotomic(",string(n),",", getind(p),")"])
@@ -171,11 +171,11 @@ NemoUnivariatePolynomial(R : NemoRing, x : Symbol):
         jlref(concat ["theta_qexp(",string(r),",", string(n), "," getind(p),")"])
       etaQExp(r,n,p) ==
         jlref(concat ["eta_qexp(",string(r),",", string(n), "," getind(p),")"])
-    else if R is NemoFraction(NemoInteger) then
+    else if R is NMFraction(NMInteger) then
       roots(p) ==
         jlref(concat(["roots(QQBar,",
-          getind(p),")"]))$JuliaVector(NemoAlgebraicNumber)
-      minimalPolynomial(p : NemoAlgebraicNumber) : % ==
+          getind(p),")"]))$JLVector(NMAlgebraicNumber)
+      minimalPolynomial(p : NMAlgebraicNumber) : % ==
         jlref(concat(["minpoly(", NUPRing, ",", getind(p),")"]))
       p : % + q : Fraction(Integer) == jbinfunc("+", p, coerce(q)@NRAT)
       p : % * q : Fraction(Integer) == jbinfunc("*", p, coerce(q)@NRAT)
@@ -188,7 +188,8 @@ NemoUnivariatePolynomial(R : NemoRing, x : Symbol):
       ret := jlRegexReplace(p, jlRegex("/"), jlSubstitute("//"))
       jlref(ret)
 
-    jlNemoRing() == NUPRing
+    jlNMRing() == NUPRing
+    jlObject() == jlEvalString(concat(["string(", NUPRing,")"]))@String
 
     0 == jlref(concat(["zero(", NUPRing, ")"]))
     1 == jlref(concat(["one(", NUPRing, ")"]))
@@ -213,23 +214,23 @@ NemoUnivariatePolynomial(R : NemoRing, x : Symbol):
     a : % ^ i : NNI  == jlref(concat [getind(a),"^", string(i)])
     exactDivide(p,q) == jbinfunc("divexact", p, q)
     (p1:% exquo p2:%) ==
-      ret : JuliaObjTuple := jbinfunc("divides", p1, p2)
+      ret : JLObjTuple := jbinfunc("divides", p1, p2)
       not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
         => "failed"
       junfunc("last", ret)
     divide(a,b) : Record(quotient : %, remainder : %) ==
-      ret : JuliaObjTuple := jbinfunc("divrem",a,b)
+      ret : JLObjTuple := jbinfunc("divrem",a,b)
       [ret.1 pretend %, ret.2 pretend %]
     a:% quo b:% == jbinfunc("div", a, b)
     a:% rem b:% == jbinfunc("mod", a, b)
     pseudoRemainder(p1,p2) == jbinfunc("pseudorem",p1,p2)
     pseudoDivide(p1,p2) : Record(quotient : %, remainder : %) ==
       divrem := jlref(concat ["pseudodivrem(", getind(p1),
-        ",", getind(p2),")"])$JuliaObject
+        ",", getind(p2),")"])$JLObject
       [qelt(divrem,1) pretend %, qelt(divrem, 2) pretend %]
     if R has DivisionRing then
       recip(p) ==
-        ret : JuliaObjTuple := jbinfunc("divides", 1, p)
+        ret : JLObjTuple := jbinfunc("divides", 1, p)
         not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
           => "failed"
         junfunc("last", ret)
@@ -256,10 +257,10 @@ NemoUnivariatePolynomial(R : NemoRing, x : Symbol):
     primitivePart(p) == junfunc("primpart", p)
     discriminant(p) == junfunc("discriminant", p)
     length(p) == parsei(string(junfunc("length", p)))
-    factor(p : %) : NemoFactored(%) == factor(p)$NemoFactored(%)
-    factor(p : %) : Factored(%) == factor(p)$NemoFactored(%)
+    factor(p : %) : NMFactored(%) == factor(p)$NMFactored(%)
+    factor(p : %) : Factored(%) == factor(p)$NMFactored(%)
 
-    -- Using Nemo factorisation (can be different; over rationals for example)
+    -- Using NM factorisation (can be different; over rationals for example)
     -- unit(p) == unit factor(p)
 
     coefficient(p : %, n : NNI) ==
@@ -280,7 +281,7 @@ NemoUnivariatePolynomial(R : NemoRing, x : Symbol):
       [deg, jlref(concat ["leading_coefficient(", ind,")"])$R]
     listOfTerms(p) ==
       ind := getind(p)
-      v : JuliaVector(R) := jlref(concat ["reverse(collect(coefficients(",ind, ")))"]) 
+      v : JLVector(R) := jlref(concat ["reverse(collect(coefficients(",ind, ")))"]) 
       ret : List(Record(k:NNI, c:R)) := []
       for i in 0..(#v-1) repeat 
         if not zero?(coef := qelt(v,i+1)) then
@@ -299,32 +300,31 @@ NemoUnivariatePolynomial(R : NemoRing, x : Symbol):
       jlref(concat ["derivative(", getind(p),")"])
     integrate(p) ==
       jlref(concat ["integral(", getind(p),")"])
-
-    coerce(p : %) : OutputForm ==
-      jlRegexReplace(string(p), jlRegex("//"), jlSubstitute("/")) pretend OutputForm
     coerce(v : Variable(x)) == jlref(string(v::Symbol))
     coerce(i : Integer) == jlref(concat([NUPRing,"(",string(i),")"]))
-    coerce(c : R) == junfunc("NUPRing",c)
+    coerce(c : R) == junfunc("NUPRing", c)
+    coerce(p : %) : OutputForm ==
+      jlRegexReplace(string(p), jlRegex("//"), jlSubstitute("/")) pretend OutputForm
 
-)abbrev domain NULP NemoUnivariateLaurentPolynomial
-++ Univariate laurent polynomial domain using Julia AbstractAlgebra package 
+)abbrev domain NULP NMUnivariateLaurentPolynomial
+++ Univariate laurent polynomial domain using JL AbstractAlgebra package 
 ++ Author: G. Vanuxem
 ++ Date created: Dec, 2024
 -- TODO: eval, elt, subst, compose, evaluate
 -- TODO: *term*, truncate, mullow, *degree, reverse, integrate,
 -- constantMonomial checks
---   with other Nemo ring than NINT an NRAT to see if they
+--   with other NM ring than NINT an NRAT to see if they
 --   should be removed or rewrited. See commented out implementations.
-NemoUnivariateLaurentPolynomial(R : NemoRing, x : Symbol):
+NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
       Exports == Implementation where
-  NINT      ==> NemoInteger
-  NRAT      ==> NemoFraction(NemoInteger)
-  JI64      ==> JuliaInt64
+  NINT      ==> NMInteger
+  NRAT      ==> NMFraction(NMInteger)
+  JI64      ==> JLInt64
   INT       ==> Integer
   PI        ==> PositiveInteger
   NNI       ==> NonNegativeInteger
   parsei    ==> PARSE_-INTEGER$Lisp
-  Exports ==> Join(NemoCommutativeRing,
+  Exports ==> Join(NMCommutativeRing,
       UnivariatePolynomialCategory(R)) with
     --constant? : % -> Boolean
     --++ constant?(p) checks whether or not p is a constant polynomial.
@@ -376,10 +376,10 @@ NemoUnivariateLaurentPolynomial(R : NemoRing, x : Symbol):
     ++ a rem b returns the remainder of \spad{a} and b.
     jnulp  : UnivariatePolynomial(x, R) -> %
     ++ jnulp(p) converts the univariate polynomial p to
-    ++ a Nemo univariate polynomial.
-    factor   : % -> NemoFactored(%)
+    ++ a NM univariate polynomial.
+    factor   : % -> NMFactored(%)
     ++ factor(p) returns the factorization of p using the
-    ++ NemoFactored domain.
+    ++ NMFactored domain.
     unit : % -> %
     ++ unit(p) returns unit from the factorization of p.
     --length   : % -> NNI
@@ -391,10 +391,10 @@ NemoUnivariateLaurentPolynomial(R : NemoRing, x : Symbol):
     ++ trailingCoefficient(p) returns the trailing coefficientof p.
     constantCoefficient : % -> R
     ++ constantCoefficient(p) returns the constant of p.
-    coefficients : (%, Segment(Integer)) -> JuliaVector(R)
+    coefficients : (%, Segment(Integer)) -> JLVector(R)
     ++ coeficients(p, seg) returns the coefficients from the exponent
     ++ range seg.
-    univariate : % -> NemoUnivariatePolynomial(R,x)
+    univariate : % -> NMUnivariatePolynomial(R,x)
     ++ returns the underlying univariate polynomial used
     ++ for the implementation.
     truncate : (%, NNI) -> %
@@ -411,10 +411,10 @@ NemoUnivariateLaurentPolynomial(R : NemoRing, x : Symbol):
     ++ the resulting polynomial is trucated or padded with zeroes before
     ++ the leading term if necessary
     coerce   : Variable(x) -> %
-    ++ coerce(x) converts the variable x to a Nemo univariate polynomial.
+    ++ coerce(x) converts the variable x to a NM univariate polynomial.
   Implementation ==> add
-    import from JuliaUtilityFunctions
-    import from JuliaStringUtilities
+    import from JLUtilityFunctions
+    import from JLStringUtilities
 
     jlInitialize(true)
     Rep := SExpression
@@ -435,15 +435,16 @@ NemoUnivariateLaurentPolynomial(R : NemoRing, x : Symbol):
 
 
     jlEvalString(concat([NULPRing,",",string(x), "=laurent_polynomial_ring(",
-      jlNemoRing()$R, ",_"", string(x), "_")"])$String)
-    if R is NemoFraction(NemoInteger) then
+      jlNMRing()$R, ",_"", string(x), "_")"])$String)
+    if R is NMFraction(NMInteger) then
       p : % + q : Fraction(Integer) == jbinfunc("+", p, coerce(q)@NRAT)
       p : % * q : Fraction(Integer) == jbinfunc("*", p, coerce(q)@NRAT)
       q : Fraction(Integer) + p : % == jbinfunc("+", coerce(q)@NRAT, p)
       q : Fraction(Integer) * p : % == jbinfunc("*", coerce(q)@NRAT, p)
       (p  / q) : % == jbinfunc("/" ,p, q)
 
-    jlNemoRing() == NULPRing
+    jlNMRing() == NULPRing
+    jlObject() == jlEvalString(concat(["string(", NULPRing,")"]))@String
 
     0 == jlref(concat(["zero(", NULPRing, ")"]))
     1 == jlref(concat(["one(", NULPRing, ")"]))
@@ -465,19 +466,19 @@ NemoUnivariateLaurentPolynomial(R : NemoRing, x : Symbol):
     a : % ^ i : Integer  == jbinfunc("^", a, coerce(i)@NINT)
     exactDivide(p,q) == jbinfunc("divexact", p, q)
     (p1:% exquo p2:%) ==
-      ret : JuliaObjTuple := jbinfunc("divides", p1, p2)
+      ret : JLObjTuple := jbinfunc("divides", p1, p2)
       not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
         => "failed"
       junfunc("last", ret)
     divide(a,b) : Record(quotient : %, remainder : %) ==
-      ret : JuliaObjTuple := jbinfunc("divrem",a,b)
+      ret : JLObjTuple := jbinfunc("divrem",a,b)
       [ret.1 pretend %, ret.2 pretend %]
     a:% quo b:% == jbinfunc("div", a, b)
     a:% rem b:% == jbinfunc("mod", a, b)
     --pseudoRemainder(p1,p2) == jbinfunc("pseudorem",p1,p2)
     if R has DivisionRing then
       recip(p) ==
-        ret : JuliaObjTuple := jbinfunc("divides", 1$R, p)
+        ret : JLObjTuple := jbinfunc("divides", 1$R, p)
         not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
           => "failed"
         junfunc("last", ret)
@@ -494,7 +495,7 @@ NemoUnivariateLaurentPolynomial(R : NemoRing, x : Symbol):
         unit?(p) => p
         "failed"
 
-    -- Using Nemo factorisation (can be different, over rationals for example)
+    -- Using NM factorisation (can be different, over rationals for example)
     -- another method is used for NUP
     -- Here degree is not implemented, so:
     unit(p) == unit factor(p)
@@ -509,15 +510,15 @@ NemoUnivariateLaurentPolynomial(R : NemoRing, x : Symbol):
     --primitivePart(p) == junfunc("primpart", p)
     --discriminant(p) == junfunc("discriminant", p)
     --length(p) == parsei(string(junfunc("length", p)))
-    factor(p : %) : NemoFactored(%) == factor(p)$NemoFactored(%)
+    factor(p : %) : NMFactored(%) == factor(p)$NMFactored(%)
     -- error no method degree
-    factor(p : %) : Factored(%) == factor(p)$NemoFactored(%)
+    factor(p : %) : Factored(%) == factor(p)$NMFactored(%)
 
     coefficient(p : %, n : NNI) ==
       jlref(concat ["coeff(", getind(p),",", string(n) ")"])$R
     coefficients(p : %, r : Segment(Integer)) ==
       jlref(concat ["coeff.(", getind(p),",",
-        string(low(r)),":", string(high(r)), ")"])$JuliaVector(R)
+        string(low(r)),":", string(high(r)), ")"])$JLVector(R)
     leadingCoefficient(p : %) ==
       junfunc("leading_coefficient", p)
     trailingCoefficient(p) ==
@@ -527,7 +528,7 @@ NemoUnivariateLaurentPolynomial(R : NemoRing, x : Symbol):
     --degree(p) == jlEvalString(concat(["degree(", getind(p),")"]))@NNI
     minimumDegree(p) : INT == -- ??
       jlEvalString(concat [getind(p), ".mindeg"])
-    univariate(p) : NemoUnivariatePolynomial(R,x) ==
+    univariate(p) : NMUnivariatePolynomial(R,x) ==
       jlref(concat [getind(p), ".poly"])
       --jlEvalString(concat(["findfirst(!iszero, _
       --  collect(coefficients(",getind(p),")))-1"]))@NNI
@@ -537,7 +538,7 @@ NemoUnivariateLaurentPolynomial(R : NemoRing, x : Symbol):
     --  [deg, jlref(concat ["leading_coefficient(", ind,")"])$R]
     --listOfTerms(p) ==
     --  ind := getind(p)
-    --  v : JuliaVector(R) := jlref(concat ["reverse(collect(coefficients(",ind, ")))"]) 
+    --  v : JLVector(R) := jlref(concat ["reverse(collect(coefficients(",ind, ")))"]) 
     --  ret : List(Record(k:NNI, c:R)) := []
     --  for i in 0..(#v-1) repeat 
     --    if not zero?(coef := qelt(v,i+1)) then
@@ -550,7 +551,7 @@ NemoUnivariateLaurentPolynomial(R : NemoRing, x : Symbol):
     --reverse(p) == junfunc("reverse",p)
     --reverse(p,n) == jlref(concat ["reverse(", getind(p),",", string(n),")"])
 
-    -- ... error in Nemo apparently
+    -- ... error in NM apparently
     elt(p, at : R) : R ==
       jbinfunc("evaluate", p, at)
     differentiate(p) ==
@@ -572,20 +573,20 @@ NemoUnivariateLaurentPolynomial(R : NemoRing, x : Symbol):
         jlRegex("//"), jlSubstitute("/")) pretend OutputForm
     
 
-)abbrev domain NMP NemoMultivariatePolynomial
-++ Multivariate polynomial domain using the Julia pakage Nemo
+)abbrev domain NMP NMMultivariatePolynomial
+++ Multivariate polynomial domain using the JL pakage NM
 ++ Author: G. Vanuxem
 ++ Basic Functions: Ring, degree, eval, coefficient, monomial, differentiate,
 ++ resultant, gcd
 ++ Date created: mar, 2024
-++ Related Constructors: Polynomial, NemoUnivariatePolynomial
+++ Related Constructors: Polynomial, NMUnivariatePolynomial
 ++ Also See:
 ++ AMS Classifications:
 ++ Keywords: polynomial, multivariate
 ++ References:
 ++ Description:
 ++   This type is a basic representation of sparse, distributed multivariate
-++ polynomials using the Julia pakage Nemo. It is parameterized by the
+++ polynomials using the JL pakage NM. It is parameterized by the
 ++ coefficient ring. The coefficient ring may be non-commutative,
 ++ but the variables are assumed to commute. The monomial ordering
 ++ used for internal storage can be one of :lex, :deglex or :degrevlex.
@@ -603,16 +604,16 @@ NemoUnivariateLaurentPolynomial(R : NemoRing, x : Symbol):
 ++   p^7
 -- https://en.wikipedia.org/wiki/Monomial_order#Graded_reverse_lexicographic_order
 -- TODO: eval, elt, subst, compose, evaluate
-NemoMultivariatePolynomial(R : NemoRing, VarSet : List Symbol,
-          InternalOrdering : JuliaSymbol) : Exports == Implementation where
-  NINT      ==> NemoInteger
-  NRAT      ==> NemoFraction(NemoInteger)
-  JI64      ==> JuliaInt64
+NMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
+          InternalOrdering : JLSymbol) : Exports == Implementation where
+  NINT      ==> NMInteger
+  NRAT      ==> NMFraction(NMInteger)
+  JI64      ==> JLInt64
   INT       ==> Integer
   PI        ==> PositiveInteger
   NNI       ==> NonNegativeInteger
   parsei    ==> PARSE_-INTEGER$Lisp
-  Exports ==> Join(NemoCommutativeRing, PolynomialCategory(R, 
+  Exports ==> Join(NMCommutativeRing, PolynomialCategory(R, 
                   IndexedExponents(OrderedVariableList(VarSet)),
                     OrderedVariableList(VarSet))) with
     constant? : % -> Boolean
@@ -654,19 +655,19 @@ NemoMultivariatePolynomial(R : NemoRing, VarSet : List Symbol,
     ++ exactDivide(p,q) divides p by q if the division is exact.
     jmp2nmp : MultivariatePolynomial(VarSet,R) -> %
     ++ jnmp(p) converts the multivariate polynomial p to
-    ++ a Nemo multivariate polynomial.
-    factor   : % -> NemoFactored(%)
+    ++ a NM multivariate polynomial.
+    factor   : % -> NMFactored(%)
     ++ factor(p) returns the factorization of p.
     degree   : (%, PI) -> NNI
     ++ degree(p,i) returns the degree of the i-th variable.
     length   : % -> NNI
     ++ length(p) retruns the number of terms of p.
-    coefficients : % -> JuliaVector(R)
-    ++ coefficients(p) returns a Julia vector of coefficients of p.
-    monomials : % -> JuliaVector(%)
+    coefficients : % -> JLVector(R)
+    ++ coefficients(p) returns a JL vector of coefficients of p.
+    monomials : % -> JLVector(%)
     ++ monomials(p) returns the list of non-zero monomials of p
     ++ includind its coefficients.
-    primitiveMonomials : % -> JuliaVector(%)
+    primitiveMonomials : % -> JLVector(%)
     ++ primitiveMonomials(p) returns the list of non-zero
     ++ primitive monomials of p i.e. not including its coefficients.
     trailingCoefficient : % -> R
@@ -674,8 +675,8 @@ NemoMultivariatePolynomial(R : NemoRing, VarSet : List Symbol,
     constantCoefficient : % -> R
     ++ constantCoefficient(p) returns the constant of p.
   Implementation ==> add
-    import from JuliaUtilityFunctions
-    import from JuliaStringUtilities
+    import from JLUtilityFunctions
+    import from JLStringUtilities
 
     jlInitialize(true)
     Rep := SExpression
@@ -683,17 +684,17 @@ NemoMultivariatePolynomial(R : NemoRing, VarSet : List Symbol,
     tmp : SExpression := devaluate(R)$Lisp
     op_of_Ring : Symbol := CAR(tmp)$Lisp
 
-    -- FriCAS NemoRing of R
+    -- FriCAS NMRing of R
     NRing : String := string(op_of_Ring)
-    -- Our Nemo Ring
+    -- Our NM Ring
     NMPRing := jlRegexReplace(concat("MP", FORMAT(false, "~a", tmp)$Lisp),
       jlRegex("[(|)|\s]"), jlSubstitute(""))
 
     -- Check VarSet (TODO: reflect SMP)
     #VarSet ~= #removeDuplicates(VarSet) =>
-      error "Duplicate symbols in NemoMultivariatePolyNomial constructor" 
+      error "Duplicate symbols in NMMultivariatePolyNomial constructor" 
 
-    -- FriCAS defined vars in Julia
+    -- FriCAS defined vars in JL
     -- Correct? "(\1,)" -> "(\1)"
     vars := jlRegexReplace(
       first lines formatExpression(VarSet::OutputForm)$Format1D,
@@ -704,7 +705,7 @@ NemoMultivariatePolynomial(R : NemoRing, VarSet : List Symbol,
     -- vars for polynomial_ring() arguments
     jvars := first lines formatExpression(lvars::OutputForm)$Format1D
     
-    -- Our Julia ring
+    -- Our JL ring
     NMPRing := concat([NMPRing, concat(lvars)])
 
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
@@ -722,16 +723,17 @@ NemoMultivariatePolynomial(R : NemoRing, VarSet : List Symbol,
     --  av := interpret_in_new_env(af)$InputForm
     --  retractIfCan(av)$AnyFunctions1(Expression(Integer))
     jlEvalString(concat([NMPRing,",", vars, "=polynomial_ring(",
-      jlNemoRing()$R,",", jvars,";internal_ordering=",
+      jlNMRing()$R,",", jvars,";internal_ordering=",
         string(InternalOrdering),")"])$String)
-    if R is NemoFraction(NemoInteger) then
+    if R is NMFraction(NMInteger) then
       p : % + q : Fraction(Integer) == jbinfunc("+", p, coerce(q)@NRAT)
       p : % * q : Fraction(Integer) == jbinfunc("*", p, coerce(q)@NRAT)
       q : Fraction(Integer) + p : % == jbinfunc("+", coerce(q)@NRAT, p)
       q : Fraction(Integer) * p : % == jbinfunc("*", coerce(q)@NRAT, p)
       (p / q) : % == jbinfunc("/", p, q)
 
-    jlNemoRing() == NMPRing
+    jlNMRing() == NMPRing
+    jlObject() == jlEvalString(concat(["string(", NMPRing,")"]))@String
 
     0 == jlref(concat(["zero(",NMPRing,")"]))
     1 == jlref(concat(["one(",NMPRing,")"]))
@@ -755,7 +757,7 @@ NemoMultivariatePolynomial(R : NemoRing, VarSet : List Symbol,
     exactDivide(p,q) == jbinfunc("divexact", p, q)
 
     (p1:% exquo p2:%) ==
-      ret : JuliaObjTuple := jbinfunc("divides", p1, p2)
+      ret : JLObjTuple := jbinfunc("divides", p1, p2)
       not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
         => "failed"
       junfunc("last", ret)
@@ -763,8 +765,8 @@ NemoMultivariatePolynomial(R : NemoRing, VarSet : List Symbol,
     reductum(p) == junfunc("tail",p)
     gcd(p1,p2)  == jbinfunc("gcd",p1,p2)
     lcm(p1,p2)  == jbinfunc("lcm",p1,p2)
-    factor(a : %) : NemoFactored(%) == factor(a)$NemoFactored(%)
-    factor(a : %) : Factored(%) == factor(a)$NemoFactored(%)
+    factor(a : %) : NMFactored(%) == factor(a)$NMFactored(%)
+    factor(a : %) : Factored(%) == factor(a)$NMFactored(%)
     mainVariable(p : %) ==
       jlEvalString(concat(["is_constant(", getind(p),")"]))@Boolean
         => "failed"
@@ -773,11 +775,11 @@ NemoMultivariatePolynomial(R : NemoRing, VarSet : List Symbol,
     variables(p) == enumerate()$OrderedVariableList(VarSet)
     length(p) == jlEvalString(concat(["length(", getind(p),")"]))
 
-    coefficients(p) : JuliaVector(R) ==
+    coefficients(p) : JLVector(R) ==
       jlref(concat ["collect(coefficients(", getind(p),"))"])
     coefficients(p) : List(R) ==
       members(jlref(concat ["collect(coefficients(",
-        getind(p),"))"])$JuliaVector(R))
+        getind(p),"))"])$JLVector(R))
 
     leadingMonomial(p) == junfunc("leading_term", p)
     leadingCoefficient(p : %) ==
@@ -787,26 +789,26 @@ NemoMultivariatePolynomial(R : NemoRing, VarSet : List Symbol,
     constantCoefficient(p) ==
       jlref(concat ["constant_coefficient(", getind(p),")"])$R
     monomials(p) : List(%) ==
-      vmon := jlref(concat ["collect(terms(", getind(p),"))"])$JuliaVector(%)
+      vmon := jlref(concat ["collect(terms(", getind(p),"))"])$JLVector(%)
       l : List(%) := [] 
       for i in 1..#vmon repeat
         l := concat(l, vmon.i)
       l
-    monomials(p) : JuliaVector(%) ==
-      jlref(concat ["collect(terms(", getind(p),"))"])$JuliaVector(%)
+    monomials(p) : JLVector(%) ==
+      jlref(concat ["collect(terms(", getind(p),"))"])$JLVector(%)
     primitiveMonomials(p) : List(%) ==
-      terms  := jlref(concat ["collect(monomials(", getind(p),"))"])$JuliaVector(%)
+      terms  := jlref(concat ["collect(monomials(", getind(p),"))"])$JLVector(%)
       l : List(%) := [] 
       for i in 1..#terms repeat
         l := concat(l, terms.i)
       l
-    primitiveMonomials(p) : JuliaVector(%) ==
-      jlref(concat ["collect(monomials(", getind(p),"))"])$JuliaVector(%)
+    primitiveMonomials(p) : JLVector(%) ==
+      jlref(concat ["collect(monomials(", getind(p),"))"])$JLVector(%)
     leadingTerm(p) == 
-      tp : JuliaObject := junfunc("leading_term", p)
+      tp : JLObject := junfunc("leading_term", p)
       ind := getind(tp)
       coef := jlref(concat ["coeff(", ind,",1)"])$R
-      vs := jlref(concat(["vars(", ind, ")"]))$JuliaVector(%)
+      vs := jlref(concat(["vars(", ind, ")"]))$JLVector(%)
       res : List(Record(k:OrderedVariableList(VarSet),c:NNI)):=[]
       for i in 1..#vs repeat
         sym : String := jlEvalString(concat ["string(", getind(qelt(vs,i)),")"])
@@ -816,12 +818,12 @@ NemoMultivariatePolynomial(R : NemoRing, VarSet : List Symbol,
             exp]$Record(k:OrderedVariableList(VarSet),c:NNI))
       [construct(res)$IndexedExponents(OrderedVariableList(VarSet)), coef]
     listOfTerms(p) == 
-      v : JuliaVector(%) := jlref(concat ["collect(terms(", getind(p),"))"])
+      v : JLVector(%) := jlref(concat ["collect(terms(", getind(p),"))"])
       ret : List(Record(k: IndexedExponents(OrderedVariableList(VarSet)),c: R)) := []
       for i in 1..#v repeat
         ind := getind(v.i)
         coef := jlref(concat ["coeff(", ind,",1)"])$R
-        vs := jlref(concat(["vars(", ind, ")"]))$JuliaVector(%)
+        vs := jlref(concat(["vars(", ind, ")"]))$JLVector(%)
         res : List(Record(k:OrderedVariableList(VarSet),c:NNI)):=[]
         for j in 1..#vs repeat
           sym : String := jlEvalString(concat ["string(", getind(qelt(vs,j)),")"])
@@ -841,9 +843,9 @@ NemoMultivariatePolynomial(R : NemoRing, VarSet : List Symbol,
           $IndexedExponents(OrderedVariableList(VarSet))
     degree(p : %) ==
       ind := getind(p)
-      tp : JuliaObject := jlref(concat(["leading_monomial(", ind, ")"]))
+      tp : JLObject := jlref(concat(["leading_monomial(", ind, ")"]))
       ind := getind(tp)
-      vs := jlref(concat(["vars(", ind, ")"]))$JuliaVector(%)
+      vs := jlref(concat(["vars(", ind, ")"]))$JLVector(%)
       res : List(Record(k:OrderedVariableList(VarSet),c:NNI)):=[]
       for i in 1..#vs repeat
         sym : String := jlEvalString(concat ["string(", getind(qelt(vs,i)),")"])
@@ -858,7 +860,7 @@ NemoMultivariatePolynomial(R : NemoRing, VarSet : List Symbol,
     degree(p : %, index : PI) ==
       jlEvalString(concat(["degree(", getind(p),",", string(index),")"]))@NNI
 
-    -- unitCanonical(p) == junfunc("canonical_unit", p) -- The Nemo one 
+    -- unitCanonical(p) == junfunc("canonical_unit", p) -- The NM one 
     recip(p) ==
       unit?(p) => p
       "failed"
@@ -886,7 +888,7 @@ NemoMultivariatePolynomial(R : NemoRing, VarSet : List Symbol,
     coerce(p : %) : OutputForm ==
       jlRegexReplace(string(p),
         jlRegex("//"),jlSubstitute("/")) pretend OutputForm
-      --if R is NemoInteger then
+      --if R is NMInteger then
       --  coerce(strToExpr(string(p)))
       --else
       --  jlRegexReplace(string(p),jlRegex("//"),jlSubstitute("/")) pretend OutputForm
@@ -894,20 +896,20 @@ NemoMultivariatePolynomial(R : NemoRing, VarSet : List Symbol,
     coerce(i : Integer) == jlref(concat([NMPRing, "(", string(i), ")"]))
     coerce(c : R) == jlref(concat([NMPRing, "(", getind(c),")"]))
 
-)abbrev domain NMLP NemoMultivariateLaurentPolynomial
-++ Multivariate laurent polynomial domain using Julia AbstractAlgebra package 
+)abbrev domain NMLP NMMultivariateLaurentPolynomial
+++ Multivariate laurent polynomial domain using JL AbstractAlgebra package 
 ++ Author: G. Vanuxem
 ++ Basic Functions: Ring, degree, eval, coefficient, monomial, differentiate,
 ++ resultant, gcd
 ++ Date created: mar, 2024
-++ Related Constructors: Polynomial, NemoUnivariatePolynomial
+++ Related Constructors: Polynomial, NMUnivariatePolynomial
 ++ Also See:
 ++ AMS Classifications:
 ++ Keywords: polynomial, multivariate
 ++ References:
 ++ Description:
 ++   This type is a basic representation of sparse, distributed multivariate
-++ polynomials using the Julia pakage Nemo. It is parameterized by the
+++ polynomials using the JL pakage NM. It is parameterized by the
 ++ coefficient ring. The coefficient ring may be non-commutative,
 ++ but the variables are assumed to commute. The monomial ordering
 ++ used for internal storage can be one of :lex, :deglex or :degrevlex.
@@ -924,18 +926,18 @@ NemoMultivariatePolynomial(R : NemoRing, VarSet : List Symbol,
 ++   p:=x*2+3*y^2+17*z^-13
 ++   p^7
 -- TODO: eval, elt, subst, compose, evaluate
-NemoMultivariateLaurentPolynomial(R : NemoRing,
+NMMultivariateLaurentPolynomial(R : NMRing,
     VarSet : List Symbol) : Exports == Implementation where
-  NINT      ==> NemoInteger
-  NRAT      ==> NemoFraction(NemoInteger)
-  NRF        ==> NemoRealField
-  NCF        ==> NemoComplexField
-  JI64      ==> JuliaInt64
+  NINT      ==> NMInteger
+  NRAT      ==> NMFraction(NMInteger)
+  NRF        ==> NMRealField
+  NCF        ==> NMComplexField
+  JI64      ==> JLInt64
   INT       ==> Integer
   PI        ==> PositiveInteger
   NNI       ==> NonNegativeInteger
   parsei    ==> PARSE_-INTEGER$Lisp
-  Exports ==> Join(NemoCommutativeRing, PolynomialCategory(R, 
+  Exports ==> Join(NMCommutativeRing, PolynomialCategory(R, 
                   IndexedExponents(OrderedVariableList(VarSet)),
                     OrderedVariableList(VarSet))) with
     --constant? : % -> Boolean
@@ -979,63 +981,63 @@ NemoMultivariateLaurentPolynomial(R : NemoRing,
     ++ exactDivide(p,q) divides p by q if the division is exact.
     jmp2nmlp : MultivariatePolynomial(VarSet,R) -> %
     ++ jnmp(p) converts the multivariate polynomial p to
-    ++ a Nemo multivariate polynomial.
-    factor   : % -> NemoFactored(%)
+    ++ a NM multivariate polynomial.
+    factor   : % -> NMFactored(%)
     ++ factor(p) returns the factorization of p.
     degree   : (%, PI) -> NNI
     ++ degree(p,i) returns the degree of the i-th variable.
     length   : % -> NNI
     ++ length(p) retruns the number of terms of p.
-    monomials : % -> JuliaVector(%)
+    monomials : % -> JLVector(%)
     ++ monomials(p) returns the list of non-zero monomials of p
     ++ includind its coefficients.
-    primitiveMonomials : % -> JuliaVector(%)
+    primitiveMonomials : % -> JLVector(%)
     ++ primitiveMonomials(p) returns the list of non-zero
     ++ primitive monomials of p, i.e. not including its coefficients.
     --trailingCoefficient : % -> R
     --++ trailingCoefficient(p) returns the trailing coefficientof p.
     constantCoefficient : % -> R
     ++ constantCoefficient(p) returns the constant of p.
-    symbols : () -> JuliaVector(JuliaObject)
-    ++ symbols() returns a Julia vector of variables (Julia symbols).
-    numberOfVariables : ()  -> JuliaObject
+    symbols : () -> JLVector(JLObject)
+    ++ symbols() returns a JL vector of variables (JL symbols).
+    numberOfVariables : ()  -> JLObject
     ++ 
-    gens  : () -> JuliaVector(%)
-    gen : Integer -> JuliaObject
+    gens  : () -> JLVector(%)
+    gen : Integer -> JLObject
     gen?  : % -> Boolean
     ++ 
-    variableIndex : % -> JuliaObject
+    variableIndex : % -> JLObject
     ++ 
-    coefficients : % -> JuliaVector(R)
-    ++ coefficients(p) returns a Julia vector of coefficients of p.
-    terms : % -> JuliaVector(%)
+    coefficients : % -> JLVector(R)
+    ++ coefficients(p) returns a JL vector of coefficients of p.
+    terms : % -> JLVector(%)
     ++ 
-    exponent_vectors : % -> JuliaVector(JuliaObject)
+    exponent_vectors : % -> JLVector(JLObject)
     leading_monomial : % -> %
     leading_term : % -> %
-    leading_exponent_vector : % -> JuliaVector(JuliaObject)
+    leading_exponent_vector : % -> JLVector(JLObject)
 
     coerce : % ->
-      NemoMultivariateLaurentPolynomial(NemoInteger, VarSet)
+      NMMultivariateLaurentPolynomial(NMInteger, VarSet)
     coerce : % ->
-      NemoMultivariateLaurentPolynomial(NemoFraction(NemoInteger), VarSet)
+      NMMultivariateLaurentPolynomial(NMFraction(NMInteger), VarSet)
     coerce : % ->
-      NemoMultivariateLaurentPolynomial(NemoRealField, VarSet)
+      NMMultivariateLaurentPolynomial(NMRealField, VarSet)
     coerce : % ->
-      NemoMultivariateLaurentPolynomial(NemoComplexField, VarSet)
+      NMMultivariateLaurentPolynomial(NMComplexField, VarSet)
 
-    mapCoefficients : (JuliaObject, %) -> %
-    ++ mapCoefficients(jmap, p) applies the Julia map jmap to the
+    mapCoefficients : (JLObject, %) -> %
+    ++ mapCoefficients(jmap, p) applies the JL map jmap to the
     ++ coefficients of p an returns the modified Laurent polynomial.
     ++ Use coerce to change the base ring.
 
-    evaluate : (%, JuliaVector(JuliaObject)) -> JuliaObject
+    evaluate : (%, JLVector(JLObject)) -> JLObject
 
     derivative : (%, OrderedVariableList(VarSet)) -> %
     derivative : (%, NonNegativeInteger) -> %
   Implementation ==> add
-    import from JuliaUtilityFunctions
-    import from JuliaStringUtilities
+    import from JLUtilityFunctions
+    import from JLStringUtilities
 
     jlInitialize(true)
     Rep := SExpression
@@ -1043,7 +1045,7 @@ NemoMultivariateLaurentPolynomial(R : NemoRing,
     tmp : SExpression := devaluate(R)$Lisp
     op_of_Ring : Symbol := CAR(tmp)$Lisp
 
-    -- FriCAS NemoRing of R
+    -- FriCAS NMRing of R
     NRing : String := string(op_of_Ring)
     NMLPRing := jlRegexReplace(
       concat("MP", FORMAT(false, "~a", tmp)$Lisp),
@@ -1051,9 +1053,9 @@ NemoMultivariateLaurentPolynomial(R : NemoRing,
 
     -- Check VarSet (TODO: reflect SMP)
     #VarSet ~= #removeDuplicates(VarSet) =>
-      error "Duplicate symbols in NemoMultivariateLaurentPolynomial constructor" 
+      error "Duplicate symbols in NMMultivariateLaurentPolynomial constructor" 
     
-    -- FriCAS defined vars in Julia
+    -- FriCAS defined vars in JL
     -- Correct? "(\1,)" -> "(\1)"
     vars := jlRegexReplace(
         first lines formatExpression(VarSet::OutputForm)$Format1D,
@@ -1064,7 +1066,7 @@ NemoMultivariateLaurentPolynomial(R : NemoRing,
     -- vars for polynomial_ring() arguments
     jvars := first lines formatExpression(lvars::OutputForm)$Format1D
     
-    -- Our Julia ring
+    -- Our JL ring
     NMLPRing := concat([NMLPRing, concat(lvars)])
 
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
@@ -1083,15 +1085,16 @@ NemoMultivariateLaurentPolynomial(R : NemoRing,
     --  retractIfCan(av)$AnyFunctions1(Expression(Integer))
 
     jlEvalString(concat([NMLPRing,",", vars, "=laurent_polynomial_ring(",
-      jlNemoRing()$R, ",", jvars,")"])$String)
-    if R is NemoFraction(NemoInteger) then
+      jlNMRing()$R, ",", jvars,")"])$String)
+    if R is NMFraction(NMInteger) then
       p : % + q : Fraction(Integer) == jbinfunc("+", p, coerce(q)@NRAT)
       p : % * q : Fraction(Integer) == jbinfunc("*", p, coerce(q)@NRAT)
       q : Fraction(Integer) + p : % == jbinfunc("+", coerce(q)@NRAT, p)
       q : Fraction(Integer) * p : % == jbinfunc("*", coerce(q)@NRAT, p)
       (p / q) : % == jbinfunc("/", p, q)
 
-    jlNemoRing() == NMLPRing
+    jlNMRing() == NMLPRing
+    jlObject() == jlEvalString(concat(["string(", NMLPRing,")"]))@String
 
     0 == jlref(concat(["zero(",NMLPRing,")"]))
     1 == jlref(concat(["one(",NMLPRing,")"]))
@@ -1114,7 +1117,7 @@ NemoMultivariateLaurentPolynomial(R : NemoRing,
     a : % ^ i : INT  == jbinfunc("^", a, coerce(i pretend Integer)@NINT)
     exactDivide(p,q) == jbinfunc("divexact", p, q)
 
-    -- Nemo interface (AbstractAlgebra)
+    -- NM interface (AbstractAlgebra)
     symbols() == jlref(concat(["symbols(", NMLPRing,")"]))
     numberOfVariables() == jlref(concat(["number_of_variables(", NMLPRing,")"]))
     gens() == jlref(concat(["gens(",NMLPRing,")"]))
@@ -1122,11 +1125,11 @@ NemoMultivariateLaurentPolynomial(R : NemoRing,
     gen?(x) == junbfunc("is_gen", x)
     variableIndex(p) == junfunc("var_index", p)
 
-    coefficients(p) : JuliaVector(R) ==
+    coefficients(p) : JLVector(R) ==
       jlref(concat ["collect(coefficients(", getind(p),"))"])
     coefficients(p) : List(R) ==
       members(jlref(concat ["collect(coefficients(",
-        getind(p),"))"])$JuliaVector(R))
+        getind(p),"))"])$JLVector(R))
     terms(p) ==
       jlref(concat ["collect(terms(", getind(p),"))"])
     exponent_vectors(p) == junfunc("exponent_vectors", p)
@@ -1134,13 +1137,13 @@ NemoMultivariateLaurentPolynomial(R : NemoRing,
     leading_term(p) == junfunc("leading_term", p)
     leading_exponent_vector(p) == junfunc("leading_exponent_vector", p)
 
-    coerce(p) : NemoMultivariateLaurentPolynomial(NemoInteger,VarSet) ==
+    coerce(p) : NMMultivariateLaurentPolynomial(NMInteger,VarSet) ==
       jlref(concat ["change_base_ring(ZZ,", getind(p), ")"])
-    coerce(p) : NemoMultivariateLaurentPolynomial(NemoFraction(NemoInteger),VarSet) ==
+    coerce(p) : NMMultivariateLaurentPolynomial(NMFraction(NMInteger),VarSet) ==
       jlref(concat ["change_base_ring(QQ,", getind(p), ")"])
-    coerce(p) : NemoMultivariateLaurentPolynomial(NemoRealField,VarSet) ==
+    coerce(p) : NMMultivariateLaurentPolynomial(NMRealField,VarSet) ==
       jlref(concat ["change_base_ring(NRF,", getind(p), ")"])
-    coerce(p) : NemoMultivariateLaurentPolynomial(NemoComplexField,VarSet) ==
+    coerce(p) : NMMultivariateLaurentPolynomial(NMComplexField,VarSet) ==
       jlref(concat ["change_base_ring(NCF,", getind(p), ")"])
     mapCoefficients(func, p) ==
       jlref(concat ["(", getind(func),",", getind(p),")"])
@@ -1151,7 +1154,7 @@ NemoMultivariateLaurentPolynomial(R : NemoRing,
     --derivative(p, i::Int)
 
     (p1:% exquo p2:%) ==
-      ret : JuliaObjTuple := jbinfunc("divides", p1, p2)
+      ret : JLObjTuple := jbinfunc("divides", p1, p2)
       not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
         => "failed"
       junfunc("last", ret)
@@ -1159,8 +1162,8 @@ NemoMultivariateLaurentPolynomial(R : NemoRing,
     -- reductum(p) == junfunc("tail",p)
     gcd(p1,p2)  == jbinfunc("gcd",p1,p2)
     lcm(p1,p2)  == jbinfunc("lcm",p1,p2)
-    factor(a : %) : NemoFactored(%) == factor(a)$NemoFactored(%)
-    factor(a : %) : Factored(%) == factor(a)$NemoFactored(%)
+    factor(a : %) : NMFactored(%) == factor(a)$NMFactored(%)
+    factor(a : %) : Factored(%) == factor(a)$NMFactored(%)
     --mainVariable(p : %) ==
     --  jlEvalString(concat(["is_constant(", getind(p),")"]))@Boolean
     --    => "failed"
@@ -1176,26 +1179,26 @@ NemoMultivariateLaurentPolynomial(R : NemoRing,
     constantCoefficient(p) ==
       jlref(concat ["constant_coefficient(", getind(p),")"])$R
     monomials(p) : List(%) ==
-      vmon := jlref(concat ["collect(terms(", getind(p),"))"])$JuliaVector(%)
+      vmon := jlref(concat ["collect(terms(", getind(p),"))"])$JLVector(%)
       l : List(%) := [] 
       for i in 1..#vmon repeat
         l := concat(l, vmon.i)
       l
-    monomials(p) : JuliaVector(%) ==
-      jlref(concat ["collect(terms(", getind(p),"))"])$JuliaVector(%)
+    monomials(p) : JLVector(%) ==
+      jlref(concat ["collect(terms(", getind(p),"))"])$JLVector(%)
     primitiveMonomials(p) : List(%) ==
-      terms  := jlref(concat ["collect(monomials(", getind(p),"))"])$JuliaVector(%)
+      terms  := jlref(concat ["collect(monomials(", getind(p),"))"])$JLVector(%)
       l : List(%) := [] 
       for i in 1..#terms repeat
         l := concat(l, terms.i)
       l
-    primitiveMonomials(p) : JuliaVector(%) ==
-      jlref(concat ["collect(monomials(", getind(p),"))"])$JuliaVector(%)
+    primitiveMonomials(p) : JLVector(%) ==
+      jlref(concat ["collect(monomials(", getind(p),"))"])$JLVector(%)
     leadingTerm(p) == 
-      tp : JuliaObject := junfunc("leading_term", p)
+      tp : JLObject := junfunc("leading_term", p)
       ind := getind(tp)
       coef := jlref(concat ["coeff(", ind,",1)"])$R
-      vs := jlref(concat(["vars(", ind, ")"]))$JuliaVector(%)
+      vs := jlref(concat(["vars(", ind, ")"]))$JLVector(%)
       res : List(Record(k:OrderedVariableList(VarSet),c:NNI)):=[]
       for i in 1..#vs repeat
         sym : String := jlEvalString(concat ["string(", getind(qelt(vs,i)),")"])
@@ -1205,12 +1208,12 @@ NemoMultivariateLaurentPolynomial(R : NemoRing,
             exp]$Record(k:OrderedVariableList(VarSet),c:NNI))
       [construct(res)$IndexedExponents(OrderedVariableList(VarSet)), coef]
     --listOfTerms(p) == 
-    --  v : JuliaVector(%) := jlref(concat ["collect(terms(", getind(p),"))"])
+    --  v : JLVector(%) := jlref(concat ["collect(terms(", getind(p),"))"])
     --  ret : List(Record(k: IndexedExponents(OrderedVariableList(VarSet)),c: R)) := []
     --  for i in 1..#v repeat
     --    ind := getind(v.i)
     --    coef := jlref(concat ["coeff(", ind,",1)"])$R
-    --    vs := jlref(concat(["vars(", ind, ")"]))$JuliaVector(%)
+    --    vs := jlref(concat(["vars(", ind, ")"]))$JLVector(%)
     --    res : List(Record(k:OrderedVariableList(VarSet),c:NNI)):=[]
     --    for j in 1..#vs repeat
     --      sym : String := jlEvalString(concat ["string(", getind(qelt(vs,j)),")"])
@@ -1230,9 +1233,9 @@ NemoMultivariateLaurentPolynomial(R : NemoRing,
     --      $IndexedExponents(OrderedVariableList(VarSet))
     --degree(p : %) ==
     --  ind := getind(p)
-    --  tp : JuliaObject := jlref(concat(["leading_monomial(", ind, ")"]))
+    --  tp : JLObject := jlref(concat(["leading_monomial(", ind, ")"]))
     --  ind := getind(tp)
-    --  vs := jlref(concat(["vars(", ind, ")"]))$JuliaVector(%)
+    --  vs := jlref(concat(["vars(", ind, ")"]))$JLVector(%)
     --  res : List(Record(k:OrderedVariableList(VarSet),c:NNI)):=[]
     --  for i in 1..#vs repeat
     --    sym : String := jlEvalString(concat ["string(", getind(qelt(vs,i)),")"])
@@ -1247,11 +1250,11 @@ NemoMultivariateLaurentPolynomial(R : NemoRing,
     --degree(p : %, index : PI) ==
     --  jlEvalString(concat(["degree(", getind(p),",", string(index),")"]))@NNI
 
-    -- unitCanonical(p) == junfunc("canonical_unit", p) -- The Nemo one 
+    -- unitCanonical(p) == junfunc("canonical_unit", p) -- The NM one 
 
     if R has DivisionRing then
       recip(p) ==
-        ret : JuliaObjTuple := jbinfunc("divides", 1$R, p)
+        ret : JLObjTuple := jbinfunc("divides", 1$R, p)
         not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
           => "failed"
         junfunc("last",ret)
@@ -1282,7 +1285,7 @@ NemoMultivariateLaurentPolynomial(R : NemoRing,
     coerce(p : %) : OutputForm ==
       jlRegexReplace(string(p),
         jlRegex("//"),jlSubstitute("/")) pretend OutputForm
-      --if R is NemoInteger then
+      --if R is NMInteger then
       --  coerce(strToExpr(string(p)))
       --else
       --  jlRegexReplace(string(p), jlRegex("//"),jlSubstitute("/")) pretend OutputForm

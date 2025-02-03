@@ -1,9 +1,9 @@
-)abbrev package JFSF2 JuliaFloatSpecialFunctions2
-++ Special functions computed using Julia's ecosystem.
+)abbrev package JFSF2 JLFloatSpecialFunctions2
+++ Special functions computed using JL's ecosystem.
 ++ They are here essentially for "completeness" purpose with
-++ JuliaFloat.
-JuliaFloatSpecialFunctions2() : Exports == Implementation where
-  JF ==> JuliaFloat
+++ JLFloat.
+JLFloatSpecialFunctions2() : Exports == Implementation where
+  JF ==> JLFloat
   Exports ==> with
 
     -- Gamma Function
@@ -80,7 +80,7 @@ JuliaFloatSpecialFunctions2() : Exports == Implementation where
     ++ riemannZeta(x) computes Riemann zeta function at x.
 
   Implementation ==> add
-    import from JuliaUtilityFunctions
+    import from JLUtilityFunctions
     
     -- Gamma Functions
 

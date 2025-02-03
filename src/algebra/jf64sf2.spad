@@ -1,11 +1,11 @@
-)abbrev package JF64SF2 JuliaFloat64SpecialFunctions2
-++ Special functions computed using Julia's ecosystem.
+)abbrev package JF64SF2 JLFloat64SpecialFunctions2
+++ Special functions computed using JL's ecosystem.
 ++ They are here essentially for "completeness" purpose with
-++ JuliaFloat64. You should use the DoubleFloat's special
-++ functions if available, calling Julia functions is costly.
-JuliaFloat64SpecialFunctions2() : Exports == Implementation where
-  JF64 ==> JuliaFloat64
-  JI64 ==> JuliaInt64
+++ JLFloat64. You should use the DoubleFloat's special
+++ functions if available, calling JL functions is costly.
+JLFloat64SpecialFunctions2() : Exports == Implementation where
+  JF64 ==> JLFloat64
+  JI64 ==> JLInt64
   Exports ==> with
 
     -- Gamma Function

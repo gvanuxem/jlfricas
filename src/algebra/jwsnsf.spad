@@ -1,14 +1,14 @@
-)abbrev package JWSNSF JuliaWSNumericalSpecialFunctions
-++ Generic package for Julia WS numerical special functions
+)abbrev package JWSNSF JLWSNumericalSpecialFunctions
+++ Generic package for JL WS numerical special functions
 ++ Author: G.Vanuxem
 ++ Date Created: Jun. 2024
 ++ Description:
-++  Julia Wolfram Symbolic numerical special functions using
+++  JL Wolfram Symbolic numerical special functions using
 ++  Wolfram Symbolic Transport Protocol.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 -- TODO: check duplicate signatures, missing implementations
 -- integer arguments
-JuliaWSNumericalSpecialFunctions(R : JuliaWSNumber) : Exports ==Implementation where
+JLWSNumericalSpecialFunctions(R : JLWSNumber) : Exports ==Implementation where
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
   Exports ==> with --SpecialFunctionCategory with
     Gamma :     R -> R
@@ -164,9 +164,9 @@ JuliaWSNumericalSpecialFunctions(R : JuliaWSNumber) : Exports ==Implementation w
     --    meijerG : (List R, List R, List R, List R, R) -> R
     --        ++ meijerG(la, lb, lc, ld, z) is the meijerG function.
     ------------------------------------------------------------------
-    EiEn : (JuliaWSInteger, R) -> R
+    EiEn : (JLWSInteger, R) -> R
     ++ EiEn(n,z) returns the exponential integral En of z.
-    lambertW : (JuliaWSInteger, R) -> R
+    lambertW : (JLWSInteger, R) -> R
     ++ lambertW(k,z) returns the k-th solution to LambertW function.
     haversine : R -> R
     ++ haversine(z)	computes the haversine of z.
@@ -209,9 +209,9 @@ JuliaWSNumericalSpecialFunctions(R : JuliaWSNumber) : Exports ==Implementation w
     riemannSiegelZ : R -> R
     ++ riemannSiegelZ(t)  computes the Riemann-Siegel Z function of t.
     -- expect a non negative integer:
-    stieltjesGamma : JuliaWSInteger -> R
+    stieltjesGamma : JLWSInteger -> R
     ++ stieltjesGamma(n) returns the n-th Stieltjes constant.
-    stieltjesGamma : (JuliaWSInteger, R) -> R
+    stieltjesGamma : (JLWSInteger, R) -> R
     ++ stieltjesGamma(n,a) returns the generalized n-th Stieltjes constant.
     hurwitzZeta : (R, R) -> R
     ++ hurwitzZeta(s,a) computes the Hurwitz zeta.
@@ -244,7 +244,7 @@ JuliaWSNumericalSpecialFunctions(R : JuliaWSNumber) : Exports ==Implementation w
     ++ barnesG(z) computes the Barnes G-function of z.
     hyperFactorial : R -> R
     ++ hyperFactorial(n) computes the hyperfactorial of n.
-    fibonacci : (JuliaWSInteger, R) -> R
+    fibonacci : (JLWSInteger, R) -> R
     ++ fibonacci(n, z) evaluates the Fibonacci polynomial at z.
     legendreP : (R, R) -> R
     ++ legendreP(n, z) evaluates the legendre polynomial
@@ -261,10 +261,10 @@ JuliaWSNumericalSpecialFunctions(R : JuliaWSNumber) : Exports ==Implementation w
     sphericalHarmonicY : (R, R, R, R) -> R
     ++ sphericalHarmonicY(l, m, theta, phi) returns the spherical
     ++ harmonic Y or evaluates it.
-    gegenbauerC : (JuliaWSInteger, R) -> R
+    gegenbauerC : (JLWSInteger, R) -> R
     ++ gegenbauerC(n,z) evaluates the renormalized form of the
     ++ Gegenbauer polynomial at z.
-    gegenbauerC : (JuliaWSInteger, R, R) -> R
+    gegenbauerC : (JLWSInteger, R, R) -> R
     ++ gegenbauerC(n,lambda,z) evaluates the Gegenbauer polynomial at z.
     chebyshevT : (R, R) -> R
     ++ chebyshevT(n, z) evaluates the chebyshev polynomial of the first kind

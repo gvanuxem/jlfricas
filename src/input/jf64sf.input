@@ -2,7 +2,7 @@
 )set mess type off
 )expose UnittestCount UnittestAux Unittest
 
-testsuite "JuliaFloat64 Special Functions"
+testsuite "JLFloat64 Special Functions"
 testcase "SpecialFunctions availability"
 testTrue("jlUsing(_"SpecialFunctions_")")
 

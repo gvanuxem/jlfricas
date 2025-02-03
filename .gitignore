@@ -73,7 +73,7 @@ src/algebra/r1/
 src/algebra/r7/
 src/algebra/rf/
 
-src/algebra/jnpadic
+src/algebra/jnpadic.spad
 
 src/boot/lobj_lst
 src/boot/prev-stage

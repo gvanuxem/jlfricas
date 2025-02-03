@@ -1,19 +1,19 @@
-)abbrev domain NARB NemoArbField
-++ Domain for Nemo fixed precision real ball.
+)abbrev domain NARB NMArbField
+++ Domain for NM fixed precision real ball.
 ++ Author: G. Vanuxem
 ++ Date Created: March. 2024
 ++ Keywords: float, floating point, number, real, ball
 ++ Description:
-++  \spadtype{NemoArbField} implements fixed precision ball
-++  arithmetic using the Julia Nemo package - based on the Arb library.
-++ Reference: https://nemocas.github.io/Nemo.jl/stable/
-NemoArbField(p: PositiveInteger) : Exports == Implementation where
+++  \spadtype{NMArbField} implements fixed precision ball
+++  arithmetic using the JL NM package - based on the Arb library.
+++ Reference: https://nemocas.github.io/NM.jl/stable/
+NMArbField(p: PositiveInteger) : Exports == Implementation where
   PI        ==> PositiveInteger
   NNI       ==> NonNegativeInteger
-  JI64      ==> JuliaInt64
-  JF64      ==> JuliaFloat64
-  Exports ==> Join(NemoRing, CommutativeRing, FloatingPointSystem,
-            Approximate, JuliaArbitraryPrecision,
+  JI64      ==> JLInt64
+  JF64      ==> JLFloat64
+  Exports ==> Join(NMRing, CommutativeRing, FloatingPointSystem,
+            Approximate, JLArbitraryPrecision,
             TranscendentalFunctionCategory, SpecialFunctionCategory,
             DifferentialRing) with
     integer? : % -> Boolean
@@ -38,10 +38,10 @@ NemoArbField(p: PositiveInteger) : Exports == Implementation where
     log1p   : % -> %
     ++ log1p(x) logarithm of 1+x computed accurately.
     exp    : () -> %
-    ++ exp() returns the NemoArbField ℯ (exp(1)).
+    ++ exp() returns the NMArbField ℯ (exp(1)).
     exp1    : () -> %
-    ++ exp() returns the NemoArbField ℯ (exp(1)).
-    ldexp  : (%, NemoInteger) -> %
+    ++ exp() returns the NMArbField ℯ (exp(1)).
+    ldexp  : (%, NMInteger) -> %
     ++ ldexp(x, n) returns x * 2^n.
     atan : (%, %) -> %
     ++ atan(x, y) computes the inverse tangent of x/y.
@@ -55,11 +55,11 @@ NemoArbField(p: PositiveInteger) : Exports == Implementation where
     ++ overlaps?(x,y) checks whether or not any part of x and y balls overlaps. 
     contains? : (%, %) -> Boolean 
     ++ contains?(x,y) checks whether or not y is contained in x.
-    contains? : (%, NemoInteger) -> Boolean
+    contains? : (%, NMInteger) -> Boolean
     ++ contains?(x,y) checks whether or not y is contained in x.
-    contains? : (%, NemoFraction(NemoInteger)) -> Boolean
+    contains? : (%, NMFraction(NMInteger)) -> Boolean
     ++ contains?(x,y) checks whether or not y is contained in x.
-    contains? : (%, JuliaFloat) -> Boolean
+    contains? : (%, JLFloat) -> Boolean
     ++ contains?(x,y) checks whether or not y is contained in x.
     containsZero? : % -> Boolean
     ++ containsZero?(x) checks whether or not 0 is contained in x.
@@ -83,7 +83,7 @@ NemoArbField(p: PositiveInteger) : Exports == Implementation where
     ++ after rounding to prec = 128 (with the default rounding mode) because
     ++ the two least significant bits are zero and thus get discarded.
     ++ Source: flint-devel@googlegroups.com
-    accuracyBits : % -> JuliaInt64
+    accuracyBits : % -> JLInt64
     ++ accuracyBits(x) returns the relative accuracy of x in bits.
     midpoint : % -> %
     ++ midpoint(x) returns the midpoint of x. 
@@ -94,17 +94,17 @@ NemoArbField(p: PositiveInteger) : Exports == Implementation where
     ++ to the radius of x.
     trim : % -> %
     ++ trim(x) rounds off insignificant bits from the midpoint.
-    uniqueInteger : % -> Union(NemoInteger, "failed")
-    ++ uniqueInteger(x) returns a NemoInteger if there is a unique integer
+    uniqueInteger : % -> Union(NMInteger, "failed")
+    ++ uniqueInteger(x) returns a NMInteger if there is a unique integer
     ++ in the interval x, "failed" otherwise.
     setUnion : (%, %) -> %
     ++ setUnion(x,y) returns the unions of the intervals x and y.
-    guess    : (%, NonNegativeInteger) -> NemoAlgebraicNumber
+    guess    : (%, NonNegativeInteger) -> NMAlgebraicNumber
     ++ guess(a, deg) returns the reconstructed algebraic
     ++ number found if it succeeds. Up to degree deg.
-    convert  : % -> NemoFraction(NemoInteger)
+    convert  : % -> NMFraction(NMInteger)
     ++ convert(x) converts x.
-    convert  : % -> JuliaFloat
+    convert  : % -> JLFloat
     ++ convert(x) converts x.
     coerce   : JF64 -> %
     ++ coerces(x) coerces x.
@@ -112,9 +112,9 @@ NemoArbField(p: PositiveInteger) : Exports == Implementation where
     ++ coerces(x) coerces x.
     jnball : (%, %) -> %
     ++ jnball(x,r) returns a ball with midpoint x and radius r.
-    jnrb   : NemoAlgebraicNumber -> %
+    jnrb   : NMAlgebraicNumber -> %
     ++ jnrb(jan) evaluates numerically jan by converting it to a real Arb field.
-    jnrb   : NemoExactCalciumField -> %
+    jnrb   : NMExactCalciumField -> %
     ++ jnrb(necf) evaluates numerically necf by converting it
     ++ to a real Arb field.
     jnrb   : String -> %
@@ -126,10 +126,10 @@ NemoArbField(p: PositiveInteger) : Exports == Implementation where
     jnrb   : Float -> %
     ++ jnrb(fl) returns fl as a real Arb ball.
   Implementation ==> add
-    import from JuliaUtilityFunctions
+    import from JLUtilityFunctions
     import from String
-    import from NemoInteger
-    import from NemoFraction(NemoInteger)
+    import from NMInteger
+    import from NMFraction(NMInteger)
 
     jlInitialize(true)
     Rep := SExpression
@@ -146,7 +146,8 @@ NemoArbField(p: PositiveInteger) : Exports == Implementation where
     jlEvalString(concat([NARB, "=ArbField(", string(p),")"]))@Void
     NARBP := concat(NARB,"(")
 
-    jlNemoRing() == NARB
+    jlNMRing() == NARB
+    jlObject() == jlEvalString(concat(["string(", NARB,")"]))@String
 
     0 == jlref(concat(["zero(", NARB, ")"]))
     1 == jlref(concat(["one(", NARB, ")"]))
@@ -161,12 +162,12 @@ NemoArbField(p: PositiveInteger) : Exports == Implementation where
       jlEvalString(concat ["add_error!(", getind(x), ",", getind(y),")"])
       x
     trim(x) == junfunc("trim",x)
-    uniqueInteger(x) == --TODO: Julia boolean and tuples
-      ret : JuliaObject := junfunc("unique_integer",x)
+    uniqueInteger(x) == --TODO: JL boolean and tuples
+      ret : JLObject := junfunc("unique_integer",x)
       str: String := jlEvalString(concat(["string(getproperty(",
         getind(ret),",1))"]))
       str = "true" => jlref(concat(["getproperty(",
-        getind(ret),",2)"]))$NemoInteger
+        getind(ret),",2)"]))$NMInteger
       "failed"
     setUnion(x,y) == jbinfunc("setunion",x,y)
 
@@ -192,10 +193,10 @@ NemoArbField(p: PositiveInteger) : Exports == Implementation where
     containsNonNegative? x == junbfunc("contains_nonnegative", x)
     overlaps?(x,y) == jbinbfunc("overlaps", x, y)
     contains?(x : %, y : %) == jbinbfunc("contains", x, y)
-    contains?(x : %, y : NemoInteger) == jbinbfunc("contains", x, y)
-    contains?(x : %, y : NemoFraction(NemoInteger)) ==
+    contains?(x : %, y : NMInteger) == jbinbfunc("contains", x, y)
+    contains?(x : %, y : NMFraction(NMInteger)) ==
       jbinbfunc("contains", x, y)
-    contains?(x : %, y : JuliaFloat) == jbinbfunc("contains", x, y)
+    contains?(x : %, y : JLFloat) == jbinbfunc("contains", x, y)
 
     precision() == p
     bits(x) == jlEvalString(concat(["bits(", getind(x),")"]))
@@ -249,43 +250,43 @@ NemoArbField(p: PositiveInteger) : Exports == Implementation where
     acosh(x)  == junfunc("acosh",x)
     atanh(x)  == junfunc("atanh",x)
 
-    Gamma(x)  == jlref(concat ["Nemo.gamma(", getind(x),")"])
-    Gamma(x,y) == jlref(concat ["Nemo.gamma(",getind(x),",",getind(y)])
-    hurwitzZeta(x,y) == jlref(concat ["Nemo.zeta(",getind(x),",",getind(y)])
-    polygamma(x,y) == jlref(concat ["Nemo.polygamma(",getind(x),",",getind(y)])
+    Gamma(x)  == jlref(concat ["NM.gamma(", getind(x),")"])
+    Gamma(x,y) == jlref(concat ["NM.gamma(",getind(x),",",getind(y)])
+    hurwitzZeta(x,y) == jlref(concat ["NM.zeta(",getind(x),",",getind(y)])
+    polygamma(x,y) == jlref(concat ["NM.polygamma(",getind(x),",",getind(y)])
 
     polylog(n,x) == jbinfunc("polylog",n, x)
 
     guess(a, deg) ==
       jlref(concat(["guess(QQBar,", getind(a), ",",
-        string(deg),")"]))$NemoAlgebraicNumber
+        string(deg),")"]))$NMAlgebraicNumber
 
     retractIfCan(x) : Union(Integer, "failed") ==
       not integer?(x) => "failed"
-      convert(jlref(concat(["ZZ(", getind(x),")"]))$NemoInteger)
+      convert(jlref(concat(["ZZ(", getind(x),")"]))$NMInteger)
 
     retractIfCan(x) : Union(Fraction Integer, "failed") ==
       tmp := jlref(concat(["QQ(rationalize(BigInt,BigFloat(",
-        getind(x),")))"]))$NemoFraction(NemoInteger)
+        getind(x),")))"]))$NMFraction(NMInteger)
       retractIfCan(tmp)
 
-    convert(x) : NemoFraction(NemoInteger) ==
+    convert(x) : NMFraction(NMInteger) ==
       jlref(concat(["QQ(rationalize(BigInt,BigFloat(",
-        getind(x),")))"]))$NemoFraction(NemoInteger)
+        getind(x),")))"]))$NMFraction(NMInteger)
 
     convert(x : %) : Float ==
       tmp := jlref(concat(["QQ(rationalize(BigInt,BigFloat(",
-        getind(x),")))"]))$NemoFraction(NemoInteger)
+        getind(x),")))"]))$NMFraction(NMInteger)
       coerce(retract(tmp)@Fraction(Integer))
 
-    convert(x) : JuliaFloat ==
-      jlref(concat(["BigFloat(", getind(x),")"]))$JuliaFloat
+    convert(x) : JLFloat ==
+      jlref(concat(["BigFloat(", getind(x),")"]))$JLFloat
     convert(x) : DoubleFloat ==
       jlEvalString(concat ["convert(Float64,",
         getind(x), ")"])@JF64 pretend DoubleFloat
     convert(x : %) : Float ==
       tmp := jlref(concat(["QQ(rationalize(BigInt,BigFloat(",
-        getind(x),")))"]))$NemoFraction(NemoInteger)
+        getind(x),")))"]))$NMFraction(NMInteger)
       coerce(retract(tmp)@Fraction(Integer))
 
     coerce(jf : JF64) : % == jlref(concat([NARBP, "_"", convert(jf),"_")"]))
@@ -295,40 +296,40 @@ NemoArbField(p: PositiveInteger) : Exports == Implementation where
       outputSpacing(tmp)
       ret
     coerce(q : Fraction Integer) == 
-      junfunc(NARB, coerce(q)@NemoFraction(NemoInteger))
+      junfunc(NARB, coerce(q)@NMFraction(NMInteger))
     coerce(i : Integer) ==
       jlref(concat([NARBP, string(i),")"]))
     jnball(a,b) == jbinfunc("ball", a, b)
-    jnrb(an : NemoAlgebraicNumber) == junfunc(NARB, an)
-    jnrb(necf : NemoExactCalciumField) == junfunc(NARB, necf)
+    jnrb(an : NMAlgebraicNumber) == junfunc(NARB, an)
+    jnrb(necf : NMExactCalciumField) == junfunc(NARB, necf)
     jnrb(s : String) == jlref(concat([NARBP, "_"", s,"_")"]))
     jnrb(i : Integer) == coerce(i)
     jnrb(q : Fraction(Integer)) == coerce(q)
     jnrb(f : Float) == coerce(f)
     coerce(i : %) : OutputForm == string(i) pretend OutputForm
 
-)abbrev domain NRB NemoRealBall
+)abbrev domain NRB NMRealBall
 ++ Description: convenience domain to reflect
-++ Nemo ArbField(), i.e. without parameters.
-NemoRealBall() == NemoArbField(256)
+++ NM ArbField(), i.e. without parameters.
+NMRealBall() == NMArbField(256)
 
-)abbrev domain NACB NemoAcbField
-++ Domain for Nemo fixed precision complex ball.
+)abbrev domain NACB NMAcbField
+++ Domain for NM fixed precision complex ball.
 ++ Author: G. Vanuxem
 ++ Date Created: March. 2024
 ++ Keywords: floating point number, complex
 ++ Description:
-++  \spadtype{NemoAcbField} implements fixed precision
+++  \spadtype{NMAcbField} implements fixed precision
 ++  complex ball arbitrary precision ball arithmetic using
-++  the Julia Nemo package - based on the Arb library.
-++ Reference: https://nemocas.github.io/Nemo.jl/stable/
-NemoAcbField(p: PositiveInteger) : Exports == Implementation where
+++  the JL NM package - based on the Arb library.
+++ Reference: https://nemocas.github.io/NM.jl/stable/
+NMAcbField(p: PositiveInteger) : Exports == Implementation where
   PI        ==> PositiveInteger
   NNI       ==> NonNegativeInteger
-  JI64      ==> JuliaInt64
-  JF64      ==> JuliaFloat64
-  Exports ==> Join(NemoRing, CommutativeRing, ComplexCategory(NemoArbField(p)),
-                Approximate, JuliaArbitraryPrecision,
+  JI64      ==> JLInt64
+  JF64      ==> JLFloat64
+  Exports ==> Join(NMRing, CommutativeRing, ComplexCategory(NMArbField(p)),
+                Approximate, JLArbitraryPrecision,
                 DifferentialRing, SpecialFunctionCategory) with
     integer? : % -> Boolean
     ++ integer?(x) checks whether or not x is an integer.
@@ -341,14 +342,14 @@ NemoAcbField(p: PositiveInteger) : Exports == Implementation where
     ++ overlaps?(x,y) checks whether or not any part of x and y balls overlaps. 
     contains? : (%, %) -> Boolean 
     ++ contains?(x,y) checks whether or not y is contained in x.
-    contains? : (%, NemoInteger) -> Boolean
+    contains? : (%, NMInteger) -> Boolean
     ++ contains?(x,y) checks whether or not y is contained in x.
-    contains? : (%, NemoFraction(NemoInteger)) -> Boolean
+    contains? : (%, NMFraction(NMInteger)) -> Boolean
     ++ contains?(x,y) checks whether or not y is contained in x.
     containsZero? : % -> Boolean
     ++ containsZero?(x) checks whether or not 0 is contained in x.
     pi      : () -> %
-    ++ pi() returns the JuliaFloat representation of π.
+    ++ pi() returns the JLFloat representation of π.
     "*"   : (%, Integer) -> %
     ++ * \undocumented
     "/"   : (Integer, %) -> %
@@ -359,10 +360,10 @@ NemoAcbField(p: PositiveInteger) : Exports == Implementation where
     log1p   : % -> %
     ++ log1p(x) logarithm of 1+x computed accurately.
     exp    : () -> %
-    ++ exp() returns the NemoAcbField ℯ (exp(1)).
+    ++ exp() returns the NMAcbField ℯ (exp(1)).
     exp1    : () -> %
-    ++ exp() returns the NemoAcbField ℯ (exp(1)).
-    ldexp  : (%, NemoInteger) -> %
+    ++ exp() returns the NMAcbField ℯ (exp(1)).
+    ldexp  : (%, NMInteger) -> %
     ++ ldexp(x, n) returns x * 2^n.
     hurwitzZeta: (%, %) -> %
     ++ hurwitzZeta(s,a) returns the Hurwitz zeta function of s and a.
@@ -382,27 +383,27 @@ NemoAcbField(p: PositiveInteger) : Exports == Implementation where
     ++ after rounding to prec = 128 (with the default rounding mode) because
     ++ the two least significant bits are zero and thus get discarded.
     ++ Source of documentation: flint-devel@googlegroups.com
-    accuracyBits : % -> JuliaInt64
+    accuracyBits : % -> JLInt64
     ++ accuracyBits(x) returns the relative accuracy of x in bits.
     trim : % -> %
     ++ trim(x) rounds off insignificant bits from the midpoint.
-    uniqueInteger : % -> Union(NemoInteger, "failed")
-    ++ uniqueInteger(x) returns a NemoInteger if there is a unique integer
+    uniqueInteger : % -> Union(NMInteger, "failed")
+    ++ uniqueInteger(x) returns a NMInteger if there is a unique integer
     ++ in the interval x, "failed" otherwise.
     rootOfUnity : (NonNegativeInteger) -> %
     ++ rootOfUnity(n)Return the root of unity exp(2*%pi*%i/n).
     precision :  () -> PositiveInteger
     ++ precision() returns precision in bits used. 
-    guess    : (%, NonNegativeInteger) -> NemoAlgebraicNumber
+    guess    : (%, NonNegativeInteger) -> NMAlgebraicNumber
     ++ guess(a, deg) returns the reconstructed algebraic number found if it succeeds.
     ++ Up to degree deg.
     coerce   : Complex(Integer) -> % -- for %i operations
     ++ coerce(z) coerces z. Convenience function.
     coerce    : Float -> %
     ++ coerce(r) coerce the floating point number r.
-    jncb   : NemoAlgebraicNumber -> %
+    jncb   : NMAlgebraicNumber -> %
     ++ jncb(an) evaluates numerically an by converting it to a complex Arb field.
-    jncb   : NemoExactCalciumField -> %
+    jncb   : NMExactCalciumField -> %
     ++ jncb(necf) evaluates numerically necf by converting it to a complex Arb field.
     jncb   : String -> %
     ++ jncb(str) evaluates str to a complex Arb field.
@@ -420,9 +421,9 @@ NemoAcbField(p: PositiveInteger) : Exports == Implementation where
     ++ jncb(r,i) returns r and i as a complex Arb ball using
     ++ real and imaginary part.
   Implementation ==> add
-    import from JuliaUtilityFunctions
+    import from JLUtilityFunctions
     import from String
-    import from NemoFraction(NemoInteger)
+    import from NMFraction(NMInteger)
 
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
 
@@ -446,15 +447,16 @@ NemoAcbField(p: PositiveInteger) : Exports == Implementation where
     accuracyBits(x) == jlEvalString(concat(["accuracy_bits(",
         getind(x),")"]))
     trim(x) == junfunc("trim",x)
-    uniqueInteger(x) == --TODO: Julia boolean and tuples
-      ret : JuliaObject := junfunc("unique_integer",x)
+    uniqueInteger(x) == --TODO: JL boolean and tuples
+      ret : JLObject := junfunc("unique_integer",x)
       str: String := jlEvalString(concat(["string(getproperty(",
         getind(ret),",1))"]))
       str = "true" => jlref(concat(["getproperty(",
-        getind(ret),",2)"]))$NemoInteger
+        getind(ret),",2)"]))$NMInteger
       "failed"
 
-    jlNemoRing() == NACB
+    jlNMRing() == NACB
+    jlObject() == jlEvalString(concat(["string(", NACB,")"]))@String
 
     0 == jlref(concat(["zero(", NACB, ")"]))
     1 == jlref(concat(["one(", NACB, ")"]))
@@ -473,15 +475,15 @@ NemoAcbField(p: PositiveInteger) : Exports == Implementation where
     exact? x == junbfunc("is_exact", x)
     overlaps?(x,y) == jbinbfunc("overlaps", x, y)
     contains?(x : %, y : %) == jbinbfunc("contains", x, y)
-    contains?(x : %, y : NemoInteger) == jbinbfunc("contains", x, y)
-    contains?(x : %, y : NemoFraction(NemoInteger)) == jbinbfunc("contains", x, y)
+    contains?(x : %, y : NMInteger) == jbinbfunc("contains", x, y)
+    contains?(x : %, y : NMFraction(NMInteger)) == jbinbfunc("contains", x, y)
     containsZero? x == junbfunc("contains_zero", x)
 
     x + y == jbinfunc("+", x, y)
     x - y == jbinfunc("-", x, y)
     - x   == junfunc("-", x)
     x : % * y : % == jbinfunc("*", x, y)
-    x : NemoInteger * y : % == jbinfunc("*", x, y)
+    x : NMInteger * y : % == jbinfunc("*", x, y)
     x : Integer * y : % == jlref(concat([string(x), "*", getind(y)]))
     x : PositiveInteger * y : % == jlref(concat([string(x), "*", getind(y)]))
     x : NonNegativeInteger * y : % == jlref(concat([string(x), "*", getind(y)]))
@@ -524,10 +526,10 @@ NemoAcbField(p: PositiveInteger) : Exports == Implementation where
 
     polylog(n,x) == jbinfunc("polylog",n, x)
 
-    Gamma(x)  == jlref(concat ["Nemo.gamma(", getind(x),")"])
-    Gamma(x,y) == jlref(concat ["Nemo.gamma(",getind(x),",",getind(y)])
-    hurwitzZeta(x,y) == jlref(concat ["Nemo.zeta(",getind(x),",",getind(y)])
-    polygamma(x,y) == jlref(concat ["Nemo.polygamma(",getind(x),",",getind(y)])
+    Gamma(x)  == jlref(concat ["NM.gamma(", getind(x),")"])
+    Gamma(x,y) == jlref(concat ["NM.gamma(",getind(x),",",getind(y)])
+    hurwitzZeta(x,y) == jlref(concat ["NM.zeta(",getind(x),",",getind(y)])
+    polygamma(x,y) == jlref(concat ["NM.polygamma(",getind(x),",",getind(y)])
 
     airyAi(x) == junfunc("airy_ai", x)
     airyBi(x) == junfunc("airy_bi", x)
@@ -549,12 +551,12 @@ NemoAcbField(p: PositiveInteger) : Exports == Implementation where
 
     guess(a, deg) ==
       jlref(concat(["guess(QQBar,", getind(a), ",",
-        string(deg),")"]))$NemoAlgebraicNumber
+        string(deg),")"]))$NMAlgebraicNumber
 
     rootOfUnity(n) ==
       jlref(concat(["root_of_unity(", NACB, ",", string(n),")"]))
 
-    complex(r:NemoArbField(p), i:NemoArbField(p)) ==
+    complex(r:NMArbField(p), i:NMArbField(p)) ==
       jlref(concat([NACBP, getind(r),",",getind(i),")"]))
 
     coerce(f : Float) ==
@@ -564,42 +566,42 @@ NemoAcbField(p: PositiveInteger) : Exports == Implementation where
       ret
     coerce(i : Integer) == jlref(concat([NACBP, "_"", string(i),"_")"]))
     coerce(gi : Complex(Integer)) ==
-      jbinfunc(NACB, coerce(real gi)@NemoArbField(p), coerce(imag gi)@NemoArbField(p))
-    jncb(an : NemoAlgebraicNumber) == junfunc(NACB, an)
-    jncb(necf : NemoExactCalciumField) == junfunc(NACB, necf)
+      jbinfunc(NACB, coerce(real gi)@NMArbField(p), coerce(imag gi)@NMArbField(p))
+    jncb(an : NMAlgebraicNumber) == junfunc(NACB, an)
+    jncb(necf : NMExactCalciumField) == junfunc(NACB, necf)
     jncb(s : String) == jlref(concat([NACBP, "_"", s,"_")"]))
     jncb(r : String, i : String) ==
       jlref(concat([NACBP, "_"", r, "_",_"", i, "_")"]))
     jncb(f : Float) == coerce(f)
     jncb(r : Float, i : Float) ==
-      jbinfunc(NACB, coerce(r)@NemoArbField(p),
-        coerce(i)@NemoArbField(p))
+      jbinfunc(NACB, coerce(r)@NMArbField(p),
+        coerce(i)@NMArbField(p))
     jncb(i : Integer) == coerce(i)
     jncb(r : Integer, i : Integer) ==
-      jbinfunc(NACB, coerce(r)@NemoArbField(p), coerce(i)@NemoArbField(p))
+      jbinfunc(NACB, coerce(r)@NMArbField(p), coerce(i)@NMArbField(p))
     coerce(z : %) : OutputForm == string(z) pretend OutputForm
 
-)abbrev domain NCB NemoComplexBall
+)abbrev domain NCB NMComplexBall
 ++ Description: convenience domain to reflect
-++ Nemo AcbField(), i.e. without parameters.
-NemoComplexBall() == NemoAcbField(256)
+++ NM AcbField(), i.e. without parameters.
+NMComplexBall() == NMAcbField(256)
 
-)abbrev domain NRF NemoRealField
-++ Domain for Nemo Real Field based on the Arb
+)abbrev domain NRF NMRealField
+++ Domain for NM Real Field based on the Arb
 ++ library (arbitrary precision ball arithmetic).
 ++ Author: G. Vanuxem
 ++ Date Created: March. 2024
 ++ Keywords: arbitrary precision, floating point number, real
 ++ Description:
-++  \spadtype{NemoRealField} implements arbitrary precision ball
-++  arithmetic using the Nemo Julia package.
-++ Reference: https://nemocas.github.io/Nemo.jl/stable/
-NemoRealField() : Exports == Implementation where
+++  \spadtype{NMRealField} implements arbitrary precision ball
+++  arithmetic using the NM JL package.
+++ Reference: https://nemocas.github.io/NM.jl/stable/
+NMRealField() : Exports == Implementation where
   PI        ==> PositiveInteger
   NNI       ==> NonNegativeInteger
-  JI64      ==> JuliaInt64
-  JF64      ==> JuliaFloat64
-  Exports ==> Join(NemoRing, CommutativeRing, FloatingPointSystem,
+  JI64      ==> JLInt64
+  JF64      ==> JLFloat64
+  Exports ==> Join(NMRing, CommutativeRing, FloatingPointSystem,
             arbitraryPrecision, TranscendentalFunctionCategory,
             DifferentialRing, SpecialFunctionCategory) with
     integer? : % -> Boolean
@@ -616,9 +618,9 @@ NemoRealField() : Exports == Implementation where
     nonPositive? : % -> Boolean
     ++ nonnegative(v) checks whether or not x is lower or equal to zero.
     exp    : () -> %
-    ++ exp() returns the NemoRealField represenation of ℯ (exp(1)).
+    ++ exp() returns the NMRealField represenation of ℯ (exp(1)).
     exp1    : () -> %
-    ++ exp() returns the NemoRealField represenation of ℯ (exp(1)).
+    ++ exp() returns the NMRealField represenation of ℯ (exp(1)).
     urand01 : () -> %
     ++ urand01() returns an uniformly distributed random number
     ++ contained in [0,1].
@@ -631,7 +633,7 @@ NemoRealField() : Exports == Implementation where
     ++ involved in the direct evaluation of exp(x)-1 for small values of x.
     log1p   : % -> %
     ++ log1p(x) logarithm of 1+x computed accurately.
-    ldexp  : (%, NemoInteger) -> %
+    ldexp  : (%, NMInteger) -> %
     ++ ldexp(x, n) returns x * 2^n.
     hurwitzZeta: (%, %) -> %
     ++ hurwitzZeta(s,a) returns the Hurwitz zeta function of s and a.
@@ -644,12 +646,12 @@ NemoRealField() : Exports == Implementation where
     addError!: (%, %) -> %
     ++ addError!(x, y) adds the values (absolute) of the midpoint and radius of y
     ++ to the radius of x.
-    accuracyBits : % -> JuliaInt64
+    accuracyBits : % -> JLInt64
     ++ accuracyBits(x) returns the relative accuracy of x in bits.
     trim : % -> %
     ++ trim(x) rounds off insignificant bits from the midpoint.
-    uniqueInteger : % -> Union(NemoInteger, "failed")
-    ++ uniqueInteger(x) returns a NemoInteger if there is a unique integer
+    uniqueInteger : % -> Union(NMInteger, "failed")
+    ++ uniqueInteger(x) returns a NMInteger if there is a unique integer
     ++ in the interval x, "failed" otherwise.
     setUnion : (%, %) -> %
     ++ setUnion(x,y) returns the unions of the intervals x and y.
@@ -657,11 +659,11 @@ NemoRealField() : Exports == Implementation where
     ++ overlaps?(x,y) checks whether or not any part of x and y balls overlaps. 
     contains? : (%, %) -> Boolean 
     ++ contains?(x,y) checks whether or not y is contained in x.
-    contains? : (%, NemoInteger) -> Boolean
+    contains? : (%, NMInteger) -> Boolean
     ++ contains?(x,y) checks whether or not y is contained in x.
-    contains? : (%, NemoFraction(NemoInteger)) -> Boolean
+    contains? : (%, NMFraction(NMInteger)) -> Boolean
     ++ contains?(x,y) checks whether or not y is contained in x.
-    contains? : (%, JuliaFloat) -> Boolean
+    contains? : (%, JLFloat) -> Boolean
     ++ contains?(x,y) checks whether or not y is contained in x.
     containsZero? : % -> Boolean
     ++ containsZero?(x) checks whether or not 0 is contained in x.
@@ -677,14 +679,14 @@ NemoRealField() : Exports == Implementation where
     containsNonPositive? : % -> Boolean
     ++ containsNonPositive?(x) checks whether or not x contains
     ++ any non positive value.
-    guess    : (%, NonNegativeInteger) -> NemoAlgebraicNumber
+    guess    : (%, NonNegativeInteger) -> NMAlgebraicNumber
     ++ guess(a, deg) returns the reconstructed algebraic number found
     ++ if it succeeds, up to degree deg.
-    retractIfCan   : NemoAlgebraicNumber -> Union(%, "failed")
+    retractIfCan   : NMAlgebraicNumber -> Union(%, "failed")
     ++ retractIfCan \undocumented
-    convert  : % -> JuliaFloat
+    convert  : % -> JLFloat
     ++ convert \undocumented
-    convert  : % -> NemoFraction(NemoInteger)
+    convert  : % -> NMFraction(NMInteger)
     ++ convert \undocumented
     coerce   : Fraction(Integer) -> %
     ++ coerce \undocumented    
@@ -703,9 +705,9 @@ NemoRealField() : Exports == Implementation where
     jnrf   : Integer -> %
     ++ jnrf \undocumented
   Implementation ==> add
-    import from JuliaUtilityFunctions
+    import from JLUtilityFunctions
     import from String
-    import from NemoFraction(NemoInteger)
+    import from NMFraction(NMInteger)
 
     jlInitialize(true)
     Rep := SExpression
@@ -730,7 +732,8 @@ NemoRealField() : Exports == Implementation where
       jlEvalString(concat(["accuracy_bits(", getind(x),")"]))
     trim(x) == junfunc("trim",x)
 
-    jlNemoRing() == "NRF"
+    jlNMRing() == "NRF"
+    jlObject() == "NRF"
 
     0    == jlref("zero(NRF)")
     1    == jlref("one(NRF)")
@@ -744,12 +747,12 @@ NemoRealField() : Exports == Implementation where
     addError!(x, y) ==
       jlEvalString(concat ["add_error!(", getind(x), ",", getind(y),")"])
       x
-    uniqueInteger(x) == --TODO: Julia boolean and tuples
-      ret : JuliaObject := junfunc("unique_integer",x)
+    uniqueInteger(x) == --TODO: JL boolean and tuples
+      ret : JLObject := junfunc("unique_integer",x)
       str: String := jlEvalString(concat(["string(getproperty(",
         getind(ret),",1))"]))
       str = "true" => jlref(concat(["getproperty(",
-        getind(ret),",2)"]))$NemoInteger
+        getind(ret),",2)"]))$NMInteger
       "failed"
     setUnion(x,y) == jbinfunc("setunion",x,y)
 
@@ -775,9 +778,9 @@ NemoRealField() : Exports == Implementation where
     containsNonNegative? x == junbfunc("contains_nonnegative", x)
     overlaps?(x,y) == jbinbfunc("overlaps", x, y)
     contains?(x : %, y : %) == jbinbfunc("contains", x, y)
-    contains?(x : %, y : NemoInteger) == jbinbfunc("contains", x, y)
-    contains?(x : %, y : NemoFraction(NemoInteger)) == jbinbfunc("contains", x, y)
-    contains?(x : %, y : JuliaFloat) == jbinbfunc("contains", x, y)
+    contains?(x : %, y : NMInteger) == jbinbfunc("contains", x, y)
+    contains?(x : %, y : NMFraction(NMInteger)) == jbinbfunc("contains", x, y)
+    contains?(x : %, y : JLFloat) == jbinbfunc("contains", x, y)
 
     x : % / y : % == jbinfunc("/", x, y)
     x : % ^ y : % == jbinfunc("^", x, y)
@@ -826,41 +829,41 @@ NemoRealField() : Exports == Implementation where
     acosh(x)  == junfunc("acosh",x)
     atanh(x)  == junfunc("atanh",x)
 
-    Gamma(x)  == jlref(concat ["Nemo.gamma(", getind(x),")"])
-    Gamma(x,y) == jlref(concat ["Nemo.gamma(",getind(x),",",getind(y)])
-    hurwitzZeta(x,y) == jlref(concat ["Nemo.zeta(",getind(x),",",getind(y)])
-    polygamma(x,y) == jlref(concat ["Nemo.polygamma(",getind(x),",",getind(y)])
+    Gamma(x)  == jlref(concat ["NM.gamma(", getind(x),")"])
+    Gamma(x,y) == jlref(concat ["NM.gamma(",getind(x),",",getind(y)])
+    hurwitzZeta(x,y) == jlref(concat ["NM.zeta(",getind(x),",",getind(y)])
+    polygamma(x,y) == jlref(concat ["NM.polygamma(",getind(x),",",getind(y)])
  
     polylog(n,x) == jbinfunc("polylog",n, x)
 
     guess(a, deg) ==
       jlref(concat(["guess(QQBar,", getind(a), ",",
-        string(deg),")"]))$NemoAlgebraicNumber
+        string(deg),")"]))$NMAlgebraicNumber
 
     retractIfCan(x) : Union(Integer, "failed") ==
       not integer?(x) => "failed"
-      convert(jlref(concat(["ZZ(", getind(x),")"]))$NemoInteger)
+      convert(jlref(concat(["ZZ(", getind(x),")"]))$NMInteger)
 
-    retractIfCan(x : NemoAlgebraicNumber) : Union(%, "failed") ==
+    retractIfCan(x : NMAlgebraicNumber) : Union(%, "failed") ==
       real?(x) => junfunc("NRF", x)
       "failed"
 
     retractIfCan(x) : Union(Fraction Integer, "failed") ==
       tmp := jlref(concat(["QQ(rationalize(BigInt,BigFloat(",
-        getind(x),")))"]))$NemoFraction(NemoInteger)
+        getind(x),")))"]))$NMFraction(NMInteger)
       retractIfCan(tmp)
 
-    convert(x) : NemoFraction(NemoInteger) ==
+    convert(x) : NMFraction(NMInteger) ==
         jlref(concat(["QQ(rationalize(BigInt,BigFloat(",
-          getind(x),")))"]))$NemoFraction(NemoInteger)
+          getind(x),")))"]))$NMFraction(NMInteger)
     convert(x) : DoubleFloat ==
       jlEvalString(concat ["convert(Float64,",
         getind(x), ")"])@JF64 pretend DoubleFloat
-    convert(x) : JuliaFloat ==
-      jlref(concat(["BigFloat(", getind(x),")"]))$JuliaFloat
+    convert(x) : JLFloat ==
+      jlref(concat(["BigFloat(", getind(x),")"]))$JLFloat
     convert(x : %) : Float ==
       tmp := jlref(concat(["QQ(rationalize(BigInt,BigFloat(",
-        getind(x),")))"]))$NemoFraction(NemoInteger)
+        getind(x),")))"]))$NMFraction(NMInteger)
       coerce(retract(tmp)@Fraction(Integer))
     
     coerce(jf : JF64) == jlref(concat(["NRF(_"", convert(jf),"_")"]))
@@ -871,7 +874,7 @@ NemoRealField() : Exports == Implementation where
       ret
     coerce(i : Integer) == jlref(concat(["NRF(", string(i),")"]))
     coerce(q : Fraction(Integer)) ==
-      junfunc("NRF", coerce(q)@NemoFraction(NemoInteger))
+      junfunc("NRF", coerce(q)@NMFraction(NMInteger))
     jnball(a,b) == jbinfunc("ball", a, b)
     jnrf(s : String) : % == jlref(concat(["NRF(_"", s,"_")"]))
     jnrf(i : Integer) : % == coerce(i)
@@ -879,22 +882,22 @@ NemoRealField() : Exports == Implementation where
     jnrf(f : Float) == coerce(f)
     coerce(i : %) : OutputForm == string(i) pretend OutputForm
 
-)abbrev domain NCF NemoComplexField
-++ Domain for Nemo Complex Field based on the Arb
+)abbrev domain NCF NMComplexField
+++ Domain for NM Complex Field based on the Arb
 ++ library (arbitrary precision ball arithmetic).
 ++ Author: G. Vanuxem
 ++ Date Created: March. 2024
 ++ Keywords: arbitrary precision, floating point  number, complex
 ++ Description:
-++ \spadtype{NemoComplexField} implements arbitrary precision ball
-++ arithmetic using the Nemo Julia package.
-++ Reference: https://nemocas.github.io/Nemo.jl/stable/
-NemoComplexField() : Exports == Implementation where
-  JI64      ==> JuliaInt64
+++ \spadtype{NMComplexField} implements arbitrary precision ball
+++ arithmetic using the NM JL package.
+++ Reference: https://nemocas.github.io/NM.jl/stable/
+NMComplexField() : Exports == Implementation where
+  JI64      ==> JLInt64
   PI        ==> PositiveInteger
-  JF64      ==> JuliaFloat64
-  NRF       ==> NemoRealField
-  Exports ==> Join(NemoRing, CommutativeRing, ComplexCategory(NemoRealField),
+  JF64      ==> JLFloat64
+  NRF       ==> NMRealField
+  Exports ==> Join(NMRing, CommutativeRing, ComplexCategory(NMRealField),
             arbitraryPrecision, DifferentialRing,
             SpecialFunctionCategory) with
     integer? : % -> Boolean
@@ -904,15 +907,15 @@ NemoComplexField() : Exports == Implementation where
     ++ for example.
     exact? : % -> Boolean
     ++ exact?(x) checks whether x is exact i.e. with 0 radius.
-    accuracyBits : % -> JuliaInt64
+    accuracyBits : % -> JLInt64
     ++ accuracyBits(x) returns the relative accuracy of x in bits.
     overlaps? : (%, %) -> Boolean
     ++ overlaps?(x,y) checks whether or not any part of x and y balls overlaps. 
     contains? : (%, %) -> Boolean 
     ++ contains?(x,y) checks whether or not y is contained in x.
-    contains? : (%, NemoInteger) -> Boolean
+    contains? : (%, NMInteger) -> Boolean
     ++ contains?(x,y) checks whether or not y is contained in x.
-    contains? : (%, NemoFraction(NemoInteger)) -> Boolean
+    contains? : (%, NMFraction(NMInteger)) -> Boolean
     ++ contains?(x,y) checks whether or not y is contained in x.
     containsZero? : % -> Boolean
     ++ containsZero?(x) checks whether or not 0 is contained in x.
@@ -922,13 +925,13 @@ NemoComplexField() : Exports == Implementation where
     log1p   : % -> %
     ++ log1p(x) logarithm of 1+x computed accurately.
     exp    : () -> %
-    ++ exp() returns the NemoComplexField ℯ (exp(1)).
+    ++ exp() returns the NMComplexField ℯ (exp(1)).
     exp1    : () -> %
-    ++ exp() returns the NemoComplexField ℯ (exp(1)).
-    ldexp  : (%, NemoInteger) -> %
+    ++ exp() returns the NMComplexField ℯ (exp(1)).
+    ldexp  : (%, NMInteger) -> %
     ++ ldexp(x, n) returns x * 2^n.
     pi      : () -> %
-    ++ pi() returns the JuliaFloat representation of π.
+    ++ pi() returns the JLFloat representation of π.
     "*"      : (%, Integer) -> %
     ++ * \undocumented
     "/"      : (Integer, %) -> %
@@ -956,13 +959,13 @@ NemoComplexField() : Exports == Implementation where
     ++ precision \undocumented
     precision : PI -> PI
     ++ precision\undocumented
-    guess    : (%, NonNegativeInteger) -> NemoAlgebraicNumber
+    guess    : (%, NonNegativeInteger) -> NMAlgebraicNumber
     ++ guess(a, deg) returns the reconstructed algebraic number found if it succeeds.
     ++ Up to degree deg.
     trim : % -> %
     ++ trim(x) rounds off insignificant bits from the midpoint.
-    uniqueInteger : % -> Union(NemoInteger, "failed")
-    ++ uniqueInteger(x) returns a NemoInteger if there is a unique integer
+    uniqueInteger : % -> Union(NMInteger, "failed")
+    ++ uniqueInteger(x) returns a NMInteger if there is a unique integer
     ++ in the interval x, "failed" otherwise.
     coerce   : JF64 -> %
     ++ coerce \undocumented
@@ -970,7 +973,7 @@ NemoComplexField() : Exports == Implementation where
     ++ coerce \undocumented
     coerce   : Float -> %
     ++ coerce \undocumented
-    coerce   : NemoAlgebraicNumber -> %
+    coerce   : NMAlgebraicNumber -> %
     ++ coerce \undocumented
     coerce   : Complex(Integer) -> % -- for %i operations
     ++ coerce(z) coerces z. Convenience function.
@@ -987,9 +990,9 @@ NemoComplexField() : Exports == Implementation where
     jncf   : (Integer, Integer) -> %
     ++ jncf \undocumented
   Implementation ==> add
-    import from JuliaUtilityFunctions
+    import from JLUtilityFunctions
     import from String
-    import from NemoFraction(NemoInteger)
+    import from NMFraction(NMInteger)
 
     jlInitialize(true)
     Rep := SExpression
@@ -1014,15 +1017,16 @@ NemoComplexField() : Exports == Implementation where
     accuracyBits(x) == jlEvalString(concat(["accuracy_bits(",
       getind(x),")"]))
     trim(x) == junfunc("trim",x)
-    uniqueInteger(x) == --TODO: Julia boolean and tuples
-      ret : JuliaObject := junfunc("unique_integer",x)
+    uniqueInteger(x) == --TODO: JL boolean and tuples
+      ret : JLObject := junfunc("unique_integer",x)
       str: String := jlEvalString(concat(["string(getproperty(",
         getind(ret),",1))"]))
       str = "true" => jlref(concat(["getproperty(",
-        getind(ret),",2)"]))$NemoInteger
+        getind(ret),",2)"]))$NMInteger
       "failed"
 
-    jlNemoRing() == "NCF"
+    jlNMRing() == "NCF"
+    jlObject() == "NCF"
 
     0    == jlref("zero(NCF)")
     1    == jlref("one(NCF)")
@@ -1040,15 +1044,15 @@ NemoComplexField() : Exports == Implementation where
     exact? x == junbfunc("is_exact", x)
     overlaps?(x,y) == jbinbfunc("overlaps", x, y)
     contains?(x : %, y : %) == jbinbfunc("contains", x, y)
-    contains?(x : %, y : NemoInteger) == jbinbfunc("contains", x, y)
-    contains?(x : %, y : NemoFraction(NemoInteger)) == jbinbfunc("contains", x, y)
+    contains?(x : %, y : NMInteger) == jbinbfunc("contains", x, y)
+    contains?(x : %, y : NMFraction(NMInteger)) == jbinbfunc("contains", x, y)
     containsZero? x == junbfunc("contains_zero", x)
 
     x + y == jbinfunc("+", x, y)
     x - y == jbinfunc("-", x, y)
     - x   == junfunc("-", x)
     x : % * y : % == jbinfunc("*", x, y)
-    x : NemoInteger * y : % == jbinfunc("*", x, y)
+    x : NMInteger * y : % == jbinfunc("*", x, y)
     x : Integer * y : % == jlref(concat([string(x), "*", getind(y)]))
     x : PositiveInteger * y : % == jlref(concat([string(x), "*", getind(y)]))
     x : NonNegativeInteger * y : % == jlref(concat([string(x), "*", getind(y)]))
@@ -1061,7 +1065,7 @@ NemoComplexField() : Exports == Implementation where
     x : % / y : Integer == jlref(concat([getind(x), "/", string(y)]))
     x ^ y : Integer == jlref(concat [getind(x), "^", string(y)])
     x ^ y : Fraction(Integer) ==
-      jbinfunc("^", x, coerce(y)@NemoFraction(NemoInteger))
+      jbinfunc("^", x, coerce(y)@NMFraction(NMInteger))
     recip(x) ==
       zero?(x) => "failed"
       junfunc("inv",x) pretend %
@@ -1089,10 +1093,10 @@ NemoComplexField() : Exports == Implementation where
     tanh(x)  == junfunc("tanh",x)
     coth(x)  == junfunc("coth",x)
 
-    Gamma(x)  == jlref(concat ["Nemo.gamma(", getind(x),")"])
-    Gamma(x,y) == jlref(concat ["Nemo.gamma(",getind(x),",",getind(y)])
-    hurwitzZeta(x,y) == jlref(concat ["Nemo.zeta(",getind(x),",",getind(y)])
-    polygamma(x,y) == jlref(concat ["Nemo.polygamma(",getind(x),",",getind(y)])
+    Gamma(x)  == jlref(concat ["NM.gamma(", getind(x),")"])
+    Gamma(x,y) == jlref(concat ["NM.gamma(",getind(x),",",getind(y)])
+    hurwitzZeta(x,y) == jlref(concat ["NM.zeta(",getind(x),",",getind(y)])
+    polygamma(x,y) == jlref(concat ["NM.polygamma(",getind(x),",",getind(y)])
 
     airyAi(x) == junfunc("airy_ai", x)
     airyBi(x) == junfunc("airy_bi", x)
@@ -1120,7 +1124,7 @@ NemoComplexField() : Exports == Implementation where
 
     guess(a, deg) ==
       jlref(concat(["guess(QQBar,", getind(a), ",",
-        string(deg),")"]))$NemoAlgebraicNumber
+        string(deg),")"]))$NMAlgebraicNumber
 
     complex(r:NRF, i:NRF) == jlref(concat(["NCF(", getind(r),",",getind(i),")"]))
     coerce(jf : JF64) : % == jlref(concat(["NCF(_"", convert(jf),"_")"]))
@@ -1133,7 +1137,7 @@ NemoComplexField() : Exports == Implementation where
       ret := jlref(concat(["NCF(_"", convert(f),"_")"]))
       outputSpacing(tmp)
       ret
-    coerce(an : NemoAlgebraicNumber) == junfunc("NCF", an)
+    coerce(an : NMAlgebraicNumber) == junfunc("NCF", an)
     jncf(s : String) : % == jlref(concat(["NCF(_"", s,"_")"]))
     jncf(r : String, i : String) : % ==
       jlref(concat(["NCF(_"", r, "_",_"", i, "_")"]))

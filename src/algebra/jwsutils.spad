@@ -1,65 +1,65 @@
-)abbrev package JWSUF JuliaWSUtilityFunctions
-++ Generic package for Julia WS based utilities
+)abbrev package JWSUF JLWSUtilityFunctions
+++ Generic package for JL WS based utilities
 ++ Author: G.Vanuxem
 ++ Date Created: July. 2024
 ++ Description:
-++  Julia Wolfram Symbolic utility functions using
+++  JL Wolfram Symbolic utility functions using
 ++  Wolfram Symbolic Transport Protocol.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
-JuliaWSUtilityFunctions() : Exports == Implementation where
+JLWSUtilityFunctions() : Exports == Implementation where
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
   Exports ==> with
-    seedRandom : JuliaWSInteger -> JuliaWSExpression
+    seedRandom : JLWSInteger -> JLWSExpression
     ++ seedRandom(n) reseeds the random number generator with n as seed.
     ++ Returns the random generator state.
-    urand01Real : PositiveInteger -> JuliaWSVector(JuliaWSReal)
-    ++ urand01Real(n) returns a Julia WS vector with uniformly
+    urand01Real : PositiveInteger -> JLWSVector(JLWSReal)
+    ++ urand01Real(n) returns a JL WS vector with uniformly
     ++ distributed random elements in the range 0..1. Convenience function.
-    urand01Real : (PositiveInteger, PositiveInteger) -> JuliaWSMatrix(JuliaWSReal)
-    ++ urand01Real(rows,cols) returns a Julia WS matrix with uniformly
+    urand01Real : (PositiveInteger, PositiveInteger) -> JLWSMatrix(JLWSReal)
+    ++ urand01Real(rows,cols) returns a JL WS matrix with uniformly
     ++ distributed random elements in the range 0..1. Convenience function.
-    urand01Complex : PositiveInteger -> JuliaWSVector(JuliaWSComplex)
-    ++ urand01Complex(n) returns a Julia WS vector with uniformly
+    urand01Complex : PositiveInteger -> JLWSVector(JLWSComplex)
+    ++ urand01Complex(n) returns a JL WS vector with uniformly
     ++ distributed random complex elements in the unit square.
     ++ Convenience function.
     urand01Complex : (PositiveInteger, PositiveInteger) ->
-      JuliaWSMatrix(JuliaWSComplex)
-    ++ urand01Complex(rows,cols) returns a Julia WS matrix with uniformly
+      JLWSMatrix(JLWSComplex)
+    ++ urand01Complex(rows,cols) returns a JL WS matrix with uniformly
     ++ distributed random complex elements in the unit square.
     ++ Convenience function.
-    hankelMatrix : PositiveInteger -> JuliaWSMatrix(JuliaWSInteger)
+    hankelMatrix : PositiveInteger -> JLWSMatrix(JLWSInteger)
     ++ hankelMatrix(n) returns the square Hankel matrix with integer
     ++ coefficients.
-    hilbertMatrix : PositiveInteger -> JuliaWSMatrix(JuliaWSRational)
+    hilbertMatrix : PositiveInteger -> JLWSMatrix(JLWSRational)
     ++ hilbertMatrix(n) returns the square Hilbert matrix.
-    gaussianMatrix : JuliaWSReal -> JuliaWSMatrix(JuliaWSReal)
+    gaussianMatrix : JLWSReal -> JLWSMatrix(JLWSReal)
     ++ gaussianMatrix(r) returns the Gaussian matrix with radius r.
     ++ For example:
     ++ \example{gaussianMatrix "2.2"}
-    vandermondeMatrix : JuliaWSList(JuliaWSExpression) ->
-                          JuliaWSMatrix(JuliaWSExpression)
+    vandermondeMatrix : JLWSList(JLWSExpression) ->
+                          JLWSMatrix(JLWSExpression)
     ++ vandermondeMatrix(lvars) returns a Vandermonde matrix with nodes
     ++ from lvars.
-    vandermondeMatrix : (JuliaWSList(JuliaWSExpression), JuliaWSInteger)
-                          -> JuliaWSMatrix(JuliaWSExpression)
+    vandermondeMatrix : (JLWSList(JLWSExpression), JLWSInteger)
+                          -> JLWSMatrix(JLWSExpression)
     ++ vandermondeMatrix(lvars, m) returns a Vandermonde matrix with nodes
     ++ from lvars and m columns.
-    identityMatrix : PositiveInteger ->  JuliaWSMatrix(JuliaWSInteger)
+    identityMatrix : PositiveInteger ->  JLWSMatrix(JLWSInteger)
     ++ identityMatrix(n) returns the identity matrix of size n.
     zeroMatrix : (PositiveInteger, PositiveInteger) ->
-                    JuliaWSMatrix(JuliaWSInteger)
+                    JLWSMatrix(JLWSInteger)
     ++ \spad{zeroMatrix(m, n)} returns an m-by-n zero matrix.
-    range : JuliaWSInteger -> JuliaWSList(JuliaWSInteger)
+    range : JLWSInteger -> JLWSList(JLWSInteger)
     ++ range(n) returns a WS agg that ranges from 1 to n.
     ++ For example:
     ++ \example{range(10)@JWSLIST(JWSINT)}
-    range : (JuliaWSInteger, JuliaWSInteger) -> JuliaWSList(JuliaWSInteger)
+    range : (JLWSInteger, JLWSInteger) -> JLWSList(JLWSInteger)
     ++ range(n,m) returns a WS agg that ranges from n to m.
-    range : (JuliaWSInteger, JuliaWSInteger, JuliaWSInteger) ->
-                                                JuliaWSList(JuliaWSInteger)
+    range : (JLWSInteger, JLWSInteger, JLWSInteger) ->
+                                                JLWSList(JLWSInteger)
     ++ range(n,m,d) returns a WS agg that ranges from n to m with step d.
   
-    jlWSExport : (String, JuliaWSExpression) -> JuliaWSExpression
+    jlWSExport : (String, JLWSExpression) -> JLWSExpression
     ++ jlWSExport(file.ext, obj) exports the object obj to the file file.ext.
     ++ The extension ext will determine the saved format. A WS expression for
     ++ example can be exported in an image file, it will be saved in the WS
@@ -69,8 +69,8 @@ JuliaWSUtilityFunctions() : Exports == Implementation where
     --outputForm
     --*Form
     -- TODO: OutputForm?
-    jlWSExportString : (JuliaWSExpression, JuliaWSExpression)
-      -> JuliaWSExpression
+    jlWSExportString : (JLWSExpression, JLWSExpression)
+      -> JLWSExpression
     ++ jlWSExportString(expr, jWSString(format)) returns the string
     ++ representation of expr in the format form. Use toString or string
     ++ to obtain the FriCAS String.
@@ -79,7 +79,7 @@ JuliaWSUtilityFunctions() : Exports == Implementation where
     ++ \example{jWSExpr \"Probability[x < 1, x \\[Distributed] NormalDistribution[]]\"}
     ++ \example{string jlWSExportString(%,jWSString "TeX")}
 
-    jlWSPlot : (JuliaWSExpression, JuliaWSExpression) -> JuliaWSExpression
+    jlWSPlot : (JLWSExpression, JLWSExpression) -> JLWSExpression
     ++ jlWSPlot(expr, options) is the WS plot function. Since it should be run
     ++ in a Wolfram notebook or any other supported graphical interfaces,
     ++ the Wolfram Jupyter "plugin" for example, it is left to the user for
@@ -87,8 +87,8 @@ JuliaWSUtilityFunctions() : Exports == Implementation where
     ++ \example{x:=jWSExpr(x);opt:=jWSList [x,-5,5]}
     ++ \example{jlWSExport("sin.png", jlWSPlot(sin(x),opt))}
   Implementation ==> add
-    import JuliaWSInteger
-    import from JuliaWSList(JuliaWSInteger)
+    import JLWSInteger
+    import from JLWSList(JLWSInteger)
   
     junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
     jbinfunc(func,a,b) ==>
@@ -102,25 +102,25 @@ JuliaWSUtilityFunctions() : Exports == Implementation where
 
     seedRandom(n) == junfunc("W_"SeedRandom_"(", n)
     jlWSExport(file, options) ==
-      savefile : JuliaWSExpression := coerce(concat(["_"", file, "_""]))
+      savefile : JLWSExpression := coerce(concat(["_"", file, "_""]))
       jbinfunc("W_"Export_"(", savefile, options)
     jlWSExportString(expr, format) ==
-      jlEval(jbinfunc("W_"ExportString_"(", expr, format) pretend JuliaWSExpression)
+      jlEval(jbinfunc("W_"ExportString_"(", expr, format) pretend JLWSExpression)
     jlWSPlot(expr, options) == jbinfunc("W_"Plot_"(", expr, options)
 
     urand01Real(rows,cols) ==
-      range := jWSList("{0,1}")@JuliaWSList(JuliaWSInteger)
-      dims := jWSList([jWSInt(rows),jWSInt(cols)])@JuliaWSList(JuliaWSInteger)
+      range := jWSList("{0,1}")@JLWSList(JLWSInteger)
+      dims := jWSList([jWSInt(rows),jWSInt(cols)])@JLWSList(JLWSInteger)
       jbinfunc("W_"RandomReal_"(", range, dims)
     urand01Real(n) ==
-      range := jWSList("{0,1}")@JuliaWSList(JuliaWSInteger)
+      range := jWSList("{0,1}")@JLWSList(JLWSInteger)
       jbinfunc("W_"RandomReal_"(", range, jWSInt n)
     urand01Complex(n) ==
-      range := jWSList("1+I")@JuliaWSList(JuliaWSInteger)
+      range := jWSList("1+I")@JLWSList(JLWSInteger)
       jbinfunc("W_"RandomComplex_"(", range, jWSInt n)
     urand01Complex(rows,cols) ==
-      range := jWSList("1+I")@JuliaWSList(JuliaWSInteger)
-      dims := jWSList([jWSInt(rows),jWSInt(cols)])@JuliaWSList(JuliaWSInteger)
+      range := jWSList("1+I")@JLWSList(JLWSInteger)
+      dims := jWSList([jWSInt(rows),jWSInt(cols)])@JLWSList(JLWSInteger)
       jbinfunc("W_"RandomComplex_"(", range, dims)
 
     range(n) ==
@@ -137,6 +137,6 @@ JuliaWSUtilityFunctions() : Exports == Implementation where
     vandermondeMatrix(lvars, m) == jbinfunc("W_"VandermondeMatrix_"(", lvars, m)
     identityMatrix(n) == junfunc("W_"IdentityMatrix_"(", jWSInt(n))
     zeroMatrix(m,n) == 
-      jbinfunc("W_"ConstantArray_"(", 0$JuliaWSInteger,
-        jWSList([jWSInt(m), jWSInt(n)])@JuliaWSList(JuliaWSInteger))
+      jbinfunc("W_"ConstantArray_"(", 0$JLWSInteger,
+        jWSList([jWSInt(m), jWSInt(n)])@JLWSList(JLWSInteger))
 

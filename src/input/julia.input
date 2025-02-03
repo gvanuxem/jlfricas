@@ -2,11 +2,11 @@
 )set mess type off
 )expose UnittestCount UnittestAux Unittest
 
-testsuite "Julia"
-testcase "Julia availability"
+testsuite "JL"
+testcase "JL availability"
 testTrue("jlInitialize(true)")
 
-testcase "JuliaStringUtilities"
+testcase "JLStringUtilities"
 str := "hello"
 testTrue("jlRegexMatch?(_"hello world_", jlRegex(str))")
 testEquals("jlRegexMatch(_"hello world_" , jlRegex(str))", "_"hello_"")
@@ -19,27 +19,27 @@ testEquals("qelt(ret, _"hours_")", "_"18_"")
 testEquals("jlRegexReplace(_"herro world_", jlRegex(_"rr_"),_
     jlSubstitute(_"ll_"))", "_"hello world_"")
 
-testcase "JuliaSymbol"
+testcase "JLSymbol"
 sym   := jsym "mysym";
 ssym  := ":mysym"; 
 testEquals("string(sym)","ssym")
 testEquals("coerce(coerce(_"mysym_")@Symbol)@JSYM","sym")
 
-testcase "JuliaInt64"
+testcase "JLInt64"
 testEquals("coerce(0$JI64)@SINT","0$SINT")
 testEquals("coerce(0$SINT)@JI64","0$JI64")
 testEquals("convert(0$JI64)@Integer","0$Integer")
 testEquals("ji64(0$SINT)","0$JI64")
 testEquals("ji64(0$INT)","0$Integer")
 
-testcase "JuliaFloat64"
+testcase "JLFloat64"
 testEquals("coerce(0$JF64)@SF","0$SF")
 testEquals("coerce(0$SF)@JF64","0$JF64")
 testEquals("convert(0$JF64)@Float","0$Float")
 testEquals("jf64(0$SF)","0$JF64")
 testEquals("jf64(0$Integer)","0$JF64")
 
-testcase "JuliaUtilityFunctions"
+testcase "JLUtilityFunctions"
 
 testTrue("jlEvalString(_"isnothing(using LinearAlgebra)_")@Boolean")
 testTrue("jlEvalString(_"isnothing(import LinearAlgebra.svd)_")@Boolean")

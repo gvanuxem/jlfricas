@@ -1,14 +1,14 @@
-)abbrev package JF32LA JuliaF32LinearAlgebra
-++ Linear Algebra functions computed using Julia and its algorithms.
+)abbrev package JF32LA JLF32LinearAlgebra
+++ Linear Algebra functions computed using JL and its algorithms.
 ++ 32 bits version.
-JuliaF32LinearAlgebra() : Exports == Implementation where
-  JF32     ==> JuliaFloat32
-  JI64     ==> JuliaInt64
-  JI64VEC  ==> JuliaInt64Vector
-  JF32VEC  ==> JuliaFloat32Vector
-  JF32MAT  ==> JuliaFloat32Matrix
-  JCF32VEC ==> JuliaComplexF32Vector
-  JCF32MAT ==> JuliaComplexF32Matrix
+JLF32LinearAlgebra() : Exports == Implementation where
+  JF32     ==> JLFloat32
+  JI64     ==> JLInt64
+  JI64VEC  ==> JLInt64Vector
+  JF32VEC  ==> JLFloat32Vector
+  JF32MAT  ==> JLFloat32Matrix
+  JCF32VEC ==> JLComplexF32Vector
+  JCF32MAT ==> JLComplexF32Matrix
   NNI      ==> NonNegativeInteger
   Exports ==> with
     normalize:  JF32VEC -> JF32VEC
@@ -132,8 +132,8 @@ JuliaF32LinearAlgebra() : Exports == Implementation where
     ++ tril!(m) overwrites m with its upper triangular matrix counterpart.
     ++ Returns m.
   Implementation ==> add
-    import from JuliaUtilityFunctions
-    import from JuliaF32ArrayFunctions
+    import from JLUtilityFunctions
+    import from JLF32ArrayFunctions
     jlImport("LinearAlgebra.LAPACK.gesv!")
     jlImport("LinearAlgebra.LAPACK.geev!")
 
@@ -387,16 +387,16 @@ JuliaF32LinearAlgebra() : Exports == Implementation where
       jlApplyFunction("tril!", jlVector(m), nrows(m))
       m
 
-)abbrev package JCF32LA JuliaCF32LinearAlgebra
-++ Linear Algebra functions computed using Julia and its algorithms.
+)abbrev package JCF32LA JLCF32LinearAlgebra
+++ Linear Algebra functions computed using JL and its algorithms.
 ++ 32 bits version.
-JuliaCF32LinearAlgebra() : Exports == Implementation where
-  JF32     ==> JuliaFloat32
-  JI64     ==> JuliaInt64
-  JF32VEC  ==> JuliaFloat32Vector
-  JF32MAT  ==> JuliaFloat32Matrix
-  JCF32VEC ==> JuliaComplexF32Vector
-  JCF32MAT ==> JuliaComplexF32Matrix
+JLCF32LinearAlgebra() : Exports == Implementation where
+  JF32     ==> JLFloat32
+  JI64     ==> JLInt64
+  JF32VEC  ==> JLFloat32Vector
+  JF32MAT  ==> JLFloat32Matrix
+  JCF32VEC ==> JLComplexF32Vector
+  JCF32MAT ==> JLComplexF32Matrix
   NNI      ==> NonNegativeInteger
   Exports ==> with
     normalize:  JCF32VEC -> JCF32VEC
@@ -482,8 +482,8 @@ JuliaCF32LinearAlgebra() : Exports == Implementation where
     ++ log(m) tries to compute the principal matrix logarithm of m.
     ++ Otherwise, returns a non pricipal matrix logarithm of m if possible.
   Implementation ==> add
-    import from JuliaUtilityFunctions
-    import from JuliaF32ArrayFunctions
+    import from JLUtilityFunctions
+    import from JLF32ArrayFunctions
 
     jlImport("LinearAlgebra.LAPACK.gesv!")
     jlImport("LinearAlgebra.LAPACK.geev!")
@@ -664,15 +664,15 @@ JuliaCF32LinearAlgebra() : Exports == Implementation where
       jlApplyFunction!("log", jlVector(ret), jlVector(a), m)
       ret
 
-)abbrev package JF32MTF JuliaF32MatrixTranscendentalFunctions
-++ Linear Algebra functions computed using Julia and its algorithms.
-JuliaF32MatrixTranscendentalFunctions() : Exports == Implementation where
-  JF32     ==> JuliaFloat32
-  JI64     ==> JuliaInt64
-  JF32VEC  ==> JuliaFloat32Vector
-  JF32MAT  ==> JuliaFloat32Matrix
-  JCF32VEC ==> JuliaComplexF32Vector
-  JCF32MAT ==> JuliaComplexF32Matrix
+)abbrev package JF32MTF JLF32MatrixTranscendentalFunctions
+++ Linear Algebra functions computed using JL and its algorithms.
+JLF32MatrixTranscendentalFunctions() : Exports == Implementation where
+  JF32     ==> JLFloat32
+  JI64     ==> JLInt64
+  JF32VEC  ==> JLFloat32Vector
+  JF32MAT  ==> JLFloat32Matrix
+  JCF32VEC ==> JLComplexF32Vector
+  JCF32MAT ==> JLComplexF32Matrix
   NNI      ==> NonNegativeInteger
   Exports ==> with
     sin   : JF32MAT -> JF32MAT
@@ -744,8 +744,8 @@ JuliaF32MatrixTranscendentalFunctions() : Exports == Implementation where
     cis     : JF32MAT -> JCF32MAT
     ++ cis(x) returns exp(%i*x) computed efficiently.
   Implementation ==> add
-    import from JuliaUtilityFunctions
-    import from JuliaF32ArrayFunctions
+    import from JLUtilityFunctions
+    import from JLF32ArrayFunctions
 
     sin(m : JF32MAT) ==
       nr := nrows(m)
@@ -985,12 +985,12 @@ JuliaF32MatrixTranscendentalFunctions() : Exports == Implementation where
       jlApplyFunction!("cis", jlVector(ret), jlVector(m), nr)
       ret
 
-)abbrev package JCF32MTF JuliaComplexF32MatrixTranscendentalFunctions
-++ Linear Algebra functions computed using Julia and its algorithms.
-JuliaComplexF32MatrixTranscendentalFunctions() : Exports == Implementation where
-  JF32     ==> JuliaFloat32
-  JI64     ==> JuliaInt64
-  JCF32MAT ==> JuliaComplexF32Matrix
+)abbrev package JCF32MTF JLComplexF32MatrixTranscendentalFunctions
+++ Linear Algebra functions computed using JL and its algorithms.
+JLComplexF32MatrixTranscendentalFunctions() : Exports == Implementation where
+  JF32     ==> JLFloat32
+  JI64     ==> JLInt64
+  JCF32MAT ==> JLComplexF32Matrix
   NNI      ==> NonNegativeInteger
   Exports ==> with
     sin   : JCF32MAT -> JCF32MAT
@@ -1062,8 +1062,8 @@ JuliaComplexF32MatrixTranscendentalFunctions() : Exports == Implementation where
     cis   : JCF32MAT -> JCF32MAT
     ++ cis(m) returns exp(%i*m) computed efficiently.
   Implementation ==> add
-    import from JuliaUtilityFunctions
-    import from JuliaF32ArrayFunctions
+    import from JLUtilityFunctions
+    import from JLF32ArrayFunctions
 
     sin(m : JCF32MAT) ==
       nr := nrows(m)

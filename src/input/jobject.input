@@ -2,9 +2,9 @@
 )set mess type off
 )expose UnittestCount UnittestAux Unittest
 
-testsuite "Julia Object"
-testcase "JuliaFloat"
-a := identity(10)$JuliaMatrix(JFLOAT);
+testsuite "JL Object"
+testcase "JLFloat"
+a := identity(10)$JLMatrix(JFLOAT);
 b := map(i+->nrand()$JFLOAT,a);
 testTrue("jlApprox?(inverse(b)*b,a)")
 statistics()

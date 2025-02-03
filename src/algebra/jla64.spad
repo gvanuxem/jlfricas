@@ -1,14 +1,14 @@
-)abbrev package JF64LA JuliaF64LinearAlgebra
-++ Linear Algebra functions computed using Julia and its algorithms.
+)abbrev package JF64LA JLF64LinearAlgebra
+++ Linear Algebra functions computed using JL and its algorithms.
 ++ 64 bits version.
-JuliaF64LinearAlgebra() : Exports == Implementation where
-  JF64     ==> JuliaFloat64
-  JI64     ==> JuliaInt64
-  JI64VEC  ==> JuliaInt64Vector
-  JF64VEC  ==> JuliaFloat64Vector
-  JF64MAT  ==> JuliaFloat64Matrix
-  JCF64VEC ==> JuliaComplexF64Vector
-  JCF64MAT ==> JuliaComplexF64Matrix
+JLF64LinearAlgebra() : Exports == Implementation where
+  JF64     ==> JLFloat64
+  JI64     ==> JLInt64
+  JI64VEC  ==> JLInt64Vector
+  JF64VEC  ==> JLFloat64Vector
+  JF64MAT  ==> JLFloat64Matrix
+  JCF64VEC ==> JLComplexF64Vector
+  JCF64MAT ==> JLComplexF64Matrix
   NNI      ==> NonNegativeInteger
   Exports ==> with
     normalize:  JF64VEC -> JF64VEC
@@ -137,8 +137,8 @@ JuliaF64LinearAlgebra() : Exports == Implementation where
     ++ used or the BLAS/LAPACK libraries used to see if that fits
     ++ your needs.
   Implementation ==> add
-    import from JuliaUtilityFunctions
-    import from JuliaF64ArrayFunctions
+    import from JLUtilityFunctions
+    import from JLF64ArrayFunctions
 
     jlImport("LinearAlgebra.peakflops")
     jlImport("LinearAlgebra.LAPACK.gesv!")
@@ -392,16 +392,16 @@ JuliaF64LinearAlgebra() : Exports == Implementation where
       jlApplyFunction("tril!", jlVector(m), nrows(m))
       m
 
-)abbrev package JCF64LA JuliaCF64LinearAlgebra
-++ Linear Algebra functions computed using Julia and its algorithms.
+)abbrev package JCF64LA JLCF64LinearAlgebra
+++ Linear Algebra functions computed using JL and its algorithms.
 ++ 64 bits version.
-JuliaCF64LinearAlgebra() : Exports == Implementation where
-  JF64     ==> JuliaFloat64
-  JI64     ==> JuliaInt64
-  JF64VEC  ==> JuliaFloat64Vector
-  JF64MAT  ==> JuliaFloat64Matrix
-  JCF64VEC ==> JuliaComplexF64Vector
-  JCF64MAT ==> JuliaComplexF64Matrix
+JLCF64LinearAlgebra() : Exports == Implementation where
+  JF64     ==> JLFloat64
+  JI64     ==> JLInt64
+  JF64VEC  ==> JLFloat64Vector
+  JF64MAT  ==> JLFloat64Matrix
+  JCF64VEC ==> JLComplexF64Vector
+  JCF64MAT ==> JLComplexF64Matrix
   NNI      ==> NonNegativeInteger
   Exports ==> with
     normalize:  JCF64VEC -> JCF64VEC
@@ -487,8 +487,8 @@ JuliaCF64LinearAlgebra() : Exports == Implementation where
     ++ log(m) tries to compute the principal matrix logarithm of m.
     ++ Otherwise, returns a non pricipal matrix logarithm of m if possible.
   Implementation ==> add
-    import from JuliaUtilityFunctions
-    import from JuliaF64ArrayFunctions
+    import from JLUtilityFunctions
+    import from JLF64ArrayFunctions
 
     jlImport("LinearAlgebra.LAPACK.gesv!")
     jlImport("LinearAlgebra.LAPACK.geev!")
@@ -669,15 +669,15 @@ JuliaCF64LinearAlgebra() : Exports == Implementation where
       jlApplyFunction!("log", jlVector(ret), jlVector(a), m)
       ret
 
-)abbrev package JF64MTF JuliaF64MatrixTranscendentalFunctions
-++ Linear Algebra functions computed using Julia and its algorithms.
-JuliaF64MatrixTranscendentalFunctions() : Exports == Implementation where
-  JF64     ==> JuliaFloat64
-  JI64     ==> JuliaInt64
-  JF64VEC  ==> JuliaFloat64Vector
-  JF64MAT  ==> JuliaFloat64Matrix
-  JCF64VEC ==> JuliaComplexF64Vector
-  JCF64MAT ==> JuliaComplexF64Matrix
+)abbrev package JF64MTF JLF64MatrixTranscendentalFunctions
+++ Linear Algebra functions computed using JL and its algorithms.
+JLF64MatrixTranscendentalFunctions() : Exports == Implementation where
+  JF64     ==> JLFloat64
+  JI64     ==> JLInt64
+  JF64VEC  ==> JLFloat64Vector
+  JF64MAT  ==> JLFloat64Matrix
+  JCF64VEC ==> JLComplexF64Vector
+  JCF64MAT ==> JLComplexF64Matrix
   NNI      ==> NonNegativeInteger
   Exports ==> with
     sin   : JF64MAT -> JF64MAT
@@ -749,8 +749,8 @@ JuliaF64MatrixTranscendentalFunctions() : Exports == Implementation where
     cis     : JF64MAT -> JCF64MAT
     ++ cis(x) returns exp(%i*x) computed efficiently.
   Implementation ==> add
-    import from JuliaUtilityFunctions
-    import from JuliaF64ArrayFunctions
+    import from JLUtilityFunctions
+    import from JLF64ArrayFunctions
 
     sin(m : JF64MAT) ==
       nr := nrows(m)
@@ -990,12 +990,12 @@ JuliaF64MatrixTranscendentalFunctions() : Exports == Implementation where
       jlApplyFunction!("cis", jlVector(ret), jlVector(m), nr)
       ret
 
-)abbrev package JCF64MTF JuliaComplexF64MatrixTranscendentalFunctions
-++ Linear Algebra functions computed using Julia and its algorithms.
-JuliaComplexF64MatrixTranscendentalFunctions() : Exports == Implementation where
-  JF64     ==> JuliaFloat64
-  JI64     ==> JuliaInt64
-  JCF64MAT ==> JuliaComplexF64Matrix
+)abbrev package JCF64MTF JLComplexF64MatrixTranscendentalFunctions
+++ Linear Algebra functions computed using JL and its algorithms.
+JLComplexF64MatrixTranscendentalFunctions() : Exports == Implementation where
+  JF64     ==> JLFloat64
+  JI64     ==> JLInt64
+  JCF64MAT ==> JLComplexF64Matrix
   NNI      ==> NonNegativeInteger
   Exports ==> with
     sin   : JCF64MAT -> JCF64MAT
@@ -1067,8 +1067,8 @@ JuliaComplexF64MatrixTranscendentalFunctions() : Exports == Implementation where
     cis   : JCF64MAT -> JCF64MAT
     ++ cis(m) returns exp(%i*m) computed efficiently.
   Implementation ==> add
-    import from JuliaUtilityFunctions
-    import from JuliaF64ArrayFunctions
+    import from JLUtilityFunctions
+    import from JLF64ArrayFunctions
 
     sin(m : JCF64MAT) ==
       nr := nrows(m)

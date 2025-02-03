@@ -1,21 +1,21 @@
-)abbrev package JUF JuliaUtilityFunctions
-++ Utility package for Julia related data.
+)abbrev package JUF JLUtilityFunctions
+++ Utility package for JL related data.
 ++ Author: G. Vanuxem
 ++ Date Created:
 ++ Description:
-++  This package provides different Julia utility functions.
-JuliaUtilityFunctions() : Exports == Implementation where
+++  This package provides different JL utility functions.
+JLUtilityFunctions() : Exports == Implementation where
   NNI       ==> NonNegativeInteger
   PI        ==> PositiveInteger
-  JSYM      ==> JuliaSymbol
-  JI64      ==> JuliaInt64
-  JF32      ==> JuliaFloat32
-  JF64      ==> JuliaFloat64
+  JSYM      ==> JLSymbol
+  JI64      ==> JLInt64
+  JF32      ==> JLFloat32
+  JF64      ==> JLFloat64
   STR       ==> String
   Exports ==> with
     jlInitialize  : Boolean -> Boolean
-    ++ jlInitialize(init) initializes the Julia environment if init is true,
-    ++ otherwise clears the Julia environment. Normally, it should
+    ++ jlInitialize(init) initializes the JL environment if init is true,
+    ++ otherwise clears the JL environment. Normally, it should
     ++ not be used since it is automatically called.
     jlUsing      : String -> Boolean
     ++ jlUsing(modpack) loads the module or package modpack
@@ -26,51 +26,51 @@ JuliaUtilityFunctions() : Exports == Implementation where
     ++ modpackfunc and makes its exported name(s) available.
     ++ Returns false if it can not be imported.
     jlInclude    : String -> Boolean
-    ++ jlInclude(file.jl) loads and evaluates the content of the Julia
+    ++ jlInclude(file.jl) loads and evaluates the content of the JL
     ++ file file.jl in the current global scope.
     jlGCCollect : () -> Void
-    ++ jlGCCollect() forces a Julia garbage collector run.
-    jlDefined?    : JuliaSymbol -> Boolean
-    ++ jlDefined?(sym) checks whether or not sym is defined in Julia.
+    ++ jlGCCollect() forces a JL garbage collector run.
+    jlDefined?    : JLSymbol -> Boolean
+    ++ jlDefined?(sym) checks whether or not sym is defined in JL.
     jlDefined?    : String -> Boolean
-    ++ jlDefined?(str) checks whether or not str is defined in Julia.
+    ++ jlDefined?(str) checks whether or not str is defined in JL.
 
     jlAddPackage  : String -> Void
-    ++ jlAddPackage(package) add package to Julia project.
+    ++ jlAddPackage(package) add package to JL project.
 
-    jlSeed! : JuliaInt64 -> Void
-    ++ jlSeed!(n) reseeds the Julia random number generator,
+    jlSeed! : JLInt64 -> Void
+    ++ jlSeed!(n) reseeds the JL random number generator,
     ++ if applicable.
 
     jlRandomString : PI -> String
     ++ jlRandomString(n) returns a random string of n characters.
 
     jlEvalString   : STR -> Void
-    ++ jlEvalString(str) evaluates str in Julia with no output.
+    ++ jlEvalString(str) evaluates str in JL with no output.
     jlEvalString   : STR -> Boolean
-    ++ jlEvalString(str) evaluates str in Julia,
+    ++ jlEvalString(str) evaluates str in JL,
     ++ where the output is a Boolean.
     jlEvalString   : STR -> JI64
-    ++ jlEvalString(str) evaluates str in Julia,
-    ++ where the output is a JuliaInt64.
+    ++ jlEvalString(str) evaluates str in JL,
+    ++ where the output is a JLInt64.
     jlEvalString   : STR -> Integer
-    ++ jlEvalString(str) evaluates str in Julia,
+    ++ jlEvalString(str) evaluates str in JL,
     ++ where the output is an Integer.
     jlEvalString   : STR -> NonNegativeInteger
-    ++ jlEvalString(str) evaluates str in Julia,
+    ++ jlEvalString(str) evaluates str in JL,
     ++ where the output is an Non Negative Integer.
     jlEvalString   : STR -> PositiveInteger
-    ++ jlEvalString(str) evaluates str in Julia,
+    ++ jlEvalString(str) evaluates str in JL,
     ++ where the output is an Positive Integer.
     jlEvalString   : STR -> STR
-    ++ jlEvalString(str) evaluates str in Julia,
+    ++ jlEvalString(str) evaluates str in JL,
     ++ where the output is a String.
     jlEvalString   : STR -> JF32
-    ++ jlEvalString(str) evaluates str in Julia,
-    ++ where the output is a JuliaFloat32.
+    ++ jlEvalString(str) evaluates str in JL,
+    ++ where the output is a JLFloat32.
     jlEvalString   : STR -> JF64
-    ++ jlEvalString(str) evaluates str in Julia,
-    ++ where the output is a JuliaFloat64.
+    ++ jlEvalString(str) evaluates str in JL,
+    ++ where the output is a JLFloat64.
 
   Implementation ==> add
     import from String
@@ -79,7 +79,7 @@ JuliaUtilityFunctions() : Exports == Implementation where
     
     defined?(func) ==>
       not jlDefined?(func) =>
-        error concat(string(func), " is not defined in Julia")
+        error concat(string(func), " is not defined in JL")
 
     jlInitialize(init) ==
       if init then init_julia_env()$Lisp
@@ -90,7 +90,7 @@ JuliaUtilityFunctions() : Exports == Implementation where
     jlInclude(file) == jl_include_file(file)$Lisp
     jlGCCollect() == jl_gc_collect()$Lisp
 
-    jlDefined?(sym : JuliaSymbol) ==
+    jlDefined?(sym : JLSymbol) ==
       jlEvalString(concat(["isdefined(Main,", string(sym),")"]))
     jlDefined?(str : String) ==
       lsym := split(str, char ".")
@@ -119,14 +119,14 @@ JuliaUtilityFunctions() : Exports == Implementation where
     jlEvalString(s : STR)   : JF32    == jl_flt_eval_string(s)$Lisp
     jlEvalString(s : STR)   : JF64    == jl_dbl_eval_string(s)$Lisp
 
-)abbrev package JSTRU JuliaStringUtilities
-++ Utility package for strings using Julia facilities
+)abbrev package JSTRU JLStringUtilities
+++ Utility package for strings using JL facilities
 ++ Author: G. Vanuxem
 ++ Date Created: Oct, 2024
 ++ Description:
-++  This package provides Julia facilities that operate on
+++  This package provides JL facilities that operate on
 ++  strings.
-JuliaStringUtilities() : Exports == Implementation where
+JLStringUtilities() : Exports == Implementation where
   STR  ==> String
   PI   ==> PositiveInteger
   NNI  ==> NonNegativeInteger
@@ -136,7 +136,7 @@ JuliaStringUtilities() : Exports == Implementation where
     ++ style within braces (I am {red:here}).
     ++ For example:
     ++ jlMessageStyled("{red:■} {green:■} {yellow:■} {blue:■} {magenta:■} {cyan:■}")
-    jlMessageStyled : (String, JuliaSymbol) -> Void
+    jlMessageStyled : (String, JLSymbol) -> Void
     ++ jlMessageStyled(message, color) print the message with formatted 
     ++ `color` (english color).
     ++ For example
@@ -150,18 +150,18 @@ JuliaStringUtilities() : Exports == Implementation where
     ++ (a string or a regular expression). Equivalent to
     ++ jlSplit(str, delims, 0).
     jlRegex  : String -> String
-    ++ jlRegex(str) returns the String corresponding to a Julia
+    ++ jlRegex(str) returns the String corresponding to a JL
     ++ regular expression, that is, "r_"str_"". Convenience function.
     jlSubstitute  : String -> String
-    ++ jlSubstitute(str) returns the String corresponding to a Julia
+    ++ jlSubstitute(str) returns the String corresponding to a JL
     ++ subtitute expression, that is, "s_"str_"". Convenience function.
     jlLatex  : String -> String
-    ++ jlLatex(str) returns the String corresponding to a Julia
-    ++ LaTeX expression, that is, "L"str"" if your Julia support it
+    ++ jlLatex(str) returns the String corresponding to a JL
+    ++ LaTeX expression, that is, "L"str"" if your JL support it
     ++ (LaTeXStrings package). Convenience function.
     jlStyled  : String -> String
-    ++ jlLatex(str) returns the String corresponding to a Julia
-    ++ LaTeX expression, that is, "styled_"str_"" if your Julia support it.
+    ++ jlLatex(str) returns the String corresponding to a JL
+    ++ LaTeX expression, that is, "styled_"str_"" if your JL support it.
     ++ (StyledStrings official package). Convenience function.
     jlRegexMatch?   : (String, String) -> Boolean
     ++ jlRegexMatch(s, regex) checks if the regular expression matches in s.
@@ -182,12 +182,12 @@ JuliaStringUtilities() : Exports == Implementation where
     ++ starting at index i.
     jlRegexReplace  : (String, String, String) -> String
     ++ jlRegexReplace(str, regex, subst) will replace captured regular expressions
-    ++ in str with subst. More information in String documentation of Julia.
+    ++ in str with subst. More information in String documentation of JL.
     ++ For example:
     ++  jlRegexReplace("hey", jlRegex("$"), jlSubstitute(" you!"))
   Implementation ==> add
-    import from JuliaUtilityFunctions
-    import from JuliaStringUtilities
+    import from JLUtilityFunctions
+    import from JLStringUtilities
     import from AssociationList(String,String)
     jlInitialize(true)
     jlUsing "StyledStrings"
@@ -259,7 +259,7 @@ JuliaStringUtilities() : Exports == Implementation where
         concat(["reg=match(", r, ",_"",
           s, "_",", string(ind), ");"])
       jlEvalString(estr)@Void
-      -- TODO: check bad regex, actually Julia throws error(s).
+      -- TODO: check bad regex, actually JL throws error(s).
       -- if (reg===nothing) ...
       n := jlEvalString("size(reg.captures,1)")@Integer
       for i in n..1 by -1 repeat
@@ -275,32 +275,32 @@ JuliaStringUtilities() : Exports == Implementation where
         "_",", r, "=>", s, ")"])
       jlEvalString(t)@String
 
-)abbrev domain JOBDLINK JuliaObjDynamicLinker
-++ Domain for dynamic linking shared libraries using Julia
+)abbrev domain JOBDLINK JLObjDynamicLinker
+++ Domain for dynamic linking shared libraries using JL
 ++ Author: G.Vanuxem
 ++ Date Created: Oct. 2024
 ++ Description:
-++  Generic Julia objects used for dynamically linking shared libraries.
-JuliaObjDynamicLinker() : Exports == Implementation where
+++  Generic JL objects used for dynamically linking shared libraries.
+JLObjDynamicLinker() : Exports == Implementation where
   INT  ==> Integer
   NNI  ==> NonNegativeInteger
-  JOBJ ==> JuliaObject
+  JOBJ ==> JLObject
   STR  ==> String
-  Exports ==> JuliaObjectType with
+  Exports ==> JLObjectType with
     jlDlCApply : (%, JOBJ) -> JOBJ
     ++ jlDlCApply(func,x) applies the function pointer func to x.
-    ++ The Julia type of x must be compatible with the Libdl
-    ++ Julia module. Type of the returned value is assumed to be
+    ++ The JL type of x must be compatible with the Libdl
+    ++ JL module. Type of the returned value is assumed to be
     ++ the same than the type of x. For example:
     ++ \example{libm:= jlDlOpen "libopenlibm"}
     ++ \example{squareRoot:=jlDlSym(libm,jsym(sqrt))}
     ++ \example{jlDlCApply(squareRoot,jobject("2."))}
     jlDlCApply : (%, STR, JOBJ, STR) -> JOBJ
     ++ jlDlCApply(func, ctype, x, xctype) applies the function
-    ++ pointer func to x given its Julia C type (xctype) or its
-    ++ supported Julia type, for example "Float64" or "Cdouble".
+    ++ pointer func to x given its JL C type (xctype) or its
+    ++ supported JL type, for example "Float64" or "Cdouble".
     ++ Returned value is assumed to be a C type ctype
-    ++ (or any Julia supported types). For example:
+    ++ (or any JL supported types). For example:
     ++ \example{libm:= jlDlOpen "libopenlibm"}
     ++ \example{squareRoot:= jlDlSym(libm,jsym(sqrt))}
     ++ \example{jlDlCApply(squareRoot, "Cdouble" jobject("2."), "Cdouble")}
@@ -315,11 +315,11 @@ JuliaObjDynamicLinker() : Exports == Implementation where
     ++ \example{jlDlCApply(ipower,jobject("2.0"),jobject("7"))}
     jlDlCApply : (%, STR, JOBJ, STR, JOBJ, STR) -> JOBJ
     ++ jlDlCApply(func, ctype, x, xctype, y, xctype) applies the
-    ++ function pointer func to x and y given their Julia C type
-    ++ (xctype and xctype) or their supported Julia type,
+    ++ function pointer func to x and y given their JL C type
+    ++ (xctype and xctype) or their supported JL type,
     ++ for example "Float64" or "Cdouble".
     ++ Returned value is assumed to be a C type ctype
-    ++ (or any Julia supported types).
+    ++ (or any JL supported types).
     jlDlCApply : (%, JOBJ, JOBJ, JOBJ) -> JOBJ
     ++ jlDlCApply(func,x,y,z) applies the function pointer func to x, y and z.
     ++ Returned value is assumed the same type than type of x. Use jlDlCApply
@@ -330,10 +330,10 @@ JuliaObjDynamicLinker() : Exports == Implementation where
     ++ \example{jlDlCApply(hypot3,jobject("2."),jobject("7."),jobjet("9.0"))}
     jlDlCApply : (%, STR, JOBJ, STR, JOBJ, STR, JOBJ, STR) -> JOBJ
     ++ jlDlCApply(func, ctype, x, xctype, y, xctype, z, ztype) applies the
-    ++ function pointer func to x given its Julia C type (xctype) or its
-    ++ supported Julia type, for example "Float64" or "Cdouble".
+    ++ function pointer func to x given its JL C type (xctype) or its
+    ++ supported JL type, for example "Float64" or "Cdouble".
     ++ Returned value is assumed to be a C type ctype
-    ++ (or any Julia supported types).
+    ++ (or any JL supported types).
     jlDlOpen : STR -> %
     ++ jlDlOpen(lib) opens/loads the dynamic shared library lib and
     ++ returns a reference pointer that can
@@ -368,7 +368,7 @@ JuliaObjDynamicLinker() : Exports == Implementation where
     ++ returns a reference pointer that can
     ++ be used to obtain adress to symbols in it using jlDlSym.
     ++ It is up to the user to unload the shared object when it is
-    ++ no longer used. 'throw' determines whether or not Julia throws an error
+    ++ no longer used. 'throw' determines whether or not JL throws an error
     ++ if the library can not be loaded.
     ++ \example{jlDlOpen("libopenlibm", true)}
     jlDlOpen : (STR, JOBJ, Boolean) -> %
@@ -379,7 +379,7 @@ JuliaObjDynamicLinker() : Exports == Implementation where
     ++ no longer used. Does not throw an error if the library can not
     ++ be loaded by default and returns nothing in this case. Use
     ++ the nothing? operation on the returned value if necessary.
-    ++ 'throw' determines whether or not Julia throws an error
+    ++ 'throw' determines whether or not JL throws an error
     ++ if the library can not be loaded.
     ++ \example{jlDlOpen("libopenlibm", jobject "Libdl.RTLD_NOW", false)}
     ++ flags can be one or combinaison of:
@@ -396,7 +396,7 @@ JuliaObjDynamicLinker() : Exports == Implementation where
     jlDlClose : % -> Boolean
     ++ jlDlClose(libPtr) unload explicitely the shared library
     ++ referenced by libPtr.
-    jlDlSym : (%, JuliaSymbol) -> %
+    jlDlSym : (%, JLSymbol) -> %
     ++ jlDlSym(lib, sym) returns the pointer to the symbol sym in
     ++ the library referenced by lib. See jlDlOpen.
     ++ \example{lnk:=jdlink "libjulia"}
@@ -404,11 +404,11 @@ JuliaObjDynamicLinker() : Exports == Implementation where
     ++ \example{TODO}
     jlDlList : () -> JOBJ
     ++ jlDlList() returns the list of loaded shared objects
-    ++ by the currect processus in a JuliaObject referencing
-    ++ a Julia vector of strings.
+    ++ by the currect processus in a JLObject referencing
+    ++ a JL vector of strings.
     jlDlPath : String -> String
     ++ jlDlPath(lib) returns the path of the library lib.
-    ++ Julia warns if it is not found and returns an empty string.
+    ++ JL warns if it is not found and returns an empty string.
     jlDlPath : % -> String
     ++ jlDlPath(lib) returns the path of the loaded library lib.
     jlDlFindLib : String -> String
@@ -421,12 +421,12 @@ JuliaObjDynamicLinker() : Exports == Implementation where
     ++ It is up to the user to unload the shared object when it is
     ++ no longer necessary using jlDlClose.
     ++ \example{jdlink "libopenlibm"}
-    ++ Throws a Julia error if it is not found. Use jlDlOpen
-    ++ for a version with options and/or without Julia errors.
+    ++ Throws a JL error if it is not found. Use jlDlOpen
+    ++ for a version with options and/or without JL errors.
   Implementation ==> add
-    import from JuliaUtilityFunctions
+    import from JLUtilityFunctions
     import from String
-    import from JuliaObject
+    import from JLObject
 
     jlInitialize(true)
     jlUsing("Libdl")

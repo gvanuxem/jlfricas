@@ -1,20 +1,20 @@
-)abbrev domain JWSEXPR JuliaWSExpression
-++ Generic domain for Julia WS expressions
+)abbrev domain JWSEXPR JLWSExpression
+++ Generic domain for JL WS expressions
 ++ Author: G.Vanuxem
 ++ Date Created: May. 2024
 ++ Description:
-++  Julia Wolfram Symbolic expressions using Wolfram Symbolic Transport Protocol.
+++  JL Wolfram Symbolic expressions using Wolfram Symbolic Transport Protocol.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 -- TODO
 -- Reduce or FindInstance
 -- limit(cos(x)-sin(x-1/x),"x->Infinity")
 -- interval({-2, 2})
 -- limit etc. "x=0" assignment vs. jlEval
-JuliaWSExpression() : Exports == Implementation where
+JLWSExpression() : Exports == Implementation where
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-  JWSL  ==> JuliaWSList
-  JF64  ==> JuliaFloat64
-  Exports ==> Join(JuliaWSAggregate(%), PartialOrder, JuliaWSRing,
+  JWSL  ==> JLWSList
+  JF64  ==> JLFloat64
+  Exports ==> Join(JLWSAggregate(%), PartialOrder, JLWSRing,
                   ComplexCategory(%), PartialDifferentialRing(%),
                   ExpressionSpace) with
     AlgebraicallyClosedFunctionSpace(%)
@@ -60,7 +60,7 @@ JuliaWSExpression() : Exports == Implementation where
     ++ For example:
     ++ \example{jlWSDefied? "Sin"}
     ++ => true
-    "^"     : (%, JuliaWSRational) -> %
+    "^"     : (%, JLWSRational) -> %
     ++ ^ is the exponentiation by a rational.
     round : % -> %
     ++ round(x) returns the integer closest to x.
@@ -625,7 +625,7 @@ JuliaWSExpression() : Exports == Implementation where
     ++ polynomialQuotient(p1, p2, x) returns the quotient of p1 and p2 in x. 
     polynomialRemainder : (%, %, %) -> %
     ++ polynomialRemainder(p1,p2, x) returns the remainder of p1 and p2 in x.
-    polynomialQuotientRemainder : (%, %, %) -> JuliaWSList(%)
+    polynomialQuotientRemainder : (%, %, %) -> JLWSList(%)
     ++ polynomialQuotientRemainder(p1,p2,var) returns the quotient and remainder
     ++ of p1 and p2 in x.
 
@@ -705,17 +705,17 @@ JuliaWSExpression() : Exports == Implementation where
     factorTerms : (%, JWSL(%)) -> %
     ++ factorTerms(p, vars) factors the expression or polynomial expr by putting out
     ++ numerical factors without those related to var(s).
-    factorTermsList : % -> JuliaWSList(%)
+    factorTermsList : % -> JLWSList(%)
     ++ factorTermsList(expr) is the counterpart of factorTerms but here returned as
     ++ a list of pair (numerical factor, polynomial factor).
-    factorTermsList : (%, %) -> JuliaWSList(%)
+    factorTermsList : (%, %) -> JLWSList(%)
     ++ factorTermsList(expr, vars) is the counterpart of factorTerms but here
     ++ returned as a list of pair (numerical factor, polynomial factor).
     ++ The numerical factors related to var(s) are not factored.
-    factorList : % -> JuliaWSList(JuliaWSList(%))
+    factorList : % -> JLWSList(JLWSList(%))
     ++ factorList(expr) factor the expression or polynomial expr, but
     ++ returns result as a list of pair (factor, exponent).
-    factorSquareFreeList : % -> JuliaWSList(JuliaWSList(%))
+    factorSquareFreeList : % -> JLWSList(JLWSList(%))
     ++ factorSquareFreeList(expr) factors the expression or polynomial expr
     ++ in square free factors but returns result as a list of pair
     ++ (factor, exponent).
@@ -725,7 +725,7 @@ JuliaWSExpression() : Exports == Implementation where
     ++ irreducible?(p) checks whether or not p is irreducible over Gaussian
     ++ rationals or algebraic extensions.
 
-    decompose : (%, %) -> JuliaWSList(%)
+    decompose : (%, %) -> JLWSList(%)
     ++ decompose(poly, x) is a polynomial decomposition function, here,
     ++ related to x.
     interpolatingPolynomial : (%, %) -> %
@@ -873,7 +873,7 @@ JuliaWSExpression() : Exports == Implementation where
     ++ of the expression expr within tolerance dx.
     jlGreedyEval : Boolean -> Void
     ++ jlGreedyEval(bool) toogles or not to automatic arithmetic operations.
-    ++ Plus[a, a] can become Times[2, a] using or not Julia `weval`.
+    ++ Plus[a, a] can become Times[2, a] using or not JL `weval`.
     jlEval    : (%, String) -> %
     ++ jlEval(expr, param) evaluates expression expr with param as parameter(s).
     ++ For example:
@@ -909,10 +909,10 @@ JuliaWSExpression() : Exports == Implementation where
     quantityMagnitude : % -> %
     ++ quantityMagnitude(val) returns magnitude of val.
 
-    jlDisplay : JuliaWSExpression -> JuliaWSExpression
+    jlDisplay : JLWSExpression -> JLWSExpression
     ++ jlDisplay(expr) returns the traditional form of expr:
     ++ jWSExpr "Format[Sin[x]]" => sin(x)
-    jlDisplay : (JuliaWSExpression, JuliaWSExpression) -> JuliaWSExpression
+    jlDisplay : (JLWSExpression, JLWSExpression) -> JLWSExpression
     ++ jlDisplay(expr, form) returns the `form` form of expr:
     ++ jWSExpr "Format[Sin[x], TeXForm]" => \sin x())
     matrixForm : % -> %
@@ -939,8 +939,8 @@ JuliaWSExpression() : Exports == Implementation where
     ++ replaceAll(expr, rule) applies rule(s) to expr.
     replaceRepeated : (%, %) -> %
     ++ replaceRepeated(expr, rule) applies rule(s) to expr, but repeatedly.
-    retractIfCan : % -> Union(JuliaFloat64, "failed")
-    ++ retractIfCan(expr) retracts expr to a JuliaFloat64 if it can be retracted
+    retractIfCan : % -> Union(JLFloat64, "failed")
+    ++ retractIfCan(expr) retracts expr to a JLFloat64 if it can be retracted
     ++ to a 64 bits machine float.
     retractIfCan : % -> Union(DoubleFloat, "failed")
     ++ retractIfCan(expr) retracts expr to a DoubleFloat if it can be retracted
@@ -956,28 +956,28 @@ JuliaWSExpression() : Exports == Implementation where
     ++ retract(expr) tries to retract expr to an Expression(Integer).
     ++ Throws an error otherwise.
     coerce  : Integer  -> %
-    ++ coerce(z) coerces the integer z to a JuliaWSExpression.
+    ++ coerce(z) coerces the integer z to a JLWSExpression.
     ++ Convenience function.
     coerce   : Complex(Integer) -> % -- %i operations for example
-    ++ coerce(gi) coerces gi to a JuliaWSExpression. Convenience function.
+    ++ coerce(gi) coerces gi to a JLWSExpression. Convenience function.
     coerce  : Fraction(Integer)  -> %
-    ++ coerce(q) coerces the rational q to a JuliaWSExpression.
+    ++ coerce(q) coerces the rational q to a JLWSExpression.
     ++ Convenience function.
     coerce  : Float  -> %
-    ++ coerce(f) coerces the floating point number f to a JuliaWSExpression.
+    ++ coerce(f) coerces the floating point number f to a JLWSExpression.
     ++ Convenience function.
     coerce  : String  -> %
-    ++ coerce(str) coerces the string str to a JuliaWSExpression
+    ++ coerce(str) coerces the string str to a JLWSExpression
     ++ evaluating str as a Wolfram Symbolic Language Expression.
     ++ For example:
     ++ \example{expr := "Sqrt[x]"::JWSEXPR;jlEval(expr,"x=2.0")}
     -- The following breaks build process in src/doc and likely in src/input
     coerce : Symbol -> %
-    ++ coerce(sym) coerces sym to a JuliaWSExpression.
-    coerce : JuliaWSSymbol -> %
-    ++ coerce(sym) coerces sym to a JuliaWSExpression.
+    ++ coerce(sym) coerces sym to a JLWSExpression.
+    coerce : JLWSSymbol -> %
+    ++ coerce(sym) coerces sym to a JLWSExpression.
     coerce : List(%) -> %
-    ++ coerce(list) coerces list of JuliaWSExpression.
+    ++ coerce(list) coerces list of JLWSExpression.
     jlWSPrecision : % -> %
     ++ jlWSPrecision get precision of expr.
     jlWSAccuracy : % -> %
@@ -1004,24 +1004,24 @@ JuliaWSExpression() : Exports == Implementation where
     ++  jWSData(sym, prop) returns the property of sym.
     jWSData : (%, %, %) -> %
     ++ jWSData(sym, prop, ann) returns the annotation for the property of sym.
-    jWSTable : (%, %) -> JuliaWSList(%)
+    jWSTable : (%, %) -> JLWSList(%)
     ++ jWSTable(expr, range) applies the expr to the define range.
-    jWSTable : (%, %, %) -> JuliaWSList(JuliaWSList(%))
+    jWSTable : (%, %, %) -> JLWSList(JLWSList(%))
     ++ jWSTable(expr, range1, range2) applies the expr to the define ranges.
     jWSRule : (%,  %) -> %
-    ++ jWSRule(lhs,rhs) returns the Julia WS rule lhs->rhs.
+    ++ jWSRule(lhs,rhs) returns the JL WS rule lhs->rhs.
     jWSEqual : (%,  %) -> %
-    ++ jWSEqual(lhs,rhs) returns the Julia WS equality lhs == rhs.
+    ++ jWSEqual(lhs,rhs) returns the JL WS equality lhs == rhs.
     jWSNotEqual : (%,  %) -> %
-    ++ jWSNotEqual(lhs,rhs) returns the Julia WS inequality lhs != rhs.
+    ++ jWSNotEqual(lhs,rhs) returns the JL WS inequality lhs != rhs.
     jWSLess : (%,  %) -> %
-    ++ jWSLess(lhs,rhs) returns the Julia WS inequality lhs < rhs.
+    ++ jWSLess(lhs,rhs) returns the JL WS inequality lhs < rhs.
     jWSLessEqual : (%,  %) -> %
-    ++ jWSLessEqual(lhs,rhs) returns the Julia WS inequality lhs <= rhs.
+    ++ jWSLessEqual(lhs,rhs) returns the JL WS inequality lhs <= rhs.
     jWSGreater : (%,  %) -> %
-    ++ jWSGreater(lhs,rhs) returns the Julia WS inequality lhs > rhs.
+    ++ jWSGreater(lhs,rhs) returns the JL WS inequality lhs > rhs.
     jWSGreaterEqual : (%,  %) -> %
-    ++ jWSGreaterEqual(lhs,rhs) returns the Julia WS inequality lhs >= rhs.
+    ++ jWSGreaterEqual(lhs,rhs) returns the JL WS inequality lhs >= rhs.
     jWSQuantity : % -> %
     ++ jWSQuantity(jWSString(u)) returns quantity unit u of 1.
     ++ For example:
@@ -1033,30 +1033,30 @@ JuliaWSExpression() : Exports == Implementation where
     jWSString : String -> %
     ++ jWSString(str) returns str as a WS String. 
     jWSExpr : Symbol -> %
-    ++ jWSExpr(sym) coerces sym to a JuliaWSExpression.
+    ++ jWSExpr(sym) coerces sym to a JLWSExpression.
     jWSExpr : Integer -> %
-    ++ jWSExpr(z) returns the Integer z as a JuliaWSExpression.
+    ++ jWSExpr(z) returns the Integer z as a JLWSExpression.
     jWSExpr : Fraction Integer -> %
-    ++ jWSExpr(q)  returns the Fraction(Integer) q as a JuliaWSExpression.
+    ++ jWSExpr(q)  returns the Fraction(Integer) q as a JLWSExpression.
     jWSExpr : DoubleFloat -> %
-    ++ jWSExpr(r)  returns the DoubleFloat as a JuliaWSExpression.
-    jWSExpr : JuliaFloat64 -> %
-    ++ jWSExpr(r)  returns the JuliaFloat64  as a JuliaWSExpression.
+    ++ jWSExpr(r)  returns the DoubleFloat as a JLWSExpression.
+    jWSExpr : JLFloat64 -> %
+    ++ jWSExpr(r)  returns the JLFloat64  as a JLWSExpression.
     jWSExpr : Float -> %
-    ++ jWSExpr(r)  returns the Float r as a JuliaWSExpression.
+    ++ jWSExpr(r)  returns the Float r as a JLWSExpression.
     jWSExpr : List(%) -> %
-    ++ jWSExpr(list) returns the list of JuliaWSExpression
-    ++ as a JuliaWSExpression.
+    ++ jWSExpr(list) returns the list of JLWSExpression
+    ++ as a JLWSExpression.
     jWSExpr : String -> %
-    ++ jWSExpr(str) constructs str as a JuliaWSExpression evaluating
+    ++ jWSExpr(str) constructs str as a JLWSExpression evaluating
     ++ str as a Wolfram Symbolic Language Expression.
     ++ For example:
     ++ \example{jWSExpr "Factorial[5]"}
     ++ \example{jWSExpr "3.14159"}
     ++ \example{jWSExpr "Today"}
-  Implementation ==> JuliaObject add
-    import from JuliaUtilityFunctions
-    import from JuliaStringUtilities
+  Implementation ==> JLObject add
+    import from JLUtilityFunctions
+    import from JLStringUtilities
 
     jbinop(op,a,b) ==> jlref(concat(["weval(", getind(a), op, getind(b),")"]))
     junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
@@ -1073,7 +1073,7 @@ JuliaWSExpression() : Exports == Implementation where
     error1(msg, f) ==> error concat [msg, " ", toString f]
 
     if not jlUsing("MathLink") then
-      error "The Julia MathLink package is not installed."
+      error "The JL MathLink package is not installed."
     jlEvalString("import MathLink: WExpr, WSymbol, WReal, WRational, WInteger")
     
     Rep := SExpression
@@ -1113,7 +1113,7 @@ JuliaWSExpression() : Exports == Implementation where
     real(z)      == junfunc("W_"Re_"(", z)
     imag(z)      == junfunc("W_"Im_"(", z)
 
-    WS : JuliaWSSymbol := WString()
+    WS : JLWSSymbol := WString()
 
     defined?(x) == junfunc("W_"NameQ_"(", x) = WTrue()
     member?(list, expr) == jbinfunc("W_"MemberQ_"(", list, expr) = WTrue() 
@@ -1153,15 +1153,15 @@ JuliaWSExpression() : Exports == Implementation where
     x : Integer * y : % == jbinop("*", jWSExpr(x), y)
     x : PositiveInteger * y : % == jbinop("*", jWSExpr(x), y)
     x : NonNegativeInteger * y : % == jbinop("*", jWSExpr(x), y)
-    x : % * y : Fraction(Integer) == jbinop("*", x, coerce(y)@JuliaWSRational)
-    x : Fraction(Integer) * y : % == jbinop("*", coerce(x)@JuliaWSRational, y)
+    x : % * y : Fraction(Integer) == jbinop("*", x, coerce(y)@JLWSRational)
+    x : Fraction(Integer) * y : % == jbinop("*", coerce(x)@JLWSRational, y)
     x : % / y : % == jbinop("/", x, y)
     x : % ^ y : % == jbinop("^", x, y)
     x : % ^ y : Integer == jbinop("^", x, coerce(y))
     x : % ^ y : PositiveInteger == jbinop("^", x, coerce(y))
     x : % ^ y : NonNegativeInteger == jbinop("^", x, coerce(y))
-    x : % ^ q : JuliaWSRational == jbinop("^", x, q)
-    x : % ^ q : Fraction(Integer) == jbinop("^", x, coerce(q)@JuliaWSRational)
+    x : % ^ q : JLWSRational == jbinop("^", x, q)
+    x : % ^ q : Fraction(Integer) == jbinop("^", x, coerce(q)@JLWSRational)
 
     round(x)   == junfunc("W_"Round_"(", x)
     ceiling(x) == junfunc("W_"Ceiling_"(", x)
@@ -1732,7 +1732,7 @@ JuliaWSExpression() : Exports == Implementation where
     toExpression(expr) == junfunc("W_"ToExpression_"(", jWSString(expr))
     toExpression(expr, form) == jbinfunc("W_"ToExpression_"(", jWSString(expr), form)
     toExpression(expr, form, h) == jterfunc("W_"ToExpression_"(", jWSString(expr), form, h)
-    retractIfCan(expr : %) : Union(JuliaFloat64, "failed") ==
+    retractIfCan(expr : %) : Union(JLFloat64, "failed") ==
       jlType(expr) = "Float64" => jlEvalString(getind(expr))
       "failed"
     retractIfCan(expr : %) : Union(DoubleFloat, "failed") ==
@@ -1768,14 +1768,14 @@ JuliaWSExpression() : Exports == Implementation where
     --string(expr) : String == toString expr
     --convert(expr) : String == toString expr
     coerce(sym : Symbol) == jlref(concat(["W_`", string(sym),  "_`"]))
-    coerce(sym : JuliaWSSymbol) == sym pretend %
+    coerce(sym : JLWSSymbol) == sym pretend %
     coerce(i : Integer) == jlref(concat(["WInteger(_"", string(i), "_")"]))
     coerce(z : Complex(Integer)) ==
       jlref(concat(["weval(W_"Complex_"(",
-        getind(coerce(real(z))@JuliaWSInteger),",",
-          getind(coerce(imag(z))@JuliaWSInteger),"))"]))
-    coerce(q : Fraction(Integer)) == jWSRat(q)$JuliaWSRational pretend %
-    coerce(r : Float) == jWSReal(r)$JuliaWSReal pretend %
+        getind(coerce(real(z))@JLWSInteger),",",
+          getind(coerce(imag(z))@JLWSInteger),"))"]))
+    coerce(q : Fraction(Integer)) == jWSRat(q)$JLWSRational pretend %
+    coerce(r : Float) == jWSReal(r)$JLWSReal pretend %
     coerce(str : String) == jlref(concat(["W_`", str, "_`"]))
     coerce(l : List(%)) : % ==
       -- Temporary (and dirty) hack
@@ -1813,10 +1813,10 @@ JuliaWSExpression() : Exports == Implementation where
     jWSQuantity(m,u) == jbinfunc("W_"Quantity_"(", m, u)
     jWSString(str) == jlref(concat(["W_`_"", str, "_"_`"]))
     jWSExpr(i : Integer) == jlref(concat(["WInteger(_"", string(i), "_")"]))
-    jWSExpr(q : Fraction(Integer)) == jWSRat(q)$JuliaWSRational pretend %
-    jWSExpr(r : DoubleFloat) == jWSReal(r)$JuliaWSReal pretend %
-    jWSExpr(r : JuliaFloat64) == jWSReal(r)$JuliaWSReal pretend %
-    jWSExpr(r : Float) == jWSReal(r)$JuliaWSReal pretend %
+    jWSExpr(q : Fraction(Integer)) == jWSRat(q)$JLWSRational pretend %
+    jWSExpr(r : DoubleFloat) == jWSReal(r)$JLWSReal pretend %
+    jWSExpr(r : JLFloat64) == jWSReal(r)$JLWSReal pretend %
+    jWSExpr(r : Float) == jWSReal(r)$JLWSReal pretend %
     jWSExpr(sym : Symbol) : % == jlref(concat(["W_`", string(sym),  "_`"]))
     jWSExpr(str : String) : % == jlref(concat(["W_`", str, "_`"]))
     jWSExpr(l : List(%)) : % == coerce(l)

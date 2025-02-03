@@ -3,24 +3,22 @@
 )expose UnittestCount UnittestAux Unittest
 
 testsuite "Julia Nemo"
-testcase "Nemo availability"
-testTrue("jlUsing(_"Nemo_")")
 
-testcase "NemoInteger arithmetic"
+testcase "NMInteger arithmetic"
 a := jnint 2;
 b := jnint 4;
 testEquals("a+a", "b")
-testEquals("a-a", "0$NemoInteger")
+testEquals("a-a", "0$NMInteger")
 testEquals("a*a", "b")
 testEquals("2*a", "b")
 testEquals("a^2", "b")
 
-testcase "Nemo Rational arithmetic"
-a := coerce(2)@NemoFraction(NemoInteger);
-b := coerce(4)@NemoFraction(NemoInteger);
-c := coerce(1/2)@NemoFraction(NemoInteger);
+testcase "NM Rational arithmetic"
+a := coerce(2)@NMFraction(NMInteger);
+b := coerce(4)@NMFraction(NMInteger);
+c := coerce(1/2)@NMFraction(NMInteger);
 testEquals("a+a", "b")
-testEquals("a-a", "0$NemoFraction(NemoInteger)")
+testEquals("a-a", "0$NMFraction(NMInteger)")
 testEquals("a*a", "b")
 testEquals("2*a", "b")
 testEquals("a^2", "b")
@@ -28,7 +26,7 @@ testEquals("b/a", "a")
 testEquals("a/b", "c")
 
 
-testcase "NemoExactCalciumField"
+testcase "NMExactCalciumField"
 a := jnecf(1/2)
 testEquals("asin sin(a)", "a")
 testEquals("cos acos(a)", "a")

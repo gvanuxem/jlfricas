@@ -2,7 +2,7 @@
 )set mess type off
 )expose UnittestCount UnittestAux Unittest
 
-testsuite "JuliaWSReal Special Functions"
+testsuite "JLWSReal Special Functions"
 testcase "MathLink availability"
 testTrue("jlUsing(_"MathLink_")")
 

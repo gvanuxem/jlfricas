@@ -1,12 +1,12 @@
-)abbrev category JWSO JuliaWSObject
-++ Category for Julia WS objects
+)abbrev category JWSO JLWSObject
+++ Category for JL WS objects
 ++ Author: G.Vanuxem
 ++ Date Created: May. 2024
 ++ Description:
-++  Julia Wolfram Symbolic Object category using the Wolfram Symbol
+++  JL Wolfram Symbolic Object category using the Wolfram Symbol
 ++  Transport Protocol.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
-JuliaWSObject() : Category == JuliaObjectType with
+JLWSObject() : Category == JLObjectType with
     jWSInterpret: (String, String) -> %
     ++ jWSInterpret(Type, Expr) interprets Expr to be of type Type
     ++ using the Wolfram Symbolic Language.
@@ -21,16 +21,16 @@ JuliaWSObject() : Category == JuliaObjectType with
     ++ jlNumeric(expr) returns numerical expr.
     jlNumeric : (%, PositiveInteger) -> %
     ++ jlNumeric(expr, prec) returns numerical expr with digits precision prec.
-    jlHead   : % -> JuliaWSSymbol
+    jlHead   : % -> JLWSSymbol
     ++ jlHead(expr) returns the Head type of expr.
     toString : % -> String
     ++ toString(obj) returns its string representation.
   add
-    import from JuliaUtilityFunctions
+    import from JLUtilityFunctions
     import from String
 
     if not jlUsing("MathLink") then
-      error "The Julia MathLink package is not installed."
+      error "The JL MathLink package is not installed."
 
     jlEvalString("Interpret=W_`Interpreter_`")@Void
 
@@ -68,37 +68,37 @@ JuliaWSObject() : Category == JuliaObjectType with
       prec := jlref(concat(["WInteger(_"", string(p), "_")"]))
       jbinfunc("W_"N_"(", expr, prec)
     
-)abbrev category JWSRING JuliaWSRing
-++ Category for Julia WS rings
+)abbrev category JWSRING JLWSRing
+++ Category for JL WS rings
 ++ Author: G.Vanuxem
 ++ Date Created: Jun. 2024
 ++ Description:
-++  Julia Wolfram Symbolic category for rings using the Wolfram Symbol
+++  JL Wolfram Symbolic category for rings using the Wolfram Symbol
 ++  Transport Protocol.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
-JuliaWSRing() : Category == Join(JuliaWSObject, JuliaObjectRing)
+JLWSRing() : Category == Join(JLWSObject, JLObjectRing)
 
-)abbrev category JWSNUM JuliaWSNumber
-++ Category for Julia WS numbers
+)abbrev category JWSNUM JLWSNumber
+++ Category for JL WS numbers
 ++ Author: G.Vanuxem
 ++ Date Created: Jun. 2024
 ++ Description:
-++  Julia Wolfram Symbolic category for numbers using the Wolfram Symbol
+++  JL Wolfram Symbolic category for numbers using the Wolfram Symbol
 ++  Transport Protocol.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
-JuliaWSNumber() : Category == JuliaWSRing
+JLWSNumber() : Category == JLWSRing
 
-)abbrev domain JWSSYM JuliaWSSymbol
-++ Generic domain for Julia WS symbols
+)abbrev domain JWSSYM JLWSSymbol
+++ Generic domain for JL WS symbols
 ++ Author: G.Vanuxem
 ++ Date Created: May. 2024
 ++ Description:
-++  Julia Wolfram Symbolic symbols using Wolfram Symbolic Transport Protocol.
+++  JL Wolfram Symbolic symbols using Wolfram Symbolic Transport Protocol.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
-JuliaWSSymbol() : Exports == Implementation where
+JLWSSymbol() : Exports == Implementation where
   INT ==> Integer
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-  Exports ==> JuliaWSObject with
+  Exports ==> JLWSObject with
     WReal     : () -> %
     ++ WReal() returns the WS Real symbol.
     WComplex  : () -> %
@@ -123,9 +123,9 @@ JuliaWSSymbol() : Exports == Implementation where
     ++ WSymbol() returns the WS Missing symbol.
     coerce  : % -> Boolean
     ++ coerce(sym) coerces sym to a FriCAS boolean.
-    ++ Sym must be a Julia WS boolean
+    ++ Sym must be a JL WS boolean
     coerce : Boolean -> %
-    ++ coerce(bool) coerces bool to a Julia WS boolean.
+    ++ coerce(bool) coerces bool to a JL WS boolean.
     coerce : String -> %
     ++ coerce(str) is a convenience function to coerce a String.
     coerce : Symbol -> %
@@ -133,14 +133,14 @@ JuliaWSSymbol() : Exports == Implementation where
     coerce : % -> Symbol
     ++ coerce(sym) is a convenience function to coerce sym
     ++ to a FriCAS Symbol.
-    coerce  : % -> JuliaWSExpression
-    ++ coerce(sym) coerces sym to a JuliaWSExpression.
+    coerce  : % -> JLWSExpression
+    ++ coerce(sym) coerces sym to a JLWSExpression.
     jWSSym : Symbol -> %
-    ++ jWSSym(sym) constructs sym as a JuliaWSSymbol.
+    ++ jWSSym(sym) constructs sym as a JLWSSymbol.
     jWSSym : String -> %
-    ++ jWSSym(str) constructs str as a JuliaWSSymbol.
-  Implementation ==> JuliaObject add
-    import from JuliaUtilityFunctions
+    ++ jWSSym(str) constructs str as a JLWSSymbol.
+  Implementation ==> JLObject add
+    import from JLUtilityFunctions
     import from String
 
     jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
@@ -151,7 +151,7 @@ JuliaWSSymbol() : Exports == Implementation where
       jlEvalString(concat(["getproperty(", getind(sym), ",:name,)"]))@String
 
     if not jlUsing("MathLink") then
-      error "The Julia MathLink package is not installed."
+      error "The JL MathLink package is not installed."
     jlEvalString("import MathLink: WSymbol")
     
     Rep := SExpression
@@ -178,26 +178,26 @@ JuliaWSSymbol() : Exports == Implementation where
     coerce(sym : %) : Symbol  == coerce(string(sym))
     coerce(sym : Symbol) == jlref(concat(["WSymbol(_"", string(sym), "_")"]))
     coerce(str : String) == jlref(concat(["W_`", str, "_`"]))
-    coerce(sym : %) : JuliaWSExpression == sym pretend JuliaWSExpression
+    coerce(sym : %) : JLWSExpression == sym pretend JLWSExpression
     jWSSym(sym : Symbol) == jlref(concat(["WSymbol(_"", string(sym), "_")"]))
     jWSSym(str : String) == jlref(concat(["W_`", str, "_`"]))
     coerce(obj) : OutputForm == jl_string_getindex(jlId(obj))$Lisp
 
-)abbrev domain JWSINT JuliaWSInteger
-++ Generic domain for Julia WS integers
+)abbrev domain JWSINT JLWSInteger
+++ Generic domain for JL WS integers
 ++ Author: G.Vanuxem
 ++ Date Created: May. 2024
 ++ Description:
-++  Julia Wolfram Symbolic integers using Wolfram Symbolic Transport Protocol.
+++  JL Wolfram Symbolic integers using Wolfram Symbolic Transport Protocol.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
-JuliaWSInteger() : Exports == Implementation where
+JLWSInteger() : Exports == Implementation where
   INT       ==> Integer
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
   parsei ==> PARSE_-INTEGER$Lisp
-  Exports ==> Join(JuliaWSNumber, IntegerNumberSystem,
+  Exports ==> Join(JLWSNumber, IntegerNumberSystem,
                   Canonical, canonicalsClosed) with
-    "/"     : (%, %) -> JuliaWSRational
-    ++ a/b returns the Julia WS rational a/b.
+    "/"     : (%, %) -> JLWSRational
+    ++ a/b returns the JL WS rational a/b.
     integer : % -> Integer
     ++ integer(i) return i as a FriCAS Integer.
     ++ Convenience function.
@@ -207,18 +207,18 @@ JuliaWSInteger() : Exports == Implementation where
     ++ QFactorial(x,q) returns the q-analog of factorial of x.
     fibonacci : % -> %
     ++ fibonacci(n) returns the Fibonacci numberi Fn.
-    factor : % -> JuliaWSList JuliaWSList(%)
+    factor : % -> JLWSList JLWSList(%)
     ++ factor(n) returns the WS factorization of n.
     coerce  : Integer  -> %
     ++ coerce(z): coeeces z. Convenience function.
-    coerce  : % -> JuliaWSRational
+    coerce  : % -> JLWSRational
     ++ coerce(z): coeeces z. Convenience function.
-    coerce  : % -> JuliaWSExpression
+    coerce  : % -> JLWSExpression
     ++ coerce(z): coeeces z. Convenience function.
     jWSInt : Integer -> %
-    ++ jWSInt(int) constructs int as a JuliaWSInteger.
-  Implementation ==> JuliaObject add
-    import from JuliaUtilityFunctions
+    ++ jWSInt(int) constructs int as a JLWSInteger.
+  Implementation ==> JLObject add
+    import from JLUtilityFunctions
     import from String
 
     jbinop(op,a,b) ==> jlref(concat(["weval(", getind(a), op, getind(b),")"]))
@@ -233,14 +233,14 @@ JuliaWSInteger() : Exports == Implementation where
     jbinbop(op,a,b) ==> jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
 
     if not jlUsing("MathLink") then
-      error "The Julia MathLink package is not installed."
+      error "The JL MathLink package is not installed."
     jlEvalString("import MathLink: WInteger")@Void
     
     Rep := SExpression
 
     0 == jlref("WInteger(_"0_")")
     1 == jlref("WInteger(_"1_")")
-    WT : JuliaWSSymbol := WTrue()
+    WT : JLWSSymbol := WTrue()
 
     zero? x == x = 0
     one? x == x = 1
@@ -262,13 +262,13 @@ JuliaWSInteger() : Exports == Implementation where
     x : Integer * y : % == jbinop("*", coerce(x), y)
     x : % ^ y : PositiveInteger == jbinop("^", x, coerce(y))
     x : % ^ y : NonNegativeInteger == jbinop("^", x, coerce(y))
-    x : % / y : % == coerce(x)@JuliaWSRational / coerce(y)@JuliaWSRational
+    x : % / y : % == coerce(x)@JLWSRational / coerce(y)@JLWSRational
     x quo y == jbinfunc("W_"Quotient_"(", x, y)
     x rem y == jbinfunc("W_"Mod_"(", x, y)
     powmod(x,y,z) == jterfunc("W_"PowerMod_"(", x, y, z)
     divide(x, y) ==
-      zero?(y) => error "divide$JuliaWSInteger: division by 0"
-      ret : JuliaWSList(%) := jbinfunc("W_"QuotientRemainder_"(", x, y)
+      zero?(y) => error "divide$JLWSInteger: division by 0"
+      ret : JLWSList(%) := jbinfunc("W_"QuotientRemainder_"(", x, y)
       [first(ret) pretend %, last(ret) pretend %]
 
     gcd(a,b) == jbinfunc("W_"GCD_"(", a, b)
@@ -292,9 +292,9 @@ JuliaWSInteger() : Exports == Implementation where
     random(n) == junfunc("W_"RandomInteger_"(",n)
     integer(i) == parsei(string i)
     convert(i : %) : Integer == parsei(string i)
-    coerce(x : %) : JuliaWSRational ==
-      jlref(concat(getind(x), "/1"))$JuliaWSRational
-    coerce(x : %) : JuliaWSExpression == x pretend JuliaWSExpression
+    coerce(x : %) : JLWSRational ==
+      jlref(concat(getind(x), "/1"))$JLWSRational
+    coerce(x : %) : JLWSExpression == x pretend JLWSExpression
     coerce(i : Integer) == jlref(concat(["WInteger(_"", string(i), "_")"]))
     jWSInt(i : Integer) == jlref(concat(["WInteger(_"", string(i), "_")"]))
     -- TODO
@@ -302,29 +302,29 @@ JuliaWSInteger() : Exports == Implementation where
       ret : String := jl_string_getindex(jlId i)$Lisp
       coerce(parsei(ret))$Integer
 
-)abbrev domain JWSRAT JuliaWSRational
-++ Generic domain for Julia WS rational numbers
+)abbrev domain JWSRAT JLWSRational
+++ Generic domain for JL WS rational numbers
 ++ Author: G.Vanuxem
 ++ Date Created: May. 2024
 ++ Description:
-++  Julia Wolfram Symbolic rational numbers using Wolfram Symbolic Transport Protocol.
+++  JL Wolfram Symbolic rational numbers using Wolfram Symbolic Transport Protocol.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
-JuliaWSRational() : Exports == Implementation where
+JLWSRational() : Exports == Implementation where
   INT ==> Integer
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
   parsei ==> PARSE_-INTEGER$Lisp
-  Exports ==> Join(JuliaWSNumber,
-      QuotientFieldCategory(JuliaWSInteger)) with
+  Exports ==> Join(JLWSNumber,
+      QuotientFieldCategory(JLWSInteger)) with
     coerce  : Integer  -> %
     ++ coerce(z): coerces(z). Convenience function.
     convert : % -> Fraction(Integer)
     ++ convert(q) returns q as a Fraction(Integer)
-    coerce  : % -> JuliaWSExpression
+    coerce  : % -> JLWSExpression
     ++ coerce(q) coerces q. Convenience function. 
     jWSRat : Fraction(Integer) -> %
-    ++ jWSRat(q) constructs q as a JuliaWSRational.
-  Implementation ==> JuliaObject add
-    import from JuliaUtilityFunctions
+    ++ jWSRat(q) constructs q as a JLWSRational.
+  Implementation ==> JLObject add
+    import from JLUtilityFunctions
     import from String
 
     jbinop(op,a,b) ==> jlref(concat(["weval(",getind(a), op, getind(b),")"]))
@@ -335,13 +335,13 @@ JuliaWSRational() : Exports == Implementation where
       jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
 
     if not jlUsing("MathLink") then
-      error "The Julia MathLink package is not installed."
+      error "The JL MathLink package is not installed."
     jlEvalString("WRAT=W_"Rational_"")@Void
     Rep := SExpression
 
     0 == jlref("WRAT(0,1)")
     1 == jlref("WRAT(1,1)")
-    WT : JuliaWSSymbol := WTrue()
+    WT : JLWSSymbol := WTrue()
 
     zero? x == x = 0
     one? x  == x = 1
@@ -367,8 +367,8 @@ JuliaWSRational() : Exports == Implementation where
     x - y == jbinop("-", x, y)
     - x   == junfunc("-(", x)
     x : % * y : % == jbinop("*", x, y)
-    x : % * y : Fraction(Integer) == jbinop("*", x, coerce(y)@JuliaWSRational)
-    x : JuliaWSInteger * y : % == jbinop("/", x, y) 
+    x : % * y : Fraction(Integer) == jbinop("*", x, coerce(y)@JLWSRational)
+    x : JLWSInteger * y : % == jbinop("/", x, y) 
     x : Integer * y : % == jbinop("*", coerce(x), y)
     x : % / y : % == jbinop("/", x, y)
     x : % ^ y : Integer == jbinop("^", x, coerce(y))
@@ -377,10 +377,10 @@ JuliaWSRational() : Exports == Implementation where
 
     string(q) == toString q
     convert(q) : String == toString q
-    retract(q : %) : JuliaWSInteger ==
+    retract(q : %) : JLWSInteger ==
       denom(q) = 1 => numer(q)
-      error("retract@JuliaWSInteger: not an integer")
-    retractIfCan(x : %) : Union(JuliaWSInteger, "failed") ==
+      error("retract@JLWSInteger: not an integer")
+    retractIfCan(x : %) : Union(JLWSInteger, "failed") ==
       denom(x) = 1 => numer(x)
       "failed"
     retract(q : %) : Fraction(Integer) ==
@@ -393,7 +393,7 @@ JuliaWSRational() : Exports == Implementation where
       n / d
 
     coerce(i : Integer) == jlref(concat(["WRAT(", string(i), ",1)"]))
-    coerce(x : %) : JuliaWSExpression == x pretend JuliaWSExpression
+    coerce(x : %) : JLWSExpression == x pretend JLWSExpression
     jWSRat(rat : Fraction Integer) : % ==
       jlref(concat(["WRAT(", string(numer(rat)), "," ,string(denom(rat)), ")"]))
 
@@ -408,34 +408,34 @@ JuliaWSRational() : Exports == Implementation where
       (numer pretend OutputForm)  / (denom pretend OutputForm)
       --concat([toString(numer),"/", toString(denom)]) pretend OutputForm
 
-)abbrev domain JWSREAL JuliaWSReal
+)abbrev domain JWSREAL JLWSReal
 ++ Generic domain for WS real numbers
 ++ Author: G.Vanuxem
 ++ Date Created: April. 2024
 ++ Description:
-++  Julia Wolfram Symbolic real numbers using
+++  JL Wolfram Symbolic real numbers using
 ++  Wolfram Symbolic Transport Protocol. Precision is determined
 ++  during coercion. Machine precision will be used for jWSReal("3.14") whereas
 ++  jWSReal("3.14159265358979323846264338327950288419716939937510")
 ++  will have arbitrary precision of about 50 digits.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
-JuliaWSReal() : Exports == Implementation where
+JLWSReal() : Exports == Implementation where
   INT   ==> Integer
-  JF64  ==> JuliaFloat64
+  JF64  ==> JLFloat64
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-  Exports ==> Join(JuliaWSNumber, FloatingPointSystem,
+  Exports ==> Join(JLWSNumber, FloatingPointSystem,
                     DifferentialRing, ElementaryFunctionCategory,
                     TranscendentalFunctionCategory,
                     LiouvillianFunctionCategory) with
     urand01 : () -> %
     ++ urand01() returns a uniformly distributed random number in the range 0..1.
-    integerPart : % -> JuliaWSInteger
+    integerPart : % -> JLWSInteger
     ++ integerPart(x) returns the integer part of x.
     jlApprox?: (%, %) -> Boolean
     ++ jlApprox?(x,y) computes inexact equality comparison
     ++ with WS default parameters (Equal).
     exp    : () -> %
-    ++ exp() returns the JuliaWSAPReal ℯ (%e or exp(1)).
+    ++ exp() returns the JLWSAPReal ℯ (%e or exp(1)).
     sinc    : % -> %
     ++ sinc(x) compues the unormalized sinc of x, sin(x)/x.
     log2    : % -> %
@@ -448,44 +448,44 @@ JuliaWSReal() : Exports == Implementation where
     ++ erf(x) computes the error function of x.
     erfc    : % -> %
     ++ erfc(x) computes the complementary error function of x.
-    rationalApproximation : % -> JuliaWSRational
+    rationalApproximation : % -> JLWSRational
     ++ rationalApproximation(x) try to find a rational approximation
     ++ of x. Error if x can not be retracted.
-    rationalApproximation : (%, %) -> JuliaWSRational
+    rationalApproximation : (%, %) -> JLWSRational
     ++ rationalApproximation(x, dx) returns a rational approximation
     ++ of x within tolerance dx. If dx = 0, converts it anyway.
     coerce : % -> DoubleFloat
     ++ coerce(r) coerces r to a DoubleFloat.
-    coerce : % -> JuliaFloat64
-    ++ coerce(r) coerce r to a JuliaFloat64.
-    coerce  : % -> JuliaFloat
-    ++ coerce(x) converts x as a JuliaFloat.
+    coerce : % -> JLFloat64
+    ++ coerce(r) coerce r to a JLFloat64.
+    coerce  : % -> JLFloat
+    ++ coerce(x) converts x as a JLFloat.
     coerce  : String -> %
-    ++ coerce(str) construct str as a JuliaWSReal.
-    coerce  : JuliaFloat64  -> %
-    ++ coerce(x) converts x as a JuliaWSReal.
+    ++ coerce(str) construct str as a JLWSReal.
+    coerce  : JLFloat64  -> %
+    ++ coerce(x) converts x as a JLWSReal.
     coerce  : DoubleFloat  -> %
-    ++ coerce(x) converts x as a JuliaWSReal.
+    ++ coerce(x) converts x as a JLWSReal.
     coerce  : Float  -> %
-    ++ coerce(x) converts x as a JuliaWSReal.
-    coerce  : JuliaFloat  -> %
-    ++ coerce(x) converts x as a JuliaWSReal.
-    coerce  : % -> JuliaWSExpression
-    ++ coerce(x) coerce x to a JuliaWSExpression.
+    ++ coerce(x) converts x as a JLWSReal.
+    coerce  : JLFloat  -> %
+    ++ coerce(x) converts x as a JLWSReal.
+    coerce  : % -> JLWSExpression
+    ++ coerce(x) coerce x to a JLWSExpression.
     jWSReal : DoubleFloat -> %
-    ++ jWSReal(z) coerces the integer z to a JuliaWSReal.
+    ++ jWSReal(z) coerces the integer z to a JLWSReal.
     jWSReal : Float -> %
-    ++ jWSReal(z) coerces the integer z to a JuliaWSReal.
-    jWSReal : JuliaFloat64 -> %
-    ++ jWSReal(z) coerces the integer z to a JuliaWSReal.
+    ++ jWSReal(z) coerces the integer z to a JLWSReal.
+    jWSReal : JLFloat64 -> %
+    ++ jWSReal(z) coerces the integer z to a JLWSReal.
     jWSReal : Integer -> %
-    ++ jWSReal(z) coerces the integer z to a JuliaWSReal.
+    ++ jWSReal(z) coerces the integer z to a JLWSReal.
     jWSReal : String -> %
-    ++ jWSReal(str) constructs str as a JuliaWSReal.
-  Implementation ==> JuliaObject add
-    import from JuliaUtilityFunctions
+    ++ jWSReal(str) constructs str as a JLWSReal.
+  Implementation ==> JLObject add
+    import from JLUtilityFunctions
     import from String
-    import from JuliaWSExpression
+    import from JLWSExpression
 
     jbinop(op,a,b) ==> jlref(concat(["weval(",getind(a), op, getind(b),")"]))
     junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
@@ -502,7 +502,7 @@ JuliaWSReal() : Exports == Implementation where
     error1(msg, f) ==> error concat [msg, " ", toString f]
 
     if not jlUsing("MathLink") then
-      error "The Julia MathLink package is not installed."
+      error "The JL MathLink package is not installed."
     jlEvalString("import MathLink: WReal")@Void
 
     Rep := SExpression
@@ -511,16 +511,16 @@ JuliaWSReal() : Exports == Implementation where
 
     0     == jlref("WReal(_"0_")")
     1     == jlref("WReal(_"1_")")
-    pi()  == jWSExpr("N[Pi]")$JuliaWSExpression pretend %
-    exp() == jWSExpr("N[E]")$JuliaWSExpression pretend %
-    WT : JuliaWSSymbol := WTrue()
+    pi()  == jWSExpr("N[Pi]")$JLWSExpression pretend %
+    exp() == jWSExpr("N[E]")$JLWSExpression pretend %
+    WT : JLWSSymbol := WTrue()
     --catalan()
     --goldenRatio()
     -- ...
 
     precision() == 53
 
-    zero? x == zero?(x pretend JuliaWSExpression)
+    zero? x == zero?(x pretend JLWSExpression)
     one? x  == x = 1
 
     negative? x == junfunc("W_"Negative_"(", x) = WT
@@ -538,13 +538,13 @@ JuliaWSReal() : Exports == Implementation where
     x - y == jbinop("-", x, y)
     - x   == junfunc("-(", x)
     x : % * y : % == jbinop("*", x, y)
-    x : Integer * y : % == jbinop("*", coerce(x)@JuliaWSInteger, y)
+    x : Integer * y : % == jbinop("*", coerce(x)@JLWSInteger, y)
     x : % / y : % == jbinop("/", x, y)
-    x : % / y : Integer == jbinop("/", x, coerce(y)@JuliaWSInteger)
+    x : % / y : Integer == jbinop("/", x, coerce(y)@JLWSInteger)
     x : % ^ y : % == jbinop("^", x, y)
-    x : % ^ y : Integer == jbinop("^", x, coerce(y)@JuliaWSInteger)
-    x : % ^ y : PositiveInteger == jbinop("^", x, coerce(y)@JuliaWSInteger)
-    x : % ^ y : NonNegativeInteger == jbinop("^", x, coerce(y)@JuliaWSInteger)
+    x : % ^ y : Integer == jbinop("^", x, coerce(y)@JLWSInteger)
+    x : % ^ y : PositiveInteger == jbinop("^", x, coerce(y)@JLWSInteger)
+    x : % ^ y : NonNegativeInteger == jbinop("^", x, coerce(y)@JLWSInteger)
 
     round(x)   == junfunc("W_"Round_"(", x)
     ceiling(x) == junfunc("W_"Ceiling_"(", x)
@@ -552,17 +552,17 @@ JuliaWSReal() : Exports == Implementation where
     abs(x)     == junfunc("W_"RealAbs_"(", x)
 
     rationalApproximation(x) ==
-      ret : JuliaWSRational := junfunc("W_"Rationalize_"(", x)
+      ret : JLWSRational := junfunc("W_"Rationalize_"(", x)
       jlHead ret = WRational() => ret
       error concat(string(x), " cannot be retracted. Use a tolerance value if needed.")
     rationalApproximation(x, dx) ==
-      ret : JuliaWSRational := jbinfunc("W_"Rationalize_"(", x, dx)
+      ret : JLWSRational := jbinfunc("W_"Rationalize_"(", x, dx)
       jlHead ret = WRational() => ret
       error1("Cannot be retracted with tolerance: ", dx)
 
     float(m, e, b) == jbinop("*",jWSReal(m), jWSReal(b) ^ e)
     integerPart(x) == junfunc("W_"IntegerPart_"(",x)
-    wholePart(x) == convert(junfunc("W_"IntegerPart_"(",x))$JuliaWSInteger
+    wholePart(x) == convert(junfunc("W_"IntegerPart_"(",x))$JLWSInteger
     fractionPart(x) == junfunc("W_"FractionalPart_"(", x)
     truncate(x)  == (negative? x => -floor(-x); floor x)
     retractIfCan(x : %):Union(Integer, "failed") ==
@@ -657,7 +657,7 @@ JuliaWSReal() : Exports == Implementation where
     fresnelC(x) == junfunc("W_"FresnelC_"(",x)
     fresnelS(x) == junfunc("W_"FresnelS_"(",x)
     li(x)       == junfunc("W_"LogIntegral_"(",x)
-    dilog(x)    == jbinfunc("W_"PolyLog_"(", coerce(2)@JuliaWSInteger, x)
+    dilog(x)    == jbinfunc("W_"PolyLog_"(", coerce(2)@JLWSInteger, x)
 
     urand01() == jlEval jWSExpr("RandomReal[]") pretend %
 
@@ -668,23 +668,23 @@ JuliaWSReal() : Exports == Implementation where
 
     coerce(r : %) : DoubleFloat ==
       jlEvalString(getind(jlEval r))@JF64 pretend DoubleFloat
-    coerce(r : %) : JuliaFloat64 == jlEvalString(getind(jlEval r))
-    coerce(x : %) : JuliaWSExpression == x pretend JuliaWSExpression
-    coerce(x) : JuliaFloat ==
-      jlref(concat(["weval(BigFloat,", getind(x),")"]))$JuliaFloat
+    coerce(r : %) : JLFloat64 == jlEvalString(getind(jlEval r))
+    coerce(x : %) : JLWSExpression == x pretend JLWSExpression
+    coerce(x) : JLFloat ==
+      jlref(concat(["weval(BigFloat,", getind(x),")"]))$JLFloat
     coerce(str : String) : % == jlref(concat(["WReal(_"", str, "_")"]))
     coerce(f : Float) ==
       tmp := outputSpacing(0)
       ret : % := jlref(concat(["WReal(_"", toString(f), "_")"]))
       outputSpacing(tmp)
       ret
-    coerce(f : JuliaFloat64) == jlref(concat(["WReal(_"", toString(f), "_")"]))
+    coerce(f : JLFloat64) == jlref(concat(["WReal(_"", toString(f), "_")"]))
     coerce(f : DoubleFloat) == jlref(concat(["WReal(_"", toString(f), "_")"]))
     coerce(f : Float) ==
       jlref(concat(["WReal(_"", toString(f,digits()$Float), "_")"]))
-    coerce(f : JuliaFloat) == jlref(concat(["WReal(_"", string(f), "_")"]))
+    coerce(f : JLFloat) == jlref(concat(["WReal(_"", string(f), "_")"]))
     coerce(f : Integer) == jlref(concat(["WReal(_"", string(f), "_")"]))
-    jWSReal(f : JuliaFloat64) == jlref(concat(["WReal(_"", toString(f), "_")"]))
+    jWSReal(f : JLFloat64) == jlref(concat(["WReal(_"", toString(f), "_")"]))
     jWSReal(f : DoubleFloat) == jlref(concat(["WReal(_"", toString(f), "_")"]))
     jWSReal(f : Float) ==
       tmp := outputSpacing(0)
@@ -694,33 +694,33 @@ JuliaWSReal() : Exports == Implementation where
     jWSReal(f : Integer) == jlref(concat(["WReal(_"", string(f), "_")"]))
     jWSReal(str) == jlref(concat(["WReal(_"", str, "_")"]))
     coerce(x) : OutputForm ==
-      x >= 0 => coerce(x pretend JuliaWSExpression)
-      - coerce(abs(x) pretend JuliaWSExpression)
+      x >= 0 => coerce(x pretend JLWSExpression)
+      - coerce(abs(x) pretend JLWSExpression)
 
-)abbrev domain JWSAPR JuliaWSAPReal
-++ Generic domain for Julia WS arbitrary precision real numbers
+)abbrev domain JWSAPR JLWSAPReal
+++ Generic domain for JL WS arbitrary precision real numbers
 ++ Author: G.Vanuxem
 ++ Date Created: April. 2024
 ++ Description:
-++  Julia Wolfram Symbolic arbitrary pecision real numbers using
+++  JL Wolfram Symbolic arbitrary pecision real numbers using
 ++  Wolfram Symbolic Transport Protocol.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
-JuliaWSAPReal(prec : PositiveInteger) : Exports == Implementation where
+JLWSAPReal(prec : PositiveInteger) : Exports == Implementation where
   INT ==> Integer
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-  Exports ==> Join(JuliaWSNumber, FloatingPointSystem, arbitraryPrecision,
+  Exports ==> Join(JLWSNumber, FloatingPointSystem, arbitraryPrecision,
                     DifferentialRing, ElementaryFunctionCategory,
                     TranscendentalFunctionCategory,
                     LiouvillianFunctionCategory) with
     urand01 : () -> %
     ++ urand01() returns a uniformly distributed random number in the range 0..1.
-    integerPart : % -> JuliaWSInteger
+    integerPart : % -> JLWSInteger
     ++ integerPart(x) returns the integer part of x.
     jlApprox?: (%, %) -> Boolean
     ++ jlApprox?(x,y) computes inexact equality comparison
     ++ with WS default parameters (Equal).
     exp    : () -> %
-        ++ exp() returns the JuliaWSAPReal ℯ (%e or exp(1)).
+        ++ exp() returns the JLWSAPReal ℯ (%e or exp(1)).
     sinc    : % -> %
     ++ sinc(x) compues the unormalized sinc of x, sin(x)/x and 0 if x = 0.
     log2    : % -> %
@@ -733,38 +733,38 @@ JuliaWSAPReal(prec : PositiveInteger) : Exports == Implementation where
     ++ erf(x) computes the error function of x.
     erfc    : % -> %
     ++ erfc(x) computes the complementary error function of x.
-    rationalApproximation : % -> JuliaWSRational
+    rationalApproximation : % -> JLWSRational
     ++ rationalApproximation(x) try to find a rational approximation
     ++ of x.
-    rationalApproximation : (%, %) -> JuliaWSRational
+    rationalApproximation : (%, %) -> JLWSRational
     ++ rationalApproximation(x, dx) try to find a rational approximation
     ++ of x within tolerance dx.
-    coerce  : % -> JuliaFloat
-    ++ coerce(x) converts x as a JuliaFloat.
+    coerce  : % -> JLFloat
+    ++ coerce(x) converts x as a JLFloat.
     coerce  : String -> %
-    ++ coerce(str) construct str as a JuliaWSAPReal.
+    ++ coerce(str) construct str as a JLWSAPReal.
     coerce  : Float  -> %
-    ++ coerce(x) converts x as a JuliaWSAPReal.
-    coerce  : JuliaFloat  -> %
-    ++ coerce(x) converts x as a JuliaWSAPReal.
-    coerce  : % -> JuliaWSExpression
-    ++ coerce(x) coerce x to a JuliaWSExpression.
+    ++ coerce(x) converts x as a JLWSAPReal.
+    coerce  : JLFloat  -> %
+    ++ coerce(x) converts x as a JLWSAPReal.
+    coerce  : % -> JLWSExpression
+    ++ coerce(x) coerce x to a JLWSExpression.
     jWSReal : Integer -> %
-    ++ jWSReal(i) coerces i to a JuliaWSAPReal.
+    ++ jWSReal(i) coerces i to a JLWSAPReal.
     jWSReal : DoubleFloat -> %
-    ++ jWSReal(f) coerces f to a JuliaWSAPReal.
-    jWSReal : JuliaFloat64 -> %
-    ++ jWSReal(f) coerces f to a JuliaWSAPReal.
+    ++ jWSReal(f) coerces f to a JLWSAPReal.
+    jWSReal : JLFloat64 -> %
+    ++ jWSReal(f) coerces f to a JLWSAPReal.
     jWSReal : Float -> %
-    ++ jWSReal(f) coerces f to a JuliaWSAPReal.
-    jWSReal : JuliaFloat -> %
-    ++ jWSReal(f) coerces f to a JuliaWSAPReal.
+    ++ jWSReal(f) coerces f to a JLWSAPReal.
+    jWSReal : JLFloat -> %
+    ++ jWSReal(f) coerces f to a JLWSAPReal.
     jWSReal : String -> %
-    ++ jWSReal(str) constructs str as a JuliaWSAPReal.
-  Implementation ==> JuliaObject add
-    import from JuliaUtilityFunctions
+    ++ jWSReal(str) constructs str as a JLWSAPReal.
+  Implementation ==> JLObject add
+    import from JLUtilityFunctions
     import from String
-    import from JuliaWSExpression
+    import from JLWSExpression
 
     jbinop(op,a,b) ==> jlref(concat(["weval(",getind(a), op, getind(b),")"]))
     junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
@@ -783,27 +783,27 @@ JuliaWSAPReal(prec : PositiveInteger) : Exports == Implementation where
     error1(msg, f) ==> error(concat [msg, " ", toString(f)])
 
     if not jlUsing("MathLink") then
-      error "The Julia MathLink package is not installed."
+      error "The JL MathLink package is not installed."
     jlEvalString("NN=W_`Interpreter[_"Real_"]_`")@Void
 
     Rep := SExpression
 
     0    == jlref(concat(["W_"N_"(0,", string(prec), ")"]))
     1    == jlref(concat(["W_"N_"(1,", string(prec), ")"]))
-    WT : JuliaWSSymbol := WTrue()
+    WT : JLWSSymbol := WTrue()
 
     --pi() == jlref(concat ["W_"N_"(", "W_"Pi_"", ",", string(prec), ")"])
     --exp() == jlref(concat ["W_"N_"(", "W_"E_"", ",", string(prec), ")"])
     pi()  ==
-      jWSExpr(concat(["N[Pi,", string(prec),"]"]))$JuliaWSExpression pretend %
+      jWSExpr(concat(["N[Pi,", string(prec),"]"]))$JLWSExpression pretend %
     exp() ==
-      jWSExpr(concat(["N[E,", string(prec),"]"]))$JuliaWSExpression pretend %
+      jWSExpr(concat(["N[E,", string(prec),"]"]))$JLWSExpression pretend %
 
     -- redefine constructors?
     -- string, floats...
     -- Workaround an issue?
-    zero? x == zero?(x pretend JuliaWSExpression)
-    one? x  == zero?((x pretend JuliaWSExpression)-1)
+    zero? x == zero?(x pretend JLWSExpression)
+    one? x  == zero?((x pretend JLWSExpression)-1)
 
     negative? x == junfunc("W_"Negative_"(", x) = WT
     positive? x == junfunc("W_"Positive_"(", x) = WT
@@ -822,15 +822,15 @@ JuliaWSAPReal(prec : PositiveInteger) : Exports == Implementation where
     x - y == jbinop("-", x, y)
     - x   == junfunc("-(", x)
     x : % * y : % == jbinop("*", x, y)
-    x : Integer * y : % == jbinop("*", coerce(x)@JuliaWSInteger, y)
+    x : Integer * y : % == jbinop("*", coerce(x)@JLWSInteger, y)
     x : % / y : % == jbinop("/", x, y)
-    x : % / y : Integer == jbinop("/", x, coerce(y)@JuliaWSInteger)
+    x : % / y : Integer == jbinop("/", x, coerce(y)@JLWSInteger)
     x : % ^ y : % ==
       jtypeassert(res:=jbinop("^", x, y))
       res
-    x : % ^ y : Integer == jbinop("^", x, coerce(y)@JuliaWSInteger)
-    x : % ^ y : PositiveInteger == jbinop("^", x, coerce(y)@JuliaWSInteger)
-    x : % ^ y : NonNegativeInteger == jbinop("^", x, coerce(y)@JuliaWSInteger)
+    x : % ^ y : Integer == jbinop("^", x, coerce(y)@JLWSInteger)
+    x : % ^ y : PositiveInteger == jbinop("^", x, coerce(y)@JLWSInteger)
+    x : % ^ y : NonNegativeInteger == jbinop("^", x, coerce(y)@JLWSInteger)
 
     round(x)   == junfunc("W_"Round_"(", x)
     ceiling(x) == junfunc("W_"Ceiling_"(", x)
@@ -841,7 +841,7 @@ JuliaWSAPReal(prec : PositiveInteger) : Exports == Implementation where
     rationalApproximation(x) == junfunc("W_"Rationalize_"(", x)
     rationalApproximation(x, dx) == jbinfunc("W_"Rationalize_"(", x, dx)
     integerPart(x) == junfunc("W_"IntegerPart_"(",x)
-    wholePart(x) == convert(junfunc("W_"IntegerPart_"(",x))$JuliaWSInteger
+    wholePart(x) == convert(junfunc("W_"IntegerPart_"(",x))$JLWSInteger
     fractionPart(x) == junfunc("W_"FractionalPart_"(", x)
     truncate x          == (negative? x => -floor(-x); floor x)
     retractIfCan(x : %):Union(Integer, "failed") ==
@@ -935,26 +935,26 @@ JuliaWSAPReal(prec : PositiveInteger) : Exports == Implementation where
     fresnelC(x) == junfunc("W_"FresnelC_"(",x)
     fresnelS(x) == junfunc("W_"FresnelS_"(",x)
     li(x)       == junfunc("W_"LogIntegral_"(",x)
-    dilog(x)    == jbinfunc("W_"PolyLog_"(", coerce(2)@JuliaWSInteger, x)
+    dilog(x)    == jbinfunc("W_"PolyLog_"(", coerce(2)@JLWSInteger, x)
 
     urand01() ==
       jlEval jWSExpr(concat(["RandomReal[WorkingPrecision->",
         string(prec pretend Integer),"]"])) pretend %
     string(x) : String ==
-      toString(x pretend JuliaWSExpression, jWSExpr("OutputForm"))
+      toString(x pretend JLWSExpression, jWSExpr("OutputForm"))
     convert(obj) : String == string obj
     toString(x) ==
-      str := toString(x pretend JuliaWSExpression)
+      str := toString(x pretend JLWSExpression)
       str := jlEvalString(concat(["replace(_"", str,
         "_", _"*^_" => _" E _", r_"`[0-9]+\.?[0-9]*_" => _"_")"]))
       --jlRegexReplace(str, jlRegex("`.*\*\^"),
       --  jlSubstitute("e"))
     toString(x, p) ==
-      toString(x pretend JuliaWSReal, p)
+      toString(x pretend JLWSReal, p)
 
-    coerce(x : %) : JuliaWSExpression == x pretend JuliaWSExpression
-    coerce(x : %) : JuliaFloat ==
-      jlref(concat(["weval(BigFloat,", getind(x),")"]))$JuliaFloat
+    coerce(x : %) : JLWSExpression == x pretend JLWSExpression
+    coerce(x : %) : JLFloat ==
+      jlref(concat(["weval(BigFloat,", getind(x),")"]))$JLFloat
     coerce(str : String) : % ==
       str = "0" => 0
       jlref(concat(["weval(NN(_"", str, "_`", string(prec), "_"))"]))
@@ -964,7 +964,7 @@ JuliaWSAPReal(prec : PositiveInteger) : Exports == Implementation where
         "_`", string(prec),"_"))"]))
       outputSpacing(tmp)
       ret
-    coerce(f : JuliaFloat) ==
+    coerce(f : JLFloat) ==
       jlref(concat(["weval(NN(_"", toString(f), "_`", string(prec), "_"))"]))
     coerce(i : Integer) ==
       zero? i => 0
@@ -976,11 +976,11 @@ JuliaWSAPReal(prec : PositiveInteger) : Exports == Implementation where
     jWSReal(i : Integer) ==
       zero? i => 0
       jlref(concat(["weval(NN(_"", string(i), "_`", string(prec), "_"))"]))
-    jWSReal(f : JuliaFloat) ==
+    jWSReal(f : JLFloat) ==
       jlref(concat(["weval(NN(_"", toString(f), "_`", string(prec), "_"))"]))
     jWSReal(f : DoubleFloat) ==
       jlref(concat(["weval(NN(_"", toString(f), "_`", string(prec), "_"))"]))
-    jWSReal(f : JuliaFloat64) ==
+    jWSReal(f : JLFloat64) ==
       jlref(concat(["weval(NN(_"", toString(f), "_`", string(prec), "_"))"]))
     jWSReal(f : Float) ==
       tmp := outputSpacing(0)
@@ -988,34 +988,34 @@ JuliaWSAPReal(prec : PositiveInteger) : Exports == Implementation where
       outputSpacing(tmp)
       a
     coerce(x) : OutputForm ==
-      x >= 0 => coerce(x pretend JuliaWSExpression)
-      - coerce(abs(x) pretend JuliaWSExpression)
+      x >= 0 => coerce(x pretend JLWSExpression)
+      - coerce(abs(x) pretend JLWSExpression)
 
 
-)abbrev domain JWSGINT JuliaWSGaussianInteger
-++ Generic domain for Julia WS gaussian integers
+)abbrev domain JWSGINT JLWSGaussianInteger
+++ Generic domain for JL WS gaussian integers
 ++ Author: G.Vanuxem
 ++ Date Created: May. 2024
 ++ Description:
-++  Julia Wolfram Symbolic gaussian integers using Wolfram Symbolic Transport Protocol.
+++  JL Wolfram Symbolic gaussian integers using Wolfram Symbolic Transport Protocol.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
-JuliaWSGaussianInteger() : Exports == Implementation where
+JLWSGaussianInteger() : Exports == Implementation where
   INT ==> Integer
   parsei ==> PARSE_-INTEGER$Lisp
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-  Exports ==> Join(JuliaWSNumber, ComplexCategory(JuliaWSInteger)) with
-    random   : JuliaWSInteger -> %
+  Exports ==> Join(JLWSNumber, ComplexCategory(JLWSInteger)) with
+    random   : JLWSInteger -> %
     ++ random(n) returns a gaussian integer where real part is in the range 0..n
     ++ as the imagniray part.
     coerce   : Integer  -> %
     ++ coerce(x): convenience function.
-    coerce  : % -> JuliaWSExpression
+    coerce  : % -> JLWSExpression
     ++ coerce(x): convenience function. 
-    jWSGI    : (JuliaWSInteger, JuliaWSInteger) -> %
-    ++ jWSGI(re, im) constructs a JuliaWSGaussianInteger from real
+    jWSGI    : (JLWSInteger, JLWSInteger) -> %
+    ++ jWSGI(re, im) constructs a JLWSGaussianInteger from real
     ++ part re and imaginary part im.
-  Implementation ==> JuliaObject add
-    import from JuliaUtilityFunctions
+  Implementation ==> JLObject add
+    import from JLUtilityFunctions
 
     jbinop(op,a,b) ==> jlref(concat(["weval(",getind(a), op, getind(b),")"]))
     junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
@@ -1023,10 +1023,10 @@ JuliaWSGaussianInteger() : Exports == Implementation where
       jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
     jbinbop(op,a,b) ==>
       jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
-    bool(a) ==> coerce(a)$JuliaWSSymbol
+    bool(a) ==> coerce(a)$JLWSSymbol
 
     if not jlUsing("MathLink") then
-      error "The Julia MathLink package is not installed."
+      error "The JL MathLink package is not installed."
     Rep := SExpression
 
     0 == jlref("W_"Complex_"(0,0)")
@@ -1050,8 +1050,8 @@ JuliaWSGaussianInteger() : Exports == Implementation where
     x - y == jbinop("-", x, y)
     - x   == junfunc("-(", x)
     x : % * y : % == jbinop("*", x, y)
-    x : Integer * y : % == jbinop("*", coerce(x)@JuliaWSInteger, y)
-    x : JuliaWSInteger * y : % == jbinop("*", coerce(x), y) 
+    x : Integer * y : % == jbinop("*", coerce(x)@JLWSInteger, y)
+    x : JLWSInteger * y : % == jbinop("*", coerce(x), y) 
     x : Integer * y : % == jbinop("*", coerce(x), y)
     x : % ^ y : Integer == jbinop("^", x, coerce(y))
     x : % ^ y : PositiveInteger == jbinop("^", x, coerce(y))
@@ -1069,18 +1069,18 @@ JuliaWSGaussianInteger() : Exports == Implementation where
       im < 0 => [-1, complex(-re, -im) ,-1]
       [imaginary(), complex(im, -re), -imaginary()]
 
-    random(n) == complex(junfunc("W_"RandomInteger_"(",n) pretend JuliaWSInteger,
-      junfunc("W_"RandomInteger_"(",n) pretend JuliaWSInteger) 
+    random(n) == complex(junfunc("W_"RandomInteger_"(",n) pretend JLWSInteger,
+      junfunc("W_"RandomInteger_"(",n) pretend JLWSInteger) 
     string(gi) == toString(gi)
     convert(obj) : String == string obj
-    coerce(x : %) : JuliaWSExpression == x pretend JuliaWSExpression
+    coerce(x : %) : JLWSExpression == x pretend JLWSExpression
     coerce(i : Integer) ==
-      jlref(concat(["W_"Complex_"(", getind(coerce(i)@JuliaWSInteger), ",0)"]))
-    coerce(i : JuliaWSInteger) ==
+      jlref(concat(["W_"Complex_"(", getind(coerce(i)@JLWSInteger), ",0)"]))
+    coerce(i : JLWSInteger) ==
       jlref(concat(["W_"Complex_"(", getind(i), ",0)"]))
-    complex(re : JuliaWSInteger, im : JuliaWSInteger) : % ==
+    complex(re : JLWSInteger, im : JLWSInteger) : % ==
       jlref(concat(["W_"Complex_"(", getind(re), "," , getind(im), ")"]))
-    jWSGI(re : JuliaWSInteger, im : JuliaWSInteger) : % ==
+    jWSGI(re : JLWSInteger, im : JLWSInteger) : % ==
       jlref(concat(["W_"Complex_"(", getind(re), "," , getind(im), ")"]))
     coerce(x) : OutputForm ==
       re := (r := real x)::OutputForm
@@ -1094,28 +1094,28 @@ JuliaWSGaussianInteger() : Exports == Implementation where
       zero? r => ip
       re + ip
 
-)abbrev domain JWSCPLX JuliaWSComplex
-++ Generic domain for Julia WS complex numbers
+)abbrev domain JWSCPLX JLWSComplex
+++ Generic domain for JL WS complex numbers
 ++ Author: G.Vanuxem
 ++ Date Created: May. 2024
 ++ Description:
-++  Julia Wolfram Symbolic complex numbers using Wolfram Symbolic Transport Protocol.
+++  JL Wolfram Symbolic complex numbers using Wolfram Symbolic Transport Protocol.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
-JuliaWSComplex() : Exports == Implementation where
+JLWSComplex() : Exports == Implementation where
   INT ==> Integer
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-  Exports ==> Join(JuliaWSNumber, ComplexCategory(JuliaWSReal),
+  Exports ==> Join(JLWSNumber, ComplexCategory(JLWSReal),
                 ElementaryFunctionCategory, TranscendentalFunctionCategory,
                 LiouvillianFunctionCategory) with
     urand01 : () -> %
     ++ urand01() returns a unit square random complex number.
-    "*"      : (JuliaWSInteger, %) -> %
+    "*"      : (JLWSInteger, %) -> %
     ++ n * x multiplies n by x. 
     jlApprox?: (%, %) -> Boolean
     ++ jlApprox?(x,y) computes inexact equality comparison
     ++ with WS default parameters (Equal).
     exp     : () -> %
-    ++ exp() returns the JuliaWSAPReal ℯ (%e or exp(1)).
+    ++ exp() returns the JLWSAPReal ℯ (%e or exp(1)).
     sinc    : % -> %
     ++ sinc(z) compues the unormalized sinc of z, sin(z)/z and 0 if z = 0.
     log2    : % -> %
@@ -1128,32 +1128,32 @@ JuliaWSComplex() : Exports == Implementation where
     ++ erf \undocumented
     erfc    : % -> %
     ++ erfc \undocuemented
-    toString: (%, JuliaWSExpression) -> String
+    toString: (%, JLWSExpression) -> String
     ++ toString(expr, form) returns the string representation of expr
     ++ with WS language format form.
     coerce   : % -> Complex(DoubleFloat)
     ++ coerce(z) coerces z to a FriCAS Complex(DoubleFloat).
-    coerce   : % -> Complex(JuliaFloat64)
-    ++ coerce(z) coerces z to a FriCAS Complex(JuliaFloat64).
+    coerce   : % -> Complex(JLFloat64)
+    ++ coerce(z) coerces z to a FriCAS Complex(JLFloat64).
     coerce   : Integer  -> %
     ++ coerce(int): coerces int. Convenience function.
     coerce   : Complex(Integer) -> %
     ++ coerce(z) coerce z. Convenience function. -- %i operations for example
-    coerce   : JuliaWSInteger  -> %
+    coerce   : JLWSInteger  -> %
     ++ coerce(int): coerces int. Convenience function.
-    coerce  : % -> JuliaWSExpression
+    coerce  : % -> JLWSExpression
     ++ coerce(cplx) coerces cplx. Convenience function.
-    complex    : (JuliaWSReal, JuliaWSReal) -> %
-    ++ complex(re,im) constructs a JuliaWSComplex from real part re
+    complex    : (JLWSReal, JLWSReal) -> %
+    ++ complex(re,im) constructs a JLWSComplex from real part re
     ++ and imaginary part im.
-    jWSComplex    : JuliaWSReal -> %
-    ++ jWSComplex(re) constructs a JuliaWSComplex with real part re.
-    jWSComplex    : (JuliaWSReal, JuliaWSReal) -> %
-    ++ jWSComplex(re, im) constructs a JuliaWSComplex from real part re
+    jWSComplex    : JLWSReal -> %
+    ++ jWSComplex(re) constructs a JLWSComplex with real part re.
+    jWSComplex    : (JLWSReal, JLWSReal) -> %
+    ++ jWSComplex(re, im) constructs a JLWSComplex from real part re
     ++ and imaginary part im.
-  Implementation ==> JuliaObject add
-    import from JuliaUtilityFunctions
-    import from JuliaWSExpression
+  Implementation ==> JLObject add
+    import from JLUtilityFunctions
+    import from JLWSExpression
 
     jbinop(op,a,b) ==> jlref(concat(["weval(",getind(a), op, getind(b),")"]))
     junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
@@ -1166,16 +1166,16 @@ JuliaWSComplex() : Exports == Implementation where
         getind(c), ",", getind(d)"))"]))
     jbinbop(op,a,b) ==> jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
     error1(msg, f) ==> error concat [msg, " ", toString f]
-    bool(a) ==> coerce(a)$JuliaWSSymbol
+    bool(a) ==> coerce(a)$JLWSSymbol
 
     if not jlUsing("MathLink") then
-      error "The Julia MathLink package is not installed."
+      error "The JL MathLink package is not installed."
     Rep := SExpression
 
     0 == jlref(concat(["W_`Complex[0.0,0.0]_`"]))
     1 == jlref(concat(["W_`Complex[1.0,0.0]_`"]))
     imaginary()  == jlref(concat(["W_`Complex[0.0,1.0]_`"]))
-    WT : JuliaWSSymbol := WTrue()
+    WT : JLWSSymbol := WTrue()
 
     zero? z == z = 0
     one? z  == z = 1
@@ -1198,7 +1198,7 @@ JuliaWSComplex() : Exports == Implementation where
     x - y == jbinop("-", x, y)
     - x   == junfunc("-(", x)
     x : % * y : % == jbinop("*", x, y)
-    x : JuliaWSInteger * y : % == jbinop("*", coerce(x), y) 
+    x : JLWSInteger * y : % == jbinop("*", coerce(x), y) 
     x : Integer * y : % == jbinop("*", coerce(x), y)
     x : % ^ y : Integer == jbinop("^", x, coerce(y))
     x : % ^ y : PositiveInteger == jbinop("^", x, coerce(y))
@@ -1289,7 +1289,7 @@ JuliaWSComplex() : Exports == Implementation where
     fresnelS(z) == junfunc("W_"FresnelS_"(",z)
     li(z)       == junfunc("W_"LogIntegral_"(",z)
     dilog(z)    ==
-      two := jWSReal("2")$JuliaWSReal
+      two := jWSReal("2")$JLWSReal
       jbinfunc("W_"PolyLog_"(", two, z)
 
     urand01() == jWSExpr("RandomComplex[]") pretend %
@@ -1298,26 +1298,26 @@ JuliaWSComplex() : Exports == Implementation where
     toString(z, form) == string jbinfunc("W_"ToString_"(", z, form)
     coerce(z : %) : Complex(DoubleFloat) ==
       complex(coerce(real(z)), coerce(imag(z)))
-    coerce(z : %) : Complex(JuliaFloat64) ==
+    coerce(z : %) : Complex(JLFloat64) ==
       complex(coerce(real(z)), coerce(imag(z)))
-    coerce(z : %) : JuliaWSExpression == z pretend JuliaWSExpression
+    coerce(z : %) : JLWSExpression == z pretend JLWSExpression
     coerce(i : Integer) ==
-      jlref(concat(["weval(W_"Complex_"(", getind(coerce(i)@JuliaWSInteger), ",0))"]))
+      jlref(concat(["weval(W_"Complex_"(", getind(coerce(i)@JLWSInteger), ",0))"]))
     coerce(z : Complex(Integer)) ==
       jlref(concat(["weval(W_"Complex_"(",
-        getind(coerce(real(z))@JuliaWSInteger),",",
-          getind(coerce(imag(z))@JuliaWSInteger),"))"]))
-    coerce(i : JuliaWSInteger) ==
+        getind(coerce(real(z))@JLWSInteger),",",
+          getind(coerce(imag(z))@JLWSInteger),"))"]))
+    coerce(i : JLWSInteger) ==
       jlref(concat(["weval(W_"Complex_"(", getind(i), ",0))"]))
-    coerce(r : JuliaWSReal) ==
+    coerce(r : JLWSReal) ==
       jlref(concat(["weval(W_"Complex_"(", getind(r), ", 0))"]))
-    complex(re : JuliaWSReal, im : JuliaWSReal) : % ==
+    complex(re : JLWSReal, im : JLWSReal) : % ==
       jlref(concat(["weval(W_"Complex_"(", getind(re), "," , getind(im), "))"]))
-    jWSComplex(re : JuliaWSReal) : % ==
+    jWSComplex(re : JLWSReal) : % ==
       jlref(concat(["weval(W_"Complex_"(", getind(re), "," , getind(0), "))"]))
-    jWSComplex(re : JuliaWSReal, im : JuliaWSReal) : % ==
+    jWSComplex(re : JLWSReal, im : JLWSReal) : % ==
       jlref(concat(["weval(W_"Complex_"(", getind(re), "," , getind(im), "))"]))
-    coerce(z) : OutputForm == --coerce(z pretend JuliaWSExpression)
+    coerce(z) : OutputForm == --coerce(z pretend JLWSExpression)
       re := (r := real z)::OutputForm
       ie := (i := imag z)::OutputForm
       zero? i => re
@@ -1329,18 +1329,18 @@ JuliaWSComplex() : Exports == Implementation where
       zero? r => ip
       re + ip
 
-)abbrev domain JWSAPCPX JuliaWSAPComplex
-++ Generic domain for Julia WS arbitrary precision complex numbers
+)abbrev domain JWSAPCPX JLWSAPComplex
+++ Generic domain for JL WS arbitrary precision complex numbers
 ++ Author: G.Vanuxem
 ++ Date Created: May. 2024
 ++ Description:
-++  Julia Wolfram Symbolic arbitrary precision complex numbers using Wolfram Symbolic
+++  JL Wolfram Symbolic arbitrary precision complex numbers using Wolfram Symbolic
 ++  Transport Protocol.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
-JuliaWSAPComplex(prec : PositiveInteger) : Exports == Implementation where
+JLWSAPComplex(prec : PositiveInteger) : Exports == Implementation where
   INT ==> Integer
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-  Exports ==> Join(JuliaWSNumber, ComplexCategory(JuliaWSAPReal(prec)),
+  Exports ==> Join(JLWSNumber, ComplexCategory(JLWSAPReal(prec)),
                 ElementaryFunctionCategory, TranscendentalFunctionCategory,
                 LiouvillianFunctionCategory) with
     urand01 : () -> %
@@ -1348,10 +1348,10 @@ JuliaWSAPComplex(prec : PositiveInteger) : Exports == Implementation where
     jlApprox?: (%, %) -> Boolean
     ++ jlApprox?(x,y) computes inexact equality comparison
     ++ with WS default parameters (Equal).
-    "*"      : (JuliaWSInteger, %) -> %
+    "*"      : (JLWSInteger, %) -> %
     ++ n * z multiplies n by z.
     exp     : () -> %
-    ++ exp() returns the JuliaWSAPReal ℯ (%e or exp(1)).
+    ++ exp() returns the JLWSAPReal ℯ (%e or exp(1)).
     sinc    : % -> %
     ++ sinc(z) compues the unormalized sinc of z, sin(z)/z and 0 if z = 0.
     log2    : % -> %
@@ -1364,28 +1364,28 @@ JuliaWSAPComplex(prec : PositiveInteger) : Exports == Implementation where
     ++ erf(z) the error function of z.
     erfc    : % -> %
     ++ erfc(z) returns the complementary error function of z.
-    toString: (%, JuliaWSExpression) -> String
+    toString: (%, JLWSExpression) -> String
     ++ toString(expr, form) returns the string representation of expr
     ++ with WS language format form.
     coerce   : Integer  -> %
     ++ coerce(i): convenience function.
     coerce   : Complex(Integer) -> % -- %i operations for example
     ++ coerce(gi) coerces gi. Convenience function.
-    coerce   : JuliaWSInteger  -> %
+    coerce   : JLWSInteger  -> %
     ++ coerce(int): coerces int. Convenience function.
-    coerce  : % -> JuliaWSExpression
+    coerce  : % -> JLWSExpression
     ++ coerce(cplx) coerces cplx. Convenience function.
-    complex    : (JuliaWSAPReal(prec), JuliaWSAPReal(prec)) -> %
+    complex    : (JLWSAPReal(prec), JLWSAPReal(prec)) -> %
     ++ complex(re, im) returns the complex number from real part re
     ++ and imaginary part im.
-    jWSComplex : JuliaWSAPReal(prec) -> %
-    ++ jWSComplex(re) constructs a JuliaWSComplex with real part re.
-    jWSComplex : (JuliaWSAPReal(prec), JuliaWSAPReal(prec)) -> %
-    ++ jWSComplex(re, im) constructs a JuliaWSComplex from real part re
+    jWSComplex : JLWSAPReal(prec) -> %
+    ++ jWSComplex(re) constructs a JLWSComplex with real part re.
+    jWSComplex : (JLWSAPReal(prec), JLWSAPReal(prec)) -> %
+    ++ jWSComplex(re, im) constructs a JLWSComplex from real part re
     ++ and imaginary part im.
-  Implementation ==> JuliaObject add
-    import from JuliaUtilityFunctions
-    import from JuliaWSExpression
+  Implementation ==> JLObject add
+    import from JLUtilityFunctions
+    import from JLWSExpression
 
     jbinop(op,a,b) ==> jlref(concat(["weval(",getind(a), op, getind(b),")"]))
     junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
@@ -1399,16 +1399,16 @@ JuliaWSAPComplex(prec : PositiveInteger) : Exports == Implementation where
         getind(c), ",", getind(d)"))"]))
     jbinbop(op,a,b) ==> jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
     error1(msg, f) ==> error concat [msg, " ", toString(f, jWSExpr "OutputForm")]
-    bool(a) ==> coerce(a)$JuliaWSSymbol
+    bool(a) ==> coerce(a)$JLWSSymbol
 
     if not jlUsing("MathLink") then
-      error "The Julia MathLink package is not installed."
+      error "The JL MathLink package is not installed."
     Rep := SExpression
 
     0 == jlref(concat(["W_`N[Complex[0,0],", string(prec), "]_`"]))
     1 == jlref(concat(["W_`N[Complex[1,0],", string(prec), "]_`"]))
     imaginary()  == jlref(concat(["W_`N[Complex[0,1],", string(prec), "]_`"]))
-    WT : JuliaWSSymbol := WTrue()
+    WT : JLWSSymbol := WTrue()
 
     zero? z == z = 0
     one? z  == z = 1
@@ -1431,11 +1431,11 @@ JuliaWSAPComplex(prec : PositiveInteger) : Exports == Implementation where
     x - y == jbinop("-", x, y)
     - x   == junfunc("-(", x)
     x : % * y : % == jbinop("*", x, y)
-    x : JuliaWSInteger * y : % == jbinop("*", x, y) 
-    x : Integer * y : % == jbinop("*", coerce(x)@JuliaWSInteger, y)
-    x : % ^ y : Integer == jbinop("^", x, coerce(y)@JuliaWSInteger)
-    x : % ^ y : PositiveInteger == jbinop("^", x, coerce(y)@JuliaWSInteger)
-    x : % ^ y : NonNegativeInteger == jbinop("^", x, coerce(y)@JuliaWSInteger)
+    x : JLWSInteger * y : % == jbinop("*", x, y) 
+    x : Integer * y : % == jbinop("*", coerce(x)@JLWSInteger, y)
+    x : % ^ y : Integer == jbinop("^", x, coerce(y)@JLWSInteger)
+    x : % ^ y : PositiveInteger == jbinop("^", x, coerce(y)@JLWSInteger)
+    x : % ^ y : NonNegativeInteger == jbinop("^", x, coerce(y)@JLWSInteger)
 
     unitNormal x ==
       -- TODO: to be improved 
@@ -1522,32 +1522,32 @@ JuliaWSAPComplex(prec : PositiveInteger) : Exports == Implementation where
     fresnelS(z) == junfunc("W_"FresnelS_"(",z)
     li(z)       == junfunc("W_"LogIntegral_"(",z)
     dilog(z)    ==
-      two := jWSReal("2")$JuliaWSAPReal(prec)
+      two := jWSReal("2")$JLWSAPReal(prec)
       jbinfunc("W_"PolyLog_"(", two, z)
 
     urand01() ==
       jWSExpr(concat(["RandomComplex[WorkingPrecision->",
         string(prec),"]"])) pretend %
-    string(z) == toString(z pretend JuliaWSExpression, jWSExpr("OutputForm"))
+    string(z) == toString(z pretend JLWSExpression, jWSExpr("OutputForm"))
     convert(obj) : String == string obj
     toString(z, form) == string jbinfunc("W_"ToString_"(", z, form)
-    coerce(z : %) : JuliaWSExpression == z pretend JuliaWSExpression
+    coerce(z : %) : JLWSExpression == z pretend JLWSExpression
     coerce(i : Integer) ==
       jlref(concat(["weval(W_"Complex_"(",
-        getind(coerce(i)@JuliaWSInteger), ",0))"]))
+        getind(coerce(i)@JLWSInteger), ",0))"]))
     coerce(z : Complex(Integer)) ==
       jlref(concat(["weval(W_"Complex_"(",
-        getind(coerce(real(z))@JuliaWSInteger),",",
-          getind(coerce(imag(z))@JuliaWSInteger),"))"]))
-    coerce(i : JuliaWSInteger) ==
+        getind(coerce(real(z))@JLWSInteger),",",
+          getind(coerce(imag(z))@JLWSInteger),"))"]))
+    coerce(i : JLWSInteger) ==
       jlref(concat(["weval(W_"Complex_"(", getind(i), ",0))"]))
-    coerce(r : JuliaWSAPReal(prec)) ==
+    coerce(r : JLWSAPReal(prec)) ==
       jlref(concat(["weval(W_"Complex_"(", getind(r), ",0))"]))
-    complex(re : JuliaWSAPReal(prec), im : JuliaWSAPReal(prec)) : % ==
+    complex(re : JLWSAPReal(prec), im : JLWSAPReal(prec)) : % ==
       jlref(concat(["weval(W_"Complex_"(", getind(re), "," , getind(im), "))"]))
-    jWSComplex(re : JuliaWSAPReal(prec)) : % ==
+    jWSComplex(re : JLWSAPReal(prec)) : % ==
       jlref(concat(["weval(W_"Complex_"(", getind(re), "," , getind(0), "))"]))
-    jWSComplex(re : JuliaWSAPReal(prec), im : JuliaWSAPReal(prec)) : % ==
+    jWSComplex(re : JLWSAPReal(prec), im : JLWSAPReal(prec)) : % ==
       jlref(concat(["weval(W_"Complex_"(", getind(re), "," , getind(im), "))"]))
     coerce(z) : OutputForm ==
       re := (r := real z)::OutputForm

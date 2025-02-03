@@ -2,11 +2,11 @@
 )set mess type off
 )expose UnittestCount UnittestAux Unittest
 
-testsuite "Julia Utils"
+testsuite "JL Utils"
 
-testcase "Julia shared library dynamic loading"
+testcase "JL shared library dynamic loading"
 libm:= jlDlOpen "libopenlibm"
 squareRoot:=jlDlSym(libm,jsym(sqrt))
-testTrue("jlApprox?(jlF64CApply(squareRoot,jfloat64(2)), jlApply(_"sqrt_",jfloat64(2)) pretend JuliaObjFloat64)")
+testTrue("jlApprox?(jlF64CApply(squareRoot,jfloat64(2)), jlApply(_"sqrt_",jfloat64(2)) pretend JLObjFloat64)")
 
 statistics()

@@ -1,18 +1,18 @@
-)abbrev domain JF32VEC JuliaFloat32Vector
-++ Domain for Julia Float32 vectors
+)abbrev domain JF32VEC JLFloat32Vector
+++ Domain for JL Float32 vectors
 ++ Author: G. Vanuxem
 ++ Date Created: november 2024
-++ Description: This domain provides a fast JuliaFloat32 vector type
+++ Description: This domain provides a fast JLFloat32 vector type
 ++ with no bound checking on elt's. Minimum index is 1.
-JuliaFloat32Vector() : Exports == Implementation where
+JLFloat32Vector() : Exports == Implementation where
   NNI             ==> NonNegativeInteger
-  JF32            ==> JuliaFloat32
+  JF32            ==> JLFloat32
   Qnew            ==> make_sf_array1$Lisp
   Qnew1           ==> make_sf_iarray1$Lisp
   Qsize           ==> SFVSIZE$Lisp
   Qelt            ==> SFAREF11$Lisp
   Qsetelt         ==> SFSETAREF11$Lisp
-  Exports ==> JuliaVectorCategory(JuliaFloat32) with
+  Exports ==> JLVectorCategory(JLFloat32) with
     vector  : List JF32 -> %
     ++ vector(l) converts the list l to a vector.
     qnew    : NonNegativeInteger -> %
@@ -24,13 +24,13 @@ JuliaFloat32Vector() : Exports == Implementation where
     ++ jlApply(func, v) applies func to argument v.
     jlApply : (String, %) -> JF32
     ++ jlApply(func, v) applies func to argument v
-    ++ and returns a Julia Float32.
+    ++ and returns a JL Float32.
     jlApply : (String, %) -> %
     ++ jlApply(func, v) applies func to argument v
-    ++ and returns a JuliaFloat32Vector.
+    ++ and returns a JLFloat32Vector.
     jlApply : (String, %, JF32) -> JF32
     ++ jlApply(func, v, val) applies func to arguments v and val
-    ++ and returns a Julia Float32.
+    ++ and returns a JL Float32.
     jlApply : (String, %, %) -> Void
     ++ jlApply(func, v1, v2) applies func to arguments v1 and v2.
     jlApply : (String, %, %, %) -> Void
@@ -43,25 +43,25 @@ JuliaFloat32Vector() : Exports == Implementation where
     ++ is within tolerance bounds. Applied component-vise.
     urand   :   (NNI, JF32) -> %
     ++ urand(n, x) returns a uniformly (0$NNI..x) distributed
-    ++ Julia vector of size n.
+    ++ JL vector of size n.
     urand01 :   NNI -> %
     ++ urand01(n) returns a uniformly (0$NNI..1) distributed
-    ++ Julia vector of size n.
+    ++ JL vector of size n.
     nrand :   NNI -> %
-    ++ nrand(n) returns a normally distributed Julia vector of size n
+    ++ nrand(n) returns a normally distributed JL vector of size n
     ++ with mean=0 and standard deviation=1.
     jlDisplay: % -> Void
-    ++ jldisplay(v) pretty prints v (à la Julia).
+    ++ jldisplay(v) pretty prints v (à la JL).
     juliaVPrint : Boolean -> Boolean
     ++ juliaVPrint(b) defines whether or not FriCAS uses 
-    ++ the printing version of Julia for vectors instead of
+    ++ the printing version of JL for vectors instead of
     ++ its OutputForm version. Returns previous value.
-    ++ By default it is the Julia version.
+    ++ By default it is the JL version.
   Implementation ==> add
-    import from JuliaUtilityFunctions
+    import from JLUtilityFunctions
     jlInitialize(true)
     defined?(func) ==> not jlDefined?(func) =>
-      error concat(func, " is not defined in Julia")
+      error concat(func, " is not defined in JL")
     pprint := true
 
     #x                          == Qsize x
@@ -73,12 +73,12 @@ JuliaFloat32Vector() : Exports == Implementation where
     qelt(x, i)                  == Qelt(x, i)
     elt(x, i : Integer)         ==
       i < 1 or i > #x =>
-        error "elt$JuliaFloat32Vector: index out of range"
+        error "elt$JLFloat32Vector: index out of range"
       Qelt(x, i)
     qsetelt!(x, i, s:JF32)      == Qsetelt(x, i, s)
     setelt!(x : %, i : Integer, s : JF32) ==
       i < 1 or i > #x =>
-        error "setelt!$JuliaFloat32Vector: index out of range"
+        error "setelt!$JLFloat32Vector: index out of range"
       Qsetelt(x, i, s)
     fill!(v, x)       == (for i in 1..Qsize v repeat Qsetelt(v, i, x); v)
     less?(v,n) == #v < n
@@ -158,8 +158,8 @@ JuliaFloat32Vector() : Exports == Implementation where
       v := qnew(n)
       (jl_1dffunction(0$NNI,"randn!", v)$Lisp;v)
 
-)abbrev package JF32VEC2 JuliaFloat32VectorFunctions2
-++ Package for operations on Julia Float32 vectors
+)abbrev package JF32VEC2 JLFloat32VectorFunctions2
+++ Package for operations on JL Float32 vectors
 ++ Author: G. Vanuxem
 ++ Date Created: november 2024
 ++ Basic Functions:
@@ -170,15 +170,15 @@ JuliaFloat32Vector() : Exports == Implementation where
 ++ References:
 ++ Description:
 ++   This package provides operations which all take as arguments
-++ JuliaFloat32Vector and functions from JuliaFloat32 to
-++ JuliaFloat32. The operations all iterate over their vector argument
-++ and either return a value of type JuliaFloat32Vector or a JuliaFloat32.
+++ JLFloat32Vector and functions from JLFloat32 to
+++ JLFloat32. The operations all iterate over their vector argument
+++ and either return a value of type JLFloat32Vector or a JLFloat32.
 
-JuliaFloat32VectorFunctions2() : Exports == Implementation where
-  A  ==> JuliaFloat32
-  B  ==> JuliaFloat32
-  VA ==> JuliaFloat32Vector
-  VB ==> JuliaFloat32Vector
+JLFloat32VectorFunctions2() : Exports == Implementation where
+  A  ==> JLFloat32
+  B  ==> JLFloat32
+  VA ==> JLFloat32Vector
+  VB ==> JLFloat32Vector
   O2 ==> FiniteLinearAggregateFunctions2(A, VA, B, VB)
   UB ==> Union(B,"failed")
 
@@ -211,26 +211,26 @@ JuliaFloat32VectorFunctions2() : Exports == Implementation where
        res := cons(r::B, res)
      vector reverse! res
 
-)abbrev domain JF32MAT JuliaFloat32Matrix
-++ Domain for Julia Float32 matrices
+)abbrev domain JF32MAT JLFloat32Matrix
+++ Domain for JL Float32 matrices
 ++ Author: G. Vanuxem
 ++ Date Created: november 2024
-++ Description: This domain provides a fast JuliaFloat32 matrix type
+++ Description: This domain provides a fast JLFloat32 matrix type
 ++ with no bound checking on elt's. Minimum index is 1.
-JuliaFloat32Matrix() :  Exports == Implementation where
+JLFloat32Matrix() :  Exports == Implementation where
   NNI         ==> NonNegativeInteger
   INT         ==> Integer
-  JF32        ==> JuliaFloat32
-  JF32VEC     ==> JuliaFloat32Vector
+  JF32        ==> JLFloat32
+  JF32VEC     ==> JLFloat32Vector
   Qnew        ==> make_sf_array2$Lisp
   Qnew1       ==> make_sf_iarray2$Lisp
   Qelt2       ==> SFAREF21$Lisp
   Qsetelt2    ==> SFSETAREF21$Lisp
-  Row         ==> JuliaFloat32Vector
-  Col         ==> JuliaFloat32Vector
+  Row         ==> JLFloat32Vector
+  Col         ==> JLFloat32Vector
   MLAF        ==> MatrixLinearAlgebraFunctions(JF32, Row, Col, %)
-  Exports ==> JuliaMatrixCategory(JF32, Row, Col) with
-    jlVector: % -> JuliaFloat32Vector
+  Exports ==> JLMatrixCategory(JF32, Row, Col) with
+    jlVector: % -> JLFloat32Vector
     ++ jlVector(m) returns reference to the internal vector representation.
     jlApply : (String, %) -> Void
     ++ jlApply(func, x) apply func to argument x.
@@ -241,12 +241,12 @@ JuliaFloat32Matrix() :  Exports == Implementation where
     jlApply : (String, %) -> %
     ++ jlApply(func, x) apply func to argument x.
     jlDisplay: % -> Void
-    ++ jldisplay(m) pretty prints m (à la Julia).
+    ++ jldisplay(m) pretty prints m (à la JL).
     juliaMPrint : Boolean -> Boolean
     ++ juliaMPrint(b) defines whether or not FriCAS uses 
-    ++ the printing version of Julia for matrices instead of
+    ++ the printing version of JL for matrices instead of
     ++ its OutputForm version. Returns previous value.
-    ++ By default it is the Julia version.
+    ++ By default it is the JL version.
     copy!: (%, %) -> %
     ++ copy!(b,a) copies efficiently a to b.No check are done on
     ++ arrays dimensions.
@@ -254,12 +254,12 @@ JuliaFloat32Matrix() :  Exports == Implementation where
     ++ identity(n) returns a n by n identity matrix.S
     urand   :   (NNI, NNI, JF32) -> %
     ++ urand(m,n,x) returns a uniformly (0$NNI..x) distributed
-    ++ Julia matrix of size (m,n).
+    ++ JL matrix of size (m,n).
     urand01 :   (NNI, NNI) -> %
     ++ urand01(m,n) returns a uniformly (0$NNI..1) distributed
-    ++ Julia matrix of size (m,n).
+    ++ JL matrix of size (m,n).
     nrand :   (NNI, NNI) -> %
-    ++ nrand(m,n) returns a normally distributed Julia matrix of size (m,n)
+    ++ nrand(m,n) returns a normally distributed JL matrix of size (m,n)
     ++ with mean=0 and standard deviation=1.
     positiveDefinite? : % -> Boolean
     ++ positiveDefinite?(m) tests wether or not m is positive definite.
@@ -281,16 +281,16 @@ JuliaFloat32Matrix() :  Exports == Implementation where
     transpose!:     (%, %) -> %
     ++ transpose!(b, a) stores transposed a in b.
   Implementation ==> add
-    import from JuliaUtilityFunctions
-    import from JuliaF32LinearAlgebra
-    import from JuliaFloat32Vector
+    import from JLUtilityFunctions
+    import from JLF32LinearAlgebra
+    import from JLFloat32Vector
     jlInitialize(true)
 
-    Rep := Record(elts : JuliaFloat32Vector,
+    Rep := Record(elts : JLFloat32Vector,
       ncols : NonNegativeInteger, nrows : NonNegativeInteger)
 
     defined?(func) ==> not jlDefined?(func)
-      => error concat(func, " is not defined in Julia")
+      => error concat(func, " is not defined in JL")
     pprint := true
 
     minRowIndex x == 1
@@ -304,20 +304,20 @@ JuliaFloat32Matrix() :  Exports == Implementation where
     qelt(m, i, j) == Qelt2(m.elts, m.ncols, m.nrows, j, i)
     elt(m:%, i:INT, j:INT) : JF32 ==
       i < 1 or i > m.ncols or j < 1 or j > m.nrows=>
-        error "elt$JuliaFloat32Matrix: index(es) out of range"
+        error "elt$JLFloat32Matrix: index(es) out of range"
       Qelt2(m.elts, m.ncols, m.nrows, j, i)
     qsetelt!(m, i, j, r) == Qsetelt2(m.elts, m.ncols, m.nrows, j, i, r)
     setelt!(m : %, i : Integer, j : Integer, r : JF32) ==
       i < 1 or i > m.ncols or j < 1 or j > m.nrows=>
-        error "setelt!$JuliaFloat32Matrix: index(es) out of range"
+        error "setelt!$JLFloat32Matrix: index(es) out of range"
       Qsetelt2(m.elts, m.ncols, m.nrows, j, i, r)
-    empty() == error "empty()$JuliaFloat32Matrix is not supported"
+    empty() == error "empty()$JLFloat32Matrix is not supported"
     qnew(rows, cols) ==
-      m: JuliaFloat32Vector := Qnew(rows, cols)
+      m: JLFloat32Vector := Qnew(rows, cols)
       [m, rows, cols]
   
     new(rows, cols, a) ==
-      m: JuliaFloat32Vector := Qnew1(cols, rows, a)
+      m: JLFloat32Vector := Qnew1(cols, rows, a)
       [m, rows, cols]
     jlVector(mat) == mat.elts
   
@@ -388,7 +388,7 @@ JuliaFloat32Matrix() :  Exports == Implementation where
     -- ??? why the pretend?
     rank(m) ==
       prec : JF32 := SINGLE_-FLOAT_-EPSILON$Lisp
-      rank(m pretend JuliaFloat32Matrix, prec * jf32(10))$JuliaF32LinearAlgebra
+      rank(m pretend JLFloat32Matrix, prec * jf32(10))$JLF32LinearAlgebra
 
     inverse(m) ==
       m.nrows ~= m.ncols => error "inverse: matrix is not square"
@@ -460,29 +460,29 @@ JuliaFloat32Matrix() :  Exports == Implementation where
     rowEchelon(m) == rowEchelon(m)$MLAF
     minordet(m) == minordet(m)$MLAF
 
-)abbrev domain JF32SMAT JuliaF32SquareMatrix
-++ Domain for Julia Float32 square matrices
+)abbrev domain JF32SMAT JLF32SquareMatrix
+++ Domain for JL Float32 square matrices
 ++ Author: G. Vanuxem
 ++ Date Created: november 2024
-++ Description: This domain provides a fast Julia Float32
+++ Description: This domain provides a fast JL Float32
 ++ square matrix type with no bound checking on elt's. Minimum index is 1.
-JuliaF32SquareMatrix(n: NonNegativeInteger) : Exports == Implementation where
-  Row ==> DirectProduct(n, JuliaFloat32)
-  Col ==> DirectProduct(n, JuliaFloat32)
-  Exports ==> Join(JuliaType, SquareMatrixCategory(n, JuliaFloat32,
-        Row, Col), CoercibleTo(JuliaFloat32Matrix)) with
-    qcoerce: JuliaFloat32Matrix -> %
-    ++ qcoerce(m) coerces m to JuliaF32SquareMatrix
+JLF32SquareMatrix(n: NonNegativeInteger) : Exports == Implementation where
+  Row ==> DirectProduct(n, JLFloat32)
+  Col ==> DirectProduct(n, JLFloat32)
+  Exports ==> Join(JLType, SquareMatrixCategory(n, JLFloat32,
+        Row, Col), CoercibleTo(JLFloat32Matrix)) with
+    qcoerce: JLFloat32Matrix -> %
+    ++ qcoerce(m) coerces m to JLF32SquareMatrix
     ++ trusting that m is square.
-    squareMatrix: JuliaFloat32Matrix -> %
-    ++ squareMatrix(m) returns a copy of m as a JuliaF32SquareMatrix.
-  Implementation ==>  JuliaFloat32Matrix add
-    import from JuliaFloat32Matrix
-    JF32MAT ==> JuliaFloat32Matrix
+    squareMatrix: JLFloat32Matrix -> %
+    ++ squareMatrix(m) returns a copy of m as a JLF32SquareMatrix.
+  Implementation ==>  JLFloat32Matrix add
+    import from JLFloat32Matrix
+    JF32MAT ==> JLFloat32Matrix
     NNI ==> NonNegativeInteger
 
     qcoerce(m) == m pretend %
-    coerce(m) == m pretend JuliaFloat32Matrix
+    coerce(m) == m pretend JLFloat32Matrix
 
     0  : % == new(n,n,0)$JF32MAT pretend %
     1  : % == scalarMatrix(n,1)$JF32MAT pretend %
@@ -500,30 +500,30 @@ JuliaF32SquareMatrix(n: NonNegativeInteger) : Exports == Implementation where
     one?(m) == jl_bool_2dffunction(0$NNI, "isone",
       jlVector(m pretend JF32MAT), ncols(m pretend JF32MAT))$Lisp
 
-)abbrev domain JCF32VEC JuliaComplexF32Vector
-++ Domain for Julia Complex Float32 vectors
+)abbrev domain JCF32VEC JLComplexF32Vector
+++ Domain for JL Complex Float32 vectors
 ++ Author: G. Vanuxem
 ++ Date Created: november 2024
-++ Description: This domain provides a fast JuliaComplexF32 vector type
+++ Description: This domain provides a fast JLComplexF32 vector type
 ++ with no bound checking on elt's. Minimum index is 1.
-JuliaComplexF32Vector() :  Exports == Implementation where
+JLComplexF32Vector() :  Exports == Implementation where
   NNI         ==> NonNegativeInteger
-  JF32        ==> JuliaFloat32
-  JF32VEC     ==> JuliaFloat32Vector
+  JF32        ==> JLFloat32
+  JF32VEC     ==> JLFloat32Vector
   Qelt1       ==> JCFELT$Lisp
   Qsetelt1    ==> JCFSETELT$Lisp
   Qsize       ==> JCFLEN$Lisp
   Qnew        ==> MAKE_CF_ARRAY1$Lisp
-  Exports ==> JuliaVectorCategory(JuliaComplexF32) with
+  Exports ==> JLVectorCategory(JLComplexF32) with
     qnew : NNI -> %
       ++ qnew(n) creates a new uninitialized vector of length n.
-    vector : List JuliaComplexF32 -> %
+    vector : List JLComplexF32 -> %
     ++ vector(l) converts the list l to a vector.
     real : % -> JF32VEC
-    ++ real(v) returns a JuliaFloat32 vector with the real part
+    ++ real(v) returns a JLFloat32 vector with the real part
     ++ of the v elements.
     imag : % -> JF32VEC
-    ++ imag(v) returns a JuliaFloat32 vector with the imaginary part
+    ++ imag(v) returns a JLFloat32 vector with the imaginary part
     ++ of the v elements.
     copy!   : (%, %) -> %
     ++ copy!(b,a) copies efficiently a to b. No check are done on
@@ -541,34 +541,34 @@ JuliaComplexF32Vector() :  Exports == Implementation where
     ++ is within tolerance bounds. Applied component-wise.
     urand01 :   NNI -> %
     ++ urand01(n) returns a uniformly (0$NNI..1) distributed
-    ++ Julia vector of size n.
+    ++ JL vector of size n.
     nrand :   NNI -> %
-    ++ nrand(n) returns a normally distributed Julia vector of size n.
-    ++ See Julia documentation (randn) for this complex version used here.
+    ++ nrand(n) returns a normally distributed JL vector of size n.
+    ++ See JL documentation (randn) for this complex version used here.
     jlDisplay : % -> Void
-    ++ jldisplay(v) pretty prints v (à la Julia).
+    ++ jldisplay(v) pretty prints v (à la JL).
     juliaCVPrint : Boolean -> Boolean
     ++ juliaCVPrint(b) defines whether or not FriCAS uses 
-    ++ the printing version of Julia for matrices instead of
+    ++ the printing version of JL for matrices instead of
     ++ its OutputForm version. Returns previous value.
-    ++ By default it is the Julia version.
+    ++ By default it is the JL version.
   Implementation ==> add
-    import from JuliaUtilityFunctions
-    import from JuliaCF32LinearAlgebra
+    import from JLUtilityFunctions
+    import from JLCF32LinearAlgebra
     jlInitialize(true)
     defined?(func) ==> not jlDefined?(func) =>
-      error concat(func, " is not defined in Julia")
+      error concat(func, " is not defined in JL")
     pprint := true
 
     qelt(x, i)                  == Qelt1(x, i)
     elt(x, i : Integer)         ==
         i < 1 or i > #x =>
-            error "elt$JuliaComplexF32Vector: index out of range"
+            error "elt$JLComplexF32Vector: index out of range"
         Qelt1(x, i)
     qsetelt!(x, i, s)           == Qsetelt1(x, i, s)
-    setelt!(x : %, i : Integer, s:JuliaComplexF32) ==
+    setelt!(x : %, i : Integer, s:JLComplexF32) ==
         i < 1 or i > #x =>
-            error "setelt!$JuliaComplexF32Vector: index out of range"
+            error "setelt!$JLComplexF32Vector: index out of range"
         Qsetelt1(x, i, s)
     #x          == Qsize(x)
     minIndex x  == 1
@@ -635,36 +635,36 @@ JuliaComplexF32Vector() :  Exports == Implementation where
         jl_stringify_1dffunction(1$NNI, "show", "_"text/plain_"", v)$Lisp
       pile(append(["" pretend OutputForm],rest ret))
 
-)abbrev domain JCF32MAT JuliaComplexF32Matrix
-++ Domain for Julia Complex Float32 matrices.
+)abbrev domain JCF32MAT JLComplexF32Matrix
+++ Domain for JL Complex Float32 matrices.
 ++ Author: G. Vanuxem
 ++ Date Created: november 2024
-++ Description: This domain provides a fast JuliaComplexF32 matrix type
+++ Description: This domain provides a fast JLComplexF32 matrix type
 ++ with no bound checking on elt's. Minimum index is 1.
-JuliaComplexF32Matrix() : Exports == Implementation where
-  JF32        ==> JuliaFloat32
-  JF32MAT     ==> JuliaFloat32Matrix
-  JCF32       ==> JuliaComplexF32
-  JCF32VEC    ==> JuliaComplexF32Vector
+JLComplexF32Matrix() : Exports == Implementation where
+  JF32        ==> JLFloat32
+  JF32MAT     ==> JLFloat32Matrix
+  JCF32       ==> JLComplexF32
+  JCF32VEC    ==> JLComplexF32Vector
   NNI         ==> NonNegativeInteger
   Qelt2       ==> JCFELT2$Lisp
   Qsetelt2    ==> JCFSETELT2$Lisp
   Qnew        ==> MAKE_CF_ARRAY1$Lisp
-  Row         ==> JuliaComplexF32Vector
-  Col         ==> JuliaComplexF32Vector
+  Row         ==> JLComplexF32Vector
+  Col         ==> JLComplexF32Vector
   MLAF        ==> MatrixLinearAlgebraFunctions(JCF32, Row, Col, %)
-  Exports ==> JuliaMatrixCategory(JCF32, Row, Col) with
+  Exports ==> JLMatrixCategory(JCF32, Row, Col) with
     coerce: JF32MAT -> %
-    ++ coerce(m) coerces m to a a Julia Complex Float 32 matrix.
+    ++ coerce(m) coerces m to a a JL Complex Float 32 matrix.
     jlDisplay : % -> Void  
-    ++ jlDisplay(m) pretty prints m (à la Julia).
-    jlVector: % -> JuliaComplexF32Vector
+    ++ jlDisplay(m) pretty prints m (à la JL).
+    jlVector: % -> JLComplexF32Vector
     ++ jlVector(m) returns reference to the internal vector representation.
     real : % -> JF32MAT
-    ++ real(m) returns a JuliaFloat32 matrix with the real part of the
+    ++ real(m) returns a JLFloat32 matrix with the real part of the
     ++ m elements.
     imag : % -> JF32MAT
-    ++ imag(m) returns a JuliaFloat32 matrix with the imaginary part
+    ++ imag(m) returns a JLFloat32 matrix with the imaginary part
     ++ of the m elements.
     jlApply : (String, %) -> Void
     ++ jlApply(func, x) apply func to argument x.
@@ -694,10 +694,10 @@ JuliaComplexF32Matrix() : Exports == Implementation where
     ++ diagonalMatrix(v) returns a diagonal matrix with elements of v.
     urand01:   (NNI, NNI) -> %
     ++ urand01(m,n) returns a uniformly (0$NNI..1) distributed
-    ++ Julia matrix of size (m,n).
+    ++ JL matrix of size (m,n).
     nrand :   (NNI, NNI) -> %
-    ++ nrand(m,n) returns a normally distributed Julia matrix of size (m,n).
-    ++ See Julia documentation (randn) for this complex version used here.
+    ++ nrand(m,n) returns a normally distributed JL matrix of size (m,n).
+    ++ See JL documentation (randn) for this complex version used here.
     transpose!:     (%, %) -> %
     ++ transpose!(b, a) stores transposed a in b.
     adjoint:     % -> %
@@ -708,19 +708,19 @@ JuliaComplexF32Matrix() : Exports == Implementation where
     ++ the conjugate transposition of m.
     juliaCMPrint : Boolean -> Boolean
     ++ juliaMPrint(b) defines whether or not FriCAS uses 
-    ++ the printing version of Julia for matrices instead of
+    ++ the printing version of JL for matrices instead of
     ++ its OutputForm version. Returns previous value.
-    ++ By default it is the Julia version.
+    ++ By default it is the JL version.
   Implementation ==> add
-    import from JuliaUtilityFunctions
-    import from JuliaCF32LinearAlgebra
-    import from JuliaFloat32Vector
-    import from JuliaFloat32Matrix
+    import from JLUtilityFunctions
+    import from JLCF32LinearAlgebra
+    import from JLFloat32Vector
+    import from JLFloat32Matrix
     jlInitialize(true)
     defined?(func) ==> not jlDefined?(func) =>
-      error concat(func, " is not defined in Julia")
+      error concat(func, " is not defined in JL")
     pprint := true
-    Rep := Record(elts : JuliaComplexF32Vector,
+    Rep := Record(elts : JLComplexF32Vector,
         ncols : NonNegativeInteger, nrows : NonNegativeInteger)
     minRowIndex x == 1
     minColIndex x == 1
@@ -731,14 +731,14 @@ JuliaComplexF32Matrix() : Exports == Implementation where
     qelt(m, i, j) == Qelt2(m.elts, m.ncols, j, i)
     elt(m:%, i : Integer, j : Integer) ==
         i < 1 or i > m.ncols or j < 1 or j > m.nrows =>
-            error "elt$JuliaComplexF32Matrix: index(es) out of range"
+            error "elt$JLComplexF32Matrix: index(es) out of range"
         Qelt2(m.elts, m.ncols, j, i)
     qsetelt!(m, i, j, r) == Qsetelt2(m.elts, m.ncols, j, i, r)
     setelt!(m : %, i : Integer, j : Integer, r : JCF32) ==
         i < 1 or i > m.ncols or j < 1 or j > m.nrows =>
-            error "setelt!$JuliaComplexF32Matrix: index(es) out of range"
+            error "setelt!$JLComplexF32Matrix: index(es) out of range"
         Qsetelt2(m.elts, m.ncols, j, i, r)
-    empty() == error "empty()$JuliaComplexF32Matrix is not supported"
+    empty() == error "empty()$JLComplexF32Matrix is not supported"
     qnew(rows, cols) ==
         vec : JCF32VEC := Qnew(rows*cols)
         [vec, rows, cols]
@@ -826,8 +826,8 @@ JuliaComplexF32Matrix() : Exports == Implementation where
     -- ??? why the pretend?
     rank(m) ==
         prec : JF32 := SINGLE_-FLOAT_-EPSILON$Lisp
-        rank(m pretend JuliaComplexF32Matrix,
-            prec * jf32(10))$JuliaCF32LinearAlgebra
+        rank(m pretend JLComplexF32Matrix,
+            prec * jf32(10))$JLCF32LinearAlgebra
     inverse(m) ==
         m.nrows ~= m.ncols => error "inverse: matrix is not square"
         inv := qnew(m.ncols, m.ncols) 
@@ -870,39 +870,39 @@ JuliaComplexF32Matrix() : Exports == Implementation where
                 for i in 1 .. ncols(m)] _
                 for j in 1 .. nrows(m)]
             matrix l
-    coerce(m : JuliaFloat32Matrix) : % ==
+    coerce(m : JLFloat32Matrix) : % ==
       newm := qnew(nrows(m), ncols(m))
       for i in 1 .. ncols(m) repeat
         for j in 1 .. nrows(m) repeat
           qsetelt!(newm, i, j, complex(qelt(m, i, j), 0)$JCF32)             
       newm
 
-)abbrev domain JCF32SMA JuliaComplexF32SquareMatrix
-++ Domain for Julia Complex Float32 square matrices
+)abbrev domain JCF32SMA JLComplexF32SquareMatrix
+++ Domain for JL Complex Float32 square matrices
 ++ Author: G. Vanuxem
 ++ Date Created: november 2024
-++ Description: This domain provides a fast Julia Float32
+++ Description: This domain provides a fast JL Float32
 ++ square matrix type with no bound checking on elt's. Minimum index is 1.
-JuliaComplexF32SquareMatrix(n : NonNegativeInteger) : Exports == Implementation where
-  Row ==> DirectProduct(n, JuliaComplexF32)
-  Col ==> DirectProduct(n, JuliaComplexF32)
-  Exports ==> Join(JuliaType, SquareMatrixCategory(n, JuliaComplexF32, 
-        Row, Col), CoercibleTo(JuliaComplexF32Matrix)) with
-    qcoerce: JuliaComplexF32Matrix -> %
-    ++ qcoerce(m) coerces m to JuliaComplexF32SquareMatrix
+JLComplexF32SquareMatrix(n : NonNegativeInteger) : Exports == Implementation where
+  Row ==> DirectProduct(n, JLComplexF32)
+  Col ==> DirectProduct(n, JLComplexF32)
+  Exports ==> Join(JLType, SquareMatrixCategory(n, JLComplexF32, 
+        Row, Col), CoercibleTo(JLComplexF32Matrix)) with
+    qcoerce: JLComplexF32Matrix -> %
+    ++ qcoerce(m) coerces m to JLComplexF32SquareMatrix
     ++ trusting that m is square.
-    coerce: % -> JuliaComplexF32Matrix
-    ++ coerce(m) coerces m to JuliaComplexF32Matrix
-    squareMatrix: JuliaComplexF32Matrix -> %
+    coerce: % -> JLComplexF32Matrix
+    ++ coerce(m) coerces m to JLComplexF32Matrix
+    squareMatrix: JLComplexF32Matrix -> %
     ++ squareMatrix(m) returns a copy of m as 
-    ++ a JuliaComplexF32SquareMatrix.
-  Implementation ==> JuliaComplexF32Matrix add
-    import from JuliaComplexF32Matrix
-    JCF32MAT ==> JuliaComplexF32Matrix
+    ++ a JLComplexF32SquareMatrix.
+  Implementation ==> JLComplexF32Matrix add
+    import from JLComplexF32Matrix
+    JCF32MAT ==> JLComplexF32Matrix
     NNI ==> NonNegativeInteger
 
     qcoerce(m) == m pretend %
-    coerce(m) == m pretend JuliaComplexF32Matrix
+    coerce(m) == m pretend JLComplexF32Matrix
 
     0  : % == new(n,n,0)$JCF32MAT pretend %
     1  : % == scalarMatrix(n,1)$JCF32MAT pretend %

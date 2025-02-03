@@ -1,24 +1,24 @@
-)abbrev package JPLOT JuliaPlotFunctions
+)abbrev package JPLOT JLPlotFunctions
 ++ Author: G. Vanuxem
 ++ Date Created: march 2023
 ++ Basic Operations: jlPlot, jlSurface
 ++ Keywords: plot, surface
 ++ Description: low level plotting functions
-++ using the Plots module from Julia.
-JuliaPlotFunctions() : Exports == Implementation where
+++ using the Plots module from JL.
+JLPlotFunctions() : Exports == Implementation where
   NNI     ==> NonNegativeInteger
-  JF64    ==> JuliaFloat64
+  JF64    ==> JLFloat64
   SF      ==> DoubleFloat
   SEG     ==> Segment Float
-  JF64VEC ==> JuliaFloat64Vector
-  JF64MAT ==> JuliaFloat64Matrix
+  JF64VEC ==> JLFloat64Vector
+  JF64MAT ==> JLFloat64Matrix
   Exports ==> with
-    jlRange : SEG -> JuliaFloat64Vector
-    ++ jlRange(range) is a utility function that returns a JuliaFloat64Vector
+    jlRange : SEG -> JLFloat64Vector
+    ++ jlRange(range) is a utility function that returns a JLFloat64Vector
     ++ with 250 points from \spad{low(range)} to \spad{high(range)}.
-    jlRange : (SEG, PositiveInteger) -> JuliaFloat64Vector
+    jlRange : (SEG, PositiveInteger) -> JLFloat64Vector
     ++ jlRange(range, n) is a utility function that returns a
-    ++ JuliaFloat64Vector with n points from \spad{low(range)}
+    ++ JLFloat64Vector with n points from \spad{low(range)}
     ++ to \spad{high(range)}.
     jlDensity : JF64VEC -> Void
     ++ jlDensity(x) draws a line plot of a kernel density estimate of x.
@@ -72,7 +72,7 @@ JuliaPlotFunctions() : Exports == Implementation where
     ++ jlPlotTitle!(title) draws `title' as plot title in the current plot.
     ++ For example:
     ++   jlPlotTitle! "sin(x)"
-    ++ if you have the LatexStrings Julia package
+    ++ if you have the LatexStrings JL package
     ++ \example{jlPlotTitle! jlLatex latex sin(x)}
     ++ For simple expressions title will automatically
     ++ be enclosed betweek $. 
@@ -88,15 +88,15 @@ JuliaPlotFunctions() : Exports == Implementation where
     ++ jlPlotZlims!(z1,z2) sets z plot limits.
     jlPlotXlabel! : String -> Void
     ++ jlPlotXlabel!(str) sets x label.
-    ++ See \spadfunFromX{jlPlotTitle}{JuliaPlotFunctions} for more
+    ++ See \spadfunFromX{jlPlotTitle}{JLPlotFunctions} for more
     ++ informations on the diffent supported formats.
     jlPlotYlabel! : String -> Void
     ++ jlPlotYlabel!(str) sets y label.
-    ++ See \spadfunFromX{jlPlotTitle}{JuliaPlotFunctions} for more
+    ++ See \spadfunFromX{jlPlotTitle}{JLPlotFunctions} for more
     ++ informations on the diffent supported formats.
     jlPlotZlabel! : String -> Void
     ++ jlPlotZlabel!(str) sets z label.
-    ++ See \spadfunFromX{jlPlotTitle}{JuliaPlotFunctions} for more
+    ++ See \spadfunFromX{jlPlotTitle}{JLPlotFunctions} for more
     ++ informations on the diffent supported formats.
     
     -- Should be moved to another package 
@@ -164,7 +164,7 @@ JuliaPlotFunctions() : Exports == Implementation where
     ++ png (default), PDF, svg and more.
     ++ See https://docs.juliaplots.org/latest/output/#savefig-/-format 
   Implementation ==> add
-    import from JuliaUtilityFunctions
+    import from JLUtilityFunctions
 
     jlInitialize(true)
 
@@ -172,10 +172,10 @@ JuliaPlotFunctions() : Exports == Implementation where
     POINTS ==> 250
 
     --if not jlUsing("Plots") then
-    --  error "JuliaPlotFunctions: the Julia package Plots is not installed"
+    --  error "JLPlotFunctions: the JL package Plots is not installed"
 
     if not jlUsing("LaTeXStrings") then
-      jlEvalString("printstyled(_"LaTexStrings is not installed in Julia " _
+      jlEvalString("printstyled(_"LaTexStrings is not installed in JL " _
       "do not use it (axis, title, etc.).\n_"; color=:green)")
     --if jlUsing "Gaston" then
     --  jlEvalString("gaston()")
@@ -190,7 +190,7 @@ JuliaPlotFunctions() : Exports == Implementation where
     jlRange(seg)  ==
       xHi := coerce(high(seg))@SF
       xLo := coerce(low(seg))@SF
-      v := qnew(POINTS)$JuliaFloat64Vector
+      v := qnew(POINTS)$JLFloat64Vector
       xLow := coerce(xLo)@JF64
       xPad := coerce((xHi - xLo)/(POINTS-1))@JF64
       for i in 1..POINTS repeat
@@ -202,7 +202,7 @@ JuliaPlotFunctions() : Exports == Implementation where
       xHi := coerce(high(seg))@SF
       xLo := coerce(low(seg))@SF
       xPad := coerce((xHi - xLo)/(n-1))@JF64
-      v := qnew(n)$JuliaFloat64Vector
+      v := qnew(n)$JLFloat64Vector
       xLow := coerce(xLo)@JF64
       xPad := coerce((xHi - xLo)/(n-1))@JF64
       for i in 1..n repeat
@@ -240,10 +240,10 @@ JuliaPlotFunctions() : Exports == Implementation where
     jlBar!(x,y) ==
       jlApply("bar!",x, y)
       display()
-    jlSurface(x,y, mat : JuliaFloat64Matrix)  ==
+    jlSurface(x,y, mat : JLFloat64Matrix)  ==
       jl_2v2dfunction("surface",x,y,jlVector(mat), nrows(mat))$Lisp
       display()
-    jlSurface!(x,y, mat : JuliaFloat64Matrix)     ==
+    jlSurface!(x,y, mat : JLFloat64Matrix)     ==
       jl_2v2dfunction("surface!",x,y,jlVector(mat), nrows(mat))$Lisp
       display()
     jlWireframe(x,y,mat)     ==
@@ -395,20 +395,20 @@ JuliaPlotFunctions() : Exports == Implementation where
           qsetelt!(height, i, j, coerce(func(pdf(qelt(v1,i)), pdf(qelt(v2,j)))))
       jlContourf!(v1, v2, height)
 
-)abbrev package JDRAW JuliaDrawFunctions
+)abbrev package JDRAW JLDrawFunctions
 ++ Author: G. Vanuxem
 ++ Date Created: march 2023
 ++ Basic Operations: jlPlot, jlSurface
-++ Related Constructors: JuliaPlotFunctions
+++ Related Constructors: JLPlotFunctions
 ++ Keywords: jlPlot, jlSurface
-++ Description: JuliaDrawFunctions provides
+++ Description: JLDrawFunctions provides
 ++ top level functions for drawing graphics of expressions.
-JuliaDrawFunctions(Ex : Join(ConvertibleTo InputForm, SetCategory)):
+JLDrawFunctions(Ex : Join(ConvertibleTo InputForm, SetCategory)):
         Exports == Implementation where
-    JF64    ==> JuliaFloat64
+    JF64    ==> JLFloat64
     SF      ==> DoubleFloat
-    JF64VEC ==> JuliaFloat64Vector
-    JF64MAT ==> JuliaFloat64Matrix
+    JF64VEC ==> JLFloat64Vector
+    JF64MAT ==> JLFloat64Matrix
     BIND    ==> SegmentBinding Float
     Exports ==> with
 
@@ -485,7 +485,7 @@ JuliaDrawFunctions(Ex : Join(ConvertibleTo InputForm, SetCategory)):
       ++ Fill area between contours.
 
     Implementation ==> add
-      import from JuliaPlotFunctions
+      import from JLPlotFunctions
       import from MakeFloatCompiledFunction(Ex)
 
       pdf(x)      ==> x pretend SF

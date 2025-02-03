@@ -1,7 +1,7 @@
-)abbrev package JCFSF JuliaComplexFloatSpecialFunctions
-++ Special functions computed using Julia's ecosystem.
-JuliaComplexFloatSpecialFunctions() : Exports == Implementation where
-  JCF ==> JuliaComplexFloat
+)abbrev package JCFSF JLComplexFloatSpecialFunctions
+++ Special functions computed using JL's ecosystem.
+JLComplexFloatSpecialFunctions() : Exports == Implementation where
+  JCF ==> JLComplexFloat
   Exports ==> with
     sind   : JCF -> JCF
     ++ sind(x) computes sine of x, where x is in degrees.
