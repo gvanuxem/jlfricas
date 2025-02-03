@@ -1,0 +1,208 @@
+)abbrev category NPADICC NMPadicIntegerCategory
+++ Author: Grégroy based on the work of Clifton J. Williamson)
+++ Date Created: 15 May 1990
+++ Basic Operations:
+++ Related Domains:
+++ Also See:
+++ AMS Classifications:
+++ Keywords: p-adic, completion
+++ Examples:
+++ References:
+++ Description: This is the catefory of stream-based representations of
+++   the p-adic integers.
+NMPadicIntegerCategory(p) : Category == Definition where
+  p     :   NMInteger
+  NINT  ==> NMInteger
+  I     ==> Integer
+  NNI   ==> NonNegativeInteger
+
+  Definition ==> Join(EuclideanDomain, CharacteristicZero) with
+    --digits : % -> ST I
+    --  ++ \spad{digits(x)} returns a stream of p-adic digits of x.
+    order : % -> NNI
+      ++ \spad{order(x)} returns the exponent of the highest power of p
+      ++ dividing x.
+    extend : (%, I) -> %
+      ++ \spad{extend(x, n)} forces the computation of digits up to order n.
+    complete : % -> %
+      ++ \spad{complete(x)} forces the computation of all digits.
+    modulus : () -> NMInteger
+      ++ \spad{modulus()} returns the value of p.
+    moduloP : % -> I
+      ++ \spad{modulo(x)} returns a, where \spad{x = a + b p}.
+    quotientByP : % -> %
+      ++ \spad{quotientByP(x)} returns b, where \spad{x = a + b p}.
+    approximate : (%, I) -> I
+      ++ \spad{approximate(x, n)} returns an integer y such that
+      ++ \spad{y = x (mod p^n)}
+      ++ when n is positive, and 0 otherwise.
+    sqrt : (%, I) -> %
+      ++ \spad{sqrt(b, a)} returns a square root of b.
+      ++ Argument \spad{a} is a square root of b \spad{(mod p)}.
+    --root : (SUP I, I) -> %
+    --  ++ \spad{root(f, a)} returns a root of the polynomial \spad{f}.
+    --  ++ Argument \spad{a} must be a root of \spad{f} \spad{(mod p)}.
+
+)abbrev domain INPADICZ InnerNMPadicInteger
+++ Author: Vanuxem Grégory
+++ Date Created: 1 February 2025
+++ Basic Operations:
+++ Related Domains:
+++ Also See:
+++ AMS Classifications:
+++ Keywords:
+++ Keywords: p-adic, completion
+++ Examples:
+++ References:
+++ Description:
+++   This domain implements Zp, the p-adic completion of the integers.
+InnerNMPadicInteger(p : NMInteger, prec : JLInt64) : Exports == Implementation where
+  --unBalanced? : Boolean
+  I    ==> Integer
+  NNI  ==> NonNegativeInteger
+  OUT  ==> OutputForm
+  L    ==> List
+  NINT ==> NMInteger
+  NFINT ==> NMFraction(NMInteger)
+  JI64 ==> JLInt64
+  Exports ==> Join(NMCommutativeRing, NMPadicIntegerCategory(p)) with
+    "+" : (NINT, %) -> %
+    sqrt : % -> %
+    ++ sqrt(x) returns square root of x if  
+    valuation : % -> %
+    ++ valuation(x) 
+    liftZ : % -> NINT
+    ++ liftZ(x) lift x to a NM Integer.
+    liftQ : % -> NFINT
+    ++ liftQ(x) lift x to a NM Fraction NM Integer.
+    log : % -> %
+    ++ log(x) com putes the logarithm of x.
+    exp : % -> %
+    ++ exp(x) computes the exponential of x.
+    teichmuller : % -> %
+    ++ ++ teichmuller(x) computes the Teihmuller lift of x.
+    ++ The valuation of x must be non negative.
+    coerce : NMInteger -> %
+    ++ coerce(x) returns x as the p-adic completion of the NM Integer.    
+    coerce: NMFraction(NMInteger) -> %
+    ++ 
+    jpadic : NMInteger -> %
+    ++ padic(x) returns x as the p-adic completion of the NM Integer.
+    jpadic : NMFraction NMInteger -> %
+    ++ padic(x) returns x as the p-adic completion of the NM Integer.
+    O : (NMInteger, NMInteger) -> %
+    ++ 
+    prime : () -> NMInteger
+    ++
+    precision : % -> Integer
+    ++ 
+  Implementation ==> add
+    import from JLUtilityFunctions
+    import from String
+
+    jlImport "AbstractAlgebra.Generic.prime"
+    jlImport "AbstractAlgebra.O"
+
+    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+    jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+    junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
+    jbinbfunc(op,a,b) ==>
+      jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
+
+    Rep := SExpression
+    
+    -- Set up the field
+    INPADICZP := concat(["INPADICZ", string(p), "p",string(prec)])
+    jlEvalString(concat([INPADICZP, "=padic_field(", getind(p), ", precision=", string(prec),")"]))
+    jlNMRing() == INPADICZP
+    INPADICZPP := concat(INPADICZP,"(")
+    jlObject() == jlEvalString(concat(["string(", INPADICZP,")"]))
+    O(p : NINT, e : NINT) == jlref(concat(["O(",INPADICZP,",", string(p),"^",string(e),")"]))
+
+    unit?(a) == junbfunc("is_unit", a)
+    one?(a) == junbfunc("isone", a)
+    zero?(a) == junbfunc("iszero", a)
+
+    characteristic() == 0
+
+    --euclideanSize(x) == order(retract x)
+
+    prime() == jlref(concat(["prime(",jlNMRing(),")"]))$NMInteger
+    precision(x) == jlEvalString(concat ["precision(", getind(x),")"])
+    sqrt(x) == junfunc("sqrt",x)
+    valuation(x) == junfunc("valuation",x)
+    exp(x) == junfunc("exp",x)
+    log(x) == junfunc("log",x)
+    teichmuller(x) == junfunc("teichmuller",x)
+    liftZ(x) == jlref(concat(["lift(","ZZ", ",", getind(x),")"]))$NINT
+    liftQ(x) == jlref(concat(["lift(","QQ", ",", getind(x),")"]))$NFINT
+    --digits x == stream x
+
+    --extend(x, n) == extend(x, n + 1)$Rep
+    --complete x == complete(x)$Rep
+
+    --modP : I -> I
+    --modP n ==
+      --unBalanced? or (p = 2) => positiveRemainder(n, p)
+      --symmetricRemainder(n, p)
+
+    --modPInfo : I -> Record(digit : I, carry : I)
+    --modPInfo n ==
+    --  dv := divide(n, p)
+    --  r0 := dv.remainder; q := dv.quotient
+    --  if (r := modP r0) ~= r0 then q := q + ((r0 - r) quo p)
+    --  [r, q]
+
+    --invModP : I -> I
+    --invModP n == invmod(n, p)
+
+    modulus() == jlref(concat ["prime(",jlNMRing(), ")"])$NMInteger
+    --moduloP x     == (empty? x => 0; frst x)
+    --quotientByP x == (empty? x => x; rst x)
+
+    --approximate(x, n) ==
+    --  n <= 0 or empty? x => 0
+    --  frst x + p * approximate(rst x, n - 1)
+
+    --x = y ==
+    -- st : ST I := stream(x - y)
+    --  n : I := _$streamCount$Lisp
+    --  for i in 0..n repeat
+    --    empty? st => return true
+    --    frst st ~= 0 => return false
+    --   st := rst st
+    --  empty? st
+
+    --order x ==
+    --  st := stream x
+    --  for i in 0..1000 repeat
+    --    empty? st => return 0
+    --    frst st ~= 0 => return i
+    --    st := rst st
+    --  error "order: series has more than 1000 leading zero coefs"
+
+    0 ==  jlref(concat ["zero(", INPADICZP, ")"])
+    1 ==  jlref(concat ["one(", INPADICZP, ")"])
+    a: NINT + pa : % == jbinfunc("+",a,pa)
+    coerce(i : Integer) == junfunc(INPADICZPP, string(i))
+    coerce(i : NMInteger) == junfunc(INPADICZP, i)
+    coerce(fi : NMFraction(NMInteger)) == junfunc(INPADICZP, fi)
+    jpadic(x) == jlref(concat([INPADICZPP, string(x),")"]))
+    jpadic(fi : NMFraction(NMInteger)) == junfunc(INPADICZP, fi)
+    coerce(x) : OUT == string(x) pretend OUT
+
+)abbrev domain NPADICZ NMPadicInteger
+++ Author: Grégory Vanuxem
+++ Date Created: 3 February 2025
+++ Basic Operations:
+++ Related Domains: InnerNMPadicInteger
+++ Also See: NMPadicIntegerCategory
+++ AMS Classifications:
+++ Keywords: p-adic, completion
+++ Examples:
+++ References:
+++ Description:
+++   Stream-based implementation of Zp: p-adic numbers are represented as
+++   sum(i = 0.., a[i] * p^i), where the a[i] lie in 0, 1, ..., (p - 1).
+NMPadicInteger(p : NMInteger) == InnerNMPadicInteger(p, 30::JLInt64)
