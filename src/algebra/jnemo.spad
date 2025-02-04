@@ -528,7 +528,7 @@ NMIntegerMod(p : PositiveInteger) : Exports == Implementation where
 ++ Date Created: Feb. 2024
 ++ Description:
 ++  This domain allows the manipulation of NM prime field
-++  elements using the NM JL package (FLINT based).
+++  elements using the Nemo Julia package (FLINT based).
 ++ https://flintlib.org/
 NMPrimeField(p : PositiveInteger) : Exports == Implementation where
   PI        ==> PositiveInteger
@@ -644,7 +644,7 @@ NMPrimeField(p : PositiveInteger) : Exports == Implementation where
 ++ Date Created: Feb. 2024
 ++ Description:
 ++  This domain allows the manipulation of NM Galois field
-++  of p^n elements using the NM JL package (FLINT based).
+++  of p^n elements using the Nemo Julia package (FLINT based).
 ++ https://flintlib.org/
 NMFiniteField(p : PositiveInteger, n: PositiveInteger) : Exports == Implementation where
   PI        ==> PositiveInteger

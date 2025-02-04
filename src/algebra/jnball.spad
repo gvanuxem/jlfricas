@@ -594,7 +594,7 @@ NMComplexBall() == NMAcbField(256)
 ++ Keywords: arbitrary precision, floating point number, real
 ++ Description:
 ++  \spadtype{NMRealField} implements arbitrary precision ball
-++  arithmetic using the NM JL package.
+++  arithmetic using the Nemo Julia package.
 ++ Reference: https://nemocas.github.io/NM.jl/stable/
 NMRealField() : Exports == Implementation where
   PI        ==> PositiveInteger
@@ -890,7 +890,7 @@ NMRealField() : Exports == Implementation where
 ++ Keywords: arbitrary precision, floating point  number, complex
 ++ Description:
 ++ \spadtype{NMComplexField} implements arbitrary precision ball
-++ arithmetic using the NM JL package.
+++ arithmetic using the Nemo Julia package.
 ++ Reference: https://nemocas.github.io/NM.jl/stable/
 NMComplexField() : Exports == Implementation where
   JI64      ==> JLInt64

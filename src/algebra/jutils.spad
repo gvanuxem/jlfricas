@@ -163,8 +163,10 @@ JLStringUtilities() : Exports == Implementation where
     ++ jlLatex(str) returns the String corresponding to a JL
     ++ LaTeX expression, that is, "styled_"str_"" if your JL support it.
     ++ (StyledStrings official package). Convenience function.
+    jlString : String -> String
+    ++ jlString(str) costructs an escaped string usable by the Julie parser.
     jlRegexMatch?   : (String, String) -> Boolean
-    ++ jlRegexMatch(s, regex) checks if the regular expression matches in s.
+    ++ jlRegexMatch?(s, regex) checks if the regular expression matches in s.
     jlRegexMatch    : (String, String) -> String
     ++ jlRegexMatch(s, regex) returns the matched regular expression in s.
     jlRegexMatch    : (String, String, PI) -> String
@@ -199,6 +201,7 @@ JLStringUtilities() : Exports == Implementation where
     jlMessageStyled(mess, color) ==
       jlEvalString(concat ["printstyled(" "_"\n     ", mess,
         "\n_";color=", string(color), ")"])
+    jlString(str) == concat(["_"", str, "_""])
     jlMessageStyled(mess) ==
       jl_eval_string(concat(["println(styled_"\n     ",mess,"_")"]))$Lisp
 
@@ -302,7 +305,7 @@ JLObjDynamicLinker() : Exports == Implementation where
     ++ Returned value is assumed to be a C type ctype
     ++ (or any JL supported types). For example:
     ++ \example{libm:= jlDlOpen "libopenlibm"}
-    ++ \example{squareRoot:= jlDlSym(libm,jsym(sqrt))}
+    ++ \example{squareRoot:= jlDlSym(libm,jsym(sqrt)}
     ++ \example{jlDlCApply(squareRoot, "Cdouble" jobject("2."), "Cdouble")}
     ++ \example{sinus:=jlDlSym(libm,jsym(sin))}
     ++ \example{jlDlCApply(sinus,"Float64"), jobject("2."), "Float64")}
@@ -327,7 +330,7 @@ JLObjDynamicLinker() : Exports == Implementation where
     ++ For example with GSL:
     ++ \example{gsl:= jlDlOpen "libgsl"}
     ++ \example{hypot3:= jlDlSym(gsl,jsym(gsl_hypot3))}
-    ++ \example{jlDlCApply(hypot3,jobject("2."),jobject("7."),jobjet("9.0"))}
+    ++ \example{jlDlCApply(hypot3,jobject("2."),jobject("7."),jobject("9.0"))}
     jlDlCApply : (%, STR, JOBJ, STR, JOBJ, STR, JOBJ, STR) -> JOBJ
     ++ jlDlCApply(func, ctype, x, xctype, y, xctype, z, ztype) applies the
     ++ function pointer func to x given its JL C type (xctype) or its
