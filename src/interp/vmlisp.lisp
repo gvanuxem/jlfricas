@@ -142,7 +142,8 @@
 ; 14.1 Creation
 
 ;;; needed for SPAD compiler output
-(define-function '|construct| #'list)
+#-gcl(define-function '|construct| #'list)
+#+gcl(define-function '|construct| #'cl::list)
 
 (defun VEC2LIST (vec) (coerce vec 'list))
 
@@ -289,19 +290,9 @@
 
 (defun GETZEROVEC (n) (MAKE-ARRAY n :initial-element 0))
 
-#-:GCL
 (defun LIST2VEC (list) (coerce list 'vector))
 
 ;;; At least in gcl 2.6.8 coerce is slow, so we roll our own version
-#+:GCL
-(defun LIST2VEC (list)
-    (if (consp list)
-        (let* ((len (length list))
-               (vec (make-array len)))
-             (dotimes (i len)
-                  (setf (aref vec i) (pop list)))
-             vec)
-        (coerce list 'vector)))
 
 
 (define-function 'LIST2REFVEC #'LIST2VEC)
@@ -673,8 +664,20 @@
 #+:poplog
 (defun reclaim () nil)
 
+#+gcl
+(defun BPINAME (func)
+  (typecase func
+    (symbol func)
+    ((cons (eql lambda-block) t) (cadr func))
+    (function
+     (cond (#.(fboundp 'function-lambda-expression)
+	    (multiple-value-bind (x y z) (function-lambda-expression func)
+	      (or (and (symbolp z) (fboundp z) z) func)))
+	   ((compiled-function-p func)
+            (system:compiled-function-name func))
+           (func)))))
 
-#+(OR IBCL KCL)
+#+(OR IBCL)
 (defun BPINAME (func)
   (if (functionp func)
       (cond ((symbolp func) func)
