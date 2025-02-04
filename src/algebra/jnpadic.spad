@@ -67,6 +67,25 @@ InnerNMPadicInteger(p : NMInteger, prec : JLInt64) : Exports == Implementation w
   JI64 ==> JLInt64
   Exports ==> Join(NMCommutativeRing, NMPadicIntegerCategory(p)) with
     "+" : (NINT, %) -> %
+    ++ a + x is the addition of a NemoInteger and a p-adic Integer.
+    "+" : (%, I) -> %
+    ++ x + a is the addition of a p-adic integer and an Integer.
+    "+" : (%, NINT) -> %
+    ++ x is the addition of a p-adic integer and a Nemo integer.
+    "+" : (I, %) -> %
+    ++ a + x is the addition of an Integer and a p-adic integer.
+    ++ For example:
+    ++ \example{p := 1 + 2*7 + 4*7^2 + O(7,3)$NPADICZ(7)}
+    "*" : (NINT, %) -> %
+    ++ a * x is the multiplication of a NemoInteger and a p-adic integer.
+    "*" : (I, %) -> %
+    ++ a * x is the multiplication of an Integer and a p-adic integer.
+    "*" : (%, NINT) -> %
+    ++ a * x is the multiplication of an Integer and a p-adic integer.
+    ++ For example:
+    ++ \example{p := 1 + 2*7 + 4*7^2 + O(7,3)$NPADICZ(7)}
+    "*" : (%, I) -> %
+    ++ a * x is the multiplication of a Nemo integer and an integer.
     sqrt : % -> %
     ++ sqrt(x) returns square root of x if  
     valuation : % -> %
@@ -184,7 +203,14 @@ InnerNMPadicInteger(p : NMInteger, prec : JLInt64) : Exports == Implementation w
 
     0 ==  jlref(concat ["zero(", INPADICZP, ")"])
     1 ==  jlref(concat ["one(", INPADICZP, ")"])
-    a: NINT + pa : % == jbinfunc("+",a,pa)
+    a : NINT + pa : % == jbinfunc("+",a,pa)
+    a : Integer + pa : % == jbinfunc("+",jnint(a),pa)
+    a : NINT * pa : % == jbinfunc("*",a,pa)
+    a : Integer * pa : % == jbinfunc("*",jnint(a),pa)
+    pa : % + a : NINT == jbinfunc("+",pa,a)
+    pa : % + a : I == jbinfunc("+", pa, jnint a)
+    pa : % * a : NINT == jbinfunc("*", pa, a)
+    pa : % * a : I == jbinfunc("*", pa, jnint a)
     coerce(i : Integer) == junfunc(INPADICZPP, string(i))
     coerce(i : NMInteger) == junfunc(INPADICZP, i)
     coerce(fi : NMFraction(NMInteger)) == junfunc(INPADICZP, fi)
