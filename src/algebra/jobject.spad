@@ -17,6 +17,8 @@ JLObjectType() : Category == JLType() with
     jlRef   : % -> SExpression
     ++ jlRef(obj) returns the pretty printed internal Lisp representation
     ++ of the JL object obj.
+    jlDump : JLObject -> Void
+    ++ jlDump(obj) dumps (shows) the Julia object (internal structure with type).
     mutable? : % -> Boolean
     ++ mutable?(obj) checks whether or not obj is mutable.
     nothing? : % -> Boolean
@@ -80,6 +82,7 @@ JLObjectType() : Category == JLType() with
     jlId(obj)    == JLREFID(obj)$Lisp
     jlType(obj)  == jlEvalString(concat(["string(typeof(",getind(obj),"))"]))
     jlRef(obj)   == obj pretend SExpression
+    jlDump(obj)  == jlEvalString(concat(["dump(", getind(obj),")"]))
 
     x = y == jl_call2_bool_wrapped_index("==", jlId(x), jlId(y))$Lisp
     x ~= y == jl_call2_bool_wrapped_index("!=", jlId(x), jlId(y))$Lisp
@@ -1433,12 +1436,15 @@ JLDataFrame() : Exports == Implementation where
     import from JLUtilityFunctions
     import from String
 
-    not jlUsing "DataFrames" =>
-      error "JLDataFrame: DataFrames is not installed in JL"
+    not jlUsing "DataFrames,Statistics" =>
+      error "JLDataFrame: DataFrames is not installed in Julia"
     -- jlEvalString("macro dfa(obj) DataFrame(eval(Meta.parse(obj)),:auto) end")@Void
+  
+    Rep := SExpression
     jlEvalString("function dfa(obj) DataFrame(obj, :auto) end")@Void
 
-    Rep := SExpression
+
+
     junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
 
     elt(obj : %, jsy : JLSymbol) ==
@@ -1642,7 +1648,7 @@ JLMatrix(R : JLObjectRing) :  Exports == Implementation where
   Row     ==> JLVector(R)
   Col     ==> JLVector(R)
   MLAF    ==> MatrixLinearAlgebraFunctions(R, Row, Col, %)
-  parsei    ==> PARSE_-INTEGER$Lisp
+  parsei  ==> PARSE_-INTEGER$Lisp
   Exports ==> Join(JLObjectAggregate,
                 JLMatrixCategory(R, Row, Col)) with
     new : (NNI, NNI, R) -> %

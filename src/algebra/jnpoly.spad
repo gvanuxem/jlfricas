@@ -218,9 +218,6 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
       not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
         => "failed"
       junfunc("last", ret)
-    divide(a,b) : Record(quotient : %, remainder : %) ==
-      ret : JLObjTuple := jbinfunc("divrem",a,b)
-      [ret.1 pretend %, ret.2 pretend %]
     a:% quo b:% == jbinfunc("div", a, b)
     a:% rem b:% == jbinfunc("mod", a, b)
     pseudoRemainder(p1,p2) == jbinfunc("pseudorem",p1,p2)
@@ -361,14 +358,6 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
     ++ p * n is the product of p with a non negative integer.
     "*"   : (%, PI) -> %
     ++ p * n is the product of p with a positive integer.
-    exactDivide : (%, %) -> %
-    ++ exactDivide(p,q) divides p by q if the division is exact.
-    --pseudoDivide : (%, %) -> Record(quotient : %, remainder : %)
-    --++ pseudoDivide(p1,p2) returns pseudo-quotient and
-    --++ pseudo-remainder of the pseudo-division of p1 by p2.
-    divide :  (%, %) -> Record(quotient: %, remainder : %)
-    ++ divide(p,q) returns a record (quotient, remainder) of the
-    ++ the Euclidean division of p by q.
     _quo : (%, %) -> %
     ++ a quo b returns the quotient of \spad{a} and b, forgetting
     ++ the remainder.

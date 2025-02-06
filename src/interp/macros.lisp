@@ -101,6 +101,7 @@
                    ((IDENTP V) NIL)
                    ((STRINGP U) (AND (STRINGP V) (string> V U) T))
                    ((STRINGP V) NIL)
+                   ((or (TYPEP U 'JLREF) (TYPEP V 'JLREF)) NIL)
                    ((BREAK))
                    ((croak "Do not understand")))
                T))

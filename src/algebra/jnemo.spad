@@ -17,17 +17,54 @@ NMType() : Category == JLObjectType
 ++ Description:
 ++  Parent category of NM ring domains.
 NMRing() : Category == Join(NMType, JLObjectRing) with
-    jlNMRing : () -> String
-    ++ jlNMRing(x) returns the NM ring type of x as a string.
-    jlObject: () -> String
-    ++ jlObject() returns the internal JL name of the module used.
+      exact? : % -> Boolean 
+      ++ exact?(x) heck wheter or not x is exact.
+      unit? : % -> Boolean 
+      ++ unit?(x) checks whther or not x is a unit, i.e. invertible.
+      equal? : (% , %) -> Boolean
+      ++ 
+      characteristic : % -> NonNegativeInteger
+      ++ characteristic**
+      inverse : % -> % 
+      ++ inverse 
+      exactDivide : (%, %) -> %
+      ++
+      divide : (%, %) -> Record(quotient : %, remainder : %)
+      ++
+      jlNMRing : () -> String
+      ++ jlNMRing(x) returns the NM ring type of x as a string.
+      jlObject: () -> String
+      ++ jlObject() returns the internal JL name of the module used.
+    add
+      import from JLUtilityFunctions
+      import from String
+      jl_eval_string("import AbstractAlgebra: parent_type, elem_type, _
+        base_ring, base_ring_type, parent, is_domain_type, _
+        is_exact_type, canonical_unit, isequal, divexact, _
+        get_cached!, is_unit, expressify,  _
+        @show_name, @show_special, is_terse, pretty, terse, Lowercase")$Lisp
+
+      getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+      junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+      jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+      junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
+      jbinbfunc(op,a,b) ==> jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
+      exact?(x) == junbfunc("is_exact_type",x)
+      unit?(x) == junbfunc("is_unit",x)      
+      exactDivide(x,y) == jbinfunc("divexact",x,y)
+      divide(a,b) : Record(quotient : %, remainder : %) ==
+        ret : JLObjTuple := jbinfunc("divrem",a,b)
+        [ret.1 pretend %, ret.2 pretend %]
+      equal?(x,y) == jbinbfunc("isequal",x,y)
+      characteristic(x) == junfunc("characteristic",junfunc("base_ring",x))
+      inverse(x) == junfunc("inv",x)
 
 )abbrev category NCRING NMCommutativeRing
 ++ Category for NM commutative ring domains.
 ++ Author: G.Vanuxem
 ++ Date Created: Dec,, 2024
 ++ Description:
-++  Parent category of NM coommutative ring domains.
+++  Parent category of NM commutative ring domains.
 NMCommutativeRing() : Category == Join(NMRing, CommutativeRing)
 
 )abbrev category JARBPR JLArbitraryPrecision
@@ -70,6 +107,8 @@ NMInteger() : Exports == Implementation where
     ++ coerce \undocumented
     coerce  : % -> AlgebraicNumber
     ++ coerce \undocumented
+    inverse : % -> NMFraction(NMInteger)
+    ++ 
     jnint   : Integer -> %
     ++ jnint \undocumented
   Implementation ==> add
@@ -138,9 +177,6 @@ NMInteger() : Exports == Implementation where
     -- x quo y == jbinfuncdiv", x, y)
     x quo y == jbinfunc("÷", x, y)
     x rem y == jbinfunc("%", x, y)    
-    divide(a,b) ==
-      ret : JLObjTuple := jbinfunc("divrem",a,b)
-      [ret.1 pretend %, ret.2 pretend %]
     gcd(a,b) == jbinfunc("gcd",a,b)
     lcm(a,b) == jbinfunc("lcm",a,b)
     (p1:% exquo p2:%): Union(%,"failed") ==
@@ -148,6 +184,7 @@ NMInteger() : Exports == Implementation where
       not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
         => "failed"
       junfunc("last", ret)
+    inverse(x) == junfunc("inv",x)
 
     coerce(jsi : %) : JI64 ==
       ret : Integer := parsei string jsi 
@@ -1681,10 +1718,6 @@ NMFraction(R : Join(NMCommutativeRing, IntegralDomain)) :
         den : Integer := convert(junfunc("denominator", x) pretend NMInteger)
         num/den
     gcd(x,y)  == jbinfunc("gcd",x,y)
-    divide(a,b) ==
-      ret : JLObjTuple := jbinfunc("divrem",a,b)
-      [ret.1 pretend %, ret.2 pretend %]
-
     random(seg : Segment(Integer)) ==
       jlref(concat(["rand(",NFR,",", string(low(seg)),":",
         string(high(seg)),")"]))

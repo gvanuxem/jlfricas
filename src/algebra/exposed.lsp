@@ -863,6 +863,7 @@
   (|NewSparseMultivariatePolynomial| . NSMP)
   (|NewSparseUnivariatePolynomial| . NSUP)
   (|NewSparseUnivariatePolynomialFunctions2| . NSUP2)
+  (|NMPadic2| . NPADIC2)
   (|None| . NONE)
   (|NonLinearFirstOrderODESolver| . NODE1)
   (|NonLinearSolvePackage| . NLINSOL)
