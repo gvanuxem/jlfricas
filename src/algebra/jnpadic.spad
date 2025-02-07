@@ -15,7 +15,8 @@ NMPadicIntegerCategory(p) : Category == Definition where
   NINT  ==> NMInteger
   I     ==> Integer
   NNI   ==> NonNegativeInteger
-  Definition ==> Join(EuclideanDomain, CharacteristicZero) with
+  Definition ==> Join(EuclideanDomain, CharacteristicZero,
+      RadicalCategory, ElementaryFunctionCategory) with
     --digits : % -> ST I
     --  ++ \spad{digits(x)} returns a stream of p-adic digits of x.
     order : % -> NNI
@@ -35,9 +36,6 @@ NMPadicIntegerCategory(p) : Category == Definition where
       ++ \spad{approximate(x, n)} returns an integer y such that
       ++ \spad{y = x (mod p^n)}
       ++ when n is positive, and 0 otherwise.
-    sqrt : (%, I) -> %
-      ++ \spad{sqrt(b, a)} returns a square root of b.
-      ++ Argument \spad{a} is a square root of b \spad{(mod p)}.
     --root : (SUP I, I) -> %
     --  ++ \spad{root(f, a)} returns a root of the polynomial \spad{f}.
     --  ++ Argument \spad{a} must be a root of \spad{f} \spad{(mod p)}.
@@ -98,18 +96,12 @@ ExtendedNMPadicInteger(p : NMInteger, prec : NMInteger) : Exports == Implementat
     ++ a * x is the multiplication of an Integer and a p-adic integer.
     ++ For example:
     ++ \example{p := 1 + 2*7 + 4*7^2 + O(7,3)$NPADICZ(7)}
-    sqrt : % -> %
-    ++ sqrt(x) returns square root of x if  
     valuation : % -> %
     ++ valuation(x) 
     liftZ : % -> NINT
     ++ liftZ(x) lift x to a NM Integer.
     liftQ : % -> NFINT
     ++ liftQ(x) lift x to a NM Fraction NM Integer.
-    log : % -> %
-    ++ log(x) com putes the logarithm of x.
-    exp : % -> %
-    ++ exp(x) computes the exponential of x.
     teichmuller : % -> %
     ++ ++ teichmuller(x) computes the Teihmuller lift of x.
     ++ The valuation of x must be non negative.
@@ -224,7 +216,7 @@ ExtendedNMPadicInteger(p : NMInteger, prec : NMInteger) : Exports == Implementat
     1 ==  jlref(concat ["one(", EXPADICZP, ")"])
     pa : % = pb : % == jbinbop("==", pa,pb) 
     pa : % ~= pb : % == not jbinbop("==", pa,pb)
-    pa : % + pb : % == jlref(concat([getind(pa),"+",getind(pb)]))
+    pa : % + pb : % == jbinop("+",pa,pb)
     pa : % - pb : % == jlref(concat([getind(pa),"-",getind(pb)]))
     pa : % / pb : % == jlref(concat([getind(pa),"//",getind(pb)]))
     pa : % * pb : % == jlref(concat([getind(pa),"*",getind(pb)]))
@@ -259,7 +251,7 @@ ExtendedNMPadicInteger(p : NMInteger, prec : NMInteger) : Exports == Implementat
 ++ Description:
 ++   Implementation of Zp: p-adic numbers are represented as
 ++   sum(i = 0.., a[i] * p^i), where the a[i] lie in 0, 1, ..., (p - 1).
-NMPadicInteger(p : NMInteger) == ExtendedNMPadicInteger(p, 64::NMInteger)
+NMPadicInteger(p : NMInteger) ==> ExtendedNMPadicInteger(p, 64::NMInteger)
 
 )abbrev domain NPADIC2 NMPadic2
 ++ Author: Grégory Vanuxem
@@ -274,4 +266,4 @@ NMPadicInteger(p : NMInteger) == ExtendedNMPadicInteger(p, 64::NMInteger)
 ++ Description:
 ++   Implementation of Zp: p-adic numbers are represented as
 ++   sum(i = 0.., a[i] * p^i), where the a[i] lie in 0, 1, ..., (p - 1).
-NMPadic2() == ExtendedNMPadicInteger(2::NMInteger, 30::NMInteger)
+NMPadic2() ==> ExtendedNMPadicInteger(2::NMInteger, 30::NMInteger)

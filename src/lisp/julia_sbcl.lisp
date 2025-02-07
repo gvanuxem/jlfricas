@@ -1,7 +1,7 @@
 (in-package "BOOT")
 (export (import (find-symbol "FIXNUMP" 'sb-ext)) 'boot)
 
-(eval-when (:execute :load-toplevel)
+(eval-when (:compile-toplevel :load-toplevel :execute)
     (sb-int:set-floating-point-modes :traps nil ; :overflow
          :rounding-mode :nearest :current-exceptions nil
          :accrued-exceptions nil :fast-mode nil)

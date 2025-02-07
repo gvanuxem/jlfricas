@@ -1002,11 +1002,11 @@ InnerNMExactCalciumField(Options : JLObjDict) : Exports ==
       jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
     -- initialize (see Calcium constructor options)
-    INECF := concat ["INECF",
-      jlEvalString(concat ["string(hash(", getind(Options),"))"])@String]
-    jlEvalString(concat [INECF,
-      "=CalciumField(extended=true,options=",getind(Options),")"])@Void
-    INECFP := "INECF("
+    INECF := concat(["INECF",
+      jlEvalString(concat ["string(hash(", getind(Options),"))"])@String])
+    jlEvalString(concat([INECF,
+      "=CalciumField(extended=true,options=",getind(Options),")"]))@Void
+    INECFP := concat([INECF,"("])
 
     jlOptions(x) == jlref(concat ["options(",INECF,")"])$JLObjDict
 
