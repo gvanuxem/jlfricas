@@ -84,7 +84,7 @@
 
 ; Ordering
 
-(DEFUN |lt_sexp| (U V))
+(DEFUN |lt_sexp| (U V)
   "Multiple-type ordering relation."
 ;;; Result negated compared to LEXGREATERP and GGREATERP
 ;;;   Order of types: nil number symbol string vector cons"
@@ -101,7 +101,6 @@
                    ((IDENTP V) NIL)
                    ((STRINGP U) (AND (STRINGP V) (string> V U) T))
                    ((STRINGP V) NIL)
-                   ((or (TYPEP U 'JLREF) (TYPEP V 'JLREF)) NIL)
                    ((BREAK))
                    ((croak "Do not understand")))
                T))
