@@ -806,7 +806,7 @@ JLWSExpression() : Exports == Implementation where
     ++ for example an Extension rule.
     together : % -> % 
     ++ together(expr) put together terms over a common denominator cancelling
-    ++ common factors in numerator and denominator.
+    ++ common factors.
     distribute : % -> % 
     ++ distribute(expr) distributes expr over addition.
     ++ For illustration:
@@ -1826,13 +1826,12 @@ JLWSExpression() : Exports == Implementation where
     quantityForm(expr, form : JWSL(%)) ==
       jbinfunc("W_"QuantityForm_"(", expr, form)
     coerce(expr) : OutputForm ==
-      -Log
       jlHead(expr) = WS => coerce(string(expr))@OutputForm
       pagew := string(_$LINELENGTH$Lisp pretend Integer - 2)
       sexpr := toString(expr, jWSExpr concat("PageWidth -> ", pagew))
       str : String := jlEvalString(concat(["replace(_"", sexpr,
         "_", '[' => '(', ']' => ')', _"ArcS_" => _"as_", _"ArcC_" => _"ac_",",
-        " _"ArcT_" => _"at_" , r_"\b[A-Z][a-z]{2}_" => x -> lowercase(x))"]))
+        " _"ArcT_" => _"at_" , r_"\b[A-Z][a-z]{3}_" => x -> lowercase(x))"]))
       l := split(sexpr, newline())
       #l > 1 => pile(append([""],l) pretend List(OutputForm))
       str pretend OutputForm

@@ -111,6 +111,8 @@ NMInteger() : Exports == Implementation where
     ++ 
     jnint   : Integer -> %
     ++ jnint \undocumented
+    ZZ   : Integer -> %
+    ++ ZZ(i) RETURNS A Nemo integer.
   Implementation ==> add
     import from JLUtilityFunctions
     import from String
@@ -202,6 +204,7 @@ NMInteger() : Exports == Implementation where
       coerce(parsei(string x))$AlgebraicNumber
     coerce(i : %) : OutputForm == string(i) pretend OutputForm
     jnint(i : Integer) : % == coerce(i)
+    ZZ(i : Integer) : % == coerce(i)
 
 )abbrev domain NAN NMAlgebraicNumber
 ++ Domain for NM algebraic number
@@ -285,10 +288,10 @@ NMAlgebraicNumber() : Exports == Implementation where
     denominator: % -> NMInteger
     ++ numeraor(anum) returns the denominator of anum, i.e. the leading coefficient
     ++ of the minimal polynomial of a.
-    minimalPolynomial : % -> SparseUnivariatePolynomial(%)
-    -- ??
-    ++ minimalPolynomial(an) returns the minimal polynomial of an
-    ++ over algebraic numbers.
+    -- : % -> SparseUnivariatePolynomial(%)
+    ---- ??
+    --++ minimalPolynomial(an) returns the minimal polynomial of an
+    --++ over algebraic numbers.
     minimalPolynomial : % -> SparseUnivariatePolynomial(Z)
     ++ minimalPolynomial(an) returns the minimal polynomial of an.
     abs : % -> %
@@ -351,22 +354,22 @@ NMAlgebraicNumber() : Exports == Implementation where
       jlref(concat(["root_of_unity(QQBar,", string(n), ",",string(k) ")"]))
     real(x) == junfunc("real",x)
     imag(x) == junfunc("imag",x)
-    minimalPolynomial(an) : SparseUnivariatePolynomial(%) ==
+    --minimalPolynomial(an) : SparseUnivariatePolynomial(%) == --TODO WHY????(13/02/2025)
       -- Temporary
-      AN  := NMAlgebraicNumber
-      --myx := symbol(GENSYM()$Lisp) -- does not work
-      UP := UnivariatePolynomial('mynanvar, AN)
-      p := minimalPolynomial(an pretend AN)$NUP(NINT, 'mynanvar)
-      strp := string p; inp := parse(strp)$InputForm
-      interpret(inp)$InputFormFunctions1(UP) pretend SparseUnivariatePolynomial(%)
-    minimalPolynomial(an) : SparseUnivariatePolynomial(Integer) ==
-      -- Temporary
-      AN  := NMAlgebraicNumber
-      --myx := symbol(GENSYM()$Lisp) -- does not work
-      UP := UnivariatePolynomial('myzvar, Integer)
-      p := minimalPolynomial(an pretend AN)$NUP(NINT, 'myzvar)
-      strp := string p; inp := parse(strp)$InputForm
-      interpret(inp)$InputFormFunctions1(UP) pretend SparseUnivariatePolynomial(Z)
+    --  AN  := NMAlgebraicNumber
+    --  --myx := symbol(GENSYM()$Lisp) -- does not work
+    --  UP := UnivariatePolynomial('mynanvar, AN)
+    --  p := minimalPolynomial(an pretend AN)$NUP(NINT, 'mynanvar)
+    --  strp := string p; inp := parse(strp)$InputForm
+    --  interpret(inp)$InputFormFunctions1(UP) pretend SparseUnivariatePolynomial(%)
+    --minimalPolynomial(an) : SparseUnivariatePolynomial(Integer) ==
+    --  -- Temporary
+    --  AN  := NMAlgebraicNumber
+    --  --myx := symbol(GENSYM()$Lisp) -- does not work
+    --  UP := UnivariatePolynomial('myzvar, Integer)
+    --  p := minimalPolynomial(an pretend AN)$NUP(NINT, 'myzvar)
+    --  strp := string p; inp := parse(strp)$InputForm
+    --  interpret(inp)$InputFormFunctions1(UP) pretend SparseUnivariatePolynomial(Z)
 
     random(deg, bits) ==
       jlref(concat(["rand(QQBar,degree=", string(deg),
@@ -958,8 +961,8 @@ InnerNMExactCalciumField(Options : JLObjDict) : Exports ==
     ++ retractIfCan(z) retracts if possible z to a Integer.
     retractIfCan  : % -> Union(NMFraction(NMInteger), "failed")
     ++ retractIfCan(z) retracts if possible z to a NMFraction(NMInteger).
-    retractIfCan  : % -> Union(NMAlgebraicNumber, "failed")
-    ++ retractIfCan(z) retracts if possible z to a NMAlgebraicNumber.
+    --retractIfCan  : % -> Union(NMAlgebraicNumber, "failed")
+    --++ retractIfCan(z) retracts if possible z to a NMAlgebraicNumber.
     retractIfCan  : % -> Union(NMRealBall,"failed")
     ++ convert(x) converts x.
     retract  : % -> NMComplexBall
@@ -990,6 +993,7 @@ InnerNMExactCalciumField(Options : JLObjDict) : Exports ==
     import from JLUtilityFunctions
     import from String
     import from NMFraction(NMInteger)
+    import from NMAlgebraicNumber
 
     jlInitialize(true)
     Rep := SExpression
@@ -1175,10 +1179,10 @@ InnerNMExactCalciumField(Options : JLObjDict) : Exports ==
       rational?(x) =>   
         jlref(concat ["QQ(", getind(x),")"])$NMFraction(NMInteger)
       "failed"
-    retractIfCan(x : %) : Union(NMAlgebraicNumber, "failed") ==
-      algebraic?(x) =>   
-        jlref(concat ["QQBar(", getind(x),")"])$NMAlgebraicNumber
-      "failed"
+    --retractIfCan(x : %) : Union(NMAlgebraicNumber, "failed") ==
+    --  algebraic?(x) =>   
+    --    jlref(concat ["QQBar(", getind(x),")"])$NMAlgebraicNumber
+    --  "failed"
     retractIfCan(x) : Union(NMRealBall, "failed") ==
       real?(x) =>
         junfunc(jlNMRing()$NMRealBall(), x) pretend NMRealBall

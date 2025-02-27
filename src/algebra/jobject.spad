@@ -48,9 +48,6 @@ JLObjectType() : Category == JLType() with
     ++ jlApply(func, obj1, obj2, obj3, obj4, obj5) applies the function func with obj1,
     ++ obj2, obj3, obj4 and obj5 as parameters and returns the result as a FriCAS
     ++ JLObject.
-    string  : % -> String
-    ++ string(obj) returns the JL corresponding value of the object obj
-    ++ as a string. Convenience function.
     jlAbout : % -> Void
     ++ jlAbout(obj) displays JL informations about obj
     ++ if you have About.jl installed in JL.

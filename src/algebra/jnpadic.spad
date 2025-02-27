@@ -1,5 +1,5 @@
 )abbrev category NPADICC NMPadicIntegerCategory
-++ Author: Grégroy based on the work of Clifton J. Williamson)
+++ Author: Grégory Vnuxem (based on the work of Clifton J. Williamson)
 ++ Date Created: 15 May 1990
 ++ Basic Operations:
 ++ Related Domains:
@@ -252,18 +252,3 @@ ExtendedNMPadicInteger(p : NMInteger, prec : NMInteger) : Exports == Implementat
 ++   Implementation of Zp: p-adic numbers are represented as
 ++   sum(i = 0.., a[i] * p^i), where the a[i] lie in 0, 1, ..., (p - 1).
 NMPadicInteger(p : NMInteger) ==> ExtendedNMPadicInteger(p, 64::NMInteger)
-
-)abbrev domain NPADIC2 NMPadic2
-++ Author: Grégory Vanuxem
-++ Date Created: 3 February 2025
-++ Basic Operations:
-++ Related Domains: ExtendedNMPadicInteger
-++ Also See: NMPadicIntegerCategory
-++ AMS Classifications:
-++ Keywords: p-adic, completion
-++ Examples:
-++ References:
-++ Description:
-++   Implementation of Zp: p-adic numbers are represented as
-++   sum(i = 0.., a[i] * p^i), where the a[i] lie in 0, 1, ..., (p - 1).
-NMPadic2() ==> ExtendedNMPadicInteger(2::NMInteger, 30::NMInteger)

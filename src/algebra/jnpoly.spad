@@ -383,9 +383,6 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
     coefficients : (%, Segment(Integer)) -> JLVector(R)
     ++ coeficients(p, seg) returns the coefficients from the exponent
     ++ range seg.
-    univariate : % -> NMUnivariatePolynomial(R,x)
-    ++ returns the underlying univariate polynomial used
-    ++ for the implementation.
     truncate : (%, NNI) -> %
     ++ truncate(p, n) return p truncated to n term. It's the remainder
     ++ of the division by x^n.
@@ -517,10 +514,6 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
     --degree(p) == jlEvalString(concat(["degree(", getind(p),")"]))@NNI
     minimumDegree(p) : INT == -- ??
       jlEvalString(concat [getind(p), ".mindeg"])
-    univariate(p) : NMUnivariatePolynomial(R,x) ==
-      jlref(concat [getind(p), ".poly"])
-      --jlEvalString(concat(["findfirst(!iszero, _
-      --  collect(coefficients(",getind(p),")))-1"]))@NNI
     --leadingTerm(p) ==
     --  ind := getind(p)
     --  deg : NNI := parsei(string jlref(concat ["degree(", ind,")"])) 
@@ -588,7 +581,7 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
 ++   PRing := NMP(NINT,VarSet, "lex")
 ++   x := x::V::PRing
 ++   y := y::V::PRing
-++   z := z::V::PRing
+++   z := z:f:V::PRing
 ++   p:=x*2+3*y^2+17*z^13
 ++   p^7
 -- https://en.wikipedia.org/wiki/Monomial_order#Graded_reverse_lexicographic_order
