@@ -126,6 +126,8 @@ JLWSExpression() : Exports == Implementation where
     sphericalHankelH2 : (% , %)-> %
     ++ sphericalHankelH2(n,z) computes the spherical Hankel
     ++ of the second kind of z.
+    weberE : (%, %, %) -> %
+    ++ weberE(v,n,z) is the associated Weber E function.
     dirichletL : (%, %, %) ->  %
     ++ dirichletL(k,j,s) returns Dirichlet L-function of s, modulus k,
     ++ index j.
@@ -1264,6 +1266,8 @@ JLWSExpression() : Exports == Implementation where
     sphericalHankelH2(n,z) == jbinfunc("W_"SphericalHankelH2_"(", n,z)
     struveH(n,z) == jbinfunc("W_"StruveH_"(", n,z)
     struveL(n,z) == jbinfunc("W_"StruveL_"(", n,z)
+    weberE(n,z) == jbinfunc("W_"WeberE_"(", n,z)
+    weberE(v,n,z) == jterfunc("W_"WeberE_"(", v,n,z)
 
     -- Check k > s ?
     dirichletL(k,j,s) == jterfunc("W_"DirichletL_"(", k,j,s)
@@ -1831,7 +1835,7 @@ JLWSExpression() : Exports == Implementation where
       sexpr := toString(expr, jWSExpr concat("PageWidth -> ", pagew))
       str : String := jlEvalString(concat(["replace(_"", sexpr,
         "_", '[' => '(', ']' => ')', _"ArcS_" => _"as_", _"ArcC_" => _"ac_",",
-        " _"ArcT_" => _"at_" , r_"\b[A-Z][a-z]{3}_" => x -> lowercase(x))"]))
-      l := split(sexpr, newline())
+        " _"ArcT_" => _"at_" , r_"\b[A-Z][a-z]{2}_" => x -> lowercase(x))"]))
+      l := split(str, newline())
       #l > 1 => pile(append([""],l) pretend List(OutputForm))
       str pretend OutputForm

@@ -69,6 +69,8 @@ JLWSNumericalSpecialFunctions(R : JLWSNumber) : Exports ==Implementation where
         ++ angerJ(v, z) is the Anger J function.
     weberE : (R, R) -> R
         ++ weberE(v, z) is the Weber E function.
+    weberE : (R, R, R) -> R
+        ++ weberE(v, n, z) is the associated Weber E function.
     struveH : (R, R) -> R
         ++ struveH(v, z) is the Struve H function.
     struveL : (R, R) -> R
@@ -743,6 +745,10 @@ JLWSNumericalSpecialFunctions(R : JLWSNumber) : Exports ==Implementation where
       ret
     whittakerW(k,m,z) ==
       ret : R := jterfunc("W_"WhittakerW_"(", k,m,z)
+      jtypeassert(z,ret)
+      ret
+    weberE(v,n,z) ==
+      ret : R := jterfunc("W_"WeberE_"(",v,n,z)
       jtypeassert(z,ret)
       ret
     parabolicCylinderD(v,z) ==

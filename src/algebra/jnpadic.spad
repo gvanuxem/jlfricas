@@ -110,8 +110,9 @@ ExtendedNMPadicInteger(p : NMInteger, prec : NMInteger) : Exports == Implementat
     ++ 0() creates the default Big-oh from domain parameters.
     O : () -> %
     ++ 0() returns the default Big-oh from domain parameters.
-    prime : () -> NMInteger
-    ++
+    prime : % -> NMInteger
+    ++ prime(x) returns the modulus used for x.
+    ++ Convenience function.
     precision : % -> NMInteger
     ++ 
   Implementation ==> add
@@ -149,7 +150,7 @@ ExtendedNMPadicInteger(p : NMInteger, prec : NMInteger) : Exports == Implementat
 
     --euclideanSize(x) == order(retract x)
 
-    prime() == p
+    prime(x) == p
     precision(x) == prec
     sqrt(x) == junfunc("sqrt",x)
     valuation(x) == junfunc("valuation",x)
