@@ -1440,8 +1440,6 @@ JLDataFrame() : Exports == Implementation where
     Rep := SExpression
     jlEvalString("function dfa(obj) DataFrame(obj, :auto) end")@Void
 
-
-
     junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
 
     elt(obj : %, jsy : JLSymbol) ==

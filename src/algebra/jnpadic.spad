@@ -62,16 +62,7 @@ ExtendedNMPadicInteger(p : NMInteger, prec : NMInteger) : Exports == Implementat
   NINT ==> NMInteger
   NFINT ==> NMFraction(NMInteger)
   JI64 ==> NMInteger
-  Exports ==> Join(NMRing, NMPadicIntegerCategory(p)) with
-    jlApprox? : (%, %) -> Boolean 
-    "+" : (%, %) -> %
-    ++ 
-    "-" : (%, %) -> %
-    ++ 
-    "/" : (%, %) -> %
-    ++ 
-    "*" : (%, %) -> %
-    ++ 
+  Exports ==> Join(NMCommutativeRing, Field, NMPadicIntegerCategory(p)) with
     "+" : (NINT, %) -> %
     ++ a + x is the addition of a Julia Nemo Integer
     ++ and a p-adic Integer.
@@ -216,10 +207,11 @@ ExtendedNMPadicInteger(p : NMInteger, prec : NMInteger) : Exports == Implementat
     1 ==  jlref(concat ["one(", EXPADICZP, ")"])
     pa : % = pb : % == jbinbop("==", pa,pb) 
     pa : % ~= pb : % == not jbinbop("==", pa,pb)
-    pa : % + pb : % == jbinop("+",pa,pb)
-    pa : % - pb : % == jlref(concat([getind(pa),"-",getind(pb)]))
-    pa : % / pb : % == jlref(concat([getind(pa),"//",getind(pb)]))
-    pa : % * pb : % == jlref(concat([getind(pa),"*",getind(pb)]))
+
+    (pa:% + pb:%) : % == jbinfunc("+", pa,pb)
+    (pa:% - pb:%) : % == jbinfunc("-", pa,pb)
+    (pa:% * pb:%) : % == jbinfunc("*", pa,pb)
+    (pa:% / pb:%) : % == jbinfunc("/", pa,pb)
 
 
     a : NINT + pa : % == jbinop("+",a,pa)
@@ -234,7 +226,6 @@ ExtendedNMPadicInteger(p : NMInteger, prec : NMInteger) : Exports == Implementat
     coerce(i : NMInteger) == junfunc(EXPADICZP, i)
     coerce(fi : NMFraction(NMInteger)) == junfunc(EXPADICZP, fi)
     jnpadic(x:Integer) == jlref(concat([EXPADICZPP, getind(jnint(x)),")"]))
-    jnpadic(fi : NMFraction(NMInteger)) == junfunc(EXPADICZP, fi)
     jnpadic(fi : NMFraction(NMInteger)) == junfunc(EXPADICZP, fi)
     coerce(x) : OUT == string(x) pretend OUT
 
@@ -251,4 +242,19 @@ ExtendedNMPadicInteger(p : NMInteger, prec : NMInteger) : Exports == Implementat
 ++ Description:
 ++   Implementation of Zp: p-adic numbers are represented as
 ++   sum(i = 0.., a[i] * p^i), where the a[i] lie in 0, 1, ..., (p - 1).
-NMPadicInteger(p : NMInteger) ==> ExtendedNMPadicInteger(p, 64::NMInteger)
+NMPadicInteger(p : Integer) == ExtendedNMPadicInteger(p::NMInteger, 64::NMInteger)
+
+)abbrev domain NPADIC2 NMPadic2
+++ Author: Grégory Vanuxem
+++ Date Created: 3 February 2025
+++ Basic Operations:
+++ Related Domains: ExtendedNMPadicInteger
+++ Also See: NMPadicIntegerCategory
+++ AMS Classifications:
+++ Keywords: p-adic, completion
+++ Examples:
+++ References:
+++ Description:
+++   Implementation of Zp: p-adic numbers are represented as
+++   sum(i = 0.., a[i] * p^i), where the a[i] lie in 0, 1, ..., (p - 1).
+NMPadic2() == ExtendedNMPadicInteger(2::NMInteger, 64::NMInteger)
