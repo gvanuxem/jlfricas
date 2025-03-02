@@ -730,7 +730,7 @@ NMFiniteField(p : PositiveInteger, n: PositiveInteger) : Exports == Implementati
     jlInitialize(true)
     Rep := SExpression
 
-    -- intialize
+    -- initialize
     not prime?(p) => error "NMFiniteField(p, n): argument p must be a prime"
     NFF := concat(["NFF",string(p^n)])
     jlEvalString(concat([NFF, "=GF(", string(p^n),")"]))@Void
