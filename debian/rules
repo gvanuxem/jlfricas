@@ -8,10 +8,10 @@ export DH_QUIET=1
 	dh $@
 
 override_dh_auto_configure:
-	dh_auto_configure -- --prefix=/usr --enable-gmp --enable-julia --enable-hunchentoot --enable-mathlink
+	dh_auto_configure -- --prefix=/usr/local --enable-gmp --enable-julia --enable-hunchentoot --enable-mathlink
 
 build:
-	./configure --prefix=/usr --enable-gmp --enable-julia --enable-hunchentoot --enable-mathlink
+	./configure --prefix=/usr/local --enable-gmp --enable-julia --enable-hunchentoot --enable-mathlink
 	$(MAKE) -j4 all htmldoc
 	$(MAKE) -j4 check
 
