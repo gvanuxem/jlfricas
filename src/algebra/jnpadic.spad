@@ -1,6 +1,6 @@
 )abbrev category NPADICC NMPadicIntegerCategory
 ++ Author: Grégory Vanuxem (based on the work of Clifton J. Williamson)
-++ Date Created: 15 May 1990
+++ Date Created: 1 February 2025
 ++ Basic Operations:
 ++ Related Domains:
 ++ Also See:
@@ -63,7 +63,7 @@ NMExtendedPadicInteger(p : Integer, prec : Integer) :
   NINT ==> NMInteger
   NFINT ==> NMFraction(NMInteger)
   JI64 ==> NMInteger
-  Exports ==> Join(NMCommutativeRing, Field, NMPadicIntegerCategory(p)) with
+  Exports ==> Join(NMCommutativeRing, NMPadicIntegerCategory(p)) with
     "+" : (NINT, %) -> %
     ++ a + x is the addition of a Julia Nemo Integer
     ++ and a p-adic Integer.
