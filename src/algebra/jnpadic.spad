@@ -134,7 +134,9 @@ NMExtendedPadicInteger(p : Integer, prec : Integer) :
     jlNMRing() == EXPADICZP
     EXPADICZPP := concat(EXPADICZP,"(")
     jlObject() == jlEvalString(concat(["string(", EXPADICZP,")"]))
-    O() == jlref(concat(["O(",EXPADICZP,",", string(p),"^",string(prec),")"]))
+    -- TODO
+    --O() == jlref(concat(["O(",EXPADICZP,",", string(p),"^",string(prec),")"]))
+    O() == 0
 
     unit?(a) == junbfunc("is_unit", a)
     one?(a) == junbfunc("isone", a)
