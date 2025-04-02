@@ -11,7 +11,7 @@
 ++ Description: This is the category representations of
 ++   the p-adic integers.
 NMPadicIntegerCategory(p) : Category == Definition where
-  p     :   NMInteger
+  p     :   Integer
   NINT  ==> NMInteger
   I     ==> Integer
   NNI   ==> NonNegativeInteger
@@ -26,7 +26,7 @@ NMPadicIntegerCategory(p) : Category == Definition where
       ++ \spad{extend(x, n)} forces the computation of digits up to order n.
     complete : % -> %
       ++ \spad{complete(x)} forces the computation of all digits.
-    modulus : () -> NMInteger
+    modulus : () -> I
       ++ \spad{modulus()} returns the value of p.
     moduloP : % -> I
       ++ \spad{modulo(x)} returns a, where \spad{x = a + b p}.
@@ -40,7 +40,7 @@ NMPadicIntegerCategory(p) : Category == Definition where
     --  ++ \spad{root(f, a)} returns a root of the polynomial \spad{f}.
     --  ++ Argument \spad{a} must be a root of \spad{f} \spad{(mod p)}.
 
-)abbrev domain EXPADICZ ExtendedNMPadicInteger
+)abbrev domain NXPADICZ NMExtendedPadicInteger
 ++ Author: Vanuxem Grégory
 ++ Date Created: 1 February 2025
 ++ Basic Operations:
@@ -53,7 +53,8 @@ NMPadicIntegerCategory(p) : Category == Definition where
 ++ References:
 ++ Description:
 ++   This domain implements Zp, the p-adic completion of the integers.
-ExtendedNMPadicInteger(p : NMInteger, prec : NMInteger) : Exports == Implementation where
+NMExtendedPadicInteger(p : Integer, prec : Integer) :
+    Exports == Implementation where
   --unBalanced? : Boolean
   I    ==> Integer
   NNI  ==> NonNegativeInteger
@@ -98,22 +99,16 @@ ExtendedNMPadicInteger(p : NMInteger, prec : NMInteger) : Exports == Implementat
     ++ The valuation of x must be non negative.
     coerce : NMInteger -> %
     ++ coerce(x) returns x as the p-adic completion of the NM Integer.    
-    coerce: NMFraction(NMInteger) -> %
-    ++
     jnpadic : Integer -> %
     ++ padic(x) returns x as the p-adic completion of the NM Integer. 
     jnpadic : NMInteger -> %
     ++ padic(x) returns x as the p-adic completion of the NM Integer.
-    jnpadic : NMFraction NMInteger -> %
-    ++ padic(x) returns x as the p-adic completion of the NM Integer.
-    O : (NMInteger, NMInteger) -> %
-    ++ 0() creates the default Big-oh from domain parameters.
     O : () -> %
     ++ 0() returns the default Big-oh from domain parameters.
-    prime : % -> NMInteger
+    prime : % -> I
     ++ prime(x) returns the modulus used for x.
     ++ Convenience function.
-    precision : % -> NMInteger
+    precision : % -> I
     ++ 
   Implementation ==> add
     import from JLUtilityFunctions
@@ -135,16 +130,34 @@ ExtendedNMPadicInteger(p : NMInteger, prec : NMInteger) : Exports == Implementat
     
     -- Set up the field
     EXPADICZP := concat(["EXPADICZ", string(p), "p",string(prec)])
-    jlEvalString(concat([EXPADICZP, "=padic_field(", getind(p), ", precision=", string(prec),")"]))
+    jlEvalString(concat([EXPADICZP, "=padic_field(", string(p), ", precision=", string(prec),")"]))
     jlNMRing() == EXPADICZP
     EXPADICZPP := concat(EXPADICZP,"(")
     jlObject() == jlEvalString(concat(["string(", EXPADICZP,")"]))
-    O(p, e) == jlref(concat(["O(",EXPADICZP,",", string(p),"^",string(e),")"]))
     O() == jlref(concat(["O(",EXPADICZP,",", string(p),"^",string(prec),")"]))
 
     unit?(a) == junbfunc("is_unit", a)
     one?(a) == junbfunc("isone", a)
     zero?(a) == junbfunc("iszero", a)
+
+    0 ==  jlref(concat ["zero(", EXPADICZP, ")"])
+    1 ==  jlref(concat ["one(", EXPADICZP, ")"])
+    pa : % = pb : % == jbinbop("==", pa,pb) 
+    pa : % ~= pb : % == not jbinbop("==", pa,pb)
+
+    (pa:% + pb:%) : % == jbinfunc("+", pa,pb)
+    (pa:% - pb:%) : % == jbinfunc("-", pa,pb)
+    (pa:% * pb:%) : % == jbinfunc("*", pa,pb)
+    (pa:% / pb:%) : % == jbinfunc("/", pa,pb)
+
+    a : NINT + pa : % == jbinop("+",a,pa)
+    a : NINT * pa : % == jbinop("*",a,pa)
+    pa : % + a : NINT == jbinop("+",pa,a)
+    pa : % * a : NINT == jbinop("*", pa, a)
+    pa : % * a : NFINT == jbinop("*", pa, a)
+    a  : NFINT * pa: % == jbinop("*", a, pa)
+    pa : % + a : NFINT == jbinop("+", pa, a)
+    a  : NFINT + pa: % == jbinop("+", a, pa)
 
     characteristic() == 0
 
@@ -204,37 +217,17 @@ ExtendedNMPadicInteger(p : NMInteger, prec : NMInteger) : Exports == Implementat
     --    st := rst st
     --  error "order: series has more than 1000 leading zero coefs"
 
-    0 ==  jlref(concat ["zero(", EXPADICZP, ")"])
-    1 ==  jlref(concat ["one(", EXPADICZP, ")"])
-    pa : % = pb : % == jbinbop("==", pa,pb) 
-    pa : % ~= pb : % == not jbinbop("==", pa,pb)
-
-    (pa:% + pb:%) : % == jbinfunc("+", pa,pb)
-    (pa:% - pb:%) : % == jbinfunc("-", pa,pb)
-    (pa:% * pb:%) : % == jbinfunc("*", pa,pb)
-    (pa:% / pb:%) : % == jbinfunc("/", pa,pb)
-
-
-    a : NINT + pa : % == jbinop("+",a,pa)
-    a : NINT * pa : % == jbinop("*",a,pa)
-    pa : % + a : NINT == jbinop("+",pa,a)
-    pa : % * a : NINT == jbinop("*", pa, a)
-    pa : % * a : NFINT == jbinop("*", pa, a)
-    a  : NFINT * pa: % == jbinop("*", a, pa)
-    pa : % + a : NFINT == jbinop("+", pa, a)
-    a  : NFINT + pa: % == jbinop("+", a, pa)
-    coerce(i : Integer) == jlref(concat([EXPADICZPP, getind(jnint(i)),")"]))
-    coerce(i : NMInteger) == junfunc(EXPADICZP, i)
-    coerce(fi : NMFraction(NMInteger)) == junfunc(EXPADICZP, fi)
-    jnpadic(x:Integer) == jlref(concat([EXPADICZPP, getind(jnint(x)),")"]))
-    jnpadic(fi : NMFraction(NMInteger)) == junfunc(EXPADICZP, fi)
+    coerce(i : Integer) == jlref(concat([EXPADICZPP, string(i),")"]))
+    coerce(i : NMInteger) == jlref(concat([EXPADICZPP, string(i),")"]))
+    jnpadic(x:Integer) == jlref(concat([EXPADICZPP, string(x),")"]))
+    jnpadic(i : NMInteger) == jlref(concat([EXPADICZPP, string(i),")"]))
     coerce(x) : OUT == string(x) pretend OUT
 
 )abbrev domain NPADICZ NMPadicInteger
 ++ Author: Grégory Vanuxem
 ++ Date Created: 3 February 2025
 ++ Basic Operations:
-++ Related Domains: ExtendedNMPadicInteger
+++ Related Domains: NMExtendedPadicInteger
 ++ Also See: NMPadicIntegerCategory
 ++ AMS Classifications:
 ++ Keywords: p-adic, completion
@@ -243,13 +236,13 @@ ExtendedNMPadicInteger(p : NMInteger, prec : NMInteger) : Exports == Implementat
 ++ Description:
 ++   Implementation of Zp: p-adic numbers are represented as
 ++   sum(i = 0.., a[i] * p^i), where the a[i] lie in 0, 1, ..., (p - 1).
-NMPadicInteger(p : Integer) == ExtendedNMPadicInteger(p::NMInteger, 64::NMInteger)
+NMPadicInteger(p : Integer) == NMExtendedPadicInteger(p, 64)
 
 )abbrev domain NPADIC2 NMPadic2
 ++ Author: Grégory Vanuxem
 ++ Date Created: 3 February 2025
 ++ Basic Operations:
-++ Related Domains: ExtendedNMPadicInteger
+++ Related Domains: NMExtendedPadicInteger
 ++ Also See: NMPadicIntegerCategory
 ++ AMS Classifications:
 ++ Keywords: p-adic, completion
@@ -258,4 +251,4 @@ NMPadicInteger(p : Integer) == ExtendedNMPadicInteger(p::NMInteger, 64::NMIntege
 ++ Description:
 ++   Implementation of Zp: p-adic numbers are represented as
 ++   sum(i = 0.., a[i] * p^i), where the a[i] lie in 0, 1, ..., (p - 1).
-NMPadic2() == ExtendedNMPadicInteger(2::NMInteger, 64::NMInteger)
+NMPadic2() == NMExtendedPadicInteger(2, 64)
