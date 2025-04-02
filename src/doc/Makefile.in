@@ -693,7 +693,7 @@ stamp-book-pics: stamp-book-viewports
 # Here lives the official git repository of the package.
 # It should be possible to say "git clone ${PACKAGE_SOURCE}".
 # Do not use ".git" extension explicitly for PACKAGE_SOURCE.
-PACKAGE_SOURCE=https://github.com/fricas/fricas
+PACKAGE_SOURCE=https://github.com/gvanuxem/jlfricas
 
 tmp/info.tex:
 	${MKDIR_P} tmp
@@ -809,11 +809,11 @@ clean-html:
 	-rm -rf stamp-sphinx stamp-api stamp-html stamp-doc
 
 ###################################################################
-clean-local: clean-book clean-html
+clean-local: clean-book
 	-rm -f ${GEN_NONVIEWPORTFILES_PHT} ${GEN_VIEWPORTFILES_PHT}
 	-rm -f ${GEN_FILES_HT} *.input *.help *.text *.ps
 	-rm -rf tmp
 	-rm -f examples.* stamp* ht.db
 	-rm -rf *.VIEW viewports test*.svg *.sfort
 
-distclean-local: clean-local
+distclean-local: clean-local clean-html

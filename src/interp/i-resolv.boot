@@ -409,7 +409,8 @@ resolveTCat(t,c) ==
 
   -- now check some specific niladic categories
   c in '((Field) (EuclideanDomain)) and ofCategory(t,'(IntegralDomain))=>
-      [$QuotientField, t]
+    ofCategory(t,'(NemoRing)) => ['NemoFraction,t] 
+    [$QuotientField, t]
 
   (t is [t0]) and (sd := getImmediateSuperDomain(t0)) and sd ~= t0 =>
     resolveTCat(sd,c)
