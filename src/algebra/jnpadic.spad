@@ -1,4 +1,4 @@
-)abbrev category NPADICC NMPadicIntegerCategory
+)abbrev category NPADICC NMPadicNumberCategory
 ++ Author: Grégory Vanuxem (based on the work of Clifton J. Williamson)
 ++ Date Created: 1 February 2025
 ++ Basic Operations:
@@ -10,12 +10,12 @@
 ++ References:
 ++ Description: This is the category representations of
 ++   the p-adic integers.
-NMPadicIntegerCategory(p) : Category == Definition where
+NMPadicNumberCategory(p) : Category == Definition where
   p     :   Integer
   NINT  ==> NMInteger
   I     ==> Integer
   NNI   ==> NonNegativeInteger
-  Definition ==> Join(EuclideanDomain, CharacteristicZero,
+  Definition ==> Join(NMCommutativeRing, EuclideanDomain, CharacteristicZero,
       RadicalCategory, ElementaryFunctionCategory) with
     --digits : % -> ST I
     --  ++ \spad{digits(x)} returns a stream of p-adic digits of x.
@@ -59,11 +59,9 @@ NMExtendedPadicInteger(p : Integer, prec : Integer) :
   I    ==> Integer
   NNI  ==> NonNegativeInteger
   OUT  ==> OutputForm
-  L    ==> List
   NINT ==> NMInteger
   NFINT ==> NMFraction(NMInteger)
-  JI64 ==> NMInteger
-  Exports ==> Join(NMCommutativeRing, NMPadicIntegerCategory(p)) with
+  Exports ==> NMPadicNumberCategory(p) with
     "+" : (NINT, %) -> %
     ++ a + x is the addition of a Julia Nemo Integer
     ++ and a p-adic Integer.
@@ -129,7 +127,7 @@ NMExtendedPadicInteger(p : Integer, prec : Integer) :
     Rep := SExpression
     
     -- Set up the field
-    EXPADICZP := concat(["EXPADICZ", string(p), "p",string(prec)])
+    EXPADICZP := concat(["PADICR", string(p), "p",string(prec)])
     jlEvalString(concat([EXPADICZP, "=padic_field(", string(p), ", precision=", string(prec),")"]))
     jlNMRing() == EXPADICZP
     EXPADICZPP := concat(EXPADICZP,"(")
@@ -230,7 +228,7 @@ NMExtendedPadicInteger(p : Integer, prec : Integer) :
 ++ Date Created: 3 February 2025
 ++ Basic Operations:
 ++ Related Domains: NMExtendedPadicInteger
-++ Also See: NMPadicIntegerCategory
+++ Also See: NMPadicNumberCategory
 ++ AMS Classifications:
 ++ Keywords: p-adic, completion
 ++ Examples:
@@ -245,12 +243,216 @@ NMPadicInteger(p : Integer) == NMExtendedPadicInteger(p, 64)
 ++ Date Created: 3 February 2025
 ++ Basic Operations:
 ++ Related Domains: NMExtendedPadicInteger
-++ Also See: NMPadicIntegerCategory
+++ Also See: NMPadicNumberCategory
 ++ AMS Classifications:
 ++ Keywords: p-adic, completion
 ++ Examples:
 ++ References:
 ++ Description:
-++   Implementation of Zp: p-adic numbers are represented as
+++   Implementation of Zp: here, 2-adic numbers are represented as
 ++   sum(i = 0.., a[i] * p^i), where the a[i] lie in 0, 1, ..., (p - 1).
 NMPadic2() == NMExtendedPadicInteger(2, 64)
+
+)abbrev domain NXPADICR NMExtendedPadicRational
+++ Author: Grégory Vanuxem
+++ Date Created: 4 april 2025
+++ Basic Operations:
+++ Related Domains:
+++ Also See:
+++ AMS Classifications:
+++ Keywords: p-adic, completion
+++ Examples:
+++ References:
+++ Description: This is a domain of Qp.
+NMExtendedPadicRational(p,prec) : Exports == Implementation where
+  p     :   Integer
+  prec  :   Integer
+  NINT ==> NMInteger
+  NFINT ==> NMFraction(NMInteger)
+  PADIC ==> NMPadicNumberCategory(p)
+  I     ==> Integer
+  NNI   ==> NonNegativeInteger
+  OUT   ==> OutputForm
+  RN    ==> Fraction Integer
+  Exports ==> Join(NMCommutativeRing,
+      QuotientFieldCategory(NMExtendedPadicInteger(p,prec)),
+      RadicalCategory, ElementaryFunctionCategory) with
+    "+" : (NINT, %) -> %
+    ++ a + x is the addition of a Julia Nemo Integer
+    ++ and a p-adic Integer.
+    "+" : (%, NINT) -> %
+    ++ x is the addition of a p-adic integer
+    ++ and a Julia Nemo integer.
+    "+" : (%, NFINT) -> %
+    ++ x is the addition of a p-adic integer
+    ++ and a Julia Nemo Fraction integer.
+    "+" : (NFINT, %) -> %
+    ++ x is the addition of Julia Nemo Fraction integer
+    ++ and a p-adic integer
+    "*" : (%, NFINT) -> %
+    ++ x is the multiplication of a p-adic integer
+    ++ and a Julia Nemo Fraction integer.
+    "*" : (NFINT, %) -> %
+    ++ x is the multiplication of Julia Nemo Fraction integer
+    ++ and a p-adic integer
+    "*" : (NINT, %) -> %
+    ++ a * x is the multiplication of a NemoInteger and a p-adic integer.
+    "*" : (%, NINT) -> %
+    ++ a * x is the multiplication of an Integer and a p-adic integer.
+    ++ For example:
+    ++ \example{p := 1 + 2*7 + 4*7^2 + O(7,3)$NPADICZ(7)}
+    valuation : % -> %
+    ++ valuation(x) 
+    liftZ : % -> NINT
+    ++ liftZ(x) lift x to a NM Integer.
+    liftQ : % -> NFINT
+    ++ liftQ(x) lift x to a NM Fraction NM Integer.
+    teichmuller : % -> %
+    ++ teichmuller(x) computes the Teihmuller lift of x.
+    ++ The valuation of x must be non negative.
+    frobenius : (%, I) -> %
+    ++ frobenius(x,i) returns  the image of the i-th power of Frobenius
+    ++ of x
+    coerce : NMInteger -> %
+    ++ coerce(x) returns x as the p-adic completion of the NM Integer.    
+    jnpadic : Integer -> %
+    ++ padic(x) returns x as the p-adic completion of the NM Integer. 
+    jnpadic : NMInteger -> %
+    ++ padic(x) returns x as the p-adic completion of the NM Integer.
+    O : () -> %
+    ++ 0() returns the default Big-oh from domain parameters.
+    prime : % -> I
+    ++ prime(x) returns the modulus used for x.
+    ++ Convenience function.
+    precision : % -> I
+    ++ 
+    modulus : () -> I
+      ++ \spad{modulus()} returns the value of p.
+  Implementation ==> add
+    import from JLUtilityFunctions
+    import from String
+  
+    jlImport "AbstractAlgebra.Generic.prime"
+    jlImport "AbstractAlgebra.O"
+  
+    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+    jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
+    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+    jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+    junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
+    jbinbop(op,a,b) ==> jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
+    jbinbfunc(op,a,b) ==>
+      jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
+  
+    Rep := SExpression
+    
+    -- Set up the field
+    PADICR := concat(["PADICR", string(p), "p",string(prec)])
+    jlEvalString(concat([PADICR, ",_=qadic_field(", string(p), ", 1, precision=", string(prec),")"]))
+    jlNMRing() == PADICR
+    PADICRP := concat(PADICR,"(")
+    jlObject() == jlEvalString(concat(["string(", PADICR,")"]))
+    -- TODO
+    --O() == jlref(concat(["O(",PADICRP,",", string(p),"^",string(prec),")"]))
+    O() == 0
+  
+    unit?(a) == junbfunc("is_unit", a)
+    one?(a) == junbfunc("isone", a)
+    zero?(a) == junbfunc("iszero", a)
+  
+    0 ==  jlref(concat ["zero(", PADICRP, "))"])
+    1 ==  jlref(concat ["one(", PADICRP, "))"])
+    pa : % = pb : % == jbinbop("==", pa,pb) 
+    pa : % ~= pb : % == not jbinbop("==", pa,pb)
+  
+    (pa:% + pb:%) : % == jbinfunc("+", pa,pb)
+    (pa:% - pb:%) : % == jbinfunc("-", pa,pb)
+    (pa:% * pb:%) : % == jbinfunc("*", pa,pb)
+    (pa:% / pb:%) : % == jbinfunc("/", pa,pb)
+  
+    a : NINT + pa : % == jbinop("+",a,pa)
+    a : NINT * pa : % == jbinop("*",a,pa)
+    pa : % + a : NINT == jbinop("+",pa,a)
+    pa : % * a : NINT == jbinop("*", pa, a)
+    pa : % * a : NFINT == jbinop("*", pa, a)
+    a  : NFINT * pa: % == jbinop("*", a, pa)
+    pa : % + a : NFINT == jbinop("+", pa, a)
+    a  : NFINT + pa: % == jbinop("+", a, pa)
+  
+    characteristic() == 0
+  
+    --euclideanSize(x) == order(retract x)
+  
+    prime(x) == p
+    precision(x) == prec
+    sqrt(x) == junfunc("sqrt",x)
+    valuation(x) == junfunc("valuation",x)
+    exp(x) == junfunc("exp",x)
+    log(x) == junfunc("log",x)
+    teichmuller(x) == junfunc("teichmuller",x)
+    frobenius(x,n) == jlref(concat ["frobenius(",getind(x),",", string(n),")"])
+    liftZ(x) == jlref(concat(["lift(","ZZ", ",", getind(x),")"]))$NINT
+    liftQ(x) == jlref(concat(["lift(","QQ", ",", getind(x),")"]))$NFINT
+    --digits x == stream x
+  
+    --extend(x, n) == extend(x, n + 1)$Rep
+    --complete x == complete(x)$Rep
+  
+    --modP : I -> I
+    --modP n ==
+      --unBalanced? or (p = 2) => positiveRemainder(n, p)
+      --symmetricRemainder(n, p)
+  
+    --modPInfo : I -> Record(digit : I, carry : I)
+    --modPInfo n ==
+    --  dv := divide(n, p)
+    --  r0 := dv.remainder; q := dv.quotient
+    --  if (r := modP r0) ~= r0 then q := q + ((r0 - r) quo p)
+    --  [r, q]
+  
+    --invModP : I -> I
+    --invModP n == invmod(n, p)
+  
+    modulus() == p
+    --moduloP x     == (empty? x => 0; frst x)
+    --quotientByP x == (empty? x => x; rst x)
+  
+    --approximate(x, n) ==
+    --  n <= 0 or empty? x => 0
+    --  frst x + p * approximate(rst x, n - 1)
+  
+    --x = y ==
+    -- st : ST I := stream(x - y)
+    --  n : I := _$streamCount$Lisp
+    --  for i in 0..n repeat
+    --    empty? st => return true
+    --    frst st ~= 0 => return false
+    --   st := rst st
+    --  empty? st
+  
+    --order x ==
+    --  st := stream x
+    --  for i in 0..1000 repeat
+    --    empty? st => return 0
+    --    frst st ~= 0 => return i
+    --    st := rst st
+    --  error "order: series has more than 1000 leading zero coefs"
+  
+    coerce(i : Integer) == jlref(concat([PADICRP, string(i),")"]))
+    coerce(i : NMInteger) == jlref(concat([PADICRP, string(i),")"]))
+    jnpadic(x:Integer) == jlref(concat([PADICRP, string(x),")"]))
+    jnpadic(i : NMInteger) == jlref(concat([PADICRP, string(i),")"]))
+    coerce(x) : OUT == string(x) pretend OUT
+
+)abbrev domain NPADICR NMPadicRational
+++ Author: Grégory Vanuxem
+++ Date Created: 4 april 2025
+++ Basic Operations:
+++ Related Domains:
+++ Also See:
+++ AMS Classifications:
+++ Keywords: p-adic, completion
+++ Examples:
+++ References:
+++ Description: This is a domain of Qp.
+NMPadicRational(p : Integer) == NMExtendedPadicRational(p, 64)
