@@ -73,13 +73,13 @@ NMExtendedPadicInteger(p : Integer, prec : Integer) :
     ++ and a Julia Nemo Fraction integer.
     "+" : (NFINT, %) -> %
     ++ q + x is the addition of Julia Nemo Fraction integer
-    ++ and a p-adic number
+    ++ and a p-adic number.
     "*" : (%, NFINT) -> %
     ++ x * q is the multiplication of a p-adic number
     ++ and a Julia Nemo Fraction integer.
     "*" : (NFINT, %) -> %
     ++ q * x is the multiplication of Julia Nemo Fraction integer
-    ++ and a p-adic number
+    ++ and a p-adic number.
     "*" : (NINT, %) -> %
     ++ i * x is the multiplication of a NemoInteger and a p-adic number.
     "*" : (%, NINT) -> %
@@ -87,7 +87,7 @@ NMExtendedPadicInteger(p : Integer, prec : Integer) :
     ++ For example:
     ++ \example{p := 1 + 2*7 + 4*7^2 + O()$NPADICZ(7)}
     valuation : % -> %
-    ++ valuation(x) 
+    ++ valuation(x) is the valuation of x.
     liftZ : % -> NINT
     ++ liftZ(x) lift x to a NM Integer.
     liftQ : % -> NFINT
@@ -125,13 +125,11 @@ NMExtendedPadicInteger(p : Integer, prec : Integer) :
     
     -- Set up the field
     EXPADICZP := concat(["PADICR", string(p), "p",string(prec)])
-    jlEvalString(concat([EXPADICZP, "=padic_field(", string(p), ", precision=", string(prec),")"]))
+    jlEvalString(concat([EXPADICZP, "=padic_field(ZZ(", string(p), "), precision=", string(prec),")"]))
     jlNMRing() == EXPADICZP
     EXPADICZPP := concat(EXPADICZP,"(")
     jlObject() == jlEvalString(concat(["string(", EXPADICZP,")"]))
-    -- TODO
-    --O() == jlref(concat(["O(",EXPADICZP,",", string(p),"^",string(prec),")"]))
-    O() == 0
+    O() == jlref(concat(["O(",EXPADICZP,",ZZ(", string(p),")^",string(prec),")"]))
 
     unit?(a) == junbfunc("is_unit", a)
     one?(a) == junbfunc("isone", a)
@@ -286,13 +284,13 @@ NMExtendedPadicRational(p,deg,prec) : Exports == Implementation where
     ++ and a Julia Nemo Fraction integer.
     "+" : (NFINT, %) -> %
     ++ q + x is the addition of Julia Nemo Fraction integer
-    ++ and a q-adic number
+    ++ and a q-adic number.
     "*" : (%, NFINT) -> %
     ++ x * q is the multiplication of a q-adic number
     ++ and a Julia Nemo Fraction integer.
     "*" : (NFINT, %) -> %
     ++ q * x is the multiplication of Julia Nemo Fraction integer
-    ++ and a q-adic number
+    ++ and a q-adic number.
     "*" : (NINT, %) -> %
     ++ i * x is the multiplication of a NemoInteger and a q-adic number.
     "*" : (%, NINT) -> %
@@ -300,7 +298,7 @@ NMExtendedPadicRational(p,deg,prec) : Exports == Implementation where
     ++ For example:
     ++ \example{p := 1 + 2*7 + 4*7^2 + O()$NPADICZ(7)}
     valuation : % -> %
-    ++ valuation(x) is the valuation of x. 
+    ++ valuation(x) is the valuation of x.
     liftZ : % -> NINT
     ++ liftZ(x) lift x to a NM Integer if possible.
     liftQ : % -> NFINT
@@ -310,7 +308,7 @@ NMExtendedPadicRational(p,deg,prec) : Exports == Implementation where
     ++ The valuation of x must be non negative.
     frobenius : (%, I) -> %
     ++ frobenius(x,i) returns  the image of the i-th power of Frobenius
-    ++ of x
+    ++ of x.
     coerce : NMInteger -> %
     ++ coerce(x) returns x as the q-adic completion of the NM Integer.    
     jnpadic : Integer -> %
@@ -343,14 +341,12 @@ NMExtendedPadicRational(p,deg,prec) : Exports == Implementation where
     
     -- Set up the field
     PADICR := concat(["PADICR", string(p), "p",string(prec)])
-    jlEvalString(concat([PADICR, ",_=qadic_field(", string(p), ",", string(deg),
+    jlEvalString(concat([PADICR, ",_=qadic_field(ZZ(", string(p), "),", string(deg),
       ",precision=", string(prec),")"]))
     jlNMRing() == PADICR
     PADICRP := concat(PADICR,"(")
     jlObject() == jlEvalString(concat(["string(", PADICR,")"]))
-    -- TODO
-    --O() == jlref(concat(["O(",PADICRP,",", string(p),"^",string(prec),")"]))
-    O() == 0
+    O() == jlref(concat(["O(",PADICR,",ZZ(", string(p),")^",string(prec),")"]))
   
     unit?(a) == junbfunc("is_unit", a)
     one?(a) == junbfunc("isone", a)
