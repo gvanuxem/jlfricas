@@ -3,19 +3,19 @@
 -- Antic : algebraic number field element arithmetic
 -- Calcium : exact real and complex numbers, including algebraic numbers
 )abbrev category NTYPE NMType
-++ Category for NM type domains
+++ Category for Nemo type domains
 ++ Author: G.Vanuxem
 ++ Date Created: Apr, 2024
 ++ Description:
-++  Parent category of NM domains.
+++  Parent category of Nemo domains.
 NMType() : Category == JLObjectType
 
 )abbrev category NRING NMRing
-++ Category for NM ring domains
+++ Category for Nemo ring domains
 ++ Author: G.Vanuxem
 ++ Date Created: Mar, 2024
 ++ Description:
-++  Parent category of NM ring domains.
+++  Parent category of Nemo ring domains.
 NMRing() : Category == Join(NMType, JLObjectRing) with
       exact? : % -> Boolean 
       ++ exact?(x) heck wheter or not x is exact.
@@ -32,9 +32,9 @@ NMRing() : Category == Join(NMType, JLObjectRing) with
       divide : (%, %) -> Record(quotient : %, remainder : %)
       ++
       jlNMRing : () -> String
-      ++ jlNMRing(x) returns the NM ring type of x as a string.
+      ++ jlNMRing(x) returns the Nemo ring type of x as a string.
       jlObject: () -> String
-      ++ jlObject() returns the internal JL name of the module used.
+      ++ jlObject() returns the internal Julia name of the module used.
     add
       import from JLUtilityFunctions
       import from String
@@ -60,11 +60,11 @@ NMRing() : Category == Join(NMType, JLObjectRing) with
       inverse(x) == junfunc("inv",x)
 
 )abbrev category NCRING NMCommutativeRing
-++ Category for NM commutative ring domains.
+++ Category for Nemo commutative ring domains.
 ++ Author: G.Vanuxem
 ++ Date Created: Dec,, 2024
 ++ Description:
-++  Parent category of NM commutative ring domains.
+++  Parent category of Nemo commutative ring domains.
 NMCommutativeRing() : Category == Join(NMRing, CommutativeRing)
 
 )abbrev category JARBPR JLArbitraryPrecision
@@ -78,12 +78,12 @@ JLArbitraryPrecision() : Category ==  JLType with
   ++ later if its modification is allowed.
 
 )abbrev domain NINT NMInteger
-++ Domain for NM Integers (ZZ)
+++ Domain for Nemo Integers (ZZ)
 ++ Author: G. Vanuxem
 ++ Date Created: Jan. 2023
 ++ Description:
-++  This domain allows the manipulation of NM integers
-++  using the NM package for JL (FLINT based).
+++  This domain allows the manipulation of Nemo integers
+++  using the Nemo package for Julia (FLINT based).
 ++ https://flintlib.org/
 NMInteger() : Exports == Implementation where
   Z         ==> Integer
@@ -98,7 +98,7 @@ NMInteger() : Exports == Implementation where
     ++ using a Baillie-PSW probable prime test with parameters chosen
     ++ by Selfridge’s method. See https://flintlib.org/.
     random : Segment(Integer) -> %
-    ++ random(seg) returns a random NM integer in the range seg.
+    ++ random(seg) returns a random Nemo integer in the range seg.
     coerce  : JI64 -> %
     ++ coerce(i) coerces i to a NMInteger.
     coerce  : % -> JI64
@@ -207,13 +207,13 @@ NMInteger() : Exports == Implementation where
     ZZ(i : Integer) : % == coerce(i)
 
 )abbrev domain NAN NMAlgebraicNumber
-++ Domain for NM algebraic number
+++ Domain for Nemo algebraic number
 ++ Author: G. Vanuxem
 ++ Date Created: March. 2023
 ++ Description:
-++  This domain allows the manipulation of NM algebraic numbers
-++  represented by minimal polynomials using the NM package
-++  for JL (Calcium based).
+++  This domain allows the manipulation of Nemo algebraic numbers
+++  represented by minimal polynomials using the Nemo package
+++  for Julia (Calcium based).
 ++  https://fredrikj.net/calcium/
 -- TODO: relative stuff to UniPoly*, reducedSystem*
 -- norm, height etc...
@@ -490,12 +490,12 @@ NMAlgebraicNumber() : Exports == Implementation where
     jnan(s: String) == jlref(concat(["QQBar(", s,")"]))
 
 )abbrev domain NZMOD NMIntegerMod
-++ Domain for NM integer mod n
+++ Domain for Nemo integer mod n
 ++ Author: G. Vanuxem
 ++ Date Created: Feb. 2024
 ++ Description:
-++  This domain allows the manipulation of NM integer mod n
-++  elements using the NM package for JL (FLINT based).
+++  This domain allows the manipulation of Nemo integer mod n
+++  elements using the Nemo package for Julia (FLINT based).
 ++ Purpose: Experimentation.
 ++ https://flintlib.org/
 NMIntegerMod(p : PositiveInteger) : Exports == Implementation where
@@ -563,11 +563,11 @@ NMIntegerMod(p : PositiveInteger) : Exports == Implementation where
     coerce(i : %) : OutputForm == string(i) pretend OutputForm
 
 )abbrev domain NPF NMPrimeField
-++ Domain for NM Galois Fields
+++ Domain for Nemo Galois Fields
 ++ Author: G. Vanuxem
 ++ Date Created: Feb. 2024
 ++ Description:
-++  This domain allows the manipulation of NM prime field
+++  This domain allows the manipulation of Nemo prime field
 ++  elements using the Nemo Julia package (FLINT based).
 ++ https://flintlib.org/
 NMPrimeField(p : PositiveInteger) : Exports == Implementation where
@@ -587,7 +587,7 @@ NMPrimeField(p : PositiveInteger) : Exports == Implementation where
     ++ * \undocumented
     sqrt     : % -> %
     ++ sqrt(x) returns a square root of x.
-    ++ Throw a JL error if there is no square root and returns 0.
+    ++ Throw a Julia error if there is no square root and returns 0.
     coerce  : Integer -> %
     ++ coerce \undocumented
     coerce  : NMInteger -> %
@@ -679,11 +679,11 @@ NMPrimeField(p : PositiveInteger) : Exports == Implementation where
     coerce(i : %) : OutputForm == string(i) pretend OutputForm
 
 )abbrev domain NFF NMFiniteField
-++ Experimental domain for NM Galois Fields
+++ Experimental domain for Nemo Galois Fields
 ++ Author: G. Vanuxem
 ++ Date Created: Feb. 2024
 ++ Description:
-++  This domain allows the manipulation of NM Galois field
+++  This domain allows the manipulation of Nemo Galois field
 ++  of p^n elements using the Nemo Julia package (FLINT based).
 ++ https://flintlib.org/
 NMFiniteField(p : PositiveInteger, n: PositiveInteger) : Exports == Implementation where
@@ -714,7 +714,7 @@ NMFiniteField(p : PositiveInteger, n: PositiveInteger) : Exports == Implementati
     ++ * \undocumented
     sqrt     : % -> %
     ++ sqrt(x) returns a square root of x.
-    ++ Throw a JL error if there is no square root and returns 0.
+    ++ Throw a Julia error if there is no square root and returns 0.
     coerce  : Integer -> %
     ++ coerce \undocumented
     coerce  : NMInteger -> %
@@ -804,16 +804,16 @@ NMFiniteField(p : PositiveInteger, n: PositiveInteger) : Exports == Implementati
     coerce(i : %) : OutputForm == string(i) pretend OutputForm
 
 )abbrev domain INECF InnerNMExactCalciumField
-++ Domain for NM exact complex field based on the Calcium
+++ Domain for Nemo exact complex field based on the Calcium
 ++ library.
 ++ Author: G. Vanuxem
 ++ Date Created: April. 2024
 ++ Keywords: float, floating point, number, complex
 ++ Description:
 ++  \spadtype{InnerNMExactCalciumField} implements exact complex field
-++  arithmetic using the NM package Inner domain using options,
+++  arithmetic using the Nemo package Inner domain using options,
 ++  see https://fredrikj.net/calcium/ca.html#context-options for hints).
-++  Reference: https://nemocas.github.io/NM.jl
+++  Reference: https://nemocas.github.io/Nemo.jl
 ++  See https://flintlib.org/doc/introduction_calcium.html for the C library.
 --InnerNMExactCalciumField(jdict("Dict{Symbol,Int64}(:verbose=>0,:print_flags=>3)"))
 --InnerNMExactCalciumField(jdict("Dict{Symbol,Int64}(:verbose=>0,:print_flags=>643)"))
@@ -886,7 +886,7 @@ InnerNMExactCalciumField(Options : JLObjDict) : Exports ==
     ++ pow(x, i, repr) x raised to power i using one of the repr representations:
     ++ :default (since 'default' is a FriCAS keyword use jsym(String) to coerce it)
     ++ :arithmetic
-    ++ See the NM documentation for more information, 
+    ++ See the Nemo documentation for more information, 
     ++ and InnerNMExactCalciumField for more options.
     sin     : (%, JLSymbol) -> %
     ++ sin(x, repr) return sin(x) using one of the repr representations:
@@ -932,7 +932,7 @@ InnerNMExactCalciumField(Options : JLObjDict) : Exports ==
     ++ erfc(x) is the complementary error function evaluated at x.
     complexNormalForm : % -> %
     ++ complexNormalForm(x) returns x rewritten using standard transformations.
-    ++ See the NM.jl documentation fo more informations.
+    ++ See the Nemo.jl documentation fo more informations.
     random   : (Integer, Integer) -> %
     ++ random(depth, bits) returns a random number with size of
     ++ coefficients up to bits. if depth is nonzero, apply a random arithmetic
@@ -955,7 +955,7 @@ InnerNMExactCalciumField(Options : JLObjDict) : Exports ==
     ++ / \undocumented
     jlOptions : % -> JLObjDict
     ++ jlOptions(x) returns the options set at instantiation time
-    ++ that affect different aspects of computations. See NM
+    ++ that affect different aspects of computations. See Nemo
     ++ documentation.
     retractIfCan  : % -> Union(NMInteger, "failed")
     ++ retractIfCan(z) retracts if possible z to a Integer.
@@ -978,16 +978,16 @@ InnerNMExactCalciumField(Options : JLObjDict) : Exports ==
     coerce   : Complex(Integer) -> % -- for %i operations
     ++ coerce(z) coerces z. Convenience function.
     jinecf    : NMAlgebraicNumber -> %
-    ++ jinecf(qbar) coerces qbar to a NM exact real or complex number.
+    ++ jinecf(qbar) coerces qbar to a Nemo exact real or complex number.
     jinecf    : Fraction(Integer) -> %
-    ++ jinecf(fi) coerces fi to a NM real exact number.
+    ++ jinecf(fi) coerces fi to a Nemo real exact number.
     jinecf    : (Fraction(Integer), Fraction(Integer)) -> %
-    ++ jinecf(real,cplx) coerces real and cplx to a NM exact complex number
+    ++ jinecf(real,cplx) coerces real and cplx to a Nemo exact complex number
     ++ where real is the real part and cplx the complex part.
     jinecf    : NMFraction(NMInteger) -> %
-    ++ jinecf(nr) coerces nr to a NM exact real number.
+    ++ jinecf(nr) coerces nr to a Nemo exact real number.
     jinecf    : (NMFraction(NMInteger), NMFraction(NMInteger)) -> %
-    ++ jinecf(real,cplx) coerces real and cplx to a NM exact
+    ++ jinecf(real,cplx) coerces real and cplx to a Nemo exact
     ++ where real is the real part and cplx the complex part.
   Implementation ==> add
     import from JLUtilityFunctions
@@ -1158,10 +1158,10 @@ InnerNMExactCalciumField(Options : JLObjDict) : Exports ==
       atanh(a@%)
 
     -- TODO: improve
-    Gamma(x) == jlref(concat(["NM.gamma(", getind(x),")"]))
-    erf(x)   == jlref(concat(["NM.erf(", getind(x),")"]))
-    erfi(x)  == jlref(concat(["NM.erfi(", getind(x),")"]))
-    erfc(x)  == jlref(concat(["NM.erfc(", getind(x),")"]))
+    Gamma(x) == jlref(concat(["Nemo.gamma(", getind(x),")"]))
+    erf(x)   == jlref(concat(["Nemo.erf(", getind(x),")"]))
+    erfi(x)  == jlref(concat(["Nemo.erfi(", getind(x),")"]))
+    erfc(x)  == jlref(concat(["Nemo.erfc(", getind(x),")"]))
 
     complexNormalForm(x) == junfunc("complex_normal_form", x)
 
@@ -1211,15 +1211,15 @@ InnerNMExactCalciumField(Options : JLObjDict) : Exports ==
     coerce(i : %) : OutputForm == string(i) pretend OutputForm
 
 )abbrev domain NECF NMExactCalciumField
-++ Domain for NM exact complex field based on the Calcium
+++ Domain for Nemo exact complex field based on the Calcium
 ++ library.
 ++ Author: G. Vanuxem
 ++ Date Created: April. 2024
 ++ Keywords: float, floating point, number, complex
 ++ Description:
 ++  \spadtype{NMExactCalciumField} implements exact complex field
-++  arithmetic using the NM package.
-++  Reference: https://nemocas.github.io/NM.jl
+++  arithmetic using the Nemo package.
+++  Reference: https://nemocas.github.io/Nemo.jl
 ++  See https://flintlib.org/doc/introduction_calcium.html for the C library.
 NMExactCalciumField() : Exports == Implementation where
   JI64      ==> JLInt64
@@ -1289,7 +1289,7 @@ NMExactCalciumField() : Exports == Implementation where
     ++ pow(x, i, repr) x raised to power i using one of the repr representations:
     ++ :default (since 'default' is a FriCAS keyword use jsym(String) to coerce it)
     ++ :arithmetic
-    ++ See the NM documentation for more information.
+    ++ See the Nemo documentation for more information.
     sin     : (%, JLSymbol) -> %
     ++ sin(x, repr) return sin(x) using one of the repr representations:
     ++ :default (since 'default' is a FriCAS keyword use jsym(String) to coerce it)
@@ -1334,7 +1334,7 @@ NMExactCalciumField() : Exports == Implementation where
     ++ erfc(x) is the complementary error function evaluated at x.
     complexNormalForm : % -> %
     ++ complexNormalForm(x) returns x rewritten using standard transformations.
-    ++ See the NM.jl documentation fo more informations.
+    ++ See the Nemo.jl documentation fo more informations.
     random   : (Integer, Integer) -> %
     ++ random(depth, bits) returns a random number with size of
     ++ coefficients up to bits. if depth is nonzero, apply a random arithmetic
@@ -1379,16 +1379,16 @@ NMExactCalciumField() : Exports == Implementation where
     coerce   : Complex(Integer) -> % -- for %i operations
     ++ coerce(z) coerces z. Convenience function.
     jnecf    : NMAlgebraicNumber -> %
-    ++ jnecf(qbar) coerces qbar to a NM exact real or complex number.
+    ++ jnecf(qbar) coerces qbar to a Nemo exact real or complex number.
     jnecf    : Fraction(Integer) -> %
-    ++ jnecf(fi) coerces fi to a NM real exact number.
+    ++ jnecf(fi) coerces fi to a Nemo real exact number.
     jnecf    : (Fraction(Integer), Fraction(Integer)) -> %
-    ++ jnecf(real,cplx) coerces real and cplx to a NM exact complex number
+    ++ jnecf(real,cplx) coerces real and cplx to a Nemo exact complex number
     ++ where real is the real part and cplx the complex part.
     jnecf    : NMFraction(NMInteger) -> %
-    ++ jnecf(nr) coerces nr to a NM exact real number.
+    ++ jnecf(nr) coerces nr to a Nemo exact real number.
     jnecf    : (NMFraction(NMInteger), NMFraction(NMInteger)) -> %
-    ++ jnecf(real,cplx) coerces real and cplx to a NM exact
+    ++ jnecf(real,cplx) coerces real and cplx to a Nemo exact
     ++ where real is the real part and cplx the complex part.
   Implementation ==> add
     import from JLUtilityFunctions
@@ -1556,10 +1556,10 @@ NMExactCalciumField() : Exports == Implementation where
       atanh(a@%)
 
     -- TODO: improve
-    Gamma(x) == jlref(concat(["NM.gamma(", getind(x),")"]))
-    erf(x)   == jlref(concat(["NM.erf(", getind(x),")"]))
-    erfi(x)  == jlref(concat(["NM.erfi(", getind(x),")"]))
-    erfc(x)  == jlref(concat(["NM.erfc(", getind(x),")"]))
+    Gamma(x) == jlref(concat(["Nemo.gamma(", getind(x),")"]))
+    erf(x)   == jlref(concat(["Nemo.erf(", getind(x),")"]))
+    erfi(x)  == jlref(concat(["Nemo.erfi(", getind(x),")"]))
+    erfc(x)  == jlref(concat(["Nemo.erfc(", getind(x),")"]))
 
     complexNormalForm(x) == junfunc("complex_normal_form", x)
 
@@ -1609,7 +1609,7 @@ NMExactCalciumField() : Exports == Implementation where
     coerce(i : %) : OutputForm == string(i) pretend OutputForm
 
 )abbrev domain NFRAC NMFraction
-++ Domain for JL AbstractAlgebra fractions over a NM integral domain
+++ Domain for Julia AbstractAlgebra fractions over a Nemo integral domain
 ++ Author: G. Vanuxem
 ++ Date Created:
 ++ Description:
@@ -1751,11 +1751,11 @@ NMFraction(R : Join(NMCommutativeRing, IntegralDomain)) :
       pn/pd
 
 )abbrev domain NFR NMFactored
-++ Domain for factored NM elements
+++ Domain for factored Nemo elements
 ++ Author: G.Vanuxem
 ++ Date Created: May. 2024
 ++ Description:
-++  NM factored objects.
+++  Nemo factored objects.
 NMFactored(R : Join(NMRing, IntegralDomain)) : 
       Exports == Implementation where
   INT ==> Integer

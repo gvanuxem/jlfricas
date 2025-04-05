@@ -1,5 +1,5 @@
 )abbrev package JF32LA JLF32LinearAlgebra
-++ Linear Algebra functions computed using JL and its algorithms.
+++ Linear Algebra functions computed using Julia and its algorithms.
 ++ 32 bits version.
 JLF32LinearAlgebra() : Exports == Implementation where
   JF32     ==> JLFloat32
@@ -388,7 +388,7 @@ JLF32LinearAlgebra() : Exports == Implementation where
       m
 
 )abbrev package JCF32LA JLCF32LinearAlgebra
-++ Linear Algebra functions computed using JL and its algorithms.
+++ Linear Algebra functions computed using Julia and its algorithms.
 ++ 32 bits version.
 JLCF32LinearAlgebra() : Exports == Implementation where
   JF32     ==> JLFloat32
@@ -665,7 +665,7 @@ JLCF32LinearAlgebra() : Exports == Implementation where
       ret
 
 )abbrev package JF32MTF JLF32MatrixTranscendentalFunctions
-++ Linear Algebra functions computed using JL and its algorithms.
+++ Linear Algebra functions computed using Julia and its algorithms.
 JLF32MatrixTranscendentalFunctions() : Exports == Implementation where
   JF32     ==> JLFloat32
   JI64     ==> JLInt64
@@ -986,7 +986,7 @@ JLF32MatrixTranscendentalFunctions() : Exports == Implementation where
       ret
 
 )abbrev package JCF32MTF JLComplexF32MatrixTranscendentalFunctions
-++ Linear Algebra functions computed using JL and its algorithms.
+++ Linear Algebra functions computed using Julia and its algorithms.
 JLComplexF32MatrixTranscendentalFunctions() : Exports == Implementation where
   JF32     ==> JLFloat32
   JI64     ==> JLInt64

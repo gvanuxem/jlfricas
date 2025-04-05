@@ -1,5 +1,5 @@
 )abbrev package JFSF JLFloatSpecialFunctions
-++ Special functions computed using JL's ecosystem.
+++ Special functions computed using Julia's ecosystem.
 JLFloatSpecialFunctions() : Exports == Implementation where
   JF ==> JLFloat
   INT ==> Integer

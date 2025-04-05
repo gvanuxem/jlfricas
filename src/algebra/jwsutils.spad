@@ -1,9 +1,9 @@
 )abbrev package JWSUF JLWSUtilityFunctions
-++ Generic package for JL WS based utilities
+++ Generic package for Julia WS based utilities
 ++ Author: G.Vanuxem
 ++ Date Created: July. 2024
 ++ Description:
-++  JL Wolfram Symbolic utility functions using
+++  Julia Wolfram Symbolic utility functions using
 ++  Wolfram Symbolic Transport Protocol.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 JLWSUtilityFunctions() : Exports == Implementation where
@@ -13,18 +13,18 @@ JLWSUtilityFunctions() : Exports == Implementation where
     ++ seedRandom(n) reseeds the random number generator with n as seed.
     ++ Returns the random generator state.
     urand01Real : PositiveInteger -> JLWSVector(JLWSReal)
-    ++ urand01Real(n) returns a JL WS vector with uniformly
+    ++ urand01Real(n) returns a Julia WS vector with uniformly
     ++ distributed random elements in the range 0..1. Convenience function.
     urand01Real : (PositiveInteger, PositiveInteger) -> JLWSMatrix(JLWSReal)
-    ++ urand01Real(rows,cols) returns a JL WS matrix with uniformly
+    ++ urand01Real(rows,cols) returns a Julia WS matrix with uniformly
     ++ distributed random elements in the range 0..1. Convenience function.
     urand01Complex : PositiveInteger -> JLWSVector(JLWSComplex)
-    ++ urand01Complex(n) returns a JL WS vector with uniformly
+    ++ urand01Complex(n) returns a Julia WS vector with uniformly
     ++ distributed random complex elements in the unit square.
     ++ Convenience function.
     urand01Complex : (PositiveInteger, PositiveInteger) ->
       JLWSMatrix(JLWSComplex)
-    ++ urand01Complex(rows,cols) returns a JL WS matrix with uniformly
+    ++ urand01Complex(rows,cols) returns a Julia WS matrix with uniformly
     ++ distributed random complex elements in the unit square.
     ++ Convenience function.
     hankelMatrix : PositiveInteger -> JLWSMatrix(JLWSInteger)

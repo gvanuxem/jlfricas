@@ -1,9 +1,9 @@
 )abbrev domain JWSEXPR JLWSExpression
-++ Generic domain for JL WS expressions
+++ Generic domain for Julia WS expressions
 ++ Author: G.Vanuxem
 ++ Date Created: May. 2024
 ++ Description:
-++  JL Wolfram Symbolic expressions using Wolfram Symbolic Transport Protocol.
+++  Julia Wolfram Symbolic expressions using Wolfram Symbolic Transport Protocol.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 -- TODO
 -- Reduce or FindInstance
@@ -875,7 +875,7 @@ JLWSExpression() : Exports == Implementation where
     ++ of the expression expr within tolerance dx.
     jlGreedyEval : Boolean -> Void
     ++ jlGreedyEval(bool) toogles or not to automatic arithmetic operations.
-    ++ Plus[a, a] can become Times[2, a] using or not JL `weval`.
+    ++ Plus[a, a] can become Times[2, a] using or not Julia `weval`.
     jlEval    : (%, String) -> %
     ++ jlEval(expr, param) evaluates expression expr with param as parameter(s).
     ++ For example:
@@ -1011,19 +1011,19 @@ JLWSExpression() : Exports == Implementation where
     jWSTable : (%, %, %) -> JLWSList(JLWSList(%))
     ++ jWSTable(expr, range1, range2) applies the expr to the define ranges.
     jWSRule : (%,  %) -> %
-    ++ jWSRule(lhs,rhs) returns the JL WS rule lhs->rhs.
+    ++ jWSRule(lhs,rhs) returns the Julia WS rule lhs->rhs.
     jWSEqual : (%,  %) -> %
-    ++ jWSEqual(lhs,rhs) returns the JL WS equality lhs == rhs.
+    ++ jWSEqual(lhs,rhs) returns the Julia WS equality lhs == rhs.
     jWSNotEqual : (%,  %) -> %
-    ++ jWSNotEqual(lhs,rhs) returns the JL WS inequality lhs != rhs.
+    ++ jWSNotEqual(lhs,rhs) returns the Julia WS inequality lhs != rhs.
     jWSLess : (%,  %) -> %
-    ++ jWSLess(lhs,rhs) returns the JL WS inequality lhs < rhs.
+    ++ jWSLess(lhs,rhs) returns the Julia WS inequality lhs < rhs.
     jWSLessEqual : (%,  %) -> %
-    ++ jWSLessEqual(lhs,rhs) returns the JL WS inequality lhs <= rhs.
+    ++ jWSLessEqual(lhs,rhs) returns the Julia WS inequality lhs <= rhs.
     jWSGreater : (%,  %) -> %
-    ++ jWSGreater(lhs,rhs) returns the JL WS inequality lhs > rhs.
+    ++ jWSGreater(lhs,rhs) returns the Julia WS inequality lhs > rhs.
     jWSGreaterEqual : (%,  %) -> %
-    ++ jWSGreaterEqual(lhs,rhs) returns the JL WS inequality lhs >= rhs.
+    ++ jWSGreaterEqual(lhs,rhs) returns the Julia WS inequality lhs >= rhs.
     jWSQuantity : % -> %
     ++ jWSQuantity(jWSString(u)) returns quantity unit u of 1.
     ++ For example:
@@ -1075,7 +1075,7 @@ JLWSExpression() : Exports == Implementation where
     error1(msg, f) ==> error concat [msg, " ", toString f]
 
     if not jlUsing("MathLink") then
-      error "The JL MathLink package is not installed."
+      error "The Julia MathLink package is not installed."
     jlEvalString("import MathLink: WExpr, WSymbol, WReal, WRational, WInteger")
     
     Rep := SExpression

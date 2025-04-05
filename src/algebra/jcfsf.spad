@@ -1,5 +1,5 @@
 )abbrev package JCFSF JLComplexFloatSpecialFunctions
-++ Special functions computed using JL's ecosystem.
+++ Special functions computed using Julia's ecosystem.
 JLComplexFloatSpecialFunctions() : Exports == Implementation where
   JCF ==> JLComplexFloat
   Exports ==> with

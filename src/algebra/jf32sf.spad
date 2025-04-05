@@ -1,8 +1,8 @@
 )abbrev package JF32SF JLFloat32SpecialFunctions
-++ Special functions computed using JL's ecosystem.
+++ Special functions computed using Julia's ecosystem.
 ++ They are here essentially for "completeness" purpose with
 ++ JLFloat32. You should use the DoubleFloat's special
-++ functions if available, calling JL functions is costly.
+++ functions if available, calling Julia functions is costly.
 JLFloat32SpecialFunctions() : Exports == Implementation where
   JF32 ==> JLFloat32
   JI64 ==> JLInt64

@@ -1,45 +1,45 @@
 )abbrev category JTYPE JLType
-++ Category for JL types
+++ Category for Julia types
 ++ Author: G.Vanuxem
 ++ Date Created: December, 2022
 ++ Description:
-++  Parent category of JL domains.
+++  Parent category of Julia domains.
 JLType() : Category == Join(SetCategory, ConvertibleTo(String))
   with
     string : % -> String
     ++ string(jt) returns the string representation of jt.
 
 )abbrev category JMTYPE JLMachineType
-++ Category for JL machine types
+++ Category for Julia machine types
 ++ Author: G.Vanuxem
 ++ Date Created: December, 2022
 ++ Description:
-++  Parent category of JL machine type domains.
+++  Parent category of Julia machine type domains.
 JLMachineType() : Category == JLType() add
   string(x) == PRINC_-TO_-STRING(x)$Lisp
 
 )abbrev category JRING JLRing
-++ Category for JL rings
+++ Category for Julia rings
 ++ Author: G.Vanuxem
 ++ Date Created: May, 2024
 ++ Description:
-++  Parent category of JL ring domains.
+++  Parent category of Julia ring domains.
 JLRing() : Category == Join(JLType, Ring)
 
 )abbrev category JCRING JLCommutativeRing
-++ Category for JL commuative rings
+++ Category for Julia commuative rings
 ++ Author: G.Vanuxem
 ++ Date Created: Dec, 2024
 ++ Description:
-++  Parent category of JL commutative ring domains.
+++  Parent category of Julia commutative ring domains.
 JLCommutativeRing() : Category == Join(JLType, CommutativeRing)
 
 )abbrev category JMFLOAT JLMachineFloat
-++ Category for JL machine floats (Float32 and Float64)
+++ Category for Julia machine floats (Float32 and Float64)
 ++ Author: G.Vanuxem
 ++ Date Created: Dec, 2024
 ++ Description:
-++  Parent category of JL machine float domains.
+++  Parent category of Julia machine float domains.
 JLMachineFloat() : Category ==
       Join(JLMachineType, FloatingPointSystem) with
   jlApprox?: (%, %) -> Boolean
@@ -61,7 +61,7 @@ JLMachineFloat() : Category ==
   ++ jlCApply(lib, func, x, y) applies the C function func from the library
   ++ lib to arguments x and y. For example:
   ++ \example{jlCApply("libopenlibm", jsym(pow),jf64(2.7),jf64(3.0))}
-  ++ OpenLibm library is provided by JL.
+  ++ OpenLibm library is provided by Julia.
   jlCApply : (String, JLSymbol, %, %, %) -> %
   ++ jlCApply(lib, func, x, y, z) applies the C function func from
   ++ the library lib to arguments x, y and z.
@@ -92,22 +92,22 @@ JLMachineFloat() : Category ==
   goldenRation : () -> %
   ++ goldenRation() returns the golden ratio.
   nan: () -> %
-  ++ nan() returns the JL Float64 NaN (not a number) constant.
+  ++ nan() returns the Julia Float64 NaN (not a number) constant.
   positiveInfinity: () -> %
-  ++ positiveInfinity() returns the JL Float64
+  ++ positiveInfinity() returns the Julia Float64
   ++ positive infinity constant.
   negativeInfinity: () -> %
-  ++ negativeInfinity() returns the JL Float64
+  ++ negativeInfinity() returns the Julia Float64
   ++ negtive infinity constant.
   jlString : % -> String
   ++ jlString(x) returns the string representation of x.
 
 )abbrev domain JSYM JLSymbol
-++ Domain for JL symbols
+++ Domain for Julia symbols
 ++ Author: G. Vanuxem
 ++ Date Created:
 ++ Description:
-++  This domain allows the manipulation of JL symbols.
+++  This domain allows the manipulation of Julia symbols.
 JLSymbol() : Exports == Implementation where
   STR ==> String
   Exports ==> JLType with
@@ -116,9 +116,9 @@ JLSymbol() : Exports == Implementation where
     coerce  : Symbol -> %
     ++ coerce \undocumented
     jsym    : String -> %
-    ++ jsym(str) converts str to a JL symbol.
+    ++ jsym(str) converts str to a Julia symbol.
     jsym    : Symbol -> %
-    ++ jsym(sym) converts sym to a JL symbol.
+    ++ jsym(sym) converts sym to a Julia symbol.
   Implementation ==> add
     import from JLUtilityFunctions
     import from String
@@ -135,17 +135,17 @@ JLSymbol() : Exports == Implementation where
     coerce(sy : %) : OutputForm == sy pretend OutputForm
 
 )abbrev domain JI64 JLInt64
-++ Domain for JL Int64
+++ Domain for Julia Int64
 ++ Author: G. Vanuxem
 ++ Date Created:
 ++ Description:
-++  This domain allows the manipulation of JL Int64.
+++  This domain allows the manipulation of Julia Int64.
 ++  Beware of internal Lisp implementations of machine integer,
 ++  usually they differ, for example Lisp MOST-POSITIVE-FIXNUM on 
 ++  x86_64 GNU/Linux is 4611686018427387903 with SBCL whereas it is
 ++  1152921504606846975 with Clozure CL. They will be passed as an Int64
-++  to JL nevertheless, but returned value can not fit in a Lisp fixnum. 
-++  In JL, typemax(Int64) is 9223372036854775807 on this arch. 
+++  to Julia nevertheless, but returned value can not fit in a Lisp fixnum. 
+++  In Julia, typemax(Int64) is 9223372036854775807 on this arch. 
 ++  This domain is therefore not intented to perfom "advanced" computation,
 ++  it just includes basic arthmetic and is used, for example,
 ++  for returned pivot vectors in linear algebra.
@@ -182,12 +182,12 @@ JLInt64() : Exports == Implementation where
 
 
 )abbrev domain JF32 JLFloat32
-++ Domain for JL Float32
+++ Domain for Julia Float32
 ++ Author: G. Vanuxem
 ++ Date Created: november 2024
 ++ Description:
 ++  \spadtype{JLFloat32} implements 32 bits floating
-++  point arithmetic using JL Float32 type. Bear in mind that,
+++  point arithmetic using Julia Float32 type. Bear in mind that,
 ++  like JLInt64, the internal representation depends on the
 ++  underlying Lisp implementation, so the usual pure arithmetic
 ++  operations occur there. For other functions like sqrt, log, exp,
@@ -203,11 +203,11 @@ JLFloat32() : Exports == Implementation where
                 ConvertibleFrom(DoubleFloat), ElementaryFunctionCategory,
                 TranscendentalFunctionCategory, DifferentialRing) with
     jf32    : DoubleFloat -> %
-    ++ jf32(x) coerces x to a JL Float32.
+    ++ jf32(x) coerces x to a Julia Float32.
     jf32    : Integer -> %
-    ++ jf32(i) coerces i to a JL Float32.
+    ++ jf32(i) coerces i to a Julia Float32.
     jf32    : JLFloat64 -> %
-    ++ jf32(x) coerces x to a JL Float32.
+    ++ jf32(x) coerces x to a Julia Float32.
   Implementation ==> add
     import from JLUtilityFunctions
     import from String
@@ -382,7 +382,7 @@ JLFloat32() : Exports == Implementation where
     jf32(x : Integer) == makeF32(x,0)$Lisp
 
 )abbrev domain JCF32 JLComplexF32
-++ Domain for Complex JL F32
+++ Domain for Complex Julia F32
 ++ Author: G. Vanuxem
 ++ Date Created: novemebr 2024
 ++ Description: \spadtype{JLComplexF32} implements complex 32 bits
@@ -406,12 +406,12 @@ JLComplexF32() : Exports == Implementation where
     jcf32(r,i) == complex(r,i)
 
 )abbrev domain JF64 JLFloat64
-++ Domain for JL Float64
+++ Domain for Julia Float64
 ++ Author: G. Vanuxem
 ++ Date Created:
 ++ Description:
 ++  \spadtype{JLFloat64} implements 64 bits floating
-++  point arithmetic using JL Float64 type. Bear in mind that,
+++  point arithmetic using Julia Float64 type. Bear in mind that,
 ++  like JLInt64, the internal representation depends on the
 ++  underlying Lisp implementation, so the usual pure arithmetic
 ++  operations occur there. For other functions like sqrt, log, exp,
@@ -428,9 +428,9 @@ JLFloat64() : Exports == Implementation where
                 ConvertibleTo(InputForm), ElementaryFunctionCategory,
                 TranscendentalFunctionCategory, DifferentialRing) with
     jf64    : DoubleFloat -> %
-    ++ jf64(x) coerces x to a JL Float64.
+    ++ jf64(x) coerces x to a Julia Float64.
     jf64    : Integer -> %
-    ++ jf64(i) coerces i to a JL Float64.
+    ++ jf64(i) coerces i to a Julia Float64.
     jf64    : String -> %
     ++ jf64(str) read the string at the Common Lisp level using
     ++ read-from-string. It is expected that the string represent a CL
@@ -443,7 +443,7 @@ JLFloat64() : Exports == Implementation where
     jlInitialize(true)
     defined?(func) ==>
       not jlDefined?(func) =>
-        error concat(func, " is not defined in JL")
+        error concat(func, " is not defined in Julia")
     
     max_SF ==> MOST_-POSITIVE_-DOUBLE_-FLOAT$Lisp      
     MER ==> Record(MANTISSA : Integer, EXPONENT : Integer)
@@ -606,7 +606,7 @@ JLFloat64() : Exports == Implementation where
       error "jf64(String): not a 64 bits floating point number."
 
 )abbrev domain JCF64 JLComplexF64
-++ Domain for Complex JL F64
+++ Domain for Complex Julia F64
 ++ Author: G. Vanuxem
 ++ Date Created:
 ++ Description: \spadtype{JLComplexF64} implements complex 64 bits

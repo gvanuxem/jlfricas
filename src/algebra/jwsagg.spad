@@ -1,9 +1,9 @@
 )abbrev category JWSAGG JLWSAggregate
-++ Generic category for JL WS aggregates 
+++ Generic category for Julia WS aggregates 
 ++ Author: G.Vanuxem
 ++ Date Created: Jun. 2024
 ++ Description:
-++  JL Wolfram Symbolic aggregate (WS list) using Wolfram Symbolic
+++  Julia Wolfram Symbolic aggregate (WS list) using Wolfram Symbolic
 ++ Transport Protocol.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 JLWSAggregate(E : JLWSObject) : Category == JLWSObject with
@@ -121,7 +121,7 @@ JLWSAggregate(E : JLWSObject) : Category == JLWSObject with
       jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
 
     if not jlUsing("MathLink") then
-      error "The JL MathLink package is not installed."
+      error "The Julia MathLink package is not installed."
     
     Rep := SExpression
     WT : JLWSSymbol := WTrue()
@@ -179,7 +179,7 @@ JLWSAggregate(E : JLWSObject) : Category == JLWSObject with
         elem pretend JLWSExpression))
 
     -- TODO
-    -- Works on copy and assign it to the JL IdDict index (refs)
+    -- Works on copy and assign it to the Julia IdDict index (refs)
     setelt!(agg,i,elem) ==
       i > integer length(agg) => error "setelt!: index too large"
       cmd := concat(["weval(W_"ReplacePart_"(", getind(agg), ",",
@@ -210,11 +210,11 @@ JLWSAggregate(E : JLWSObject) : Category == JLWSObject with
       coerce(agg pretend JLWSExpression)@OutputForm
 
 )abbrev domain JWSLIST JLWSList
-++ Generic domain for JL WS lists
+++ Generic domain for Julia WS lists
 ++ Author: G.Vanuxem
 ++ Date Created: Jun. 2024
 ++ Description:
-++  JL Wolfram Symbolic lists using Wolfram Symbolic Transport Protocol.
+++  Julia Wolfram Symbolic lists using Wolfram Symbolic Transport Protocol.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 JLWSList(E : JLWSObject) : Exports == Implementation where
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
@@ -230,7 +230,7 @@ JLWSList(E : JLWSObject) : Exports == Implementation where
     import from JLUtilityFunctions
 
     if not jlUsing("MathLink") then
-      error "The JL MathLink package is not installed."
+      error "The Julia MathLink package is not installed."
 
     Rep := SExpression
 
@@ -246,11 +246,11 @@ JLWSList(E : JLWSObject) : Exports == Implementation where
       coerce(l pretend JLWSExpression)@OutputForm
 
 )abbrev domain JWSVEC JLWSVector
-++ Generic domain for JL WS vectors
+++ Generic domain for Julia WS vectors
 ++ Author: G.Vanuxem
 ++ Date Created: Jun. 2024
 ++ Description:
-++  JL Wolfram Symbolic vectors using Wolfram Symbolic Transport Protocol.
+++  Julia Wolfram Symbolic vectors using Wolfram Symbolic Transport Protocol.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 JLWSVector(E : JLWSObject) : Exports == Implementation where
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
@@ -310,7 +310,7 @@ JLWSVector(E : JLWSObject) : Exports == Implementation where
       jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
 
     if not jlUsing("MathLink") then
-      error "The JL MathLink package is not installed."
+      error "The Julia MathLink package is not installed."
 
     Rep := SExpression
 
@@ -339,11 +339,11 @@ JLWSVector(E : JLWSObject) : Exports == Implementation where
       coerce(matrixForm(vec pretend JLWSExpression))@OutputForm
 
 )abbrev domain JWSMAT JLWSMatrix
-++ Generic domain for JL WS matrices
+++ Generic domain for Julia WS matrices
 ++ Author: G.Vanuxem
 ++ Date Created: Jun. 2024
 ++ Description:
-++  JL Wolfram Symbolic matrices using Wolfram Symbolic Transport Protocol.
+++  Julia Wolfram Symbolic matrices using Wolfram Symbolic Transport Protocol.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 -- JLWSRing?
 JLWSMatrix(E : JLWSRing) : Exports == Implementation where
@@ -539,7 +539,7 @@ JLWSMatrix(E : JLWSRing) : Exports == Implementation where
       jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
 
     if not jlUsing("MathLink") then
-      error "The JL MathLink package is not installed."
+      error "The Julia MathLink package is not installed."
     
     Rep := SExpression
     WT : JLWSSymbol := WTrue()

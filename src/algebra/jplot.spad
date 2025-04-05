@@ -4,7 +4,7 @@
 ++ Basic Operations: jlPlot, jlSurface
 ++ Keywords: plot, surface
 ++ Description: low level plotting functions
-++ using the Plots module from JL.
+++ using the Plots module from Julia.
 JLPlotFunctions() : Exports == Implementation where
   NNI     ==> NonNegativeInteger
   JF64    ==> JLFloat64
@@ -72,7 +72,7 @@ JLPlotFunctions() : Exports == Implementation where
     ++ jlPlotTitle!(title) draws `title' as plot title in the current plot.
     ++ For example:
     ++   jlPlotTitle! "sin(x)"
-    ++ if you have the LatexStrings JL package
+    ++ if you have the LatexStrings Julia package
     ++ \example{jlPlotTitle! jlLatex latex sin(x)}
     ++ For simple expressions title will automatically
     ++ be enclosed betweek $. 
@@ -172,10 +172,10 @@ JLPlotFunctions() : Exports == Implementation where
     POINTS ==> 250
 
     --if not jlUsing("Plots") then
-    --  error "JLPlotFunctions: the JL package Plots is not installed"
+    --  error "JLPlotFunctions: the Julia package Plots is not installed"
 
     if not jlUsing("LaTeXStrings") then
-      jlEvalString("printstyled(_"LaTexStrings is not installed in JL " _
+      jlEvalString("printstyled(_"LaTexStrings is not installed in Julia " _
       "do not use it (axis, title, etc.).\n_"; color=:green)")
     --if jlUsing "Gaston" then
     --  jlEvalString("gaston()")

@@ -1,22 +1,22 @@
 )abbrev category JOBTYPE JLObjectType
-++ Category for arbirary JL objects
+++ Category for arbitrary Julia objects
 ++ Author: G.Vanuxem
 ++ Date Created: April. 2024
 ++ Description:
-++  Category for arbitrary JL objects, more precisely
-++  objects that are used within JL.
+++  Category for arbitrary Julia objects, more precisely
+++  objects that are used within Julia.
 JLObjectType() : Category == JLType() with
     jlref   : String -> %
-    ++ jlref(str) evaluates the JL command str and returns
-    ++ the corresponding FriCAS JL object.
+    ++ jlref(str) evaluates the Julia command str and returns
+    ++ the corresponding FriCAS Julia object.
     jlId    : % -> JLInt64
-    ++ jlId(obj) returns the JL indexed dictionary index related
+    ++ jlId(obj) returns the Julia indexed dictionary index related
     ++ to the object obj.
     jlType  : % -> String
-    ++ jlType(obj) return the JL type of obj.
+    ++ jlType(obj) return the Julia type of obj.
     jlRef   : % -> SExpression
     ++ jlRef(obj) returns the pretty printed internal Lisp representation
-    ++ of the JL object obj.
+    ++ of the Julia object obj.
     jlDump : JLObject -> Void
     ++ jlDump(obj) dumps (shows) the Julia object (internal structure with type).
     mutable? : % -> Boolean
@@ -24,7 +24,7 @@ JLObjectType() : Category == JLType() with
     nothing? : % -> Boolean
     ++ nothing?(obj) checks whether or not obj is nothing.
     jlDisplay: % -> Void
-    ++ jlDisplay(v) pretty prints v (à la JL).
+    ++ jlDisplay(v) pretty prints v (à la Julia).
     jlApply : (String, %) -> %
     ++jlApply(func, obj) applies the function func with obj as parameter
     ++ and returns the result as a FriCAS JLObject.
@@ -49,13 +49,13 @@ JLObjectType() : Category == JLType() with
     ++ obj2, obj3, obj4 and obj5 as parameters and returns the result as a FriCAS
     ++ JLObject.
     jlAbout : % -> Void
-    ++ jlAbout(obj) displays JL informations about obj
-    ++ if you have About.jl installed in JL.
-    ++ In the JL interpreter enter in the package management mode
+    ++ jlAbout(obj) displays Julia informations about obj
+    ++ if you have About.jl installed in Julia.
+    ++ In the Julia interpreter enter in the package management mode
     ++ with ']' and issue:
     ++ pkg> add "https://github.com/tecosaur/About.jl"
     jlObject : () -> String
-    ++ jlObject() returns the internal JL name of the JL module used.
+    ++ jlObject() returns the internal Julia name of the Julia module used.
     coerce  : % -> JLObject
     ++ coerce(obj) coerce obj to JLObject.
     ++ Convenience function.
@@ -73,7 +73,7 @@ JLObjectType() : Category == JLType() with
       make_jlref_wcall5(func, a, b, c, d, e)$Lisp
     defined?(func) ==>
       not jlDefined?(func)$JLUtilityFunctions =>
-        error concat(func, " is not defined in JL")
+        error concat(func, " is not defined in Julia")
 
     jlref(cmd)   == make_jlref(cmd)$Lisp  
     jlId(obj)    == JLREFID(obj)$Lisp
@@ -105,7 +105,7 @@ JLObjectType() : Category == JLType() with
       jquinfunc(func,a,b,c,d,e)
     jlAbout(obj) ==
       not jlUsing("About") =>
-        error(concat("jlAbout: the _"About.jl_" JL package is not installed.",
+        error(concat("jlAbout: the _"About.jl_" Julia package is not installed.",
           " See the JLObjectType category for information"))
       jlEvalString(concat(["about(", getind(obj),")"]))@Void
     coerce(obj : %) : OutputForm ==
@@ -120,11 +120,11 @@ JLObjectType() : Category == JLType() with
     coerce(obj : %) == obj pretend JLObject
 
 )abbrev category JOBAGG JLObjectAggregate
-++ Category for arbitrary JL aggregates
+++ Category for arbitrary Julia aggregates
 ++ Author: G.Vanuxem
 ++ Date Created: Aug. 2024
 ++ Description:
-++  Category for arbitrary JL aggregates.
+++  Category for arbitrary Julia aggregates.
 JLObjectAggregate() : Category == Join(JLObjectType, Aggregate) with
     elt : (%, JLSymbol) -> JLObject
     ++ elt(obj, sym) returns the property sym of obj.
@@ -133,7 +133,7 @@ JLObjectAggregate() : Category == Join(JLObjectType, Aggregate) with
     qelt : (%, JLSymbol) -> JLObject
     ++ qelt(obj, sym) returns the property sym of obj. No checks are done
     ++ regarding the existence of the sym property. If it does not exist,
-    ++ JL throws an error.
+    ++ Julia throws an error.
     elt : (%, Integer) -> JLObject
     ++ elt(obj, ind) returns the element at index ind of obj.
     ++ It can be used, for example, with a Tuple or a Vector.
@@ -163,7 +163,7 @@ JLObjectAggregate() : Category == Join(JLObjectType, Aggregate) with
       jlEvalString(concat(["ismissing(", getind(m),")"]))@Boolean
 
 )abbrev category JOBRING JLObjectRing
-++ Category for JL object rings
+++ Category for Julia object rings
 ++ Author: G.Vanuxem
 ++ Date Created: Aug, 2024
 ++ Description:
@@ -193,11 +193,11 @@ JLObjectRing() : Category == Join(JLObjectType, JLRing) with
     x ^ y : NonNegativeInteger == jlref(concat [getind(x), "^", string(y)])
 
 )abbrev domain JOBJECT JLObject
-++ Generic domain for JL objects
+++ Generic domain for Julia objects
 ++ Author: G.Vanuxem
 ++ Date Created: April. 2024
 ++ Description:
-++  Generic JL objects i.e. objects that are used within JL,
+++  Generic Julia objects i.e. objects that are used within Julia,
 ++ and not directly by the underlying FriCAS Common LISP. It also
 ++ supports the JLObjectAggregate category.
 JLObject() : Exports == Implementation where
@@ -214,16 +214,16 @@ JLObject() : Exports == Implementation where
     ++ coerce(i) coerces i as a JLObject.
     ++ Convenience function.
     jlCollect : % -> JLVector(%)
-    ++ jlCollect(obj) collects element of a JL iterator
+    ++ jlCollect(obj) collects element of a Julia iterator
     ++ in a JLVector.
     jobject : Integer -> %
     ++ jobject(n) returns the JLObject representing the integer n.
     jobject : String -> %
-    ++ jobject(str) constructs an arbitrary JL object depending
-    ++ on string used (evaluated by JL). For example:
+    ++ jobject(str) constructs an arbitrary Julia object depending
+    ++ on string used (evaluated by Julia). For example:
     ++ \example{jobject("rand(Float64,(2,3,4))")}
     ++ returns a 2x3x4 array of Float64 elements.
-    ++ A JL exception is raised if error(s) occur(s)
+    ++ A Julia exception is raised if error(s) occur(s)
     ++ during parsing/evalution.
   Implementation ==> add
     import from JLUtilityFunctions
@@ -240,23 +240,23 @@ JLObject() : Exports == Implementation where
     jobject(str: String) : % == jlref(str)
 
 )abbrev domain JOBBOOL JLObjBoolean
-++ Convenience domain for JL booleans
+++ Convenience domain for Julia booleans
 ++ Author: G.Vanuxem
 ++ Date Created: Aug. 2024
 ++ Description:
-++  Convenience domain for JL booleans, objects that are used
-++ within JL, and not directly by the underlying FriCAS Common LISP.
+++  Convenience domain for Julia booleans, objects that are used
+++ within Julia, and not directly by the underlying FriCAS Common LISP.
 ++ It is not meant to be used directly, but rather for returned value
 ++ or function argument for example.
 JLObjBoolean() : Exports == Implementation where
   Exports ==> JLObjectType with
     coerce : % -> Boolean
-    ++ coerce(jbool) coerces the JL boolean value to a
+    ++ coerce(jbool) coerces the Julia boolean value to a
     ++ FriCAS Boolean.
     jtrue : () -> %
-    ++ jtrue() returns the JL boolean true value.
+    ++ jtrue() returns the Julia boolean true value.
     jfalse : () -> %
-    ++ jfalse() returns the JL boolean false value.
+    ++ jfalse() returns the Julia boolean false value.
   Implementation ==> add
     import String
     coerce(bool) : Boolean == jl_string_getindex(jlId bool)$Lisp = "true"
@@ -264,12 +264,12 @@ JLObjBoolean() : Exports == Implementation where
     jfalse() == jlref("false")
  
 )abbrev domain JOBF32 JLObjFloat32
-++ Convenience domain for JL Float32
+++ Convenience domain for Julia Float32
 ++ Author: G.Vanuxem
 ++ Date Created: Aug. 2024
 ++ Description:
-++  Convenience domain for JL Float32, objects that are used
-++ within JL, and not directly by the underlying FriCAS Common LISP.
+++  Convenience domain for Julia Float32, objects that are used
+++ within Julia, and not directly by the underlying FriCAS Common LISP.
 ++ It is not meant to be used directly, but rather, for returned value
 ++ or function argument for example.
 ++ Only basic arithmetic operations are supported.
@@ -312,8 +312,8 @@ JLObjFloat32() : Exports == Implementation where
     jfloat32 : Float -> %
     jfloat32 : JLFloat32 -> %
     jfloat32 : String -> %
-    ++ jfloat32(str) evaluates str in JL and returns the
-    ++ JL Float32 object. For example:
+    ++ jfloat32(str) evaluates str in Julia and returns the
+    ++ Julia Float32 object. For example:
     ++\example{jfloat32("sin(pi)")}
     ++\example{jfloat32("0.7")}
   Implementation ==> add
@@ -373,16 +373,16 @@ JLObjFloat32() : Exports == Implementation where
     jfloat32(r : JLFloat32) == jlref(toString(r))
     jfloat32(str : String) ==
       ret : % := jlref(str)
-      jlType(ret) ~= "Float32" => error "jfloat32: not a JL Float32"
+      jlType(ret) ~= "Float32" => error "jfloat32: not a Julia Float32"
       ret
 
 )abbrev domain JOBF64 JLObjFloat64
-++ Convenience domain for JL Float64
+++ Convenience domain for Julia Float64
 ++ Author: G.Vanuxem
 ++ Date Created: Aug. 2024
 ++ Description:
-++  Convenience domain for JL Float64, objects that are used
-++ within JL, and not directly by the underlying FriCAS Common LISP.
+++  Convenience domain for Julia Float64, objects that are used
+++ within Julia, and not directly by the underlying FriCAS Common LISP.
 ++ It is not meant to be used directly, but rather, for returned value
 ++ or function argument for example.
 ++ Only basic arithmetic operations are supported.
@@ -429,8 +429,8 @@ JLObjFloat64() : Exports == Implementation where
     jfloat64 : Float -> %
     jfloat64 : JLFloat64 -> %
     jfloat64 : String -> %
-    ++ jfloat64(str) evaluates str in JL and returns the
-    ++ JL Float64 object. For example:
+    ++ jfloat64(str) evaluates str in Julia and returns the
+    ++ Julia Float64 object. For example:
     ++\example{jfloat64("sin(pi)")}
     ++\example{jfloat64("0.7")}
   Implementation ==> add
@@ -490,16 +490,16 @@ JLObjFloat64() : Exports == Implementation where
     jfloat64(r : JLFloat64) == jlref(toString(r))
     jfloat64(str : String) ==
       ret : % := jlref(str)
-      jlType(ret) ~= "Float64" => error "jfloat64: not a JL Float64"
+      jlType(ret) ~= "Float64" => error "jfloat64: not a Julia Float64"
       ret
 
 )abbrev domain JOBCF32 JLObjComplexF32
-++ Convenience domain for JL ComplexF32
+++ Convenience domain for Julia ComplexF32
 ++ Author: G.Vanuxem
 ++ Date Created: Aug. 2024
 ++ Description:
-++  Convenience domain for JL ComplexF32, objects that are used
-++ within JL, and not directly by the underlying FriCAS Common LISP.
+++  Convenience domain for Julia ComplexF32, objects that are used
+++ within Julia, and not directly by the underlying FriCAS Common LISP.
 ++ It is not meant to be used directly, but rather for returned value
 ++ or function argument for example.
 ++ Only basic arithmetic operations are supported.
@@ -520,7 +520,7 @@ JLObjComplexF32() : Exports == Implementation where
     cispi : % -> %
     ++ cispi(x) returns cis(%pi*x) computed efficiently.
     jcfloat32 : String -> %
-    ++ jcfloat32(str) evaluates str in JL and returns the JL
+    ++ jcfloat32(str) evaluates str in Julia and returns the Julia
     ++ Complex{Float32} object.
     ++ For example:
     ++ \example{jcfloat32 "cos(2pi)im"}
@@ -552,16 +552,16 @@ JLObjComplexF32() : Exports == Implementation where
     cispi(x) == junfunc("cispi",x)
     jcfloat32(str) ==
       ret : % := jlref(str)
-      jlType(ret) ~= "ComplexF32" => error "jcfloat32: not a JL ComplexF32"
+      jlType(ret) ~= "ComplexF32" => error "jcfloat32: not a Julia ComplexF32"
       ret
 
 )abbrev domain JOBCF64 JLObjComplexF64
-++ Convenience domain for JL ComplexF64
+++ Convenience domain for Julia ComplexF64
 ++ Author: G.Vanuxem
 ++ Date Created: Aug. 2024
 ++ Description:
-++  Convenience domain for JL ComplexF64, objects that are used
-++ within JL, and not directly by the underlying FriCAS Common LISP.
+++  Convenience domain for Julia ComplexF64, objects that are used
+++ within Julia, and not directly by the underlying FriCAS Common LISP.
 ++ It is not meant to be used directly, but rather for returned value
 ++ or function argument for example.
 ++ Only basic arithmetic operations are supported.
@@ -582,7 +582,7 @@ JLObjComplexF64() : Exports == Implementation where
     cispi : % -> %
     ++ cispi(x) returns cis(%pi*x) computed efficiently.
     jcfloat64 : String -> %
-    ++ jcfloat64(str) evaluates str in JL and returns the JL
+    ++ jcfloat64(str) evaluates str in Julia and returns the Julia
     ++ Complex{Float64} object.
     ++ For example:
     ++ \example{jcfloat64 "cos(2pi)im"}
@@ -614,16 +614,16 @@ JLObjComplexF64() : Exports == Implementation where
     cispi(x) == junfunc("cispi",x)
     jcfloat64(str) ==
       ret : % := jlref(str)
-      jlType(ret) ~= "ComplexF64" => error "jcfloat64: not a JL ComplexF64"
+      jlType(ret) ~= "ComplexF64" => error "jcfloat64: not a Julia ComplexF64"
       ret
 
 )abbrev domain JOBI64 JLObjInt64
-++ Convenience domain for JL Int64
+++ Convenience domain for Julia Int64
 ++ Author: G.Vanuxem
 ++ Date Created: Aug. 2024
 ++ Description:
-++  Convenience domain for JL Int64, objects that are used
-++ within JL, and not directly by the underlying FriCAS Common LISP.
+++  Convenience domain for Julia Int64, objects that are used
+++ within Julia, and not directly by the underlying FriCAS Common LISP.
 ++ It is not meant to be used directly, but rather for returned value
 ++ or function argument for example. Only basic arithmetic operations
 ++ are supported.
@@ -665,12 +665,12 @@ JLObjInt64() : Exports == Implementation where
     jint64(str : String) == jlref(str)
 
 )abbrev domain JOBBINT JLObjBigInt
-++ Convenience domain for JL BigInt
+++ Convenience domain for Julia BigInt
 ++ Author: G.Vanuxem
 ++ Date Created: Aug. 2024
 ++ Description:
-++  Convenience domain for JL BigInt, objects that are used
-++ within JL, and not directly by the underlying FriCAS Common LISP.
+++  Convenience domain for Julia BigInt, objects that are used
+++ within Julia, and not directly by the underlying FriCAS Common LISP.
 ++ It is not meant to be used directly, but rather for returned value
 ++ or function argument for example. It is also not meant to replace
 ++ NMInteger, which uses GMP, but basic arithmetic operations
@@ -693,10 +693,10 @@ JLObjBigInt() : Exports == Implementation where
     ++ It is expected that the C function modifies the first parameters
     ++ for the returned value (provided by FriCAS and returned here).
     jbigint : Integer -> %
-    ++ jbigint(z) converts z to a JL BigInt. 
+    ++ jbigint(z) converts z to a Julia BigInt. 
     jbigint : String -> %
-    ++ jbigint(z) returns the string str evaluated in JL where the returned
-    ++ value is assumed to be a JL BigInt.
+    ++ jbigint(z) returns the string str evaluated in Julia where the returned
+    ++ value is assumed to be a Julia BigInt.
     ++ \example{jbigint "BigInt(1234567890)"}
   Implementation == add
     import from JLUtilityFunctions
@@ -749,12 +749,12 @@ JLObjBigInt() : Exports == Implementation where
     jbigint(str : String) == jlref(str)
 
 )abbrev domain JOBPAIR JLObjPair
-++ Convenience domain for JL Pair.
+++ Convenience domain for Julia Pair.
 ++ Author: G.Vanuxem
 ++ Date Created: Dec. 2024
 ++ Description:
-++  Convenience domain for JL Pairs, objects that are used
-++ within JL, and not directly by the underlying FriCAS Common LISP.
+++  Convenience domain for Julia Pairs, objects that are used
+++ within Julia, and not directly by the underlying FriCAS Common LISP.
 ++ It is not meant to be used directly, but rather for returned value
 ++ or function argument for example.
 JLObjPair(F : JLObjectType, L : JLObjectType)
@@ -765,8 +765,8 @@ JLObjPair(F : JLObjectType, L : JLObjectType)
     last : % -> L
     ++ last(pair) returns the last element of pair.
     jpair : String -> %
-    ++ jpair(str) returns a JL Pair
-    ++ from the evaluation of the JL command str.
+    ++ jpair(str) returns a Julia Pair
+    ++ from the evaluation of the Julia command str.
   Implementation ==> add
     import from JLUtilityFunctions
     import from JLStringUtilities
@@ -779,22 +779,22 @@ JLObjPair(F : JLObjectType, L : JLObjectType)
     jpair(str : String) == jlref str
 
 )abbrev domain JOBTPLE JLObjTuple
-++ Convenience domain for JL Tuple.
+++ Convenience domain for Julia Tuple.
 ++ Author: G.Vanuxem
 ++ Date Created: Aug. 2024
 ++ Description:
-++  Convenience domain for JL Tuples, objects that are used
-++ within JL, and not directly by the underlying FriCAS Common LISP.
+++  Convenience domain for Julia Tuples, objects that are used
+++ within Julia, and not directly by the underlying FriCAS Common LISP.
 ++ It is not meant to be used directly, but rather for returned value
 ++ or function argument for example.
 JLObjTuple() : Exports == Implementation where
   Exports ==> JLObjectAggregate() with
     jtuple : List(Any) -> %
-    ++ jtuple(lst) returns a JL Tuple from the List lst.
+    ++ jtuple(lst) returns a Julia Tuple from the List lst.
     ++ lst must be compatible with 1D format.
     jtuple : String -> %
-    ++ jtuple(str) returns a JL Tuple
-    ++ from the evaluation of the JL command str.
+    ++ jtuple(str) returns a Julia Tuple
+    ++ from the evaluation of the Julia command str.
   Implementation ==> add
     import from JLUtilityFunctions
     import from JLStringUtilities
@@ -808,12 +808,12 @@ JLObjTuple() : Exports == Implementation where
     jtuple(str : String) == jlref str
 
 )abbrev domain JOBDICT JLObjDict
-++ Convenience domain for JL Dict.
+++ Convenience domain for Julia Dict.
 ++ Author: G.Vanuxem
 ++ Date Created: Aug. 2024
 ++ Description:
-++  Convenience domain for JL Dictionaries, objects that are used
-++ within JL, and not directly by the underlying FriCAS Common LISP.
+++  Convenience domain for Julia Dictionaries, objects that are used
+++ within Julia, and not directly by the underlying FriCAS Common LISP.
 ++ It is not meant to be used directly, but rather for returned value
 ++ or function argument for example.
 JLObjDict() : Exports == Implementation where
@@ -823,14 +823,14 @@ JLObjDict() : Exports == Implementation where
     qelt : (%, Any) -> JLObject
     ++ qelt(dict, key) returns the value associated to the key of dict.
     ++ No checks are done regarding the existence of the key at
-    ++ the FriCAS level. Returns the JL missing value if the
+    ++ the FriCAS level. Returns the Julia missing value if the
     ++ key does not exist.
     elt : (%, JLSymbol) -> JLObject
     ++ elt(dict, sym) returns the value associated to the key sym of dict.
     qelt : (%, JLSymbol) -> JLObject
     ++ qelt(dict, sym) returns the value associated to the key sym of dict.
     ++ No checks are done regarding the existence of the key sym at
-    ++ the FriCAS level. Returns the JL missing value if the
+    ++ the FriCAS level. Returns the Julia missing value if the
     ++ key does not exist.
     setelt! : (%, Any, JLObject) -> %
     ++ setelt!(dict, key, val) sets the val to the key of dict.
@@ -845,7 +845,7 @@ JLObjDict() : Exports == Implementation where
     ++ delete!(dict, key) delete the mapping corresponding to the
     ++ the  key of dict.
     jdict : String -> %
-    ++ jdict(str) returns a JL Dict from the JL command str.
+    ++ jdict(str) returns a Julia Dict from the Julia command str.
   Implementation ==> add
     import from JLUtilityFunctions
     import from String
@@ -886,13 +886,13 @@ JLObjDict() : Exports == Implementation where
     jdict(str : String) == jlref str
       
 )abbrev domain JFLOAT JLFloat
-++ Domain for JL (Big) floats
+++ Domain for Julia (Big) floats
 ++ Author: G. Vanuxem
 ++ Date Created: Feb. 2024
 ++ Keywords: float, floating point, number
 ++ Description:
 ++  \spadtype{JLFloat} implements arbitrary precision floating
-++  point arithmetic using JL BigFloats. Use the MPFR library:
+++  point arithmetic using Julia BigFloats. Use the MPFR library:
 ++ https://www.mpfr.org/
 JLFloat() : Exports == Implementation where
   INT       ==> Integer
@@ -935,7 +935,7 @@ JLFloat() : Exports == Implementation where
     ++ It is expected that the C function modifies the first parameters
     ++ for the returned value (provided by FriCAS and returned here) and
     ++ and as a last parameter, the rounding mode. See MPFR.
-    ++ Uses JL rounding mode, default to nearest.
+    ++ Uses Julia rounding mode, default to nearest.
     ++ \example{mpfr:=jlDlOpen "libmpfr"}
     ++ \example{sym:= jlDlSym(mpfr,jsym(mpfr_gamma))}
     ++ \example{val:=jfloat("0.7");}
@@ -947,7 +947,7 @@ JLFloat() : Exports == Implementation where
     ++ It is expected that the C function modifies the first parameters
     ++ for the returned value (provided by FriCAS and returned here) and
     ++ and as a last parameter, the rounding mode. See MPFR.
-    ++ Uses JL rounding mode, default to nearest.
+    ++ Uses Julia rounding mode, default to nearest.
     ++ \example{mpfr:=j lDlOpen "libmpfr"}
     ++ \example{sym:= jlDlSym(mpfr,jsym(mpfr_pow))}
     ++ \example{val:=jfloat("0.7");}
@@ -959,7 +959,7 @@ JLFloat() : Exports == Implementation where
     ++ for the returned value (provided by FriCAS and returned here) and
     ++ as a last parameter, the rounding mode (the default mode is used here).
     ++ See MPFR.
-    ++ Uses JL rounding mode, default to nearest.
+    ++ Uses Julia rounding mode, default to nearest.
     ++ \example{mpfr:=j lDlOpen "libmpfr"}
     ++ \example{sym:= jlDlSym(mpfr,jsym(mpfr_fma))}
     ++ \example{val:=jfloat("0.7");}
@@ -1174,13 +1174,13 @@ JLFloat() : Exports == Implementation where
     jfloat(x : Float) : % == coerce(x)
 
 )abbrev domain JCFLOAT JLComplexFloat
-++ Domain for JL (Big) complex floats
+++ Domain for Julia (Big) complex floats
 ++ Author: G. Vanuxem
 ++ Date Created: May. 2024
 ++ Keywords: float, floating point, complex number
 ++ Description:
 ++  \spadtype{JLFComplexloat} implements arbitrary precision floating
-++  point arithmetic for complex numbers using JL BigFloats (MPFR based).
+++  point arithmetic for complex numbers using Julia BigFloats (MPFR based).
 ++ https://www.mpfr.org/
 JLComplexFloat() : Exports == Implementation where
   INT       ==> Integer
@@ -1393,13 +1393,13 @@ JLComplexFloat() : Exports == Implementation where
 
 -- TODO: Interact.jl
 )abbrev domain JDFRAME JLDataFrame
-++ Description: JL DataFrames support
+++ Description: Julia DataFrames support
 ++ Author: G. Vanuxem
 ++ Date Created: May. 2024
 ++ Keywords: tabular data, sciences, statistics, description
 ++ Description:
 ++  \spadtype{JLDataFrame} adds support of the DataFrames.jl
-++  JL package. As of now, most of its use has to be done in
+++  Julia package. As of now, most of its use has to be done in
 ++  a generic manner using jlApply.
 -- Report results for example. 
 JLDataFrame() : Exports == Implementation where
@@ -1413,7 +1413,7 @@ JLDataFrame() : Exports == Implementation where
     --qelt : (%, JLSymbol) -> JLVector(JLObject)
     --++ elt(obj, sym) returns the property sym of obj. No checks are done
     --++ regarding the existence of the sym property. If it does not exist,
-    --++ JL will throw an error.
+    --++ Julia will throw an error.
     --elt : (%, Integer) -> JLVector(JLObject)
     --++ elt(obj, ind) returns the element at index ind of obj.
     --++ For example for a Tuple or a vector.
@@ -1589,7 +1589,7 @@ JLVector(R : JLObjectType) : Exports == Implementation where
 ++ References:
 ++ Description:
 ++   This package provides operations which all take as arguments
-++ JL vectors of elements of some type \spad{A} and functions from \spad{A} to
+++ Julia vectors of elements of some type \spad{A} and functions from \spad{A} to
 ++ another of type \spad{B}. The operations all iterate over their vector argument
 ++ and either return a value of type B or a vector over B.
 JLVectorFunctions2(A, B) : Exports == Implementation where
@@ -1627,12 +1627,12 @@ JLVectorFunctions2(A, B) : Exports == Implementation where
      vector reverse! res
 
 )abbrev domain JMATRIX JLMatrix
-++ Description: This domain provides a generic JL matrix type
-++ stored in JL with no bound checking on elt's. Minimum index is 1.
-++ Beware, for matrix with NM elements, contrary to JL matrix,
-++ NM follows the convention of the C libraries, it wraps and uses
+++ Description: This domain provides a generic Julia matrix type
+++ stored in Julia with no bound checking on elt's. Minimum index is 1.
+++ Beware, for matrix with Nemo elements, contrary to Julia matrix,
+++ Nemo follows the convention of the C libraries, it wraps and uses
 ++ row major representation.
-++ See https://nemocas.github.io/NM.jl/stable/developer/interfaces/#Column-major-vs-row-major-matrices
+++ See https://nemocas.github.io/Nemo.jl/stable/developer/interfaces/#Column-major-vs-row-major-matrices
 ++ for more information.
 -- TODO: to be improved for partially implemented JLObjectType
 JLMatrix(R : JLObjectRing) :  Exports == Implementation where
@@ -1652,11 +1652,11 @@ JLMatrix(R : JLObjectRing) :  Exports == Implementation where
     if R has NMRing and (R has IntegerNumberSystem or
         R has QuotientFieldCategory(NINT)) then
       radicalEigenvalues: % -> JLVector(NMAlgebraicNumber)
-      ++ radicalEigenvalues(mat) returns a JL vector containing
+      ++ radicalEigenvalues(mat) returns a Julia vector containing
       ++ the eigenvalues of mat.
       radicalEigenvaluesWithMultiplicities : % -> JLVector(JLObjTuple)
-      ++ radicalEigenvaluesWithMultiplicities(mat) returns a JL vector
-      ++ containing JL tuples of the eigenvalues and their multiplicities.
+      ++ radicalEigenvaluesWithMultiplicities(mat) returns a Julia vector
+      ++ containing Julia tuples of the eigenvalues and their multiplicities.
       ++ The tuples are of internal type (NMAlgebraicNumber, JLObjInt64).
     if R has ComplexCategory(NMRealField) then
       eigenvalues: % -> JLVector(R)
@@ -1700,7 +1700,7 @@ JLMatrix(R : JLObjectRing) :  Exports == Implementation where
         ++ \example{qr := jlApply("qr", mat)}
         ++ \example{qr.Q * qr.R}
     inverse : % -> %
-    ++ inverse(m) returns inverse matrix. Throws a JL error if m
+    ++ inverse(m) returns inverse matrix. Throws a Julia error if m
     ++ is no invertible.
     identity:    NNI -> %
     ++ identity(n) returns a n by n identity matrix.
@@ -1849,7 +1849,7 @@ JLMatrix(R : JLObjectRing) :  Exports == Implementation where
     if R has Field then
       inverse(m) : % == make_jlref_wcall1("inv", m)$Lisp
 
-    if R is JLObjInt64 then -- returns a JL Float64 so convert it
+    if R is JLObjInt64 then -- returns a Julia Float64 so convert it
       determinant(m) == jlref(concat(["Int64(det(", getind(m),"))"]))$R
     else if R is JLObjBigInt then
       determinant(m) == jlref(concat(["BigInt(det(", getind(m),"))"]))$R

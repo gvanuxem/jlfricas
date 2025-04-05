@@ -1,12 +1,12 @@
 )abbrev domain NARB NMArbField
-++ Domain for NM fixed precision real ball.
+++ Domain for Nemo fixed precision real ball.
 ++ Author: G. Vanuxem
 ++ Date Created: March. 2024
 ++ Keywords: float, floating point, number, real, ball
 ++ Description:
 ++  \spadtype{NMArbField} implements fixed precision ball
-++  arithmetic using the JL NM package - based on the Arb library.
-++ Reference: https://nemocas.github.io/NM.jl/stable/
+++  arithmetic using the Julia Nemo package - based on the Arb library.
+++ Reference: https://nemocas.github.io/Nemo.jl/stable/
 NMArbField(p: PositiveInteger) : Exports == Implementation where
   PI        ==> PositiveInteger
   NNI       ==> NonNegativeInteger
@@ -162,7 +162,7 @@ NMArbField(p: PositiveInteger) : Exports == Implementation where
       jlEvalString(concat ["add_error!(", getind(x), ",", getind(y),")"])
       x
     trim(x) == junfunc("trim",x)
-    uniqueInteger(x) == --TODO: JL boolean and tuples
+    uniqueInteger(x) == --TODO: Julia boolean and tuples
       ret : JLObject := junfunc("unique_integer",x)
       str: String := jlEvalString(concat(["string(getproperty(",
         getind(ret),",1))"]))
@@ -250,10 +250,10 @@ NMArbField(p: PositiveInteger) : Exports == Implementation where
     acosh(x)  == junfunc("acosh",x)
     atanh(x)  == junfunc("atanh",x)
 
-    Gamma(x)  == jlref(concat ["NM.gamma(", getind(x),")"])
-    Gamma(x,y) == jlref(concat ["NM.gamma(",getind(x),",",getind(y)])
-    hurwitzZeta(x,y) == jlref(concat ["NM.zeta(",getind(x),",",getind(y)])
-    polygamma(x,y) == jlref(concat ["NM.polygamma(",getind(x),",",getind(y)])
+    Gamma(x)  == jlref(concat ["Nemo.gamma(", getind(x),")"])
+    Gamma(x,y) == jlref(concat ["Nemo.gamma(",getind(x),",",getind(y)])
+    hurwitzZeta(x,y) == jlref(concat ["Nemo.zeta(",getind(x),",",getind(y)])
+    polygamma(x,y) == jlref(concat ["Nemo.polygamma(",getind(x),",",getind(y)])
 
     polylog(n,x) == jbinfunc("polylog",n, x)
 
@@ -310,19 +310,19 @@ NMArbField(p: PositiveInteger) : Exports == Implementation where
 
 )abbrev domain NRB NMRealBall
 ++ Description: convenience domain to reflect
-++ NM ArbField(), i.e. without parameters.
+++ Nemo ArbField(), i.e. without parameters.
 NMRealBall() == NMArbField(256)
 
 )abbrev domain NACB NMAcbField
-++ Domain for NM fixed precision complex ball.
+++ Domain for Nemo fixed precision complex ball.
 ++ Author: G. Vanuxem
 ++ Date Created: March. 2024
 ++ Keywords: floating point number, complex
 ++ Description:
 ++  \spadtype{NMAcbField} implements fixed precision
 ++  complex ball arbitrary precision ball arithmetic using
-++  the JL NM package - based on the Arb library.
-++ Reference: https://nemocas.github.io/NM.jl/stable/
+++  the Julia Nemo package - based on the Arb library.
+++ Reference: https://nemocas.github.io/Nemo.jl/stable/
 NMAcbField(p: PositiveInteger) : Exports == Implementation where
   PI        ==> PositiveInteger
   NNI       ==> NonNegativeInteger
@@ -447,7 +447,7 @@ NMAcbField(p: PositiveInteger) : Exports == Implementation where
     accuracyBits(x) == jlEvalString(concat(["accuracy_bits(",
         getind(x),")"]))
     trim(x) == junfunc("trim",x)
-    uniqueInteger(x) == --TODO: JL boolean and tuples
+    uniqueInteger(x) == --TODO: Julia boolean and tuples
       ret : JLObject := junfunc("unique_integer",x)
       str: String := jlEvalString(concat(["string(getproperty(",
         getind(ret),",1))"]))
@@ -526,10 +526,10 @@ NMAcbField(p: PositiveInteger) : Exports == Implementation where
 
     polylog(n,x) == jbinfunc("polylog",n, x)
 
-    Gamma(x)  == jlref(concat ["NM.gamma(", getind(x),")"])
-    Gamma(x,y) == jlref(concat ["NM.gamma(",getind(x),",",getind(y)])
-    hurwitzZeta(x,y) == jlref(concat ["NM.zeta(",getind(x),",",getind(y)])
-    polygamma(x,y) == jlref(concat ["NM.polygamma(",getind(x),",",getind(y)])
+    Gamma(x)  == jlref(concat ["Nemo.gamma(", getind(x),")"])
+    Gamma(x,y) == jlref(concat ["Nemo.gamma(",getind(x),",",getind(y)])
+    hurwitzZeta(x,y) == jlref(concat ["Nemo.zeta(",getind(x),",",getind(y)])
+    polygamma(x,y) == jlref(concat ["Nemo.polygamma(",getind(x),",",getind(y)])
 
     airyAi(x) == junfunc("airy_ai", x)
     airyBi(x) == junfunc("airy_bi", x)
@@ -583,11 +583,11 @@ NMAcbField(p: PositiveInteger) : Exports == Implementation where
 
 )abbrev domain NCB NMComplexBall
 ++ Description: convenience domain to reflect
-++ NM AcbField(), i.e. without parameters.
+++ Nemo AcbField(), i.e. without parameters.
 NMComplexBall() == NMAcbField(256)
 
 )abbrev domain NRF NMRealField
-++ Domain for NM Real Field based on the Arb
+++ Domain for Nemo Real Field based on the Arb
 ++ library (arbitrary precision ball arithmetic).
 ++ Author: G. Vanuxem
 ++ Date Created: March. 2024
@@ -595,7 +595,7 @@ NMComplexBall() == NMAcbField(256)
 ++ Description:
 ++  \spadtype{NMRealField} implements arbitrary precision ball
 ++  arithmetic using the Nemo Julia package.
-++ Reference: https://nemocas.github.io/NM.jl/stable/
+++ Reference: https://nemocas.github.io/Nemo.jl/stable/
 NMRealField() : Exports == Implementation where
   PI        ==> PositiveInteger
   NNI       ==> NonNegativeInteger
@@ -747,7 +747,7 @@ NMRealField() : Exports == Implementation where
     addError!(x, y) ==
       jlEvalString(concat ["add_error!(", getind(x), ",", getind(y),")"])
       x
-    uniqueInteger(x) == --TODO: JL boolean and tuples
+    uniqueInteger(x) == --TODO: Julia boolean and tuples
       ret : JLObject := junfunc("unique_integer",x)
       str: String := jlEvalString(concat(["string(getproperty(",
         getind(ret),",1))"]))
@@ -829,10 +829,10 @@ NMRealField() : Exports == Implementation where
     acosh(x)  == junfunc("acosh",x)
     atanh(x)  == junfunc("atanh",x)
 
-    Gamma(x)  == jlref(concat ["NM.gamma(", getind(x),")"])
-    Gamma(x,y) == jlref(concat ["NM.gamma(",getind(x),",",getind(y)])
-    hurwitzZeta(x,y) == jlref(concat ["NM.zeta(",getind(x),",",getind(y)])
-    polygamma(x,y) == jlref(concat ["NM.polygamma(",getind(x),",",getind(y)])
+    Gamma(x)  == jlref(concat ["Nemo.gamma(", getind(x),")"])
+    Gamma(x,y) == jlref(concat ["Nemo.gamma(",getind(x),",",getind(y)])
+    hurwitzZeta(x,y) == jlref(concat ["Nemo.zeta(",getind(x),",",getind(y)])
+    polygamma(x,y) == jlref(concat ["Nemo.polygamma(",getind(x),",",getind(y)])
  
     polylog(n,x) == jbinfunc("polylog",n, x)
 
@@ -883,7 +883,7 @@ NMRealField() : Exports == Implementation where
     coerce(i : %) : OutputForm == string(i) pretend OutputForm
 
 )abbrev domain NCF NMComplexField
-++ Domain for NM Complex Field based on the Arb
+++ Domain for Nemo Complex Field based on the Arb
 ++ library (arbitrary precision ball arithmetic).
 ++ Author: G. Vanuxem
 ++ Date Created: March. 2024
@@ -891,7 +891,7 @@ NMRealField() : Exports == Implementation where
 ++ Description:
 ++ \spadtype{NMComplexField} implements arbitrary precision ball
 ++ arithmetic using the Nemo Julia package.
-++ Reference: https://nemocas.github.io/NM.jl/stable/
+++ Reference: https://nemocas.github.io/Nemo.jl/stable/
 NMComplexField() : Exports == Implementation where
   JI64      ==> JLInt64
   PI        ==> PositiveInteger
@@ -1017,7 +1017,7 @@ NMComplexField() : Exports == Implementation where
     accuracyBits(x) == jlEvalString(concat(["accuracy_bits(",
       getind(x),")"]))
     trim(x) == junfunc("trim",x)
-    uniqueInteger(x) == --TODO: JL boolean and tuples
+    uniqueInteger(x) == --TODO: Julia boolean and tuples
       ret : JLObject := junfunc("unique_integer",x)
       str: String := jlEvalString(concat(["string(getproperty(",
         getind(ret),",1))"]))
@@ -1093,10 +1093,10 @@ NMComplexField() : Exports == Implementation where
     tanh(x)  == junfunc("tanh",x)
     coth(x)  == junfunc("coth",x)
 
-    Gamma(x)  == jlref(concat ["NM.gamma(", getind(x),")"])
-    Gamma(x,y) == jlref(concat ["NM.gamma(",getind(x),",",getind(y)])
-    hurwitzZeta(x,y) == jlref(concat ["NM.zeta(",getind(x),",",getind(y)])
-    polygamma(x,y) == jlref(concat ["NM.polygamma(",getind(x),",",getind(y)])
+    Gamma(x)  == jlref(concat ["Nemo.gamma(", getind(x),")"])
+    Gamma(x,y) == jlref(concat ["Nemo.gamma(",getind(x),",",getind(y)])
+    hurwitzZeta(x,y) == jlref(concat ["Nemo.zeta(",getind(x),",",getind(y)])
+    polygamma(x,y) == jlref(concat ["Nemo.polygamma(",getind(x),",",getind(y)])
 
     airyAi(x) == junfunc("airy_ai", x)
     airyBi(x) == junfunc("airy_bi", x)

@@ -1,5 +1,5 @@
 )abbrev domain JF32VEC JLFloat32Vector
-++ Domain for JL Float32 vectors
+++ Domain for Julia Float32 vectors
 ++ Author: G. Vanuxem
 ++ Date Created: november 2024
 ++ Description: This domain provides a fast JLFloat32 vector type
@@ -24,13 +24,13 @@ JLFloat32Vector() : Exports == Implementation where
     ++ jlApply(func, v) applies func to argument v.
     jlApply : (String, %) -> JF32
     ++ jlApply(func, v) applies func to argument v
-    ++ and returns a JL Float32.
+    ++ and returns a Julia Float32.
     jlApply : (String, %) -> %
     ++ jlApply(func, v) applies func to argument v
     ++ and returns a JLFloat32Vector.
     jlApply : (String, %, JF32) -> JF32
     ++ jlApply(func, v, val) applies func to arguments v and val
-    ++ and returns a JL Float32.
+    ++ and returns a Julia Float32.
     jlApply : (String, %, %) -> Void
     ++ jlApply(func, v1, v2) applies func to arguments v1 and v2.
     jlApply : (String, %, %, %) -> Void
@@ -43,25 +43,25 @@ JLFloat32Vector() : Exports == Implementation where
     ++ is within tolerance bounds. Applied component-vise.
     urand   :   (NNI, JF32) -> %
     ++ urand(n, x) returns a uniformly (0$NNI..x) distributed
-    ++ JL vector of size n.
+    ++ Julia vector of size n.
     urand01 :   NNI -> %
     ++ urand01(n) returns a uniformly (0$NNI..1) distributed
-    ++ JL vector of size n.
+    ++ Julia vector of size n.
     nrand :   NNI -> %
-    ++ nrand(n) returns a normally distributed JL vector of size n
+    ++ nrand(n) returns a normally distributed Julia vector of size n
     ++ with mean=0 and standard deviation=1.
     jlDisplay: % -> Void
-    ++ jldisplay(v) pretty prints v (à la JL).
+    ++ jldisplay(v) pretty prints v (à la Julia).
     juliaVPrint : Boolean -> Boolean
     ++ juliaVPrint(b) defines whether or not FriCAS uses 
-    ++ the printing version of JL for vectors instead of
+    ++ the printing version of Julia for vectors instead of
     ++ its OutputForm version. Returns previous value.
-    ++ By default it is the JL version.
+    ++ By default it is the Julia version.
   Implementation ==> add
     import from JLUtilityFunctions
     jlInitialize(true)
     defined?(func) ==> not jlDefined?(func) =>
-      error concat(func, " is not defined in JL")
+      error concat(func, " is not defined in Julia")
     pprint := true
 
     #x                          == Qsize x
@@ -159,7 +159,7 @@ JLFloat32Vector() : Exports == Implementation where
       (jl_1dffunction(0$NNI,"randn!", v)$Lisp;v)
 
 )abbrev package JF32VEC2 JLFloat32VectorFunctions2
-++ Package for operations on JL Float32 vectors
+++ Package for operations on Julia Float32 vectors
 ++ Author: G. Vanuxem
 ++ Date Created: november 2024
 ++ Basic Functions:
@@ -212,7 +212,7 @@ JLFloat32VectorFunctions2() : Exports == Implementation where
      vector reverse! res
 
 )abbrev domain JF32MAT JLFloat32Matrix
-++ Domain for JL Float32 matrices
+++ Domain for Julia Float32 matrices
 ++ Author: G. Vanuxem
 ++ Date Created: november 2024
 ++ Description: This domain provides a fast JLFloat32 matrix type
@@ -241,12 +241,12 @@ JLFloat32Matrix() :  Exports == Implementation where
     jlApply : (String, %) -> %
     ++ jlApply(func, x) apply func to argument x.
     jlDisplay: % -> Void
-    ++ jldisplay(m) pretty prints m (à la JL).
+    ++ jldisplay(m) pretty prints m (à la Julia).
     juliaMPrint : Boolean -> Boolean
     ++ juliaMPrint(b) defines whether or not FriCAS uses 
-    ++ the printing version of JL for matrices instead of
+    ++ the printing version of Julia for matrices instead of
     ++ its OutputForm version. Returns previous value.
-    ++ By default it is the JL version.
+    ++ By default it is the Julia version.
     copy!: (%, %) -> %
     ++ copy!(b,a) copies efficiently a to b.No check are done on
     ++ arrays dimensions.
@@ -254,12 +254,12 @@ JLFloat32Matrix() :  Exports == Implementation where
     ++ identity(n) returns a n by n identity matrix.S
     urand   :   (NNI, NNI, JF32) -> %
     ++ urand(m,n,x) returns a uniformly (0$NNI..x) distributed
-    ++ JL matrix of size (m,n).
+    ++ Julia matrix of size (m,n).
     urand01 :   (NNI, NNI) -> %
     ++ urand01(m,n) returns a uniformly (0$NNI..1) distributed
-    ++ JL matrix of size (m,n).
+    ++ Julia matrix of size (m,n).
     nrand :   (NNI, NNI) -> %
-    ++ nrand(m,n) returns a normally distributed JL matrix of size (m,n)
+    ++ nrand(m,n) returns a normally distributed Julia matrix of size (m,n)
     ++ with mean=0 and standard deviation=1.
     positiveDefinite? : % -> Boolean
     ++ positiveDefinite?(m) tests wether or not m is positive definite.
@@ -290,7 +290,7 @@ JLFloat32Matrix() :  Exports == Implementation where
       ncols : NonNegativeInteger, nrows : NonNegativeInteger)
 
     defined?(func) ==> not jlDefined?(func)
-      => error concat(func, " is not defined in JL")
+      => error concat(func, " is not defined in Julia")
     pprint := true
 
     minRowIndex x == 1
@@ -461,10 +461,10 @@ JLFloat32Matrix() :  Exports == Implementation where
     minordet(m) == minordet(m)$MLAF
 
 )abbrev domain JF32SMAT JLF32SquareMatrix
-++ Domain for JL Float32 square matrices
+++ Domain for Julia Float32 square matrices
 ++ Author: G. Vanuxem
 ++ Date Created: november 2024
-++ Description: This domain provides a fast JL Float32
+++ Description: This domain provides a fast Julia Float32
 ++ square matrix type with no bound checking on elt's. Minimum index is 1.
 JLF32SquareMatrix(n: NonNegativeInteger) : Exports == Implementation where
   Row ==> DirectProduct(n, JLFloat32)
@@ -501,7 +501,7 @@ JLF32SquareMatrix(n: NonNegativeInteger) : Exports == Implementation where
       jlVector(m pretend JF32MAT), ncols(m pretend JF32MAT))$Lisp
 
 )abbrev domain JCF32VEC JLComplexF32Vector
-++ Domain for JL Complex Float32 vectors
+++ Domain for Julia Complex Float32 vectors
 ++ Author: G. Vanuxem
 ++ Date Created: november 2024
 ++ Description: This domain provides a fast JLComplexF32 vector type
@@ -541,23 +541,23 @@ JLComplexF32Vector() :  Exports == Implementation where
     ++ is within tolerance bounds. Applied component-wise.
     urand01 :   NNI -> %
     ++ urand01(n) returns a uniformly (0$NNI..1) distributed
-    ++ JL vector of size n.
+    ++ Julia vector of size n.
     nrand :   NNI -> %
-    ++ nrand(n) returns a normally distributed JL vector of size n.
-    ++ See JL documentation (randn) for this complex version used here.
+    ++ nrand(n) returns a normally distributed Julia vector of size n.
+    ++ See Julia documentation (randn) for this complex version used here.
     jlDisplay : % -> Void
-    ++ jldisplay(v) pretty prints v (à la JL).
+    ++ jldisplay(v) pretty prints v (à la Julia).
     juliaCVPrint : Boolean -> Boolean
     ++ juliaCVPrint(b) defines whether or not FriCAS uses 
-    ++ the printing version of JL for matrices instead of
+    ++ the printing version of Julia for matrices instead of
     ++ its OutputForm version. Returns previous value.
-    ++ By default it is the JL version.
+    ++ By default it is the Julia version.
   Implementation ==> add
     import from JLUtilityFunctions
     import from JLCF32LinearAlgebra
     jlInitialize(true)
     defined?(func) ==> not jlDefined?(func) =>
-      error concat(func, " is not defined in JL")
+      error concat(func, " is not defined in Julia")
     pprint := true
 
     qelt(x, i)                  == Qelt1(x, i)
@@ -636,7 +636,7 @@ JLComplexF32Vector() :  Exports == Implementation where
       pile(append(["" pretend OutputForm],rest ret))
 
 )abbrev domain JCF32MAT JLComplexF32Matrix
-++ Domain for JL Complex Float32 matrices.
+++ Domain for Julia Complex Float32 matrices.
 ++ Author: G. Vanuxem
 ++ Date Created: november 2024
 ++ Description: This domain provides a fast JLComplexF32 matrix type
@@ -655,9 +655,9 @@ JLComplexF32Matrix() : Exports == Implementation where
   MLAF        ==> MatrixLinearAlgebraFunctions(JCF32, Row, Col, %)
   Exports ==> JLMatrixCategory(JCF32, Row, Col) with
     coerce: JF32MAT -> %
-    ++ coerce(m) coerces m to a a JL Complex Float 32 matrix.
+    ++ coerce(m) coerces m to a a Julia Complex Float 32 matrix.
     jlDisplay : % -> Void  
-    ++ jlDisplay(m) pretty prints m (à la JL).
+    ++ jlDisplay(m) pretty prints m (à la Julia).
     jlVector: % -> JLComplexF32Vector
     ++ jlVector(m) returns reference to the internal vector representation.
     real : % -> JF32MAT
@@ -694,10 +694,10 @@ JLComplexF32Matrix() : Exports == Implementation where
     ++ diagonalMatrix(v) returns a diagonal matrix with elements of v.
     urand01:   (NNI, NNI) -> %
     ++ urand01(m,n) returns a uniformly (0$NNI..1) distributed
-    ++ JL matrix of size (m,n).
+    ++ Julia matrix of size (m,n).
     nrand :   (NNI, NNI) -> %
-    ++ nrand(m,n) returns a normally distributed JL matrix of size (m,n).
-    ++ See JL documentation (randn) for this complex version used here.
+    ++ nrand(m,n) returns a normally distributed Julia matrix of size (m,n).
+    ++ See Julia documentation (randn) for this complex version used here.
     transpose!:     (%, %) -> %
     ++ transpose!(b, a) stores transposed a in b.
     adjoint:     % -> %
@@ -708,9 +708,9 @@ JLComplexF32Matrix() : Exports == Implementation where
     ++ the conjugate transposition of m.
     juliaCMPrint : Boolean -> Boolean
     ++ juliaMPrint(b) defines whether or not FriCAS uses 
-    ++ the printing version of JL for matrices instead of
+    ++ the printing version of Julia for matrices instead of
     ++ its OutputForm version. Returns previous value.
-    ++ By default it is the JL version.
+    ++ By default it is the Julia version.
   Implementation ==> add
     import from JLUtilityFunctions
     import from JLCF32LinearAlgebra
@@ -718,7 +718,7 @@ JLComplexF32Matrix() : Exports == Implementation where
     import from JLFloat32Matrix
     jlInitialize(true)
     defined?(func) ==> not jlDefined?(func) =>
-      error concat(func, " is not defined in JL")
+      error concat(func, " is not defined in Julia")
     pprint := true
     Rep := Record(elts : JLComplexF32Vector,
         ncols : NonNegativeInteger, nrows : NonNegativeInteger)
@@ -878,10 +878,10 @@ JLComplexF32Matrix() : Exports == Implementation where
       newm
 
 )abbrev domain JCF32SMA JLComplexF32SquareMatrix
-++ Domain for JL Complex Float32 square matrices
+++ Domain for Julia Complex Float32 square matrices
 ++ Author: G. Vanuxem
 ++ Date Created: november 2024
-++ Description: This domain provides a fast JL Float32
+++ Description: This domain provides a fast Julia Float32
 ++ square matrix type with no bound checking on elt's. Minimum index is 1.
 JLComplexF32SquareMatrix(n : NonNegativeInteger) : Exports == Implementation where
   Row ==> DirectProduct(n, JLComplexF32)

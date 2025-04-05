@@ -1,5 +1,5 @@
 )abbrev package JF64LA JLF64LinearAlgebra
-++ Linear Algebra functions computed using JL and its algorithms.
+++ Linear Algebra functions computed using Julia and its algorithms.
 ++ 64 bits version.
 JLF64LinearAlgebra() : Exports == Implementation where
   JF64     ==> JLFloat64
@@ -393,7 +393,7 @@ JLF64LinearAlgebra() : Exports == Implementation where
       m
 
 )abbrev package JCF64LA JLCF64LinearAlgebra
-++ Linear Algebra functions computed using JL and its algorithms.
+++ Linear Algebra functions computed using Julia and its algorithms.
 ++ 64 bits version.
 JLCF64LinearAlgebra() : Exports == Implementation where
   JF64     ==> JLFloat64
@@ -670,7 +670,7 @@ JLCF64LinearAlgebra() : Exports == Implementation where
       ret
 
 )abbrev package JF64MTF JLF64MatrixTranscendentalFunctions
-++ Linear Algebra functions computed using JL and its algorithms.
+++ Linear Algebra functions computed using Julia and its algorithms.
 JLF64MatrixTranscendentalFunctions() : Exports == Implementation where
   JF64     ==> JLFloat64
   JI64     ==> JLInt64
@@ -991,7 +991,7 @@ JLF64MatrixTranscendentalFunctions() : Exports == Implementation where
       ret
 
 )abbrev package JCF64MTF JLComplexF64MatrixTranscendentalFunctions
-++ Linear Algebra functions computed using JL and its algorithms.
+++ Linear Algebra functions computed using Julia and its algorithms.
 JLComplexF64MatrixTranscendentalFunctions() : Exports == Implementation where
   JF64     ==> JLFloat64
   JI64     ==> JLInt64

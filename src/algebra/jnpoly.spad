@@ -2,7 +2,7 @@
 ++ Author: G. Vanuxem (based on work of Manuel Bronstein)
 ++ Date Created: Nov. 2024
 ++ Description:
-++   Model for NM algebraically closed fields.
+++   Model for Nemo algebraically closed fields.
 ++ Keywords: algebraic, closure, field.
 NMAlgebraicallyClosedField() : Category == Join(Field, RadicalCategory)
 
@@ -16,7 +16,7 @@ NMAlgebraicallyClosedFunctionSpace(R : Join(Comparable, IntegralDomain)):
   Category == Join(NMAlgebraicallyClosedField, FunctionSpace R)
 
 )abbrev domain NUP NMUnivariatePolynomial
-++ Univariate polynomial domain using the JL pakage NM
+++ Univariate polynomial domain using the Julia pakage Nemo
 ++ Author: G. Vanuxem
 ++ Date created: mar, 2024
 -- TODO: eval, elt, subst, compose, evaluate
@@ -104,7 +104,7 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
     ++ pseudo-remainder of the pseudo-division of p1 by p2.
     jnup  : UnivariatePolynomial(x, R) -> %
     ++ jnup(p) converts the univariate polynomial p to
-    ++ a NM univariate polynomial.
+    ++ a Nemo univariate polynomial.
     factor   : % -> NMFactored(%)
     ++ factor(p) returns the factorization of p using the
     ++ NMFactored domain.
@@ -129,7 +129,7 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
     ++ the resulting polynomial is trucated or padded with zeroes before
     ++ the leading term if necessary
     coerce   : Variable(x) -> %
-    ++ coerce(x) converts the variable x to a NM univariate polynomial.
+    ++ coerce(x) converts the variable x to a Nemo univariate polynomial.
   Implementation ==> add
     import from JLUtilityFunctions
     import from JLStringUtilities
@@ -257,7 +257,7 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
     factor(p : %) : NMFactored(%) == factor(p)$NMFactored(%)
     factor(p : %) : Factored(%) == factor(p)$NMFactored(%)
 
-    -- Using NM factorisation (can be different; over rationals for example)
+    -- Using Nemo factorisation (can be different; over rationals for example)
     -- unit(p) == unit factor(p)
 
     coefficient(p : %, n : NNI) ==
@@ -304,13 +304,13 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
       jlRegexReplace(string(p), jlRegex("//"), jlSubstitute("/")) pretend OutputForm
 
 )abbrev domain NULP NMUnivariateLaurentPolynomial
-++ Univariate laurent polynomial domain using JL AbstractAlgebra package 
+++ Univariate laurent polynomial domain using Julia AbstractAlgebra package 
 ++ Author: G. Vanuxem
 ++ Date created: Dec, 2024
 -- TODO: eval, elt, subst, compose, evaluate
 -- TODO: *term*, truncate, mullow, *degree, reverse, integrate,
 -- constantMonomial checks
---   with other NM ring than NINT an NRAT to see if they
+--   with other Nemo ring than NINT an NRAT to see if they
 --   should be removed or rewrited. See commented out implementations.
 NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
       Exports == Implementation where
@@ -365,7 +365,7 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
     ++ a rem b returns the remainder of \spad{a} and b.
     jnulp  : UnivariatePolynomial(x, R) -> %
     ++ jnulp(p) converts the univariate polynomial p to
-    ++ a NM univariate polynomial.
+    ++ a Nemo univariate polynomial.
     factor   : % -> NMFactored(%)
     ++ factor(p) returns the factorization of p using the
     ++ NMFactored domain.
@@ -397,7 +397,7 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
     ++ the resulting polynomial is trucated or padded with zeroes before
     ++ the leading term if necessary
     coerce   : Variable(x) -> %
-    ++ coerce(x) converts the variable x to a NM univariate polynomial.
+    ++ coerce(x) converts the variable x to a Nemo univariate polynomial.
   Implementation ==> add
     import from JLUtilityFunctions
     import from JLStringUtilities
@@ -481,7 +481,7 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
         unit?(p) => p
         "failed"
 
-    -- Using NM factorisation (can be different, over rationals for example)
+    -- Using Nemo factorisation (can be different, over rationals for example)
     -- another method is used for NUP
     -- Here degree is not implemented, so:
     unit(p) == unit factor(p)
@@ -533,7 +533,7 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
     --reverse(p) == junfunc("reverse",p)
     --reverse(p,n) == jlref(concat ["reverse(", getind(p),",", string(n),")"])
 
-    -- ... error in NM apparently
+    -- ... error in Nemo apparently
     elt(p, at : R) : R ==
       jbinfunc("evaluate", p, at)
     differentiate(p) ==
@@ -556,7 +556,7 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
     
 
 )abbrev domain NMP NMMultivariatePolynomial
-++ Multivariate polynomial domain using the JL pakage NM
+++ Multivariate polynomial domain using the Julia pakage Nemo
 ++ Author: G. Vanuxem
 ++ Basic Functions: Ring, degree, eval, coefficient, monomial, differentiate,
 ++ resultant, gcd
@@ -568,7 +568,7 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
 ++ References:
 ++ Description:
 ++   This type is a basic representation of sparse, distributed multivariate
-++ polynomials using the JL pakage NM. It is parameterized by the
+++ polynomials using the Julia pakage Nemo. It is parameterized by the
 ++ coefficient ring. The coefficient ring may be non-commutative,
 ++ but the variables are assumed to commute. The monomial ordering
 ++ used for internal storage can be one of :lex, :deglex or :degrevlex.
@@ -637,7 +637,7 @@ NMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
     ++ exactDivide(p,q) divides p by q if the division is exact.
     jmp2nmp : MultivariatePolynomial(VarSet,R) -> %
     ++ jnmp(p) converts the multivariate polynomial p to
-    ++ a NM multivariate polynomial.
+    ++ a Nemo multivariate polynomial.
     factor   : % -> NMFactored(%)
     ++ factor(p) returns the factorization of p.
     degree   : (%, PI) -> NNI
@@ -645,7 +645,7 @@ NMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
     length   : % -> NNI
     ++ length(p) retruns the number of terms of p.
     coefficients : % -> JLVector(R)
-    ++ coefficients(p) returns a JL vector of coefficients of p.
+    ++ coefficients(p) returns a Julia vector of coefficients of p.
     monomials : % -> JLVector(%)
     ++ monomials(p) returns the list of non-zero monomials of p
     ++ includind its coefficients.
@@ -668,7 +668,7 @@ NMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
 
     -- FriCAS NMRing of R
     NRing : String := string(op_of_Ring)
-    -- Our NM Ring
+    -- Our Nemo Ring
     NMPRing := jlRegexReplace(concat("MP", FORMAT(false, "~a", tmp)$Lisp),
       jlRegex("[(|)|\s]"), jlSubstitute(""))
 
@@ -676,7 +676,7 @@ NMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
     #VarSet ~= #removeDuplicates(VarSet) =>
       error "Duplicate symbols in NMMultivariatePolyNomial constructor" 
 
-    -- FriCAS defined vars in JL
+    -- FriCAS defined vars in Julia
     -- Correct? "(\1,)" -> "(\1)"
     vars := jlRegexReplace(
       first lines formatExpression(VarSet::OutputForm)$Format1D,
@@ -687,7 +687,7 @@ NMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
     -- vars for polynomial_ring() arguments
     jvars := first lines formatExpression(lvars::OutputForm)$Format1D
     
-    -- Our JL ring
+    -- Our Julia ring
     NMPRing := concat([NMPRing, concat(lvars)])
 
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
@@ -842,7 +842,7 @@ NMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
     degree(p : %, index : PI) ==
       jlEvalString(concat(["degree(", getind(p),",", string(index),")"]))@NNI
 
-    -- unitCanonical(p) == junfunc("canonical_unit", p) -- The NM one 
+    -- unitCanonical(p) == junfunc("canonical_unit", p) -- The Nemo one 
     recip(p) ==
       unit?(p) => p
       "failed"
@@ -879,7 +879,7 @@ NMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
     coerce(c : R) == jlref(concat([NMPRing, "(", getind(c),")"]))
 
 )abbrev domain NMLP NMMultivariateLaurentPolynomial
-++ Multivariate laurent polynomial domain using JL AbstractAlgebra package 
+++ Multivariate laurent polynomial domain using Julia AbstractAlgebra package 
 ++ Author: G. Vanuxem
 ++ Basic Functions: Ring, degree, eval, coefficient, monomial, differentiate,
 ++ resultant, gcd
@@ -891,7 +891,7 @@ NMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
 ++ References:
 ++ Description:
 ++   This type is a basic representation of sparse, distributed multivariate
-++ polynomials using the JL pakage NM. It is parameterized by the
+++ polynomials using the Julia pakage Nemo. It is parameterized by the
 ++ coefficient ring. The coefficient ring may be non-commutative,
 ++ but the variables are assumed to commute. The monomial ordering
 ++ used for internal storage can be one of :lex, :deglex or :degrevlex.
@@ -963,7 +963,7 @@ NMMultivariateLaurentPolynomial(R : NMRing,
     ++ exactDivide(p,q) divides p by q if the division is exact.
     jmp2nmlp : MultivariatePolynomial(VarSet,R) -> %
     ++ jnmp(p) converts the multivariate polynomial p to
-    ++ a NM multivariate polynomial.
+    ++ a Nemo multivariate polynomial.
     factor   : % -> NMFactored(%)
     ++ factor(p) returns the factorization of p.
     degree   : (%, PI) -> NNI
@@ -981,7 +981,7 @@ NMMultivariateLaurentPolynomial(R : NMRing,
     constantCoefficient : % -> R
     ++ constantCoefficient(p) returns the constant of p.
     symbols : () -> JLVector(JLObject)
-    ++ symbols() returns a JL vector of variables (JL symbols).
+    ++ symbols() returns a Julia vector of variables (Julia symbols).
     numberOfVariables : ()  -> JLObject
     ++ 
     gens  : () -> JLVector(%)
@@ -991,7 +991,7 @@ NMMultivariateLaurentPolynomial(R : NMRing,
     variableIndex : % -> JLObject
     ++ 
     coefficients : % -> JLVector(R)
-    ++ coefficients(p) returns a JL vector of coefficients of p.
+    ++ coefficients(p) returns a Julia vector of coefficients of p.
     terms : % -> JLVector(%)
     ++ 
     exponent_vectors : % -> JLVector(JLObject)
@@ -1009,7 +1009,7 @@ NMMultivariateLaurentPolynomial(R : NMRing,
       NMMultivariateLaurentPolynomial(NMComplexField, VarSet)
 
     mapCoefficients : (JLObject, %) -> %
-    ++ mapCoefficients(jmap, p) applies the JL map jmap to the
+    ++ mapCoefficients(jmap, p) applies the Julia map jmap to the
     ++ coefficients of p an returns the modified Laurent polynomial.
     ++ Use coerce to change the base ring.
 
@@ -1037,7 +1037,7 @@ NMMultivariateLaurentPolynomial(R : NMRing,
     #VarSet ~= #removeDuplicates(VarSet) =>
       error "Duplicate symbols in NMMultivariateLaurentPolynomial constructor" 
     
-    -- FriCAS defined vars in JL
+    -- FriCAS defined vars in Julia
     -- Correct? "(\1,)" -> "(\1)"
     vars := jlRegexReplace(
         first lines formatExpression(VarSet::OutputForm)$Format1D,
@@ -1048,7 +1048,7 @@ NMMultivariateLaurentPolynomial(R : NMRing,
     -- vars for polynomial_ring() arguments
     jvars := first lines formatExpression(lvars::OutputForm)$Format1D
     
-    -- Our JL ring
+    -- Our Julia ring
     NMLPRing := concat([NMLPRing, concat(lvars)])
 
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
@@ -1099,7 +1099,7 @@ NMMultivariateLaurentPolynomial(R : NMRing,
     a : % ^ i : INT  == jbinfunc("^", a, coerce(i pretend Integer)@NINT)
     exactDivide(p,q) == jbinfunc("divexact", p, q)
 
-    -- NM interface (AbstractAlgebra)
+    -- Nemo interface (AbstractAlgebra)
     symbols() == jlref(concat(["symbols(", NMLPRing,")"]))
     numberOfVariables() == jlref(concat(["number_of_variables(", NMLPRing,")"]))
     gens() == jlref(concat(["gens(",NMLPRing,")"]))
@@ -1232,7 +1232,7 @@ NMMultivariateLaurentPolynomial(R : NMRing,
     --degree(p : %, index : PI) ==
     --  jlEvalString(concat(["degree(", getind(p),",", string(index),")"]))@NNI
 
-    -- unitCanonical(p) == junfunc("canonical_unit", p) -- The NM one 
+    -- unitCanonical(p) == junfunc("canonical_unit", p) -- The Nemo one 
 
     if R has DivisionRing then
       recip(p) ==

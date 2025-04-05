@@ -1,9 +1,9 @@
 )abbrev category JWSO JLWSObject
-++ Category for JL WS objects
+++ Category for Julia WS objects
 ++ Author: G.Vanuxem
 ++ Date Created: May. 2024
 ++ Description:
-++  JL Wolfram Symbolic Object category using the Wolfram Symbol
+++  Julia Wolfram Symbolic Object category using the Wolfram Symbol
 ++  Transport Protocol.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 JLWSObject() : Category == JLObjectType with
@@ -30,7 +30,7 @@ JLWSObject() : Category == JLObjectType with
     import from String
 
     if not jlUsing("MathLink") then
-      error "The JL MathLink package is not installed."
+      error "The Julia MathLink package is not installed."
 
     jlEvalString("Interpret=W_`Interpreter_`")@Void
 
@@ -69,31 +69,31 @@ JLWSObject() : Category == JLObjectType with
       jbinfunc("W_"N_"(", expr, prec)
     
 )abbrev category JWSRING JLWSRing
-++ Category for JL WS rings
+++ Category for Julia WS rings
 ++ Author: G.Vanuxem
 ++ Date Created: Jun. 2024
 ++ Description:
-++  JL Wolfram Symbolic category for rings using the Wolfram Symbol
+++  Julia Wolfram Symbolic category for rings using the Wolfram Symbol
 ++  Transport Protocol.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 JLWSRing() : Category == Join(JLWSObject, JLObjectRing)
 
 )abbrev category JWSNUM JLWSNumber
-++ Category for JL WS numbers
+++ Category for Julia WS numbers
 ++ Author: G.Vanuxem
 ++ Date Created: Jun. 2024
 ++ Description:
-++  JL Wolfram Symbolic category for numbers using the Wolfram Symbol
+++  Julia Wolfram Symbolic category for numbers using the Wolfram Symbol
 ++  Transport Protocol.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 JLWSNumber() : Category == JLWSRing
 
 )abbrev domain JWSSYM JLWSSymbol
-++ Generic domain for JL WS symbols
+++ Generic domain for Julia WS symbols
 ++ Author: G.Vanuxem
 ++ Date Created: May. 2024
 ++ Description:
-++  JL Wolfram Symbolic symbols using Wolfram Symbolic Transport Protocol.
+++  Julia Wolfram Symbolic symbols using Wolfram Symbolic Transport Protocol.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 JLWSSymbol() : Exports == Implementation where
   INT ==> Integer
@@ -123,9 +123,9 @@ JLWSSymbol() : Exports == Implementation where
     ++ WSymbol() returns the WS Missing symbol.
     coerce  : % -> Boolean
     ++ coerce(sym) coerces sym to a FriCAS boolean.
-    ++ Sym must be a JL WS boolean
+    ++ Sym must be a Julia WS boolean
     coerce : Boolean -> %
-    ++ coerce(bool) coerces bool to a JL WS boolean.
+    ++ coerce(bool) coerces bool to a Julia WS boolean.
     coerce : String -> %
     ++ coerce(str) is a convenience function to coerce a String.
     coerce : Symbol -> %
@@ -151,7 +151,7 @@ JLWSSymbol() : Exports == Implementation where
       jlEvalString(concat(["getproperty(", getind(sym), ",:name,)"]))@String
 
     if not jlUsing("MathLink") then
-      error "The JL MathLink package is not installed."
+      error "The Julia MathLink package is not installed."
     jlEvalString("import MathLink: WSymbol")
     
     Rep := SExpression
@@ -184,11 +184,11 @@ JLWSSymbol() : Exports == Implementation where
     coerce(obj) : OutputForm == jl_string_getindex(jlId(obj))$Lisp
 
 )abbrev domain JWSINT JLWSInteger
-++ Generic domain for JL WS integers
+++ Generic domain for Julia WS integers
 ++ Author: G.Vanuxem
 ++ Date Created: May. 2024
 ++ Description:
-++  JL Wolfram Symbolic integers using Wolfram Symbolic Transport Protocol.
+++  Julia Wolfram Symbolic integers using Wolfram Symbolic Transport Protocol.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 JLWSInteger() : Exports == Implementation where
   INT       ==> Integer
@@ -197,7 +197,7 @@ JLWSInteger() : Exports == Implementation where
   Exports ==> Join(JLWSNumber, IntegerNumberSystem,
                   Canonical, canonicalsClosed) with
     "/"     : (%, %) -> JLWSRational
-    ++ a/b returns the JL WS rational a/b.
+    ++ a/b returns the Julia WS rational a/b.
     integer : % -> Integer
     ++ integer(i) return i as a FriCAS Integer.
     ++ Convenience function.
@@ -233,7 +233,7 @@ JLWSInteger() : Exports == Implementation where
     jbinbop(op,a,b) ==> jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
 
     if not jlUsing("MathLink") then
-      error "The JL MathLink package is not installed."
+      error "The Julia MathLink package is not installed."
     jlEvalString("import MathLink: WInteger")@Void
     
     Rep := SExpression
@@ -303,11 +303,11 @@ JLWSInteger() : Exports == Implementation where
       coerce(parsei(ret))$Integer
 
 )abbrev domain JWSRAT JLWSRational
-++ Generic domain for JL WS rational numbers
+++ Generic domain for Julia WS rational numbers
 ++ Author: G.Vanuxem
 ++ Date Created: May. 2024
 ++ Description:
-++  JL Wolfram Symbolic rational numbers using Wolfram Symbolic Transport Protocol.
+++  Julia Wolfram Symbolic rational numbers using Wolfram Symbolic Transport Protocol.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 JLWSRational() : Exports == Implementation where
   INT ==> Integer
@@ -335,7 +335,7 @@ JLWSRational() : Exports == Implementation where
       jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
 
     if not jlUsing("MathLink") then
-      error "The JL MathLink package is not installed."
+      error "The Julia MathLink package is not installed."
     jlEvalString("WRAT=W_"Rational_"")@Void
     Rep := SExpression
 
@@ -413,7 +413,7 @@ JLWSRational() : Exports == Implementation where
 ++ Author: G.Vanuxem
 ++ Date Created: April. 2024
 ++ Description:
-++  JL Wolfram Symbolic real numbers using
+++  Julia Wolfram Symbolic real numbers using
 ++  Wolfram Symbolic Transport Protocol. Precision is determined
 ++  during coercion. Machine precision will be used for jWSReal("3.14") whereas
 ++  jWSReal("3.14159265358979323846264338327950288419716939937510")
@@ -502,7 +502,7 @@ JLWSReal() : Exports == Implementation where
     error1(msg, f) ==> error concat [msg, " ", toString f]
 
     if not jlUsing("MathLink") then
-      error "The JL MathLink package is not installed."
+      error "The Julia MathLink package is not installed."
     jlEvalString("import MathLink: WReal")@Void
 
     Rep := SExpression
@@ -698,11 +698,11 @@ JLWSReal() : Exports == Implementation where
       - coerce(abs(x) pretend JLWSExpression)
 
 )abbrev domain JWSAPR JLWSAPReal
-++ Generic domain for JL WS arbitrary precision real numbers
+++ Generic domain for Julia WS arbitrary precision real numbers
 ++ Author: G.Vanuxem
 ++ Date Created: April. 2024
 ++ Description:
-++  JL Wolfram Symbolic arbitrary pecision real numbers using
+++  Julia Wolfram Symbolic arbitrary pecision real numbers using
 ++  Wolfram Symbolic Transport Protocol.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 JLWSAPReal(prec : PositiveInteger) : Exports == Implementation where
@@ -783,7 +783,7 @@ JLWSAPReal(prec : PositiveInteger) : Exports == Implementation where
     error1(msg, f) ==> error(concat [msg, " ", toString(f)])
 
     if not jlUsing("MathLink") then
-      error "The JL MathLink package is not installed."
+      error "The Julia MathLink package is not installed."
     jlEvalString("NN=W_`Interpreter[_"Real_"]_`")@Void
 
     Rep := SExpression
@@ -993,11 +993,11 @@ JLWSAPReal(prec : PositiveInteger) : Exports == Implementation where
 
 
 )abbrev domain JWSGINT JLWSGaussianInteger
-++ Generic domain for JL WS gaussian integers
+++ Generic domain for Julia WS gaussian integers
 ++ Author: G.Vanuxem
 ++ Date Created: May. 2024
 ++ Description:
-++  JL Wolfram Symbolic gaussian integers using Wolfram Symbolic Transport Protocol.
+++  Julia Wolfram Symbolic gaussian integers using Wolfram Symbolic Transport Protocol.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 JLWSGaussianInteger() : Exports == Implementation where
   INT ==> Integer
@@ -1026,7 +1026,7 @@ JLWSGaussianInteger() : Exports == Implementation where
     bool(a) ==> coerce(a)$JLWSSymbol
 
     if not jlUsing("MathLink") then
-      error "The JL MathLink package is not installed."
+      error "The Julia MathLink package is not installed."
     Rep := SExpression
 
     0 == jlref("W_"Complex_"(0,0)")
@@ -1095,11 +1095,11 @@ JLWSGaussianInteger() : Exports == Implementation where
       re + ip
 
 )abbrev domain JWSCPLX JLWSComplex
-++ Generic domain for JL WS complex numbers
+++ Generic domain for Julia WS complex numbers
 ++ Author: G.Vanuxem
 ++ Date Created: May. 2024
 ++ Description:
-++  JL Wolfram Symbolic complex numbers using Wolfram Symbolic Transport Protocol.
+++  Julia Wolfram Symbolic complex numbers using Wolfram Symbolic Transport Protocol.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 JLWSComplex() : Exports == Implementation where
   INT ==> Integer
@@ -1169,7 +1169,7 @@ JLWSComplex() : Exports == Implementation where
     bool(a) ==> coerce(a)$JLWSSymbol
 
     if not jlUsing("MathLink") then
-      error "The JL MathLink package is not installed."
+      error "The Julia MathLink package is not installed."
     Rep := SExpression
 
     0 == jlref(concat(["W_`Complex[0.0,0.0]_`"]))
@@ -1330,11 +1330,11 @@ JLWSComplex() : Exports == Implementation where
       re + ip
 
 )abbrev domain JWSAPCPX JLWSAPComplex
-++ Generic domain for JL WS arbitrary precision complex numbers
+++ Generic domain for Julia WS arbitrary precision complex numbers
 ++ Author: G.Vanuxem
 ++ Date Created: May. 2024
 ++ Description:
-++  JL Wolfram Symbolic arbitrary precision complex numbers using Wolfram Symbolic
+++  Julia Wolfram Symbolic arbitrary precision complex numbers using Wolfram Symbolic
 ++  Transport Protocol.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 JLWSAPComplex(prec : PositiveInteger) : Exports == Implementation where
@@ -1402,7 +1402,7 @@ JLWSAPComplex(prec : PositiveInteger) : Exports == Implementation where
     bool(a) ==> coerce(a)$JLWSSymbol
 
     if not jlUsing("MathLink") then
-      error "The JL MathLink package is not installed."
+      error "The Julia MathLink package is not installed."
     Rep := SExpression
 
     0 == jlref(concat(["W_`N[Complex[0,0],", string(prec), "]_`"]))

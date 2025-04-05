@@ -1,9 +1,9 @@
 )abbrev package JWSNSF JLWSNumericalSpecialFunctions
-++ Generic package for JL WS numerical special functions
+++ Generic package for Julia WS numerical special functions
 ++ Author: G.Vanuxem
 ++ Date Created: Jun. 2024
 ++ Description:
-++  JL Wolfram Symbolic numerical special functions using
+++  Julia Wolfram Symbolic numerical special functions using
 ++  Wolfram Symbolic Transport Protocol.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 -- TODO: check duplicate signatures, missing implementations

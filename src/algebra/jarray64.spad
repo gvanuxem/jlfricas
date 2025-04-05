@@ -1,12 +1,12 @@
 )abbrev category JMATCAT JLMatrixCategory
-++ Description: This category provides JL matrices.
+++ Description: This category provides Julia matrices.
 JLMatrixCategory(R : Join(JLType, AbelianMonoid), 
   Row : FiniteLinearAggregate R,
   Col : FiniteLinearAggregate R) : Category == 
     Join(JLType, MatrixCategory(R, Row, Col))
 
 )abbrev category JVECCAT JLVectorCategory
-++ Description: This category provides JL vectors.
+++ Description: This category provides Julia vectors.
 JLVectorCategory(JT : JLType) : Category == VectorCategory(JT)
 
 )abbrev domain JI64VEC JLInt64Vector
@@ -27,12 +27,12 @@ JLInt64Vector() : Exports == Implementation where
     vector  : List JI64 -> %
     ++ vector(l) converts the list l to a vector.
     jlDisplay: % -> Void
-    ++ jlDisplay(v) pretty prints v (à la JL).
+    ++ jlDisplay(v) pretty prints v (à la Julia).
     juliaIVPrint : Boolean -> Boolean
     ++ juliaIVPrint(b) defines whether or not FriCAS uses 
-    ++ the printing version of JL for vectors instead of
+    ++ the printing version of Julia for vectors instead of
     ++ its OutputForm version. Returns previous value.
-    ++ By default it is the JL version.
+    ++ By default it is the Julia version.
   Implementation ==> add
     import JLUtilityFunctions
     pprint := true
@@ -95,13 +95,13 @@ JLFloat64Vector() : Exports == Implementation where
     ++ jlApply(func, v) applies func to argument v.
     jlApply : (String, %) -> JF64
     ++ jlApply(func, v) applies func to argument v
-    ++ and returns a JL Float64.
+    ++ and returns a Julia Float64.
     jlApply : (String, %) -> %
     ++ jlApply(func, v) applies func to argument v
     ++ and returns a JLFloat64Vector.
     jlApply : (String, %, JF64) -> JF64
     ++ jlApply(func, v, val) applies func to arguments v and val
-    ++ and returns a JL Float64.
+    ++ and returns a Julia Float64.
     jlApply : (String, %, %) -> Void
     ++ jlApply(func, v1, v2) applies func to arguments v1 and v2.
     jlApply : (String, %, %, %) -> Void
@@ -113,24 +113,24 @@ JLFloat64Vector() : Exports == Implementation where
     ++ if their relative distance or their absolute distance
     ++ is within tolerance bounds. Applied component-vise.
     urand   :   (NNI, JF64) -> %
-    ++ urand(n, x) returns a uniform(0$NNI..x) JL vector of size n.
+    ++ urand(n, x) returns a uniform(0$NNI..x) Julia vector of size n.
     urand01 :   NNI -> %
-    ++ urand01(n) returns a uniform(0$NNI..1) JL vector of size n.
+    ++ urand01(n) returns a uniform(0$NNI..1) Julia vector of size n.
     nrand :   NNI -> %
-    ++ nrand(n) returns a normally distributed JL vector of size n
+    ++ nrand(n) returns a normally distributed Julia vector of size n
     ++ with mean=0 and standard deviation=1.
     jlDisplay: % -> Void
-    ++ jldisplay(v) pretty prints v (à la JL).
+    ++ jldisplay(v) pretty prints v (à la Julia).
     juliaVPrint : Boolean -> Boolean
     ++ juliaVPrint(b) defines whether or not FriCAS uses 
-    ++ the printing version of JL for vectors instead of
+    ++ the printing version of Julia for vectors instead of
     ++ its OutputForm version. Returns previous value.
-    ++ By default it is the JL version.
+    ++ By default it is the Julia version.
   Implementation ==> add
     import from JLUtilityFunctions
     jlInitialize(true)
     defined?(func) ==> not jlDefined?(func) =>
-      error concat(func, " is not defined in JL")
+      error concat(func, " is not defined in Julia")
     pprint := true
 
     #x                          == Qsize x
@@ -308,23 +308,23 @@ JLFloat64Matrix() :  Exports == Implementation where
     jlApply : (String, %) -> %
     ++ jlApply(func, x) apply func to argument x.
     jlDisplay: % -> Void
-    ++ jldisplay(m) pretty prints m (à la JL).
+    ++ jldisplay(m) pretty prints m (à la Julia).
     juliaMPrint : Boolean -> Boolean
     ++ juliaMPrint(b) defines whether or not FriCAS uses 
-    ++ the printing version of JL for matrices instead of
+    ++ the printing version of Julia for matrices instead of
     ++ its OutputForm version. Returns previous value.
-    ++ By default it is the JL version.
+    ++ By default it is the Julia version.
     copy!: (%, %) -> %
     ++ copy!(b,a) copies efficiently a to b.No check are done on
     ++ arrays dimensions.
     identity:    NNI -> %
     ++ identity(n) returns a n by n identity matrix.S
     urand   :   (NNI, NNI, JF64) -> %
-    ++ urand(m,n,x) returns a uniform(0$NNI..x) JL matrix of size (m,n).
+    ++ urand(m,n,x) returns a uniform(0$NNI..x) Julia matrix of size (m,n).
     urand01 :   (NNI, NNI) -> %
-    ++ urand01(m,n) returns a uniform(0$NNI..1) JL matrix of size (m,n).
+    ++ urand01(m,n) returns a uniform(0$NNI..1) Julia matrix of size (m,n).
     nrand :   (NNI, NNI) -> %
-    ++ nrand(m,n) returns a normally distributed JL matrix of size (m,n)
+    ++ nrand(m,n) returns a normally distributed Julia matrix of size (m,n)
     ++ with mean=0 and standard deviation=1.
     positiveDefinite? : % -> Boolean
     ++ positiveDefinite?(m) tests wether or not m is positive definite.
@@ -355,7 +355,7 @@ JLFloat64Matrix() :  Exports == Implementation where
         ncols : NonNegativeInteger, nrows : NonNegativeInteger)
 
     defined?(func) ==> not jlDefined?(func) =>
-      error concat(func, " is not defined in JL")
+      error concat(func, " is not defined in Julia")
     pprint := true
 
     minRowIndex x == 1
@@ -536,7 +536,7 @@ JLFloat64Matrix() :  Exports == Implementation where
     minordet(m) == minordet(m)$MLAF
 
 )abbrev domain JF64SMAT JLF64SquareMatrix
-++ Description: This domain provides a fast JL Float64
+++ Description: This domain provides a fast Julia Float64
 ++ square matrix type with no bound checking on elt's. Minimum index is 1.
 JLF64SquareMatrix(n: NonNegativeInteger) : Exports == Implementation where
   Row ==> DirectProduct(n, JLFloat64)
@@ -608,23 +608,23 @@ JLComplexF64Vector() :  Exports == Implementation where
     ++ if their relative distance or their absolute distance
     ++ is within tolerance bounds. Applied component-wise.
     urand01 :   NNI -> %
-    ++ urand01(n) returns a uniform(0$NNI..1) JL vector of size n.
+    ++ urand01(n) returns a uniform(0$NNI..1) Julia vector of size n.
     nrand :   NNI -> %
-    ++ nrand(n) returns a normally distributed JL vector of size n.
-    ++ See JL documentation (randn) for this complex version used here.
+    ++ nrand(n) returns a normally distributed Julia vector of size n.
+    ++ See Julia documentation (randn) for this complex version used here.
     jlDisplay : % -> Void
-    ++ jldisplay(v) pretty prints v (à la JL).
+    ++ jldisplay(v) pretty prints v (à la Julia).
     juliaCVPrint : Boolean -> Boolean
     ++ juliaCVPrint(b) defines whether or not FriCAS uses 
-    ++ the printing version of JL for matrices instead of
+    ++ the printing version of Julia for matrices instead of
     ++ its OutputForm version. Returns previous value.
-    ++ By default it is the JL version.
+    ++ By default it is the Julia version.
   Implementation ==> add
     import from JLUtilityFunctions
     import from JLCF64LinearAlgebra
     jlInitialize(true)
     defined?(func) ==> not jlDefined?(func) =>
-      error concat(func, " is not defined in JL")
+      error concat(func, " is not defined in Julia")
     pprint := true
 
     qelt(x, i)                  == Qelt1(x, i)
@@ -721,9 +721,9 @@ JLComplexF64Matrix() : Exports == Implementation where
   MLAF        ==> MatrixLinearAlgebraFunctions(JCF64, Row, Col, %)
   Exports ==> JLMatrixCategory(JCF64, Row, Col) with
     coerce: JF64MAT -> %
-    ++ coerce(m) coerces m to a a JL Complex Float 64 matrix.
+    ++ coerce(m) coerces m to a a Julia Complex Float 64 matrix.
     jlDisplay : % -> Void  
-    ++ jlDisplay(m) pretty prints m (à la JL).
+    ++ jlDisplay(m) pretty prints m (à la Julia).
     jlVector: % -> JLComplexF64Vector
     ++ jlVector(m) returns reference to the internal vector representation.
     real : % -> JF64MAT
@@ -759,10 +759,10 @@ JLComplexF64Matrix() : Exports == Implementation where
     diagonalMatrix:   JCF64VEC -> %
     ++ diagonalMatrix(v) returns a diagonal matrix with elements of v.
     urand01:   (NNI, NNI) -> %
-    ++ urand01(m,n) returns a uniform(0$NNI..1) JL matrix of size (m,n).
+    ++ urand01(m,n) returns a uniform(0$NNI..1) Julia matrix of size (m,n).
     nrand :   (NNI, NNI) -> %
-    ++ nrand(m,n) returns a normally distributed JL matrix of size (m,n).
-    ++ See JL documentation (randn) for this complex version used here.
+    ++ nrand(m,n) returns a normally distributed Julia matrix of size (m,n).
+    ++ See Julia documentation (randn) for this complex version used here.
     transpose!:     (%, %) -> %
     ++ transpose!(b, a) stores transposed a in b.
     adjoint:     % -> %
@@ -773,9 +773,9 @@ JLComplexF64Matrix() : Exports == Implementation where
     ++ the conjugate transposition of m.
     juliaCMPrint : Boolean -> Boolean
     ++ juliaMPrint(b) defines whether or not FriCAS uses 
-    ++ the printing version of JL for matrices instead of
+    ++ the printing version of Julia for matrices instead of
     ++ its OutputForm version. Returns previous value.
-    ++ By default it is the JL version.
+    ++ By default it is the Julia version.
   Implementation ==> add
     import from JLUtilityFunctions
     import from JLCF64LinearAlgebra
@@ -784,7 +784,7 @@ JLComplexF64Matrix() : Exports == Implementation where
     jlInitialize(true)
 
     defined?(func) ==> not jlDefined?(func) =>
-      error concat(func, " is not defined in JL")
+      error concat(func, " is not defined in Julia")
     pprint := true
 
     Rep := Record(elts : JLComplexF64Vector,
@@ -973,7 +973,7 @@ JLComplexF64Matrix() : Exports == Implementation where
       newm
 
 )abbrev domain JCF64SMA JLComplexF64SquareMatrix
-++ Description: This domain provides a fast JL Float64
+++ Description: This domain provides a fast Julia Float64
 ++ square matrix type with no bound checking on elt's. Minimum index is 1.
 JLComplexF64SquareMatrix(n : NonNegativeInteger) : Exports == Implementation where
   Row ==> DirectProduct(n, JLComplexF64)
