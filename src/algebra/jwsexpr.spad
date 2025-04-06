@@ -58,7 +58,7 @@ JLWSExpression() : Exports == Implementation where
     ++ jlWSDefined?(sym) checks whether or not the symbol sym is defined
     ++ in the WS language.
     ++ For example:
-    ++ \example{jlWSDefied? "Sin"}
+    ++ \example{jlWSDefined? "Sin"}
     ++ => true
     "^"     : (%, JLWSRational) -> %
     ++ ^ is the exponentiation by a rational.
@@ -114,6 +114,12 @@ JLWSExpression() : Exports == Implementation where
     ++ inverseGudermannian(z)	computes the inverse gudermannian.
     digamma     : (% , %) -> %
     ++ digamma(n,z)	 the n-th derivative of the digamma function
+    besselJZero : (%, %) -> %
+    ++ besselJZero(n,x) returns the n-th zero of the
+    ++ Bessel J n-th function.
+    besselYZero : (%, %) -> %
+    ++ besselYZero(n,x) returns the n-th zero of the
+    ++ Bessel Y n-th function.
     sphericalBesselJ : (% , %)-> %
     ++ sphericalBesselJ(n,z) returns the spherical Bessel
     ++ of the first kind of z.
@@ -126,6 +132,14 @@ JLWSExpression() : Exports == Implementation where
     sphericalHankelH2 : (% , %)-> %
     ++ sphericalHankelH2(n,z) computes the spherical Hankel
     ++ of the second kind of z.
+    airyAiZero :    % -> %
+    ++ airyAiZero(n) is n-th zero function of the Airy function \spad{Ai(z)}.
+    airyAiZero :    (%, %) -> %
+    ++ airyAiZero(n,x) is n-th zero function of the Airy function \spad{Ai(z)}
+    airyBiZero :    % -> %
+    ++ airyBiZero(n) is n-th zero function of the Airy function \spad{Bi(z)}.
+    airyBiZero :    (%, %) -> %
+    ++ airyBiZero(n,x) is n-th zero function of the Airy function \spad{Bi(z)}
     weberE : (%, %, %) -> %
     ++ weberE(v,n,z) is the associated Weber E function.
     dirichletL : (%, %, %) ->  %
@@ -742,6 +756,7 @@ JLWSExpression() : Exports == Implementation where
     ++ in the variable var of the expression expr.
     findRoot : (%, %) -> %
     ++ findRoot(exp,start) try to find the root of expr starting at start.
+    ++ \example{x:= jWSExpr x}
     ++ \example{findRoot(sin(x) + cos(x), "\{x, 0\}")}
 
     --finiteField : (%, %) -> %
@@ -750,6 +765,10 @@ JLWSExpression() : Exports == Implementation where
     normal   : % -> %
     ++ normal(expr) converts expr to a normal expression from different
     ++ expression types. Can be applied to a power serie for example.
+    ++ For example.
+    ++ \example{x:=jWSExpr x}
+    ++ \example{s:=series(exp(x),jWSExpr "\{x,0,10\}")}
+    ++ \example{normal(s)::EXPR INT}
     normal   : (%, %) -> %
     ++ normal(expr, list(Head)||Head) converts objects in expr to a normal
     ++ expression form from different expression types, with Head, or a
@@ -912,11 +931,11 @@ JLWSExpression() : Exports == Implementation where
     ++ quantityMagnitude(val) returns magnitude of val.
 
     jlDisplay : JLWSExpression -> JLWSExpression
-    ++ jlDisplay(expr) returns the traditional form of expr:
-    ++ jWSExpr "Format[Sin[x]]" => sin(x)
+    ++ jlDisplay(expr) returns the traditional form of expr
+    ++ jWSExpr "Format[Sin[x]" => sin(x)]
     jlDisplay : (JLWSExpression, JLWSExpression) -> JLWSExpression
-    ++ jlDisplay(expr, form) returns the `form` form of expr:
-    ++ jWSExpr "Format[Sin[x], TeXForm]" => \sin x())
+    ++ jlDisplay(expr, form) returns the `form` form of expr
+    ++ Resulting for example in: "Format[Sin[x], TeXForm]" => \sin x
     matrixForm : % -> %
     ++ matrixForm(mat) returns a pretty-printable form of mat i.e.
     ++ its WS 'MatrixForm'.
@@ -1245,12 +1264,18 @@ JLWSExpression() : Exports == Implementation where
     inverseGudermannian(z) == junfunc("W_"InverseGudermannian_"(", z)
 
     airyAi(z) == junfunc("W_"AiryAi_"(", z)
+    airyAiZero(z) == junfunc("W_"AiryAiZero_"(", z)
+    airyAiZero(n,z) == jbinfunc("W_"AiryAiZero_"(", n, z)
     airyBi(z) == junfunc("W_"AiryBi_"(", z)
+    airyBiZero(z) == junfunc("W_"AiryBiZero_"(", z)
+    airyBiZero(n,z) == jbinfunc("W_"AiryBiZero_"(", n, z)
     airyAiPrime(z) == junfunc("W_"AiryAiPrime_"(", z)
     airyBiPrime(z) == junfunc("W_"AiryBiPrime_"(", z)
 
     besselJ(n,z) == jbinfunc("W_"BesselJ_"(", n,z)
+    besselJZero(n,z) == jbinfunc("W_"BesselJZero_"(", n,z)
     besselY(n,z) == jbinfunc("W_"BesselY_"(", n,z)
+    besselYZero(n,z) == jbinfunc("W_"BesselYZero_"(", n,z)
     besselI(n,z) == jbinfunc("W_"BesselI_"(", n,z)
     besselK(n,z) == jbinfunc("W_"BesselK_"(", n,z)
     kelvinBer(n,z) == jbinfunc("W_"KelvinBer_"(", n,z)
@@ -1745,8 +1770,8 @@ JLWSExpression() : Exports == Implementation where
     retractIfCan(expr) : Union(Expression(Integer), "failed") ==
       str : String := jlEvalString(concat(["replace(_"",
         toString(expr, jWSExpr "InputForm"),
-        "_", '[' => '(', ']' => ')', _"ArcS_" => _"as_", _"ArcC_" => _"ac_",",
-        " _"ArcT_" => _"at_" , r_"\b[A-Z][a-z]{2}_" => x -> lowercase(x))"]))
+        "_", '[' => '(', ']' => ')', _"Pi_"=>_"%pi_", _"ArcS_" => _"as_", _"ArcC_" => _"ac_",",
+        " _"ArcT_" => _"at_" , _"E_" => _"%e_" ,r_"\b[A-Z][a-z]{2}_" => x -> lowercase(x))"]))
       jlRegexMatch?(str,jlRegex("[0-9]\.|0-9]")) => "failed"
       strToExprInt(str)
     retract(expr : %) : Expression(Integer) ==
@@ -1758,8 +1783,8 @@ JLWSExpression() : Exports == Implementation where
     retractIfCan(expr : %) : Union(Expression(Float), "failed") ==
       str : String := jlEvalString(concat(["replace(_"",
         toString(expr, jWSExpr "InputForm"),
-        "_", '[' => '(', ']' => ')', _"ArcS_" => _"as_", _"ArcC_" => _"ac_",",
-        " _"ArcT_" => _"at_" , r_"\b[A-Z][a-z]{2}_" => x -> lowercase(x))"]))
+        "_", '[' => '(', ']' => ')', _"Pi_" => _"%pi_", _"ArcS_" => _"as_", _"ArcC_" => _"ac_",",
+        " _"ArcT_" => _"at_" , _"E_" => _"%e_", r_"\b[A-Z][a-z]{2}_" => x -> lowercase(x))"]))
       -- TODO: to be improved `
       jlRegexMatch?(str, jlRegex("`")) => "failed"
       strToExprFloat(str)

@@ -27,8 +27,14 @@ JLWSNumericalSpecialFunctions(R : JLWSNumber) : Exports ==Implementation where
         ++ Gamma(a, z) is the incomplete Gamma function.
     besselJ :   (R, R) -> R
         ++ besselJ(v, z) is the Bessel function of the first kind.
+    besselJZero : (R, R) -> R
+        ++ besselJZero(n,x) returns the n-th zero of the
+        ++ Bessel J n-th function.
     besselY :   (R, R) -> R
         ++ besselY(v, z) is the Bessel function of the second kind.
+    besselYZero : (R, R) -> R
+        ++ besselYZero(n,x) returns the n-th zero of the
+        ++ Bessel Y n-th function.
     besselI :   (R, R) -> R
         ++ besselI(v, z) is the modified Bessel function of the first kind.
     besselK :   (R, R) -> R
@@ -37,8 +43,18 @@ JLWSNumericalSpecialFunctions(R : JLWSNumber) : Exports ==Implementation where
         ++ airyAi(z) is the Airy function \spad{Ai(z)}.
     airyAiPrime : R -> R
         ++ airyAiPrime(z) is the derivative of the Airy function \spad{Ai(z)}.
+    airyAiZero :    R -> R
+        ++ airyAiZero(n) is n-th zero function of the Airy function \spad{Ai(z)}.
+    airyAiZero :    (R, R) -> R
+        ++ airyAiZero(n,x) is n-th zero function of the Airy function \spad{Ai(z)}
+        ++ smaller than x. 
     airyBi :    R -> R
         ++ airyBi(z) is the Airy function \spad{Bi(z)}.
+    airyBiZero :    R -> R
+        ++ airyBiZero(n) is n-th zero function of the Airy function \spad{Bi(z)}.
+    airyBiZero :    (R, R) -> R
+        ++ airyBiZero(n,x) is n-th zero function of the Airy function \spad{Bi(z)}
+        ++ smaller than x. 
     airyBiPrime : R -> R
         ++ airyBiPrime(z) is the derivative of the Airy function \spad{Bi(z)}.
     dawson  : R -> R
@@ -444,8 +460,24 @@ JLWSNumericalSpecialFunctions(R : JLWSNumber) : Exports ==Implementation where
       ret : R := junfunc("W_"AiryAi_"(", z)
       jtypeassert(z,ret)
       ret
+    airyAiZero(z) ==
+      ret : R := junfunc("W_"AiryAiZero_"(", z)
+      jtypeassert(z,ret)
+      ret
+    airyAiZero(n,z) ==
+      ret : R := jbinfunc("W_"AiryAiZero_"(", n, z)
+      jtypeassert(z,ret)
+      ret
     airyBi(z) ==
       ret : R := junfunc("W_"AiryBi_"(", z)
+      jtypeassert(z,ret)
+      ret
+    airyBiZero(z) ==
+      ret : R := junfunc("W_"AiryBiZero_"(", z)
+      jtypeassert(z,ret)
+      ret
+    airyBiZero(n,z) ==
+      ret : R := jbinfunc("W_"AiryBiZero_"(", n, z)
       jtypeassert(z,ret)
       ret
     airyAiPrime(z) ==
@@ -461,8 +493,16 @@ JLWSNumericalSpecialFunctions(R : JLWSNumber) : Exports ==Implementation where
       ret : R := jbinfunc("W_"BesselJ_"(", n,z)
       jtypeassert(z,ret)
       ret
+    besselJZero(n,z) ==
+      ret := jbinfunc("W_"BesselJZero_"(", n,z)
+      jtypeassert(z,ret)
+      ret
     besselY(n,z) ==
       ret : R := jbinfunc("W_"BesselY_"(", n,z)
+      jtypeassert(z,ret)
+      ret
+    besselYZero(n,z) ==
+      ret := jbinfunc("W_"BesselYZero_"(", n,z)
       jtypeassert(z,ret)
       ret
     besselI(n,z) ==
