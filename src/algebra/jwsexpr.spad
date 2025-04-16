@@ -1354,7 +1354,8 @@ JLWSExpression() : Exports == Implementation where
     laguerreL(n,a,x) == jterfunc("W_"LaguerreL_"(", n,a,x)
     zernikeR(n,m,x) == jterfunc("W_"ZernikeR_"(", n,m,x)
     jacobiP(n,a,b,x) == jquatfunc("W_"JacobiP_"(", n,a,b,x)
-
+    factorial(x) == junfunc("W_"factorial_"(", x)
+    
     hypergeometric0F1(a,z) == jbinfunc("W_"Hypergeometric0F1_"(", a,z)
     hypergeometric0F1Regularized(a,z) ==
       jbinfunc("W_"Hypergeometric0F1Regularized_"(", a,z)
