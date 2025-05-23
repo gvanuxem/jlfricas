@@ -3,11 +3,10 @@
 ++ Author: G.Vanuxem
 ++ Date Created: May. 2024
 ++ Description:
-++  Julia Wolfram Symbolic expressions using Wolfram Symbolic Transport Protocol.
+++  Julia Wolfram Symbolic expressions using the MathLink Julia package.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 -- TODO
 -- Reduce or FindInstance
--- limit(cos(x)-sin(x-1/x),"x->Infinity")
 -- interval({-2, 2})
 -- limit etc. "x=0" assignment vs. jlEval
 JLWSExpression() : Exports == Implementation where

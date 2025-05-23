@@ -32,7 +32,10 @@ NMRing() : Category == Join(NMType, JLObjectRing) with
       divide : (%, %) -> Record(quotient : %, remainder : %)
       ++
       jlNMRing : () -> String
-      ++ jlNMRing(x) returns the Nemo ring type of x as a string.
+      ++ jlNMRing(x) returns the FriCAS Nemo ring type
+      ++  of x used in Julia.
+      ++ For example:
+      ++ \example{jlNMRing()$NMPadicInteger(17)}
       jlObject: () -> String
       ++ jlObject() returns the internal Julia name of the module used.
     add

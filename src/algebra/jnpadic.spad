@@ -124,7 +124,7 @@ NMExtendedPadicInteger(p : Integer, prec : Integer) :
     Rep := SExpression
     
     -- Set up the field
-    EXPADICZP := concat(["PADICR", string(p), "p",string(prec)])
+    EXPADICZP := concat(["PADICZ", string(p), "p",string(prec)])
     jlEvalString(concat([EXPADICZP, "=padic_field(ZZ(", string(p), "), precision=", string(prec),")"]))
     jlNMRing() == EXPADICZP
     EXPADICZPP := concat(EXPADICZP,"(")
@@ -340,20 +340,20 @@ NMExtendedPadicRational(p,deg,prec) : Exports == Implementation where
     Rep := SExpression
     
     -- Set up the field
-    PADICR := concat(["PADICR", string(p), "p",string(prec)])
-    jlEvalString(concat([PADICR, ",_=qadic_field(ZZ(", string(p), "),", string(deg),
+    PADICQ := concat(["PADICQ", string(p), "p",string(prec)])
+    jlEvalString(concat([PADICQ, ",_=qadic_field(ZZ(", string(p), "),", string(deg),
       ",precision=", string(prec),")"]))
-    jlNMRing() == PADICR
-    PADICRP := concat(PADICR,"(")
-    jlObject() == jlEvalString(concat(["string(", PADICR,")"]))
-    O() == jlref(concat(["O(",PADICR,",ZZ(", string(p),")^",string(prec),")"]))
+    jlNMRing() == PADICQ
+    PADICQP := concat(PADICQ,"(")
+    jlObject() == jlEvalString(concat(["string(", PADICQ,")"]))
+    O() == jlref(concat(["O(",PADICQ,",ZZ(", string(p),")^",string(prec),")"]))
   
     unit?(a) == junbfunc("is_unit", a)
     one?(a) == junbfunc("isone", a)
     zero?(a) == junbfunc("iszero", a)
   
-    0 ==  jlref(concat ["zero(", PADICRP, "))"])
-    1 ==  jlref(concat ["one(", PADICRP, "))"])
+    0 ==  jlref(concat ["zero(", PADICQP, "))"])
+    1 ==  jlref(concat ["one(", PADICQP, "))"])
     pa : % = pb : % == jbinbfunc("==", pa,pb) 
     pa : % ~= pb : % == jbinbfunc("!=", pa,pb)
   
@@ -430,10 +430,10 @@ NMExtendedPadicRational(p,deg,prec) : Exports == Implementation where
     --    st := rst st
     --  error "order: series has more than 1000 leading zero coefs"
   
-    coerce(i : Integer) == jlref(concat([PADICRP, string(i),")"]))
-    coerce(i : NMInteger) == jlref(concat([PADICRP, string(i),")"]))
-    jnpadic(x:Integer) == jlref(concat([PADICRP, string(x),")"]))
-    jnpadic(i : NMInteger) == jlref(concat([PADICRP, string(i),")"]))
+    coerce(i : Integer) == jlref(concat([PADICQP, string(i),")"]))
+    coerce(i : NMInteger) == jlref(concat([PADICQP, string(i),")"]))
+    jnpadic(x:Integer) == jlref(concat([PADICQP, string(x),")"]))
+    jnpadic(i : NMInteger) == jlref(concat([PADICQP, string(i),")"]))
     coerce(x) : OUT == string(x) pretend OUT
 
 )abbrev domain NPADICR NMPadicRational
