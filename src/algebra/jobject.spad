@@ -1473,7 +1473,12 @@ JLVector(R : JLObjectType) : Exports == Implementation where
   Exports ==> Join(JLObjectAggregate, JLVectorCategory(R)) with
     vector  : List R -> %
     ++ vector(l) converts the list l to a vector.
-    elt : % -> R
+    elt : (%, PositiveInteger) -> R
+    ++ elt(v,n) returns the element in v from the index n. 
+    qelt : (%, PositiveInteger) -> R
+    ++ qelt(v,n) returns the element in v from the index n.
+    ++ No checks are done at the FriCAS level, only at the
+    ++ Julia level
     if not R has NMType then
       kroneckerProduct : (%, %) -> %
       ++ kroneckerProduct(v1,v2) returns the kronecker product of v1 and v2.
@@ -1516,9 +1521,9 @@ JLVector(R : JLObjectType) : Exports == Implementation where
       jlEvalString(concat(["length(", getind(x),")"]))
     new(n, x:R) ==
       jlref(concat(["fill(", getind(x),",", string(n),")"]))
-    qelt(x, i) ==
+    qelt(x, i : PositiveInteger) ==
       jlref(concat([getind(x),"[",string(i),"]"]))$R
-    elt(x, i) : R ==
+    elt(x, i : PositiveInteger) : R ==
       i > #x => error "elt$JLvector: incompatible index"
       jlref(concat([getind(x),"[",string(i),"]"]))$R
     qsetelt!(v : %, i, s:R) ==
