@@ -870,9 +870,32 @@ JLWSExpression() : Exports == Implementation where
     expToTrig : % -> %
     ++ expToTrig(expr) returns expr with exponentials converted to
     ++ (hyperbolic) trigonometric functions.
+    dateObject : () -> %
+    ++ dateObject() returns the JLWSExpression object of the
+    ++ local date and time.
+    dateObject : % -> %
+    ++ dateObject(expr) returns the JLWSExpression object of
+    ++ the date from expr.
+    dateObject : (%, %) -> %
+    ++ dateObject(date,type) returns the JLWSExpression object of
+    ++ the date and type, for example "Month".
     toString : (%, %) -> String
     ++ toString(expr, form) returns the string representation of expr
     ++ with WS language format form.
+    dateString : () -> %
+    ++ dateString() returns the JLWSExpression string of the local date and time.
+    ++ For example:
+    ++ \example{toString dateTime()}
+    dateString : % -> %
+    ++ dateString(expr) returns the JLWSExpression string of the date
+    ++ from a WS date object.
+    ++ For example:
+    ++ \example{dateString jWSExpr "Tomorrow"}
+    dateString : (%, %) -> %
+    ++ dateString(expr, form) returns JLWSExpression string of the date
+    ++ from a WS date object with WS format form.
+    ++ Fo example:
+    ++ \example{dateString(jWSExpr("Now"), jWSExpr("Entity[_"Language_", _"French::367gk_"]"))}
     toExpression : String -> %
     ++ toExpression(expr) converts expr to a WS expression and evaluates it.
     toExpression : (String, %) -> %
@@ -1095,6 +1118,8 @@ JLWSExpression() : Exports == Implementation where
     ++ jWSString(str) returns str as a WS String. 
     jWSExpr : Symbol -> %
     ++ jWSExpr(sym) coerces sym to a JLWSExpression.
+    ++ For example:
+    ++ x := jWSExpr x
     jWSExpr : Integer -> %
     ++ jWSExpr(z) returns the Integer z as a JLWSExpression.
     jWSExpr : Fraction Integer -> %
@@ -1105,6 +1130,8 @@ JLWSExpression() : Exports == Implementation where
     ++ jWSExpr(r)  returns the JLFloat64  as a JLWSExpression.
     jWSExpr : Float -> %
     ++ jWSExpr(r)  returns the Float r as a JLWSExpression.
+    jWSExpr : JLFloat -> %
+    ++ jWSExpr(r)  returns the JLFloat r as a JLWSExpression.
     jWSExpr : List(%) -> %
     ++ jWSExpr(list) returns the list of JLWSExpression
     ++ as a JLWSExpression.
@@ -1114,7 +1141,7 @@ JLWSExpression() : Exports == Implementation where
     ++ For example:
     ++ \example{jWSExpr "Factorial[5]"}
     ++ \example{jWSExpr "3.14159"}
-    ++ \example{jWSExpr "Today"}
+    ++ \example{dateString(jWSExpr "Today")}
   Implementation ==> JLObject add
     import from JLUtilityFunctions
     import from JLStringUtilities
@@ -1799,7 +1826,14 @@ JLWSExpression() : Exports == Implementation where
     jlWSSetAccuracy(expr, n) == jbinfunc("W_"SetAccuracy_"(", expr, n)
     jlDisplay(expr) == junfunc("W_"Format_"(", expr)
     jlDisplay(expr, form) == jbinfunc("W_"Format_"(", expr, form)
+    dateObject() == jWSExpr "DateObject[]"
+    dateObject(expr) == junfunc("W_"DateObject_"(", expr)
+    dateObject(expr, type) == jbinfunc("W_"DateObject_"(", expr, type)
+
     toString(expr, form) == string jbinfunc("W_"ToString_"(", expr, form)
+    dateString() == jWSExpr "DateString[]"
+    dateString(expr) == junfunc("W_"DateString_"(", expr)
+    dateString(expr, form) == jbinfunc("W_"DateString_"(", expr, form)
     toExpression(expr) == junfunc("W_"ToExpression_"(", jWSString(expr))
     toExpression(expr, form) == jbinfunc("W_"ToExpression_"(", jWSString(expr), form)
     toExpression(expr, form, h) == jterfunc("W_"ToExpression_"(", jWSString(expr), form, h)
@@ -1888,6 +1922,7 @@ JLWSExpression() : Exports == Implementation where
     jWSExpr(r : DoubleFloat) == jWSReal(r)$JLWSReal pretend %
     jWSExpr(r : JLFloat64) == jWSReal(r)$JLWSReal pretend %
     jWSExpr(r : Float) == jWSReal(r)$JLWSReal pretend %
+    jWSExpr(r : JLFloat) == jWSExpr(string(r))
     jWSExpr(sym : Symbol) : % == jlref(concat(["weval(W_`", string(sym),  "_`)"]))
     jWSExpr(str : String) : % == jlref(concat(["weval(W_`", str, "_`)"]))
     jWSExpr(l : List(%)) : % == coerce(l)
@@ -1902,14 +1937,14 @@ JLWSExpression() : Exports == Implementation where
     numberForm(x, expr) ==
       number? x and (jlHead(expr) = WL or integer? expr)
         => jbinfunc("W_"NumberForm_"(", x,expr)
-      error "numberForm: Bad format(s) used"
+      error "numberForm: Bad format(s) of arguments"
     decimalForm(x) ==
       number? x => junfunc("W_"DecimalForm_"(", x)
       error "decimalForm: Not a number"
     decimalForm(x, expr) ==
       number? x and (jlHead(expr) = WL or integer? expr)
         => jbinfunc("W_"DecimalForm_"(", x, expr)
-      error "decimalForm: Bad format(s) used"
+      error "decimalForm: Bad format(s) of arguments"
     scientificForm(x) ==
       number? x => junfunc("W_"ScientificForm_"(", x)
       error "scientificForm: Not a number"
