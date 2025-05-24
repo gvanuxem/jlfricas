@@ -4,7 +4,7 @@
 ++ Date Created: Jun. 2024
 ++ Description:
 ++  Julia Wolfram Symbolic numerical special functions using
-++  Wolfram Symbolic Transport Protocol.
+++  the MathLink Julia package.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 -- TODO: check duplicate signatures, missing implementations
 -- integer arguments

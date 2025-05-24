@@ -932,6 +932,50 @@ JLWSExpression() : Exports == Implementation where
     jlDisplay : (JLWSExpression, JLWSExpression) -> JLWSExpression
     ++ jlDisplay(expr, form) returns the `form` form of expr
     ++ Resulting for example in: "Format[Sin[x], TeXForm]" => \sin x
+
+    baseForm : (%, %) -> %
+    ++ baseForm(x, n) returns the printed representation of x in base b.
+    numberForm : % -> %
+    ++ numberForm(x) returns the default printed representation of x.
+    numberForm : (%, %) -> %
+    ++ numberForm(x, expr) returns the approximate printed
+    ++ representation of x with expr as specification
+    ++ (number of digits of precision or a 2-list of number of digits
+    ++ and the number of digits after the decimal point).
+    decimalForm : % -> %
+    ++ decimalForm(x) returns the printed representation of x
+    ++ in decimal form i.e. without scientific notation.
+    decimalForm : (%, %) -> %
+    ++ decimalForm(x, expr) returns the printed representation of x
+    ++ in decimal form with expr as specification
+    ++ (number of digits of precision or a 2-list of number of digits
+    ++ and the number of digits after the decimal point).
+    scientificForm : % -> %
+    ++ scientificForm(x) returns the printed representation
+    ++ of x in scientific form.
+    scientificForm : (%, %) -> %
+    ++ scientificForm(x,n) returns the printed representation
+    ++ of x in scientific form with n digits of precision.
+    engineeringForm : % -> %
+    ++ engineeringForm(x) returns the printed representation
+    ++ of x in engineering form.
+    engineeringForm : (%, %) -> %
+    ++ engineeringForm(x,n) returns the printed representation
+    ++ of x in engineering form with n digits of precision.
+    percentForm : % -> %
+    ++ percentForm(x) returns the printed representation
+    ++ of x in percent form.
+    ++ For example:
+    ++ \example{percentForm jWSExpr 0.50}
+    percentForm : (%, %) -> %
+    ++ percentForm(x,n) returns the printed representation
+    ++ of x in percent with n digits of precision.
+    accountingForm : % -> %
+    ++ accountingForm(x,n) returns the accounting printed
+    ++ representation of x.
+    accountingForm : (%, %) -> %
+    ++ accountingForm(x,n) returns the accounting printed
+    ++ representation of x with n digits of precision.
     matrixForm : % -> %
     ++ matrixForm(mat) returns a pretty-printable form of mat i.e.
     ++ its WS 'MatrixForm'.
@@ -1131,6 +1175,7 @@ JLWSExpression() : Exports == Implementation where
     imag(z)      == junfunc("W_"Im_"(", z)
 
     WS : JLWSSymbol := WString()
+    WL : JLWSSymbol := WList()
 
     defined?(x) == junfunc("W_"NameQ_"(", x) = WTrue()
     member?(list, expr) == jbinfunc("W_"MemberQ_"(", list, expr) = WTrue() 
@@ -1847,6 +1892,48 @@ JLWSExpression() : Exports == Implementation where
     jWSExpr(str : String) : % == jlref(concat(["weval(W_`", str, "_`)"]))
     jWSExpr(l : List(%)) : % == coerce(l)
     jlWSSetOptions(arg1, arg2) == jbinfunc("W_"SetOptions_"(", arg1, arg2)
+
+    baseForm(x,n) ==
+      integer? x and integer? n => jbinfunc("W_"BaseForm_"(", x,n)
+      error "baseForm: Integer(s) not used"
+    numberForm(x) ==
+      number? x => junfunc("W_"NumberForm_"(", x)
+      error "numberForm: Not a number"
+    numberForm(x, expr) ==
+      number? x and (jlHead(expr) = WL or integer? expr)
+        => jbinfunc("W_"NumberForm_"(", x,expr)
+      error "numberForm: Bad format(s) used"
+    decimalForm(x) ==
+      number? x => junfunc("W_"DecimalForm_"(", x)
+      error "decimalForm: Not a number"
+    decimalForm(x, expr) ==
+      number? x and (jlHead(expr) = WL or integer? expr)
+        => jbinfunc("W_"DecimalForm_"(", x, expr)
+      error "decimalForm: Bad format(s) used"
+    scientificForm(x) ==
+      number? x => junfunc("W_"ScientificForm_"(", x)
+      error "scientificForm: Not a number"
+    scientificForm(x,n) ==
+      number? x and integer? n => jbinfunc("W_"ScientificForm_"(", x,n)
+      error "scientificForm: Require numbers"
+    engineeringForm(x) ==
+      number? x => junfunc("W_"EngineeringForm_"(", x)
+      error "engineeringForm: Not a number"
+    engineeringForm(x,n) ==
+      number? x and integer? n => jbinfunc("W_"EngineeringForm_"(", x,n)
+      error "engineeringForm: Require numbers"
+    percentForm(x) ==
+      number? x => junfunc("W_"PercentForm_"(", x)
+      error "percentForm: Not a number"
+    percentForm(x,n) ==
+      number? x and integer? n => jbinfunc("W_"PercentForm_"(", x,n)
+      error "percentForm: Require numbers"
+    accountingForm(x) ==
+      number? x => junfunc("W_"AccountingForm_"(", x)
+      error "accountingForm: Not a number"
+    accountingForm(x,n) ==
+      number? x and integer? n => jbinfunc("W_"AccountingForm_"(", x,n)
+      error "accountingForm: Require numbers"
     matrixForm(expr) == junfunc("W_"MatrixForm_"(", expr)
     quantityForm(expr, form : %) == jbinfunc("W_"QuantityForm_"(", expr, form)
     quantityForm(expr, form : JWSL(%)) ==

@@ -4,7 +4,7 @@
 ++ Date Created: July. 2024
 ++ Description:
 ++  Julia Wolfram Symbolic utility functions using
-++  Wolfram Symbolic Transport Protocol.
+++  the MathLink Julia package.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 JLWSUtilityFunctions() : Exports == Implementation where
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])

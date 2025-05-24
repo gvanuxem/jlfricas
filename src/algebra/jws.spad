@@ -52,15 +52,15 @@ JLWSObject() : Category == JLObjectType with
       jlref(concat(["W_"", sym, "_"(", getind(a), ",", getind(b),
         ",", getind(c), ",", getind(d), ",", getind(e),")"]))
 
-    jlSymbolic(jws) ==
+    jlSymbolic(jwso) ==
       -- subject to change
       jlEvalString(concat(["weval(W_"ToString_"(W_"FullForm_"(",
-        getind(jws),")))"]))
-    toString(jws) ==
-      jlEvalString(concat(["weval(W_"ToString_"(W_"InputForm_"(",
-        getind(jws),")))"]))
-    jlHead(jws) == jlref(concat(["weval(W_"Head_"(", getind(jws), "))"]))
-    jlEval(jws) == make_jlref_wcall1("weval", jws)$Lisp
+        getind(jwso),")))"]))
+    toString(jwso) ==
+      jlEvalString(concat(["weval(W_"ToString_"(W_"OutputForm_"(",
+        getind(jwso),")))"]))
+    jlHead(jwso) == jlref(concat(["weval(W_"Head_"(", getind(jwso), "))"]))
+    jlEval(jwso) == make_jlref_wcall1("weval", jwso)$Lisp
     jWSInterpret(type, expr) ==
       jlref(concat ["Interpret(_"", type, "_",)(_"", expr, "_")"])
     jlNumeric(expr) == junfunc("W_"N_"(", expr)
@@ -93,7 +93,7 @@ JLWSNumber() : Category == JLWSRing
 ++ Author: G.Vanuxem
 ++ Date Created: May. 2024
 ++ Description:
-++  Julia Wolfram Symbolic symbols using Wolfram Symbolic Transport Protocol.
+++  Julia Wolfram Symbolic symbols using the MathLink Julia package.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 JLWSSymbol() : Exports == Implementation where
   INT ==> Integer
@@ -188,7 +188,7 @@ JLWSSymbol() : Exports == Implementation where
 ++ Author: G.Vanuxem
 ++ Date Created: May. 2024
 ++ Description:
-++  Julia Wolfram Symbolic integers using Wolfram Symbolic Transport Protocol.
+++  Julia Wolfram Symbolic integers using the MathLink Julia package.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 JLWSInteger() : Exports == Implementation where
   INT       ==> Integer
@@ -307,7 +307,7 @@ JLWSInteger() : Exports == Implementation where
 ++ Author: G.Vanuxem
 ++ Date Created: May. 2024
 ++ Description:
-++  Julia Wolfram Symbolic rational numbers using Wolfram Symbolic Transport Protocol.
+++  Julia Wolfram Symbolic rational numbers using the MathLink Julia package.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 JLWSRational() : Exports == Implementation where
   INT ==> Integer
@@ -414,10 +414,7 @@ JLWSRational() : Exports == Implementation where
 ++ Date Created: April. 2024
 ++ Description:
 ++  Julia Wolfram Symbolic real numbers using
-++  Wolfram Symbolic Transport Protocol. Precision is determined
-++  during coercion. Machine precision will be used for jWSReal("3.14") whereas
-++  jWSReal("3.14159265358979323846264338327950288419716939937510")
-++  will have arbitrary precision of about 50 digits.
+++  the MathLink Julia package.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 JLWSReal() : Exports == Implementation where
   INT   ==> Integer
@@ -659,7 +656,7 @@ JLWSReal() : Exports == Implementation where
     li(x)       == junfunc("W_"LogIntegral_"(",x)
     dilog(x)    == jbinfunc("W_"PolyLog_"(", coerce(2)@JLWSInteger, x)
 
-    urand01() == jlEval jWSExpr("RandomReal[]") pretend %
+    urand01() == jlEval(jWSExpr("RandomReal[]")) pretend %
 
     toString(x, p : NonNegativeInteger) ==
       n := # string integerPart x
@@ -672,17 +669,27 @@ JLWSReal() : Exports == Implementation where
     coerce(x : %) : JLWSExpression == x pretend JLWSExpression
     coerce(x) : JLFloat ==
       jlref(concat(["weval(BigFloat,", getind(x),")"]))$JLFloat
-    coerce(str : String) : % == jlref(concat(["WReal(_"", str, "_")"]))
+
+    coerce(str : String) : % ==
+      x := jlref(concat(["WReal(_"", str, "_")"]))
+      machineNumber?(x pretend JLWSExpression) => x
+      error "jWSReal: Not a machine number"
     coerce(f : Float) ==
       tmp := outputSpacing(0)
       ret : % := jlref(concat(["WReal(_"", toString(f), "_")"]))
       outputSpacing(tmp)
-      ret
+      machineNumber?(ret pretend JLWSExpression) => ret
+      error "jWSReal: Not a machine number"
     coerce(f : JLFloat64) == jlref(concat(["WReal(_"", toString(f), "_")"]))
     coerce(f : DoubleFloat) == jlref(concat(["WReal(_"", toString(f), "_")"]))
     coerce(f : Float) ==
-      jlref(concat(["WReal(_"", toString(f,digits()$Float), "_")"]))
-    coerce(f : JLFloat) == jlref(concat(["WReal(_"", string(f), "_")"]))
+      x:=jlref(concat(["WReal(_"", toString(f,digits()$Float), "_")"]))
+      machineNumber?(x pretend JLWSExpression) => x
+      error "jWSReal: Not a machine number"
+    coerce(f : JLFloat) ==
+      x := jlref(concat(["WReal(_"", string(f), "_")"]))
+      machineNumber?(x pretend JLWSExpression) => x
+      error "jWSReal: Not a machine number"
     coerce(f : Integer) == jlref(concat(["WReal(_"", string(f), "_")"]))
     jWSReal(f : JLFloat64) == jlref(concat(["WReal(_"", toString(f), "_")"]))
     jWSReal(f : DoubleFloat) == jlref(concat(["WReal(_"", toString(f), "_")"]))
@@ -690,9 +697,13 @@ JLWSReal() : Exports == Implementation where
       tmp := outputSpacing(0)
       ret := jlref(concat(["WReal(_"", toString(f), "_")"]))
       outputSpacing(tmp)
-      ret
+      machineNumber?(ret pretend JLWSExpression) => ret
+      error "jWSReal: Not a machine number"
     jWSReal(f : Integer) == jlref(concat(["WReal(_"", string(f), "_")"]))
-    jWSReal(str) == jlref(concat(["WReal(_"", str, "_")"]))
+    jWSReal(str) ==
+      x:= jlref(concat(["WReal(_"", str, "_")"]))
+      machineNumber?(x pretend JLWSExpression) => x
+      error "jWSReal: Not a machine number"
     coerce(x) : OutputForm ==
       x >= 0 => coerce(x pretend JLWSExpression)
       - coerce(abs(x) pretend JLWSExpression)
@@ -997,7 +1008,7 @@ JLWSAPReal(prec : PositiveInteger) : Exports == Implementation where
 ++ Author: G.Vanuxem
 ++ Date Created: May. 2024
 ++ Description:
-++  Julia Wolfram Symbolic gaussian integers using Wolfram Symbolic Transport Protocol.
+++  Julia Wolfram Symbolic gaussian integers using the MathLink Julia package.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 JLWSGaussianInteger() : Exports == Implementation where
   INT ==> Integer
@@ -1099,7 +1110,7 @@ JLWSGaussianInteger() : Exports == Implementation where
 ++ Author: G.Vanuxem
 ++ Date Created: May. 2024
 ++ Description:
-++  Julia Wolfram Symbolic complex numbers using Wolfram Symbolic Transport Protocol.
+++  Julia Wolfram Symbolic complex numbers using the MathLink Julia package.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 JLWSComplex() : Exports == Implementation where
   INT ==> Integer
