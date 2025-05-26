@@ -790,6 +790,11 @@ JLWSExpression() : Exports == Implementation where
     refine : (%, %) -> %
     ++ refine(expr, assums) refines the expression expr with assumptions
     ++ assums.
+    assuming : (%, %) -> %
+    ++ assuming(assumption(s), expr) uses the assumptions for use of
+    ++ expr with refine, simplify and integerate for example.
+    ++ The assumption(s) are not always supported by MathLink.
+    ++ Use assumptions directly whith 'refine' etc. directly
     expand : % -> %
     ++ expand(expr) puts out products and positive powers of integers
     ++ of the expression expr.
@@ -870,14 +875,14 @@ JLWSExpression() : Exports == Implementation where
     expToTrig : % -> %
     ++ expToTrig(expr) returns expr with exponentials converted to
     ++ (hyperbolic) trigonometric functions.
-    dateObject : () -> %
-    ++ dateObject() returns the JLWSExpression object of the
+    jWSDateObject : () -> %
+    ++ jWSDateObject() returns the JLWSExpression object of the
     ++ local date and time.
-    dateObject : % -> %
-    ++ dateObject(expr) returns the JLWSExpression object of
+    jWSDateObject : % -> %
+    ++ jWSDateObject(expr) returns the JLWSExpression object of
     ++ the date from expr.
-    dateObject : (%, %) -> %
-    ++ dateObject(date,type) returns the JLWSExpression object of
+    jWSDateObject : (%, %) -> %
+    ++ jWSDateObject(date,type) returns the JLWSExpression object of
     ++ the date and type, for example "Month".
     toString : (%, %) -> String
     ++ toString(expr, form) returns the string representation of expr
@@ -1760,6 +1765,8 @@ JLWSExpression() : Exports == Implementation where
     extendedSimplify(expr, assume) ==
       jbinfunc("W_"FullSimplify_"(", expr, assume)
     refine(expr, assume) == jbinfunc("W_"Refine_"(", expr, assume)
+    -- TODO: Not always supported by MathLink
+    assuming(assume, expr) == jbinfunc("W_"Assuming_"(", assume, expr)
 
     expand(expr) == junfunc("W_"Expand_"(", expr)
     extendedExpand(expr) == junfunc("W_"ExpandAll_"(", expr)
@@ -1824,17 +1831,53 @@ JLWSExpression() : Exports == Implementation where
     jlWSAccuracy(expr) == junfunc("W_"Accuracy_"(", expr)
     jlWSSetPrecision(expr, n) == jbinfunc("W_"SetPrecision_"(", expr, n)
     jlWSSetAccuracy(expr, n) == jbinfunc("W_"SetAccuracy_"(", expr, n)
+    jlWSSetOptions(arg1, arg2) == jbinfunc("W_"SetOptions_"(", arg1, arg2)
     jlDisplay(expr) == junfunc("W_"Format_"(", expr)
     jlDisplay(expr, form) == jbinfunc("W_"Format_"(", expr, form)
-    dateObject() == jWSExpr "DateObject[]"
-    dateObject(expr) == junfunc("W_"DateObject_"(", expr)
-    dateObject(expr, type) == jbinfunc("W_"DateObject_"(", expr, type)
-
+    jWSDateObject() == jWSExpr "DateObject[]"
+    jWSDateObject(expr) == junfunc("W_"DateObject_"(", expr)
+    jWSDateObject(expr, type) == jbinfunc("W_"DateObject_"(", expr, type)
+    jWSData() == jWSExpr "WolframLanguageData[]"
+    jWSData(ents : String) ==
+      junfunc("W_"WolframLanguageData_"(", jWSString(ents))
+    jWSData(ent : String, prop : String) ==
+      jbinfunc("W_"WolframLanguageData_"(", jWSString(ent), jWSString(prop))
+    jWSData(ent : String, prop : String, ann : String) ==
+      jterfunc("W_"WolframLanguageData_"(", jWSString(ent),
+        jWSString(prop), jWSString(ann))
+    jWSData(ents : %) ==
+        junfunc("W_"WolframLanguageData_"(", ents)
+    jWSData(ents : %, prop : %) ==
+      jbinfunc("W_"WolframLanguageData_"(", ents, prop)
+    jWSData(ent : %, prop : %, ann : %) ==
+      jterfunc("W_"WolframLanguageData_"(", ent, prop, ann)
+    jWSTable(expr, range) == jbinfunc("W_"Table_"(", expr, range)
+    jWSTable(expr, range1, range2) ==
+      jterfunc("W_"Table_"(", expr, range1, range2)
+    jWSRule(lhs, rhs) == jbinfunc("W_"Rule_"(", lhs, rhs)
+    jWSEqual(lhs, rhs) == jbinfunc("W_"Equal_"(", lhs, rhs)
+    jWSNotEqual(lhs, rhs) == jbinfunc("W_"Unequal_"(", lhs, rhs)
+    jWSLess(lhs, rhs) == jbinfunc("W_"Less_"(", lhs, rhs)
+    jWSLessEqual(lhs, rhs) == jbinfunc("W_"LessEqual_"(", lhs, rhs)
+    jWSGreater(lhs, rhs) == jbinfunc("W_"Greater_"(", lhs, rhs)
+    jWSGreaterEqual(lhs, rhs) == jbinfunc("W_"GreaterEqual_"(", lhs, rhs)
+    jWSQuantity(u) == junfunc("W_"Quantity_"(", u)
+    jWSQuantity(m,u) == jbinfunc("W_"Quantity_"(", m, u)
+    jWSString(str) == jlref(concat(["W_`_"", str, "_"_`"]))
+    jWSExpr(i : Integer) == jlref(concat(["WInteger(_"", string(i), "_")"]))
+    jWSExpr(q : Fraction(Integer)) == jWSRat(q)$JLWSRational pretend %
+    jWSExpr(r : DoubleFloat) == jWSReal(r)$JLWSReal pretend %
+    jWSExpr(r : JLFloat64) == jWSReal(r)$JLWSReal pretend %
+    jWSExpr(r : Float) == jWSReal(r)$JLWSReal pretend %
+    jWSExpr(r : JLFloat) == jWSExpr(string(r))
+    jWSExpr(sym : Symbol) : % == jlref(concat(["weval(W_`", string(sym),  "_`)"]))
+    jWSExpr(str : String) : % == jlref(concat(["weval(W_`", str, "_`)"]))
+    jWSExpr(l : List(%)) : % == coerce(l)
     toString(expr, form) == string jbinfunc("W_"ToString_"(", expr, form)
     dateString() == jWSExpr "DateString[]"
     dateString(expr) == junfunc("W_"DateString_"(", expr)
     dateString(expr, form) == jbinfunc("W_"DateString_"(", expr, form)
-    toExpression(expr) == junfunc("W_"ToExpression_"(", jWSString(expr))
+    toExpression(expr) == junfunc("W_"ToExpression_"(", jWSString expr)
     toExpression(expr, form) == jbinfunc("W_"ToExpression_"(", jWSString(expr), form)
     toExpression(expr, form, h) == jterfunc("W_"ToExpression_"(", jWSString(expr), form, h)
     retractIfCan(expr : %) : Union(JLFloat64, "failed") ==
@@ -1890,43 +1933,6 @@ JLWSExpression() : Exports == Implementation where
       for i in 1..(#lstr - 1) repeat
         str := concat([str, lstr.i, ","])
       jlref(concat(["W_`", concat([str, lstr.(#lstr) ,"}"]), "_`"]))
-    jWSData() == jWSExpr "WolframLanguageData[]"
-    jWSData(ents : String) ==
-      junfunc("W_"WolframLanguageData_"(", jWSString(ents))
-    jWSData(ent : String, prop : String) ==
-      jbinfunc("W_"WolframLanguageData_"(", jWSString(ent), jWSString(prop))
-    jWSData(ent : String, prop : String, ann : String) ==
-      jterfunc("W_"WolframLanguageData_"(", jWSString(ent),
-        jWSString(prop), jWSString(ann))
-    jWSData(ents : %) ==
-        junfunc("W_"WolframLanguageData_"(", ents)
-    jWSData(ents : %, prop : %) ==
-      jbinfunc("W_"WolframLanguageData_"(", ents, prop)
-    jWSData(ent : %, prop : %, ann : %) ==
-      jterfunc("W_"WolframLanguageData_"(", ent, prop, ann)
-    jWSTable(expr, range) == jbinfunc("W_"Table_"(", expr, range)
-    jWSTable(expr, range1, range2) ==
-      jterfunc("W_"Table_"(", expr, range1, range2)
-    jWSRule(lhs, rhs) == jbinfunc("W_"Rule_"(", lhs, rhs)
-    jWSEqual(lhs, rhs) == jbinfunc("W_"Equal_"(", lhs, rhs)
-    jWSNotEqual(lhs, rhs) == jbinfunc("W_"Unequal_"(", lhs, rhs)
-    jWSLess(lhs, rhs) == jbinfunc("W_"Less_"(", lhs, rhs)
-    jWSLessEqual(lhs, rhs) == jbinfunc("W_"LessEqual_"(", lhs, rhs)
-    jWSGreater(lhs, rhs) == jbinfunc("W_"Greater_"(", lhs, rhs)
-    jWSGreaterEqual(lhs, rhs) == jbinfunc("W_"GreaterEqual_"(", lhs, rhs)
-    jWSQuantity(u) == junfunc("W_"Quantity_"(", u)
-    jWSQuantity(m,u) == jbinfunc("W_"Quantity_"(", m, u)
-    jWSString(str) == jlref(concat(["W_`_"", str, "_"_`"]))
-    jWSExpr(i : Integer) == jlref(concat(["WInteger(_"", string(i), "_")"]))
-    jWSExpr(q : Fraction(Integer)) == jWSRat(q)$JLWSRational pretend %
-    jWSExpr(r : DoubleFloat) == jWSReal(r)$JLWSReal pretend %
-    jWSExpr(r : JLFloat64) == jWSReal(r)$JLWSReal pretend %
-    jWSExpr(r : Float) == jWSReal(r)$JLWSReal pretend %
-    jWSExpr(r : JLFloat) == jWSExpr(string(r))
-    jWSExpr(sym : Symbol) : % == jlref(concat(["weval(W_`", string(sym),  "_`)"]))
-    jWSExpr(str : String) : % == jlref(concat(["weval(W_`", str, "_`)"]))
-    jWSExpr(l : List(%)) : % == coerce(l)
-    jlWSSetOptions(arg1, arg2) == jbinfunc("W_"SetOptions_"(", arg1, arg2)
 
     baseForm(x,n) ==
       integer? x and integer? n => jbinfunc("W_"BaseForm_"(", x,n)
