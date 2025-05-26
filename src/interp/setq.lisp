@@ -293,6 +293,7 @@
 (SETQ |$DoubleFloat| '(|DoubleFloat|))
 
 (SETQ |$Integer| '(|Integer|))
+(SETQ |$SingleInteger| '(|SingleInteger|))
 (SETQ |$ComplexInteger| (LIST '|Complex| |$Integer|))
 (SETQ |$NonNegativeInteger| '(|NonNegativeInteger|))
 (SETQ |$PositiveInteger| '(|PositiveInteger|))
@@ -302,8 +303,6 @@
 (SETQ |$Void|  '(|Void|))
 (SETQ |$QuotientField| '|Fraction|)
 (SETQ |$FunctionalExpression| '|Expression|)
-(SETQ |$DoubleFloat| '(|DoubleFloat|))
-(SETQ |$SingleInteger| '(|SingleInteger|))
 
 (SETQ |$InteractiveFrame| (LIST (LIST NIL)))
 (SETQ |$DomainsInScope| (LIST NIL))
