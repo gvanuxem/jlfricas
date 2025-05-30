@@ -107,13 +107,13 @@ NMInteger() : Exports == Implementation where
     coerce  : % -> JI64
     ++ coerce(ni) ro a JLInt64 if possible.
     coerce  : % -> Expression Integer
-    ++ coerce \undocumented
+    ++ coerce(x) coerces x.
     coerce  : % -> AlgebraicNumber
-    ++ coerce \undocumented
+    ++ coerce(x) coerces x.
     inverse : % -> NMFraction(NMInteger)
-    ++ 
+    ++ inverse(x) returns the inverse of x.
     jnint   : Integer -> %
-    ++ jnint \undocumented
+    ++ jnint(i) returns i as an NMInteger.
     ZZ   : Integer -> %
     ++ ZZ(i) returns A Nemo integer.
   Implementation ==> add
@@ -258,7 +258,7 @@ NMAlgebraicNumber() : Exports == Implementation where
     ++ random(deg, bits) returns a random algebraic number (real) of
     ++ degree up to deg and coefficients size up to bits.
     crandom     : (NNI, NNI) -> %
-    ++ random(deg, bits) returns a random algebraic number (complex) of
+    ++ crandom(deg, bits) returns a random algebraic number (complex) of
     ++ degree up to deg and coefficients size up to bits.
     ++ Requires at least degree 2.
     expPiI    : % -> %
@@ -289,7 +289,7 @@ NMAlgebraicNumber() : Exports == Implementation where
     ++ numerator(anum) returns anum multiplied by its denominator
     ++ i.e. an algebraic integer.
     denominator: % -> NMInteger
-    ++ numeraor(anum) returns the denominator of anum, i.e. the leading coefficient
+    ++ denominator(anum) returns the denominator of anum, i.e. the leading coefficient
     ++ of the minimal polynomial of a.
     -- : % -> SparseUnivariatePolynomial(%)
     ---- ??
@@ -300,7 +300,7 @@ NMAlgebraicNumber() : Exports == Implementation where
     abs : % -> %
     ++ abs(a) returns the absolute value of a.
     abs2 : % -> %
-    ++ abs(a) returns the squared absolute value of a.
+    ++ abs2(a) returns the squared absolute value of a.
     floor : % -> %
     ++ floor(a) returns the largest integer below or equal ot a.
     ceiling : % -> %
@@ -320,15 +320,15 @@ NMAlgebraicNumber() : Exports == Implementation where
     -- TODO
     ++ coerce(nan) coerces nan to AlgebraicNumber if it is rational.
     jnan    : Integer -> %
-    ++ jnan \undocumented
+    ++ jnan(x) returns x as a NMAlgebraicNumber.
     jnan    : Fraction(Integer) -> %
-    ++ jnan \undocumented
+    ++ jnan(q) returns q as a NMAlgebraicNumber.
     jnan    : NMInteger -> %
-    ++ jnan \undocumented
+    ++ jnan(x) returns x as a NMAlgebraicNumber.
     jnan    : NMFraction(NMInteger) -> %
-    ++ jnan \undocumented
+    ++ jnan(q) returns q as a NMAlgebraicNumber.
     jnan    : String -> %
-    ++ jnan \undocumented
+    ++ jnan(str) evaluates str in Julia that returns a NMAlgebraicNumber.
   Implementation ==> add
     import from JLUtilityFunctions
     import from String
@@ -499,7 +499,6 @@ NMAlgebraicNumber() : Exports == Implementation where
 ++ Description:
 ++  This domain allows the manipulation of Nemo integer mod n
 ++  elements using the Nemo package for Julia (FLINT based).
-++ Purpose: Experimentation.
 ++ https://flintlib.org/
 NMIntegerMod(p : PositiveInteger) : Exports == Implementation where
   PI      ==> PositiveInteger
@@ -508,17 +507,17 @@ NMIntegerMod(p : PositiveInteger) : Exports == Implementation where
   Exports ==> Join(NMCommutativeRing, Finite,
         ConvertibleTo(Integer), StepThrough) with
     "*"     : (%, Integer) -> %
-    ++ * \undocumented
+    ++ x*i is the multiplication by an integer.
     "*"     : (%, NMInteger) -> %
-    ++ * \undocumented
+    ++ x*i is the multiplication by a Nemo integer.
     coerce  : Integer -> %
-    ++ coerce \undocumented
+    ++ coerce(i) coerces i.
     coerce  : NMInteger -> %
-    ++ coerce \undocumented
+    ++ coerce(i) coerces i.
     jnzmod   : Integer -> %
-    ++ jnzmod \undocumented
+    ++ jnzmod(i) returns i as a NMIntegerMod.
     jnzmod   : NMInteger -> %
-    ++ jnzmod \undocumented
+    ++ jnzmod(i) returns i as a NMIntegerMod
   Implementation ==> add
     import from JLUtilityFunctions
     import from String
@@ -573,6 +572,7 @@ NMIntegerMod(p : PositiveInteger) : Exports == Implementation where
 ++  This domain allows the manipulation of Nemo prime field
 ++  elements using the Nemo Julia package (FLINT based).
 ++ https://flintlib.org/
+-- TODO: trace, absoluteTrace etc.
 NMPrimeField(p : PositiveInteger) : Exports == Implementation where
   PI        ==> PositiveInteger
   NNI       ==> NonNegativeInteger
@@ -582,23 +582,24 @@ NMPrimeField(p : PositiveInteger) : Exports == Implementation where
                    FiniteAlgebraicExtensionField(%),
                    ConvertibleTo(Integer)) with
     generator? : % -> Boolean
+    ++ generator?(x) checks whether or not of the NMPrimeField.
     order    : () -> NNI
-    ++ order \undocumented
+    ++ order() returns the order of the NMPrimeField.
     "*"      : (%, NMInteger) -> %
-    ++ * \undocumented
+    ++ x*i is the multiplication by a an integer (NMInteger).
     "*"      : (%, Integer) -> %
-    ++ * \undocumented
+    ++ * x*i is the multiplication by an integer.
     sqrt     : % -> %
-    ++ sqrt(x) returns a square root of x.
+    ++ sqrt(x) returns quare root of x.
     ++ Throw a Julia error if there is no square root and returns 0.
     coerce  : Integer -> %
-    ++ coerce \undocumented
+    ++ coerce(i) coerces i as a NMPrimeField element. 
     coerce  : NMInteger -> %
-    ++ coerce \undocumented
+    ++ coerce(i) coerces i as a NMPrimeField element.
     jnpf   : Integer -> %
-    ++ jnpf \undocumented
+    ++ jnpf(i) returns i as a NMPrimeField element.
     jnpf   : NMInteger -> %
-    ++ jnpf \undocumented
+    ++ jnpf(i) returns i as a NMPrimeField element.
   Implementation ==> add
     import from JLUtilityFunctions
     import from String
@@ -698,34 +699,36 @@ NMFiniteField(p : PositiveInteger, n: PositiveInteger) : Exports == Implementati
                    FiniteAlgebraicExtensionField(NMPrimeField(p)),
                    ConvertibleTo(Integer)) with
     generator?    : % -> Boolean
-    ++ generator? \undocumented
+    ++ generator?(x) checks whether or not x a generator
+    ++ of the finite filed.
     absolute?     : () -> Boolean
-    ++ absolute? \undocumented
+    ++ absolute?(x) checks whether or not x is the base field
+    ++ is a prime field.
     trace         : % -> NMPrimeField(p)
-    ++ trace \undocumented
+    ++ trace(x) returs the trace of x.
     absoluteTrace : % -> NMPrimeField(p)
-    ++ absoluteTrace \undocumented
+    ++ absoluteTrace(x) returns the obsolute trace of x.
     norm          : % -> NMPrimeField(p)
-    ++ norm \undocumented
+    ++ norm(x) returns the norm of x.
     absoluteNorm  : % -> NMPrimeField(p)
-    ++ absoluteNorm \undocumented
+    ++ absoluteNorm(x) returns the absolute norm of x.
     order    : () -> NNI
-    ++ order \undocumented
+    ++ order() returns the order of the finite field.
     "*"      : (%, NMInteger) -> %
-    ++ * \undocumented
+    ++ x*i is the integer multiplication (NMInteger).
     "*"      : (%, Integer) -> %
-    ++ * \undocumented
+    ++ x*i is the integer multiplication.
     sqrt     : % -> %
     ++ sqrt(x) returns a square root of x.
     ++ Throw a Julia error if there is no square root and returns 0.
     coerce  : Integer -> %
-    ++ coerce \undocumented
+    ++ coerce(i) coerces i.
     coerce  : NMInteger -> %
-    ++ coerce \undocumented
+    ++ coerce(i) coerces i.
     jnff   : Integer -> %
-    ++ jnff \undocumented
+    ++ jnff(i) returns i as a NMFiniteField element.
     jnff   : NMInteger -> %
-    ++ jnff \undocumented
+    ++ jnff(i) returns i, a NMIntger, as a NMFiniteField element.
   Implementation ==> add
     import from JLUtilityFunctions
     import from String
@@ -854,7 +857,7 @@ InnerNMExactCalciumField(Options : JLObjDict) : Exports ==
     exp    : () -> %
     ++ exp() returns ℯ (exp(1)).
     exp1    : () -> %
-    ++ exp() returns ℯ (exp(1)).
+    ++ exp1() returns ℯ (exp(1)).
     eulerGamma : () -> %
     ++ eulerGamma() returns the Euler's constant gamma (γ).
     pi      : () -> %
@@ -953,9 +956,9 @@ InnerNMExactCalciumField(Options : JLObjDict) : Exports ==
     "*"      : (%, Integer) -> %
     ++ x*n is the product of x by the integer n.
     "/"      : (Integer, %) -> %
-    ++ / \undocumented
+    ++ i/x is the division of an integer by x.
     "/"      : (%, Integer) -> %
-    ++ / \undocumented
+    ++ x/i is the division by an integer.
     jlOptions : % -> JLObjDict
     ++ jlOptions(x) returns the options set at instantiation time
     ++ that affect different aspects of computations. See Nemo
@@ -967,9 +970,9 @@ InnerNMExactCalciumField(Options : JLObjDict) : Exports ==
     --retractIfCan  : % -> Union(NMAlgebraicNumber, "failed")
     --++ retractIfCan(z) retracts if possible z to a NMAlgebraicNumber.
     retractIfCan  : % -> Union(NMRealBall,"failed")
-    ++ convert(x) converts x.
+    ++ retractIfCan(x) retracts x if possible or returns "failed".
     retract  : % -> NMComplexBall
-    ++ convert(x) converts x.
+    ++ retract(x) retracts x. Error if x is not retractable.
     coerce   : Fraction(Integer) -> %
     ++ coerce(q) coerces q. Convenience function.
     coerce   : NMFraction(NMInteger) -> %
@@ -1257,7 +1260,7 @@ NMExactCalciumField() : Exports == Implementation where
     exp    : () -> %
     ++ exp() returns ℯ (exp(1)).
     exp1    : () -> %
-    ++ exp() returns ℯ (exp(1)).
+    ++ exp1() returns ℯ (exp(1)).
     eulerGamma : () -> %
     ++ eulerGamma() returns the Euler's constant gamma (γ).
     pi      : () -> %
@@ -1356,9 +1359,9 @@ NMExactCalciumField() : Exports == Implementation where
     "*"      : (%, Integer) -> %
     ++ x*n is the product of x by the integer n.
     "/"      : (Integer, %) -> %
-    ++ / \undocumented
+    ++ i/x is the division of an integer by x.
     "/"      : (%, Integer) -> %
-    ++ / \undocumented
+    ++ x/i is the division by an integer.
     jlOptions : % -> JLObjDict
     ++ jlOptions(x) returns the options used during compoutations.
     retractIfCan  : % -> Union(NMInteger, "failed")
@@ -1368,9 +1371,9 @@ NMExactCalciumField() : Exports == Implementation where
     retractIfCan  : % -> Union(NMAlgebraicNumber, "failed")
     ++ retractIfCan(z) retracts if possible z to a NMAlgebraicNumber.
     retractIfCan  : % -> Union(NMRealBall,"failed")
-    ++ convert(x) converts x.
+    ++ retractIfCan(x) retracts x.
     retract  : % -> NMComplexBall
-    ++ convert(x) converts x.
+    ++ retract(x) retract x.
     coerce   : Fraction(Integer) -> %
     ++ coerce(q) coerces q. Convenience function.
     coerce   : NMFraction(NMInteger) -> %
@@ -1627,15 +1630,16 @@ NMFraction(R : Join(NMCommutativeRing, IntegralDomain)) :
     "/" : (R, %) -> %
     ++ / is the division operator.
     "*" : (%, NMInteger) -> %
-    ++ \undocumented
+    ++ x*i is the integer multiplication (NMInteger). 
     "*" : (NMInteger, %) -> %
-    ++ \undocumented
+    ++ i*x is the integer multiplication (NMInteger).
     if R has IntegerNumberSystem then
       random : PositiveInteger -> %
-      ++ random(p) returns a random rational with numerator and denominator having
-      ++ p bits before before canonicalisation.
+      ++ random(p) returns a random rational with numerator and
+      ++ denominator having p bits before before canonicalisation.
       differentiate : (%, (NMInteger -> NMInteger)) -> %
-      ++ \undocumented
+      ++ differentiate(x f) differentiates x extending the derivation f on
+      ++ on NMFraction(R).
     factorFraction : % -> Fraction(Factored(R))
     ++ factorFraction(p) factors the numerator and the denominator
     ++ of the fraction p.

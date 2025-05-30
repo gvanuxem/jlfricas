@@ -109,9 +109,9 @@ JLF64LinearAlgebra() : Exports == Implementation where
     lu!     : JF64MAT -> Record(LU:JF64MAT, ipiv:JI64VEC)
     ++ lu!(m) computes the LU factorisation of m in m.
     luReorder : (JF64MAT, JI64VEC) -> JF64MAT
-    ++ luOrder(mat, ipiv) returns a copy of mat reordered with ipiv pivot indices.
+    ++ luReorder(mat, ipiv) returns a copy of mat reordered with ipiv pivot indices.
     luReorder! : (JF64MAT, JI64VEC) -> JF64MAT
-    ++ luOrder(mat, ipiv) returns mat in-place reordered with ipiv pivot indices.
+    ++ luReorder!(mat, ipiv) returns mat in-place reordered with ipiv pivot indices.
     mpInverse : JF64MAT -> JF64MAT
     ++ mpInverse(m) returns the Moore-Penrose pseudo inverse of m.
     sqrt:   JF64MAT -> JCF64MAT
@@ -434,7 +434,7 @@ JLCF64LinearAlgebra() : Exports == Implementation where
     conditionNumber    : (JCF64MAT,JF64) -> JF64
     ++ conditionNumber(m) computes the p-condition number of m.
     condSkeel    : JCF64MAT -> JF64
-    ++ condsKeel(m) computes the Skeel condition number of m.
+    ++ condSkeel(m) computes the Skeel condition number of m.
     rank        : (JCF64MAT, JF64) -> NNI
     ++ rank(m, tol) computes rank of m. Counts singular value
     ++ with magnitude greater than tol.

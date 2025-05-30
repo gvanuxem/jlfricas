@@ -16,9 +16,9 @@ JLF32ArrayFunctions() : Exports == Implementation where
   STR       ==> String
   Exports ==> with
     jlApplyFunction : (STR, JF32VEC) -> Void
-    ++ jlFunctionF32Vector(func, vec) applies func to vec.
+    ++ jlApplyFunction(func, vec) applies func to vec.
     jlApplyFunction : (STR, JCF32VEC) -> Void
-    ++ jlF32FunctionF32Vec(func, vec) applies func to cvec.
+    ++ jlApplyFunction(func, vec) applies func to cvec.
     jlApplyFunction : (STR, JF32VEC) -> JF32
     ++ jlApplyFunction(func, vec) returns the output value
     ++ of func applied to vec.
@@ -93,7 +93,7 @@ JLF32ArrayFunctions() : Exports == Implementation where
     ++ that puts, at the C level, the resulting matrix in array.
     ++ Can be used with Julia 'real' or 'imag' for example.
     jlApplyFunction! : (STR, JCF32VEC, JCF32VEC, NNI) -> Void
-    ++ jlApplyFunction!!(func, carray, cmat, nr) applies the function
+    ++ jlApplyFunction!(func, carray, cmat, nr) applies the function
     ++ func to the matrix cmat and returns the result in carray. It is FriCAS
     ++ that puts, at the C level, the resulting matrix in carray.
   Implementation ==> add
@@ -162,9 +162,9 @@ JLF64ArrayFunctions() : Exports == Implementation where
   STR       ==> String
   Exports ==> with
     jlApplyFunction : (STR, JF64VEC) -> Void
-    ++ jlFunctionF32Vector(func, vec) applies func to vec.
+    ++ jlApplyFunction(func, vec) applies func to vec.
     jlApplyFunction : (STR, JCF64VEC) -> Void
-    ++ jlF32FunctionF32Vec(func, vec) applies func to cvec.
+    ++ jlApplyFunction(func, vec) applies func to cvec.
     jlApplyFunction : (STR, JF64VEC) -> JF64
     ++ jlApplyFunction(func, vec) returns the output value
     ++ of func applied to vec.
@@ -239,7 +239,7 @@ JLF64ArrayFunctions() : Exports == Implementation where
     ++ that puts, at the C level, the resulting matrix in array.
     ++ Can be used with Julia 'real' or 'imag' for example.
     jlApplyFunction! : (STR, JCF64VEC, JCF64VEC, NNI) -> Void
-    ++ jlApplyFunction!!(func, carray, cmat, nr) applies the function
+    ++ jlApplyFunction!(func, carray, cmat, nr) applies the function
     ++ func to the matrix cmat and returns the result in carray. It is FriCAS
     ++ that puts, at the C level, the resulting matrix in carray.
   Implementation ==> add

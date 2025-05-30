@@ -381,7 +381,7 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
     constantCoefficient : % -> R
     ++ constantCoefficient(p) returns the constant of p.
     coefficients : (%, Segment(Integer)) -> JLVector(R)
-    ++ coeficients(p, seg) returns the coefficients from the exponent
+    ++ coefficients(p, seg) returns the coefficients from the exponent
     ++ range seg.
     truncate : (%, NNI) -> %
     ++ truncate(p, n) return p truncated to n term. It's the remainder
@@ -636,7 +636,7 @@ NMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
     exactDivide : (%, %) -> %
     ++ exactDivide(p,q) divides p by q if the division is exact.
     jmp2nmp : MultivariatePolynomial(VarSet,R) -> %
-    ++ jnmp(p) converts the multivariate polynomial p to
+    ++ jmp2nmp(p) converts the multivariate polynomial p to
     ++ a Nemo multivariate polynomial.
     factor   : % -> NMFactored(%)
     ++ factor(p) returns the factorization of p.
@@ -891,7 +891,7 @@ NMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
 ++ References:
 ++ Description:
 ++   This type is a basic representation of sparse, distributed multivariate
-++ polynomials using the Julia pakage Nemo. It is parameterized by the
+++ Laurent polynomials using the Julia pakage Nemo. It is parameterized by the
 ++ coefficient ring. The coefficient ring may be non-commutative,
 ++ but the variables are assumed to commute. The monomial ordering
 ++ used for internal storage can be one of :lex, :deglex or :degrevlex.
@@ -961,8 +961,8 @@ NMMultivariateLaurentPolynomial(R : NMRing,
     ++ ^ is the integer exponentiation (possibly negative).
     exactDivide : (%, %) -> %
     ++ exactDivide(p,q) divides p by q if the division is exact.
-    jmp2nmlp : MultivariatePolynomial(VarSet,R) -> %
-    ++ jnmp(p) converts the multivariate polynomial p to
+    jmp2nmp : MultivariatePolynomial(VarSet,R) -> %
+    ++ jmp2nmp(p) converts the multivariate polynomial p to
     ++ a Nemo multivariate polynomial.
     factor   : % -> NMFactored(%)
     ++ factor(p) returns the factorization of p.
@@ -983,40 +983,53 @@ NMMultivariateLaurentPolynomial(R : NMRing,
     symbols : () -> JLVector(JLObject)
     ++ symbols() returns a Julia vector of variables (Julia symbols).
     numberOfVariables : ()  -> JLObject
-    ++ 
+    ++ numberOfVariables() returns the number of variables.
     gens  : () -> JLVector(%)
-    gen : Integer -> JLObject
+    ++ gens() returns a vector of the generators (variables).
+    gen : Integer -> %
+    ++ gen(i) returns the i-th generator.
     gen?  : % -> Boolean
-    ++ 
-    variableIndex : % -> JLObject
-    ++ 
+    ++ gen?(lp) checks whether or not lp is a generator.
+    variableIndex : % -> JLObjInt64
+    ++ variableIndex(var) returns the index of the variable var.
+    ++ Julia raises an error if var is not  
     coefficients : % -> JLVector(R)
     ++ coefficients(p) returns a Julia vector of coefficients of p.
     terms : % -> JLVector(%)
-    ++ 
-    exponent_vectors : % -> JLVector(JLObject)
+    ++ terms(lp) returns the vector of terms.
+    exponent_vectors : % -> JJLObject
+    ++ exponent_vectors(lp) returns the exponent vectors.
     leading_monomial : % -> %
+    ++ leading_monomial(lp) returns the leading monomial.
     leading_term : % -> %
+    ++ leading_term(lp) returns the leading term.
     leading_exponent_vector : % -> JLVector(JLObject)
+    ++ leading_exponent_vector(lp) returns the of leading exponent
 
     coerce : % ->
       NMMultivariateLaurentPolynomial(NMInteger, VarSet)
+
+    ++ coerce(lp) coerces lp.
     coerce : % ->
       NMMultivariateLaurentPolynomial(NMFraction(NMInteger), VarSet)
+    ++ coerce(lp) coerces lp.
     coerce : % ->
       NMMultivariateLaurentPolynomial(NMRealField, VarSet)
+    ++ coerce(lp) coerces lp.
     coerce : % ->
       NMMultivariateLaurentPolynomial(NMComplexField, VarSet)
+    ++ coerce(lp) coerces lp.
 
     mapCoefficients : (JLObject, %) -> %
     ++ mapCoefficients(jmap, p) applies the Julia map jmap to the
     ++ coefficients of p an returns the modified Laurent polynomial.
     ++ Use coerce to change the base ring.
 
-    evaluate : (%, JLVector(JLObject)) -> JLObject
+    --evaluate : (%, JLVector(JLObject)) -> JLObject
+    --++ evaluate(lp,vec)
 
-    derivative : (%, OrderedVariableList(VarSet)) -> %
-    derivative : (%, NonNegativeInteger) -> %
+    --derivative : (%, OrderedVariableList(VarSet)) -> %
+    --derivative : (%, NonNegativeInteger) -> %
   Implementation ==> add
     import from JLUtilityFunctions
     import from JLStringUtilities
@@ -1105,7 +1118,7 @@ NMMultivariateLaurentPolynomial(R : NMRing,
     gens() == jlref(concat(["gens(",NMLPRing,")"]))
     gen(i) == jlref(concat(["gen(",NMLPRing, ",", string(i) ,")"]))
     gen?(x) == junbfunc("is_gen", x)
-    variableIndex(p) == junfunc("var_index", p)
+    variableIndex(var) == junfunc("var_index", var)
 
     coefficients(p) : JLVector(R) ==
       jlref(concat ["collect(coefficients(", getind(p),"))"])
@@ -1253,7 +1266,7 @@ NMMultivariateLaurentPolynomial(R : NMRing,
         unit?(p) => p
         "failed"
 
-    jmp2nmlp(mp) : % ==
+    jmp2nmp(mp) : % ==
       p: String := first(lines formatExpression(mp::OutputForm)$Format1D)
       -- handle NRAT case
       ret := jlRegexReplace(p, jlRegex("/"), jlSubstitute("//"))

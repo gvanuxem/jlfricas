@@ -29,19 +29,21 @@ JLWSExpression() : Exports == Implementation where
     defined? :  % -> Boolean
     ++ defined?(sym) checks whether or not sym is a WS symbol.
     real? : % -> Boolean
-    ++ \undocumented
+    ++ real?(x) checks whether or not x represents a real number.
     realNumeric? : % -> Boolean
-    ++ \undocumented
+    ++ realNumeric?(x) checks whether or not x represents
+    ++ a real value (numeric).
     integer? : % -> Boolean
-    ++ \undocumented
+    ++ integer?(i) checks whteher or not i is an integer.
     rational? : % -> Boolean
-    ++ \undocumented
+    ++ rational?(q) checks whether or not q is a rational number.
     number? : % -> Boolean
-    ++ \undocumented
+    ++ number?(expr) checks whether or not expr is a number.
     machineNumber? : % -> Boolean
-    ++ \undocumented
+    ++ machineNumber?(expr) checks whether or not expr is a
+    ++ CPU/GPU supported number.
     exactNumber? : % -> Boolean
-    ++ \undocumented
+    ++ exactNumber?(x) checks whether or not x is an exact number.
     positive? : % -> Boolean
     ++ positive?(expr) checks whether or not expr is positive.
     negative? : % -> Boolean

@@ -45,7 +45,7 @@ JLPlotFunctions() : Exports == Implementation where
     jlPlot : (JF64VEC, JF64VEC, JF64VEC) -> Void
     ++ jlPlot(x,y,z) draws a plot using elements of x, y and z.
     jlPlot! : (JF64VEC, JF64VEC, JF64VEC) -> Void
-    ++ jlPlot(x,y,z) draws a plot using elements of x, y and z
+    ++ jlPlot!(x,y,z) draws a plot using elements of x, y and z
     ++ on the existing graph object.
     jlWireframe : (JF64VEC, JF64VEC, JF64MAT) -> Void
     ++ jlWireframe(x,y,mat) draws the wireframe surface of mat.

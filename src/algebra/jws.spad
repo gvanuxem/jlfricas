@@ -16,7 +16,7 @@ JLWSObject() : Category == JLObjectType with
     jlEval  : % -> %
     ++ jlEval(expr) evaluate expr using the Wolfram Symbolic Transport Protocol.
     jlSymbolic : % -> String
-    ++ jlSymbolix(expr) returns the symbolic 'FullForm'
+    ++ jlSymbolic(expr) returns the symbolic 'FullForm'
     jlNumeric : % -> %
     ++ jlNumeric(expr) returns numerical expr.
     jlNumeric : (%, PositiveInteger) -> %
@@ -120,7 +120,7 @@ JLWSSymbol() : Exports == Implementation where
     WSymbol    : () -> %
     ++ WSymbol() returns the WS Symbol symbol.
     WMissing  : () -> %
-    ++ WSymbol() returns the WS Missing symbol.
+    ++ WMissing() returns the WS Missing symbol.
     coerce  : % -> Boolean
     ++ coerce(sym) coerces sym to a FriCAS boolean.
     ++ Sym must be a Julia WS boolean
@@ -1136,9 +1136,9 @@ JLWSComplex() : Exports == Implementation where
     atan    : (%, %) -> %
     ++ atan(z1,z2) computes the arc tangent of z2/z1.
     erf     : (%, %) -> %
-    ++ erf \undocumented
+    ++ erf(x) is the error function.
     erfc    : % -> %
-    ++ erfc \undocuemented
+    ++ erfc(x) is the complementary error function.
     toString: (%, JLWSExpression) -> String
     ++ toString(expr, form) returns the string representation of expr
     ++ with WS language format form.

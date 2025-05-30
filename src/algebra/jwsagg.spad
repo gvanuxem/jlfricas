@@ -51,9 +51,9 @@ JLWSAggregate(E : JLWSObject) : Category == JLWSObject with
     union : (%, %) -> %
     ++ union(agg1, agg2) is the union set operator. Elements are sorted on output.
     intersection : (%, %) -> %
-    ++ intersection(agg1, agg2) is the intersection set operator.
+    ++ intersection(agg1, agg2) is the intersection operator.
     setIntersection : (%, %) -> %
-    ++ intersection(agg1, agg2) is the intersection set operator.
+    ++ setIntersection(agg1, agg2) is the intersection set operator.
     riffle : (%, %) -> %
     ++ riffle(agg, elts) riffles (interleaves) element(s) elts i.e. insert them.
     riffle : (%, %, %) -> %
@@ -475,7 +475,7 @@ JLWSMatrix(E : JLWSRing) : Exports == Implementation where
     svdvals : % -> JLWSList(E)
     ++ svdvals(m) returns the singular values of the matrix m.
     schur : % -> Record(q : %, t : %)
-    ++ schurm) computes the Schur decomposition of
+    ++ schur(m) computes the Schur decomposition of
     ++ of the square matrix m.
     qr: % -> Record(q : %, r : %)
     ++ qr(m) computes the QR decomposition of the matrix m.

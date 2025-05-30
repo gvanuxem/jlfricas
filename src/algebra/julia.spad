@@ -112,9 +112,9 @@ JLSymbol() : Exports == Implementation where
   STR ==> String
   Exports ==> JLType with
     coerce  : String -> %
-    ++ coerce \undocumented
+    ++ coerce(str) coerces str.
     coerce  : Symbol -> %
-    ++ coerce \undocumented
+    ++ coerce(sym) coerces sym.
     jsym    : String -> %
     ++ jsym(str) converts str to a Julia symbol.
     jsym    : Symbol -> %
@@ -152,19 +152,22 @@ JLSymbol() : Exports == Implementation where
 JLInt64() : Exports == Implementation where
   Exports ==> Join(JLMachineType, IntegerNumberSystem) with
     min     : () -> %
-    ++ min \undocumented
+    ++ min() returns the smallest JLInt64 compatible with
+    ++ the underlying Common Lisp implementation. 
     max     : () -> %
-    ++ max \undocumented
+    ++ max() returns the largest JLInt64 compatible with
+    ++ the underlying Common Lisp implementation. 
     string  : % -> String
-    ++ string \undocumented
+    ++ string(x) stringifies x.
     coerce  : SingleInteger -> %
-    ++ coerce \undocumented
+    ++ coerce(x) coerces x.
     coerce  : % -> SingleInteger
-    ++ coerce \undocumented
+    ++ coerce(x) coerces x to a SingleInteger.
     ji64    : SingleInteger -> %
-    ++ ji64 \undocumented
+    ++ ji64(x) returns x a a Julia Int64 (in Julia memory area).
     ji64    : Integer -> %
-    ++ ji64\undocumented
+    ++ ji64(x) returns x a a Julia Int64 (in Julia memory area).
+    ++ Error if x is can not be coerced.
   Implementation ==> SingleInteger add
     import JLUtilityFunctions
     jlInitialize(true)
@@ -397,7 +400,10 @@ JLComplexF32() : Exports == Implementation where
     ++ if their relative distance or their absolute distance
     ++ is within tolerance bounds. Applied component-wise.
     jcf32 : JLFloat32 -> %
+    ++ jcf32(r) coerces r as a JLComplexF32 with the real part r.
     jcf32 : (JLFloat32, JLFloat32) -> %
+    ++ jcf32(r,i) returns a JLComplexF32 with real part r and
+    ++ imaginary part i.
   Implementation ==> Complex(JLFloat32) add
     jlApprox?(x, y) : Boolean ==
       jl_bool_function_flt_flt("isapprox", real(x), real(y))$Lisp
@@ -621,10 +627,10 @@ JLComplexF64() : Exports == Implementation where
     ++ if their relative distance or their absolute distance
     ++ is within tolerance bounds. Applied component-wise.
     jcf64 : JLFloat64 -> %
-    ++ jcf64(r) coerces the real part r.
+    ++ jcf64(r) coerces r as a JLComplexF64 with the real part r.
     jcf64 : (JLFloat64, JLFloat64) -> %
-    ++ jcf64(r,i) coerce real part r and imaginary part i
-    ++ to a JLComplexF64.
+    ++ jcf64(r,i) returns a JLComplexF64 with real part r and
+    ++ imaginary part i.
   Implementation ==> Complex(JLFloat64) add
     jlApprox?(x, y) : Boolean ==
       jl_bool_function_dbl_dbl("isapprox", real(x), real(y))$Lisp

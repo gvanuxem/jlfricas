@@ -276,8 +276,13 @@ JLObjBoolean() : Exports == Implementation where
 JLObjFloat32() : Exports == Implementation where
   Exports ==> Join(OrderedSet, JLObjectRing, Field) with
     "*" : (%, Integer) -> %
+    ++ x*i is the multiplication of x by an integer.
     "/" : (%, Integer) -> %
+    ++ x/i is the division of x by an integer.
     "/" : (Integer, %) -> %
+    ++ i/x is the division of an integer by x.
+    "^" : (%, Fraction(Integer)) -> %
+    ++ x^q is the exponentiation by a rational.
     jlApprox?: (%, %) -> Boolean
     ++ jlApprox?(x,y) computes inexact equality comparison
     ++ with default parameters.
@@ -307,10 +312,17 @@ JLObjFloat32() : Exports == Implementation where
     cispi : % -> JLObjComplexF32
     ++ cispi(x) returns cis(%pi*x) computed efficiently.
     convert : Float -> %
+    ++ convert(x) returns x as a JLObjFloat32 (truncate it).
     coerce : DoubleFloat -> %
+    ++ coerce(x) returns x as a JLObjFloat32 (truncate it).
+    ++ Convenience function.
     coerce : Float -> %
+    ++ coerce(x) returns x as a JLObjFloat32 (truncate it).
+    ++ Convenience function.
     jfloat32 : Float -> %
+    ++ jfloat32(x) returns x as a JLObjFloat32 (truncate it).
     jfloat32 : JLFloat32 -> %
+    ++ jfloat32(x) returns x as a JLObjFloat32 (truncate it).
     jfloat32 : String -> %
     ++ jfloat32(str) evaluates str in Julia and returns the
     ++ Julia Float32 object. For example:
@@ -341,6 +353,8 @@ JLObjFloat32() : Exports == Implementation where
       jlref(concat ["(",string(numer x), "//" , string(denom(x)) ")*", getind(y)])
     x : % * y : Fraction(Integer) ==
       jlref(concat [getind(x), "*(", string(numer(y)),"//", string(denom(y)), ")"])
+    x : % ^ y : Fraction(Integer) ==
+      jlref(concat [getind(x), "^(", string(numer(y)),"//", string(denom(y)), ")"])
     x : % / y : % == jbinfunc("/",x,y)
     x : % / i : Integer == jlref(concat [getind(x) , "/", string(i)])
     i : Integer / x : % == jlref(concat [string(i), "/", getind(x)])
@@ -389,8 +403,13 @@ JLObjFloat32() : Exports == Implementation where
 JLObjFloat64() : Exports == Implementation where
   Exports ==> Join(OrderedSet, JLObjectRing, Field) with
     "*" : (%, Integer) -> %
+    ++ x*i is the integer multiplication.
     "/" : (%, Integer) -> %
+    ++ x/i is the division by an integer.
     "/" : (Integer, %) -> %
+    ++ i/x is the division of an integer by x.
+    "^" : (%, Fraction(Integer)) -> %
+    ++ x^q is the exponentiation by a rational.
     jlApprox?: (%, %) -> Boolean
     ++ jlApprox?(x,y) computes inexact equality comparison
     ++ with default parameters.
@@ -424,10 +443,18 @@ JLObjFloat64() : Exports == Implementation where
     cispi : % -> JLObjComplexF64
     ++ cispi(x) returns cis(%pi*x) computed efficiently.
     convert : Float -> %
+    ++ convert(x) returns x as a JLObjFloat64 (truncate it).
     coerce : DoubleFloat -> %
+    ++ coerce(x) returns x as a JLObjFloat64.
     coerce : Float -> %
+    ++ coerce(x) returns x as a JLObjFloat64 (truncate it)
+    ++ Convenience function.
     jfloat64 : Float -> %
+    ++ jfloat64(x) returns x as a JLObjFloat64 (truncate it).
     jfloat64 : JLFloat64 -> %
+    ++ jfloat64(x) returns x as a JLObjFloat64 i.e. returns
+    ++ a 64 bits float in the memory area of Julia from
+    ++ the memory area of the underlying Common Lisp implementation.
     jfloat64 : String -> %
     ++ jfloat64(str) evaluates str in Julia and returns the
     ++ Julia Float64 object. For example:
@@ -458,6 +485,8 @@ JLObjFloat64() : Exports == Implementation where
       jlref(concat ["(",string(numer x), "//" , string(denom(x)) ")*", getind(y)])
     x : % * y : Fraction(Integer) ==
       jlref(concat [getind(x), "*(", string(numer(y)),"//", string(denom(y)), ")"])
+    x : % ^ y : Fraction(Integer) ==
+      jlref(concat [getind(x), "^(", string(numer(y)),"//", string(denom(y)), ")"])
     x : % / y : % == jbinfunc("/",x,y)
     x : % / i : Integer == jlref(concat [getind(x) , "/", string(i)])
     i : Integer / x : % == jlref(concat [string(i), "/", getind(x)])
@@ -506,8 +535,11 @@ JLObjFloat64() : Exports == Implementation where
 JLObjComplexF32() : Exports == Implementation where
   Exports ==> Join(JLObjectRing, Field) with
     "*" : (%, Integer) -> %
+    ++ x*i is the integer multiplication.
     "/" : (%, Integer) -> %
+    ++ x/i is the division by an integer.
     "/" : (Integer, %) -> %
+    ++ i/x is the division of an integer by x.
     jlApply : (String, %) -> %
     ++jlApply(func, x) applies the function func with x as parameter.
     jlApply : (String, %, %) -> %
@@ -568,8 +600,11 @@ JLObjComplexF32() : Exports == Implementation where
 JLObjComplexF64() : Exports == Implementation where
   Exports ==> Join(JLObjectRing, Field) with
     "*" : (%, Integer) -> %
+    ++ x*i is the multiplication by an integer.
     "/" : (%, Integer) -> %
+    ++ x/i is the division by an integer.
     "/" : (Integer, %) -> %
+    ++ i/x is the division of an integer by c
     jlApply : (String, %) -> %
     ++jlApply(func, x) applies the function func with x as parameter.
     jlApply : (String, %, %) -> %
@@ -632,7 +667,9 @@ JLObjInt64() : Exports == Implementation where
   Exports ==> Join(OrderedSet, JLObjectRing, CommutativeRing,
         EuclideanDomain, OrderedIntegralDomain) with
     jint64 : Integer -> %
+    ++ jint64(i) returns i as a JLObjInt64.
     jint64 : String -> %
+    ++ jint64(str) returns the Julia Int64 from the str command.
   Implementation ==> add
     import from JLUtilityFunctions
     import from String
@@ -661,8 +698,14 @@ JLObjInt64() : Exports == Implementation where
       ret : JLObjTuple := jbinfunc("divrem",a,b)
       [ret.1 pretend %, ret.2 pretend %]
     coerce(z : Integer) == jlref(string z)
-    jint64(z : Integer) == jlref(string z)
-    jint64(str : String) == jlref(str)
+    jint64(z : Integer) ==
+      a := jlref(string z)
+      jlType(a) = "Int64" => a
+      error "jint64: not a Julia Int64"
+    jint64(str : String) ==
+      a := jlref(str)
+      jlType(a) = "Int64" => a
+      error "jint64: not a Julia Int64"
 
 )abbrev domain JOBBINT JLObjBigInt
 ++ Convenience domain for Julia BigInt
@@ -994,14 +1037,28 @@ JLFloat() : Exports == Implementation where
     atan : (%, %) -> %
     ++ atan(x, y) computes the inverse tangent of x/y.
     "*"      : (%, Integer) -> %
+    ++ x*i is the multiplication by an integer.
     "/"      : (Integer, %) -> %
+    ++ i/x is the division of an integer by x.
     "^"      : (%, Fraction(Integer)) -> %
+    ++ x^q is the exponentiation by a Fraction(Integer).
     coerce   : JF64 -> %
+    ++ coerce(x) coerces x to a JLFloat.
+    ++ convenience function.
     coerce   : Float -> %
+    ++ coerce(x) coerces x to JLFLoat.
     jfloat   : String -> %
+    ++ jfloat(z) returns z as a JFLoat.
+    ++ For example where automatic coercions is also used:
+    ++ \example{sqrt(jfloat(2.0)^2+7.0^2+9.^2)}
     jfloat   : Integer -> %
+    ++ jfloat(z) returns z as a JFLoat.
+    ++ For example:
+    ++ \example{sqrt(jfloat(2)^2+7.0^2+9.^2)}
     jfloat   : Fraction(Integer) -> %
+    ++ jfloat(q) returns z as a JFLoat.
     jfloat   : Float -> %
+    ++ jfloat(x) returns x as a JFLoat.
   Implementation ==> add
     import from JLUtilityFunctions
     import from String
@@ -1247,13 +1304,22 @@ JLComplexFloat() : Exports == Implementation where
     atan : (%, %) -> %
     ++ atan(x, y) computes the inverse tangent of x/y.
     "*"      : (%, Integer) -> %
+    ++ c*i is the multiplication by an integer.
     "/"      : (Integer, %) -> %
+    ++ i/c is the division of and integer by c.
     "/"      : (%, Integer) -> %
+    ++ c/i is the division by an integer.
     coerce   : JF64 -> %
+    ++ coerce(r) coerces r to a JLComplexFloat.
     coerce   : Float -> %
+    ++ coerce(r) coerces to a JLComplexFloat.
     jcfloat   : Integer -> %
+    ++ jcfloat(z) returns z as a JLComplexFloat.
     jcfloat   : Fraction(Integer) -> %
+    ++ jcfloat(q) returns q as a JLComplexFloat.
     jcfloat   : Float -> %
+    ++ jcfloat(r) returns r as a JLComplexFloat.
+    -- TODO jcfloat(string) 
   Implementation ==> add
     import from JLUtilityFunctions
     import from String
@@ -1391,7 +1457,6 @@ JLComplexFloat() : Exports == Implementation where
     jcfloat(fi : Fraction(Integer)) == coerce(fi)
     jcfloat(x : Float) : % == coerce(x)
 
--- TODO: Interact.jl
 )abbrev domain JDFRAME JLDataFrame
 ++ Description: Julia DataFrames support
 ++ Author: G. Vanuxem
@@ -1488,14 +1553,14 @@ JLVector(R : JLObjectType) : Exports == Implementation where
         ++ urand01(n) returns a JLVector of size n with 
         ++ uniformly distributed random numbers contained in [0,1].
         nrand : (n : PI) -> JLVector(JLFloat)
-        ++ rand(n) returns a JLVector of size n with normally
+        ++ nrand(n) returns a JLVector of size n with normally
         ++ distributed random numbers.
       if R has Join(JLObjectRing, ComplexCategory(JLFloat)) then
         urand01 : (n : PI) -> JLVector(JLComplexFloat)
         ++ urand01(n) returns a JLVector of size n with 
         ++ uniformly distributed random numbers contained in [0,1].
         nrand : (n : PI) -> JLVector(JLComplexFloat)
-        ++ rand(n) returns a JLVector of size n with normally
+        ++ nrand(n) returns a JLVector of size n with normally
         ++ distributed random numbers.
     coerce  : JLFloat64Vector -> JLVector(JLObjFloat64)
     ++ coerce(x): convenience function.
@@ -1638,7 +1703,8 @@ JLVectorFunctions2(A, B) : Exports == Implementation where
 ++ Beware, for matrix with Nemo elements, contrary to Julia matrix,
 ++ Nemo follows the convention of the C libraries, it wraps and uses
 ++ row major representation.
-++ See https://nemocas.github.io/Nemo.jl/stable/developer/interfaces/#Column-major-vs-row-major-matrices
+++ See:
+++ https://nemocas.github.io/Nemo.jl/stable/developer/interfaces/#Column-major-vs-row-major-matrices
 ++ for more information.
 -- TODO: to be improved for partially implemented JLObjectType
 JLMatrix(R : JLObjectRing) :  Exports == Implementation where
@@ -1654,7 +1720,6 @@ JLMatrix(R : JLObjectRing) :  Exports == Implementation where
                 JLMatrixCategory(R, Row, Col)) with
     new : (NNI, NNI, R) -> %
     ++ new(m, n, x) creates a matrix of size m by n with all elements x.
-    matrix : JLObject -> %
     if R has NMRing and (R has IntegerNumberSystem or
         R has QuotientFieldCategory(NINT)) then
       radicalEigenvalues: % -> JLVector(NMAlgebraicNumber)

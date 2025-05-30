@@ -160,7 +160,7 @@ JLStringUtilities() : Exports == Implementation where
     ++ LaTeX expression, that is, "L"str"" if your Julia support it
     ++ (LaTeXStrings package). Convenience function.
     jlStyled  : String -> String
-    ++ jlLatex(str) returns the String corresponding to a Julia
+    ++ jlStyled(str) returns the String corresponding to a Julia
     ++ LaTeX expression, that is, "styled_"str_"" if your Julia support it.
     ++ (StyledStrings official package). Convenience function.
     jlString : String -> String

@@ -50,9 +50,9 @@ JLFloatSpecialFunctions() : Exports == Implementation where
     acscd : JF -> JF
     ++ acscd(x) computes the inverse cosecant of x, where output is in degrees.
     rad2Deg  : JF -> JF
-    ++ rad2deg(x) converts x to degrees, where x is in radians.
+    ++ rad2Deg(x) converts x to degrees, where x is in radians.
     deg2Rad  : JF -> JF
-    ++ deg2rad(x) converts x to radian, where x is in degrees.
+    ++ deg2Rad(x) converts x to radian, where x is in degrees.
 
   Implementation ==> add
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
