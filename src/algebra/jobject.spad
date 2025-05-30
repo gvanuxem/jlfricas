@@ -1833,6 +1833,8 @@ JLMatrix(R : JLObjectRing) :  Exports == Implementation where
         jlref(concat(["fill(", getind(a), ",(", 
           string(rows), ",", string(cols),"))"]))
 
+    symmetric?(m) == junfunc("issymmetric",m)
+
     minRowIndex x == 1
     minColIndex x == 1
     nrows(a : %) : NNI ==
@@ -1862,6 +1864,8 @@ JLMatrix(R : JLObjectRing) :  Exports == Implementation where
       r
 
     fill!(v, x) == jbinfunc("fill!", v, x)
+    vertConcat(m1,m2) == jbinfunc("vcat", m1, m2)
+    horizConcat(m1,m2) == jbinfunc("hcat", m1, m2)
   
     qnew(rows, cols) == new(rows, cols, 0$R)
     zero(m,n) == new(m, n, 0$R)
