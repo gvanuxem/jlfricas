@@ -1,0 +1,145 @@
+)abbrev package JWSUF JLWSUtilityFunctions
+++ Generic package for Julia WS based utilities
+++ Author: G.Vanuxem
+++ Date Created: July. 2024
+++ Description:
+++  Julia Wolfram Symbolic utility functions using
+++  the MathLink Julia package.
+++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
+JLWSUtilityFunctions() : Exports == Implementation where
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  Exports ==> with
+    seedRandom : JLWSInteger -> JLWSExpression
+    ++ seedRandom(n) reseeds the random number generator with n as seed.
+    ++ Returns the random generator state.
+    urand01Real : PositiveInteger -> JLWSVector(JLWSReal)
+    ++ urand01Real(n) returns a Julia WS vector with uniformly
+    ++ distributed random elements in the range 0..1. Convenience function.
+    urand01Real : (PositiveInteger, PositiveInteger) -> JLWSMatrix(JLWSReal)
+    ++ urand01Real(rows,cols) returns a Julia WS matrix with uniformly
+    ++ distributed random elements in the range 0..1. Convenience function.
+    urand01Complex : PositiveInteger -> JLWSVector(JLWSComplex)
+    ++ urand01Complex(n) returns a Julia WS vector with uniformly
+    ++ distributed random complex elements in the unit square.
+    ++ Convenience function.
+    urand01Complex : (PositiveInteger, PositiveInteger) ->
+      JLWSMatrix(JLWSComplex)
+    ++ urand01Complex(rows,cols) returns a Julia WS matrix with uniformly
+    ++ distributed random complex elements in the unit square.
+    ++ Convenience function.
+    hankelMatrix : PositiveInteger -> JLWSMatrix(JLWSInteger)
+    ++ hankelMatrix(n) returns the square Hankel matrix with integer
+    ++ coefficients.
+    hilbertMatrix : PositiveInteger -> JLWSMatrix(JLWSRational)
+    ++ hilbertMatrix(n) returns the square Hilbert matrix.
+    fourierMatrix : PositiveInteger -> JLWSMatrix(JLWSExpression)
+    ++ fourierMatrix(n) returns the n x n Fourier matrix.
+    gaussianMatrix : JLWSReal -> JLWSMatrix(JLWSReal)
+    ++ gaussianMatrix(r) returns the Gaussian matrix with radius r.
+    ++ For example:
+    ++ \example{gaussianMatrix "2.2"}
+    vandermondeMatrix : JLWSList(JLWSExpression) ->
+                          JLWSMatrix(JLWSExpression)
+    ++ vandermondeMatrix(lvars) returns a Vandermonde matrix with nodes
+    ++ from lvars.
+    vandermondeMatrix : (JLWSList(JLWSExpression), JLWSInteger)
+                          -> JLWSMatrix(JLWSExpression)
+    ++ vandermondeMatrix(lvars, m) returns a Vandermonde matrix with nodes
+    ++ from lvars and m columns.
+    identityMatrix : PositiveInteger ->  JLWSMatrix(JLWSInteger)
+    ++ identityMatrix(n) returns the identity matrix of size n.
+    zeroMatrix : (PositiveInteger, PositiveInteger) ->
+                    JLWSMatrix(JLWSInteger)
+    ++ \spad{zeroMatrix(m, n)} returns an m-by-n zero matrix.
+    range : JLWSInteger -> JLWSList(JLWSInteger)
+    ++ range(n) returns a WS agg that ranges from 1 to n.
+    ++ For example:
+    ++ \example{range(10)@JWSLIST(JWSINT)}
+    range : (JLWSInteger, JLWSInteger) -> JLWSList(JLWSInteger)
+    ++ range(n,m) returns a WS agg that ranges from n to m.
+    range : (JLWSInteger, JLWSInteger, JLWSInteger) ->
+                                                JLWSList(JLWSInteger)
+    ++ range(n,m,d) returns a WS agg that ranges from n to m with step d.
+  
+    jlWSExport : (String, JLWSExpression) -> JLWSExpression
+    ++ jlWSExport(file.ext, obj) exports the object obj to the file file.ext.
+    ++ The extension ext will determine the saved format. A WS expression for
+    ++ example can be exported in an image file, it will be saved in the WS
+    ++ 'StandardForm' whereas in FriCAS it is outputted in WS 'OutputForm':
+    ++ \example{x:=jWSExpr(x);jlWSExport("legendreP.png", legendreP(7, x))} 
+    --inputForm() -- jRule NumberMarks > False||True
+    --outputForm
+    --*Form
+    -- TODO: OutputForm?
+    jlWSExportString : (JLWSExpression, JLWSExpression)
+      -> JLWSExpression
+    ++ jlWSExportString(expr, jWSString(format)) returns the string
+    ++ representation of expr in the format form. Use toString or string
+    ++ to obtain the FriCAS String.
+    ++ For example:
+    ++ \example{jWSExpr \"Probability[x < 0, x \\[Distributed] NormalDistribution[]]\"}
+    ++ \example{jWSExpr \"Probability[x < 1, x \\[Distributed] NormalDistribution[]]\"}
+    ++ \example{string jlWSExportString(%,jWSString "TeX")}
+
+    jlWSPlot : (JLWSExpression, JLWSExpression) -> JLWSExpression
+    ++ jlWSPlot(expr, options) is the WS plot function. Since it should be run
+    ++ in a Wolfram notebook or any other supported graphical interfaces,
+    ++ the Wolfram Jupyter "plugin" for example, it is left to the user for
+    ++ testing purposes. The following uses the jlWSExport function:
+    ++ \example{x:=jWSExpr(x);opt:=jWSList [x,-5,5]}
+    ++ \example{jlWSExport("sin.png", jlWSPlot(sin(x),opt))}
+  Implementation ==> add
+    import JLWSInteger
+    import from JLWSList(JLWSInteger)
+  
+    junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
+    jbinfunc(func,a,b) ==>
+      jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
+    jterfunc(func,a,b,c) ==>
+      jlref(concat(["weval(", func, getind(a), ",",
+        getind(b), ",", getind(c)"))"]))
+    jquatfunc(func,a,b,c,d) ==>
+      jlref(concat(["weval(", func, getind(a), ",", getind(b), ",",
+        getind(c), ",", getind(d)"))"]))
+
+    seedRandom(n) == junfunc("W_"SeedRandom_"(", n)
+    jlWSExport(file, options) ==
+      savefile : JLWSExpression := coerce(concat(["_"", file, "_""]))
+      jbinfunc("W_"Export_"(", savefile, options)
+    jlWSExportString(expr, format) ==
+      jlEval(jbinfunc("W_"ExportString_"(", expr, format) pretend JLWSExpression)
+    jlWSPlot(expr, options) == jbinfunc("W_"Plot_"(", expr, options)
+
+    urand01Real(rows,cols) ==
+      range := jWSList("{0,1}")@JLWSList(JLWSInteger)
+      dims := jWSList([jWSInt(rows),jWSInt(cols)])@JLWSList(JLWSInteger)
+      jbinfunc("W_"RandomReal_"(", range, dims)
+    urand01Real(n) ==
+      range := jWSList("{0,1}")@JLWSList(JLWSInteger)
+      jbinfunc("W_"RandomReal_"(", range, jWSInt n)
+    urand01Complex(n) ==
+      range := jWSList("1+I")@JLWSList(JLWSInteger)
+      jbinfunc("W_"RandomComplex_"(", range, jWSInt n)
+    urand01Complex(rows,cols) ==
+      range := jWSList("1+I")@JLWSList(JLWSInteger)
+      dims := jWSList([jWSInt(rows),jWSInt(cols)])@JLWSList(JLWSInteger)
+      jbinfunc("W_"RandomComplex_"(", range, dims)
+
+    range(n) ==
+      junfunc("W_"Range_"(", n)
+    range(m,n) ==
+      jbinfunc("W_"Range_"(", m, n)
+    range(m,n,step) ==
+      jterfunc("W_"Range_"(", m, n, step)
+
+    hankelMatrix(n) == junfunc("W_"HankelMatrix_"(", jWSInt(n))
+    hilbertMatrix(n) == junfunc("W_"HilbertMatrix_"(", jWSInt(n))
+    fourierMatrix(n) == junfunc("W_"FourierMatrix_"(", jWSInt(n))
+    gaussianMatrix(r) == junfunc("W_"GaussianMatrix_"(", r)
+    vandermondeMatrix(lvars) == junfunc("W_"VandermondeMatrix_"(", lvars)
+    vandermondeMatrix(lvars, m) == jbinfunc("W_"VandermondeMatrix_"(", lvars, m)
+    identityMatrix(n) == junfunc("W_"IdentityMatrix_"(", jWSInt(n))
+    zeroMatrix(m,n) == 
+      jbinfunc("W_"ConstantArray_"(", 0$JLWSInteger,
+        jWSList([jWSInt(m), jWSInt(n)])@JLWSList(JLWSInteger))
+

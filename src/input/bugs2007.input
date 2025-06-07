@@ -1,6 +1,8 @@
 )set break resume
 )expose UnittestCount UnittestAux Unittest
 
+)unexpose NMComplexField NMExactCalciumField JLWSExpression
+
 testsuite "bugs2007"
 
 testcase "derivative of besselK (issue 355)"
