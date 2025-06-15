@@ -1778,6 +1778,9 @@ JLMatrix(R : JLObjectRing) :  Exports == Implementation where
     inverse : % -> %
     ++ inverse(m) returns inverse matrix. Throws a Julia error if m
     ++ is no invertible.
+    trace : % -> R
+    ++ trace(m) returns the trace of square matrix m.
+    ++ Julia error if m is not square.
     identity:    NNI -> %
     ++ identity(n) returns a n by n identity matrix.
     diagonalMatrix:   JLVector(R) -> %
@@ -1867,6 +1870,11 @@ JLMatrix(R : JLObjectRing) :  Exports == Implementation where
       jlEvalString(concat(["setindex!(", getind(m), ",", getind(r)
         ",", string(i), ",", string(j), ")"]))@Void
       r
+    row(m, i) ==
+      jlref(concat([getind(m),"[",string(i),",:]"]))$JLVector(R)
+    column(m,i) ==
+      jlref(concat([getind(m),"[:,",string(i),"]"]))$JLVector(R)
+    
 
     fill!(v, x) == jbinfunc("fill!", v, x)
     vertConcat(m1,m2) == jbinfunc("vcat", m1, m2)
@@ -1941,6 +1949,7 @@ JLMatrix(R : JLObjectRing) :  Exports == Implementation where
     else
       determinant(m) == jlref(concat(["det(", getind(m),")"]))$R
     minordet(m) == minordet(m)$MLAF
+    trace(m) == make_jlref_wcall1("tr", m)$Lisp
 
     identity(n) ==
         m := new(n,n, 0$R)

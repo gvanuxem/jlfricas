@@ -111,6 +111,8 @@ JLWSSymbol() : Exports == Implementation where
     ++ WTrue() returns the WS True symbol.
     WFalse    : () -> %
     ++ WFalse() returns the WS False symbol.
+    WFailure  : () -> %
+    ++ WFailure() returns the WS Failure symbol.
     WRule    : () -> %
     ++ WRule() returns the WS Rule symbol.
     WList    : () -> %
@@ -169,6 +171,7 @@ JLWSSymbol() : Exports == Implementation where
     WList()     == jlref("WSymbol(_"List_")")
     WString()   == jlref("WSymbol(_"String_")")
     WSymbol()   == jlref("WSymbol(_"Symbol_")")
+    WFailure()   == jlref("WSymbol(_"Failure_")")
     WMissing()   == jlref("WSymbol(_"Missing_")")
   
     coerce(bool : Boolean) ==
@@ -1126,7 +1129,7 @@ JLWSComplex() : Exports == Implementation where
     ++ jlApprox?(x,y) computes inexact equality comparison
     ++ with WS default parameters (Equal).
     exp     : () -> %
-    ++ exp() returns the JLWSAPReal ℯ (%e or exp(1)).
+    ++ exp() returns the JLWSAPJLWSComplexReal ℯ (%e or exp(1)).
     sinc    : % -> %
     ++ sinc(z) compues the unormalized sinc of z, sin(z)/z and 0 if z = 0.
     log2    : % -> %

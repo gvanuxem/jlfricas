@@ -21,6 +21,9 @@ JLUtilityFunctions() : Exports == Implementation where
     ++ jlUsing(modpack) loads the module or package modpack
     ++ and makes its exported names available.
     ++ Returns false if it can not be loaded.
+    jlDocumentation  : Symbol -> Void
+    ++ jlDocumentation(op) show the documentation of the
+    ++ operation op.
     jlImport     : String -> Boolean
     ++ jlImport(modpackfunc) imports the module, package or function
     ++ modpackfunc and makes its exported name(s) available.
@@ -73,7 +76,7 @@ JLUtilityFunctions() : Exports == Implementation where
     ++ where the output is a JLFloat64.
 
   Implementation ==> add
-    import from String
+    import from JLStringUtilities
 
     jlInitialize(true)
     
@@ -108,6 +111,31 @@ JLUtilityFunctions() : Exports == Implementation where
 
     jlRandomString(n) ==
       jl_string_eval_string(concat ["randstring(", string(n),")"])$Lisp
+
+    jlDocumentation(op) ==
+      ops := getDatabase("o")$OperationsQuery
+      docs := elt(ops,equation('name, string op)$QueryEquation)
+      -- dbComments(x)$Lisp
+      elts : DataList(String) := elt(docs,'doc)
+      origs : DataList(String) := elt(docs,'origin)
+      outl : List(OutputForm) := [newline()$Character::OutputForm]
+      for i in 1 .. #elts repeat
+        -- clean it up first
+        wdqstr := remove(char("_""),elts.i)
+        wdqstr :=
+          jlEvalString(concat["replace(raw_"", wdqstr,
+            "_", _"{}_" => _"_")"])@String
+        -- \spad.*[...]
+        outl := concat(outl,concat([jlEvalString(concat([ _
+          "replace(raw_"", wdqstr, "_", _"{}_" => _"_",", _
+          "_"\\spadfun{_" => _"_",", _
+          "_"\\spadtype{_" => _"_",", _
+          "_"\\spadignore{_" => _"_",", _
+          "_"\\spad{_" =>_"_"," _
+          "_"}_" =>_"_")"]))@String, _
+          " From: " , remove(char("_""), origs.i)]) pretend OutputForm)
+        concat!(outl, newline()$Character::OutputForm)
+      output(pile outl)$OutputPackage
 
     jlEvalString(s : STR)   : Void    == jl_eval_string(s)$Lisp
     jlEvalString(s : STR)   : Boolean == jl_bool_eval_string(s)$Lisp

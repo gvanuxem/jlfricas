@@ -157,8 +157,6 @@ JLInt64() : Exports == Implementation where
     max     : () -> %
     ++ max() returns the largest JLInt64 compatible with
     ++ the underlying Common Lisp implementation. 
-    string  : % -> String
-    ++ string(x) stringifies x.
     coerce  : SingleInteger -> %
     ++ coerce(x) coerces x.
     coerce  : % -> SingleInteger

@@ -51,17 +51,46 @@ JLWSUtilityFunctions() : Exports == Implementation where
     zeroMatrix : (PositiveInteger, PositiveInteger) ->
                     JLWSMatrix(JLWSInteger)
     ++ \spad{zeroMatrix(m, n)} returns an m-by-n zero matrix.
-    range : JLWSInteger -> JLWSList(JLWSInteger)
-    ++ range(n) returns a WS agg that ranges from 1 to n.
+    jlWSRange : JLWSInteger -> JLWSList(JLWSInteger)
+    ++ jlWSRange(n) returns a WS agg that ranges from 1 to n.
     ++ For example:
-    ++ \example{range(10)@JWSLIST(JWSINT)}
-    range : (JLWSInteger, JLWSInteger) -> JLWSList(JLWSInteger)
-    ++ range(n,m) returns a WS agg that ranges from n to m.
-    range : (JLWSInteger, JLWSInteger, JLWSInteger) ->
+    ++ \example{jlWSRange(10)@JWSLIST(JWSINT)}
+    jlWSRange : (JLWSInteger, JLWSInteger) -> JLWSList(JLWSInteger)
+    ++ jlWSRange(n,m) returns a WS agg that ranges from n to m.
+    jlWSRange : (JLWSInteger, JLWSInteger, JLWSInteger) ->
               JLWSList(JLWSInteger)
-    ++ range(n,m,d) returns a WS agg that ranges from n to m with step d.
-    jWSInformation : Symbol -> JLWSExpression
+    ++ jlWSRange(n,m,d) returns a WS agg that ranges from n to m with step d.
+    jWSDateObject : () -> JLWSExpression
+    ++ jWSDateObject() returns the JLWSExpression object of the
+    ++ local date and time.
+    jWSDateObject : JLWSExpression -> JLWSExpression
+    ++ jWSDateObject(expr) returns the JLWSExpression object of
+    ++ the date from expr.
+    jWSDateObject : (JLWSExpression, JLWSExpression) -> JLWSExpression
+    ++ jWSDateObject(date,type) returns the JLWSExpression object of
+    ++ the date and type, for example "Month".
+    jlWSDateString : () -> JLWSExpression
+    ++ dateString() returns the JLWSExpression string of the local date and time.
+    ++ For example:
+    ++ \example{toString dateTime()}
+    jlWSDateString : JLWSExpression -> JLWSExpression
+    ++ jlWSDateString(expr) returns the JLWSExpression string of the date
+    ++ from a WS date object.
+    ++ For example:
+    ++ \example{jlWSDateString jWSExpr "Tomorrow"}
+    jlWSDateString : (JLWSExpression, JLWSExpression) -> JLWSExpression
+    ++ jlWSDateString(expr, form) returns JLWSExpression string of the date
+    ++ from a WS date object with WS format form.
+    ++ Fo example:
+    ++ \example{jlWSDateString(jWSExpr("Now"), jWSExpr("Entity[_"Language_", _"French::367gk_"]"))}
+    jlWSInformation : Symbol -> JLWSExpression
     ++ jWSInformation(sym) prints informations about the symbol sym.
+    ++ For example:
+    ++ \example{jWSInformation sin}
+    jlWSImport : String -> JLWSExpression
+    ++ jWSImport(expr) imports expr.
+    jlWSImport : (String, JLWSExpression) -> JLWSExpression
+    ++ jWSImport(expr, form) imports expr with format form.
     jlWSExport : (String, JLWSExpression) -> JLWSExpression
     ++ jlWSExport(file.ext, obj) exports the object obj to the file file.ext.
     ++ The extension ext will determine the saved format. A WS expression for
@@ -104,6 +133,17 @@ JLWSUtilityFunctions() : Exports == Implementation where
         getind(c), ",", getind(d)"))"]))
 
     seedRandom(n) == junfunc("W_"SeedRandom_"(", n)
+
+    jWSDateObject() == jWSExpr "DateObject[]"
+    jWSDateObject(expr) == junfunc("W_"DateObject_"(", expr)
+    jWSDateObject(expr, type) == jbinfunc("W_"DateObject_"(", expr, type)
+    jlWSDateString() == jWSExpr "DateString[]"
+    jlWSDateString(expr) == junfunc("W_"DateString_"(", expr)
+    jlWSDateString(expr, form) == jbinfunc("W_"DateString_"(", expr, form)
+
+    jlWSImport(file) == junfunc("W_"Import_"(", jWSString file)
+    jlWSImport(file, options) ==
+      jbinfunc("W_"Import_"(", jWSString(file), options)
     jlWSExport(file, options) ==
       savefile : JLWSExpression := coerce(concat(["_"", file, "_""]))
       jbinfunc("W_"Export_"(", savefile, options)
@@ -126,11 +166,11 @@ JLWSUtilityFunctions() : Exports == Implementation where
       dims := jWSList([jWSInt(rows),jWSInt(cols)])@JLWSList(JLWSInteger)
       jbinfunc("W_"RandomComplex_"(", range, dims)
 
-    range(n) ==
+    jlWSRange(n) ==
       junfunc("W_"Range_"(", n)
-    range(m,n) ==
+    jlWSRange(m,n) ==
       jbinfunc("W_"Range_"(", m, n)
-    range(m,n,step) ==
+    jlWSRange(m,n,step) ==
       jterfunc("W_"Range_"(", m, n, step)
 
     hankelMatrix(n) == junfunc("W_"HankelMatrix_"(", jWSInt(n))
@@ -143,8 +183,8 @@ JLWSUtilityFunctions() : Exports == Implementation where
     zeroMatrix(m,n) == 
       jbinfunc("W_"ConstantArray_"(", 0$JLWSInteger,
         jWSList([jWSInt(m), jWSInt(n)])@JLWSList(JLWSInteger))
-    jWSInformation(sym) ==
+    jlWSInformation(sym) ==
       str : String := string(sym)
-      str.1 := upperCase(str.1)
+      setelt!(str,1, upperCase str.1)
       jWSExpr(concat ["Information[", str,"]"])$JLWSExpression
 

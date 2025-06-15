@@ -56,7 +56,7 @@ JLF64LinearAlgebra() : Exports == Implementation where
     ++ possibly with more accuracy and avoding nder/overflow.
     svd:    JF64MAT -> Record(U:JF64MAT, sv:JF64VEC, Vt:JF64MAT)
     ++ svd(m) computes the singular value decomposition SVD of m
-    ++ such that SVD.U * diagonalMatrix(sv) * SVD.Vt = m.
+    ++ such that SVD.U * diagonalMatrix(SVD.sv) * SVD.Vt = m.
     svd!:   JF64MAT -> Record(U:JF64MAT, sv:JF64VEC, Vt:JF64MAT)
     ++ svd!(m) is the same as svd(m) but overwites a to save
     ++ memory space.
@@ -107,11 +107,14 @@ JLF64LinearAlgebra() : Exports == Implementation where
                 L:JF64MAT, U:JF64MAT, ipiv:JI64VEC)
     ++ lu(m) computes the LU factorisation of m.
     lu!     : JF64MAT -> Record(LU:JF64MAT, ipiv:JI64VEC)
-    ++ lu!(m) computes the LU factorisation of m in m.
+    ++ lu!(m) computes in-place LU factorisation of m in m.
+    ++ m isoverwritten by its decomposition.
     luReorder : (JF64MAT, JI64VEC) -> JF64MAT
-    ++ luReorder(mat, ipiv) returns a copy of mat reordered with ipiv pivot indices.
+    ++ luReorder(mat, ipiv) returns a copy of mat reordered
+    ++ using the ipiv pivot indices.
     luReorder! : (JF64MAT, JI64VEC) -> JF64MAT
-    ++ luReorder!(mat, ipiv) returns mat in-place reordered with ipiv pivot indices.
+    ++ luReorder!(mat, ipiv) returns mat reordered
+    ++ in-place using the ipiv pivot indices.
     mpInverse : JF64MAT -> JF64MAT
     ++ mpInverse(m) returns the Moore-Penrose pseudo inverse of m.
     sqrt:   JF64MAT -> JCF64MAT
@@ -449,7 +452,7 @@ JLCF64LinearAlgebra() : Exports == Implementation where
     ++ B with matrix X and returns X.
     svd:    JCF64MAT -> Record(U:JCF64MAT, sv:JF64VEC, Vt:JCF64MAT)
     ++ svd(m) computes the singular value decomposition SVD of m
-    ++ such that SVD.U * diagonalMatrix(sv) * SVD.Vt = m.
+    ++ such that SVD.U * diagonalMatrix(SVD.sv) * SVD.Vt = m.
     svd!:   JCF64MAT -> Record(U:JCF64MAT, sv:JF64VEC, Vt:JCF64MAT)
     ++ svd!(m) is the same as svd(m) but overwites a to save
     ++ memory space.

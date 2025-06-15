@@ -906,32 +906,9 @@ JLWSExpression() : Exports == Implementation where
     expToTrig : % -> %
     ++ expToTrig(expr) returns expr with exponentials converted to
     ++ (hyperbolic) trigonometric functions.
-    jWSDateObject : () -> %
-    ++ jWSDateObject() returns the JLWSExpression object of the
-    ++ local date and time.
-    jWSDateObject : % -> %
-    ++ jWSDateObject(expr) returns the JLWSExpression object of
-    ++ the date from expr.
-    jWSDateObject : (%, %) -> %
-    ++ jWSDateObject(date,type) returns the JLWSExpression object of
-    ++ the date and type, for example "Month".
     toString : (%, %) -> String
     ++ toString(expr, form) returns the string representation of expr
     ++ with WS language format form.
-    dateString : () -> %
-    ++ dateString() returns the JLWSExpression string of the local date and time.
-    ++ For example:
-    ++ \example{toString dateTime()}
-    dateString : % -> %
-    ++ dateString(expr) returns the JLWSExpression string of the date
-    ++ from a WS date object.
-    ++ For example:
-    ++ \example{dateString jWSExpr "Tomorrow"}
-    dateString : (%, %) -> %
-    ++ dateString(expr, form) returns JLWSExpression string of the date
-    ++ from a WS date object with WS format form.
-    ++ Fo example:
-    ++ \example{dateString(jWSExpr("Now"), jWSExpr("Entity[_"Language_", _"French::367gk_"]"))}
     toExpression : String -> %
     ++ toExpression(expr) converts expr to a WS expression and evaluates it.
     toExpression : (String, %) -> %
@@ -1177,7 +1154,7 @@ JLWSExpression() : Exports == Implementation where
     ++ For example:
     ++ \example{jWSExpr "Factorial[5]"}
     ++ \example{jWSExpr "3.14159"}
-    ++ \example{dateString(jWSExpr "Today")}
+    ++ \example{jlWSDateString(jWSExpr "Tomorrow")}
   Implementation ==> JLObject add
     import from JLUtilityFunctions
     import from JLStringUtilities
@@ -1843,7 +1820,11 @@ JLWSExpression() : Exports == Implementation where
     jlEval(expr, param1, param2, param3) ==
       jlref(concat(["weval(", getind(expr), ",",
         param1 ",", param2, ",", param3, ")"]))
-
+    
+    eval(expr : %, param : Equation(%)) ==
+      parm := first(lines formatExpression(param::OutputForm)$Format1D)
+      jlref(concat(["weval(", getind(expr), ",", parm, ")"]))
+    
     length(expr) == junfunc("W_"Length_"(", expr)
     extract(expr, i) == jbinfunc("W_"Extract_"(", expr, jWSExpr(string(i)))
     level(expr, level) == jbinfunc("W_"Level_"(", expr, level)
@@ -1879,9 +1860,6 @@ JLWSExpression() : Exports == Implementation where
     jlWSSetOptions(arg1, arg2) == jbinfunc("W_"SetOptions_"(", arg1, arg2)
     jlDisplay(expr) == junfunc("W_"Format_"(", expr)
     jlDisplay(expr, form) == jbinfunc("W_"Format_"(", expr, form)
-    jWSDateObject() == jWSExpr "DateObject[]"
-    jWSDateObject(expr) == junfunc("W_"DateObject_"(", expr)
-    jWSDateObject(expr, type) == jbinfunc("W_"DateObject_"(", expr, type)
     jWSData() == jWSExpr "WolframLanguageData[]"
     jWSData(ents : String) ==
       junfunc("W_"WolframLanguageData_"(", jWSString(ents))
@@ -1919,9 +1897,6 @@ JLWSExpression() : Exports == Implementation where
     jWSExpr(str : String) : % == jlref(concat(["weval(W_`", str, "_`)"]))
     jWSExpr(l : List(%)) : % == coerce(l)
     toString(expr, form) == string jbinfunc("W_"ToString_"(", expr, form)
-    dateString() == jWSExpr "DateString[]"
-    dateString(expr) == junfunc("W_"DateString_"(", expr)
-    dateString(expr, form) == jbinfunc("W_"DateString_"(", expr, form)
     toExpression(expr) == junfunc("W_"ToExpression_"(", jWSString expr)
     toExpression(expr, form) == jbinfunc("W_"ToExpression_"(", jWSString(expr), form)
     toExpression(expr, form, h) == jterfunc("W_"ToExpression_"(", jWSString(expr), form, h)

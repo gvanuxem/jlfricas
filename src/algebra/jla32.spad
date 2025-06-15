@@ -56,7 +56,7 @@ JLF32LinearAlgebra() : Exports == Implementation where
     ++ possibly with more accuracy and avoding nder/overflow.
     svd:    JF32MAT -> Record(U:JF32MAT, sv:JF32VEC, Vt:JF32MAT)
     ++ svd(m) computes the singular value decomposition SVD of m
-    ++ such that SVD.U * diagonalMatrix(sv) * SVD.Vt = m.
+    ++ such that SVD.U * diagonalMatrix(SVD.sv) * SVD.Vt = m.
     svd!:   JF32MAT -> Record(U:JF32MAT, sv:JF32VEC, Vt:JF32MAT)
     ++ svd!(m) is the same as svd(m) but overwites a to save
     ++ memory space.
@@ -107,12 +107,14 @@ JLF32LinearAlgebra() : Exports == Implementation where
                 L:JF32MAT, U:JF32MAT, ipiv:JI64VEC)
     ++ lu(m) computes the LU factorisation of m.
     lu!     : JF32MAT -> Record(LU:JF32MAT, ipiv:JI64VEC)
-    ++ lu!(m) computes the LU factorisation of m in m.
+    ++ lu!(m) computes in-place the LU factorisation of m in m.
+    ++ m isoverwritten by its decomposition.
     luReorder : (JF32MAT, JI64VEC) -> JF32MAT
     ++ luReorder(mat, ipiv) returns a copy of mat reordered
-    ++ with ipiv pivot indices.
+    ++ using the ipiv pivot indices.
     luReorder! : (JF32MAT, JI64VEC) -> JF32MAT
-    ++ luReorder!(mat, ipiv) returns mat in-place reordered with ipiv pivot indices.
+    ++ luReorder!(mat, ipiv) returns mat reordered
+    ++ in-place using the ipiv pivot indices.
     mpInverse : JF32MAT -> JF32MAT
     ++ mpInverse(m) returns the Moore-Penrose pseudo inverse of m.
     sqrt:   JF32MAT -> JCF32MAT
@@ -445,7 +447,7 @@ JLCF32LinearAlgebra() : Exports == Implementation where
     ++ B with matrix X and returns X.
     svd:    JCF32MAT -> Record(U:JCF32MAT, sv:JF32VEC, Vt:JCF32MAT)
     ++ svd(m) computes the singular value decomposition SVD of m
-    ++ such that SVD.U * diagonalMatrix(sv) * SVD.Vt = m.
+    ++ such that SVD.U * diagonalMatrix(SVD.sv) * SVD.Vt = m.
     svd!:   JCF32MAT -> Record(U:JCF32MAT, sv:JF32VEC, Vt:JCF32MAT)
     ++ svd!(m) is the same as svd(m) but overwites a to save
     ++ memory space.
