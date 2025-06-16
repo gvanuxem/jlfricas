@@ -129,12 +129,14 @@ JLUtilityFunctions() : Exports == Implementation where
         outl := concat(outl,concat([jlEvalString(concat([ _
           "replace(raw_"", wdqstr, "_", _"{}_" => _"_",", _
           "_"\\spadfun{_" => _"_",", _
+          "_"\\spadfunFrom{_" => _"_",", _
           "_"\\spadtype{_" => _"_",", _
           "_"\\spadignore{_" => _"_",", _
           "_"\\spad{_" =>_"_"," _
+          "_"{_" =>_"\$_",", _
           "_"}_" =>_"_")"]))@String, _
           " From: " , remove(char("_""), origs.i)]) pretend OutputForm)
-        concat!(outl, newline()$Character::OutputForm)
+        --concat!(outl, newline()$Character::OutputForm)
       output(pile outl)$OutputPackage
 
     jlEvalString(s : STR)   : Void    == jl_eval_string(s)$Lisp
