@@ -1,3 +1,20 @@
+2025-06-16  Waldek Hebisch  <cas@fricas.org>
+
+	* src/algebra/padecf.spad: New file, add
+	package for converting Taylor series to
+	continuous C-fractions
+
+2025-06-15  Waldek Hebisch  <cas@fricas.org>
+
+	* src/algebra/sttaylor.spad: Generalize Taylor series
+	operations
+	src/algebra/Makefile.in: Adjust
+
+2025-06-14  Waldek Hebisch  <cas@fricas.org>
+	    Gregory Vanuxem  <g.vanuxem@gmail.com>
+
+	* src/interp/i-resolv.boot: Avoid strange types
+
 2025-06-11  Waldek Hebisch  <cas@fricas.org>
 
 	* src/interp/br-op1.boot, src/interp/br-search.boot,
