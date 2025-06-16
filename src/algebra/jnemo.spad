@@ -18,19 +18,23 @@ NMType() : Category == JLObjectType
 ++  Parent category of Nemo ring domains.
 NMRing() : Category == Join(NMType, JLObjectRing) with
       exact? : % -> Boolean 
-      ++ exact?(x) heck wheter or not x is exact.
+      ++ exact?(x) check whether or not x is exact.
       unit? : % -> Boolean 
       ++ unit?(x) checks whther or not x is a unit, i.e. invertible.
       equal? : (% , %) -> Boolean
-      ++ 
+      ++ equal?(x,y) checks whether or not x and y ar equal.
       characteristic : % -> NonNegativeInteger
-      ++ characteristic
+      ++ characteristic(x) returns the characteristic of
+      ++ the base ring of x.
       inverse : % -> % 
-      ++ inverse 
+      ++ inverse(x) returns the inverse of x.
       exactDivide : (%, %) -> %
-      ++
+      ++ exactDivide(x,y) returns the exact division
+      ++ of x by y. Throws a Julia error if it is no
+      ++ an exact division.
       divide : (%, %) -> Record(quotient : %, remainder : %)
-      ++
+      ++ divide(x,y) returns a record containing both remainder
+      ++ and quotient.
       jlNMRing : () -> String
       ++ jlNMRing(x) returns the FriCAS Nemo ring type
       ++  of x used in Julia.

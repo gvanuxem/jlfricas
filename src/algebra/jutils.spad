@@ -23,7 +23,7 @@ JLUtilityFunctions() : Exports == Implementation where
     ++ Returns false if it can not be loaded.
     jlDocumentation  : Symbol -> Void
     ++ jlDocumentation(op) show the documentation of the
-    ++ operation op.
+    ++ operation op. Trivial implementation.
     jlImport     : String -> Boolean
     ++ jlImport(modpackfunc) imports the module, package or function
     ++ modpackfunc and makes its exported name(s) available.
@@ -114,30 +114,40 @@ JLUtilityFunctions() : Exports == Implementation where
 
     jlDocumentation(op) ==
       ops := getDatabase("o")$OperationsQuery
-      docs := elt(ops,equation('name, string op)$QueryEquation)
-      -- dbComments(x)$Lisp
-      elts : DataList(String) := elt(docs,'doc)
-      origs : DataList(String) := elt(docs,'origin)
-      outl : List(OutputForm) := [newline()$Character::OutputForm]
-      for i in 1 .. #elts repeat
+      req := elt(ops,equation('name, string op)$QueryEquation)
+      -- See alql.spad
+      docs : DataList(String) := elt(req,'doc)
+      origs : DataList(String) := elt(req,'origin)
+      types : DataList(String) := elt(req, 'type)
+      outl : List(String) := []
+      for i in 1 .. #docs repeat
+        -- PRINC(docs.i::OutputForm)$Lisp
         -- clean it up first
-        wdqstr := remove(char("_""),elts.i)
+        wdqstr := remove(char("_""),docs.i)
         wdqstr :=
           jlEvalString(concat["replace(raw_"", wdqstr,
             "_", _"{}_" => _"_")"])@String
-        -- \spad.*[...]
-        outl := concat(outl,concat([jlEvalString(concat([ _
+        outl := concat(outl,jlEvalString(concat[ _
           "replace(raw_"", wdqstr, "_", _"{}_" => _"_",", _
+          "_" {\\em_" => _"_",", _
+          "_" {\\it_" => _"_",", _
           "_"\\spadfun{_" => _"_",", _
+          "_"\\spadop{_" => _"_",", _
           "_"\\spadfunFrom{_" => _"_",", _
           "_"\\spadtype{_" => _"_",", _
           "_"\\spadignore{_" => _"_",", _
           "_"\\spad{_" =>_"_"," _
           "_"{_" =>_"\$_",", _
-          "_"}_" =>_"_")"]))@String, _
-          " From: " , remove(char("_""), origs.i)]) pretend OutputForm)
-        --concat!(outl, newline()$Character::OutputForm)
-      output(pile outl)$OutputPackage
+          "_"}_" =>_"_")"])@String)
+        outl := concat(outl,
+          [" Signature: ", remove(char("_""), types.i)])
+        outl := concat(outl,
+          [" From: ", remove(char("_""), origs.i)])
+        concat!(outl, newline()$Character::String)
+      --output("")$OutputPackage
+      --output("Output:")$OutputPackage
+      --output("")$OutputPackage
+      output(pile(outl pretend List(OutputForm)))$OutputPackage
 
     jlEvalString(s : STR)   : Void    == jl_eval_string(s)$Lisp
     jlEvalString(s : STR)   : Boolean == jl_bool_eval_string(s)$Lisp

@@ -685,10 +685,6 @@ JLWSReal() : Exports == Implementation where
       error "jWSReal: Not a machine number"
     coerce(f : JLFloat64) == jlref(concat(["WReal(_"", toString(f), "_")"]))
     coerce(f : DoubleFloat) == jlref(concat(["WReal(_"", toString(f), "_")"]))
-    coerce(f : Float) ==
-      x:=jlref(concat(["WReal(_"", toString(f,digits()$Float), "_")"]))
-      machineNumber?(x pretend JLWSExpression) => x
-      error "jWSReal: Not a machine number"
     coerce(f : JLFloat) ==
       x := jlref(concat(["WReal(_"", string(f), "_")"]))
       machineNumber?(x pretend JLWSExpression) => x

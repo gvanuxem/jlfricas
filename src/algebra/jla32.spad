@@ -107,7 +107,7 @@ JLF32LinearAlgebra() : Exports == Implementation where
                 L:JF32MAT, U:JF32MAT, ipiv:JI64VEC)
     ++ lu(m) computes the LU factorisation of m.
     lu!     : JF32MAT -> Record(LU:JF32MAT, ipiv:JI64VEC)
-    ++ lu!(m) computes in-place the LU factorisation of m in m.
+    ++ lu!(m) computes in-place the LU factorisation of m.
     ++ m isoverwritten by its decomposition.
     luReorder : (JF32MAT, JI64VEC) -> JF32MAT
     ++ luReorder(mat, ipiv) returns a copy of mat reordered
