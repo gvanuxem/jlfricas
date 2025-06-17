@@ -21,13 +21,12 @@ JLUtilityFunctions() : Exports == Implementation where
     ++ jlUsing(modpack) loads the module or package modpack
     ++ and makes its exported names available.
     ++ Returns false if it can not be loaded.
-    jlDocumentation  : Symbol -> Void
-    ++ jlDocumentation(op) show the documentation of the
-    ++ operation op. Trivial implementation.
     jlImport     : String -> Boolean
     ++ jlImport(modpackfunc) imports the module, package or function
     ++ modpackfunc and makes its exported name(s) available.
     ++ Returns false if it can not be imported.
+    jlAddPackage  : String -> Void
+    ++ jlAddPackage(package) add package to Julia.
     jlInclude    : String -> Boolean
     ++ jlInclude(file.jl) loads and evaluates the content of the Julia
     ++ file file.jl in the current global scope.
@@ -37,17 +36,14 @@ JLUtilityFunctions() : Exports == Implementation where
     ++ jlDefined?(sym) checks whether or not sym is defined in Julia.
     jlDefined?    : String -> Boolean
     ++ jlDefined?(str) checks whether or not str is defined in Julia.
-
-    jlAddPackage  : String -> Void
-    ++ jlAddPackage(package) add package to Julia project.
-
+    jlDocumentation  : Symbol -> Void
+    ++ jlDocumentation(op) show the documentation of the
+    ++ operation op. Trivial implementation.
     jlSeed! : JLInt64 -> Void
     ++ jlSeed!(n) reseeds the Julia random number generator,
     ++ if applicable.
-
     jlRandomString : PI -> String
     ++ jlRandomString(n) returns a random string of n characters.
-
     jlEvalString   : STR -> Void
     ++ jlEvalString(str) evaluates str in Julia with no output.
     jlEvalString   : STR -> Boolean
@@ -121,7 +117,6 @@ JLUtilityFunctions() : Exports == Implementation where
       types : DataList(String) := elt(req, 'type)
       outl : List(String) := []
       for i in 1 .. #docs repeat
-        -- PRINC(docs.i::OutputForm)$Lisp
         -- clean it up first
         wdqstr := remove(char("_""),docs.i)
         wdqstr :=
@@ -144,9 +139,6 @@ JLUtilityFunctions() : Exports == Implementation where
         outl := concat(outl,
           [" From: ", remove(char("_""), origs.i)])
         concat!(outl, newline()$Character::String)
-      --output("")$OutputPackage
-      --output("Output:")$OutputPackage
-      --output("")$OutputPackage
       output(pile(outl pretend List(OutputForm)))$OutputPackage
 
     jlEvalString(s : STR)   : Void    == jl_eval_string(s)$Lisp

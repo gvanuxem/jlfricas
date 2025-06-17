@@ -51,18 +51,19 @@ JLObjectType() : Category == JLType() with
     jlAbout : % -> Void
     ++ jlAbout(obj) displays Julia informations about obj
     ++ if you have About.jl installed in Julia.
-    ++ In the Julia interpreter enter in the package management mode
-    ++ with ']' and issue:
+    ++ In the Julia interpreter, enter in the package management mode
+    ++ with ']', and issue:
     ++ pkg> add "https://github.com/tecosaur/About.jl"
     jlObject : () -> String
     ++ jlObject() returns the internal Julia name of the Julia module used.
+    ++ For example:
+    ++ \example{jlObject()$NMUnivariatePolynomial(NINT,'x)}
     coerce  : % -> JLObject
     ++ coerce(obj) coerce obj to JLObject.
     ++ Convenience function.
   add
     import from JLUtilityFunctions
     import from JLSymbol
-    import from String
 
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)),")"])
     junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
@@ -173,7 +174,7 @@ JLObjectRing() : Category == Join(JLObjectType, JLRing) with
     ++ i*x is the integer multiplication.
   add
     import JLUtilityFunctions
-    import from String
+
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
     junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
@@ -227,7 +228,6 @@ JLObject() : Exports == Implementation where
     ++ during parsing/evalution.
   Implementation ==> add
     import from JLUtilityFunctions
-    import from String
 
     jlInitialize(true)
     Rep := SExpression
@@ -330,7 +330,6 @@ JLObjFloat32() : Exports == Implementation where
     ++\example{jfloat32("0.7")}
   Implementation ==> add
     import from JLUtilityFunctions
-    import from String
 
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
@@ -462,7 +461,6 @@ JLObjFloat64() : Exports == Implementation where
     ++\example{jfloat64("0.7")}
   Implementation ==> add
     import from JLUtilityFunctions
-    import from String
 
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
@@ -558,7 +556,6 @@ JLObjComplexF32() : Exports == Implementation where
     ++ \example{jcfloat32 "cos(2pi)im"}
   Implementation ==> add
     import from JLUtilityFunctions
-    import from String
 
     jlInitialize(true)
     Rep := SExpression
@@ -623,7 +620,6 @@ JLObjComplexF64() : Exports == Implementation where
     ++ \example{jcfloat64 "cos(2pi)im"}
   Implementation ==> add
     import from JLUtilityFunctions
-    import from String
 
     jlInitialize(true)
     Rep := SExpression
@@ -672,7 +668,6 @@ JLObjInt64() : Exports == Implementation where
     ++ jint64(str) returns the Julia Int64 from the str command.
   Implementation ==> add
     import from JLUtilityFunctions
-    import from String
 
     jlInitialize(true)
     Rep := SExpression
@@ -743,7 +738,6 @@ JLObjBigInt() : Exports == Implementation where
     ++ \example{jbigint "BigInt(1234567890)"}
   Implementation == add
     import from JLUtilityFunctions
-    import from String
 
     jlInitialize(true)
     Rep := SExpression
@@ -810,6 +804,8 @@ JLObjPair(F : JLObjectType, L : JLObjectType)
     jpair : String -> %
     ++ jpair(str) returns a Julia Pair
     ++ from the evaluation of the Julia command str.
+    ++ For example:
+    ++ \example{}
   Implementation ==> add
     import from JLUtilityFunctions
     import from JLStringUtilities
@@ -841,6 +837,7 @@ JLObjTuple() : Exports == Implementation where
   Implementation ==> add
     import from JLUtilityFunctions
     import from JLStringUtilities
+    import from String
 
     jlInitialize(true)
     Rep := SExpression
@@ -889,6 +886,8 @@ JLObjDict() : Exports == Implementation where
     ++ the  key of dict.
     jdict : String -> %
     ++ jdict(str) returns a Julia Dict from the Julia command str.
+    ++ For example:
+    ++ \example{jdict("Dict([(_"A_", 1), (_"B_", 2)])")."B"}
   Implementation ==> add
     import from JLUtilityFunctions
     import from String
@@ -1061,7 +1060,6 @@ JLFloat() : Exports == Implementation where
     ++ jfloat(x) returns x as a JFLoat.
   Implementation ==> add
     import from JLUtilityFunctions
-    import from String
     import from NMInteger
     import from NMFraction(NMInteger)
 
@@ -1322,7 +1320,6 @@ JLComplexFloat() : Exports == Implementation where
     -- TODO jcfloat(string) 
   Implementation ==> add
     import from JLUtilityFunctions
-    import from String
     import from NMInteger
     import from NMFraction(NMInteger)
 
@@ -1496,9 +1493,8 @@ JLDataFrame() : Exports == Implementation where
     ++ ls.
   Implementation ==> add
     import from JLUtilityFunctions
-    import from String
 
-    not jlUsing "DataFrames,Statistics" =>
+    not jlUsing "DataFrames, Statistics" =>
       error "JLDataFrame: DataFrames is not installed in Julia"
     -- jlEvalString("macro dfa(obj) DataFrame(eval(Meta.parse(obj)),:auto) end")@Void
   
@@ -1571,7 +1567,6 @@ JLVector(R : JLObjectType) : Exports == Implementation where
     ++ No checks are done at the FriCAS level.
   Implementation ==> Vector(R) add
     import from JLUtilityFunctions
-    import from String
 
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
@@ -1816,7 +1811,6 @@ JLMatrix(R : JLObjectRing) :  Exports == Implementation where
     ++ No checks are done at the FriCAS level.
   Implementation ==> add --Matrix(R) add
     import from JLUtilityFunctions
-    import from String
 
     jlInitialize(true)
     op_of_Ring : Symbol := CAR(devaluate(R)$Lisp)$Lisp
