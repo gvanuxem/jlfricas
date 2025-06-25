@@ -112,8 +112,8 @@ NMExtendedPadicInteger(p : Integer, prec : Integer) :
     import from JLUtilityFunctions
     import from String
 
-    jlImport "AbstractAlgebra.Generic.prime"
-    jlImport "AbstractAlgebra.O"
+    jlImport "Nemo.Generic.prime"
+    jlImport "Nemo.O"
 
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
@@ -328,8 +328,8 @@ NMExtendedPadicRational(p,deg,prec) : Exports == Implementation where
     import from JLUtilityFunctions
     import from String
   
-    jlImport "AbstractAlgebra.Generic.prime"
-    jlImport "AbstractAlgebra.O"
+    jlImport "Nemo.Generic.prime"
+    jlImport "Nemo.O"
   
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp

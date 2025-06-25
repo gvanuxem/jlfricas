@@ -2451,8 +2451,7 @@ void jl_init_env(void){
     // TODO: use 'import' instead of 'using' and module call them
     jl_eval_str("using Random, LinearAlgebra, SpecialFunctions, Suppressor");
     jl_eval_string("import REPL; import InteractiveUtils.run");
-    jl_eval_str("cgM0yG8bklq9FmsK=[1.0 2;3 3];evET3JUgH1R2h9yC=similar(cgM0yG8bklq9FmsK);mul!(evET3JUgH1R2h9yC,cgM0yG8bklq9FmsK,cgM0yG8bklq9FmsK);gamma(1);polygamma(1,1);digamma(1);erf(0);erfi(0);erfc(0);zeta(0)");
-    //jl_eval_str("@suppress_err using AbstractAlgebra");
+    jl_eval_str("mul!([1.0 2;3 3],[1.0 2;3 3],[1.0 2;3 3]);gamma(1);polygamma(1,1);digamma(1);erf(0);erfi(0);erfc(0);zeta(0)");
     jl_eval_str("@suppress_err using Nemo");
 }
 

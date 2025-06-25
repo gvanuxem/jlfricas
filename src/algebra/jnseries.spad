@@ -1,0 +1,139 @@
+)abbrev domain NUPS NMUnivariatePowerSeries
+++ Nemo univariate power serie ring using the Julia Nemo package
+++ Author: G. Vanuxem
+++ Date Created: Jun, 2025
+++ Basic Operations:
+++ Also See:
+++ AMS Classifications:
+++ Keywords: series
+++ Examples:
+++ References:
+++ Description: NMUnivariatePowerSeries is the Nemo univariate
+++   power series using Julia. prec determines the precision used
+++   which can be absolute or relative (:capped_absolute or :capped_relative).
+++   x := x::NUPS(NFRAC(NINT),'x,30,"capped_relative")
+++   sin(x)
+NMUnivariatePowerSeries(R, x, prec, abs) : Exports == Implementation where
+  R    : NMRing
+  x    : Symbol
+  prec : PositiveInteger
+  abs  : JLSymbol
+  INT       ==> Integer
+  PI        ==> PositiveInteger
+  NNI       ==> NonNegativeInteger
+  Exports ==> Join(NMCommutativeRing,
+        UnivariatePowerSeriesCategory(R, NNI)) with
+    "*"   : (%, INT) -> %
+    ++ s * n is the product of s with an integer.
+    "*"   : (%, NNI) -> %
+    ++ s * n is the product of s with a non negative integer.
+    "*"   : (%, PI) -> %
+    ++ s * n is the product of s with a positive integer.
+    valuation : % -> NNI
+    ++ valuation(s) returns the valuation of the given power series,
+    ++ the degree of the first nonzero term
+    inverse : % -> %
+    ++ inverse(s) returns the inverse of s. Throw a Julia error
+    ++ if no such inverse exists.
+    sqrt : % -> %
+    ++ sqrt(f) return square root of f if it exists, a Julia error
+    ++ is thrown if f has no square root.
+    monomial? : % -> Boolean
+    ++ monomial?(f) tests if f is a single monomial.
+    integrate : % -> %
+    ++ integrate(f(x)) returns an anti-derivative of the power series
+    ++ \spad{f(x)} with constant coefficient 0.
+    if R has Algebra NMFraction(NMInteger) then
+      TranscendentalFunctionCategory
+    coerce   : Variable(x) -> %
+    ++ coerce(x) converts the variable x to a Nemo univariate power serie.
+  Implementation ==> add
+    import from JLUtilityFunctions
+    import from JLStringUtilities
+    --import from JLSymbol
+
+    jlInitialize(true)
+    Rep := SExpression
+
+    tmp : SExpression := devaluate(R)$Lisp
+    op_of_Ring : Symbol := CAR(tmp)$Lisp
+
+    NRing : String := string(op_of_Ring)
+    NUPSRing := concat(["NUPS", FORMAT(false, "~a", tmp)$Lisp,
+        string(prec) , string(x), string(abs)])
+    NUPSRing := jlRegexReplace(NUPSRing,jlRegex("[(|)|\s\:]"),
+      jlSubstitute(""))
+
+    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+    junfunc(func,a) ==> make_jlref_wcall1(func, a)$Lisp
+    jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+    junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
+    jbinbfunc(op,a,b) ==>
+      jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
+
+    -- Set up the ring
+    -- Use a tuple to do not define x in the Julia Main namesapce
+    ++ to avoid reusing previous Ring when redefining x,
+    ++ FriCAS will not always reconstruct the new Ring in Julia.
+    jlEvalString(concat([NUPSRing, "=power_series_ring(",
+      jlNMRing()$R, ",", string(prec), ",_"", string(x), "_";model=",
+        string(abs), ")"]))
+
+    0 == jlref(concat(["zero(", NUPSRing, "[1])"]))
+    1 == jlref(concat(["one(", NUPSRing, "[1])"]))
+
+    a : R * b : % == jbinfunc("*",a,b)
+    a : % * b : R == jbinfunc("*",a,b)
+    i : INT  * b : % == jlref(concat [string(i),"*" ,getind(b)])
+    a : % * i : INT  == jlref(concat [getind(a),"*" , string(i)])
+    i : NNI  * b : % == jlref(concat [string(i),"*" ,getind(b)])
+    a : % * i : NNI  == jlref(concat [getind(a),"*" , string(i)])
+    i : PI  * b : % == jlref(concat [string(i),"*" ,getind(b)])
+    a : % * i : PI == jlref(concat [getind(a),"*" , string(i)])
+    a : % ^ i : PI  == jlref(concat [getind(a),"^", string(i)])
+    a : % ^ i : NNI  == jlref(concat [getind(a),"^", string(i)])
+    exactDivide(p,q) == jbinfunc("divexact", p, q)
+
+    characteristic() ==
+      jlEvalString(concat(["characteristic(", NUPSRing, "[1])"]))
+    characteristic(s : %) ==
+      jlEvalString(concat(["characteristic(", jlNMRing()$R,")"]))
+    variable(s : %) == x
+    coefficient(s : %, n : NNI) ==
+      jlref(concat ["polcoeff(", getind(s),",", string(n) ")"])$R
+    valuation(s) == jlEvalString(concat ["valuation(",getind(s),")"])
+
+
+    jlNMRing() == NUPSRing
+    jlObject() == jlEvalString(concat ["string(",NUPSRing,")"])@String
+
+    if R has Algebra NMFraction(NMInteger) then
+      exp(s) == junfunc("exp", s)
+      log(s) == junfunc("log", s)
+      sin(s) == junfunc("sin", s)
+      cos(s) == junfunc("cos", s)
+      tan(s) == junfunc("tan", s)
+      asin(s) == junfunc("asin", s)
+      --acos(s) == junfunc("acos", s)
+      atan(s) == junfunc("atan", s)
+      sinh(s) == junfunc("sinh", s)
+      cosh(s) == junfunc("cosh", s)
+      tanh(s) == junfunc("tanh", s)
+      asinh(s) == junfunc("asinh", s)
+      --acosh(s) == junfunc("acosh", s)
+      atanh(s) == junfunc("atanh", s)
+
+    inverse(s) == junfunc("inv",s)
+    sqrt(s) == junfunc("sqrt", s)
+    differentiate(s) == junfunc("derivative", s)
+    integrate(s) == junfunc("integral",s)
+
+    coerce(v : Variable(x)) == jlref(concat(NUPSRing,"[2]"))
+    coerce(i : Integer) == jlref(concat([NUPSRing,"[1](",string(i),")"]))
+    coerce(c : R) == jlref(concat([NUPSRing,"[1](", getind(c),")"]))
+    coerce(p : %) : OutputForm ==
+      if R is NMInteger then
+        string(p) pretend OutputForm
+      else
+        jlRegexReplace(string(p),
+          jlRegex("//"), jlSubstitute("/")) pretend OutputForm

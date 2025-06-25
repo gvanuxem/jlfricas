@@ -236,6 +236,7 @@
   (|MultivariateFactorize| . MULTFACT)
   (|MultivariatePolynomial| . MPOLY)
   (|MultFiniteFactorize| . MFINFACT)
+  (|NMUnivariatePowerSeries| . NUPS)
   (|NMAlgebraicNumber| . NAN)
   (|NMComplexBall| . NCB)
   (|NMComplexField| . NCF)

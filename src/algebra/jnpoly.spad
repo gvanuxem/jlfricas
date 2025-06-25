@@ -1,5 +1,5 @@
 )abbrev category NACF NMAlgebraicallyClosedField
-++ Author: G. Vanuxem (based on work of Manuel Bronstein)
+++ Author: G. Vanuxem
 ++ Date Created: Nov. 2024
 ++ Description:
 ++   Model for Nemo algebraically closed fields.
@@ -7,7 +7,7 @@
 NMAlgebraicallyClosedField() : Category == Join(Field, RadicalCategory)
 
 )abbrev category NACFS NMAlgebraicallyClosedFunctionSpace
-++ Author: G. Vanuxem (base on work of Manuel Bronstein)
+++ Author: G. Vanuxem
 ++ Date Created: 31 October 1988
 ++ Description:
 ++   Model for algebraically closed function spaces.
@@ -61,9 +61,14 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
       cyclotomicPolynomial : (NNI, %) -> %
       ++ cyclotomicPolynomial(n,p) returns the n-th
       ++ cyclotomic polynomial Φn.
+      ++ For example:
+      ++ \example{x:=x::NUP(NINT,'x)}
+      ++ \example{cyclotomicPolynomial(15,x)}
       swinnertonDyerPolynomial : (NNI, %) -> %
       ++ swinnertonDyerPolynomial(n, p) returns the Swinnerton-Dyer
       ++ polynomial Sn.
+      ++ \example{x:=x::NUP(NINT,'x)}
+      ++ \example{swinnertonDyerPolynomial(4,x)}
       cosMinimalPolynomial : (NNI, %) -> %
       ++ cosMinimalPolynomial(n,p) returns the minimal polynomial
       ++ of 2*cos(2*π/n).
@@ -153,7 +158,8 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
       jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
     -- Set up the ring
-    jlEvalString(concat([NUPRing,",",string(x),"=polynomial_ring(",
+    -- TODO: whether or not using series scheme constructor
+    jlEvalString(concat([NUPRing,"=polynomial_ring(",
       jlNMRing()$R, ",_"", string(x), "_")"]))
     if R is NMInteger then
       roots(p) ==
@@ -191,8 +197,8 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
     jlNMRing() == NUPRing
     jlObject() == jlEvalString(concat(["string(", NUPRing,")"]))@String
 
-    0 == jlref(concat(["zero(", NUPRing, ")"]))
-    1 == jlref(concat(["one(", NUPRing, ")"]))
+    0 == jlref(concat(["zero(", NUPRing, "[1])"]))
+    1 == jlref(concat(["one(", NUPRing, "[1])"]))
     constant?(p) == junbfunc("is_constant",p)
     monomial?(p) == junbfunc("is_monomial",p)
     monomialRecursive?(p) == junbfunc("is_monomial_recursive",p)
@@ -244,7 +250,7 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
         unit?(p) => p
         "failed"
     characteristic() ==
-      jlEvalString(concat(["characteristic(", NUPRing,")"]))
+      jlEvalString(concat(["characteristic(", NUPRing,"[1])"]))
     monomial(coef,exp) ==
       jlref(concat([getind(coef),"*", string(x), "^",
         string(exp pretend Integer)]))
@@ -292,15 +298,12 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
     reverse(p) == junfunc("reverse",p)
     reverse(p,n) == jlref(concat ["reverse(", getind(p),",", string(n),")"])
 
-    elt(p, at : R) : R ==
-      jlref(concat ["evaluate(", getind(p), ",", getind(at),")"])
-    differentiate(p) ==
-      jlref(concat ["derivative(", getind(p),")"])
-    integrate(p) ==
-      jlref(concat ["integral(", getind(p),")"])
-    coerce(v : Variable(x)) == jlref(string(v::Symbol))
-    coerce(i : Integer) == jlref(concat([NUPRing,"(",string(i),")"]))
-    coerce(c : R) == junfunc("NUPRing", c)
+    elt(p, at : R) : R == jbinfunc("evaluate",p,at)
+    differentiate(p) == junfunc("derivative",p)
+    integrate(p) == junfunc("integral", p)
+    coerce(v : Variable(x)) == jlref(concat(NUPRing,"[2]"))
+    coerce(i : Integer) == jlref(concat([NUPRing,"[1](",string(i),")"]))
+    coerce(c : R) ==  jlref(concat([NUPRing,"[1](",getind(c),")"]))
     coerce(p : %) : OutputForm ==
       jlRegexReplace(string(p), jlRegex("//"), jlSubstitute("/")) pretend OutputForm
 
@@ -420,8 +423,9 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
     jbinbfunc(op,a,b) ==>
       jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
-
-    jlEvalString(concat([NULPRing,",",string(x), "=laurent_polynomial_ring(",
+    -- Set up the ring
+    -- TODO: whether or not using series scheme constructor
+    jlEvalString(concat([NULPRing,"=laurent_polynomial_ring(",
       jlNMRing()$R, ",_"", string(x), "_")"])$String)
     if R is NMFraction(NMInteger) then
       p : % + q : Fraction(Integer) == jbinfunc("+", p, coerce(q)@NRAT)
@@ -433,8 +437,8 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
     jlNMRing() == NULPRing
     jlObject() == jlEvalString(concat(["string(", NULPRing,")"]))@String
 
-    0 == jlref(concat(["zero(", NULPRing, ")"]))
-    1 == jlref(concat(["one(", NULPRing, ")"]))
+    0 == jlref(concat(["zero(", NULPRing, "[1])"]))
+    1 == jlref(concat(["one(", NULPRing, "[1])"]))
     monomial?(p) == junbfunc("is_monomial",p)
     monomialRecursive?(p) == junbfunc("is_monomial_recursive",p)
     termRecursive?(p) == junbfunc("is_term_recursive",p)
@@ -534,23 +538,19 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
     --reverse(p) == junfunc("reverse",p)
     --reverse(p,n) == jlref(concat ["reverse(", getind(p),",", string(n),")"])
 
-    -- ... error in Nemo apparently
-    elt(p, at : R) : R ==
-      jbinfunc("evaluate", p, at)
-    differentiate(p) ==
-      junfunc("derivative", p)
-    --integrate(p) ==
-    --  jlref(concat ["integral(", getind(p),")"])
+    -- ... error in Nemo apparently - TODO
+    elt(p, at : R) : R == jbinfunc("evaluate", p, at)
+    differentiate(p) == junfunc("derivative", p)
+    --integrate(p) == junfunc("integral",p)
 
     jnulp(up) : % ==
       p: String := first(lines formatExpression(up::OutputForm)$Format1D)
-      -- handle NRAT case
       ret := jlRegexReplace(p, jlRegex("/"), jlSubstitute("//"))
       jlref(ret)
 
-    coerce(v : Variable(x)) == jlref(string(v::Symbol))
-    coerce(i : Integer) == jlref(concat([NULPRing,"(",string(i),")"]))
-    coerce(c : R) == junfunc("NULPRing",c)
+    coerce(v : Variable(x)) == jlref(concat(NULPRing,"[2]"))
+    coerce(i : Integer) == jlref(concat([NULPRing,"[1](",string(i),")"]))
+    coerce(c : R) == jlref(concat [NULPRing,"[1](", getind(c),")"])
     coerce(p : %) : OutputForm ==
       jlRegexReplace(string(p),
         jlRegex("//"), jlSubstitute("/")) pretend OutputForm
@@ -682,9 +682,9 @@ NMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
 
     -- FriCAS defined vars in Julia
     -- Correct? "(\1,)" -> "(\1)"
-    vars := jlRegexReplace(
-      first lines formatExpression(VarSet::OutputForm)$Format1D,
-        jlRegex("\[(.*)\]"), jlSubstitute("(\1)"))
+    --vars := jlRegexReplace(
+    --  first lines formatExpression(VarSet::OutputForm)$Format1D,
+    --    jlRegex("\[(.*)\]"), jlSubstitute("(\1)"))
     
     -- List of double-quoted vars     
     lvars := map(v +-> string(v), VarSet)$ListFunctions2(Symbol, String)
@@ -692,6 +692,7 @@ NMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
     jvars := first lines formatExpression(lvars::OutputForm)$Format1D
     
     -- Our Julia ring
+    -- TODO: whether or not using series scheme constructor
     NMPRing := concat([NMPRing, concat(lvars)])
 
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
@@ -702,15 +703,15 @@ NMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
       jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
     --strToExpr(s : String) : Union(Expression(Integer), "failed") ==
-      -- Give up if there are arbitrary precision numbers
-      -- jlRegexMatch?(s,jlRegex("_`[1-9]|\bi\b")) => "failed"
     --  str := concat("0$Expression(Integer)+", s)
     --  af := parse(str)$InputForm
     --  av := interpret_in_new_env(af)$InputForm
     --  retractIfCan(av)$AnyFunctions1(Expression(Integer))
-    jlEvalString(concat([NMPRing,",", vars, "=polynomial_ring(",
+   
+    jlEvalString(concat([NMPRing, "=polynomial_ring(",
       jlNMRing()$R,",", jvars,";internal_ordering=",
         string(InternalOrdering),")"])$String)
+
     if R is NMFraction(NMInteger) then
       p : % + q : Fraction(Integer) == jbinfunc("+", p, coerce(q)@NRAT)
       p : % * q : Fraction(Integer) == jbinfunc("*", p, coerce(q)@NRAT)
@@ -721,10 +722,10 @@ NMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
     jlNMRing() == NMPRing
     jlObject() == jlEvalString(concat(["string(", NMPRing,")"]))@String
     internalOrdering() ==
-      jlref(concat(["internal_ordering(",NMPRing,")"]))$JLObject
+      jlref(concat(["internal_ordering(",NMPRing,"[1])"]))$JLObject
 
-    0 == jlref(concat(["zero(",NMPRing,")"]))
-    1 == jlref(concat(["one(",NMPRing,")"]))
+    0 == jlref(concat(["zero(",NMPRing,"[1])"]))
+    1 == jlref(concat(["one(",NMPRing,"[1])"]))
     constant?(p) == junbfunc("is_constant",p)
     monomial?(p) == junbfunc("is_monomial",p)
     monomialRecursive?(p) == junbfunc("is_monomial_recursive",p)
@@ -750,7 +751,7 @@ NMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
         => "failed"
       junfunc("last", ret)
     characteristic() ==
-      jlEvalString(concat(["characteristic(", NMPRing,")"]))
+      jlEvalString(concat(["characteristic(", NMPRing,"[1])"]))
     reductum(p) == junfunc("tail",p)
     gcd(p1,p2)  == jbinfunc("gcd",p1,p2)
     lcm(p1,p2)  == jbinfunc("lcm",p1,p2)
@@ -866,7 +867,6 @@ NMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
 
     jmp2nmp(mp) : % ==
       p: String := first(lines formatExpression(mp::OutputForm)$Format1D)
-      -- handle NRAT case
       ret := jlRegexReplace(p,jlRegex("/"), jlSubstitute("//"))
       jlref(ret)
 
@@ -875,16 +875,18 @@ NMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
         => jlref(string(p))$R -- Huh: TODO
       "failed"
 
+    coerce(v : OrderedVariableList(VarSet)) ==
+      i := lookup(v)$OrderedVariableList(VarSet)
+      jlref(concat([NMPRing,"[2][", string(i),"]"]))
+    coerce(i : Integer) == jlref(concat([NMPRing, "[1](", string(i), ")"]))
+    coerce(c : R) == jlref(concat([NMPRing, "[1](", getind(c),")"]))
     coerce(p : %) : OutputForm ==
-      jlRegexReplace(string(p),
-        jlRegex("//"),jlSubstitute("/")) pretend OutputForm
-      --if R is NMInteger then
-      --  coerce(strToExpr(string(p)))
-      --else
-      --  jlRegexReplace(string(p),jlRegex("//"),jlSubstitute("/")) pretend OutputForm
-    coerce(v: OrderedVariableList(VarSet)) == jlref(string(convert(v)@Symbol))
-    coerce(i : Integer) == jlref(concat([NMPRing, "(", string(i), ")"]))
-    coerce(c : R) == jlref(concat([NMPRing, "(", getind(c),")"]))
+      if R is NMInteger then
+        --coerce strToExpr(string p) -- reverse order (TODO)
+        string(p) pretend OutputForm
+      else
+        jlRegexReplace(string(p),
+          jlRegex("//"),jlSubstitute("/")) pretend OutputForm
 
 )abbrev domain NMLP NMMultivariateLaurentPolynomial
 ++ Multivariate laurent polynomial domain using Julia AbstractAlgebra package 
@@ -1060,9 +1062,9 @@ NMMultivariateLaurentPolynomial(R : NMRing,
     
     -- FriCAS defined vars in Julia
     -- Correct? "(\1,)" -> "(\1)"
-    vars := jlRegexReplace(
-        first lines formatExpression(VarSet::OutputForm)$Format1D,
-          jlRegex("\[(.*)\]"), jlSubstitute("(\1)"))
+    --vars := jlRegexReplace(
+    --    first lines formatExpression(VarSet::OutputForm)$Format1D,
+    --      jlRegex("\[(.*)\]"), jlSubstitute("(\1)"))
     
     -- List of double-quoted vars     
     lvars := map(v +-> string(v), VarSet)$ListFunctions2(Symbol, String)
@@ -1070,6 +1072,7 @@ NMMultivariateLaurentPolynomial(R : NMRing,
     jvars := first lines formatExpression(lvars::OutputForm)$Format1D
     
     -- Our Julia ring
+    -- TODO: whether or not using series scheme constructor
     NMLPRing := concat([NMLPRing, concat(lvars)])
 
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
@@ -1087,7 +1090,7 @@ NMMultivariateLaurentPolynomial(R : NMRing,
     --  av := interpret_in_new_env(af)$InputForm
     --  retractIfCan(av)$AnyFunctions1(Expression(Integer))
 
-    jlEvalString(concat([NMLPRing,",", vars, "=laurent_polynomial_ring(",
+    jlEvalString(concat([NMLPRing, "=laurent_polynomial_ring(",
       jlNMRing()$R, ",", jvars,")"])$String)
     if R is NMFraction(NMInteger) then
       p : % + q : Fraction(Integer) == jbinfunc("+", p, coerce(q)@NRAT)
@@ -1099,8 +1102,8 @@ NMMultivariateLaurentPolynomial(R : NMRing,
     jlNMRing() == NMLPRing
     jlObject() == jlEvalString(concat(["string(", NMLPRing,")"]))@String
 
-    0 == jlref(concat(["zero(",NMLPRing,")"]))
-    1 == jlref(concat(["one(",NMLPRing,")"]))
+    0 == jlref(concat(["zero(",NMLPRing,"[1])"]))
+    1 == jlref(concat(["one(",NMLPRing,"[1])"]))
     --monomial?(p) == junbfunc("is_monomial",p)
     monomialRecursive?(p) == junbfunc("is_monomial_recursive",p)
     --term?(p) == junbfunc("is_term",p)
@@ -1121,10 +1124,10 @@ NMMultivariateLaurentPolynomial(R : NMRing,
     exactDivide(p,q) == jbinfunc("divexact", p, q)
 
     -- Nemo interface (AbstractAlgebra)
-    symbols() == jlref(concat(["symbols(", NMLPRing,")"]))
-    numberOfVariables() == jlref(concat(["number_of_variables(", NMLPRing,")"]))
-    gens() == jlref(concat(["gens(",NMLPRing,")"]))
-    gen(i) == jlref(concat(["gen(",NMLPRing, ",", string(i) ,")"]))
+    symbols() == jlref(concat(["symbols(", NMLPRing,"[1])"]))
+    numberOfVariables() == jlref(concat(["number_of_variables(", NMLPRing,"[1])"]))
+    gens() == jlref(concat(["gens(",NMLPRing,"[1])"]))
+    gen(i) == jlref(concat(["gen(",NMLPRing, "[1],", string(i) ,")"]))
     gen?(x) == junbfunc("is_gen", x)
     variableIndex(var) == junfunc("var_index", var)
 
@@ -1276,7 +1279,6 @@ NMMultivariateLaurentPolynomial(R : NMRing,
 
     jmp2nmp(mp) : % ==
       p: String := first(lines formatExpression(mp::OutputForm)$Format1D)
-      -- handle NRAT case
       ret := jlRegexReplace(p, jlRegex("/"), jlSubstitute("//"))
       jlref(ret)
 
@@ -1285,13 +1287,15 @@ NMMultivariateLaurentPolynomial(R : NMRing,
     --    => jlref(string(p))$R
     --  "failed"
 
+    coerce(v : OrderedVariableList(VarSet)) ==
+      i := lookup(v)$OrderedVariableList(VarSet)
+      jlref(concat([NMLPRing,"[2][", string(i),"]"]))
+    coerce(i : Integer) == jlref(concat([NMLPRing, "[1](", string(i), ")"]))
+    coerce(c : R) == jlref(concat([NMLPRing, "[1](", getind(c),")"]))
     coerce(p : %) : OutputForm ==
-      jlRegexReplace(string(p),
-        jlRegex("//"),jlSubstitute("/")) pretend OutputForm
-      --if R is NMInteger then
-      --  coerce(strToExpr(string(p)))
-      --else
-      --  jlRegexReplace(string(p), jlRegex("//"),jlSubstitute("/")) pretend OutputForm
-    coerce(v: OrderedVariableList(VarSet)) == jlref(string(convert(v)@Symbol))
-    coerce(i : Integer) == jlref(concat([NMLPRing, "(", string(i), ")"]))
-    coerce(c : R) == jlref(concat([NMLPRing, "(", getind(c),")"]))
+      if R is NMInteger then
+        --  coerce(strToExpr(string(p)))
+        string(p) pretend OutputForm
+      else
+        jlRegexReplace(string(p),
+          jlRegex("//"),jlSubstitute("/")) pretend OutputForm

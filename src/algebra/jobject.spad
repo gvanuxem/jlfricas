@@ -1826,6 +1826,7 @@ JLMatrix(R : JLObjectRing) :  Exports == Implementation where
       jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
     if R has NMRing then
+      -- TODO
       new(rows, cols, a : R) ==
         jlref(concat(["matrix_space(", jlNMRing()$R ,",",
           string(rows), ",", string(cols),")(fill(", getind(a), ",(",
@@ -1869,11 +1870,9 @@ JLMatrix(R : JLObjectRing) :  Exports == Implementation where
     column(m,i) ==
       jlref(concat([getind(m),"[:,",string(i),"]"]))$JLVector(R)
     
-
     fill!(v, x) == jbinfunc("fill!", v, x)
     vertConcat(m1,m2) == jbinfunc("vcat", m1, m2)
     horizConcat(m1,m2) == jbinfunc("hcat", m1, m2)
-    vertConcat(m1,m2) == jbinfunc("vcat", m1, m2)
     swapRows!(m, i, j) == 
       jlref(concat ["swap_rows!(",getind(m),",",string(i),",",string(j),")"])
     swapColumns!(m, i, j) == 

@@ -45,11 +45,12 @@ NMRing() : Category == Join(NMType, JLObjectRing) with
     add
       import from JLUtilityFunctions
       import from String
-      jl_eval_string("import AbstractAlgebra: parent_type, elem_type, _
-        base_ring, base_ring_type, parent, is_domain_type, _
-        is_exact_type, canonical_unit, isequal, divexact, _
-        get_cached!, is_unit, expressify,  _
-        @show_name, @show_special, is_terse, pretty, terse, Lowercase")$Lisp
+      -- Necessary? Where? Which?
+      --jl_eval_string("import AbstractAlgebra: parent_type, elem_type, _
+      --  base_ring, base_ring_type, parent, is_domain_type, _
+      --  is_exact_type, canonical_unit, isequal, divexact, _
+      --  get_cached!, is_unit, expressify,  _
+      --  @show_name, @show_special, is_terse, pretty, terse, Lowercase")$Lisp
 
       getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
       junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
@@ -138,7 +139,8 @@ NMInteger() : Exports == Implementation where
 
     0 == jlref("zero(ZZ)")
     1 == jlref("one(ZZ)")
-    random(n : %) == junfunc("rand", n)
+    random(n : %) ==
+      jlref(concat ["rand(ZZ,0:", getind(n-1),")"])
     random(seg : Segment(Integer)) ==
       jlref(concat ["rand(ZZ,",string(low(seg)), ":", string(high(seg)),")"])
     x < y  == jbinbfunc("<",x,y)
@@ -604,6 +606,10 @@ NMPrimeField(p : PositiveInteger) : Exports == Implementation where
     ++ jnpf(i) returns i as a NMPrimeField element.
     jnpf   : NMInteger -> %
     ++ jnpf(i) returns i as a NMPrimeField element.
+    GF : Integer -> %
+    ++ GF(i) returns i as a NMPrimeField element.
+    GF : NMInteger -> %
+    ++ GF(i) returns i as a NMPrimeField element.
   Implementation ==> add
     import from JLUtilityFunctions
     import from String
@@ -684,6 +690,8 @@ NMPrimeField(p : PositiveInteger) : Exports == Implementation where
     coerce(i : Integer) == jlref(concat([NPFP, string(i), ")"]))
     jnpf(i : Integer) == coerce(i)
     jnpf(ji : NMInteger) == coerce(ji)
+    GF(i : Integer) == coerce(i)
+    GF(ji : NMInteger) == coerce(ji)
     coerce(i : %) : OutputForm == string(i) pretend OutputForm
 
 )abbrev domain NFF NMFiniteField
@@ -743,7 +751,7 @@ NMFiniteField(p : PositiveInteger, n: PositiveInteger) : Exports == Implementati
     -- initialize
     not prime?(p) => error "NMFiniteField(p, n): argument p must be a prime"
     NFF := concat(["NFF",string(p^n)])
-    jlEvalString(concat([NFF, "=GF(", string(p^n),")"]))@Void
+    jlEvalString(concat([NFF, "=GF(", string(p),",", string(n),")"]))@Void
     NFFP := concat(NFF,"(")
 
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
@@ -1734,7 +1742,7 @@ NMFraction(R : Join(NMCommutativeRing, IntegralDomain)) :
         num/den
     gcd(x,y)  == jbinfunc("gcd",x,y)
     random(seg : Segment(Integer)) ==
-      jlref(concat(["rand(",NFR,",", string(low(seg)),":",
+      jlref(concat(["rand(", NFR,",", string(low(seg)),":",
         string(high(seg)),")"]))
     random(seg1 : Segment(Integer), seg2 : Segment(Integer)) ==
       jlref(concat(["rand(",NFR,",", string(low(seg1)),":",string(high(seg1)),

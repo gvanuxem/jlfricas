@@ -98,7 +98,7 @@ fricas_lib = $(subst $(exec_prefix)/,,$(libdir))
 install: install-src install-contrib
 
 install-src:
-	@echo Installing FriCAS in $(prefix)
+	@echo Installing jlFriCAS in $(prefix)
 	rm -rf '$(DESTDIR)$(libdir)/fricas'
 	$(mkinstalldirs) '$(DESTDIR)$(libdir)/fricas'
 	$(mkinstalldirs) '$(DESTDIR)$(libdir)/fricas/$(reltarget)/lib'
@@ -193,7 +193,7 @@ install-src:
 	if test x"@BUILD_ALDOR_INTERFACE@" = xyes ; then \
 	    cd src/aldor && $(MAKE) install; \
 	fi
-	@echo 79 FriCAS installation finished.
+	@echo 79 jlFriCAS installation finished.
 
 install-contrib: install-src
 	$(mkinstalldirs) '$(DESTDIR)$(bindir)'
