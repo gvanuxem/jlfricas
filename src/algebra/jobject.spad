@@ -1826,11 +1826,18 @@ JLMatrix(R : JLObjectRing) :  Exports == Implementation where
       jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
     if R has NMRing then
-      -- TODO
-      new(rows, cols, a : R) ==
-        jlref(concat(["matrix_space(", jlNMRing()$R ,",",
-          string(rows), ",", string(cols),")(fill(", getind(a), ",(",
-            string(rows), ",", string(cols),")))"]))
+      tuple : Boolean := jbinbfunc("isa",jobject(jlNMRing()$R)$JLObject,
+          jobject("Tuple")$JLObject)
+      if tuple then -- polys and series
+        new(rows, cols, a : R) ==
+          jlref(concat(["matrix_space(", jlNMRing()$R ,"[1],",
+            string(rows), ",", string(cols),")(fill(", getind(a), ",(",
+              string(rows), ",", string(cols),")))"]))
+      else
+        new(rows, cols, a : R) ==
+          jlref(concat(["matrix_space(", jlNMRing()$R ,",",
+            string(rows), ",", string(cols),")(fill(", getind(a), ",(",
+              string(rows), ",", string(cols),")))"]))
     else
       new(rows, cols, a : R) ==
         jlref(concat(["fill(", getind(a), ",(", 
