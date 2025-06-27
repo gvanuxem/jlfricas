@@ -716,7 +716,9 @@ JLComplexF32Matrix() : Exports == Implementation where
     import from JLCF32LinearAlgebra
     import from JLFloat32Vector
     import from JLFloat32Matrix
+
     jlInitialize(true)
+
     defined?(func) ==> not jlDefined?(func) =>
       error concat(func, " is not defined in Julia")
     pprint := true

@@ -43,8 +43,6 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
     termRecursive? : % -> Boolean
     ++ termRecursive?(p) checks whether or not p as one term,
     ++ recursively (all scalar types).
-    unit? : % -> Boolean
-    ++ unit?(p) checks whether or not p is invertible i.e. is a unit.
     monic? : % -> Boolean
     ++ monic?(p) checks whether or not p  monic.
     square? : % -> Boolean
@@ -223,7 +221,7 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
       ret : JLObjTuple := jbinfunc("divides", p1, p2)
       not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
         => "failed"
-      junfunc("last", ret)
+      junfunc("last", ret)@%
     a:% quo b:% == jbinfunc("div", a, b)
     a:% rem b:% == jbinfunc("mod", a, b)
     pseudoRemainder(p1,p2) == jbinfunc("pseudorem",p1,p2)
@@ -236,7 +234,7 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
         ret : JLObjTuple := jbinfunc("divides", 1, p)
         not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
           => "failed"
-        junfunc("last", ret)
+        junfunc("last", ret)@%
       p/(r : R) == inv(r)*p
       unitNormal(p) ==
         unitC : R := junfunc("canonical_unit", p)
@@ -339,8 +337,6 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
     termRecursive? : % -> Boolean
     ++ termRecursive?(p) checks whether or not p as one term,
     ++ recursively (all scalar types).
-    unit? : % -> Boolean
-    ++ unit?(p) checks whether or not p is invertible i.e. is a unit.
     -- monic? : % -> Boolean
     -- ++ monic?(p) checks whether or not p  monic.
     -- square? : % -> Boolean
@@ -460,7 +456,7 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
       ret : JLObjTuple := jbinfunc("divides", p1, p2)
       not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
         => "failed"
-      junfunc("last", ret)
+      junfunc("last", ret)@%
     divide(a,b) : Record(quotient : %, remainder : %) ==
       ret : JLObjTuple := jbinfunc("divrem",a,b)
       [ret.1 pretend %, ret.2 pretend %]
@@ -472,7 +468,7 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
         ret : JLObjTuple := jbinfunc("divides", 1$R, p)
         not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
           => "failed"
-        junfunc("last", ret)
+        junfunc("last", ret)  pretend %
       p/r : R == inv(r)*p -- TODO
       unitNormal(p) ==
         unitC : R := junfunc("canonical_unit", p)
@@ -611,8 +607,6 @@ NMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
     termRecursive? : % -> Boolean
     ++ termRecursive?(p) checks whether or not p as one term polynomial
     ++ recursively on all scalar types.
-    unit? : % -> Boolean
-    ++ unit?(p) checks whether or not p is invertible i.e. is a unit.
     univariate? : % -> Boolean
     ++ univariate?(p) checks whether or not p is a univariate polynomial.
     square? : % -> Boolean
@@ -749,7 +743,7 @@ NMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
       ret : JLObjTuple := jbinfunc("divides", p1, p2)
       not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
         => "failed"
-      junfunc("last", ret)
+      junfunc("last", ret)@%
     characteristic() ==
       jlEvalString(concat(["characteristic(", NMPRing,"[1])"]))
     reductum(p) == junfunc("tail",p)
@@ -944,8 +938,6 @@ NMMultivariateLaurentPolynomial(R : NMRing,
     termRecursive? : % -> Boolean
     ++ termRecursive?(p) checks whether or not p as one term polynomial
     ++ recursively on all scalar types.
-    unit? : % -> Boolean
-    ++ unit?(p) checks whether or not p is invertible i.e. is a unit.
     --univariate? : % -> Boolean
     --++ univariate?(p) checks whether or not p is a univariate polynomial.
     --square? : % -> Boolean
@@ -1163,7 +1155,7 @@ NMMultivariateLaurentPolynomial(R : NMRing,
       ret : JLObjTuple := jbinfunc("divides", p1, p2)
       not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
         => "failed"
-      junfunc("last", ret)
+      junfunc("last", ret)@%
 
     -- reductum(p) == junfunc("tail",p)
     gcd(p1,p2)  == jbinfunc("gcd",p1,p2)
@@ -1263,7 +1255,7 @@ NMMultivariateLaurentPolynomial(R : NMRing,
         ret : JLObjTuple := jbinfunc("divides", 1$R, p)
         not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
           => "failed"
-        junfunc("last",ret)
+        junfunc("last",ret) pretend %
       p/(r : R) == inv(r)*p
       unitNormal(p) ==
         unitC : R := junfunc("canonical_unit", p)

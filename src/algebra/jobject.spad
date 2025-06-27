@@ -1828,7 +1828,7 @@ JLMatrix(R : JLObjectRing) :  Exports == Implementation where
     if R has NMRing then
       tuple : Boolean := jbinbfunc("isa",jobject(jlNMRing()$R)$JLObject,
           jobject("Tuple")$JLObject)
-      if tuple then -- polys and series
+      if tuple then -- polynomials and series
         new(rows, cols, a : R) ==
           jlref(concat(["matrix_space(", jlNMRing()$R ,"[1],",
             string(rows), ",", string(cols),")(fill(", getind(a), ",(",

@@ -2446,13 +2446,12 @@ void jl_init_env(void){
     Stringify = jl_get_function(jl_base_module, "String");
     printstyle = jl_get_function(jl_base_module, "printstyled");
 
-    // Quick & dirty hack
-    // Set some default functions to avoid conflicts with the Nemo ones
-    // TODO: use 'import' instead of 'using' and module call them
     jl_eval_str("using Random, LinearAlgebra, SpecialFunctions, Suppressor");
     jl_eval_string("import REPL; import InteractiveUtils.run");
-    jl_eval_str("mul!([1.0 2;3 3],[1.0 2;3 3],[1.0 2;3 3]);gamma(1);polygamma(1,1);digamma(1);erf(0);erfi(0);erfc(0);zeta(0)");
     jl_eval_str("@suppress_err using Nemo");
+    // Force package calls
+    jl_eval_str("import LinearAlgebra.mul!");
+    jl_eval_str("import SpecialFunctions: gamma, digamma, polygamma, erf, erfi, erfc, zeta");
 }
 
 void jl_clear_env(void){
