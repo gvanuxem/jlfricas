@@ -194,7 +194,7 @@ NMInteger() : Exports == Implementation where
       ret : JLObjTuple := jbinfunc("divides", p1, p2)
       not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
         => "failed"
-      junfunc("last", ret)
+      junfunc("last", ret)@%
     inverse(x) == junfunc("inv",x)
 
     coerce(jsi : %) : JI64 ==
@@ -1725,7 +1725,7 @@ NMFraction(R : Join(NMCommutativeRing, IntegralDomain)) :
         ret : JLObjTuple := jbinfunc("divides", p1, p2)
         not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
           => "failed"
-        junfunc("last", ret)
+        junfunc("last", ret)@%
       D(x) == 0
       D(x, nni) == 0
       -- Temporary hack

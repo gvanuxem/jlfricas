@@ -162,13 +162,11 @@ NMArbField(p: PositiveInteger) : Exports == Implementation where
       jlEvalString(concat ["add_error!(", getind(x), ",", getind(y),")"])
       x
     trim(x) == junfunc("trim",x)
-    uniqueInteger(x) == --TODO: Julia boolean and tuples
-      ret : JLObject := junfunc("unique_integer",x)
-      str: String := jlEvalString(concat(["string(getproperty(",
-        getind(ret),",1))"]))
-      str = "true" => jlref(concat(["getproperty(",
-        getind(ret),",2)"]))$NMInteger
-      "failed"
+    uniqueInteger(x) ==
+      ret : JLObjTuple := junfunc("unique_integer",x)
+      not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
+        => "failed"
+      junfunc("last", ret)@NMInteger
     setUnion(x,y) == jbinfunc("setunion",x,y)
 
     x < y  == jbinbfunc("<",x,y)
@@ -447,13 +445,11 @@ NMAcbField(p: PositiveInteger) : Exports == Implementation where
     accuracyBits(x) == jlEvalString(concat(["accuracy_bits(",
         getind(x),")"]))
     trim(x) == junfunc("trim",x)
-    uniqueInteger(x) == --TODO: Julia boolean and tuples
-      ret : JLObject := junfunc("unique_integer",x)
-      str: String := jlEvalString(concat(["string(getproperty(",
-        getind(ret),",1))"]))
-      str = "true" => jlref(concat(["getproperty(",
-        getind(ret),",2)"]))$NMInteger
-      "failed"
+    uniqueInteger(x) ==
+      ret : JLObjTuple := junfunc("unique_integer",x)
+      not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
+        => "failed"
+      junfunc("last", ret)@NMInteger
 
     jlNMRing() == NACB
     jlObject() == jlEvalString(concat(["string(", NACB,")"]))@String
@@ -747,13 +743,11 @@ NMRealField() : Exports == Implementation where
     addError!(x, y) ==
       jlEvalString(concat ["add_error!(", getind(x), ",", getind(y),")"])
       x
-    uniqueInteger(x) == --TODO: Julia boolean and tuples
-      ret : JLObject := junfunc("unique_integer",x)
-      str: String := jlEvalString(concat(["string(getproperty(",
-        getind(ret),",1))"]))
-      str = "true" => jlref(concat(["getproperty(",
-        getind(ret),",2)"]))$NMInteger
-      "failed"
+    uniqueInteger(x) ==
+      ret : JLObjTuple := junfunc("unique_integer",x)
+      not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
+        => "failed"
+      junfunc("last", ret)@NMInteger
     setUnion(x,y) == jbinfunc("setunion",x,y)
 
     x < y  == jbinbfunc("<",x,y)
@@ -1024,13 +1018,11 @@ NMComplexField() : Exports == Implementation where
     accuracyBits(x) == jlEvalString(concat(["accuracy_bits(",
       getind(x),")"]))
     trim(x) == junfunc("trim",x)
-    uniqueInteger(x) == --TODO: Julia boolean and tuples
-      ret : JLObject := junfunc("unique_integer",x)
-      str: String := jlEvalString(concat(["string(getproperty(",
-        getind(ret),",1))"]))
-      str = "true" => jlref(concat(["getproperty(",
-        getind(ret),",2)"]))$NMInteger
-      "failed"
+    uniqueInteger(x) ==
+      ret : JLObjTuple := junfunc("unique_integer",x)
+      not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
+        => "failed"
+      junfunc("last", ret)@NMInteger
 
     jlNMRing() == "NCF"
     jlObject() == "NCF"

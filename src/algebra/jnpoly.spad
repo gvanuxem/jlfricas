@@ -155,6 +155,12 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
     jbinbfunc(op,a,b) ==>
       jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
+    strToExpr(s : String) : Union(Expression(Integer), "failed") ==
+      str := concat("0$Expression(Integer)+", s)
+      af := parse(str)$InputForm
+      av := interpret_in_new_env(af)$InputForm
+      retract(av)$AnyFunctions1(Expression(Integer))
+
     -- Set up the ring
     -- TODO: whether or not using series scheme constructor
     jlEvalString(concat([NUPRing,"=polynomial_ring(",
@@ -303,7 +309,11 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
     coerce(i : Integer) == jlref(concat([NUPRing,"[1](",string(i),")"]))
     coerce(c : R) ==  jlref(concat([NUPRing,"[1](",getind(c),")"]))
     coerce(p : %) : OutputForm ==
-      jlRegexReplace(string(p), jlRegex("//"), jlSubstitute("/")) pretend OutputForm
+      if R is NMInteger then
+        coerce strToExpr(string p)
+      else
+        coerce(strToExpr(jlRegexReplace(string(p), jlRegex("//"),
+          jlSubstitute("/"))))
 
 )abbrev domain NULP NMUnivariateLaurentPolynomial
 ++ Univariate laurent polynomial domain using Julia AbstractAlgebra package 
@@ -423,6 +433,13 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
     -- TODO: whether or not using series scheme constructor
     jlEvalString(concat([NULPRing,"=laurent_polynomial_ring(",
       jlNMRing()$R, ",_"", string(x), "_")"])$String)
+
+    strToExpr(s : String) : Union(Expression(Integer), "failed") ==
+      str := concat("0$Expression(Integer)+", s)
+      af := parse(str)$InputForm
+      av := interpret_in_new_env(af)$InputForm
+      retract(av)$AnyFunctions1(Expression(Integer))
+
     if R is NMFraction(NMInteger) then
       p : % + q : Fraction(Integer) == jbinfunc("+", p, coerce(q)@NRAT)
       p : % * q : Fraction(Integer) == jbinfunc("*", p, coerce(q)@NRAT)
@@ -548,8 +565,11 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
     coerce(i : Integer) == jlref(concat([NULPRing,"[1](",string(i),")"]))
     coerce(c : R) == jlref(concat [NULPRing,"[1](", getind(c),")"])
     coerce(p : %) : OutputForm ==
-      jlRegexReplace(string(p),
-        jlRegex("//"), jlSubstitute("/")) pretend OutputForm
+      if R is NMInteger then
+        coerce strToExpr(string p)
+      else
+        coerce(strToExpr(jlRegexReplace(string(p), jlRegex("//"),
+          jlSubstitute("/"))))
     
 
 )abbrev domain NMP NMMultivariatePolynomial
@@ -674,12 +694,6 @@ NMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
     #VarSet ~= #removeDuplicates(VarSet) =>
       error "Duplicate symbols in NMMultivariatePolyNomial constructor" 
 
-    -- FriCAS defined vars in Julia
-    -- Correct? "(\1,)" -> "(\1)"
-    --vars := jlRegexReplace(
-    --  first lines formatExpression(VarSet::OutputForm)$Format1D,
-    --    jlRegex("\[(.*)\]"), jlSubstitute("(\1)"))
-    
     -- List of double-quoted vars     
     lvars := map(v +-> string(v), VarSet)$ListFunctions2(Symbol, String)
     -- vars for polynomial_ring() arguments
@@ -876,7 +890,7 @@ NMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
     coerce(c : R) == jlref(concat([NMPRing, "[1](", getind(c),")"]))
     coerce(p : %) : OutputForm ==
       if R is NMInteger then
-        --coerce strToExpr(string p) -- reverse order (TODO)
+        --coerce strToMPoly(string p) -- reverse order (TODO)
         string(p) pretend OutputForm
       else
         jlRegexReplace(string(p),
