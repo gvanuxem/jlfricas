@@ -1760,14 +1760,8 @@ NMFraction(R : Join(NMCommutativeRing, IntegralDomain)) :
       error "retract$NMFraction: denominator is not 1"
     coerce(r : R) == jlref(concat([NFRP, getind(r),")"]))
     coerce(p) : OutputForm ==
-      one?(denom p)  => jlRegexReplace(string(numer p),
-        jlRegex("//"), jlSubstitute("/")) pretend OutputForm  
-      pn := jlRegexReplace(string(numer p),
-        jlRegex("//"), jlSubstitute("/")) pretend OutputForm
-      pd := jlRegexReplace(string(denom p),
-        jlRegex("//"), jlSubstitute("/")) pretend OutputForm
-      --ret : Fraction(R)  := numer(p)/denom(p) 
-      pn/pd
+      ret : Fraction(R)  := numer(p)/denom(p) 
+      coerce(ret)
 
 )abbrev domain NFR NMFactored
 ++ Domain for factored Nemo elements
@@ -1863,4 +1857,4 @@ NMFactored(R : Join(NMRing, IntegralDomain)) :
       mkFF(jlref(concat(["unit(", getind(fr), ")"]))$R, ret) pretend Factored(R)
     coerce(ob : %) : OutputForm ==
       jlRegexReplace(string(ob),
-        jlRegex("//"), jlSubstitute("/")) pretend OutputForm
+        jlString("//"), jlString("/")) pretend OutputForm

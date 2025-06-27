@@ -28,6 +28,7 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
   INT       ==> Integer
   PI        ==> PositiveInteger
   NNI       ==> NonNegativeInteger
+  SUP       ==> SparseUnivariatePolynomial(R)
   parsei    ==> PARSE_-INTEGER$Lisp
   Exports ==> Join(NMCommutativeRing,
       UnivariatePolynomialCategory(R)) with
@@ -309,11 +310,12 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
     coerce(i : Integer) == jlref(concat([NUPRing,"[1](",string(i),")"]))
     coerce(c : R) ==  jlref(concat([NUPRing,"[1](",getind(c),")"]))
     coerce(p : %) : OutputForm ==
+      --outputForm(listOfTerms(p) pretend SUP, outputForm x) -- too exepnsive
       if R is NMInteger then
-        coerce strToExpr(string p)
+        coerce strToExpr string p
       else
-        coerce(strToExpr(jlRegexReplace(string(p), jlRegex("//"),
-          jlSubstitute("/"))))
+        jlRegexReplace(string(p),
+          jlString("//"),jlString("/")) pretend OutputForm
 
 )abbrev domain NULP NMUnivariateLaurentPolynomial
 ++ Univariate laurent polynomial domain using Julia AbstractAlgebra package 
@@ -332,6 +334,7 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
   INT       ==> Integer
   PI        ==> PositiveInteger
   NNI       ==> NonNegativeInteger
+  SUP       ==> SparseUnivariatePolynomial(R)
   parsei    ==> PARSE_-INTEGER$Lisp
   Exports ==> Join(NMCommutativeRing,
       UnivariatePolynomialCategory(R)) with
@@ -565,11 +568,12 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
     coerce(i : Integer) == jlref(concat([NULPRing,"[1](",string(i),")"]))
     coerce(c : R) == jlref(concat [NULPRing,"[1](", getind(c),")"])
     coerce(p : %) : OutputForm ==
+      --outputForm(listOfTerms(p) pretend SUP, outputForm x) -- too expensive
       if R is NMInteger then
-        coerce strToExpr(string p)
+        coerce strToExpr string p
       else
-        coerce(strToExpr(jlRegexReplace(string(p), jlRegex("//"),
-          jlSubstitute("/"))))
+        jlRegexReplace(string(p),
+          jlString("//"),jlString("/")) pretend OutputForm
     
 
 )abbrev domain NMP NMMultivariatePolynomial
