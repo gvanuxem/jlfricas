@@ -9,10 +9,10 @@
 ++ Examples:
 ++ References:
 ++ Description: NMUnivariatePowerSeries is the Nemo univariate
-++   power series using Julia. prec determines the precision used
-++   which can be absolute or relative (:capped_absolute or :capped_relative).
-++   x := x::NUPS(NFRAC(NINT),'x,30,"capped_relative")
-++   sin(x)
+++  power series using Julia. prec determines the precision used
+++  which can be absolute or relative (:capped_absolute or :capped_relative).
+++  x := x::NUPS(NFRAC(NINT),'x,30,"capped_relative")
+++  sin(x)
 NMUnivariatePowerSeries(R, x, prec, abs) : Exports == Implementation where
   R    : NMRing
   x    : Symbol
@@ -165,9 +165,9 @@ NMUnivariatePowerSeries(R, x, prec, abs) : Exports == Implementation where
 ++ Examples:
 ++ References:
 ++ Description: NMUnivariateLaurentSeries is the Nemo univariate
-++   Laurent series using Julia.
-++   x := x::NULS(NFRAC(NINT),'x,30)
-++   x^(-1)
+++  Laurent series using Julia.
+++  x := x::NULS(NFRAC(NINT),'x,30)
+++  x^(-1)
 NMUnivariateLaurentSeries(R, x, prec) : Exports == Implementation where
   R    : NMRing
   x    : Symbol
@@ -310,11 +310,11 @@ NMUnivariateLaurentSeries(R, x, prec) : Exports == Implementation where
 ++ Examples:
 ++ References:
 ++ Description: NMUnivariatePuiseuxSeries is the Nemo univariate
-++   Puiseux series using Julia.
-++   x := x::NUPSX(NFRAC(NINT),'x,30)
-++   23*x+3*19*x^7+x^(1/7)
-++   exp %
-++   log %
+++  Puiseux series using Julia.
+++  x := x::NUPSX(NFRAC(NINT),'x,30)
+++  23*x+3*19*x^7+x^(1/7)
+++  exp %
+++  log %
 NMUnivariatePuiseuxSeries(R, x, prec) : Exports == Implementation where
   R    : NMRing
   x    : Symbol

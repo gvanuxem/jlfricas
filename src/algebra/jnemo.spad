@@ -487,7 +487,6 @@ NMAlgebraicNumber() : Exports == Implementation where
         error "coerce$NMAlgebraicNumber: Unconstant kernel"
       ret
     coerce(x : Fraction(Integer)) == coerce(coerce(x)@NMFraction(NMInteger))
-    coerce(i : %) : OutputForm == string(i) pretend OutputForm
     coerce(x : %) : AlgebraicNumber ==
       -- TODO: interpret string minpoly(x) ?
       not rational?(x) => error "Can not be coerced to an AlgebraicNumber"
@@ -497,6 +496,8 @@ NMAlgebraicNumber() : Exports == Implementation where
     jnan(i : NMInteger) == coerce(i)
     jnan(fi : NMFraction(NMInteger)) == coerce(fi)
     jnan(s: String) == jlref(concat(["QQBar(", s,")"]))
+    coerce(i : %) : OutputForm ==
+      concat(["[", string(i),"]"]) pretend OutputForm
 
 )abbrev domain NZMOD NMIntegerMod
 ++ Domain for Nemo integer mod n

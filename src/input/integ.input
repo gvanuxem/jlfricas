@@ -1,7 +1,7 @@
 )set break resume
 )expose UnittestCount UnittestAux Unittest
 
-)unexpose JLWSExpression
+)unexpose WSExpression
 )unexpose NMExactCalciumField
 
 testsuite "integ"

@@ -1,4 +1,4 @@
-)abbrev package JWSUF JLWSUtilityFunctions
+)abbrev package WSUF WSUtilityFunctions
 ++ Generic package for Julia WS based utilities
 ++ Author: G.Vanuxem
 ++ Date Created: July. 2024
@@ -6,92 +6,92 @@
 ++  Julia Wolfram Symbolic utility functions using
 ++  the MathLink Julia package.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
-JLWSUtilityFunctions() : Exports == Implementation where
+WSUtilityFunctions() : Exports == Implementation where
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
   Exports ==> with
-    seedRandom : JLWSInteger -> JLWSExpression
+    seedRandom : WSInteger -> WSExpression
     ++ seedRandom(n) reseeds the random number generator with n as seed.
     ++ Returns the random generator state.
-    urand01Real : PositiveInteger -> JLWSVector(JLWSReal)
+    urand01Real : PositiveInteger -> WSVector(WSReal)
     ++ urand01Real(n) returns a Julia WS vector with uniformly
     ++ distributed random elements in the range 0..1. Convenience function.
-    urand01Real : (PositiveInteger, PositiveInteger) -> JLWSMatrix(JLWSReal)
+    urand01Real : (PositiveInteger, PositiveInteger) -> WSMatrix(WSReal)
     ++ urand01Real(rows,cols) returns a Julia WS matrix with uniformly
     ++ distributed random elements in the range 0..1. Convenience function.
-    urand01Complex : PositiveInteger -> JLWSVector(JLWSComplex)
+    urand01Complex : PositiveInteger -> WSVector(WSComplex)
     ++ urand01Complex(n) returns a Julia WS vector with uniformly
     ++ distributed random complex elements in the unit square.
     ++ Convenience function.
     urand01Complex : (PositiveInteger, PositiveInteger) ->
-      JLWSMatrix(JLWSComplex)
+      WSMatrix(WSComplex)
     ++ urand01Complex(rows,cols) returns a Julia WS matrix with uniformly
     ++ distributed random complex elements in the unit square.
     ++ Convenience function.
-    hankelMatrix : PositiveInteger -> JLWSMatrix(JLWSInteger)
+    hankelMatrix : PositiveInteger -> WSMatrix(WSInteger)
     ++ hankelMatrix(n) returns the square Hankel matrix with integer
     ++ coefficients.
-    hilbertMatrix : PositiveInteger -> JLWSMatrix(JLWSRational)
+    hilbertMatrix : PositiveInteger -> WSMatrix(WSRational)
     ++ hilbertMatrix(n) returns the square Hilbert matrix.
-    fourierMatrix : PositiveInteger -> JLWSMatrix(JLWSExpression)
+    fourierMatrix : PositiveInteger -> WSMatrix(WSExpression)
     ++ fourierMatrix(n) returns the n x n Fourier matrix.
-    gaussianMatrix : JLWSReal -> JLWSMatrix(JLWSReal)
+    gaussianMatrix : WSReal -> WSMatrix(WSReal)
     ++ gaussianMatrix(r) returns the Gaussian matrix with radius r.
     ++ For example:
     ++ \example{gaussianMatrix "2.2"}
-    vandermondeMatrix : JLWSList(JLWSExpression) ->
-                          JLWSMatrix(JLWSExpression)
+    vandermondeMatrix : WSList(WSExpression) ->
+                          WSMatrix(WSExpression)
     ++ vandermondeMatrix(lvars) returns a Vandermonde matrix with nodes
     ++ from lvars.
-    vandermondeMatrix : (JLWSList(JLWSExpression), JLWSInteger)
-                          -> JLWSMatrix(JLWSExpression)
+    vandermondeMatrix : (WSList(WSExpression), WSInteger)
+                          -> WSMatrix(WSExpression)
     ++ vandermondeMatrix(lvars, m) returns a Vandermonde matrix with nodes
     ++ from lvars and m columns.
-    identityMatrix : PositiveInteger ->  JLWSMatrix(JLWSInteger)
+    identityMatrix : PositiveInteger ->  WSMatrix(WSInteger)
     ++ identityMatrix(n) returns the identity matrix of size n.
     zeroMatrix : (PositiveInteger, PositiveInteger) ->
-                    JLWSMatrix(JLWSInteger)
+                    WSMatrix(WSInteger)
     ++ \spad{zeroMatrix(m, n)} returns an m-by-n zero matrix.
-    jlWSRange : JLWSInteger -> JLWSList(JLWSInteger)
+    jlWSRange : WSInteger -> WSList(WSInteger)
     ++ jlWSRange(n) returns a WS agg that ranges from 1 to n.
     ++ For example:
-    ++ \example{jlWSRange(10)@JWSLIST(JWSINT)}
-    jlWSRange : (JLWSInteger, JLWSInteger) -> JLWSList(JLWSInteger)
+    ++ \example{jlWSRange(10)@WSLIST(WSINT)}
+    jlWSRange : (WSInteger, WSInteger) -> WSList(WSInteger)
     ++ jlWSRange(n,m) returns a WS agg that ranges from n to m.
-    jlWSRange : (JLWSInteger, JLWSInteger, JLWSInteger) ->
-              JLWSList(JLWSInteger)
+    jlWSRange : (WSInteger, WSInteger, WSInteger) ->
+              WSList(WSInteger)
     ++ jlWSRange(n,m,d) returns a WS agg that ranges from n to m with step d.
-    jWSDateObject : () -> JLWSExpression
-    ++ jWSDateObject() returns the JLWSExpression object of the
+    jWSDateObject : () -> WSExpression
+    ++ jWSDateObject() returns the WSExpression object of the
     ++ local date and time.
-    jWSDateObject : JLWSExpression -> JLWSExpression
-    ++ jWSDateObject(expr) returns the JLWSExpression object of
+    jWSDateObject : WSExpression -> WSExpression
+    ++ jWSDateObject(expr) returns the WSExpression object of
     ++ the date from expr.
-    jWSDateObject : (JLWSExpression, JLWSExpression) -> JLWSExpression
-    ++ jWSDateObject(date,type) returns the JLWSExpression object of
+    jWSDateObject : (WSExpression, WSExpression) -> WSExpression
+    ++ jWSDateObject(date,type) returns the WSExpression object of
     ++ the date and type, for example "Month".
-    jlWSDateString : () -> JLWSExpression
-    ++ dateString() returns the JLWSExpression string of the local date and time.
+    jlWSDateString : () -> WSExpression
+    ++ dateString() returns the WSExpression string of the local date and time.
     ++ For example:
     ++ \example{toString dateTime()}
-    jlWSDateString : JLWSExpression -> JLWSExpression
-    ++ jlWSDateString(expr) returns the JLWSExpression string of the date
+    jlWSDateString : WSExpression -> WSExpression
+    ++ jlWSDateString(expr) returns the WSExpression string of the date
     ++ from a WS date object.
     ++ For example:
     ++ \example{jlWSDateString jWSExpr "Tomorrow"}
-    jlWSDateString : (JLWSExpression, JLWSExpression) -> JLWSExpression
-    ++ jlWSDateString(expr, form) returns JLWSExpression string of the date
+    jlWSDateString : (WSExpression, WSExpression) -> WSExpression
+    ++ jlWSDateString(expr, form) returns WSExpression string of the date
     ++ from a WS date object with WS format form.
     ++ Fo example:
     ++ \example{jlWSDateString(jWSExpr("Now"), jWSExpr("Entity[_"Language_", _"French::367gk_"]"))}
-    jlWSInformation : Symbol -> JLWSExpression
+    jlWSInformation : Symbol -> WSExpression
     ++ jWSInformation(sym) prints informations about the symbol sym.
     ++ For example:
     ++ \example{jWSInformation sin}
-    jlWSImport : String -> JLWSExpression
+    jlWSImport : String -> WSExpression
     ++ jWSImport(expr) imports expr.
-    jlWSImport : (String, JLWSExpression) -> JLWSExpression
+    jlWSImport : (String, WSExpression) -> WSExpression
     ++ jWSImport(expr, form) imports expr with format form.
-    jlWSExport : (String, JLWSExpression) -> JLWSExpression
+    jlWSExport : (String, WSExpression) -> WSExpression
     ++ jlWSExport(file.ext, obj) exports the object obj to the file file.ext.
     ++ The extension ext will determine the saved format. A WS expression for
     ++ example can be exported in an image file, it will be saved in the WS
@@ -101,8 +101,8 @@ JLWSUtilityFunctions() : Exports == Implementation where
     --outputForm
     --*Form
     -- TODO: OutputForm?
-    jlWSExportString : (JLWSExpression, JLWSExpression)
-      -> JLWSExpression
+    jlWSExportString : (WSExpression, WSExpression)
+      -> WSExpression
     ++ jlWSExportString(expr, jWSString(format)) returns the string
     ++ representation of expr in the format form. Use toString or string
     ++ to obtain the FriCAS String.
@@ -111,7 +111,7 @@ JLWSUtilityFunctions() : Exports == Implementation where
     ++ \example{jWSExpr \"Probability[x < 1, x \\[Distributed] NormalDistribution[]]\"}
     ++ \example{string jlWSExportString(%,jWSString "TeX")}
 
-    jlWSPlot : (JLWSExpression, JLWSExpression) -> JLWSExpression
+    jlWSPlot : (WSExpression, WSExpression) -> WSExpression
     ++ jlWSPlot(expr, options) is the WS plot function. Since it should be run
     ++ in a Wolfram notebook or any other supported graphical interfaces,
     ++ the Wolfram Jupyter "plugin" for example, it is left to the user for
@@ -119,8 +119,8 @@ JLWSUtilityFunctions() : Exports == Implementation where
     ++ \example{x:=jWSExpr(x);opt:=jWSList [x,-5,5]}
     ++ \example{jlWSExport("sin.png", jlWSPlot(sin(x),opt))}
   Implementation ==> add
-    import JLWSInteger
-    import from JLWSList(JLWSInteger)
+    import WSInteger
+    import from WSList(WSInteger)
   
     junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
     jbinfunc(func,a,b) ==>
@@ -145,25 +145,25 @@ JLWSUtilityFunctions() : Exports == Implementation where
     jlWSImport(file, options) ==
       jbinfunc("W_"Import_"(", jWSString(file), options)
     jlWSExport(file, options) ==
-      savefile : JLWSExpression := coerce(concat(["_"", file, "_""]))
+      savefile : WSExpression := coerce(concat(["_"", file, "_""]))
       jbinfunc("W_"Export_"(", savefile, options)
     jlWSExportString(expr, format) ==
-      jlEval(jbinfunc("W_"ExportString_"(", expr, format) pretend JLWSExpression)
+      jlEval(jbinfunc("W_"ExportString_"(", expr, format) pretend WSExpression)
     jlWSPlot(expr, options) == jbinfunc("W_"Plot_"(", expr, options)
 
     urand01Real(rows,cols) ==
-      range := jWSList("{0,1}")@JLWSList(JLWSInteger)
-      dims := jWSList([jWSInt(rows),jWSInt(cols)])@JLWSList(JLWSInteger)
+      range := jWSList("{0,1}")@WSList(WSInteger)
+      dims := jWSList([jWSInt(rows),jWSInt(cols)])@WSList(WSInteger)
       jbinfunc("W_"RandomReal_"(", range, dims)
     urand01Real(n) ==
-      range := jWSList("{0,1}")@JLWSList(JLWSInteger)
+      range := jWSList("{0,1}")@WSList(WSInteger)
       jbinfunc("W_"RandomReal_"(", range, jWSInt n)
     urand01Complex(n) ==
-      range := jWSList("1+I")@JLWSList(JLWSInteger)
+      range := jWSList("1+I")@WSList(WSInteger)
       jbinfunc("W_"RandomComplex_"(", range, jWSInt n)
     urand01Complex(rows,cols) ==
-      range := jWSList("1+I")@JLWSList(JLWSInteger)
-      dims := jWSList([jWSInt(rows),jWSInt(cols)])@JLWSList(JLWSInteger)
+      range := jWSList("1+I")@WSList(WSInteger)
+      dims := jWSList([jWSInt(rows),jWSInt(cols)])@WSList(WSInteger)
       jbinfunc("W_"RandomComplex_"(", range, dims)
 
     jlWSRange(n) ==
@@ -181,10 +181,10 @@ JLWSUtilityFunctions() : Exports == Implementation where
     vandermondeMatrix(lvars, m) == jbinfunc("W_"VandermondeMatrix_"(", lvars, m)
     identityMatrix(n) == junfunc("W_"IdentityMatrix_"(", jWSInt(n))
     zeroMatrix(m,n) == 
-      jbinfunc("W_"ConstantArray_"(", 0$JLWSInteger,
-        jWSList([jWSInt(m), jWSInt(n)])@JLWSList(JLWSInteger))
+      jbinfunc("W_"ConstantArray_"(", 0$WSInteger,
+        jWSList([jWSInt(m), jWSInt(n)])@WSList(WSInteger))
     jlWSInformation(sym) ==
       str : String := string(sym)
       setelt!(str,1, upperCase str.1)
-      jWSExpr(concat ["Information[", str,"]"])$JLWSExpression
+      jWSExpr(concat ["Information[", str,"]"])$WSExpression
 

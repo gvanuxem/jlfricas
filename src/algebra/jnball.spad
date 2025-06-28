@@ -14,7 +14,7 @@ NMArbField(p: PositiveInteger) : Exports == Implementation where
   JF64      ==> JLFloat64
   Exports ==> Join(NMRing, CommutativeRing, FloatingPointSystem,
             Approximate, JLArbitraryPrecision,
-            TranscendentalFunctionCategory, SpecialFunctionCategory,
+            TranscendentalFunctionCategory,
             DifferentialRing) with
     integer? : % -> Boolean
     ++ integer?(x) checks whether or not x is an integer.
@@ -47,12 +47,19 @@ NMArbField(p: PositiveInteger) : Exports == Implementation where
     ++ atan(x, y) computes the inverse tangent of x/y.
     hurwitzZeta: (%, %) -> %
     ++ hurwitzZeta(s,a) returns the Hurwitz zeta function of s and a.
+    Gamma : % -> % 
+    ++ Gamma(x) is the Euler Gamma function evaluated at x.
+    Gamma : (%, %) -> % 
+    ++ Gamma(x,y) is the incomplete Gamma function.
+    polyLog : (%, %) -> %
+    ++ polyLog(x,y) returns the polyLog function applied to x and y.
     "*" : (%, Integer) -> %
     ++ x*i is the multiplication by an integer.
     "/" : (Integer, %) -> %
     ++ i/x is the division of an integer by x.
     overlaps? : (%, %) -> Boolean
-    ++ overlaps?(x,y) checks whether or not any part of x and y balls overlaps. 
+    ++ overlaps?(x,y) checks whether or not any part
+    ++ of x and y balls overlaps. 
     contains? : (%, %) -> Boolean 
     ++ contains?(x,y) checks whether or not y is contained in x.
     contains? : (%, NMInteger) -> Boolean
@@ -249,11 +256,10 @@ NMArbField(p: PositiveInteger) : Exports == Implementation where
     atanh(x)  == junfunc("atanh",x)
 
     Gamma(x)  == jlref(concat ["Nemo.gamma(", getind(x),")"])
-    Gamma(x,y) == jlref(concat ["Nemo.gamma(",getind(x),",",getind(y)])
-    hurwitzZeta(x,y) == jlref(concat ["Nemo.zeta(",getind(x),",",getind(y)])
-    polygamma(x,y) == jlref(concat ["Nemo.polygamma(",getind(x),",",getind(y)])
+    Gamma(x,y) == jlref(concat ["Nemo.gamma(",getind(x),",",getind(y),")"])
+    hurwitzZeta(x,y) == jlref(concat ["Nemo.zeta(",getind(x),",",getind(y),")"])
 
-    polylog(n,x) == jbinfunc("polylog",n, x)
+    polyLog(n,x) == jbinfunc("polylog",n, x)
 
     guess(a, deg) ==
       jlref(concat(["guess(QQBar,", getind(a), ",",
@@ -328,7 +334,7 @@ NMAcbField(p: PositiveInteger) : Exports == Implementation where
   JF64      ==> JLFloat64
   Exports ==> Join(NMRing, CommutativeRing, ComplexCategory(NMArbField(p)),
                 Approximate, JLArbitraryPrecision,
-                DifferentialRing, SpecialFunctionCategory) with
+                DifferentialRing) with
     integer? : % -> Boolean
     ++ integer?(x) checks whether or not x is an integer.
     finite? : % -> Boolean
@@ -365,6 +371,34 @@ NMAcbField(p: PositiveInteger) : Exports == Implementation where
     ++ ldexp(x, n) returns x * 2^n.
     hurwitzZeta: (%, %) -> %
     ++ hurwitzZeta(s,a) returns the Hurwitz zeta function of s and a.
+    Gamma : % -> % 
+    ++ Gamma(x) is the Euler Gamma function evaluated at x.
+    Gamma : (%, %) -> % 
+    ++ Gamma(x,y) is the incomplete Gamma function.
+    polygamma : (%, %) -> %
+    ++ polygamma(x,y) returns the polygamma function applied to x and y.
+    polyLog : (%, %) -> %
+    ++ polyLog(x,y) returns the polyLog function applied to x and y.
+    airyAi :    R -> R
+    ++ airyAi(z) is the Airy function \spad{Ai(z)}.
+    airyAiPrime : R -> R
+    ++ airyAiPrime(z) is the derivative of the Airy function \spad{Ai(z)}.
+    airyBi :    R -> R
+    ++ airyBi(z) is the Airy function \spad{Bi(z)}.
+    airyBiPrime : R -> R
+    ++ airyBiPrime(z) is the derivative of the Airy function \spad{Bi(z)}.
+    ellipticE : % -> %
+    ++ ellipicE(x) is the complete elliptic integral of the second kind.
+    ellipticK : %-> %
+    ++ ellipticK(x) is the complete elliptic integral of the first kind.
+    besselI : (%, %) -> %
+    ++ besselI(nu,x) is the Bessel I function.
+    besselJ : (%, %) -> %
+    ++ besselJ(nu,x) is the Bessel J function.
+    besselK : (%, %) -> %
+    ++ besselK(nu,x) is the Bessel K function.
+    besselY : (%, %) -> %
+    ++ besselY(nu,x) is the Bessel Y function.
     hypergeometric1F1 : (%, %, %) -> %
     ++ hypergeometric1F1(a,b,z) is the confluent hypergeometric function
     ++ 1F1.
@@ -520,12 +554,12 @@ NMAcbField(p: PositiveInteger) : Exports == Implementation where
     tanh(x)  == junfunc("tanh",x)
     coth(x)  == junfunc("coth",x)
 
-    polylog(n,x) == jbinfunc("polylog",n, x)
+    polyLog(n,x) == jbinfunc("polylog",n, x)
 
     Gamma(x)  == jlref(concat ["Nemo.gamma(", getind(x),")"])
-    Gamma(x,y) == jlref(concat ["Nemo.gamma(",getind(x),",",getind(y)])
-    hurwitzZeta(x,y) == jlref(concat ["Nemo.zeta(",getind(x),",",getind(y)])
-    polygamma(x,y) == jlref(concat ["Nemo.polygamma(",getind(x),",",getind(y)])
+    Gamma(x,y) == jlref(concat ["Nemo.gamma(",getind(x),",",getind(y),")"])
+    hurwitzZeta(x,y) == jlref(concat ["Nemo.zeta(",getind(x),",",getind(y),")"])
+    polygamma(x,y) == jlref(concat ["Nemo.polygamma(",getind(x),",",getind(y),")"])
 
     airyAi(x) == junfunc("airy_ai", x)
     airyBi(x) == junfunc("airy_bi", x)
@@ -599,7 +633,7 @@ NMRealField() : Exports == Implementation where
   JF64      ==> JLFloat64
   Exports ==> Join(NMRing, CommutativeRing, FloatingPointSystem,
             arbitraryPrecision, TranscendentalFunctionCategory,
-            DifferentialRing, SpecialFunctionCategory) with
+            DifferentialRing) with
     integer? : % -> Boolean
     ++ integer?(x) checks whether or not x is an integer.
     finite? : % -> Boolean
@@ -633,6 +667,12 @@ NMRealField() : Exports == Implementation where
     ++ ldexp(x, n) returns x * 2^n.
     hurwitzZeta: (%, %) -> %
     ++ hurwitzZeta(s,a) returns the Hurwitz zeta function of s and a.
+    Gamma : % -> % 
+    ++ Gamma(x) is the Euler Gamma function evaluated at x.
+    Gamma : (%, %) -> % 
+    ++ Gamma(x,y) is the incomplete Gamma function.
+    polyLog : (%, %) -> %
+    ++ polyLog(x,y) returns the polyLog function applied to x and y.
     atan : (%, %) -> %
     ++ atan(x, y) computes the inverse tangent of x/y.
     midpoint : % -> %
@@ -824,11 +864,10 @@ NMRealField() : Exports == Implementation where
     atanh(x)  == junfunc("atanh",x)
 
     Gamma(x)  == jlref(concat ["Nemo.gamma(", getind(x),")"])
-    Gamma(x,y) == jlref(concat ["Nemo.gamma(",getind(x),",",getind(y)])
-    hurwitzZeta(x,y) == jlref(concat ["Nemo.zeta(",getind(x),",",getind(y)])
-    polygamma(x,y) == jlref(concat ["Nemo.polygamma(",getind(x),",",getind(y)])
+    Gamma(x,y) == jlref(concat ["Nemo.gamma(",getind(x),",",getind(y),")"])
+    hurwitzZeta(x,y) == jlref(concat ["Nemo.zeta(",getind(x),",",getind(y),")"])
  
-    polylog(n,x) == jbinfunc("polylog",n, x)
+    polyLog(n,x) == jbinfunc("polylog",n, x)
 
     guess(a, deg) ==
       jlref(concat(["guess(QQBar,", getind(a), ",",
@@ -892,8 +931,7 @@ NMComplexField() : Exports == Implementation where
   JF64      ==> JLFloat64
   NRF       ==> NMRealField
   Exports ==> Join(NMRing, CommutativeRing, ComplexCategory(NMRealField),
-            arbitraryPrecision, DifferentialRing,
-            SpecialFunctionCategory) with
+            arbitraryPrecision, DifferentialRing) with
     integer? : % -> Boolean
     ++ integer?(x) checks whether or not x is an integer.
     finite? : % -> Boolean
@@ -934,6 +972,34 @@ NMComplexField() : Exports == Implementation where
     ++ x/i is the division by an integer.
     hurwitzZeta: (%, %) -> %
     ++ hurwitzZeta(s,a) returns the Hurwitz zeta function of s and a.
+    Gamma : % -> % 
+    ++ Gamma(x) is the Euler Gamma function evaluated at x.
+    Gamma : (%, %) -> % 
+    ++ Gamma(x,y) is the incomplete Gamma function.
+    polygamma : (%, %) -> %
+    ++ polygamma(x,y) returns the polygamma function applied to x and y.
+    polyLog : (%, %) -> %
+    ++ polyLog(x,y) returns the polyLog function applied to x and y.
+    airyAi :    R -> R
+    ++ airyAi(z) is the Airy function \spad{Ai(z)}.
+    airyAiPrime : R -> R
+    ++ airyAiPrime(z) is the derivative of the Airy function \spad{Ai(z)}.
+    airyBi :    R -> R
+    ++ airyBi(z) is the Airy function \spad{Bi(z)}.
+    airyBiPrime : R -> R
+    ++ airyBiPrime(z) is the derivative of the Airy function \spad{Bi(z)}.
+    ellipticE : % -> %
+    ++ ellipicE(x) is the complete elliptic integral of the second kind.
+    ellipticK : %-> %
+    ++ ellipticK(x) is the complete elliptic integral of the first kind.
+    besselI : (%, %) -> %
+    ++ besselI(nu,x) is the Bessel I function.
+    besselJ : (%, %) -> %
+    ++ besselJ(nu,x) is the Bessel J function.
+    besselK : (%, %) -> %
+    ++ besselK(nu,x) is the Bessel K function.
+    besselY : (%, %) -> %
+    ++ besselY(nu,x) is the Bessel Y function.
     hypergeometric1F1 : (%, %, %) -> %
     ++ hypergeometric1F1(a,b,z) is the confluent hypergeometric function
     ++ 1F1.
@@ -1092,10 +1158,12 @@ NMComplexField() : Exports == Implementation where
     tanh(x)  == junfunc("tanh",x)
     coth(x)  == junfunc("coth",x)
 
+    polyLog(n,x) == jbinfunc("polylog",n, x)
+
     Gamma(x)  == jlref(concat ["Nemo.gamma(", getind(x),")"])
-    Gamma(x,y) == jlref(concat ["Nemo.gamma(",getind(x),",",getind(y)])
-    hurwitzZeta(x,y) == jlref(concat ["Nemo.zeta(",getind(x),",",getind(y)])
-    polygamma(x,y) == jlref(concat ["Nemo.polygamma(",getind(x),",",getind(y)])
+    Gamma(x,y) == jlref(concat ["Nemo.gamma(",getind(x),",",getind(y),")"])
+    hurwitzZeta(x,y) == jlref(concat ["Nemo.zeta(",getind(x),",",getind(y),")"])
+    polygamma(x,y) == jlref(concat ["Nemo.polygamma(",getind(x),",",getind(y),")"])
 
     airyAi(x) == junfunc("airy_ai", x)
     airyBi(x) == junfunc("airy_bi", x)

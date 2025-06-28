@@ -1,4 +1,4 @@
-)abbrev domain JWSEXPR JLWSExpression
+)abbrev domain WSEXPR WSExpression
 ++ Generic domain for Julia WS expressions
 ++ Author: G.Vanuxem
 ++ Date Created: May. 2024
@@ -9,11 +9,11 @@
 -- Reduce or FindInstance
 -- interval({-2, 2})
 -- limit etc. "x=0" assignment vs. jlEval
-JLWSExpression() : Exports == Implementation where
+WSExpression() : Exports == Implementation where
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-  JWSL  ==> JLWSList
+  WSL  ==> WSList
   JF64  ==> JLFloat64
-  Exports ==> Join(JLWSAggregate(%), PartialOrder, JLWSRing,
+  Exports ==> Join(WSAggregate(%), PartialOrder, WSRing,
                   ComplexCategory(%), PartialDifferentialRing(%),
                   ExpressionSpace) with
     AlgebraicallyClosedFunctionSpace(%)
@@ -25,7 +25,7 @@ JLWSExpression() : Exports == Implementation where
     zero?   : % -> Boolean 
     ++ zero? x tries to determine if x is 0.
     ++ For example:
-    ++ \example{expr:=0$JWSEXPR/1*sqrt(17::JWSEXPR); zero? expr}
+    ++ \example{expr:=0$WSEXPR/1*sqrt(17::WSEXPR); zero? expr}
     defined? :  % -> Boolean
     ++ defined?(sym) checks whether or not sym is a WS symbol.
     real? : % -> Boolean
@@ -61,7 +61,7 @@ JLWSExpression() : Exports == Implementation where
     ++ For example:
     ++ \example{jlWSDefined? "Sin"}
     ++ => true
-    "^"     : (%, JLWSRational) -> %
+    "^"     : (%, WSRational) -> %
     ++ ^ is the exponentiation by a rational.
     round : % -> %
     ++ round(x) returns the integer closest to x.
@@ -95,7 +95,7 @@ JLWSExpression() : Exports == Implementation where
     ++ erfc(x) computes the complementary error function.
     dawson  : % -> %
     ++ dawson(x) computes the Dawson integral of x.
-    -- TODO: JWSINT package
+    -- TODO: WSINT package
     eulerPhi : % -> %
     ++ eulerPhi(n) is the totient function i.e. the number of integers
     ++ that are relatively prime to n in the range [1,n].
@@ -352,7 +352,7 @@ JLWSExpression() : Exports == Implementation where
     series : (%, %) -> %
     ++ series(expr, opt) returns a serie from expr.
     ++ \example{x:=jWSExpr(x);a:=jWSExpr(a);}
-    ++ \example{opt:=jWSList [x,pi()$JWSEXPR/4,7]}
+    ++ \example{opt:=jWSList [x,pi()$WSEXPR/4,7]}
     ++ \example{series(sin(a*x),opt)}
     ++ \example{series(cos(x),"\{x, 0, 12\}")}
     sum : (%, %) -> %
@@ -472,18 +472,18 @@ JLWSExpression() : Exports == Implementation where
     maxLimit : (%, %) -> %
     ++ maxLimit(expr, params) returns the max limit, eventually nested or
     ++  multivariate, of expr.
-    solve : (Equation(%), %) -> JWSL(JWSL(%))
+    solve : (Equation(%), %) -> WSL(WSL(%))
     ++ solve(eq, vars) tries to solve the equation eq.
-    solve : (%, %) -> JWSL(JWSL(%))
+    solve : (%, %) -> WSL(WSL(%))
     ++ solve(expr, vars) tries to solve the expression expr.
-    solve : (Equation(%), %, %) -> JWSL(JWSL(%))
+    solve : (Equation(%), %, %) -> WSL(WSL(%))
     ++ solve(expr, vars, dom) tries to solve the expression expr.
-    solve : (%, %, %) -> JWSL(JWSL(%))
+    solve : (%, %, %) -> WSL(WSL(%))
     ++ solve(expr, vars, dom) tries to solve the expression expr.
-    solve : (%, String, %, %) -> JWSL(JWSL(%))
+    solve : (%, String, %, %) -> WSL(WSL(%))
     ++ solve(lhs, rel, rhs,lvars) tries to solve the (in)equation in expr
     ++ where rel is the relation operator ("==" for example).
-    solve : (%, String, %, %, %) -> JWSL(JWSL(%))
+    solve : (%, String, %, %, %) -> WSL(WSL(%))
     ++ solve(lhs, rel,rhs,lvars,dom) tries to solve the (in)equation in expr
     ++ where rel is the relation operator ("==" for example).
     numericSolve : (Equation(%), %) -> %
@@ -498,10 +498,10 @@ JLWSExpression() : Exports == Implementation where
     ++ fourier(expr, pos) returns the elements of the discrete
     ++ Fourier transform from a list of numbers with position(s)
     ++ in the list pos.
-    fourier : JWSL(%) -> JWSL(%)
+    fourier : WSL(%) -> WSL(%)
     ++ fourier(list) returns the discrete Fourier transform
     ++ from the list of numbers.
-    fourier : (JWSL(%), JWSL(%)) ->JWSL(%)
+    fourier : (WSL(%), WSL(%)) ->WSL(%)
     ++ fourier(list, lpos) returns the elements of the discrete
     ++ Fourier transform from a list of numbers with position(s)
     ++ in the list lpos.
@@ -512,10 +512,10 @@ JLWSExpression() : Exports == Implementation where
     ++ inverseFourier(expr, pos) returns the elements of the discrete
     ++ inverse Fourier transform from a list of numbers with position(s)
     ++ in the list pos.
-    inverseFourier : JWSL(%) -> %
+    inverseFourier : WSL(%) -> %
     ++ inverseFourier(expr) returns the discrete inverse Fourier
     ++ transform from a list of numbers.
-    inverseFourier : (JWSL(%), JWSL(%)) -> JWSL(%)
+    inverseFourier : (WSL(%), WSL(%)) -> WSL(%)
     ++ inverseFourier(list, lpos) returns the elements of the discrete
     ++ inverse Fourier transform from a list of numbers with position(s)
     ++ in the list lpos.
@@ -600,21 +600,21 @@ JLWSExpression() : Exports == Implementation where
     reduce : (%, String, %, %, %) -> %
     ++ reduce(lhs, rel,rhs,lvars,dom) tries to reduce the (in)equation
     ++ in expr where rel is the relation operator ("=" or "<=" for example).
-    findInstance : (Equation(%), %) -> JWSL(JWSL(%))
+    findInstance : (Equation(%), %) -> WSL(WSL(%))
     ++ findInstance(expr,lvars) tries to find an instance the equation in expr.
-    findInstance : (%, %) -> JWSL(JWSL(%))
+    findInstance : (%, %) -> WSL(WSL(%))
     ++ findInstance(expr,lvars) tries to find an instance the
     ++ (in)equation in expr.
-    findInstance : (Equation(%), %, %) -> JWSL(JWSL(%))
+    findInstance : (Equation(%), %, %) -> WSL(WSL(%))
     ++ findInstance(expr,lvars,dom) tries to find an instance the equation
     ++ in expr.
-    findInstance : (Equation(%), %, %, %) -> JWSL(JWSL(%))
+    findInstance : (Equation(%), %, %, %) -> WSL(WSL(%))
     ++ findInstance(expr,lvars,dom,n) tries to find n instance(s) to the
     ++ equation in expr.
-    findInstance : (%, %, %) -> JWSL(JWSL(%))
+    findInstance : (%, %, %) -> WSL(WSL(%))
     ++ findInstance(expr,lvars,dom) tries to find an instance to the equation
     ++ in expr.
-    findInstance : (%, %, %, %) -> JWSL(JWSL(%))
+    findInstance : (%, %, %, %) -> WSL(WSL(%))
     ++ findInstance(expr,lvars,dom, n) tries to find n instance(s) to
     ++ the (in)equation in expr.
     
@@ -622,16 +622,16 @@ JLWSExpression() : Exports == Implementation where
     ++ numerator(expr) returns the numerator of expr.
     denominator : % -> %
     ++ denominator(expr) returns the denominator of expr.
-    numerDenom : % -> JWSL(%)
+    numerDenom : % -> WSL(%)
     ++ numerDenom(expr) returns the numerator
     ++ and denominator of expr.
  
     polynomial? : (%, %) -> Boolean
     ++ polynomial?(p,x) check whether or not p is a polynomial in x.
-    polynomial? : (%, JWSL(%)) -> Boolean
+    polynomial? : (%, WSL(%)) -> Boolean
     ++ polynomial?(p,vlist) check whether or not p is a polynomial in
     ++ the list of variables vlist.
-    variables : % -> JWSL(%)
+    variables : % -> WSL(%)
     ++ variables(p) returns the list of variables in p.
     exponent  : (%, %) -> %
     ++ exponent(p,expr) returns the maximaum exponent of p for expr.
@@ -671,20 +671,20 @@ JLWSExpression() : Exports == Implementation where
     ++ polynomialQuotient(p1, p2, x) returns the quotient of p1 and p2 in x. 
     polynomialRemainder : (%, %, %) -> %
     ++ polynomialRemainder(p1,p2, x) returns the remainder of p1 and p2 in x.
-    polynomialQuotientRemainder : (%, %, %) -> JLWSList(%)
+    polynomialQuotientRemainder : (%, %, %) -> WSList(%)
     ++ polynomialQuotientRemainder(p1,p2,var) returns the quotient and remainder
     ++ of p1 and p2 in x.
 
     padeApproximant : (%, %) -> %
     ++ padeApproximant(expr, {x,x0, {n,m}}) returns the Padé approximant at x0.
 
-    symmetricPolynomial : (%, JWSL(%)) -> %
+    symmetricPolynomial : (%, WSL(%)) -> %
     ++ symmetricPolynomial(n,lvars) returns the n-th elementary symmetric
     ++ polynomial with respect to variables in lvars.
-    symmetricReduction : (%, JWSL(%)) -> JWSL(%)
+    symmetricReduction : (%, WSL(%)) -> WSL(%)
     ++ symmetricReduction(f,lvars) return a pair of polynomial representing
     ++ f = p+q where p is a symmetric polynomial, q the remainder. 
-    symmetricReduction : (%, JWSL(%), JWSL(%)) -> JWSL(%)
+    symmetricReduction : (%, WSL(%), WSL(%)) -> WSL(%)
     ++ symmetricReduction(f, lvars, replnt) return a pair of polynomial
     ++ representing f = p+q where p is a symmetric polynomial, q the remainder
     ++ where variables in p replaced by the ones in replnt.
@@ -713,10 +713,10 @@ JLWSExpression() : Exports == Implementation where
     ++ respect to x.
     discriminant : (%, %) -> %
     ++ discriminant(p, x) returns the discriminant of p with respect to x.
-    groebnerBasis : (%, %) -> JWSL(%)
+    groebnerBasis : (%, %) -> WSL(%)
     ++ groebnerBasis(lpoly, lvar) computes a Groebner basis from the list
     ++ of polynomials lpoly relative to the list of vars lvars.
-    groebnerBasis : (%, %, %) -> JWSL(%)
+    groebnerBasis : (%, %, %) -> WSL(%)
     ++ groebnerBasis(lpoly, lvar, opt) computes a Groebner basis from the list
     ++ of polynomials lpoly relative to the list of variables in lvars
     ++ without variables in opt. Opt can also give the modulus to compute it:
@@ -748,20 +748,20 @@ JLWSExpression() : Exports == Implementation where
     factorTerms : (%, %) -> %
     ++ factorTerms(p, var) factors out numerical factor of the expression
     ++ or polynomial expr without those related to var.
-    factorTerms : (%, JWSL(%)) -> %
+    factorTerms : (%, WSL(%)) -> %
     ++ factorTerms(p, vars) factors the expression or polynomial expr by putting out
     ++ numerical factors without those related to var(s).
-    factorTermsList : % -> JLWSList(%)
+    factorTermsList : % -> WSList(%)
     ++ factorTermsList(expr) is the counterpart of factorTerms but here returned as
     ++ a list of pair (numerical factor, polynomial factor).
-    factorTermsList : (%, %) -> JLWSList(%)
+    factorTermsList : (%, %) -> WSList(%)
     ++ factorTermsList(expr, vars) is the counterpart of factorTerms but here
     ++ returned as a list of pair (numerical factor, polynomial factor).
     ++ The numerical factors related to var(s) are not factored.
-    factorList : % -> JLWSList(JLWSList(%))
+    factorList : % -> WSList(WSList(%))
     ++ factorList(expr) factor the expression or polynomial expr, but
     ++ returns result as a list of pair (factor, exponent).
-    factorSquareFreeList : % -> JLWSList(JLWSList(%))
+    factorSquareFreeList : % -> WSList(WSList(%))
     ++ factorSquareFreeList(expr) factors the expression or polynomial expr
     ++ in square free factors but returns result as a list of pair
     ++ (factor, exponent).
@@ -771,7 +771,7 @@ JLWSExpression() : Exports == Implementation where
     ++ irreducible?(p) checks whether or not p is irreducible over Gaussian
     ++ rationals or algebraic extensions.
 
-    decompose : (%, %) -> JLWSList(%)
+    decompose : (%, %) -> WSList(%)
     ++ decompose(poly, x) is a polynomial decomposition function, here,
     ++ related to x.
     interpolatingPolynomial : (%, %) -> %
@@ -838,7 +838,7 @@ JLWSExpression() : Exports == Implementation where
     collect : (%, %) -> %
     ++ collect(expr, var) collects same power terms with respect to
     ++ variable var.
-    collect : (%, JWSL(%)) -> %
+    collect : (%, WSL(%)) -> %
     ++ collect(expr, vars)  collects same power terms with respect to
     ++ variables in vars.
     apart : % -> %
@@ -897,7 +897,7 @@ JLWSExpression() : Exports == Implementation where
     trigFactor : % -> %
     ++ trigFactor(expr) factors (hyperbolic) trigonometric
     ++ functions in expr.
-    trigFactorList : % -> JWSL(%)
+    trigFactorList : % -> WSL(%)
     ++ trigFactorList(expr) returns a list of factors of (hyperbolic)
     ++ trigonometric functions in expr.
     trigToExp : % -> %
@@ -940,9 +940,9 @@ JLWSExpression() : Exports == Implementation where
     ++ with param1, param2 and param3 as parameters.
     length : % -> %
     ++ length(expr) returns the length of expr seen as a list.
-    level : (%, %) -> JWSL(%)
+    level : (%, %) -> WSL(%)
     ++ level(expr, lev) returns the list of expression expr at level lev.
-    level : (%, %, Boolean) -> JWSL(%)
+    level : (%, %, Boolean) -> WSL(%)
     ++ level(expr, lev, head) returns the list of expression expr at level lev
     ++ with heads if head is true.
     extract: (%, NonNegativeInteger) -> %
@@ -961,11 +961,11 @@ JLWSExpression() : Exports == Implementation where
     quantityMagnitude : % -> %
     ++ quantityMagnitude(val) returns magnitude of val.
 
-    jlDisplay : JLWSExpression -> JLWSExpression
+    jlDisplay : WSExpression -> WSExpression
     ++ jlDisplay(expr) returns the traditional form of expr.
     ++ This is equilavtent to:
     ++ jWSExpr "Format[Sin[x]" => sin(x)]
-    jlDisplay : (JLWSExpression, JLWSExpression) -> JLWSExpression
+    jlDisplay : (WSExpression, WSExpression) -> WSExpression
     ++ jlDisplay(expr, form) returns the `form` form of expr
     ++ Resulting for example in: "Format[Sin[x], TeXForm]" => \sin x
 
@@ -1021,7 +1021,7 @@ JLWSExpression() : Exports == Implementation where
     quantityForm : (%, %) -> %
     ++ quantityForm(expr,form) returns expr as a quantity with format
     ++ form.
-    quantityForm : (%, JWSL(%)) -> %
+    quantityForm : (%, WSL(%)) -> %
     ++ quantityForm(expr,lform) returns expr as a quantity with a list
     ++ of formats lform.
     replace : (%, %) -> %
@@ -1053,28 +1053,28 @@ JLWSExpression() : Exports == Implementation where
     ++ retract(expr) tries to retract expr to an Expression(Integer).
     ++ Throws an error otherwise.
     coerce  : Integer  -> %
-    ++ coerce(z) coerces the integer z to a JLWSExpression.
+    ++ coerce(z) coerces the integer z to a WSExpression.
     ++ Convenience function.
     coerce   : Complex(Integer) -> % -- %i operations for example
-    ++ coerce(gi) coerces gi to a JLWSExpression. Convenience function.
+    ++ coerce(gi) coerces gi to a WSExpression. Convenience function.
     coerce  : Fraction(Integer)  -> %
-    ++ coerce(q) coerces the rational q to a JLWSExpression.
+    ++ coerce(q) coerces the rational q to a WSExpression.
     ++ Convenience function.
     coerce  : Float  -> %
-    ++ coerce(f) coerces the floating point number f to a JLWSExpression.
+    ++ coerce(f) coerces the floating point number f to a WSExpression.
     ++ Convenience function.
     coerce  : String  -> %
-    ++ coerce(str) coerces the string str to a JLWSExpression
+    ++ coerce(str) coerces the string str to a WSExpression
     ++ evaluating str as a Wolfram Symbolic Language Expression.
     ++ For example:
-    ++ \example{expr := "Sqrt[x]"::JWSEXPR;jlEval(expr,"x=2.0")}
+    ++ \example{expr := "Sqrt[x]"::WSEXPR;jlEval(expr,"x=2.0")}
     -- The following breaks build process in src/doc and likely in src/input
     coerce : Symbol -> %
-    ++ coerce(sym) coerces sym to a JLWSExpression.
-    coerce : JLWSSymbol -> %
-    ++ coerce(sym) coerces sym to a JLWSExpression.
+    ++ coerce(sym) coerces sym to a WSExpression.
+    coerce : WSSymbol -> %
+    ++ coerce(sym) coerces sym to a WSExpression.
     coerce : List(%) -> %
-    ++ coerce(list) coerces list of JLWSExpression.
+    ++ coerce(list) coerces list of WSExpression.
     jlWSPrecision : % -> %
     ++ jlWSPrecision get precision of expr.
     jlWSAccuracy : % -> %
@@ -1101,9 +1101,9 @@ JLWSExpression() : Exports == Implementation where
     ++  jWSData(sym, prop) returns the property of sym.
     jWSData : (%, %, %) -> %
     ++ jWSData(sym, prop, ann) returns the annotation for the property of sym.
-    jWSTable : (%, %) -> JLWSList(%)
+    jWSTable : (%, %) -> WSList(%)
     ++ jWSTable(expr, range) applies the expr to the define range.
-    jWSTable : (%, %, %) -> JLWSList(JLWSList(%))
+    jWSTable : (%, %, %) -> WSList(WSList(%))
     ++ jWSTable(expr, range1, range2) applies the expr to the define ranges.
     jWSRule : (%,  %) -> %
     ++ jWSRule(lhs,rhs) returns the Julia WS rule lhs->rhs.
@@ -1130,26 +1130,26 @@ JLWSExpression() : Exports == Implementation where
     jWSString : String -> %
     ++ jWSString(str) returns str as a WS String. 
     jWSExpr : Symbol -> %
-    ++ jWSExpr(sym) coerces sym to a JLWSExpression.
+    ++ jWSExpr(sym) coerces sym to a WSExpression.
     ++ For example:
     ++ x := jWSExpr x
     jWSExpr : Integer -> %
-    ++ jWSExpr(z) returns the Integer z as a JLWSExpression.
+    ++ jWSExpr(z) returns the Integer z as a WSExpression.
     jWSExpr : Fraction Integer -> %
-    ++ jWSExpr(q)  returns the Fraction(Integer) q as a JLWSExpression.
+    ++ jWSExpr(q)  returns the Fraction(Integer) q as a WSExpression.
     jWSExpr : DoubleFloat -> %
-    ++ jWSExpr(r)  returns the DoubleFloat as a JLWSExpression.
+    ++ jWSExpr(r)  returns the DoubleFloat as a WSExpression.
     jWSExpr : JLFloat64 -> %
-    ++ jWSExpr(r)  returns the JLFloat64  as a JLWSExpression.
+    ++ jWSExpr(r)  returns the JLFloat64  as a WSExpression.
     jWSExpr : Float -> %
-    ++ jWSExpr(r)  returns the Float r as a JLWSExpression.
+    ++ jWSExpr(r)  returns the Float r as a WSExpression.
     jWSExpr : JLFloat -> %
-    ++ jWSExpr(r)  returns the JLFloat r as a JLWSExpression.
+    ++ jWSExpr(r)  returns the JLFloat r as a WSExpression.
     jWSExpr : List(%) -> %
-    ++ jWSExpr(list) returns the list of JLWSExpression
-    ++ as a JLWSExpression.
+    ++ jWSExpr(list) returns the list of WSExpression
+    ++ as a WSExpression.
     jWSExpr : String -> %
-    ++ jWSExpr(str) constructs str as a JLWSExpression evaluating
+    ++ jWSExpr(str) constructs str as a WSExpression evaluating
     ++ str as a Wolfram Symbolic Language Expression.
     ++ For example:
     ++ \example{jWSExpr "Factorial[5]"}
@@ -1214,8 +1214,8 @@ JLWSExpression() : Exports == Implementation where
     real(z)      == junfunc("W_"Re_"(", z)
     imag(z)      == junfunc("W_"Im_"(", z)
 
-    WS : JLWSSymbol := WString()
-    WL : JLWSSymbol := WList()
+    WS : WSSymbol := WString()
+    WL : WSSymbol := WList()
 
     defined?(x) == junfunc("W_"NameQ_"(", x) = WTrue()
     member?(list, expr) == jbinfunc("W_"MemberQ_"(", list, expr) = WTrue() 
@@ -1255,15 +1255,15 @@ JLWSExpression() : Exports == Implementation where
     x : Integer * y : % == jbinop("*", jWSExpr(x), y)
     x : PositiveInteger * y : % == jbinop("*", jWSExpr(x), y)
     x : NonNegativeInteger * y : % == jbinop("*", jWSExpr(x), y)
-    x : % * y : Fraction(Integer) == jbinop("*", x, coerce(y)@JLWSRational)
-    x : Fraction(Integer) * y : % == jbinop("*", coerce(x)@JLWSRational, y)
+    x : % * y : Fraction(Integer) == jbinop("*", x, coerce(y)@WSRational)
+    x : Fraction(Integer) * y : % == jbinop("*", coerce(x)@WSRational, y)
     x : % / y : % == jbinop("/", x, y)
     x : % ^ y : % == jbinop("^", x, y)
     x : % ^ y : Integer == jbinop("^", x, coerce(y))
     x : % ^ y : PositiveInteger == jbinop("^", x, coerce(y))
     x : % ^ y : NonNegativeInteger == jbinop("^", x, coerce(y))
-    x : % ^ q : JLWSRational == jbinop("^", x, q)
-    x : % ^ q : Fraction(Integer) == jbinop("^", x, coerce(q)@JLWSRational)
+    x : % ^ q : WSRational == jbinop("^", x, q)
+    x : % ^ q : Fraction(Integer) == jbinop("^", x, coerce(q)@WSRational)
 
     round(x)   == junfunc("W_"Round_"(", x)
     ceiling(x) == junfunc("W_"Ceiling_"(", x)
@@ -1600,15 +1600,15 @@ JLWSExpression() : Exports == Implementation where
 
     fourier(expr : %) == junfunc("W_"Fourier_"(", expr)
     fourier(expr : %, lpos : %) == jbinfunc("W_"Fourier_"(", expr, lpos)
-    fourier(expr : JWSL(%)) == junfunc("W_"Fourier_"(", expr)
-    fourier(expr : JWSL(%), lpos : JWSL(%)) ==
+    fourier(expr : WSL(%)) == junfunc("W_"Fourier_"(", expr)
+    fourier(expr : WSL(%), lpos : WSL(%)) ==
       jbinfunc("W_"Fourier_"(", expr, lpos)
     inverseFourier(expr : %) == junfunc("W_"InverseFourier_"(", expr)
     inverseFourier(expr : %, lpos : %) ==
       jbinfunc("W_"InverseFourier_"(", expr, lpos)
-    inverseFourier(expr : JWSL(%)) ==
+    inverseFourier(expr : WSL(%)) ==
       junfunc("W_"InverseFourier_"(", expr)
-    inverseFourier(expr : JWSL(%), lpos : JWSL(%)) ==
+    inverseFourier(expr : WSL(%), lpos : WSL(%)) ==
       jbinfunc("W_"InverseFourier_"(", expr, lpos)
 
 
@@ -1686,12 +1686,12 @@ JLWSExpression() : Exports == Implementation where
 
     polynomial?(expr, var : %) ==
       jbinfunc("W_"PolynomialQ_"(", expr, var) = WTrue()
-    polynomial?(expr, vars : JWSL(%)) ==
+    polynomial?(expr, vars : WSL(%)) ==
       jbinfunc("W_"PolynomialQ_"(", expr, vars) = WTrue()
-    variables(p) : JWSL(%) == junfunc("W_"Variables_"(", p)
+    variables(p) : WSL(%) == junfunc("W_"Variables_"(", p)
     variables(p) : List(Symbol) ==
       l : List(Symbol) := []
-      lvars : JWSL(%) := junfunc("W_"Variables_"(", p)
+      lvars : WSL(%) := junfunc("W_"Variables_"(", p)
       for i in 1..integer(length(lvars)) repeat
         l := concat(l, coerce(toString(part(lvars, jWSInt i)))@Symbol)
       l
@@ -1741,7 +1741,7 @@ JLWSExpression() : Exports == Implementation where
     factor(p, opt) == jbinfunc("W_"Factor_"(", p, opt)
     factorTerms(p) == junfunc("W_"FactorTerms_"(", p)
     factorTerms(p, var : %) == jbinfunc("W_"FactorTerms_"(", p, var)
-    factorTerms(p, vars : JWSL(%)) == jbinfunc("W_"FactorTerms_"(", p, vars)
+    factorTerms(p, vars : WSL(%)) == jbinfunc("W_"FactorTerms_"(", p, vars)
     factorTermsList(p) == junfunc("W_"FactorTermsList_"(", p)
     factorTermsList(p, vars) == jbinfunc("W_"FactorTermsList_"(", p, vars)
     factorList(p) == junfunc("W_"FactorList_"(", p)
@@ -1770,7 +1770,7 @@ JLWSExpression() : Exports == Implementation where
     normal(expr, heads) == jbinfunc("W_"Normal_"(", expr, heads)
 
     collect(expr, vars : %) == jbinfunc("W_"Collect_"(", expr, vars)
-    collect(expr, vars : JWSL(%)) == jbinfunc("W_"Collect_"(", expr, vars)
+    collect(expr, vars : WSL(%)) == jbinfunc("W_"Collect_"(", expr, vars)
     apart(expr) == junfunc("W_"Apart_"(", expr)
     apart(expr, vars) == jbinfunc("W_"Apart_"(", expr, vars)
     expandNumerator(expr) == junfunc("W_"ExpandNumerator_"(", expr)
@@ -1888,10 +1888,10 @@ JLWSExpression() : Exports == Implementation where
     jWSQuantity(m,u) == jbinfunc("W_"Quantity_"(", m, u)
     jWSString(str) == jlref(concat(["W_`_"", str, "_"_`"]))
     jWSExpr(i : Integer) == jlref(concat(["WInteger(_"", string(i), "_")"]))
-    jWSExpr(q : Fraction(Integer)) == jWSRat(q)$JLWSRational pretend %
-    jWSExpr(r : DoubleFloat) == jWSReal(r)$JLWSReal pretend %
-    jWSExpr(r : JLFloat64) == jWSReal(r)$JLWSReal pretend %
-    jWSExpr(r : Float) == jWSReal(r)$JLWSReal pretend %
+    jWSExpr(q : Fraction(Integer)) == jWSRat(q)$WSRational pretend %
+    jWSExpr(r : DoubleFloat) == jWSReal(r)$WSReal pretend %
+    jWSExpr(r : JLFloat64) == jWSReal(r)$WSReal pretend %
+    jWSExpr(r : Float) == jWSReal(r)$WSReal pretend %
     jWSExpr(r : JLFloat) == jWSExpr(string(r))
     jWSExpr(sym : Symbol) : % == jlref(concat(["weval(W_`", string(sym),  "_`)"]))
     jWSExpr(str : String) : % == jlref(concat(["weval(W_`", str, "_`)"]))
@@ -1936,14 +1936,14 @@ JLWSExpression() : Exports == Implementation where
     --string(expr) : String == toString expr
     --convert(expr) : String == toString expr
     coerce(sym : Symbol) == jlref(concat(["W_`", string(sym),  "_`"]))
-    coerce(sym : JLWSSymbol) == sym pretend %
+    coerce(sym : WSSymbol) == sym pretend %
     coerce(i : Integer) == jlref(concat(["WInteger(_"", string(i), "_")"]))
     coerce(z : Complex(Integer)) ==
       jlref(concat(["weval(W_"Complex_"(",
-        getind(coerce(real(z))@JLWSInteger),",",
-          getind(coerce(imag(z))@JLWSInteger),"))"]))
-    coerce(q : Fraction(Integer)) == jWSRat(q)$JLWSRational pretend %
-    coerce(r : Float) == jWSReal(r)$JLWSReal pretend %
+        getind(coerce(real(z))@WSInteger),",",
+          getind(coerce(imag(z))@WSInteger),"))"]))
+    coerce(q : Fraction(Integer)) == jWSRat(q)$WSRational pretend %
+    coerce(r : Float) == jWSReal(r)$WSReal pretend %
     coerce(str : String) == jlref(concat(["W_`", str, "_`"]))
     coerce(l : List(%)) : % ==
       -- Temporary (and dirty) hack
@@ -1997,7 +1997,7 @@ JLWSExpression() : Exports == Implementation where
       error "accountingForm: Require numbers"
     matrixForm(expr) == junfunc("W_"MatrixForm_"(", expr)
     quantityForm(expr, form : %) == jbinfunc("W_"QuantityForm_"(", expr, form)
-    quantityForm(expr, form : JWSL(%)) ==
+    quantityForm(expr, form : WSL(%)) ==
       jbinfunc("W_"QuantityForm_"(", expr, form)
     coerce(expr) : OutputForm ==
       jlHead(expr) = WS => coerce(string(expr))@OutputForm

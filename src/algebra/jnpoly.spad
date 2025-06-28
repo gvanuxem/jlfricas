@@ -606,7 +606,7 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
 ++   p:=x*2+3*y^2+17*z^13
 ++   p^7
 -- https://en.wikipedia.org/wiki/Monomial_order#Graded_reverse_lexicographic_order
--- TODO: eval, elt, subst, compose, evaluate
+-- TODO: eval, elt, subst, compose, evaluate, constructOrdered
 NMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
           InternalOrdering : JLSymbol) : Exports == Implementation where
   NINT      ==> NMInteger

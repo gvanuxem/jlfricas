@@ -1,4 +1,4 @@
-)abbrev package JWSNSF JLWSNumericalSpecialFunctions
+)abbrev package WSNSF WSNumericalSpecialFunctions
 ++ Generic package for Julia WS numerical special functions
 ++ Author: G.Vanuxem
 ++ Date Created: Jun. 2024
@@ -8,183 +8,183 @@
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 -- TODO: check duplicate signatures, missing implementations
 -- integer arguments
-JLWSNumericalSpecialFunctions(R : JLWSNumber) : Exports ==Implementation where
+WSNumericalSpecialFunctions(R : WSNumber) : Exports ==Implementation where
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
   Exports ==> with --SpecialFunctionCategory with
     Gamma :     R -> R
-        ++ Gamma(z) is the Euler Gamma function.
+    ++ Gamma(z) is the Euler Gamma function.
     Beta :      (R, R) ->R
-        ++ Beta(x, y) is \spad{Gamma(x) * Gamma(y)/Gamma(x+y)}.
+    ++ Beta(x, y) is \spad{Gamma(x) * Gamma(y)/Gamma(x+y)}.
     Beta : (R, R, R) -> R
-        ++ Beta(z, a, b) is the incomplete Beta function.
+    ++ Beta(z, a, b) is the incomplete Beta function.
     digamma :   R -> R
-        ++ digamma(z) is the logarithmic derivative of \spad{Gamma(z)}
-        ++ (often written \spad{psi(z)} in the literature).
+    ++ digamma(z) is the logarithmic derivative of \spad{Gamma(z)}
+    ++ (often written \spad{psi(z)} in the literature).
     polygamma : (R, R) -> R
-        ++ polygamma(k, z) is the \spad{k-th} derivative of \spad{digamma(z)},
-        ++ (often written \spad{psi(k, z)} in the literature).
+    ++ polygamma(k, z) is the \spad{k-th} derivative of \spad{digamma(z)},
+    ++ (often written \spad{psi(k, z)} in the literature).
     Gamma :     (R, R) -> R
-        ++ Gamma(a, z) is the incomplete Gamma function.
+    ++ Gamma(a, z) is the incomplete Gamma function.
     besselJ :   (R, R) -> R
-        ++ besselJ(v, z) is the Bessel function of the first kind.
+    ++ besselJ(v, z) is the Bessel function of the first kind.
     besselJZero : (R, R) -> R
-        ++ besselJZero(n,x) returns the n-th zero of the
-        ++ Bessel J n-th function.
+    ++ besselJZero(n,x) returns the n-th zero of the
+    ++ Bessel J n-th function.
     besselY :   (R, R) -> R
-        ++ besselY(v, z) is the Bessel function of the second kind.
+    ++ besselY(v, z) is the Bessel function of the second kind.
     besselYZero : (R, R) -> R
-        ++ besselYZero(n,x) returns the n-th zero of the
-        ++ Bessel Y n-th function.
+    ++ besselYZero(n,x) returns the n-th zero of the
+    ++ Bessel Y n-th function.
     besselI :   (R, R) -> R
-        ++ besselI(v, z) is the modified Bessel function of the first kind.
+    ++ besselI(v, z) is the modified Bessel function of the first kind.
     besselK :   (R, R) -> R
-        ++ besselK(v, z) is the modified Bessel function of the second kind.
+    ++ besselK(v, z) is the modified Bessel function of the second kind.
     airyAi :    R -> R
-        ++ airyAi(z) is the Airy function \spad{Ai(z)}.
+    ++ airyAi(z) is the Airy function \spad{Ai(z)}.
     airyAiPrime : R -> R
-        ++ airyAiPrime(z) is the derivative of the Airy function \spad{Ai(z)}.
+    ++ airyAiPrime(z) is the derivative of the Airy function \spad{Ai(z)}.
     airyAiZero :    R -> R
-        ++ airyAiZero(n) is n-th zero function of the Airy function \spad{Ai(z)}.
+    ++ airyAiZero(n) is n-th zero function of the Airy function \spad{Ai(z)}.
     airyAiZero :    (R, R) -> R
-        ++ airyAiZero(n,x) is n-th zero function of the Airy function \spad{Ai(z)}
-        ++ smaller than x. 
+    ++ airyAiZero(n,x) is n-th zero function of the Airy function \spad{Ai(z)}
+    ++ smaller than x.
     airyBi :    R -> R
-        ++ airyBi(z) is the Airy function \spad{Bi(z)}.
+    ++ airyBi(z) is the Airy function \spad{Bi(z)}.
     airyBiZero :    R -> R
-        ++ airyBiZero(n) is n-th zero function of the Airy function \spad{Bi(z)}.
+    ++ airyBiZero(n) is n-th zero function of the Airy function \spad{Bi(z)}.
     airyBiZero :    (R, R) -> R
-        ++ airyBiZero(n,x) is n-th zero function of the Airy function \spad{Bi(z)}
-        ++ smaller than x. 
+    ++ airyBiZero(n,x) is n-th zero function of the Airy function \spad{Bi(z)}
+    ++ smaller than x.
     airyBiPrime : R -> R
-        ++ airyBiPrime(z) is the derivative of the Airy function \spad{Bi(z)}.
+    ++ airyBiPrime(z) is the derivative of the Airy function \spad{Bi(z)}.
     dawson  : R -> R
     ++ dawson(x) computes the Dawson integral of x.
     lambertW : R -> R
-        ++ lambertW(z) = w is the principial branch of the solution
-        ++ to the equation \spad{we^w = z}.
+    ++ lambertW(z) = w is the principial branch of the solution
+    ++ to the equation \spad{we^w = z}.
     polylog : (R, R) -> R
-        ++ polylog(s, z) is the polylogarithm of order s at z.
+    ++ polylog(s, z) is the polylogarithm of order s at z.
     weierstrassP : (R, R, R) -> R
-        ++ weierstrassP(g2, g3, z) is the Weierstrass P function.
+    ++ weierstrassP(g2, g3, z) is the Weierstrass P function.
     weierstrassPPrime : (R, R, R) -> R
-        ++ weierstrassPPrime(g2, g3, z) is the derivative of Weierstrass P
-        ++ function.
+    ++ weierstrassPPrime(g2, g3, z) is the derivative of Weierstrass P
+    ++ function.
     weierstrassSigma : (R, R, R) -> R
-        ++ weierstrassSigma(g2, g3, z) is the Weierstrass Sigma function.
+    ++ weierstrassSigma(g2, g3, z) is the Weierstrass Sigma function.
     weierstrassZeta : (R, R, R) -> R
-        ++ weierstrassZeta(g2, g3, z) is the Weierstrass Zeta function.
+    ++ weierstrassZeta(g2, g3, z) is the Weierstrass Zeta function.
     weierstrassPInverse : (R, R, R) -> R
-        ++ weierstrassPInverse(g2, g3, z) is the inverse of Weierstrass
-        ++ P function, defined by the formula
-        ++ \spad{weierstrassP(g2, g3, weierstrassPInverse(g2, g3, z)) = z}.
+    ++ weierstrassPInverse(g2, g3, z) is the inverse of Weierstrass
+    ++ P function, defined by the formula
+    ++ \spad{weierstrassP(g2, g3, weierstrassPInverse(g2, g3, z)) = z}.
     whittakerM : (R, R, R) -> R
-        ++ whittakerM(k, m, z) is the Whittaker M function.
+    ++ whittakerM(k, m, z) is the Whittaker M function.
     whittakerW : (R, R, R) -> R
-        ++ whittakerW(k, m, z) is the Whittaker W function.
+    ++ whittakerW(k, m, z) is the Whittaker W function.
     angerJ : (R, R) -> R
-        ++ angerJ(v, z) is the Anger J function.
+    ++ angerJ(v, z) is the Anger J function.
     weberE : (R, R) -> R
-        ++ weberE(v, z) is the Weber E function.
+    ++ weberE(v, z) is the Weber E function.
     weberE : (R, R, R) -> R
-        ++ weberE(v, n, z) is the associated Weber E function.
+    ++ weberE(v, n, z) is the associated Weber E function.
     struveH : (R, R) -> R
-        ++ struveH(v, z) is the Struve H function.
+    ++ struveH(v, z) is the Struve H function.
     struveL : (R, R) -> R
-        ++ struveL(v, z) is the Struve L function defined by the formula
-        ++ \spad{struveL(v, z) = -Ri^exp(-v*Rpi*Ri/2)*struveH(v, Ri*z)}.
+    ++ struveL(v, z) is the Struve L function defined by the formula
+    ++ \spad{struveL(v, z) = -Ri^exp(-v*Rpi*Ri/2)*struveH(v, Ri*z)}.
     hankelH1 : (R, R) -> R
-        ++ hankelH1(v, z) is first Hankel function (Bessel function of
-        ++ the third kind).
+    ++ hankelH1(v, z) is first Hankel function (Bessel function of
+    ++ the third kind).
     hankelH2 : (R, R) -> R
-        ++ hankelH2(v, z) is the second Hankel function (Bessel function of
-        ++ the third kind).
+    ++ hankelH2(v, z) is the second Hankel function (Bessel function of
+    ++ the third kind).
     lommelS1 : (R, R, R) -> R
-        ++ lommelS1(mu, nu, z) is the Lommel s function.
+    ++ lommelS1(mu, nu, z) is the Lommel s function.
     lommelS2 : (R, R, R) -> R
-        ++ lommelS2(mu, nu, z) is the Lommel S function.
+    ++ lommelS2(mu, nu, z) is the Lommel S function.
     kummerM : (R, R, R) -> R
-        ++ kummerM(mu, nu, z) is the Kummer M function.
+    ++ kummerM(mu, nu, z) is the Kummer M function.
     kummerU : (R, R, R) -> R
-        ++ kummerU(mu, nu, z) is the Kummer U function.
+    ++ kummerU(mu, nu, z) is the Kummer U function.
     legendreP : (R, R, R) -> R
-        ++ legendreP(nu, mu, z) is the Legendre P function.
+    ++ legendreP(nu, mu, z) is the Legendre P function.
     legendreQ : (R, R, R) -> R
-        ++ legendreQ(nu, mu, z) is the Legendre Q function.
+    ++ legendreQ(nu, mu, z) is the Legendre Q function.
     kelvinBei : (R, R) -> R
-        ++ kelvinBei(v, z) is the Kelvin bei function defined by equality
-        ++ \spad{kelvinBei(v, z) = imag(besselJ(v, exp(3*Rpi*Ri/4)*z))}
-        ++ for z and v real.
+    ++ kelvinBei(v, z) is the Kelvin bei function defined by equality
+    ++ \spad{kelvinBei(v, z) = imag(besselJ(v, exp(3*Rpi*Ri/4)*z))}
+    ++ for z and v real.
     kelvinBer : (R, R) -> R
-        ++ kelvinBer(v, z) is the Kelvin ber function defined by equality
-        ++ \spad{kelvinBer(v, z) = real(besselJ(v, exp(3*Rpi*Ri/4)*z))}
-        ++ for z and v real.
+    ++ kelvinBer(v, z) is the Kelvin ber function defined by equality
+    ++ \spad{kelvinBer(v, z) = real(besselJ(v, exp(3*Rpi*Ri/4)*z))}
+    ++ for z and v real.
     kelvinKei : (R, R) -> R
-        ++ kelvinKei(v, z) is the Kelvin kei function defined by equality
-        ++ \spad{kelvinKei(v, z) =
-        ++ imag(exp(-v*Rpi*Ri/2)*besselK(v, exp(Rpi*Ri/4)*z))}
-        ++ for z and v real.
+    ++ kelvinKei(v, z) is the Kelvin kei function defined by equality
+    ++ \spad{kelvinKei(v, z) =
+    ++ imag(exp(-v*Rpi*Ri/2)*besselK(v, exp(Rpi*Ri/4)*z))}
+    ++ for z and v real.
     kelvinKer : (R, R) -> R
-        ++ kelvinKer(v, z) is the Kelvin kei function defined by equality
-        ++ \spad{kelvinKer(v, z) =
-        ++ real(exp(-v*Rpi*Ri/2)*besselK(v, exp(Rpi*Ri/4)*z))}
-        ++ for z and v real.
+    ++ kelvinKer(v, z) is the Kelvin kei function defined by equality
+    ++ \spad{kelvinKer(v, z) =
+    ++ real(exp(-v*Rpi*Ri/2)*besselK(v, exp(Rpi*Ri/4)*z))}
+    ++ for z and v real.
     ellipticK : R -> R
-        ++ ellipticK(m) is the complete elliptic integral of the
-        ++ first kind: \spad{ellipticK(m) =
-        ++ integrate(1/sqrt((1-t^2)*(1-m*t^2)), t = 0..1)}.
+    ++ ellipticK(m) is the complete elliptic integral of the
+    ++ first kind: \spad{ellipticK(m) =
+    ++ integrate(1/sqrt((1-t^2)*(1-m*t^2)), t = 0..1)}.
     ellipticE : R -> R
-        ++ ellipticE(m) is the complete elliptic integral of the
-        ++ second kind: \spad{ellipticE(m) =
-        ++ integrate(sqrt(1-m*t^2)/sqrt(1-t^2), t = 0..1)}.
+    ++ ellipticE(m) is the complete elliptic integral of the
+    ++ second kind: \spad{ellipticE(m) =
+    ++ integrate(sqrt(1-m*t^2)/sqrt(1-t^2), t = 0..1)}.
     ellipticE : (R, R) -> R
-        ++ ellipticE(z, m) is the incomplete elliptic integral of the
-        ++ second kind: \spad{ellipticE(z, m) =
-        ++ integrate(sqrt(1-m*t^2)/sqrt(1-t^2), t = 0..z)}.
+    ++ ellipticE(z, m) is the incomplete elliptic integral of the
+    ++ second kind: \spad{ellipticE(z, m) =
+    ++ integrate(sqrt(1-m*t^2)/sqrt(1-t^2), t = 0..z)}.
     ellipticF : (R, R) -> R
-        ++ ellipticF(z, m) is the incomplete elliptic integral of the
-        ++ first kind : \spad{ellipticF(z, m) =
-        ++ integrate(1/sqrt((1-t^2)*(1-m*t^2)), t = 0..z)}.
+    ++ ellipticF(z, m) is the incomplete elliptic integral of the
+    ++ first kind : \spad{ellipticF(z, m) =
+    ++ integrate(1/sqrt((1-t^2)*(1-m*t^2)), t = 0..z)}.
     ellipticPi : (R, R, R) -> R
-        ++ ellipticPi(z, n, m) is the incomplete elliptic integral of
-        ++ the third kind: \spad{ellipticPi(z, n, m) =
-        ++ integrate(1/((1-n*t^2)*sqrt((1-t^2)*(1-m*t^2))), t = 0..z)}.
+    ++ ellipticPi(z, n, m) is the incomplete elliptic integral of
+    ++ the third kind: \spad{ellipticPi(z, n, m) =
+    ++ integrate(1/((1-n*t^2)*sqrt((1-t^2)*(1-m*t^2))), t = 0..z)}.
     jacobiSn : (R, R) -> R
-        ++ jacobiSn(z, m) is the Jacobi elliptic sn function, defined
-        ++ by the formula \spad{jacobiSn(ellipticF(z, m), m) = z}.
+    ++ jacobiSn(z, m) is the Jacobi elliptic sn function, defined
+    ++ by the formula \spad{jacobiSn(ellipticF(z, m), m) = z}.
     jacobiCn : (R, R) -> R
-        ++ jacobiCn(z, m) is the Jacobi elliptic cn function, defined
-        ++ by \spad{jacobiCn(z, m)^2 + jacobiSn(z, m)^2 = 1} and
-        ++ \spad{jacobiCn(0, m) = 1}.
+    ++ jacobiCn(z, m) is the Jacobi elliptic cn function, defined
+    ++ by \spad{jacobiCn(z, m)^2 + jacobiSn(z, m)^2 = 1} and
+    ++ \spad{jacobiCn(0, m) = 1}.
     jacobiDn : (R, R) -> R
-        ++ jacobiDn(z, m) is the Jacobi elliptic dn function, defined
-        ++ by \spad{jacobiDn(z, m)^2 + m*jacobiSn(z, m)^2 = 1} and
-        ++ \spad{jacobiDn(0, m) = 1}.
+    ++ jacobiDn(z, m) is the Jacobi elliptic dn function, defined
+    ++ by \spad{jacobiDn(z, m)^2 + m*jacobiSn(z, m)^2 = 1} and
+    ++ \spad{jacobiDn(0, m) = 1}.
     jacobiZeta : (R, R) -> R
-        ++ jacobiZeta(z, m) is the Jacobi elliptic zeta function, defined
-        ++ by \spad{D(jacobiZeta(z, m), z) =
-        ++ jacobiDn(z, m)^2 - ellipticE(m)/ellipticK(m)} and
-        ++ \spad{jacobiZeta(0, m) = 0}.
+    ++ jacobiZeta(z, m) is the Jacobi elliptic zeta function, defined
+    ++ by \spad{D(jacobiZeta(z, m), z) =
+    ++ jacobiDn(z, m)^2 - ellipticE(m)/ellipticK(m)} and
+    ++ \spad{jacobiZeta(0, m) = 0}.
     jacobiTheta : (R, R) -> R
-        ++ jacobiTheta(z, m) is the Jacobi Theta function
-        ++ in Jacobi notation.
+    ++ jacobiTheta(z, m) is the Jacobi Theta function
+    ++ in Jacobi notation.
     lerchPhi : (R, R, R) -> R
-        ++ lerchPhi(z, s, a) is the Lerch Phi function.
+    ++ lerchPhi(z, s, a) is the Lerch Phi function.
     riemannZeta : R -> R
-        ++ riemannZeta(z) is the Riemann Zeta function.
+    ++ riemannZeta(z) is the Riemann Zeta function.
     charlierC : (R, R, R) -> R
-        ++ charlierC(n, a, z) is the Charlier polynomial
+    ++ charlierC(n, a, z) is the Charlier polynomial
     meixnerM : (R, R, R, R) -> R
-        ++ meixnerM(n, b, c, z) is the Meixner polynomial
+    ++ meixnerM(n, b, c, z) is the Meixner polynomial
     --if R has RetractableTo(Integer) then
     --    hypergeometricF : (List R, List R, R) -> R
-    --        ++ hypergeometricF(la, lb, z) is the generalized hypergeometric
-    --        ++ function.
+    --    ++ hypergeometricF(la, lb, z) is the generalized hypergeometric
+    --    ++ function.
     --    meijerG : (List R, List R, List R, List R, R) -> R
-    --        ++ meijerG(la, lb, lc, ld, z) is the meijerG function.
+    --    ++ meijerG(la, lb, lc, ld, z) is the meijerG function.
     ------------------------------------------------------------------
-    EiEn : (JLWSInteger, R) -> R
+    EiEn : (WSInteger, R) -> R
     ++ EiEn(n,z) returns the exponential integral En of z.
-    lambertW : (JLWSInteger, R) -> R
+    lambertW : (WSInteger, R) -> R
     ++ lambertW(k,z) returns the k-th solution to LambertW function.
     haversine : R -> R
     ++ haversine(z)	computes the haversine of z.
@@ -227,9 +227,9 @@ JLWSNumericalSpecialFunctions(R : JLWSNumber) : Exports ==Implementation where
     riemannSiegelZ : R -> R
     ++ riemannSiegelZ(t)  computes the Riemann-Siegel Z function of t.
     -- expect a non negative integer:
-    stieltjesGamma : JLWSInteger -> R
+    stieltjesGamma : WSInteger -> R
     ++ stieltjesGamma(n) returns the n-th Stieltjes constant.
-    stieltjesGamma : (JLWSInteger, R) -> R
+    stieltjesGamma : (WSInteger, R) -> R
     ++ stieltjesGamma(n,a) returns the generalized n-th Stieltjes constant.
     hurwitzZeta : (R, R) -> R
     ++ hurwitzZeta(s,a) computes the Hurwitz zeta.
@@ -262,7 +262,7 @@ JLWSNumericalSpecialFunctions(R : JLWSNumber) : Exports ==Implementation where
     ++ barnesG(z) computes the Barnes G-function of z.
     hyperFactorial : R -> R
     ++ hyperFactorial(n) computes the hyperfactorial of n.
-    fibonacci : (JLWSInteger, R) -> R
+    fibonacci : (WSInteger, R) -> R
     ++ fibonacci(n, z) evaluates the Fibonacci polynomial at z.
     legendreP : (R, R) -> R
     ++ legendreP(n, z) evaluates the legendre polynomial
@@ -279,10 +279,10 @@ JLWSNumericalSpecialFunctions(R : JLWSNumber) : Exports ==Implementation where
     sphericalHarmonicY : (R, R, R, R) -> R
     ++ sphericalHarmonicY(l, m, theta, phi) returns the spherical
     ++ harmonic Y or evaluates it.
-    gegenbauerC : (JLWSInteger, R) -> R
+    gegenbauerC : (WSInteger, R) -> R
     ++ gegenbauerC(n,z) evaluates the renormalized form of the
     ++ Gegenbauer polynomial at z.
-    gegenbauerC : (JLWSInteger, R, R) -> R
+    gegenbauerC : (WSInteger, R, R) -> R
     ++ gegenbauerC(n,lambda,z) evaluates the Gegenbauer polynomial at z.
     chebyshevT : (R, R) -> R
     ++ chebyshevT(n, z) evaluates the chebyshev polynomial of the first kind
