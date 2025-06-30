@@ -110,6 +110,7 @@ JLF64LinearAlgebra() : Exports == Implementation where
     ++ lu!(m) computes in-place LU factorisation of m.
     ++ m isoverwritten by its decomposition.
     luReorder : (JF64MAT, JI64VEC) -> JF64MAT
+    -- TODO
     ++ luReorder(mat, ipiv) returns a copy of mat reordered
     ++ using the ipiv pivot indices.
     luReorder! : (JF64MAT, JI64VEC) -> JF64MAT

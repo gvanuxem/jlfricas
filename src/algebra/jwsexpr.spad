@@ -812,18 +812,22 @@ WSExpression() : Exports == Implementation where
     ++ For example:
     ++ \example{x:=jWSExpr("x"); simplify(sqrt(x^2), "x>0")}
     extendedSimplify : % -> %
-    ++ extendedSimplify(expr) extended version of simplify.
+    ++ extendedSimplify(expr) is the extended version of simplify.
     ++ This is the full version of simplify.
+    ++ \example{x:= jWSExpr x}
+    ++ \example{expr := Gamma(x)/Gamma(x-1))
+    ++ Compare with simplify(expr).
+    ++ \example{extendedSimplify(expr)}
     extendedSimplify : (%, %) -> %
-    ++ extendedSimplify(expr, assumptions) extended version of simplify
-    ++ with respect to assumptions or ExcludedForms.
-    ++ This is the full version.
+    ++ extendedSimplify(expr, assumptions) is the extended
+    ++ version of simplify with respect to assumptions
+    ++ or ExcludedForms. This is the full version.
     refine : (%, %) -> %
     ++ refine(expr, assums) refines the expression expr with assumptions
     ++ assums.
     assuming : (%, %) -> %
     ++ assuming(assumption(s), expr) uses the assumptions for use of
-    ++ expr with refine, simplify and integerate for example.
+    ++ expr with refine, simplify and integrate for example.
     ++ The assumption(s) are not always supported by MathLink.
     ++ Use assumptions directly whith 'refine' etc. directly
     expand : % -> %

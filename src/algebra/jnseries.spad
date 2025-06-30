@@ -113,8 +113,6 @@ NMUnivariatePowerSeries(R, x, prec, abs) : Exports == Implementation where
 
     characteristic() ==
       jlEvalString(concat(["characteristic(", NUPSRing, "[1])"]))
-    characteristic(s : %) ==
-      jlEvalString(concat(["characteristic(", jlNMRing()$R,")"]))
     variable(s : %) == x
     coefficient(s : %, n : NNI) ==
       jlref(concat ["coeff(", getind(s),",", string(n) ")"])$R
@@ -271,8 +269,6 @@ NMUnivariateLaurentSeries(R, x, prec) : Exports == Implementation where
 
     characteristic() ==
       jlEvalString(concat(["characteristic(", NULSRing, "[1])"]))
-    characteristic(s : %) ==
-      jlEvalString(concat(["characteristic(", jlNMRing()$R,")"]))
     variable(s : %) == x
     coefficient(s : %, n : INT) ==
       jlref(concat ["coeff(", getind(s),",", string(n) ")"])$R
@@ -424,8 +420,6 @@ NMUnivariatePuiseuxSeries(R, x, prec) : Exports == Implementation where
 
     characteristic() ==
       jlEvalString(concat(["characteristic(", NUPSXRing, "[1])"]))
-    characteristic(s : %) ==
-      jlEvalString(concat(["characteristic(", jlNMRing()$R,")"]))
     variable(s : %) == x
     coefficient(s : %, n : INT) ==
       jlref(concat ["coeff(", getind(s),",", string(n) ")"])$R

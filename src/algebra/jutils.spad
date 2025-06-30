@@ -70,7 +70,8 @@ JLUtilityFunctions() : Exports == Implementation where
     jlEvalString   : STR -> JF64
     ++ jlEvalString(str) evaluates str in Julia,
     ++ where the output is a JLFloat64.
-
+    QQ : Fraction(Integer) -> NMFraction(NMInteger)
+    ++ QQ(q) is the convenience function for coercing q.
   Implementation ==> add
     import from JLStringUtilities
 
@@ -150,6 +151,8 @@ JLUtilityFunctions() : Exports == Implementation where
     jlEvalString(s : STR)   : STR     == jl_string_eval_string(s)$Lisp
     jlEvalString(s : STR)   : JF32    == jl_flt_eval_string(s)$Lisp
     jlEvalString(s : STR)   : JF64    == jl_dbl_eval_string(s)$Lisp
+    QQ(q) ==
+      jlref(concat(["QQ(",string(numer(q)),"//",string(denom(q)),")"]))
 
 )abbrev package JSTRU JLStringUtilities
 ++ Utility package for strings using Julia facilities

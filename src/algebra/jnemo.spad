@@ -23,9 +23,6 @@ NMRing() : Category == Join(NMType, JLObjectRing) with
       ++ unit?(x) checks whther or not x is a unit, i.e. invertible.
       equal? : (% , %) -> Boolean
       ++ equal?(x,y) checks whether or not x and y ar equal.
-      characteristic : % -> NonNegativeInteger
-      ++ characteristic(x) returns the characteristic of
-      ++ the base ring of x.
       inverse : % -> % 
       ++ inverse(x) returns the inverse of x.
       exactDivide : (%, %) -> %
@@ -40,8 +37,6 @@ NMRing() : Category == Join(NMType, JLObjectRing) with
       ++  of x used in Julia.
       ++ For example:
       ++ \example{jlNMRing()$NMPadicInteger(17)}
-      jlObject: () -> String
-      ++ jlObject() returns the internal Julia name of the module used.
     add
       import from JLUtilityFunctions
       import from String
@@ -64,7 +59,6 @@ NMRing() : Category == Join(NMType, JLObjectRing) with
         ret : JLObjTuple := jbinfunc("divrem",a,b)
         [ret.1 pretend %, ret.2 pretend %]
       equal?(x,y) == jbinbfunc("isequal",x,y)
-      characteristic(x) == junfunc("characteristic",junfunc("base_ring",x))
       inverse(x) == junfunc("inv",x)
 
 )abbrev category NCRING NMCommutativeRing
@@ -224,8 +218,8 @@ NMInteger() : Exports == Implementation where
 ++  represented by minimal polynomials using the Nemo package
 ++  for Julia (Calcium based).
 ++  https://fredrikj.net/calcium/
--- TODO: relative stuff to UniPoly*, reducedSystem*
--- norm, height etc...
+-- TODO: norm etc... See AN in constants.spad
+-- rootOf : SparseUnivariatePolynomial(%)
 NMAlgebraicNumber() : Exports == Implementation where
   NNI       ==> NonNegativeInteger
   JI64      ==> JLInt64
@@ -233,18 +227,21 @@ NMAlgebraicNumber() : Exports == Implementation where
   NINT      ==> NMInteger
   Z         ==> Integer
   parsei    ==> PARSE_-INTEGER$Lisp
-  Exports ==> Join(NMCommutativeRing, ExpressionSpace,
-      NMAlgebraicallyClosedField, RetractableTo NMInteger,
-      RetractableTo NMFraction(NMInteger), RetractableTo Integer,
-      RetractableTo Fraction(Integer), LinearlyExplicitOver Integer,
-      LinearlyExplicitOver NMInteger,
-      LinearlyExplicitOver Fraction Integer,
-      LinearlyExplicitOver NMFraction(NMInteger),
-      -- TODO
-      -- PolynomialFactorizationExplicit,
-      CharacteristicZero, DifferentialRing) with
+  Exports ==> Join(NMCommutativeRing, AlgebraicallyClosedField,
+      RetractableTo NMInteger, RetractableTo NMFraction(NMInteger),
+      RetractableTo Integer, RetractableTo Fraction(Integer),
+      --LinearlyExplicitOver *r, -- TODO reducedSystem
+      PolynomialFactorizationExplicit,
+      ConvertibleTo NMComplexField, CharacteristicZero,
+      DifferentialRing) with
     "^"     : (%, %) -> %
     ++ a^b returns the value of a raised to power b.
+    "*"     : (%, NMInteger) -> %
+    ++ x*i is the multiplication by an integer.
+    "*"     : (%, Integer) -> %
+    ++ x*n is the product of x by the integer n.
+    "*"     : (%, NMFraction NMInteger) -> %
+    ++ x*i is the multiplication by an rational number.
     integer?  : % -> Boolean
     ++ integer?(x) tests whether or not x is an integer.
     rational? : % -> Boolean
@@ -297,34 +294,37 @@ NMAlgebraicNumber() : Exports == Implementation where
     denominator: % -> NMInteger
     ++ denominator(anum) returns the denominator of anum, i.e. the leading coefficient
     ++ of the minimal polynomial of a.
-    -- : % -> SparseUnivariatePolynomial(%)
-    ---- ??
-    --++ minimalPolynomial(an) returns the minimal polynomial of an
-    --++ over algebraic numbers.
+    minimalPolynomial : % -> SparseUnivariatePolynomial(%)
+    ++ minimalPolynomial(an) returns the minimal polynomial of an
+    ++ over algebraic numbers.
     minimalPolynomial : % -> SparseUnivariatePolynomial(Z)
     ++ minimalPolynomial(an) returns the minimal polynomial of an.
+    height : % -> NNI
+    ++ height(a) returns the height of a.
+    heightBits : % -> NNI
+    ++ heightBits(a) returns the height of a as a number of bits.
     abs : % -> %
     ++ abs(a) returns the absolute value of a.
     abs2 : % -> %
     ++ abs2(a) returns the squared absolute value of a.
+    conjugate : % -> %
+    ++ conjugate(a) returns the complex conjugate of a.
     floor : % -> %
     ++ floor(a) returns the largest integer below or equal ot a.
     ceiling : % -> %
     ++ ceiling(a) returns the smallest integer above or equal to a.
-    conj : % -> %
-    ++ conj(a) returns the complex conjugate of a.
     sign : % -> %
     ++ sign(a) returns the complex sign of a.
-    realSign : % -> %
-    ++ realSign(a) returns the sign of the real part.
-    imagSign : % -> %
-    ++ imagSign(a) returns the sign of the imaginary part.
-    csgn : % -> %
-    ++ csgn(a) returns an extension of the real sign function
+    signReal : % -> %
+    ++ signReal(a) returns the sign of the real part.
+    signImag : % -> %
+    ++ signImag(a) returns the sign of the imaginary part.
+    csign : % -> %
+    ++ csign(a) returns an extension of the real sign function
     ++ equivalent to a/sqrt(a^2).
     coerce  : % -> AlgebraicNumber
-    -- TODO
-    ++ coerce(nan) coerces nan to AlgebraicNumber if it is rational.
+    ++ coerce(nan) coerces nan to AlgebraicNumber using
+    ++ the root of the minimal polynomial.
     jnan    : Integer -> %
     ++ jnan(x) returns x as a NMAlgebraicNumber.
     jnan    : Fraction(Integer) -> %
@@ -337,7 +337,8 @@ NMAlgebraicNumber() : Exports == Implementation where
     ++ jnan(str) evaluates str in Julia that returns a NMAlgebraicNumber.
   Implementation ==> add
     import from JLUtilityFunctions
-    import from String
+    import from JLStringUtilities
+    import from NMComplexField
     import from KernelFunctions2(%,%)
 
     jlInitialize(true)
@@ -363,22 +364,23 @@ NMAlgebraicNumber() : Exports == Implementation where
       jlref(concat(["root_of_unity(QQBar,", string(n), ",",string(k) ")"]))
     real(x) == junfunc("real",x)
     imag(x) == junfunc("imag",x)
-    --minimalPolynomial(an) : SparseUnivariatePolynomial(%) == --TODO WHY????(13/02/2025)
-      -- Temporary
-    --  AN  := NMAlgebraicNumber
-    --  --myx := symbol(GENSYM()$Lisp) -- does not work
-    --  UP := UnivariatePolynomial('mynanvar, AN)
-    --  p := minimalPolynomial(an pretend AN)$NUP(NINT, 'mynanvar)
-    --  strp := string p; inp := parse(strp)$InputForm
-    --  interpret(inp)$InputFormFunctions1(UP) pretend SparseUnivariatePolynomial(%)
-    --minimalPolynomial(an) : SparseUnivariatePolynomial(Integer) ==
-    --  -- Temporary
-    --  AN  := NMAlgebraicNumber
-    --  --myx := symbol(GENSYM()$Lisp) -- does not work
-    --  UP := UnivariatePolynomial('myzvar, Integer)
-    --  p := minimalPolynomial(an pretend AN)$NUP(NINT, 'myzvar)
-    --  strp := string p; inp := parse(strp)$InputForm
-    --  interpret(inp)$InputFormFunctions1(UP) pretend SparseUnivariatePolynomial(Z)
+    minimalPolynomial(an) : SparseUnivariatePolynomial(%) ==
+      AN  := NMAlgebraicNumber
+      sym : Symbol := coerce jlRandomString(8)
+      UP := UnivariatePolynomial(sym, AN)
+      p := minimalPolynomial(an pretend AN)@NUP(NINT, sym)
+      inp := parse(string p)$InputForm
+      interpret(inp)$InputFormFunctions1(UP)
+        pretend SparseUnivariatePolynomial(%)
+  
+    minimalPolynomial(an) : SparseUnivariatePolynomial(Z) ==
+      AN  := NMAlgebraicNumber
+      sym : Symbol := coerce jlRandomString(8)
+      UP := UnivariatePolynomial(sym, Integer)
+      p := minimalPolynomial(an pretend AN)@NUP(NINT, sym)
+      inp := parse(string p)$InputForm
+      interpret(inp)$InputFormFunctions1(UP)
+        pretend SparseUnivariatePolynomial(Z)
 
     random(deg, bits) ==
       jlref(concat(["rand(QQBar,degree=", string(deg),
@@ -392,11 +394,6 @@ NMAlgebraicNumber() : Exports == Implementation where
     real? x == junbfunc("isreal",x)
     rootOfUnity? x == junbfunc("is_root_of_unity",x)
     algebraicInteger? x == junbfunc("is_algebraic_integer",x)
-    smaller?(x,y) == jbinbfunc("<", x, y)
-    definingPolynomial(an) ==
-      error concat("definingPolynomial is not defined for ",
-        "the NMAlgebraicNumber type. Coerce it first.")
-      -- TODO: interpret a SUP()?
 
     inv(x) == junfunc("inv", x)
     x :% / y : % == jbinfunc("/", x, y)
@@ -412,11 +409,13 @@ NMAlgebraicNumber() : Exports == Implementation where
       jlref(concat [ getind(x), "^(", string(numer(y)),"//", string(denom(y)),")"])
     recip(x) ==
       zero?(x) => "failed"
-      junfunc("inv",x)
+      junfunc("inv",x) pretend %
 
     -- x quo y == jbinfunc("div", x, y)
     x quo y == jbinfunc("÷", x, y)
     x rem y == 0
+    conjugate(a) == junfunc("conj", a)
+
     gcd(a,b) == jbinfunc("gcd",a,b)
     lcm(a,b) == jbinfunc("lcm",a,b)
     sqrt(a : %)  == junfunc("sqrt", a)
@@ -426,16 +425,17 @@ NMAlgebraicNumber() : Exports == Implementation where
     height(an) ==
       ret := jlref(concat ["height(", getind(an),")"])$NMInteger
       convert(ret)@Integer pretend NNI
+    heightBits(an) ==
+      ret := jlref(concat ["height(", getind(an),")"])$NMInteger
+      convert(ret)@Integer pretend NNI
     abs(an) == junfunc("abs", an)
     abs2(an) == junfunc("abs2", an)
     floor(an) == junfunc("floor", an)
     ceiling(an) == junfunc("ceil", an)
-    conj(an) == junfunc("conj", an)
     sign(an) == junfunc("sign", an)
-    csgn(an) == junfunc("csgn", an)
-    realSign(an) == junfunc("sign_real", an)
-    imagSign(an) == junfunc("sign_imag", an)
-
+    csign(an) == junfunc("csgn", an)
+    signReal(an) == junfunc("sign_real", an)
+    signImag(an) == junfunc("sign_imag", an)
 
     expPiI(a) == junfunc("exp_pi_i",a)
     logPiI(a) == junfunc("log_pi_i",a)
@@ -451,10 +451,6 @@ NMAlgebraicNumber() : Exports == Implementation where
     numerator(a) == junfunc("numerator", a)
     denominator(a) == jlref(concat(["denominator(", getind(a),")"]))$NMInteger
     degree(a : %) == jlEvalString(concat(["degree(", getind(a), ")"]))@JLInt64
-    belong?(op) == false 
-    --belong?(op) == belong?(op)$ExpressionSpace2_&(%, K) or has?(op, ALGOP)
-
-    kernels(an) == []
 
     retractIfCan(x : %) : Union(Integer, "failed") ==
       not integer? x => "failed"
@@ -478,19 +474,19 @@ NMAlgebraicNumber() : Exports == Implementation where
     retract(x : %) : NMFraction(NMInteger) ==
       junfunc("QQFieldElem", x) pretend NMFraction(NMInteger)
 
+    convert(a) : NMComplexField ==
+      jlref(concat([jlNMRing()$NMComplexField, "(",
+        getind(a), ")"]))$NMComplexField
+
     coerce(i : Integer) == jlref(concat(["QQBar(",string(i),")"]))
     coerce(i : NMInteger) : % == junfunc("QQBar", i)
     coerce(fi : NMFraction(NMInteger)) : % == junfunc("QQBar", fi)
-    coerce(an : Kernel(%)) == -- Should not happen
-      -- TODO
-      (ret := constantIfCan(an)) case "failed" =>
-        error "coerce$NMAlgebraicNumber: Unconstant kernel"
-      ret
     coerce(x : Fraction(Integer)) == coerce(coerce(x)@NMFraction(NMInteger))
     coerce(x : %) : AlgebraicNumber ==
-      -- TODO: interpret string minpoly(x) ?
-      not rational?(x) => error "Can not be coerced to an AlgebraicNumber"
-      coerce(retract(retract(x)@NMFraction(NMInteger))@Fraction(Integer))
+      mapped := map(coerce,
+        minimalPolynomial(x)@SparseUnivariatePolynomial(Z)
+          )$SparseUnivariatePolynomialFunctions2(Z,AlgebraicNumber)
+      rootOf(mapped)$AlgebraicNumber
     jnan(i : Integer) == jlref(concat(["QQBar(",string(i),")"]))
     jnan(fi : Fraction(Integer)) == coerce(fi)
     jnan(i : NMInteger) == coerce(i)
@@ -557,7 +553,7 @@ NMIntegerMod(p : PositiveInteger) : Exports == Implementation where
     --recip(x) ==
     --  -- TODO: compute an euclidean dvision to check
     --  zero?(x) => "failed"
-    --  junfunc("inv",x)
+    --  junfunc("inv",x) pretend %
 
     size()           == p
     characteristic() == p
@@ -607,10 +603,6 @@ NMPrimeField(p : PositiveInteger) : Exports == Implementation where
     ++ jnpf(i) returns i as a NMPrimeField element.
     jnpf   : NMInteger -> %
     ++ jnpf(i) returns i as a NMPrimeField element.
-    GF : Integer -> %
-    ++ GF(i) returns i as a NMPrimeField element.
-    GF : NMInteger -> %
-    ++ GF(i) returns i as a NMPrimeField element.
   Implementation ==> add
     import from JLUtilityFunctions
     import from String
@@ -647,7 +639,7 @@ NMPrimeField(p : PositiveInteger) : Exports == Implementation where
     x ^ y : Integer == jlref(concat [getind(x), "^", string(y)])
     recip(x) ==
       zero?(x) => "failed"
-      junfunc("recip",x)
+      junfunc("recip",x) pretend %
     x quo y == jbinfunc("÷", x, y)
     -- x quo y == jbinfunc("div", x, y)
     x rem y == jbinfunc("%", x, y)
@@ -691,8 +683,6 @@ NMPrimeField(p : PositiveInteger) : Exports == Implementation where
     coerce(i : Integer) == jlref(concat([NPFP, string(i), ")"]))
     jnpf(i : Integer) == coerce(i)
     jnpf(ji : NMInteger) == coerce(ji)
-    GF(i : Integer) == coerce(i)
-    GF(ji : NMInteger) == coerce(ji)
     coerce(i : %) : OutputForm == string(i) pretend OutputForm
 
 )abbrev domain NFF NMFiniteField
@@ -711,6 +701,8 @@ NMFiniteField(p : PositiveInteger, n: PositiveInteger) : Exports == Implementati
   Exports ==> Join(NMCommutativeRing, FiniteFieldCategory,
                    FiniteAlgebraicExtensionField(NMPrimeField(p)),
                    ConvertibleTo(Integer)) with
+    "=" : (%,%) -> Boolean
+    "~=" : (%,%) -> Boolean
     generator?    : % -> Boolean
     ++ generator?(x) checks whether or not x a generator
     ++ of the finite filed.
@@ -764,7 +756,7 @@ NMFiniteField(p : PositiveInteger, n: PositiveInteger) : Exports == Implementati
     jlObject() == jlEvalString(concat(["string(", NFF,")"]))@String
 
     0 == jlref(concat(["zero(", NFF,")"]))
-    1 == jlref(concat(["one(", NFF,")"]))
+    1 == jlref(concat(["one(", NFF,")"]))    
 
     generator? x == junbfunc("is_gen",x)
     absolute? ==
@@ -779,7 +771,7 @@ NMFiniteField(p : PositiveInteger, n: PositiveInteger) : Exports == Implementati
     x rem y == jbinfunc("%", x, y)
     recip(x) ==
       zero? x => "failed"
-      junfunc("inv", x)
+      junfunc("inv", x) pretend %
 
     generator() == jlref(concat(["gen(", NFF,")"]))
     trace(a) == jlref(concat(["tr(", getind(a),")"]))$NMPrimeField(p)
@@ -1124,7 +1116,7 @@ InnerNMExactCalciumField(Options : JLObjDict) : Exports ==
     log(x)   == junfunc("log",x)
     recip(x) ==
       zero? x => "failed"
-      junfunc("inv",x)
+      junfunc("inv",x) pretend %
 
     sin(x)  == junfunc("sin",x)
     sin(x,repr)  == jlref(concat ["sin(",getind(x), ",form=", string(repr),")"])
@@ -1521,7 +1513,7 @@ NMExactCalciumField() : Exports == Implementation where
     log(x)   == junfunc("log",x)
     recip(x) ==
       zero? x => "failed"
-      junfunc("inv",x)
+      junfunc("inv",x) pretend %
 
     sin(x)  == junfunc("sin",x)
     sin(x,repr)  == jlref(concat ["sin(",getind(x), ",form=", string(repr),")"])
@@ -1712,7 +1704,8 @@ NMFraction(R : Join(NMCommutativeRing, IntegralDomain)) :
     inv(q) == junfunc("inv",q)
     recip(x) ==
       zero?(x) => "failed"
-      junfunc("inv",x)
+      junfunc("inv",x) pretend %
+        
     if R is NMInteger then
       random(p : PositiveInteger) ==
         jlref(concat ["rand_bits(QQ,",string(p), ")"])

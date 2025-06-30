@@ -769,7 +769,7 @@ NMRealField() : Exports == Implementation where
     trim(x) == junfunc("trim",x)
 
     jlNMRing() == "NRF"
-    jlObject() == "NRF"
+    jlObject() == jlEvalString("string(NRF)")
 
     0    == jlref("zero(NRF)")
     1    == jlref("one(NRF)")
@@ -1035,8 +1035,6 @@ NMComplexField() : Exports == Implementation where
     ++ evaluation in Julia of str.
     coerce   : Float -> %
     ++ coerce(x) coerces x.
-    coerce   : NMAlgebraicNumber -> %
-    ++ coerce(an) coerces an.
     coerce   : Complex(Integer) -> % -- for %i operations
     ++ coerce(z) coerces z. Convenience function.
     jncf   : String -> %
@@ -1091,7 +1089,7 @@ NMComplexField() : Exports == Implementation where
       junfunc("last", ret)@NMInteger
 
     jlNMRing() == "NCF"
-    jlObject() == "NCF"
+    jlObject() == jlEvalString("string(NCF)")
 
     0    == jlref("zero(NCF)")
     1    == jlref("one(NCF)")
@@ -1204,7 +1202,6 @@ NMComplexField() : Exports == Implementation where
       ret := jlref(concat(["NCF(_"", convert(f),"_")"]))
       outputSpacing(tmp)
       ret
-    coerce(an : NMAlgebraicNumber) == junfunc("NCF", an)
     jncf(s : String) : % == jlref(concat(["NCF(_"", s,"_")"]))
     jncf(r : String, i : String) : % ==
       jlref(concat(["NCF(_"", r, "_",_"", i, "_")"]))

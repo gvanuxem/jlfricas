@@ -1,3 +1,5 @@
+-- Test Julia loading principally
+
 )set break resume
 )set mess type off
 )expose UnittestCount UnittestAux Unittest

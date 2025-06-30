@@ -1,11 +1,3 @@
-)abbrev category NACF NMAlgebraicallyClosedField
-++ Author: G. Vanuxem
-++ Date Created: Nov. 2024
-++ Description:
-++   Model for Nemo algebraically closed fields.
-++ Keywords: algebraic, closure, field.
-NMAlgebraicallyClosedField() : Category == Join(Field, RadicalCategory)
-
 )abbrev category NACFS NMAlgebraicallyClosedFunctionSpace
 ++ Author: G. Vanuxem
 ++ Date Created: 31 October 1988
@@ -13,7 +5,7 @@ NMAlgebraicallyClosedField() : Category == Join(Field, RadicalCategory)
 ++   Model for algebraically closed function spaces.
 ++ Keywords: algebraic, closure, field.
 NMAlgebraicallyClosedFunctionSpace(R : Join(Comparable, IntegralDomain)):
-  Category == Join(NMAlgebraicallyClosedField, FunctionSpace R)
+  Category == Join(AlgebraicallyClosedField, FunctionSpace R)
 
 )abbrev domain NUP NMUnivariatePolynomial
 ++ Univariate polynomial domain using the Julia pakage Nemo
@@ -171,7 +163,7 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
         jlref(concat(["roots(QQBar,",
           getind(p),")"]))$JLVector(NMAlgebraicNumber)
       minimalPolynomial(p : NMAlgebraicNumber) : % ==
-        jlref(concat(["minpoly(", NUPRing, ",", getind(p),")"]))
+        jlref(concat(["minpoly(", NUPRing, "[1],", getind(p),")"]))
       cyclotomicPolynomial(n,p) ==
         jlref(concat ["cyclotomic(",string(n),",", getind(p),")"])
       swinnertonDyerPolynomial(n,p) ==
@@ -187,7 +179,7 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
         jlref(concat(["roots(QQBar,",
           getind(p),")"]))$JLVector(NMAlgebraicNumber)
       minimalPolynomial(p : NMAlgebraicNumber) : % ==
-        jlref(concat(["minpoly(", NUPRing, ",", getind(p),")"]))
+        jlref(concat(["minpoly(", NUPRing, "[1],", getind(p),")"]))
       p : % + q : Fraction(Integer) == jbinfunc("+", p, coerce(q)@NRAT)
       p : % * q : Fraction(Integer) == jbinfunc("*", p, coerce(q)@NRAT)
       q : Fraction(Integer) + p : % == jbinfunc("+", coerce(q)@NRAT, p)
@@ -488,7 +480,7 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
         ret : JLObjTuple := jbinfunc("divides", 1$R, p)
         not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
           => "failed"
-        junfunc("last", ret)  pretend %
+        junfunc("last", ret) pretend %
       p/r : R == inv(r)*p -- TODO
       unitNormal(p) ==
         unitC : R := junfunc("canonical_unit", p)
