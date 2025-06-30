@@ -40,13 +40,6 @@ NMRing() : Category == Join(NMType, JLObjectRing) with
     add
       import from JLUtilityFunctions
       import from String
-      -- Necessary? Where? Which?
-      --jl_eval_string("import AbstractAlgebra: parent_type, elem_type, _
-      --  base_ring, base_ring_type, parent, is_domain_type, _
-      --  is_exact_type, canonical_unit, isequal, divexact, _
-      --  get_cached!, is_unit, expressify,  _
-      --  @show_name, @show_special, is_terse, pretty, terse, Lowercase")$Lisp
-
       getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
       junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
       jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
