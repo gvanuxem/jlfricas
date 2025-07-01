@@ -23,15 +23,10 @@ NMRing() : Category == Join(NMType, JLObjectRing) with
       ++ unit?(x) checks whther or not x is a unit, i.e. invertible.
       equal? : (% , %) -> Boolean
       ++ equal?(x,y) checks whether or not x and y ar equal.
-      inverse : % -> % 
-      ++ inverse(x) returns the inverse of x.
       exactDivide : (%, %) -> %
       ++ exactDivide(x,y) returns the exact division
       ++ of x by y. Throws a Julia error if it is no
       ++ an exact division.
-      divide : (%, %) -> Record(quotient : %, remainder : %)
-      ++ divide(x,y) returns a record containing both remainder
-      ++ and quotient.
       jlNMRing : () -> String
       ++ jlNMRing(x) returns the FriCAS Nemo ring type
       ++  of x used in Julia.
@@ -47,12 +42,8 @@ NMRing() : Category == Join(NMType, JLObjectRing) with
       jbinbfunc(op,a,b) ==> jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
       exact?(x) == junbfunc("is_exact_type",x)
       unit?(x) == junbfunc("is_unit",x)      
-      exactDivide(x,y) == jbinfunc("divexact",x,y)
-      divide(a,b) : Record(quotient : %, remainder : %) ==
-        ret : JLObjTuple := jbinfunc("divrem",a,b)
-        [ret.1 pretend %, ret.2 pretend %]
       equal?(x,y) == jbinbfunc("isequal",x,y)
-      inverse(x) == junfunc("inv",x)
+      exactDivide(x,y) == jbinfunc("divexact",x,y)
 
 )abbrev category NCRING NMCommutativeRing
 ++ Category for Nemo commutative ring domains.
@@ -192,6 +183,9 @@ NMInteger() : Exports == Implementation where
         => "failed"
       junfunc("last", ret)@%
     inverse(x) == junfunc("inv",x)
+    divide(a,b) : Record(quotient : %, remainder : %) ==
+      ret : JLObjTuple := jbinfunc("divrem",a,b)
+      [ret.1 pretend %, ret.2 pretend %]
 
     convert(i) : JLObjBigInt ==
       jlref(concat ["BigInt(", getind(i), ")"])
@@ -574,10 +568,10 @@ NMIntegerMod(p : PositiveInteger) : Exports == Implementation where
 
     x : % * y : NMInteger == jbinfunc("*", x, y)
     x : % * y : Integer == jlref(concat [getind(x), "*", string(y)])
-    --recip(x) ==
-    --  -- TODO: compute an euclidean dvision to check
-    --  zero?(x) => "failed"
-    --  junfunc("inv",x) pretend %
+    recip(x) ==
+      -- TODO: compute an euclidean dvision to check
+      zero?(x) => "failed"
+      junfunc("inv",x)@%
 
     size()           == p
     characteristic() == p

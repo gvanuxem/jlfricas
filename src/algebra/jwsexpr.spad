@@ -1164,6 +1164,7 @@ WSExpression() : Exports == Implementation where
     import from JLStringUtilities
 
     jlInitialize(true);
+    Rep := SExpression
 
     jbinop(op,a,b) ==> jlref(concat(["weval(", getind(a), op, getind(b),")"]))
     junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
@@ -1183,8 +1184,6 @@ WSExpression() : Exports == Implementation where
       error "The Julia MathLink package is not installed."
     jlEvalString("import MathLink: WExpr, WSymbol, WReal, WRational, WInteger")
     
-    Rep := SExpression
-
     strToExprInt(s : String) : Union(Expression(Integer), "failed") ==
       str := concat("0$Expression(Integer)+", s)
       af := parse(str)$InputForm
