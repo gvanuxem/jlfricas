@@ -1163,6 +1163,8 @@ WSExpression() : Exports == Implementation where
     import from JLUtilityFunctions
     import from JLStringUtilities
 
+    jlInitialize(true);
+
     jbinop(op,a,b) ==> jlref(concat(["weval(", getind(a), op, getind(b),")"]))
     junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
     jbinfunc(func,a,b) ==>

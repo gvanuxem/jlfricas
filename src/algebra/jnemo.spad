@@ -57,7 +57,7 @@ NMRing() : Category == Join(NMType, JLObjectRing) with
 )abbrev category NCRING NMCommutativeRing
 ++ Category for Nemo commutative ring domains.
 ++ Author: G.Vanuxem
-++ Date Created: Dec,, 2024
+++ Date Created: Dec, 2024
 ++ Description:
 ++  Parent category of Nemo commutative ring domains.
 NMCommutativeRing() : Category == Join(NMRing, CommutativeRing)
@@ -76,6 +76,7 @@ JLArbitraryPrecision() : Category ==  JLType with
 ++ Domain for Nemo Integers (ZZ)
 ++ Author: G. Vanuxem
 ++ Date Created: Jan. 2023
+++ Last Modified: Jun. 2025
 ++ Description:
 ++  This domain allows the manipulation of Nemo integers
 ++  using the Nemo package for Julia (FLINT based).
@@ -94,6 +95,8 @@ NMInteger() : Exports == Implementation where
     ++ by Selfridge’s method. See https://flintlib.org/.
     random : Segment(Integer) -> %
     ++ random(seg) returns a random Nemo integer in the range seg.
+    convert : % -> JLObjBigInt
+    ++ convert(i) converts i.
     coerce  : JI64 -> %
     ++ coerce(i) coerces i to a NMInteger.
     coerce  : % -> JI64
@@ -118,6 +121,7 @@ NMInteger() : Exports == Implementation where
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
     jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+    junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
     jbinbfunc(op,a,b) ==>
       jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
@@ -126,22 +130,27 @@ NMInteger() : Exports == Implementation where
 
     0 == jlref("zero(ZZ)")
     1 == jlref("one(ZZ)")
+    inc(x) == x + 1
+    dec(x) == x - 1
+    rightPower(x,n) == jlref(concat [getind(x), "^", string(n)])
+    leftPower(x,n) == jlref(concat [getind(x), "^", string(n)])
+    base() == jlref("ZZ(2)")
+    characteristic() == 0
+
     random(n : %) ==
-      jlref(concat ["rand(ZZ,0:", getind(n-1),")"])
+      jlref(concat ["rand(ZZ,0:", getind(n),"-1)"])
     random(seg : Segment(Integer)) ==
       jlref(concat ["rand(ZZ,",string(low(seg)), ":", string(high(seg)),")"])
     x < y  == jbinbfunc("<",x,y)
     x > y  == jbinbfunc(">",x,y)
     x >= y == jbinbfunc(">=",x,y)
     x <= y == jbinbfunc("<=",x,y)
-    odd? x == jlEvalString(concat ["isodd(",getind(x),")"])
-    even? x == jlEvalString(concat ["iseven(",getind(x),")"])
-    prime? x == jlEvalString(concat ["is_prime(",getind(x),")"])
+    odd? x == junbfunc("isodd",x)
+    even? x == junbfunc("iseven",x)
+    prime? x == junbfunc("is_prime",x)
     probablePrime? x ==
       jlEvalString(concat ["is_probable_prime(",getind(x),")"])
-
     x  * y : Integer == jlref(concat([getind(x), "*", string(y)]))
-
     abs(x) == junfunc("abs", x)
     length(x) == coerce(jlEvalString(concat(["nbits(", getind(x),")"]))@Integer)
     shift(a, sh) ==
@@ -184,6 +193,9 @@ NMInteger() : Exports == Implementation where
       junfunc("last", ret)@%
     inverse(x) == junfunc("inv",x)
 
+    convert(i) : JLObjBigInt ==
+      jlref(concat ["BigInt(", getind(i), ")"])
+
     coerce(jsi : %) : JI64 ==
       ret : Integer := parsei string jsi 
       (ret <= convert(max())@Integer) and (ret >= convert(min())@Integer) =>
@@ -206,8 +218,10 @@ NMInteger() : Exports == Implementation where
 ++ Domain for Nemo algebraic number
 ++ Author: G. Vanuxem
 ++ Date Created: March. 2023
+++ Last Modified: Jun. 2025
 ++ Description:
-++  This domain allows the manipulation of Nemo algebraic numbers
+++  This domain allows the manipulation of Nemo algebraic numbers,
+++  i.e. algebraic closure of rational field,
 ++  represented by minimal polynomials using the Nemo package
 ++  for Julia (Calcium based).
 ++  https://fredrikj.net/calcium/
@@ -328,6 +342,14 @@ NMAlgebraicNumber() : Exports == Implementation where
     ++ jnan(q) returns q as a NMAlgebraicNumber.
     jnan    : String -> %
     ++ jnan(str) evaluates str in Julia that returns a NMAlgebraicNumber.
+    QQbar    : Integer -> %
+    ++ jnan(x) returns x as a NMAlgebraicNumber.
+    QQbar    : Fraction(Integer) -> %
+    ++ jnan(q) returns q as a NMAlgebraicNumber.
+    QQbar    : NMInteger -> %
+    ++ jnan(x) returns x as a NMAlgebraicNumber.
+    QQbar    : NMFraction(NMInteger) -> %
+    ++ jnan(q) returns q as a NMAlgebraicNumber.
   Implementation ==> add
     import from JLUtilityFunctions
     import from JLStringUtilities
@@ -350,6 +372,9 @@ NMAlgebraicNumber() : Exports == Implementation where
 
     0 == jlref("zero(QQBar)")
     1 == jlref("one(QQBar)")
+
+    rightPower(x,n) == jbinfunc("^",x,n)
+    leftPower(x,n) == jbinfunc("^",x,n)
 
     characteristic() == 0
     rootOfUnity(n) == jlref(concat(["root_of_unity(QQBar,", string(n),")"]))
@@ -480,11 +505,17 @@ NMAlgebraicNumber() : Exports == Implementation where
         minimalPolynomial(x)@SparseUnivariatePolynomial(Z)
           )$SparseUnivariatePolynomialFunctions2(Z,AlgebraicNumber)
       rootOf(mapped)$AlgebraicNumber
+
     jnan(i : Integer) == jlref(concat(["QQBar(",string(i),")"]))
     jnan(fi : Fraction(Integer)) == coerce(fi)
     jnan(i : NMInteger) == coerce(i)
     jnan(fi : NMFraction(NMInteger)) == coerce(fi)
     jnan(s: String) == jlref(concat(["QQBar(", s,")"]))
+
+    QQbar(i : Integer) == jlref(concat(["QQBar(",string(i),")"]))
+    QQbar(fi : Fraction(Integer)) == coerce(fi)
+    QQbar(i : NMInteger) == coerce(i)
+    QQbar(fi : NMFraction(NMInteger)) == coerce(fi)
     coerce(i : %) : OutputForm ==
       concat(["[", string(i),"]"]) pretend OutputForm
 
@@ -645,9 +676,9 @@ NMPrimeField(p : PositiveInteger) : Exports == Implementation where
     generator() == 0
     normalElement() == 1
     createNormalElement() == 1
-    characteristic() == p pretend NNI
-    size() == p pretend NNI
-    order() == p pretend NNI
+    characteristic() == p
+    size() == p
+    order() == p
     representationType() == "prime"
     extensionDegree() : PI == 1
     charthRoot(x : %) : % == x
@@ -1223,8 +1254,8 @@ InnerNMExactCalciumField(Options : JLObjDict) : Exports ==
 ++ Description:
 ++  \spadtype{NMExactCalciumField} implements exact complex field
 ++  arithmetic using the Nemo package.
-++  Reference: https://nemocas.github.io/Nemo.jl
-++  See https://flintlib.org/doc/introduction_calcium.html for the C library.
+++ Reference: https://nemocas.github.io/Nemo.jl
+++ See also: https://flintlib.org/doc/introduction_calcium.html for the C library.
 NMExactCalciumField() : Exports == Implementation where
   JI64      ==> JLInt64
   PI        ==> PositiveInteger
