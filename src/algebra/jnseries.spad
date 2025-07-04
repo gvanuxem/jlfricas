@@ -22,8 +22,8 @@ NMUnivariatePowerSeries(R, x, prec, abs) : Exports == Implementation where
   PI        ==> PositiveInteger
   NNI       ==> NonNegativeInteger
   Exports ==> Join(NMCommutativeRing,
-      PowerSeriesCategory(R, NNI, SingletonAsOrderedSet)) with
-    DifferentialRing
+                PowerSeriesCategory(R, NNI, SingletonAsOrderedSet),
+                DifferentialRing) with
     "*"   : (%, INT) -> %
     ++ s * n is the product of s with an integer.
     "*"   : (%, NNI) -> %
@@ -50,7 +50,26 @@ NMUnivariatePowerSeries(R, x, prec, abs) : Exports == Implementation where
     ++ integrate(f(x)) returns an anti-derivative of the power series
     ++ \spad{f(x)} with constant coefficient 0.
     if R has Algebra NMFraction(NMInteger) then
-      TranscendentalFunctionCategory
+      TrigonometricFunctionCategory
+      ArcTrigonometricFunctionCategory
+      HyperbolicFunctionCategory
+      ArcHyperbolicFunctionCategory
+      exp   : % -> %
+      ++ exp(s) returns the exponential of the power serie s.
+      log   : % -> %
+      ++ exp(s) returns the logarithm of the power serie s.
+      "/" : (%, INT) -> %
+      ++ x / n is the division by an integer.
+      "/" : (%, NMInteger) -> %
+      ++ x / n is the division by an integer.
+      "/" : (%, R) -> %
+      ++ x / n is the division operation.
+      "*" : (%, R) -> %
+      ++ x  n is the multiplication operation.
+      "+" : (%, Fraction(INT)) -> %
+      ++ x + n is the addition operation.
+      "-" : (%, Fraction(INT)) -> %
+      ++ x - n is the addition operation.
     coerce   : Variable(x) -> %
     ++ coerce(x) converts the variable x to a Nemo univariate power serie.
   Implementation ==> add
@@ -85,12 +104,6 @@ NMUnivariatePowerSeries(R, x, prec, abs) : Exports == Implementation where
       jlNMRing()$R, ",", string(prec), ",_"", string(x), "_";model=",
         string(abs), ")"]))
 
-    strToExpr(s : String) : Union(Expression(Integer), "failed") ==
-      str := concat("0$Expression(Integer)+", s)
-      af := parse(str)$InputForm
-      av := interpret_in_new_env(af)$InputForm
-      retractIfCan(av)$AnyFunctions1(Expression(Integer))
-
     0 == jlref(concat(["zero(", NUPSRing, "[1])"]))
     1 == jlref(concat(["one(", NUPSRing, "[1])"]))
 
@@ -124,18 +137,49 @@ NMUnivariatePowerSeries(R, x, prec, abs) : Exports == Implementation where
     if R has Algebra NMFraction(NMInteger) then
       exp(s) == junfunc("exp", s)
       log(s) == junfunc("log", s)
+      s1 : % / s2 : R == jbinfunc("/", s1, s2)
+      s1 : % * s2 : R == jbinfunc("*", s1, s2)
+      s1 : % * s2 : Fraction(INT) ==
+        jlref(concat [getind(s1), "*",
+          string(numer s2) "//", string(denom(s2))])
+      s1 : % + s2 : Fraction(INT) ==
+        jlref(concat [getind(s1), "+",
+          string(numer s2) "//", string(denom(s2))])
+      s1 : % - s2 : Fraction(INT) ==
+        jlref(concat [getind(s1), "-",
+          string(numer s2) "//", string(denom(s2))])
+      s1 : % / s2 : NMInteger == jbinfunc("/", s1, s2)
+      s1 : % / s2 : INT == jlref(concat [getind(s1), "/", string(s2)])
+
       sin(s) == junfunc("sin", s)
       cos(s) == junfunc("cos", s)
       tan(s) == junfunc("tan", s)
+
+      cot(x : %) == cos x * csc x
+      csc(x : %) ==
+        (a := recip(sin x)) case "failed" => error "csc: no reciprocal"
+        a@%
+      sec(x : %) ==
+        (a := recip(cos x)) case "failed" => error "sec: no reciprocal"
+        a@%
+
       asin(s) == junfunc("asin", s)
       --acos(s) == junfunc("acos", s)
       atan(s) == junfunc("atan", s)
+
       sinh(s) == junfunc("sinh", s)
       cosh(s) == junfunc("cosh", s)
       tanh(s) == junfunc("tanh", s)
       asinh(s) == junfunc("asinh", s)
       --acosh(s) == junfunc("acosh", s)
       atanh(s) == junfunc("atanh", s)
+      csch (x: %) ==
+        (a := recip(sinh x)) case "failed" => error "csch: no reciprocal"
+        a@%
+      sech(x : %) ==
+        (a := recip(cosh x)) case "failed" => error "sech: no reciprocal"
+        a@%
+      coth(x : %) == cosh x * csch x
 
     inverse(s) == junfunc("inv",s)
     sqrt(s) == junfunc("sqrt", s)
@@ -146,11 +190,8 @@ NMUnivariatePowerSeries(R, x, prec, abs) : Exports == Implementation where
     coerce(i : Integer) == jlref(concat([NUPSRing,"[1](",string(i),")"]))
     coerce(c : R) == jlref(concat([NUPSRing,"[1](", getind(c),")"]))
     coerce(p : %) : OutputForm ==
-      if R is NMInteger then
-        coerce strToExpr(string(p))
-      else
-        jlRegexReplace(string(p),
-          jlRegex("//"), jlSubstitute("/")) pretend OutputForm
+      jlRegexReplace(string(p),
+        jlRegex("//"), jlSubstitute("/")) pretend OutputForm
 
 )abbrev domain NULS NMUnivariateLaurentSeries
 ++ Nemo univariate Laurent series ring using the Julia Nemo package
@@ -184,10 +225,23 @@ NMUnivariateLaurentSeries(R, x, prec) : Exports == Implementation where
     ++ s * n is the product of s with a positive integer.
     "^"   : (%, INT) -> %
     ++ s ^ z computes the z-th power of s.
-    exp   : % -> %
-    ++ exp(s) returns the exponential of the Laurent serie s.
-    log   : % -> %
-    ++ exp(s) returns the logarithm of the Laurent serie s.
+    if R has Algebra NMFraction(NMInteger) then
+      exp   : % -> %
+      ++ exp(s) returns the exponential of the Laurent serie s.
+      log   : % -> %
+      ++ exp(s) returns the logarithm of the Laurent serie s.
+      "/" : (%, INT) -> %
+      ++ x / n is the division by an integer.
+      "/" : (%, NMInteger) -> %
+      ++ x / n is the division by an integer.
+      "/" : (%, R) -> %
+      ++ x / n is the division operation.
+      "*" : (%, R) -> %
+      ++ x  n is the multiplication operation.
+      "+" : (%, Fraction(INT)) -> %
+      ++ x + n is the addition operation.
+      "-" : (%, Fraction(INT)) -> %
+      ++ x - n is the addition operation.
     variable : % -> Symbol
     ++ variable(f) returns the (unique) Laurent series variable of
     ++ the power series f.
@@ -237,14 +291,8 @@ NMUnivariateLaurentSeries(R, x, prec) : Exports == Implementation where
     -- Use a tuple to do not define x in the Julia Main namesapce
     ++ to avoid reusing previous Ring when redefining x,
     ++ FriCAS will not always reconstruct the new Ring in Julia.
-    jlEvalString(concat([NULSRing, "=laurent_series_field(",
+    jlEvalString(concat([NULSRing, "=laurent_series_ring(",
       jlNMRing()$R, ",", string(prec), ",_"", string(x),"_")"]))
-
-    strToExpr(s : String) : Union(Expression(Integer), "failed") ==
-      str := concat("0$Expression(Integer)+", s)
-      af := parse(str)$InputForm
-      av := interpret_in_new_env(af)$InputForm
-      retractIfCan(av)$AnyFunctions1(Expression(Integer))
 
     0 == jlref(concat(["zero(", NULSRing, "[1])"]))
     1 == jlref(concat(["one(", NULSRing, "[1])"]))
@@ -260,6 +308,22 @@ NMUnivariateLaurentSeries(R, x, prec) : Exports == Implementation where
     a : % ^ i : PI  == jlref(concat [getind(a),"^", string(i)])
     a : % ^ i : NNI  == jlref(concat [getind(a),"^", string(i)])
     a : % ^ i : INT  == jlref(concat [getind(a),"^", string(i)])
+    if R has Algebra NMFraction(NMInteger) then
+      exp(s) == junfunc("exp", s)
+      log(s) == junfunc("log", s)
+      s1 : % / s2 : R == jbinfunc("/", s1, s2)
+      s1 : % * s2 : R == jbinfunc("*", s1, s2)
+      s1 : % * s2 : Fraction(INT) ==
+        jlref(concat [getind(s1), "*",
+          string(numer s2) "//", string(denom(s2))])
+      s1 : % + s2 : Fraction(INT) ==
+        jlref(concat [getind(s1), "+",
+          string(numer s2) "//", string(denom(s2))])
+      s1 : % - s2 : Fraction(INT) ==
+        jlref(concat [getind(s1), "-",
+          string(numer s2) "//", string(denom(s2))])
+      s1 : % / s2 : NMInteger == jbinfunc("/", s1, s2)
+      s1 : % / s2 : INT == jlref(concat [getind(s1), "/", string(s2)])
     exactDivide(p,q) == jbinfunc("divexact", p, q)
     (p1:% exquo p2:%) ==
       ret : JLObjTuple := jbinfunc("divides", p1, p2)
@@ -278,9 +342,7 @@ NMUnivariateLaurentSeries(R, x, prec) : Exports == Implementation where
     jlObject() == jlEvalString(concat ["string(",NULSRing,")"])@String
 
     inverse(s) == junfunc("inv",s)
-    exp(s) == junfunc("exp", s)
     sqrt(s) == junfunc("sqrt", s)
-    log(s) == junfunc("log", s)
 
     differentiate(s) == junfunc("derivative", s)
     integrate(s) == junfunc("integral",s)
@@ -289,13 +351,10 @@ NMUnivariateLaurentSeries(R, x, prec) : Exports == Implementation where
     coerce(i : Integer) == jlref(concat([NULSRing,"[1](",string(i),")"]))
     coerce(c : R) == jlref(concat([NULSRing,"[1](", getind(c),")"]))
     coerce(p : %) : OutputForm ==
-      if R is NMInteger then
-        coerce strToExpr(string(p))
-      else
-        jlRegexReplace(string(p),
-          jlRegex("//"), jlSubstitute("/")) pretend OutputForm
+      jlRegexReplace(string(p),
+        jlRegex("//"), jlSubstitute("/")) pretend OutputForm
 
-)abbrev domain NUPSX NMUnivariatePuiseuxSeries
+)abbrev domain NUPXS NMUnivariatePuiseuxSeries
 ++ Nemo univariate Puiseux series ring using the Julia Nemo package
 ++ Author: G. Vanuxem
 ++ Date Created: Jun, 2025
@@ -333,10 +392,23 @@ NMUnivariatePuiseuxSeries(R, x, prec) : Exports == Implementation where
     ++ s ^ z computes the z-th power of s.
     "^"   : (%, Fraction(INT)) -> %
     ++ s ^ q computes the q power of s.
-    exp   : % -> %
-    ++ exp(s) returns the exponential of the Laurent serie s.
-    log   : % -> %
-    ++ exp(s) returns the logarithm of the Laurent serie s.
+    if R has Algebra NMFraction(NMInteger) then
+      exp   : % -> %
+      ++ exp(s) returns the exponential of the Puiseux serie s.
+      log   : % -> %
+      ++ exp(s) returns the logarithm of the Puiseux serie s.
+      "/" : (%, INT) -> %
+      ++ x / n is the division by an integer.
+      "/" : (%, NMInteger) -> %
+      ++ x / n is the division by an integer.
+      "/" : (%, R) -> %
+      ++ x / n is the division operation.
+      "*" : (%, R) -> %
+      ++ x  n is the multiplication operation.
+      "+" : (%, Fraction(INT)) -> %
+      ++ x + n is the addition operation.
+      "-" : (%, Fraction(INT)) -> %
+      ++ x - n is the addition operation.
     variable : % -> Symbol
     ++ variable(f) returns the (unique) Puiseux series variable of
     ++ the power series f.
@@ -389,12 +461,6 @@ NMUnivariatePuiseuxSeries(R, x, prec) : Exports == Implementation where
     jlEvalString(concat([NUPSXRing, "=puiseux_series_ring(",
       jlNMRing()$R, ",", string(prec), ",_"", string(x),"_")"]))
 
-    strToExpr(s : String) : Union(Expression(Integer), "failed") ==
-      str := concat("0$Expression(Integer)+", s)
-      af := parse(str)$InputForm
-      av := interpret_in_new_env(af)$InputForm
-      retractIfCan(av)$AnyFunctions1(Expression(Integer))
-
     0 == jlref(concat(["zero(", NUPSXRing, "[1])"]))
     1 == jlref(concat(["one(", NUPSXRing, "[1])"]))
 
@@ -411,6 +477,22 @@ NMUnivariatePuiseuxSeries(R, x, prec) : Exports == Implementation where
     a : % ^ i : INT  == jlref(concat [getind(a),"^", string(i)])
     a : % ^ q : Fraction(INT)  ==
       jlref(concat [getind(a),"^(", string(numer q),"//", string(denom q),")"])
+    if R has Algebra NMFraction(NMInteger) then
+      exp(s) == junfunc("exp", s)
+      log(s) == junfunc("log", s)
+      s1 : % / s2 : R == jbinfunc("/", s1, s2)
+      s1 : % * s2 : R == jbinfunc("*", s1, s2)
+      s1 : % * s2 : Fraction(INT) ==
+        jlref(concat [getind(s1), "*",
+          string(numer s2) "//", string(denom(s2))])
+      s1 : % + s2 : Fraction(INT) ==
+        jlref(concat [getind(s1), "+",
+          string(numer s2) "//", string(denom(s2))])
+      s1 : % - s2 : Fraction(INT) ==
+        jlref(concat [getind(s1), "-",
+          string(numer s2) "//", string(denom(s2))])
+      s1 : % / s2 : NMInteger == jbinfunc("/", s1, s2)
+      s1 : % / s2 : INT == jlref(concat [getind(s1), "/", string(s2)])
     exactDivide(p,q) == jbinfunc("divexact", p, q)
     (p1:% exquo p2:%) ==
       ret : JLObjTuple := jbinfunc("divides", p1, p2)
@@ -432,9 +514,7 @@ NMUnivariatePuiseuxSeries(R, x, prec) : Exports == Implementation where
     jlObject() == jlEvalString(concat ["string(",NUPSXRing,")"])@String
 
     inverse(s) == junfunc("inv",s)
-    exp(s) == junfunc("exp", s)
     sqrt(s) == junfunc("sqrt", s)
-    log(s) == junfunc("log", s)
 
     differentiate(s) == junfunc("derivative", s)
     integrate(s) == junfunc("integral",s)
@@ -443,8 +523,5 @@ NMUnivariatePuiseuxSeries(R, x, prec) : Exports == Implementation where
     coerce(i : Integer) == jlref(concat([NUPSXRing,"[1](",string(i),")"]))
     coerce(c : R) == jlref(concat([NUPSXRing,"[1](", getind(c),")"]))
     coerce(p : %) : OutputForm ==
-      if R is NMInteger then
-        coerce strToExpr(string(p))
-      else
-        jlRegexReplace(string(p),
-          jlRegex("//"), jlSubstitute("/")) pretend OutputForm
+      jlRegexReplace(string(p),
+        jlRegex("//"), jlSubstitute("/")) pretend OutputForm

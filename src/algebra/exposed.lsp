@@ -257,7 +257,7 @@
   (|NMUnivariateLaurentSeries| . NULS)
   (|NMUnivariatePolynomial| . NUP)
   (|NMUnivariatePowerSeries| . NUPS)
-  (|NMUnivariatePuiseuxSeries| . NUPSX)
+  (|NMUnivariatePuiseuxSeries| . NUPXS)
   (|NoneFunctions1| . NONE1)
   (|NonNegativeInteger| . NNI)
   (|NormalizationPackage| . NORMPK)
