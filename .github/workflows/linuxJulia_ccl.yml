@@ -30,7 +30,7 @@ jobs:
         julia -e "import Pkg;Pkg.add(\"Nemo\");Pkg.add(\"Suppressor\");Pkg.add(\"SpecialFunctions\")"
     - name: configure
       run: |       
-        ./configure --with-lisp='ros run' --enable-gmp --enable-julia --enable-hunchentoot || cat config.log
+        ./configure --with-lisp='ros run' --enable-gmp --enable-julia --enable-hunchentoot --enable-mathlink || cat config.log
     - name: make
       run: make -j4 --output-sync
     - name: make html doc
