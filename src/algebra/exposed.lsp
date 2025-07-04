@@ -250,6 +250,7 @@
   (|NMPadic2| . NPADIC2)
   (|NMPadicInteger| . NPADICZ)
   (|NMPadicRational| . NPADICR)
+  (|NMPolynomial| . NPOLY)
   (|NMPrimeField| . NPF)
   (|NMRealBall| . NRB)
   (|NMRealField| . NRF)

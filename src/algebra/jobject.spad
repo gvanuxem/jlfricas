@@ -1721,7 +1721,7 @@ JLMatrix(R : JLObjectRing) :  Exports == Implementation where
     new : (NNI, NNI, R) -> %
     ++ new(m, n, x) creates a matrix of size m by n with all elements x.
     if R has NMRing and (R has IntegerNumberSystem or
-        R has QuotientFieldCategory(NINT)) then
+        R has Algebra NMFraction(NINT)) then
       radicalEigenvalues: % -> JLVector(NMAlgebraicNumber)
       ++ radicalEigenvalues(mat) returns a Julia vector containing
       ++ the eigenvalues of mat.
