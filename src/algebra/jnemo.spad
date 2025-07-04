@@ -71,7 +71,7 @@ JLArbitraryPrecision() : Category ==  JLType with
 ++ Description:
 ++  This domain allows the manipulation of Nemo integers
 ++  using the Nemo package for Julia (FLINT based).
-++ https://flintlib.org/
+++ References: https://flintlib.org/; https://nemocas.github.io/Nemo.jl/stable/
 NMInteger() : Exports == Implementation where
   Z         ==> Integer
   JI64      ==> JLInt64
@@ -93,8 +93,6 @@ NMInteger() : Exports == Implementation where
     coerce  : % -> JI64
     ++ coerce(ni) ro a JLInt64 if possible.
     coerce  : % -> Expression Integer
-    ++ coerce(x) coerces x.
-    coerce  : % -> AlgebraicNumber
     ++ coerce(x) coerces x.
     inverse : % -> NMFraction(NMInteger)
     ++ inverse(x) returns the inverse of x.
@@ -202,8 +200,6 @@ NMInteger() : Exports == Implementation where
     convert(x : %) : Integer  == parsei(string x)
     coerce(x : %) : Expression(Integer)  ==
       coerce(parsei(string x))$Expression(Integer)
-    coerce(x : %) : AlgebraicNumber  ==
-      coerce(parsei(string x))$AlgebraicNumber
     coerce(i : %) : OutputForm == string(i) pretend OutputForm
     jnint(i : Integer) : % == coerce(i)
     ZZ(i : Integer) : % == coerce(i)
@@ -219,6 +215,7 @@ NMInteger() : Exports == Implementation where
 ++  represented by minimal polynomials using the Nemo package
 ++  for Julia (Calcium based).
 ++  https://fredrikj.net/calcium/
+++ References: https://flintlib.org/; https://nemocas.github.io/Nemo.jl/stable/
 -- TODO: norm etc... See AN in constants.spad
 -- rootOf : SparseUnivariatePolynomial(%)
 NMAlgebraicNumber() : Exports == Implementation where
@@ -517,10 +514,11 @@ NMAlgebraicNumber() : Exports == Implementation where
 ++ Domain for Nemo integer mod n
 ++ Author: G. Vanuxem
 ++ Date Created: Feb. 2024
+++ Last Modified: Jun. 2025
 ++ Description:
 ++  This domain allows the manipulation of Nemo integer mod n
 ++  elements using the Nemo package for Julia (FLINT based).
-++ https://flintlib.org/
+++ References: https://flintlib.org/; https://nemocas.github.io/Nemo.jl/stable/
 NMIntegerMod(p : PositiveInteger) : Exports == Implementation where
   PI      ==> PositiveInteger
   NNI     ==> NonNegativeInteger
@@ -586,17 +584,19 @@ NMIntegerMod(p : PositiveInteger) : Exports == Implementation where
     coerce(i : %) : OutputForm == string(i) pretend OutputForm
 
 )abbrev domain NPF NMPrimeField
-++ Domain for Nemo Galois Fields
+++ Domain for Nemo prime fields (Galois fields)
 ++ Author: G. Vanuxem
 ++ Date Created: Feb. 2024
+++ Last Modified: Jul. 2025
 ++ Description:
 ++  This domain allows the manipulation of Nemo prime field
 ++  elements using the Nemo Julia package (FLINT based).
-++ https://flintlib.org/
--- TODO: trace, absoluteTrace etc.
+++ References: https://flintlib.org/; https://nemocas.github.io/Nemo.jl/stable/
+-- TODO: trace, absoluteTrace, etc. See PF specific exports.
 NMPrimeField(p : PositiveInteger) : Exports == Implementation where
   PI        ==> PositiveInteger
   NNI       ==> NonNegativeInteger
+  INT       ==> Integer
   SUP       ==> SparseUnivariatePolynomial
   parsei    ==> PARSE_-INTEGER$Lisp
   Exports ==> Join(NMCommutativeRing, FiniteFieldCategory,
@@ -647,6 +647,9 @@ NMPrimeField(p : PositiveInteger) : Exports == Implementation where
     1 == jlref(concat(["one(", NPF,")"]))
 
     generator? x == junbfunc("is_gen",x)
+    index(n : PI) == coerce(n)
+    random() == coerce(random(p)$Integer)
+
 
     x : % * y : NMInteger == jbinfunc("*", x, y)
     x : % * y : Integer == jlref(concat [getind(x), "*", string(y)])
@@ -656,11 +659,26 @@ NMPrimeField(p : PositiveInteger) : Exports == Implementation where
         "//", string(denom(y)),")"])
     x ^ y : Integer == jlref(concat [getind(x), "^", string(y)])
     recip(x) ==
+      -- TODO: compute an euclidean dvision to check
       zero?(x) => "failed"
-      junfunc("recip",x) pretend %
+      junfunc("inv",x)@%
+    inv(x) == junfunc("inv",x)
     x quo y == jbinfunc("÷", x, y)
     -- x quo y == jbinfunc("div", x, y)
-    x rem y == jbinfunc("%", x, y)
+    x rem y ==
+      zero? y => error "rem$NPF: Division by 0"
+      0
+
+    factorsOfCyclicGroupSize() ==
+      factorsOfCyclicGroupSize()$PrimeField(p)
+
+    tableForDiscreteLogarithm(fac) ==
+      tableForDiscreteLogarithm(fac)$PrimeField(p)
+
+    createPrimitiveElement() ==
+      coerce(primitiveElement()$PrimeField(p) pretend INT)
+    primitiveElement() ==
+      coerce(primitiveElement()$PrimeField(p) pretend INT)
 
     nextItem(n) ==
       m := n+1
@@ -707,10 +725,12 @@ NMPrimeField(p : PositiveInteger) : Exports == Implementation where
 ++ Experimental domain for Nemo Galois Fields
 ++ Author: G. Vanuxem
 ++ Date Created: Feb. 2024
+++ Reference: https://flintlib.org/
+++ Last Modified: Jul. 2025
 ++ Description:
 ++  This domain allows the manipulation of Nemo Galois field
 ++  of p^n elements using the Nemo Julia package (FLINT based).
-++ https://flintlib.org/
+++ References: https://flintlib.org/; https://nemocas.github.io/Nemo.jl/stable/
 NMFiniteField(p : PositiveInteger, n: PositiveInteger) : Exports == Implementation where
   PI        ==> PositiveInteger
   NNI       ==> NonNegativeInteger
@@ -786,10 +806,13 @@ NMFiniteField(p : PositiveInteger, n: PositiveInteger) : Exports == Implementati
 
     x quo y == jbinfunc("÷", x, y)
     -- x quo y == jbinfunc("div", x, y)
-    x rem y == jbinfunc("%", x, y)
+    x rem y ==
+      zero? y => error "rem$NPF: Division by 0"
+      0
     recip(x) ==
       zero? x => "failed"
       junfunc("inv", x) pretend %
+    inv(x) == junfunc("inv", x)
 
     generator() == jlref(concat(["gen(", NFF,")"]))
     trace(a) == jlref(concat(["tr(", getind(a),")"]))$NMPrimeField(p)
@@ -837,12 +860,13 @@ NMFiniteField(p : PositiveInteger, n: PositiveInteger) : Exports == Implementati
 ++ library.
 ++ Author: G. Vanuxem
 ++ Date Created: April. 2024
+++ Last Modified: Jul. 2025
 ++ Keywords: float, floating point, number, complex
 ++ Description:
 ++  \spadtype{InnerNMExactCalciumField} implements exact complex field
-++  arithmetic using the Nemo package Inner domain using options,
-++  see https://fredrikj.net/calcium/ca.html#context-options for hints).
-++  Reference: https://nemocas.github.io/Nemo.jl
+++  arithmetic using the Nemo package. Inner domain using options,
+++  see https://fredrikj.net/calcium/ca.html#context-options for hints.
+++ References: https://flintlib.org/; https://nemocas.github.io/Nemo.jl/stable/
 ++  See https://flintlib.org/doc/introduction_calcium.html for the C library.
 --InnerNMExactCalciumField(jdict("Dict{Symbol,Int64}(:verbose=>0,:print_flags=>3)"))
 --InnerNMExactCalciumField(jdict("Dict{Symbol,Int64}(:verbose=>0,:print_flags=>643)"))
@@ -1127,7 +1151,12 @@ InnerNMExactCalciumField(Options : JLObjDict) : Exports ==
 
     -- x quo y == jbinfunc("div", x, y)
     x quo y == jbinfunc("÷", x, y)
-    x rem y == jbinfunc("%", x, y)
+    x rem y ==
+      zero? y => error "rem$INECF: Division by 0"
+      0
+    recip(x) ==
+      zero? x => "failed"
+      junfunc("inv", x) pretend %
 
     sqrt(x)  == junfunc("√",x)
     exp(x)   == junfunc("exp",x)
@@ -1248,7 +1277,7 @@ InnerNMExactCalciumField(Options : JLObjDict) : Exports ==
 ++ Description:
 ++  \spadtype{NMExactCalciumField} implements exact complex field
 ++  arithmetic using the Nemo package.
-++ Reference: https://nemocas.github.io/Nemo.jl
+++ References: https://flintlib.org/; https://nemocas.github.io/Nemo.jl/stable/
 ++ See also: https://flintlib.org/doc/introduction_calcium.html for the C library.
 NMExactCalciumField() : Exports == Implementation where
   JI64      ==> JLInt64
@@ -1524,7 +1553,9 @@ NMExactCalciumField() : Exports == Implementation where
 
     -- x quo y == jbinfunc("div", x, y)
     x quo y == jbinfunc("÷", x, y)
-    x rem y == jbinfunc("%", x, y)
+    x rem y ==
+      zero? y => error "rem$NECF: Division by 0"
+      0
 
     sqrt(x)  == junfunc("√",x)
     exp(x)   == junfunc("exp",x)
@@ -1642,6 +1673,8 @@ NMExactCalciumField() : Exports == Implementation where
 ++ Author: G. Vanuxem
 ++ Date Created:
 ++ Description:
+++  Nemo Fractions over un integral domain.
+++ References: https://flintlib.org/; https://nemocas.github.io/Nemo.jl/stable/
 -- TODO: random everywhere.
 NMFraction(R : Join(NMCommutativeRing, IntegralDomain)) :
     Exports == Implementation where
@@ -1690,8 +1723,12 @@ NMFraction(R : Join(NMCommutativeRing, IntegralDomain)) :
     NFR := concat("NFR", jlNMRing()$R)
     NFRP := concat(NFR,"(")
 
-
-    jlEvalString(concat([NFR, "=fraction_field(", jlNMRing()$R, ")"]))
+    tuple : Boolean := jbinbfunc("isa",jobject(jlNMRing()$R)$JLObject,
+      jobject("Tuple")$JLObject)
+    if tuple then -- polynomials and series
+      jlEvalString(concat([NFR, "=fraction_field(", jlNMRing()$R, "[1])"]))
+    else
+      jlEvalString(concat([NFR, "=fraction_field(", jlNMRing()$R, ")"]))
     jlNMRing() == NFR
     jlObject() == jlEvalString(concat(["string(", NFR,")"]))@String
     0 == jlref(concat(["zero(",NFR,")"]))
@@ -1781,6 +1818,7 @@ NMFraction(R : Join(NMCommutativeRing, IntegralDomain)) :
 ++ Date Created: May. 2024
 ++ Description:
 ++  Nemo factored objects.
+++ References: https://flintlib.org/; https://nemocas.github.io/Nemo.jl/stable/
 NMFactored(R : Join(NMRing, IntegralDomain)) : 
       Exports == Implementation where
   INT ==> Integer
