@@ -585,11 +585,10 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
 ++ Keywords: polynomial, multivariate
 ++ References:
 ++ Description:
-++   This type is a basic representation of generic sparse distributed universal
-++  multivariable polynomial types using the Julia pakage Nemo.
-++  It is parameterized by the coefficient ring. The coefficient ring may
-++  be non-commutative, but the variables are assumed to commute.
-++ Experimental domain.
+++   This type is a basic representation of generic sparse distributed
+++  multivariable polynomial types using the Julia pakage Nemo
+++  (AbstractAlgebra). It is parameterized by the coefficient ring.
+-- Experimental domain.
 -- TODO: eval, elt, subst, compose, evaluate, constructOrdered ???
 NMPolynomial(R : NMRing) : Exports == Implementation where
   NINT      ==> NMInteger
