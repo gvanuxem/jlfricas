@@ -7,12 +7,19 @@
 ++  Transport Protocol.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 WSObject() : Category == JLObjectType with
+    jWSInterpret: String -> %
+    ++ jWSInterpret(form) interprets form.
+    -- For later use. See WS call in ?? Spad code (WSEXPR)
     jWSInterpret: (String, String) -> %
-    ++ jWSInterpret(Type, Expr) interprets Expr to be of type Type
+    ++ jWSInterpret(Type|Form, Expr) interprets Expr to be of type Type or Form
     ++ using the Wolfram Symbolic Language.
     ++ For example:
     ++ \example{jWSInterpret("Number","3.2")@WSREAL}
     ++ \example{jWSInterpret("Real","3.2")@WSREAL}
+    ++ \example{jWSInterpret("Location","Lille")$WSEXPR}
+    ++ See jWSExpr "\$InterpreterTypes"
+    jWSInterpret: (String, String, String) -> %
+    ++ jWSInterpret(form1,form2,form3) interprets forms.
     jlEval  : % -> %
     ++ jlEval(expr) evaluate expr using the Wolfram Symbolic Transport Protocol.
     jlSymbolic : % -> String
@@ -61,8 +68,13 @@ WSObject() : Category == JLObjectType with
         getind(jwso),")))"]))
     jlHead(jwso) == jlref(concat(["weval(W_"Head_"(", getind(jwso), "))"]))
     jlEval(jwso) == make_jlref_wcall1("weval", jwso)$Lisp
-    jWSInterpret(type, expr) ==
-      jlref(concat ["Interpret(_"", type, "_",)(_"", expr, "_")"])
+    jWSInterpret(form) ==
+      jlref(concat ["Interpret(_"", form, "_")"])
+    jWSInterpret(form, form1) ==
+      jlref(concat ["Interpret(_"", form, "_",)(_"", form1, "_")"])
+    jWSInterpret(form, form1, form2) ==
+      jlref(concat ["Interpret(_"", form, "_",)(_"",
+        form1, "_",)(_"", form2, "_")"])
     jlNumeric(expr) == junfunc("W_"N_"(", expr)
     jlNumeric(expr, p) ==
       prec := jlref(concat(["WInteger(_"", string(p), "_")"]))

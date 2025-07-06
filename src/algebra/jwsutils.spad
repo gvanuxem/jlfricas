@@ -6,6 +6,7 @@
 ++  Julia Wolfram Symbolic utility functions using
 ++  the MathLink Julia package.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
+++ TODO: jWSImportString, WSString domain?? Relation to world wide data?
 WSUtilityFunctions() : Exports == Implementation where
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
   Exports ==> with

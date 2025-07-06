@@ -1616,7 +1616,6 @@ WSExpression() : Exports == Implementation where
     inverseFourier(expr : WSL(%), lpos : WSL(%)) ==
       jbinfunc("W_"InverseFourier_"(", expr, lpos)
 
-
     derivative(op, n) ==
       d := string name op
       expr : String := concat(["Derivative[", toString(n),"][", d,"]"])
