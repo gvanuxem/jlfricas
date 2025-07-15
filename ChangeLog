@@ -1,3 +1,17 @@
+2025-07-07  Waldek Hebisch  <cas@fricas.org>
+
+	* src/algebra/newpoly.spad, src/algebra/nregset.spad:
+	Do not export ConvertibleTo(String) from
+	RecursivePolynomialCategory
+
+2025-07-05  Waldek Hebisch  <cas@fricas.org>
+
+	* src/doc/ht/util.ht: Pass more requests as strings
+
+2025-07-01  Ralf Hemmecke  <ralf@hemmecke.org>
+
+	* src/algebra/hashstate.spad: remove unused "modulo"
+
 2025-06-29  Waldek Hebisch  <cas@fricas.org>
 
 	* src/interp/br-con.boot, src/interp/br-saturn.boot,
