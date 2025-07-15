@@ -96,14 +96,14 @@ WSExpression() : Exports == Implementation where
     dawson  : % -> %
     ++ dawson(x) computes the Dawson integral of x.
     -- TODO: WSINT package
-    eulerPhi : % -> %
+    eulerPhi : WSInteger -> %
     ++ eulerPhi(n) is the totient function i.e. the number of integers
     ++ that are relatively prime to n in the range [1,n].
-    eulerE : % -> %
+    eulerE : WSInteger -> %
     ++ eulerE(n) returns the Euler number En.
-    eulerE : (%, %) -> %
+    eulerE : (WSInteger , %) -> %
     ++ eulerE(n,z) return the Euler E polynomial of degree n.
-    lambertW : (%, %) -> %
+    lambertW : (WSInteger, %) -> %
     ++ lambertW(k,z) returns the k-th solution to LambertW function.
     haversine : % -> %
     ++ haversine(z)	computes the haversine of z.
