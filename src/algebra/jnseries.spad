@@ -429,7 +429,7 @@ NMUnivariatePuiseuxSeries(R, x, prec) : Exports == Implementation where
     coefficient : (%, INT) -> R
     ++ coefficient(s, i) return the coefficient of the term of degree n.
     coerce   : Variable(x) -> %
-    ++ coerce(x) converts the variable x to a Nemo univariate power serie.
+    ++ coerce(x) converts the variable x to a Nemo univariate Puiseux series.
   Implementation ==> add
     import from JLUtilityFunctions
     import from JLStringUtilities
