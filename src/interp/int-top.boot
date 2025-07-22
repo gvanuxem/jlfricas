@@ -278,6 +278,7 @@ fakepile(s) ==
 
 intloopProcessStrings(s, n) ==
      setCurrentLine s
+     JGC() -- TODO (where do I have to it)
      intloopProcess(n, true,
          next(function ncloopParse,
              next(function fakepile,

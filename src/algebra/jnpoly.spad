@@ -10,7 +10,7 @@ NMAlgebraicallyClosedFunctionSpace(R : Join(Comparable, IntegralDomain)):
 )abbrev domain NUP NMUnivariatePolynomial
 ++ Univariate polynomial domain using the Julia pakage Nemo
 ++ Author: G. Vanuxem
-++ Date created: mar, 2024
+++ Date Created: March, 2024
 -- TODO: eval, elt, subst, compose, evaluate
 NMUnivariatePolynomial(R : NMRing, x : Symbol):
       Exports == Implementation where
@@ -315,7 +315,7 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
 )abbrev domain NULP NMUnivariateLaurentPolynomial
 ++ Univariate laurent polynomial domain using Julia AbstractAlgebra package 
 ++ Author: G. Vanuxem
-++ Date created: Dec, 2024
+++ Date Created: Dec, 2024
 -- TODO: eval, elt, subst, compose, evaluate
 -- TODO: *term*, truncate, mullow, *degree, reverse, integrate,
 -- constantMonomial checks
@@ -578,7 +578,7 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
 ++ Author: G. Vanuxem
 ++ Basic Functions: degree, eval, coefficient, monomial, differentiate,
 ++ resultant, gcd
-++ Date created: mar, 2024
+++ Date Created: March, 2024
 ++ Related Constructors: Polynomial, NMUnivariatePolynomial
 ++ Also See:
 ++ AMS Classifications:
@@ -888,7 +888,7 @@ NMPolynomial(R : NMRing) : Exports == Implementation where
 ++ Author: G. Vanuxem
 ++ Basic Functions: degree, eval, coefficient, monomial, differentiate,
 ++ resultant, gcd
-++ Date created: mar, 2024
+++ Date Created: March, 2024
 ++ Related Constructors: Polynomial, NMUnivariatePolynomial
 ++ Also See:
 ++ AMS Classifications:
@@ -1225,7 +1225,7 @@ NMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
 ++ Author: G. Vanuxem
 ++ Basic Functions: degree, eval, coefficient, monomial, differentiate,
 ++ resultant, gcd
-++ Date created: mar, 2024
+++ Date Created: March, 2024
 ++ Related Constructors: Polynomial, NMUnivariatePolynomial
 ++ Also See:
 ++ AMS Classifications:
