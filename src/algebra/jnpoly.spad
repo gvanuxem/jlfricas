@@ -1020,6 +1020,14 @@ InnerNMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
     internalOrdering : () -> JLObject
     ++ internalOrdering() returns the internal ordering used by Nemo.
     ++ It is determined at instantiation time.
+    vectorOfTerms : % -> JLVector(%)
+    ++ vectorOfTerms(p) returns the Julia vector whose elements are terms of p.
+    exponent_vectors : % -> JLVector(JLVector(JLObjInt64))
+    ++ exponent_vectors(lp) returns the exponent vectors.
+    leading_monomial : % -> %
+    ++ leading_monomial(lp) returns the leading monomial.
+    leading_exponent_vector : % -> JLVector(JLObjInt64)
+    ++ leading_exponent_vector(lp) returns the of leading exponent.
     nemoMPPrint : Boolean -> Boolean
     ++ nemoMPPrint(bool) set the output mode. If set to falsz, use
     ++ the FriCAS output mode. Otherwise force the Nemo one (default).
@@ -1167,12 +1175,17 @@ InnerNMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
       vs := jlref(concat(["vars(", ind, ")"]))$JLVector(%)
       res : List(Record(k:OrderedVariableList(VarSet),c:NNI)):=[]
       for i in 1..#vs repeat
-        sym : String := jlEvalString(concat ["string(", getind(qelt(vs,i)),")"])
-        exp := jlEvalString(concat(["degree(", ind,",", sym, ")"]))@NNI
+        elt := getind(qelt(vs,i))
+        sym : String := jlEvalString(concat ["string(", elt,")"])
+        exp := jlEvalString(concat(["degree(", ind,",", elt, ")"]))@NNI
         res:=concat(res,
           [coerce(variable(coerce(sym)$Symbol)$OrderedVariableList(VarSet))@OrderedVariableList(VarSet),
             exp]$Record(k:OrderedVariableList(VarSet),c:NNI))
       [construct(res)$IndexedExponents(OrderedVariableList(VarSet)), coef]
+
+    -- TODO: Iterators
+    vectorOfTerms(p) == 
+      jlref(concat ["collect(terms(", getind(p),"))"])
 
     listOfTerms(p) == 
       v : JLVector(%) := jlref(concat ["collect(terms(", getind(p),"))"])
@@ -1183,8 +1196,9 @@ InnerNMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
         vs := jlref(concat(["vars(", ind, ")"]))$JLVector(%)
         res : List(Record(k:OrderedVariableList(VarSet),c:NNI)):=[]
         for j in 1..#vs repeat
-          sym : String := jlEvalString(concat ["string(", getind(qelt(vs,j)),")"])
-          exp := jlEvalString(concat(["degree(", ind,",", sym, ")"]))@NNI
+          elt := getind(qelt(vs,j))
+          sym : String := jlEvalString(concat ["string(", elt,")"])
+          exp := jlEvalString(concat(["degree(", ind, ",", elt, ")"]))@NNI
           res:= concat(res,
             [coerce(variable(coerce(sym)$Symbol)$OrderedVariableList(VarSet))@OrderedVariableList(VarSet),
               exp]$Record(k:OrderedVariableList(VarSet),c:NNI))
@@ -1192,12 +1206,14 @@ InnerNMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
       ret
 
     minimumDegree(p) ==
-      lterm := jlref(concat ["last(collect(terms(", getind(p),")))"])
+      constant?(p) => 0
+      lterm: % := jlref(concat ["last(collect(terms(", getind(p),")))"])
+      constant?(lterm) => 0
       ind := getind(lterm)
-      sym := jlEvalString(concat(["string(last(vars(", ind, ")))"]))@String
-      exp := jlEvalString(concat(["degree(", ind,",", sym, ")"]))@NNI
+      var :=  jlref(concat ["last(vars(", ind, "))"])
+      exp := jlEvalString(concat(["degree(", ind, ",", getind(var),")"]))@NNI
       monomial(exp,
-        coerce(variable(coerce(sym)$Symbol)$OrderedVariableList(VarSet)))
+        coerce(variable(coerce(string var)$Symbol)$OrderedVariableList(VarSet)))
           $IndexedExponents(OrderedVariableList(VarSet))
 
     degree(p : %) ==
@@ -1207,8 +1223,9 @@ InnerNMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
       vs := jlref(concat(["vars(", ind, ")"]))$JLVector(%)
       res : List(Record(k:OrderedVariableList(VarSet),c:NNI)):=[]
       for i in 1..#vs repeat
-        sym : String := jlEvalString(concat ["string(", getind(qelt(vs,i)),")"])
-        exp := jlEvalString(concat(["degree(", ind,",", sym, ")"]))@NNI
+        elt := getind(qelt(vs,i))
+        sym : String := jlEvalString(concat ["string(", elt,")"])
+        exp := jlEvalString(concat(["degree(", ind,",", elt, ")"]))@NNI
         res:=concat(res,
           [coerce(variable(coerce(sym)$Symbol)$OrderedVariableList(VarSet))@OrderedVariableList(VarSet),
             exp]$Record(k:OrderedVariableList(VarSet),c:NNI))
@@ -1219,6 +1236,11 @@ InnerNMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
       jlEvalString(concat(["degree(", getind(p),",", string(ind),")"]))@NNI
     degree(p : %, index : PI) ==
       jlEvalString(concat(["degree(", getind(p),",", string(index),")"]))@NNI
+
+    exponent_vectors(p) ==
+      jlref(concat ["collect(exponent_vectors(", getind(p),"))"])
+    leading_monomial(p) == junfunc("leading_monomial", p)
+    leading_exponent_vector(p) == junfunc("leading_exponent_vector", p)
 
     -- unitCanonical(p) == junfunc("canonical_unit", p) -- The Nemo one 
     recip(p) ==
@@ -1409,20 +1431,19 @@ NMMultivariateLaurentPolynomial(R : NMRing,
     ++ Julia raises an error if var is not  
     coefficients : % -> JLVector(R)
     ++ coefficients(p) returns a Julia vector of coefficients of p.
-    terms : % -> JLVector(%)
+    vectorOfTerms : % -> JLVector(%)
     ++ terms(lp) returns the vector of terms.
-    exponent_vectors : % -> JJLObject
+    exponent_vectors : % -> JLVector(JLVector(JLObjInt64))
     ++ exponent_vectors(lp) returns the exponent vectors.
     leading_monomial : % -> %
     ++ leading_monomial(lp) returns the leading monomial.
     leading_term : % -> %
     ++ leading_term(lp) returns the leading term.
-    leading_exponent_vector : % -> JLVector(JLObject)
-    ++ leading_exponent_vector(lp) returns the of leading exponent
+    leading_exponent_vector : % -> JLVector(JLObjInt64)
+    ++ leading_exponent_vector(lp) returns the of leading exponent.
 
     coerce : % ->
       NMMultivariateLaurentPolynomial(NMInteger, VarSet)
-
     ++ coerce(lp) coerces lp.
     coerce : % ->
       NMMultivariateLaurentPolynomial(NMFraction(NMInteger), VarSet)
@@ -1437,10 +1458,7 @@ NMMultivariateLaurentPolynomial(R : NMRing,
     mapCoefficients : (JLObject, %) -> %
     ++ mapCoefficients(jmap, p) applies the Julia map jmap to the
     ++ coefficients of p an returns the modified Laurent polynomial.
-    ++ Use coerce to change the base ring.
-    nemoMLPPrint : Boolean -> Boolean
-    ++ nemoMLPPrint(bool) set the output mode. If set to false, use
-    ++ the FriCAS output mode. Otherwise force the Nemo one (default).
+    ++ Use coerce to change the base ring instead of mapCoefficients.
 
     --evaluate : (%, JLVector(JLObject)) -> JLObject
     --++ evaluate(lp,vec)
@@ -1453,7 +1471,6 @@ NMMultivariateLaurentPolynomial(R : NMRing,
 
     jlInitialize(true)
     Rep := SExpression
-    nprint := false
 
     tmp : SExpression := devaluate(R)$Lisp
     op_of_Ring : Symbol := CAR(tmp)$Lisp
@@ -1467,13 +1484,7 @@ NMMultivariateLaurentPolynomial(R : NMRing,
     -- Check VarSet (TODO: reflect SMP)
     #VarSet ~= #removeDuplicates(VarSet) =>
       error "Duplicate symbols in NMMultivariateLaurentPolynomial constructor" 
-    
-    -- FriCAS defined vars in Julia
-    -- Correct? "(\1,)" -> "(\1)"
-    --vars := jlRegexReplace(
-    --    first lines formatExpression(VarSet::OutputForm)$Format1D,
-    --      jlRegex("\[(.*)\]"), jlSubstitute("(\1)"))
-    
+     
     -- List of double-quoted vars     
     lvars := map(v +-> string(v), VarSet)$ListFunctions2(Symbol, String)
     -- vars for polynomial_ring() arguments
@@ -1490,12 +1501,6 @@ NMMultivariateLaurentPolynomial(R : NMRing,
     jbinbfunc(op,a,b) ==>
       jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
-    strToExpr(s : String) : Union(Expression(Fraction Integer), "failed") ==
-      str := concat("0$Expression(Fraction Integer)+", s)
-      af := parse(str)$InputForm
-      av := interpret_in_new_env(af)$InputForm
-      retractIfCan(av)$AnyFunctions1(Expression(Fraction Integer))
-
     jlEvalString(concat([NMLPRing, "=laurent_polynomial_ring(",
       jlNMRing()$R, ",", jvars,")"])$String)
     if R is NMFraction(NMInteger) then
@@ -1507,10 +1512,6 @@ NMMultivariateLaurentPolynomial(R : NMRing,
 
     jlNMRing() == NMLPRing
     jlObject() == jlEvalString(concat(["string(", NMLPRing,")"]))@String
-    nemoMLPPrint(b) ==
-      oldnprint := nprint
-      nprint:=b
-      oldnprint
 
     0 == jlref(concat(["zero(",NMLPRing,"[1])"]))
     1 == jlref(concat(["one(",NMLPRing,"[1])"]))
@@ -1546,7 +1547,7 @@ NMMultivariateLaurentPolynomial(R : NMRing,
     coefficients(p) : List(R) ==
       members(jlref(concat ["collect(coefficients(",
         getind(p),"))"])$JLVector(R))
-    terms(p) ==
+    vectorOfTerms(p) ==
       jlref(concat ["collect(terms(", getind(p),"))"])
     exponent_vectors(p) == junfunc("exponent_vectors", p)
     leading_monomial(p) == junfunc("leading_monomial", p)
@@ -1610,15 +1611,18 @@ NMMultivariateLaurentPolynomial(R : NMRing,
       l
     primitiveMonomials(p) : JLVector(%) ==
       jlref(concat ["collect(monomials(", getind(p),"))"])$JLVector(%)
-    leadingTerm(p) == 
-      tp : JLObject := junfunc("leading_term", p)
+    leadingTerm(p) ==
+      error "Unsupported operation"
+      tp: % := junfunc("leading_term", p)
       ind := getind(tp)
-      coef := jlref(concat ["coeff(", ind,",1)"])$R
+      coef := leadingCoefficient p
+      -- TODO ???
       vs := jlref(concat(["vars(", ind, ")"]))$JLVector(%)
       res : List(Record(k:OrderedVariableList(VarSet),c:NNI)):=[]
       for i in 1..#vs repeat
-        sym : String := jlEvalString(concat ["string(", getind(qelt(vs,i)),")"])
-        exp := jlEvalString(concat(["degree(", ind,",", sym, ")"]))@NNI
+        elt := getind(qelt(vs,i))
+        sym : String := jlEvalString(concat ["string(", elt,")"])
+        exp := jlEvalString(concat(["degree(", ind,",", elt, ")"]))@NNI
         res:=concat(res,
           [coerce(variable(coerce(sym)$Symbol)$OrderedVariableList(VarSet))@OrderedVariableList(VarSet),
             exp]$Record(k:OrderedVariableList(VarSet),c:NNI))
@@ -1703,12 +1707,5 @@ NMMultivariateLaurentPolynomial(R : NMRing,
     coerce(i : Integer) == jlref(concat([NMLPRing, "[1](", string(i), ")"]))
     coerce(c : R) == jlref(concat([NMLPRing, "[1](", getind(c),")"]))
     coerce(p : %) : OutputForm ==
-      -- reverse order (TODO)
-      if not nprint and R is NMInteger then
-        coerce strToExpr string p
-      else if not nprint and R is NMFraction(NMInteger) then
-        coerce strToExpr jlRegexReplace((string p),
-          jlString("//"),jlString("/"))
-      else
-        jlRegexReplace(string(p),
-          jlString("//"),jlString("/")) pretend OutputForm
+      jlRegexReplace(string(p),
+        jlString("//"),jlString("/")) pretend OutputForm
