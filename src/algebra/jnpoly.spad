@@ -573,12 +573,13 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
         jlRegexReplace(string(p),
           jlString("//"),jlString("/")) pretend OutputForm
 
-)abbrev domain NPOLY NMPolynomial
-++ Generic sparse multivariate polynomial domain using the Julia pakage Nemo (AbstractAlgebra)
+)abbrev domain INPOLY InnerNMPolynomial
+++ Generic sparse multivariate polynomial domain using
+++ the Julia pakage Nemo (AbstractAlgebra)
 ++ Author: G. Vanuxem
 ++ Basic Functions: degree, eval, coefficient, monomial, differentiate,
 ++ resultant, gcd
-++ Date Created: March, 2024
+++ Date Created: July, 2025
 ++ Related Constructors: Polynomial, NMUnivariatePolynomial
 ++ Also See:
 ++ AMS Classifications:
@@ -590,7 +591,7 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
 ++  (AbstractAlgebra). It is parameterized by the coefficient ring.
 -- Experimental domain.
 -- TODO: eval, elt, subst, compose, evaluate, constructOrdered ???
-NMPolynomial(R : NMRing) : Exports == Implementation where
+InnerNMPolynomial(R : NMRing, Ordering : JLSymbol) : Exports == Implementation where
   NINT      ==> NMInteger
   NRAT      ==> NMFraction(NMInteger)
   JI64      ==> JLInt64
@@ -659,6 +660,8 @@ NMPolynomial(R : NMRing) : Exports == Implementation where
     internalOrdering : () -> JLObject
     ++ internalOrdering() returns the internal ordering used by Nemo.
     ++ It is determined at instantiation time.
+    vectorOfTerms : % -> JLVector(%)
+    ++ vectorOfTerms(p) returns the Julia vector whose elements are terms of p.
     nemoPPrint : Boolean -> Boolean
     ++ nemoPPrint(bool) set the output mode. If set to false (default), use
     ++ the FriCAS output mode. Otherwise force the Nemo one.
@@ -694,7 +697,8 @@ NMPolynomial(R : NMRing) : Exports == Implementation where
       retractIfCan(av)$AnyFunctions1(Polynomial(Fraction Integer))
    
     jlEvalString(concat([NUNPRing, "=universal_polynomial_ring(",
-      jlNMRing()$R,")"]))
+      jlNMRing()$R,";internal_ordering=",
+        string(Ordering),")"]))
 
     if R is NMFraction(NMInteger) then
       p : % + q : Fraction(Integer) == jbinfunc("+", p, coerce(q)@NRAT)
@@ -788,6 +792,7 @@ NMPolynomial(R : NMRing) : Exports == Implementation where
     -- TODO to FriCAS array returns
     primitiveMonomials(p) : JLVector(%) ==
       jlref(concat ["collect(monomials(", getind(p),"))"])$JLVector(%)
+
     --leadingTerm(p) == 
     --  tp : JLObject := junfunc("leading_term", p)
     --  ind := getind(tp)
@@ -801,22 +806,28 @@ NMPolynomial(R : NMRing) : Exports == Implementation where
     --      [coerce(variable(coerce(sym)$Symbol)$OrderedVariableList(VarSet))@OrderedVariableList(VarSet),
     --        exp]$Record(k:OrderedVariableList(VarSet),c:NNI))
     --  [construct(res)$IndexedExponents(OrderedVariableList(VarSet)), coef]
-    --listOfTerms(p) == 
-    --  v : JLVector(%) := jlref(concat ["collect(terms(", getind(p),"))"])
-    --  ret : List(Record(k: IndexedExponents(OrderedVariableList(VarSet)),c: R)) := []
-    --  for i in 1..#v repeat
-    --    ind := getind(v.i)
-    --    coef := jlref(concat ["coeff(", ind,",1)"])$R
-    --    vs := jlref(concat(["vars(", ind, ")"]))$JLVector(%)
-    --    res : List(Record(k:OrderedVariableList(VarSet),c:NNI)):=[]
-    --    for j in 1..#vs repeat
-    --      sym : String := jlEvalString(concat ["string(", getind(qelt(vs,j)),")"])
-    --      exp := jlEvalString(concat(["degree(", ind,",", sym, ")"]))@NNI
-    --      res:= concat(res,
-    --        [coerce(variable(coerce(sym)$Symbol)$OrderedVariableList(VarSet))@OrderedVariableList(VarSet),
-    --          exp]$Record(k:OrderedVariableList(VarSet),c:NNI))
-    --    ret := concat(ret,[construct(res)$IndexedExponents(OrderedVariableList(VarSet)), coef])
-    --  ret
+
+    -- TODO: Iterators
+    vectorOfTerms(p) == 
+      jlref(concat ["collect(terms(", getind(p),"))"])
+
+    -- TODO: extremely expensive
+    listOfTerms(p) == 
+      v : JLVector(%) := jlref(concat ["collect(terms(", getind(p),"))"])
+      ret : List(Record(k: IndexedExponents(Symbol), c: R)) := []
+      for i in 1..#v repeat
+        ind := getind(v.i)
+        coef := jlref(concat ["coeff(", ind,",1)"])$R
+        vs := jlref(concat(["vars(", ind, ")"]))$JLVector(%)
+        res : List(Record(k:Symbol, c:NNI)):=[]
+        for j in 1..#vs repeat
+          elt := getind(qelt(vs,j))
+          sym : String := jlEvalString(concat ["string(", elt,")"])
+          exp := jlEvalString(concat(["degree(", ind, ",", elt, ")"]))@NNI
+          res:= concat(res,[coerce(sym)@Symbol, exp])
+        ret := concat(ret,[construct(res)$IndexedExponents(Symbol), coef])
+      ret
+
     --minimumDegree(p) ==
     --  lterm := jlref(concat ["last(collect(terms(", getind(p),")))"])
     --  ind := getind(lterm)
@@ -825,6 +836,7 @@ NMPolynomial(R : NMRing) : Exports == Implementation where
     --  monomial(exp,
     --    coerce(variable(coerce(sym)$Symbol)$OrderedVariableList(VarSet)))
     --      $IndexedExponents(OrderedVariableList(VarSet))
+
     --degree(p : %) ==
     --  ind := getind(p)
     --  tp : JLObject := jlref(concat(["leading_monomial(", ind, ")"]))
@@ -838,9 +850,11 @@ NMPolynomial(R : NMRing) : Exports == Implementation where
     --      [coerce(variable(coerce(sym)$Symbol)$OrderedVariableList(VarSet))@OrderedVariableList(VarSet),
     --        exp]$Record(k:OrderedVariableList(VarSet),c:NNI))
     --  construct(res)$IndexedExponents(OrderedVariableList(VarSet))
+
     --degree(p : %, var : OrderedVariableList(VarSet)) ==
     --  ind := lookup(var)
     --  jlEvalString(concat(["degree(", getind(p),",", string(ind),")"]))@NNI
+
     degree(p : %, index : PI) ==
       jlEvalString(concat(["degree(", getind(p),",", string(index),")"]))@NNI
 
@@ -848,6 +862,7 @@ NMPolynomial(R : NMRing) : Exports == Implementation where
     recip(p) ==
       unit?(p) => p
       "failed"
+
     if R has DivisionRing then
       p/r : R == inv(r)*p
       unitNormal(p) ==
@@ -883,7 +898,27 @@ NMPolynomial(R : NMRing) : Exports == Implementation where
         jlRegexReplace(string(p),
           jlString("//"),jlString("/")) pretend OutputForm
 
-)abbrev domain NMP NMMultivariatePolynomial
+)abbrev domain NPOLY NMPolynomial
+++ Generic sparse multivariate polynomial domain using
+++ the Julia pakage Nemo (AbstractAlgebra)
+++ Author: G. Vanuxem
+++ Basic Functions: degree, eval, coefficient, monomial, differentiate,
+++ resultant, gcd
+++ Date Created: March, 2025
+++ Related Constructors: Polynomial, NMUnivariatePolynomial
+++ Also See:
+++ AMS Classifications:
+++ Keywords: polynomial, multivariate
+++ References:
+++ Description:
+++   This type is a basic representation of generic sparse distributed
+++  multivariable polynomial types using the Julia pakage Nemo
+++  (AbstractAlgebra). It is parameterized by the coefficient ring.
+-- Experimental domain.
+-- TODO: eval, elt, subst, compose, evaluate, constructOrdered ???
+NMPolynomial(R : NMRing) == InnerNMPolynomial(R, coerce("lex")@JLSymbol)
+
+)abbrev domain INMP InnerNMMultivariatePolynomial
 ++ Multivariate polynomial domain using the Julia pakage Nemo
 ++ Author: G. Vanuxem
 ++ Basic Functions: degree, eval, coefficient, monomial, differentiate,
@@ -912,10 +947,10 @@ NMPolynomial(R : NMRing) : Exports == Implementation where
 ++   z := z:f:V::PRing
 ++   p:=x*2+3*y^2+17*z^13
 ++   p^7
--- https://en.wikipedia.org/wiki/Monomial_order#Graded_reverse_lexicographic_order
+-- https://en.wikipedia.org/wiki/Monomial_order
 -- TODO: eval, elt, subst, compose, evaluate, constructOrdered
-NMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
-          InternalOrdering : JLSymbol) : Exports == Implementation where
+InnerNMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
+          Ordering : JLSymbol) : Exports == Implementation where
   NINT      ==> NMInteger
   NRAT      ==> NMFraction(NMInteger)
   JI64      ==> JLInt64
@@ -1007,7 +1042,7 @@ NMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
 
     -- Check VarSet (TODO: reflect SMP)
     #VarSet ~= #removeDuplicates(VarSet) =>
-      error "Duplicate symbols in NMMultivariatePolyNomial constructor" 
+      error "Duplicate symbols in NMMultivariatePolynomial constructor" 
 
     -- List of double-quoted vars     
     lvars := map(v +-> string(v), VarSet)$ListFunctions2(Symbol, String)
@@ -1035,7 +1070,7 @@ NMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
 
     jlEvalString(concat([NMPRing, "=polynomial_ring(",
       jlNMRing()$R,",", jvars,";internal_ordering=",
-        string(InternalOrdering),")"])$String)
+        string(Ordering),")"])$String)
 
     if R is NMFraction(NMInteger) then
       p : % + q : Fraction(Integer) == jbinfunc("+", p, coerce(q)@NRAT)
@@ -1124,6 +1159,7 @@ NMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
     -- TODO to FriCAS array returns
     primitiveMonomials(p) : JLVector(%) ==
       jlref(concat ["collect(monomials(", getind(p),"))"])$JLVector(%)
+  
     leadingTerm(p) == 
       tp : JLObject := junfunc("leading_term", p)
       ind := getind(tp)
@@ -1137,6 +1173,7 @@ NMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
           [coerce(variable(coerce(sym)$Symbol)$OrderedVariableList(VarSet))@OrderedVariableList(VarSet),
             exp]$Record(k:OrderedVariableList(VarSet),c:NNI))
       [construct(res)$IndexedExponents(OrderedVariableList(VarSet)), coef]
+
     listOfTerms(p) == 
       v : JLVector(%) := jlref(concat ["collect(terms(", getind(p),"))"])
       ret : List(Record(k: IndexedExponents(OrderedVariableList(VarSet)),c: R)) := []
@@ -1153,6 +1190,7 @@ NMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
               exp]$Record(k:OrderedVariableList(VarSet),c:NNI))
         ret := concat(ret,[construct(res)$IndexedExponents(OrderedVariableList(VarSet)), coef])
       ret
+
     minimumDegree(p) ==
       lterm := jlref(concat ["last(collect(terms(", getind(p),")))"])
       ind := getind(lterm)
@@ -1161,6 +1199,7 @@ NMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
       monomial(exp,
         coerce(variable(coerce(sym)$Symbol)$OrderedVariableList(VarSet)))
           $IndexedExponents(OrderedVariableList(VarSet))
+
     degree(p : %) ==
       ind := getind(p)
       tp : JLObject := jlref(concat(["leading_monomial(", ind, ")"]))
@@ -1174,6 +1213,7 @@ NMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
           [coerce(variable(coerce(sym)$Symbol)$OrderedVariableList(VarSet))@OrderedVariableList(VarSet),
             exp]$Record(k:OrderedVariableList(VarSet),c:NNI))
       construct(res)$IndexedExponents(OrderedVariableList(VarSet))
+
     degree(p : %, var : OrderedVariableList(VarSet)) ==
       ind := lookup(var)
       jlEvalString(concat(["degree(", getind(p),",", string(ind),")"]))@NNI
@@ -1219,6 +1259,40 @@ NMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
       else
         jlRegexReplace(string(p),
           jlString("//"),jlString("/")) pretend OutputForm
+
+)abbrev domain NMP NMMultivariatePolynomial
+++ Multivariate polynomial domain using the Julia pakage Nemo
+++ Author: G. Vanuxem
+++ Basic Functions: degree, eval, coefficient, monomial, differentiate,
+++ resultant, gcd
+++ Date Created: March, 2025
+++ Related Constructors: Polynomial, InnerNMultivariatePolynomial
+++ Also See:
+++ AMS Classifications:
+++ Keywords: polynomial, multivariate
+++ References:
+++ Description:
+++   This type is a basic representation of sparse, distributed multivariate
+++ polynomials using the Julia pakage Nemo. It is parameterized by the
+++ coefficient ring. The coefficient ring may be non-commutative,
+++ but the variables are assumed to commute. The monomial ordering
+++ used for internal storage is lexicographic.
+++  For example:
+++   VarSet: List Symbol:=[x,y,z]
+++   V := OrderedVariableList(VarSet)
+++   -- eventually, for later use
+++   -- See SparseMultivariatePolynomial
+++   -- E := IndexedExponents V
+++   PRing := NMP(NINT,VarSet, "lex")
+++   x := x::V::PRing
+++   y := y::V::PRing
+++   z := z:f:V::PRing
+++   p:=x*2+3*y^2+17*z^13
+++   p^7
+-- https://en.wikipedia.org/wiki/Monomial_order
+-- TODO: eval, elt, subst, compose, evaluate, constructOrdered
+NMMultivariatePolynomial(R : NMRing, VarSet : List Symbol) ==
+          InnerNMMultivariatePolynomial(R, VarSet, coerce("lex")@JLSymbol)
 
 )abbrev domain NMLP NMMultivariateLaurentPolynomial
 ++ Multivariate laurent polynomial domain using Julia AbstractAlgebra package 

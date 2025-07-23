@@ -776,6 +776,8 @@
   (|InnerModularGcd| . INMODGCD)
   (|InnerMultFact| . INNMFACT)
   (|InnerNMExactCalciumField| . INECF)
+  (|InnerNMMultivariatePolynomial| . INMP)
+  (|InnerNMPolynomial| . INPOLY)
   (|InnerNormalBasisFieldFunctions| . INBFF)
   (|InnerNumericEigenPackage| . INEP)
   (|InnerNumericFloatSolvePackage| . INFSP)
