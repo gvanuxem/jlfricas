@@ -314,8 +314,8 @@ NMArbField(p: PositiveInteger) : Exports == Implementation where
 
 )abbrev domain NRB NMRealBall
 ++ Description: convenience domain to reflect
-++ Nemo ArbField(), i.e. without parameters.
-NMRealBall() == NMArbField(256)
+++ Nemo ArbField(64, i.e. without parameters.
+NMRealBall() == NMArbField(64)
 
 )abbrev domain NACB NMAcbField
 ++ Domain for Nemo fixed precision complex ball.
@@ -612,9 +612,9 @@ NMAcbField(p: PositiveInteger) : Exports == Implementation where
     coerce(z : %) : OutputForm == string(z) pretend OutputForm
 
 )abbrev domain NCB NMComplexBall
-++ Description: convenience domain to reflect
-++ Nemo AcbField(), i.e. without parameters.
-NMComplexBall() == NMAcbField(256)
+++ Description: convenience domain that reflects
+++ Nemo AcbField(64), i.e. without parameters.
+NMComplexBall() == NMAcbField(64)
 
 )abbrev domain NRF NMRealField
 ++ Domain for Nemo Real Field based on the Arb

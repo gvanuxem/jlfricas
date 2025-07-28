@@ -11,7 +11,7 @@ NMAlgebraicallyClosedFunctionSpace(R : Join(Comparable, IntegralDomain)):
 ++ Univariate polynomial domain using the Julia pakage Nemo
 ++ Author: G. Vanuxem
 ++ Date Created: March, 2024
--- TODO: eval, elt, subst, compose, evaluate
+-- TODO: eval, elt, subst, compose, evaluate (elt???)
 NMUnivariatePolynomial(R : NMRing, x : Symbol):
       Exports == Implementation where
   NINT      ==> NMInteger
@@ -122,7 +122,7 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
     reverse : (%, NNI) -> %
     ++ reverse the coefficients of p (the leading becomes the trailing)
     ++ and normalise the resulting polynomial. Adjust the length to n so
-    ++ the resulting polynomial is trucated or padded with zeroes before
+    ++ the resulting polynomial is truncated or padded with zeroes before
     ++ the leading term if necessary
     coerce   : Variable(x) -> %
     ++ coerce(x) converts the variable x to a Nemo univariate polynomial.
@@ -1217,8 +1217,7 @@ InnerNMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
           $IndexedExponents(OrderedVariableList(VarSet))
 
     degree(p : %) ==
-      ind := getind(p)
-      tp : JLObject := jlref(concat(["leading_monomial(", ind, ")"]))
+      tp : JLObject := jlref(concat(["leading_monomial(", getind(p), ")"]))
       ind := getind(tp)
       vs := jlref(concat(["vars(", ind, ")"]))$JLVector(%)
       res : List(Record(k:OrderedVariableList(VarSet),c:NNI)):=[]

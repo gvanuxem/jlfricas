@@ -1106,9 +1106,9 @@ WSExpression() : Exports == Implementation where
     jWSData : (%, %, %) -> %
     ++ jWSData(sym, prop, ann) returns the annotation for the property of sym.
     jWSTable : (%, %) -> WSList(%)
-    ++ jWSTable(expr, range) applies the expr to the define range.
+    ++ jWSTable(expr, range) applies the expr to the defined range.
     jWSTable : (%, %, %) -> WSList(WSList(%))
-    ++ jWSTable(expr, range1, range2) applies the expr to the define ranges.
+    ++ jWSTable(expr, range1, range2) applies the expr to the defined ranges.
     jWSRule : (%,  %) -> %
     ++ jWSRule(lhs,rhs) returns the Julia WS rule lhs->rhs.
     jWSEqual : (%,  %) -> %
