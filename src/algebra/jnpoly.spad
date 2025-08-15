@@ -184,7 +184,7 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
       p : % * q : Fraction(Integer) == jbinfunc("*", p, coerce(q)@NRAT)
       q : Fraction(Integer) + p : % == jbinfunc("+", coerce(q)@NRAT, p)
       q : Fraction(Integer) * p : % == jbinfunc("*", coerce(q)@NRAT, p)
-      (p  / q) : % == jbinfunc("/" ,p, q)
+      (p / q) : % == jbinfunc("/" ,p, q)
 
     jnup(up) : % ==
       p: String := first(lines formatExpression(up::OutputForm)$Format1D)

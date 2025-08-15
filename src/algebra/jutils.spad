@@ -23,7 +23,7 @@ JLUtilityFunctions() : Exports == Implementation where
     ++ Returns false if it can not be loaded.
     jlImport     : String -> Boolean
     ++ jlImport(modpackfunc) imports the module, package or function
-    ++ modpackfunc and makes its exported name(s) available.
+    ++ modpackfunc and makes it available.
     ++ Returns false if it can not be imported.
     jlAddPackage  : String -> Void
     ++ jlAddPackage(package) add package to Julia.
@@ -120,11 +120,9 @@ JLUtilityFunctions() : Exports == Implementation where
       for i in 1 .. #docs repeat
         -- clean it up first
         wdqstr := remove(char("_""),docs.i)
-        wdqstr :=
-          jlEvalString(concat["replace(raw_"", wdqstr,
-            "_", _"{}_" => _"_")"])@String
         outl := concat(outl,jlEvalString(concat[ _
-          "replace(raw_"", wdqstr, "_", _"{}_" => _"_",", _
+          "replace(raw_"", wdqstr, _
+          "_", _"{}_" => _"_",", _
           "_" {\\em_" => _"_",", _
           "_" {\\it_" => _"_",", _
           "_"\\spadfun{_" => _"_",", _
