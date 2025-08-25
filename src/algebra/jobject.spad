@@ -1461,7 +1461,8 @@ JLComplexFloat() : Exports == Implementation where
 ++ Keywords: tabular data, sciences, statistics, description
 ++ Description:
 ++  \spadtype{JLDataFrame} adds support of the DataFrames.jl
-++  Julia package. As of now, most of its use has to be done in
+++  Julia package, ie. to work with tabular data.
+++ As of now, most of its use has to be done in
 ++  a generic manner using jlApply.
 -- Report results for example. 
 JLDataFrame() : Exports == Implementation where
@@ -1469,7 +1470,7 @@ JLDataFrame() : Exports == Implementation where
   NNI ==> NonNegativeInteger
   Z   ==> Integer
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-  Exports ==> JLObjectAggregate() with
+  Exports ==> Join(JLObjectAggregate, finiteAggregate) with
     --elt : (%, JLSymbol) -> JLVector(JLObject)
     --++ elt(obj, sym) returns the property sym of obj.
     --qelt : (%, JLSymbol) -> JLVector(JLObject)
@@ -1503,6 +1504,10 @@ JLDataFrame() : Exports == Implementation where
 
     junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
 
+    #df ==
+     n : NonNegativeInteger := jlEvalString(concat(["nrow(", getind(df),")"]))
+     m : NonNegativeInteger := jlEvalString(concat(["ncol(", getind(df),")"]))
+     n*m
     elt(obj : %, jsy : JLSymbol) ==
       defined := concat(["hasproperty(", getind(obj), ",",
         str := string(jsy), ")"])

@@ -8,7 +8,7 @@ NMAlgebraicallyClosedFunctionSpace(R : Join(Comparable, IntegralDomain)):
   Category == Join(AlgebraicallyClosedField, FunctionSpace R)
 
 )abbrev domain NUP NMUnivariatePolynomial
-++ Univariate polynomial domain using the Julia pakage Nemo
+++ Univariate polynomial domain using the Julia package Nemo
 ++ Author: G. Vanuxem
 ++ Date Created: March, 2024
 -- TODO: eval, elt, subst, compose, evaluate (elt???)
@@ -155,7 +155,6 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
       retract(av)$AnyFunctions1(Expression(Fraction Integer))
 
     -- Set up the ring
-    -- TODO: whether or not using series scheme constructor
     jlEvalString(concat([NUPRing,"=polynomial_ring(",
       jlNMRing()$R, ",_"", string(x), "_")"]))
     if R is NMInteger then
@@ -428,7 +427,6 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
       jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
     -- Set up the ring
-    -- TODO: whether or not using series scheme constructor
     jlEvalString(concat([NULPRing,"=laurent_polynomial_ring(",
       jlNMRing()$R, ",_"", string(x), "_")"])$String)
 
@@ -575,7 +573,7 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
 
 )abbrev domain INPOLY InnerNMPolynomial
 ++ Generic sparse multivariate polynomial domain using
-++ the Julia pakage Nemo (AbstractAlgebra)
+++ the Julia package Nemo (AbstractAlgebra)
 ++ Author: G. Vanuxem
 ++ Basic Functions: degree, eval, coefficient, monomial, differentiate,
 ++ resultant, gcd
@@ -587,7 +585,7 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
 ++ References:
 ++ Description:
 ++   This type is a basic representation of generic sparse distributed
-++  multivariable polynomial types using the Julia pakage Nemo
+++  multivariable polynomial types using the Julia package Nemo
 ++  (AbstractAlgebra). It is parameterized by the coefficient ring.
 -- Experimental domain.
 -- TODO: eval, elt, subst, compose, evaluate, constructOrdered ???
@@ -900,7 +898,7 @@ InnerNMPolynomial(R : NMRing, Ordering : JLSymbol) : Exports == Implementation w
 
 )abbrev domain NPOLY NMPolynomial
 ++ Generic sparse multivariate polynomial domain using
-++ the Julia pakage Nemo (AbstractAlgebra)
+++ the Julia package Nemo (AbstractAlgebra)
 ++ Author: G. Vanuxem
 ++ Basic Functions: degree, eval, coefficient, monomial, differentiate,
 ++ resultant, gcd
@@ -912,14 +910,14 @@ InnerNMPolynomial(R : NMRing, Ordering : JLSymbol) : Exports == Implementation w
 ++ References:
 ++ Description:
 ++   This type is a basic representation of generic sparse distributed
-++  multivariable polynomial types using the Julia pakage Nemo
+++  multivariable polynomial types using the Julia package Nemo
 ++  (AbstractAlgebra). It is parameterized by the coefficient ring.
 -- Experimental domain.
 -- TODO: eval, elt, subst, compose, evaluate, constructOrdered ???
 NMPolynomial(R : NMRing) == InnerNMPolynomial(R, coerce("lex")@JLSymbol)
 
 )abbrev domain INMP InnerNMMultivariatePolynomial
-++ Multivariate polynomial domain using the Julia pakage Nemo
+++ Multivariate polynomial domain using the Julia package Nemo
 ++ Author: G. Vanuxem
 ++ Basic Functions: degree, eval, coefficient, monomial, differentiate,
 ++ resultant, gcd
@@ -931,7 +929,7 @@ NMPolynomial(R : NMRing) == InnerNMPolynomial(R, coerce("lex")@JLSymbol)
 ++ References:
 ++ Description:
 ++   This type is a basic representation of sparse, distributed multivariate
-++ polynomials using the Julia pakage Nemo. It is parameterized by the
+++ polynomials using the Julia package Nemo. It is parameterized by the
 ++ coefficient ring. The coefficient ring may be non-commutative,
 ++ but the variables are assumed to commute. The monomial ordering
 ++ used for internal storage can be one of :lex, :deglex or :degrevlex.
@@ -1058,7 +1056,7 @@ InnerNMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
     jvars := first lines formatExpression(lvars::OutputForm)$Format1D
     
     -- Our Julia ring
-    -- TODO: whether or not using series scheme constructor
+    
     NMPRing := concat([NMPRing, concat(lvars)])
 
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
@@ -1282,7 +1280,7 @@ InnerNMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
           jlString("//"),jlString("/")) pretend OutputForm
 
 )abbrev domain NMP NMMultivariatePolynomial
-++ Multivariate polynomial domain using the Julia pakage Nemo
+++ Multivariate polynomial domain using the Julia package Nemo
 ++ Author: G. Vanuxem
 ++ Basic Functions: degree, eval, coefficient, monomial, differentiate,
 ++ resultant, gcd
@@ -1294,7 +1292,7 @@ InnerNMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
 ++ References:
 ++ Description:
 ++   This type is a basic representation of sparse, distributed multivariate
-++ polynomials using the Julia pakage Nemo. It is parameterized by the
+++ polynomials using the Julia package Nemo. It is parameterized by the
 ++ coefficient ring. The coefficient ring may be non-commutative,
 ++ but the variables are assumed to commute. The monomial ordering
 ++ used for internal storage is lexicographic.
@@ -1328,7 +1326,7 @@ NMMultivariatePolynomial(R : NMRing, VarSet : List Symbol) ==
 ++ References:
 ++ Description:
 ++   This type is a basic representation of sparse, distributed multivariate
-++ Laurent polynomials using the Julia pakage Nemo. It is parameterized by the
+++ Laurent polynomials using the Julia package Nemo. It is parameterized by the
 ++ coefficient ring. The coefficient ring may be non-commutative,
 ++ but the variables are assumed to commute. The monomial ordering
 ++ used for internal storage can be one of :lex, :deglex or :degrevlex.
@@ -1490,7 +1488,7 @@ NMMultivariateLaurentPolynomial(R : NMRing,
     jvars := first lines formatExpression(lvars::OutputForm)$Format1D
     
     -- Our Julia ring
-    -- TODO: whether or not using series scheme constructor
+    
     NMLPRing := concat([NMLPRing, concat(lvars)])
 
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])

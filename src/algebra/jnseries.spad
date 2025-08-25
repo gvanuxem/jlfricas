@@ -97,7 +97,7 @@ NMUnivariatePowerSeries(R, x, prec, abs) : Exports == Implementation where
       jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
     -- Set up the ring
-    -- Use a tuple to do not define x in the Julia Main namesapce
+    -- Use a tuple to do not define x in the Julia main namespace
     ++ to avoid reusing previous Ring when redefining x,
     ++ FriCAS will not always reconstruct the new Ring in Julia.
     jlEvalString(concat([NUPSRing, "=power_series_ring(",
@@ -455,7 +455,7 @@ NMUnivariatePuiseuxSeries(R, x, prec) : Exports == Implementation where
       jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
     -- Set up the ring
-    -- Use a tuple to do not define x in the Julia Main namesapce
+    -- Use a tuple to do not define x in the Julia main namespace
     ++ to avoid reusing previous Ring when redefining x,
     ++ FriCAS will not always reconstruct the new Ring in Julia.
     jlEvalString(concat([NUPSXRing, "=puiseux_series_ring(",

@@ -29,6 +29,7 @@ To build FriCAS with Julia support, the <code>julia</code> executable needs to b
   - UnicodePlots (will be used by default)
   - Latexify
   - LaTeXStrings
+  - DataFrames
 
 As of now with Clozure CL [queues](https://github.com/oconnore/queues) and [bordeaux-threads](https://sionescu.github.io/bordeaux-threads/) are also required. Use installed [quicklisp](https://www.quicklisp.org/beta/) with `queues` and `bordeaux-threads`, and at configure time use the `--with-quicklisp` option, see the `quicklisp` documentation for how to load it and install them. Another possibility, easier, is to use [roswell](https://roswell.github.io/) with added `ccl-bin` and `queues`. GitHub actions for Clozure CL use them to build jlFriCAS.
 
