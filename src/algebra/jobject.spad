@@ -239,7 +239,7 @@ JLObject() : Exports == Implementation where
     jobject(i: Integer) : % == jlref(string i)
     jobject(str: String) : % == jlref(str)
 
-)abbrev domain JOBBOOL JLObjBoolean
+)abbrev domain JOBBOOL JLObjBool
 ++ Convenience domain for Julia booleans
 ++ Author: G.Vanuxem
 ++ Date Created: Aug. 2024
@@ -248,7 +248,7 @@ JLObject() : Exports == Implementation where
 ++ within Julia, and not directly by the underlying FriCAS Common LISP.
 ++ It is not meant to be used directly, but rather for returned value
 ++ or function argument for example.
-JLObjBoolean() : Exports == Implementation where
+JLObjBool() : Exports == Implementation where
   Exports ==> JLObjectType with
     coerce : % -> Boolean
     ++ coerce(jbool) coerces the Julia boolean value to a
@@ -258,8 +258,13 @@ JLObjBoolean() : Exports == Implementation where
     jfalse : () -> %
     ++ jfalse() returns the Julia boolean false value.
   Implementation ==> add
-    import String
-    coerce(bool) : Boolean == jl_string_getindex(jlId bool)$Lisp = "true"
+    import from JLUtilityFunctions
+
+    jlInitialize(true)
+    Rep := SExpression
+
+    coerce(bool) : Boolean ==
+      jl_string_getindex(jlId bool)$Lisp pretend String = "true"
     jtrue() == jlref("true")
     jfalse() == jlref("false")
  
@@ -808,7 +813,6 @@ JLObjPair(F : JLObjectType, L : JLObjectType)
     ++ \example{}
   Implementation ==> add
     import from JLUtilityFunctions
-    import from JLStringUtilities
 
     jlInitialize(true)
     Rep := SExpression
@@ -836,8 +840,6 @@ JLObjTuple() : Exports == Implementation where
     ++ from the evaluation of the Julia command str.
   Implementation ==> add
     import from JLUtilityFunctions
-    import from JLStringUtilities
-    import from String
 
     jlInitialize(true)
     Rep := SExpression
@@ -926,7 +928,7 @@ JLObjDict() : Exports == Implementation where
     delete!(obj : %, jsy : JLSymbol) ==
       jlref(concat(["delete!(", getind(obj), ",", string(jsy), ")"]))
     jdict(str : String) == jlref str
-      
+
 )abbrev domain JFLOAT JLFloat
 ++ Domain for Julia (Big) floats
 ++ Author: G. Vanuxem
@@ -1461,7 +1463,7 @@ JLComplexFloat() : Exports == Implementation where
 ++ Keywords: tabular data, sciences, statistics, description
 ++ Description:
 ++  \spadtype{JLDataFrame} adds support of the DataFrames.jl
-++  Julia package, ie. to work with tabular data.
+++  Julia package, i.e. to work with tabular data.
 ++ As of now, most of its use has to be done in
 ++  a generic manner using jlApply.
 -- Report results for example. 
@@ -1495,8 +1497,11 @@ JLDataFrame() : Exports == Implementation where
   Implementation ==> add
     import from JLUtilityFunctions
 
+    jlInitialize(true)
+    Rep := SExpression
+
     not jlUsing "DataFrames, Statistics" =>
-      error "JLDataFrame: DataFrames is not installed in Julia"
+      error "JLDataFrame: DataFrames and Statistics is/are installed in Julia"
     -- jlEvalString("macro dfa(obj) DataFrame(eval(Meta.parse(obj)),:auto) end")@Void
   
     Rep := SExpression
@@ -1528,6 +1533,44 @@ JLDataFrame() : Exports == Implementation where
       tls := first lines formatExpression(lnames::OutputForm)$Format1D
       jlref(concat(["DataFrame(",
         getind(coerce(array)$JLMatrix(JLObjFloat64)),",", tls, ")"]))
+
+)abbrev domain JOBPY JLPyObj
+++ Convenience domain for Julia Python objects using
+++ the PythonCall package.
+++ Author: G.Vanuxem
+++ Date Created: Sep. 2025
+++ Description:
+++  Convenience domain for Julia Python objects that are used
+++ within Julia, and not directly by the underlying FriCAS Common LISP.
+++ The PythonCall package has to be installed in Julia.
+++ Note that the PythonCall Julia package uses a similar scheme for Julia
+++ Python objects to the one of jlFriCAS for JLObjectType references.
+++ Trademark(s): Python is a registered trademark of the Python
+++ Software Foundation.
+JLPyObj() : Exports == Implementation where
+  Exports ==> JLObjectType with
+    jlPyImport : String -> %
+    ++ jlPyImport(mod) imports the Python module mod in the
+    ++ Julia Python environment. No use at this time.
+    jpyobj : String -> %
+    ++ jpyobj(str) coerces the string str to a Julia Python object.
+    ++ jlDisplay(pyobj) displays the Python object pyobj.
+  Implementation ==> add
+    import from JLUtilityFunctions
+
+    jlInitialize(true)
+    Rep := SExpression
+
+    not jlUsing "PythonCall" =>
+      error "JLPyObj: PythonCall is not installed in Julia"
+
+    jlPyImport(pmod) ==
+      jlref(concat(["pyimport(_"", pmod, "_")"]))
+
+    coerce(pyobj : %) : OutputForm ==
+      jl_string_getindex(jlId pyobj)$Lisp
+    jpyobj(str : String) ==
+      jlref(concat(["Py(", str, ")"]))
 
 )abbrev domain JVECTOR JLVector
 ++ Description: This domain provides a JLVector type
