@@ -1501,7 +1501,7 @@ JLDataFrame() : Exports == Implementation where
     Rep := SExpression
 
     not jlUsing "DataFrames, Statistics" =>
-      error "JLDataFrame: DataFrames and Statistics is/are installed in Julia"
+      error "JLDataFrame: DataFrames and Statistics is/are not installed in Julia"
     -- jlEvalString("macro dfa(obj) DataFrame(eval(Meta.parse(obj)),:auto) end")@Void
   
     Rep := SExpression
@@ -1548,13 +1548,31 @@ JLDataFrame() : Exports == Implementation where
 ++ Trademark(s): Python is a registered trademark of the Python
 ++ Software Foundation.
 JLPyObj() : Exports == Implementation where
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
   Exports ==> JLObjectType with
+    jlApply : (String, String, %) -> %
+    ++ jlApply(func, mod, pyobj) applies the Python function func
+    ++ from the module mod to the Python object pyobj.
+    jlApply : (String, String, %, %) -> %
+    ++ jlApply(func, mod, pyobj1, pyobj2) applies the Python function func
+    ++ from the module mod to the Python objects pyobj1 and pyobj2
+    jlApply : (String, String, %, %, %) -> %
+    ++ jlApply(func, mod, pyobj1, pyobj2, pyobj3) applies the Python function
+    ++ func from the module mod to the Python objects pyobj1, pyobj2 and pyobj3.
+    jlApply : (String, String, %, %, %, %) -> %
+    ++ jlApply(func, mod, pyobj1, pyobj2, pyobj3, pyobj4) applies the Python
+    ++ function func from the module mod to the Python objects pyobj1, pyobj2,
+    ++ pyobj3 and pyobj4.
+    jlApply : (String, String, %, %, %, %, %) -> %
+    ++ jlApply(func, mod, pyobj1, pyobj2, pyobj3, pyobj4, pyobj5) applies
+    ++ the Python function func from the module mod to the Python objects
+    ++ pyobj1, pyobj2, pyobj3, pyobj4 and pyobj5.
     jlPyImport : String -> %
     ++ jlPyImport(mod) imports the Python module mod in the
     ++ Julia Python environment. No use at this time.
     jpyobj : String -> %
     ++ jpyobj(str) coerces the string str to a Julia Python object.
-    ++ jlDisplay(pyobj) displays the Python object pyobj.
+    ++ Use jlDisplay(pyobj) to display the Python object pyobj.
   Implementation ==> add
     import from JLUtilityFunctions
 
@@ -1566,7 +1584,23 @@ JLPyObj() : Exports == Implementation where
 
     jlPyImport(pmod) ==
       jlref(concat(["pyimport(_"", pmod, "_")"]))
-
+    
+    -- TODO: pycall?
+    jlApply(func, m, pyobj) ==
+      jlref(concat(["pyimport(_"", m, "_").", func, "(", getind(pyobj), ")"]))
+    jlApply(func, m, pyobj1, pyobj2) ==
+      jlref(concat(["pyimport(_"", m, "_").", func, "(", getind(pyobj1), ",",
+        getind(pyobj2), ")"]))
+    jlApply(func, m, pyobj1, pyobj2, pyobj3) ==
+      jlref(concat(["pyimport(_"", m, "_").", func, "(", getind(pyobj1), ",",
+        getind(pyobj2), ",", getind(pyobj3), ")"]))
+    jlApply(func, m, pyobj1, pyobj2, pyobj3, pyobj4) ==
+      jlref(concat(["pyimport(_"", m, "_").", func, "(", getind(pyobj1), ",",
+        getind(pyobj2), ",", getind(pyobj3), ",", getind(pyobj4), ")"]))
+    jlApply(func, m, pyobj1, pyobj2, pyobj3, pyobj4, pyobj5) ==
+      jlref(concat(["pyimport(_"", m, "_").", func, "(", getind(pyobj1), ",",
+        getind(pyobj2), ",", getind(pyobj3), ",", getind(pyobj4), ",",
+          getind(pyobj5), ")"]))
     coerce(pyobj : %) : OutputForm ==
       jl_string_getindex(jlId pyobj)$Lisp
     jpyobj(str : String) ==
