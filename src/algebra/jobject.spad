@@ -1585,7 +1585,7 @@ JLDataFrame() : Exports == Implementation where
     ++ jdframe(a, ls) returns a data frame from data a and column names
     ++ ls.
     ++ For example:
-    ++ example{df:=dframe(nrand(7,3),[a,b,jsym c])}
+    ++ example{df:=jdframe(nrand(7,3),[a,b,jsym c])}
     ++ example{df.b}
   Implementation ==> add
     import from JLUtilityFunctions
