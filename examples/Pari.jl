@@ -1,6 +1,6 @@
 # Test it in jlFriCAS using the )read command: )read Pari.jl
 # libpari is required on your system. See your package manager.
-# AI helped generated.
+# AI helped generated. Will possibly break jlFriCAS.
 
 module LibPari
 

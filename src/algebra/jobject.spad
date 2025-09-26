@@ -929,6 +929,108 @@ JLObjDict() : Exports == Implementation where
       jlref(concat(["delete!(", getind(obj), ",", string(jsy), ")"]))
     jdict(str : String) == jlref str
 
+)abbrev domain JOBPY JLObjPy
+++ Convenience domain for Julia Python objects using
+++ the PythonCall Julia package.
+++ Author: G.Vanuxem
+++ Date Created: Sep. 2025
+++ Description:
+++  Convenience domain for Julia Python objects that are used
+++ within Julia, and not directly by the underlying FriCAS Common LISP.
+++ The PythonCall package has to be installed in Julia.
+++ Note that the PythonCall Julia package uses a similar scheme for Julia
+++ Python objects to the one of jlFriCAS for JLObjectType references.
+++ Trademark(s): Python is a registered trademark of the Python
+++ Software Foundation.
+JLObjPy() : Exports == Implementation where
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  Exports ==> JLObjectType with
+    jlApply : (String, String, %) -> %
+    ++ jlApply(func, mod, pyobj) applies the Python function func
+    ++ from the module mod to the Python object pyobj.
+    ++ For example:
+    ++ Numpy needs to be installed, see the Julia package CondaPkg.
+    ++ \example{jlApply("array", "numpy", jpyobj("[1,2,3]"))}
+    ++ creates a numpy array from the Python list [1,2,3].
+    ++ jlApply("sqrt", "math", 2) computes the square root of 2.
+    jlApply : (String, String, %, %) -> %
+    ++ jlApply(func, mod, pyobj1, pyobj2) applies the Python function func
+    ++ from the module mod to the Python objects pyobj1 and pyobj2
+    jlApply : (String, String, %, %, %) -> %
+    ++ jlApply(func, mod, pyobj1, pyobj2, pyobj3) applies the Python function
+    ++ func from the module mod to the Python objects pyobj1, pyobj2 and pyobj3.
+    jlApply : (String, String, %, %, %, %) -> %
+    ++ jlApply(func, mod, pyobj1, pyobj2, pyobj3, pyobj4) applies the Python
+    ++ function func from the module mod to the Python objects pyobj1, pyobj2,
+    ++ pyobj3 and pyobj4.
+    jlApply : (String, String, %, %, %, %, %) -> %
+    ++ jlApply(func, mod, pyobj1, pyobj2, pyobj3, pyobj4, pyobj5) applies
+    ++ the Python function func from the module mod to the Python objects
+    ++ pyobj1, pyobj2, pyobj3, pyobj4 and pyobj5.
+    jlPyConvert : (%, String) -> JLObject
+    ++ jlPyConvert(pyobj, type) converts the Python object pyobj
+    ++ to the Julia type 'type'.
+    jlPyDocumentation : String -> Void
+    ++ jlPyDocumentation(obj) displays the Python documentation
+    ++ for the Python object obj.
+    jlPyImport : String -> %
+    ++ jlPyImport(mod) imports the Python module mod in the
+    ++ Julia Python environment. No use at this time.
+    coerce : Integer -> %
+    ++ coerce(i) coerces the integer i to a Julia Python object.
+    coerce : Float -> %
+    ++ coerce(f) coerces f to a Julia Python object.
+    coerce : String -> %
+    ++ coerce(str) coerces the string str to a Julia Python string object.
+    jpyobj : String -> %
+    ++ jpyobj(str) coerces the string str to a Julia Python object.
+    ++ Use jlDisplay(pyobj) to display the Python object pyobj.
+  Implementation ==> add
+    import from JLUtilityFunctions
+
+    jlInitialize(true)
+    Rep := SExpression
+
+    not jlUsing "PythonCall" =>
+      error "JLPyObj: PythonCall is not installed in Julia"
+
+    jlPyImport(pmod) ==
+      jlref(concat(["pyimport(_"", pmod, "_")"]))
+    
+    -- TODO: pycall?
+    jlApply(func, m, pyobj) ==
+      jlref(concat(["pyimport(_"", m, "_").", func, "(", getind(pyobj), ")"]))
+    jlApply(func, m, pyobj1, pyobj2) ==
+      jlref(concat(["pyimport(_"", m, "_").", func, "(", getind(pyobj1), ",",
+        getind(pyobj2), ")"]))
+    jlApply(func, m, pyobj1, pyobj2, pyobj3) ==
+      jlref(concat(["pyimport(_"", m, "_").", func, "(", getind(pyobj1), ",",
+        getind(pyobj2), ",", getind(pyobj3), ")"]))
+    jlApply(func, m, pyobj1, pyobj2, pyobj3, pyobj4) ==
+      jlref(concat(["pyimport(_"", m, "_").", func, "(", getind(pyobj1), ",",
+        getind(pyobj2), ",", getind(pyobj3), ",", getind(pyobj4), ")"]))
+    jlApply(func, m, pyobj1, pyobj2, pyobj3, pyobj4, pyobj5) ==
+      jlref(concat(["pyimport(_"", m, "_").", func, "(", getind(pyobj1), ",",
+        getind(pyobj2), ",", getind(pyobj3), ",", getind(pyobj4), ",",
+          getind(pyobj5), ")"]))
+    jlPyConvert(pyobj, type) ==
+      jlref(concat(["pyconvert(", type, ",", getind(pyobj),")"]))
+    jlPyDocumentation(obj) ==
+      jlref(concat(["pyhelp(_"", obj, "_")"]))
+    coerce(i : Integer) ==
+      jlref(concat(["Py(", string(i),")"]))
+    coerce(str : String) ==
+      jlref(concat(["Py(_"", str, "_")"]))
+    coerce(f : Float) ==
+      tmp := outputSpacing(0)
+      ret := jlref(toString(f))
+      outputSpacing(tmp)
+      jlref(concat(["Py(", getind(ret),")"]))
+    coerce(pyobj : %) : OutputForm ==
+      jl_string_getindex(jlId pyobj)$Lisp
+    jpyobj(str : String) ==
+      jlref(concat(["Py(", str, ")"]))
+
 )abbrev domain JFLOAT JLFloat
 ++ Domain for Julia (Big) floats
 ++ Author: G. Vanuxem
@@ -1473,18 +1575,6 @@ JLDataFrame() : Exports == Implementation where
   Z   ==> Integer
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
   Exports ==> Join(JLObjectAggregate, finiteAggregate) with
-    --elt : (%, JLSymbol) -> JLVector(JLObject)
-    --++ elt(obj, sym) returns the property sym of obj.
-    --qelt : (%, JLSymbol) -> JLVector(JLObject)
-    --++ elt(obj, sym) returns the property sym of obj. No checks are done
-    --++ regarding the existence of the sym property. If it does not exist,
-    --++ Julia will throw an error.
-    --elt : (%, Integer) -> JLVector(JLObject)
-    --++ elt(obj, ind) returns the element at index ind of obj.
-    --++ For example for a Tuple or a vector.
-    --qelt : (%, Integer) -> JLVector(JLObject)
-    --++ qelt(obj, ind) returns the element at index ind of obj.
-    --++ For example for a Tuple or a vector.
     jlDescribe: % -> %
     ++ jlDescribe(df) returns basic statistics about df.
     matrix : % -> JLObject
@@ -1494,6 +1584,9 @@ JLDataFrame() : Exports == Implementation where
     jdframe:  (JLFloat64Matrix, List(JLSymbol)) -> %
     ++ jdframe(a, ls) returns a data frame from data a and column names
     ++ ls.
+    ++ For example:
+    ++ example{df:=dframe(nrand(7,3),[a,b,jsym c])}
+    ++ example{df.b}
   Implementation ==> add
     import from JLUtilityFunctions
 
@@ -1533,78 +1626,6 @@ JLDataFrame() : Exports == Implementation where
       tls := first lines formatExpression(lnames::OutputForm)$Format1D
       jlref(concat(["DataFrame(",
         getind(coerce(array)$JLMatrix(JLObjFloat64)),",", tls, ")"]))
-
-)abbrev domain JOBPY JLPyObj
-++ Convenience domain for Julia Python objects using
-++ the PythonCall package.
-++ Author: G.Vanuxem
-++ Date Created: Sep. 2025
-++ Description:
-++  Convenience domain for Julia Python objects that are used
-++ within Julia, and not directly by the underlying FriCAS Common LISP.
-++ The PythonCall package has to be installed in Julia.
-++ Note that the PythonCall Julia package uses a similar scheme for Julia
-++ Python objects to the one of jlFriCAS for JLObjectType references.
-++ Trademark(s): Python is a registered trademark of the Python
-++ Software Foundation.
-JLPyObj() : Exports == Implementation where
-  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-  Exports ==> JLObjectType with
-    jlApply : (String, String, %) -> %
-    ++ jlApply(func, mod, pyobj) applies the Python function func
-    ++ from the module mod to the Python object pyobj.
-    jlApply : (String, String, %, %) -> %
-    ++ jlApply(func, mod, pyobj1, pyobj2) applies the Python function func
-    ++ from the module mod to the Python objects pyobj1 and pyobj2
-    jlApply : (String, String, %, %, %) -> %
-    ++ jlApply(func, mod, pyobj1, pyobj2, pyobj3) applies the Python function
-    ++ func from the module mod to the Python objects pyobj1, pyobj2 and pyobj3.
-    jlApply : (String, String, %, %, %, %) -> %
-    ++ jlApply(func, mod, pyobj1, pyobj2, pyobj3, pyobj4) applies the Python
-    ++ function func from the module mod to the Python objects pyobj1, pyobj2,
-    ++ pyobj3 and pyobj4.
-    jlApply : (String, String, %, %, %, %, %) -> %
-    ++ jlApply(func, mod, pyobj1, pyobj2, pyobj3, pyobj4, pyobj5) applies
-    ++ the Python function func from the module mod to the Python objects
-    ++ pyobj1, pyobj2, pyobj3, pyobj4 and pyobj5.
-    jlPyImport : String -> %
-    ++ jlPyImport(mod) imports the Python module mod in the
-    ++ Julia Python environment. No use at this time.
-    jpyobj : String -> %
-    ++ jpyobj(str) coerces the string str to a Julia Python object.
-    ++ Use jlDisplay(pyobj) to display the Python object pyobj.
-  Implementation ==> add
-    import from JLUtilityFunctions
-
-    jlInitialize(true)
-    Rep := SExpression
-
-    not jlUsing "PythonCall" =>
-      error "JLPyObj: PythonCall is not installed in Julia"
-
-    jlPyImport(pmod) ==
-      jlref(concat(["pyimport(_"", pmod, "_")"]))
-    
-    -- TODO: pycall?
-    jlApply(func, m, pyobj) ==
-      jlref(concat(["pyimport(_"", m, "_").", func, "(", getind(pyobj), ")"]))
-    jlApply(func, m, pyobj1, pyobj2) ==
-      jlref(concat(["pyimport(_"", m, "_").", func, "(", getind(pyobj1), ",",
-        getind(pyobj2), ")"]))
-    jlApply(func, m, pyobj1, pyobj2, pyobj3) ==
-      jlref(concat(["pyimport(_"", m, "_").", func, "(", getind(pyobj1), ",",
-        getind(pyobj2), ",", getind(pyobj3), ")"]))
-    jlApply(func, m, pyobj1, pyobj2, pyobj3, pyobj4) ==
-      jlref(concat(["pyimport(_"", m, "_").", func, "(", getind(pyobj1), ",",
-        getind(pyobj2), ",", getind(pyobj3), ",", getind(pyobj4), ")"]))
-    jlApply(func, m, pyobj1, pyobj2, pyobj3, pyobj4, pyobj5) ==
-      jlref(concat(["pyimport(_"", m, "_").", func, "(", getind(pyobj1), ",",
-        getind(pyobj2), ",", getind(pyobj3), ",", getind(pyobj4), ",",
-          getind(pyobj5), ")"]))
-    coerce(pyobj : %) : OutputForm ==
-      jl_string_getindex(jlId pyobj)$Lisp
-    jpyobj(str : String) ==
-      jlref(concat(["Py(", str, ")"]))
 
 )abbrev domain JVECTOR JLVector
 ++ Description: This domain provides a JLVector type
