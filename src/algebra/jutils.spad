@@ -38,7 +38,7 @@ JLUtilityFunctions() : Exports == Implementation where
     ++ jlDefined?(str) checks whether or not str is defined in Julia.
     jlDocumentation  : Symbol -> Void
     ++ jlDocumentation(op) shows the documentation of the
-    ++ Julia operation op. Trivial implementation.
+    ++ operation op. Trivial implementation.
     jlSeed! : JLInt64 -> Void
     ++ jlSeed!(n) reseeds the Julia random number generator,
     ++ if applicable.

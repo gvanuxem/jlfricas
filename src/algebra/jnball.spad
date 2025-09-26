@@ -324,7 +324,7 @@ NMRealBall() == NMArbField(256)
 ++ Keywords: floating point number, complex
 ++ Description:
 ++  \spadtype{NMAcbField} implements fixed precision
-++  complex ball arbitrary precision ball arithmetic using
+++  complex ball arithmetic using
 ++  the Julia Nemo package - based on the Arb library.
 ++ Reference: https://nemocas.github.io/Nemo.jl/stable/
 NMAcbField(p: PositiveInteger) : Exports == Implementation where

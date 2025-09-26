@@ -508,7 +508,7 @@ NMAlgebraicNumber() : Exports == Implementation where
     QQbar(i : NMInteger) == coerce(i)
     QQbar(fi : NMFraction(NMInteger)) == coerce(fi)
     coerce(i : %) : OutputForm ==
-      concat(["[", string(i),"]"]) pretend OutputForm
+      string(i) pretend OutputForm
 
 )abbrev domain NZMOD NMIntegerMod
 ++ Domain for Nemo integer mod n
