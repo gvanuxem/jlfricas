@@ -202,7 +202,7 @@ JLStringUtilities() : Exports == Implementation where
     ++ LaTeX expression, that is, "styled_"str_"" if your Julia support it.
     ++ (StyledStrings official package). Convenience function.
     jlString : String -> String
-    ++ jlString(str) costructs an escaped string usable by the Julie parser.
+    ++ jlString(str) constructs an escaped string usable by the Julie parser.
     jlRegexMatch?   : (String, String) -> Boolean
     ++ jlRegexMatch?(s, regex) checks if the regular expression matches in s.
     jlRegexMatch    : (String, String) -> String

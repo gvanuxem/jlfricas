@@ -217,6 +217,9 @@ JLObject() : Exports == Implementation where
     jlCollect : % -> JLVector(%)
     ++ jlCollect(obj) collects element of a Julia iterator
     ++ in a JLVector.
+    jstring : String -> %
+    ++ jstring(str) returns the JLObject representing the String str.
+    ++ Convenience function.
     jobject : Integer -> %
     ++ jobject(n) returns the JLObject representing the integer n.
     jobject : String -> %
@@ -236,6 +239,8 @@ JLObject() : Exports == Implementation where
     coerce(jsy : JLSymbol ) == jlref(convert(jsy))
     coerce(i: Integer) == jlref(string i)
     coerce(str : String) : % == jlref(str)
+    jstring(str : String) : % ==
+      jlref(concat ["_"", str,"_""])
     jobject(i: Integer) : % == jlref(string i)
     jobject(str: String) : % == jlref(str)
 
