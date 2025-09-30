@@ -41,15 +41,20 @@ JLFloat32Vector() : Exports == Implementation where
     ++ with default parameters. Two numbers compare equal
     ++ if their relative distance or their absolute distance
     ++ is within tolerance bounds. Applied component-vise.
-    urand   :   (NNI, JF32) -> %
-    ++ urand(n, x) returns a uniformly (0$NNI..x) distributed
+    urand   :   (PositiveInteger, JF32) -> %
+    ++ urand(n, x) returns a uniformly (0..x) distributed
+    ++ Julia vector of size n. Use the underying Common
+    ++ Lisp random number generator so jlSeed! will not
+    ++ affect it.
+    urand01 :   PositiveInteger -> %
+    ++ urand01(n) returns a uniformly (0..1) distributed
     ++ Julia vector of size n.
-    urand01 :   NNI -> %
-    ++ urand01(n) returns a uniformly (0$NNI..1) distributed
-    ++ Julia vector of size n.
-    nrand :   NNI -> %
+    nrand :   PositiveInteger -> %
     ++ nrand(n) returns a normally distributed Julia vector of size n
     ++ with mean=0 and standard deviation=1.
+    exprand : PositiveInteger -> %
+    ++ exprand(n) return a vector of size n with random elements
+    ++ from the exponential distribution with scale 1.
     jlDisplay: % -> Void
     ++ jlDisplay(v) pretty prints v (à la Julia).
     juliaVPrint : Boolean -> Boolean
@@ -146,8 +151,7 @@ JLFloat32Vector() : Exports == Implementation where
 
     urand01(n) ==
       v := qnew(n)
-      for i in 1..maxIndex(v) repeat setelt!(v, i, RANDOM(1$JF32)$Lisp)
-      v
+      (jl_1dffunction(0$NNI,"rand!", v)$Lisp;v)
 
     urand(n, r) ==
       v := qnew(n)
@@ -157,6 +161,11 @@ JLFloat32Vector() : Exports == Implementation where
     nrand(n) ==
       v := qnew(n)
       (jl_1dffunction(0$NNI,"randn!", v)$Lisp;v)
+
+    exprand(n) ==
+      v := qnew(n)
+      jl_1dffunction(0$NNI,"randexp!", v)$Lisp
+      v
 
 )abbrev package JF32VEC2 JLFloat32VectorFunctions2
 ++ Package for operations on Julia Float32 vectors
@@ -250,17 +259,23 @@ JLFloat32Matrix() :  Exports == Implementation where
     copy!: (%, %) -> %
     ++ copy!(b,a) copies efficiently a to b.No check are done on
     ++ arrays dimensions.
-    identity:    NNI -> %
+    identity:    PositiveInteger -> %
     ++ identity(n) returns a n by n identity matrix.S
-    urand   :   (NNI, NNI, JF32) -> %
-    ++ urand(m,n,x) returns a uniformly (0$NNI..x) distributed
+    urand   :   (PositiveInteger, PositiveInteger, JF32) -> %
+    ++ urand(m,n,x) returns a uniformly (0..x) distributed
+    ++ Julia matrix of size (m,n). Use the underying Common
+    ++ Lisp random number generator so jlSeed! will not
+    ++ affect it.
+    urand01 :   (PositiveInteger, PositiveInteger) -> %
+    ++ urand01(m,n) returns a uniformly (0..1) distributed
     ++ Julia matrix of size (m,n).
-    urand01 :   (NNI, NNI) -> %
-    ++ urand01(m,n) returns a uniformly (0$NNI..1) distributed
-    ++ Julia matrix of size (m,n).
-    nrand :   (NNI, NNI) -> %
-    ++ nrand(m,n) returns a normally distributed Julia matrix of size (m,n)
-    ++ with mean=0 and standard deviation=1.
+    nrand :   (PositiveInteger, PositiveInteger) -> %
+    ++ nrand(m,n) returns a Julia matrix of size (m,n) with random
+    ++ element from the normal distribution with mean=0
+    ++ and standard deviation=1.
+    exprand : (PositiveInteger, PositiveInteger) -> %
+    ++ exprand(m,n) return a Julia matrix of size (m,n) with random elements
+    ++ from the exponential distribution with scale 1.
     positiveDefinite? : % -> Boolean
     ++ positiveDefinite?(m) tests wether or not m is positive definite.
     ++ Use a Cholesky factorisation.
@@ -428,9 +443,7 @@ JLFloat32Matrix() :  Exports == Implementation where
 
     urand01(m, n) ==
       mat := qnew(m,n)
-      for i in 1 .. ncols(mat) repeat _
-      for j in 1 .. nrows(mat) repeat _
-        setelt!(mat, j, i, RANDOM(1$JF32)$Lisp)
+      jl_2dffunction(0$NNI,"rand!", mat.elts, mat.ncols)$Lisp
       mat
 
     urand(m, n, r) ==
@@ -443,6 +456,11 @@ JLFloat32Matrix() :  Exports == Implementation where
     nrand(m, n) ==
       mat := qnew(m,n)
       jl_2dffunction(0$NNI,"randn!", mat.elts, mat.ncols)$Lisp
+      mat
+
+    exprand(m, n) ==
+      mat := qnew(m,n)
+      jl_2dffunction(0$NNI,"randexp!", mat.elts, mat.ncols)$Lisp
       mat
 
     determinant(m) ==
@@ -539,11 +557,12 @@ JLComplexF32Vector() :  Exports == Implementation where
     ++ with default parameters.Two numbers compare equal
     ++ if their relative distance or their absolute distance
     ++ is within tolerance bounds. Applied component-wise.
-    urand01 :   NNI -> %
-    ++ urand01(n) returns a uniformly (0$NNI..1) distributed
+    urand01 :   PositiveInteger -> %
+    ++ urand01(n) returns a uniformly (0..1) distributed
     ++ Julia vector of size n.
-    nrand :   NNI -> %
-    ++ nrand(n) returns a normally distributed Julia vector of size n.
+    nrand :   PositiveInteger -> %
+    ++ nrand(n) returns a normally distributed Julia vector of size n
+    ++ with mean=0 and standard deviation=1.
     ++ See Julia documentation (randn) for this complex version used here.
     jlDisplay : % -> Void
     ++ jlDisplay(v) pretty prints v (à la Julia).
@@ -692,11 +711,13 @@ JLComplexF32Matrix() : Exports == Implementation where
     ++ arrays dimensions.
     diagonalMatrix:   JCF32VEC -> %
     ++ diagonalMatrix(v) returns a diagonal matrix with elements of v.
-    urand01:   (NNI, NNI) -> %
-    ++ urand01(m,n) returns a uniformly (0$NNI..1) distributed
+    urand01:   (PositiveInteger, PositiveInteger) -> %
+    ++ urand01(m,n) returns a uniformly (0..1) distributed
     ++ Julia matrix of size (m,n).
-    nrand :   (NNI, NNI) -> %
-    ++ nrand(m,n) returns a normally distributed Julia matrix of size (m,n).
+    nrand :   (PositiveInteger, PositiveInteger) -> %
+    ++ nrand(m,n) returns a Julia matrix of size (m,n) with random
+    ++ element from the normal distribution with mean=0
+    ++ and standard deviation=1.
     ++ See Julia documentation (randn) for this complex version used here.
     transpose!:     (%, %) -> %
     ++ transpose!(b, a) stores transposed a in b.

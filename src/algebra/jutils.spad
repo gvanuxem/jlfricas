@@ -39,9 +39,10 @@ JLUtilityFunctions() : Exports == Implementation where
     jlDocumentation  : Symbol -> Void
     ++ jlDocumentation(op) shows the documentation of the
     ++ operation op. Trivial implementation.
+    ++ TODO: Use StyledStrings and Julia ouput in another operation?
     jlSeed! : JLInt64 -> Void
-    ++ jlSeed!(n) reseeds the Julia random number generator,
-    ++ if applicable.
+    ++ jlSeed!(n) reseeds the Julia random number generator
+    ++ if applicable (Some random number generators don't accept a seed).
     jlRandomString : PI -> String
     ++ jlRandomString(n) returns a random string of n characters.
     jlEvalString   : STR -> Void
@@ -119,18 +120,23 @@ JLUtilityFunctions() : Exports == Implementation where
       outl : List(String) := []
       for i in 1 .. #docs repeat
         -- clean it up first
+        -- TODO: keep double quotes for string parameters
+        -- Example:  jlDlOpen "libopenlibm"
         wdqstr := remove(char("_""),docs.i)
+        -- remove some HyperDoc LaTeX commands
         outl := concat(outl,jlEvalString(concat[ _
           "replace(raw_"", wdqstr, _
           "_", _"{}_" => _"_",", _
-          "_" {\\em_" => _"_",", _
-          "_" {\\it_" => _"_",", _
+          -- Only in generic.spad (em)
+          -- "_" {\\em_" => _"_",", _
           "_"\\spadfun{_" => _"_",", _
           "_"\\spadop{_" => _"_",", _
           "_"\\spadfunFrom{_" => _"_",", _
           "_"\\spadtype{_" => _"_",", _
           "_"\\spadignore{_" => _"_",", _
           "_"\\spad{_" =>_"_"," _
+          "_"\\example{_" =>_"Example: _"," _
+          "_"\\_" => _"_"," _
           "_"{_" =>_"\$_",", _
           "_"}_" =>_"_")"])@String)
         outl := concat(outl,
@@ -378,16 +384,17 @@ JLObjDynamicLinker() : Exports == Implementation where
     ++ \example{gsl:= jlDlOpen "libgsl"}
     ++ \example{hypot3:= jlDlSym(gsl,jsym(gsl_hypot3))}
     ++ \example{jlDlCApply(hypot3,jobject("2."),jobject("7."),jobject("9.0"))}
+    ++ \example{jlDlCApply(hypot3,jfloat64("2."),jfloat64("7."),9.0::JLObjFloat64)}
     jlDlCApply : (%, STR, JOBJ, STR, JOBJ, STR, JOBJ, STR) -> JOBJ
-    ++ jlDlCApply(func, ctype, x, xctype, y, xctype, z, ztype) applies the
-    ++ function pointer func to x given its Julia C type (xctype) or its
+    ++ jlDlCApply(func, ctype, x, xctype, y, ctype, z, ztype) applies the
+    ++ function pointer func to x, y and z given its Julia C type (xctype) or its
     ++ supported Julia type, for example "Float64" or "Cdouble".
     ++ Returned value is assumed to be a C type ctype
     ++ (or any Julia supported types).
     jlDlOpen : STR -> %
     ++ jlDlOpen(lib) opens/loads the dynamic shared library lib and
     ++ returns a reference pointer that can
-    ++ be used to obtain adress to symbols in it using jlDlSym.
+    ++ be used to obtain adresses of its exported symbols using jlDlSym.
     ++ It is up to the user to unload the shared object when it is
     ++ no longer used. Does not throw an error if the library can not
     ++ be loaded and returns 'nothing' in this case. Use
@@ -395,7 +402,7 @@ JLObjDynamicLinker() : Exports == Implementation where
     jlDlOpen : (STR, JOBJ) -> %
     ++ jlDlOpen(lib, flags) opens/loads the dynamic shared library lib and
     ++ returns a reference pointer that can
-    ++ be used to obtain adress to symbols in it using jlDlSym.
+    ++ be used to obtain adresses of its exported symbols using jlDlSym.
     ++ It is up to the user to unload the shared object when it is
     ++ no longer used. Does not throw an error if the library can not
     ++ be loaded by default and returns nothing in this case. Use
@@ -416,7 +423,7 @@ JLObjDynamicLinker() : Exports == Implementation where
     jlDlOpen : (STR, Boolean) -> %
     ++ jlDlOpen(lib, throw) opens/loads the dynamic shared library lib and
     ++ returns a reference pointer that can
-    ++ be used to obtain adress to symbols in it using jlDlSym.
+    ++ be used to obtain adresses of its exported symbols using jlDlSym.
     ++ It is up to the user to unload the shared object when it is
     ++ no longer used. 'throw' determines whether or not Julia throws an error
     ++ if the library can not be loaded.
@@ -424,7 +431,7 @@ JLObjDynamicLinker() : Exports == Implementation where
     jlDlOpen : (STR, JOBJ, Boolean) -> %
     ++ jlDlOpen(lib, flags, throw) opens/loads the dynamic shared library lib and
     ++ returns a reference pointer that can
-    ++ be used to obtain adress to symbols in it using jlDlSym.
+    ++ be used to obtain adresses of its exported symbols using jlDlSym.
     ++ It is up to the user to unload the shared object when it is
     ++ no longer used. Does not throw an error if the library can not
     ++ be loaded by default and returns nothing in this case. Use
@@ -467,10 +474,10 @@ JLObjDynamicLinker() : Exports == Implementation where
     jdlink : STR -> %
     ++ jdlink(lib) opens/loads the dynamic shared library lib and
     ++ returns a reference pointer that can
-    ++ be used to obtain adress to symbols in it using jlDlSym.
+    ++ be used to obtain adresses of its exported symbols using jlDlSym.
     ++ It is up to the user to unload the shared object when it is
     ++ no longer necessary using jlDlClose.
-    ++ \example{jdlink "libopenlibm"}
+    ++ \example{libm := jdlink "libopenlibm"}
     ++ Throws a Julia error if it is not found. Use jlDlOpen
     ++ for a version with options and/or without Julia errors.
   Implementation ==> add

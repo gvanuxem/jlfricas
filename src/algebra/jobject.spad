@@ -31,7 +31,7 @@ JLObjectType() : Category == JLType() with
     ++ For example, using JLMatrix(JLObjFloat64):
     ++ \example{M:=nrand(4,4);}
     ++ \example{jlApply("svd", M::JLMatrix(JLObjFloat64)).S}
-    ++ should be "equivalent" to svdvals(M)
+    ++ should be "equivalent" to svdvals(M).
     jlApply : (String, %, %) -> %
     ++jlApply(func, obj1, obj2) applies the function func with obj1 and obj2
     ++ as parameters and returns the result as a FriCAS JLObject.
@@ -128,11 +128,11 @@ JLObjectType() : Category == JLType() with
 ++  Category for arbitrary Julia aggregates.
 JLObjectAggregate() : Category == Join(JLObjectType, Aggregate) with
     elt : (%, JLSymbol) -> JLObject
-    ++ elt(obj, sym) returns the property sym of obj.
+    ++ elt(obj, sym) returns the property/element sym of obj.
     ++ For example:
     ++ \example{ret := jlApply("svd", jobject("rand(4,4)")); ret.U}
     qelt : (%, JLSymbol) -> JLObject
-    ++ qelt(obj, sym) returns the property sym of obj. No checks are done
+    ++ qelt(obj, sym) returns the property/element sym of obj. No checks are done
     ++ regarding the existence of the sym property. If it does not exist,
     ++ Julia throws an error.
     elt : (%, Integer) -> JLObject
@@ -170,8 +170,9 @@ JLObjectAggregate() : Category == Join(JLObjectType, Aggregate) with
 ++ Description:
 ++  Category of rings whose elements are of type JLOjectType.
 JLObjectRing() : Category == Join(JLObjectType, JLRing) with
-    "*" : (NMInteger, %) -> %
-    ++ i*x is the integer multiplication.
+    "*" : (NMInteger, %) -> JLObject
+    ++ i*x is the integer multiplication. The type of the
+    ++ result depends on the type of x. Check it using jlType.
   add
     import JLUtilityFunctions
 
@@ -1142,6 +1143,8 @@ JLFloat() : Exports == Implementation where
     ++ contained in [0,1].
     nrand : () -> %
     ++ nrand() returns an normally distributed random number.
+    exprand : () -> %
+    ++ exprand() returns an exponentially distributed random number.
     atan : (%, %) -> %
     ++ atan(x, y) computes the inverse tangent of x/y.
     "*"      : (%, Integer) -> %
@@ -1206,6 +1209,7 @@ JLFloat() : Exports == Implementation where
     exp()    == jlref("BigFloat(ℯ)")
     urand01() == jlref("rand(BigFloat)")
     nrand()   == jlref("randn(BigFloat)")
+    exprand() == jlref("randexp(BigFloat)")
 
     x < y  == jbinbfunc("<",x,y)
     x > y  == jbinbfunc(">",x,y)
@@ -1542,9 +1546,6 @@ JLComplexFloat() : Exports == Implementation where
     cis(x)   == junfunc("cis",x)
     cispi(x) == junfunc("cispi",x)
 
-    urand01() == jlref("rand(Complex{BigFloat})")
-    nrand()   == jlref("randn(Complex{BigFloat})")
-
     retractIfCan(x) : Union (Integer, "failed") ==
       integer?(x) => convert jlref(concat(["ZZ(", getind(x),")"]))$NMInteger
       "failed"
@@ -1658,6 +1659,9 @@ JLVector(R : JLObjectType) : Exports == Implementation where
         ++ uniformly distributed random numbers contained in [0,1].
         nrand : (n : PI) -> JLVector(JLFloat)
         ++ nrand(n) returns a JLVector of size n with normally
+        ++ distributed random numbers.
+        exprand : (n : PI) -> JLVector(JLFloat)
+        ++ exprand(n) returns a JLVector of size n with exponentially
         ++ distributed random numbers.
       if R has Join(JLObjectRing, ComplexCategory(JLFloat)) then
         urand01 : (n : PI) -> JLVector(JLComplexFloat)
@@ -1865,6 +1869,11 @@ JLMatrix(R : JLObjectRing) :  Exports == Implementation where
         ++ \example{mat := nrand(4,4)$JLMatrix(JLFloat)}
         ++ \example{chol := jlApply("cholesky", mat * transpose(mat))}
         ++ \example{chol.L * chol.U}
+        exprand : (m : PI, n : PI) -> JLMatrix(JLFloat)
+        ++ exprand(m,n) returns a JLMatrix of size (m,n) with exponentially
+        ++ distributed random numbers.
+        ++ \example{mat := exprand(4,4)$JLMatrix(JLFloat)}
+        ++ \example{svd := jlApply("svd", mat)}
       if R has Join(JLObjectRing, ComplexCategory(JLFloat)) then
         urand01 : (m : PI, n : PI) -> JLMatrix(JLComplexFloat)
         ++ urand01(m,n) returns a JLMatrix of size (m,n) with 
@@ -2012,7 +2021,9 @@ JLMatrix(R : JLObjectRing) :  Exports == Implementation where
           jlref(concat(["rand(BigFloat,", string(rows), ",", string(cols),")"]))
         nrand(rows, cols) : JLMatrix(JLFloat) ==
           jlref(concat(["randn(BigFloat,", string(rows), ",", string(cols),")"]))
-      if R is JLComplexFloat then
+        exprand(rows, cols) : JLMatrix(JLFloat) ==
+          jlref(concat(["randexp(BigFloat,", string(rows), ",", string(cols),")"]))
+      else if R is JLComplexFloat then
         urand01(rows, cols) : JLMatrix(JLComplexFloat) ==
           jlref(concat(["rand(Complex{BigFloat},", string(rows), ",",
             string(cols),")"]))

@@ -73,6 +73,9 @@ JLMachineFloat() : Category ==
   ++ contained in [0,1].
   nrand : () -> %
   ++ nrand() returns a normally distributed random number.
+  exprand : () -> %
+  ++ exprand() returns a random number from the exponential distribution
+  ++ with scale 1.
   expm1   :  % -> %
   ++ expm1(x) computes accurately e^x-1.
   log2  : % -> %
@@ -236,6 +239,7 @@ JLFloat32() : Exports == Implementation where
 
     urand01() == jl_flt_eval_string("rand(Float32)")$Lisp
     nrand()   == jl_flt_eval_string("randn(Float32)")$Lisp
+    exprand() == jl_flt_eval_string("randexp(Float32)")$Lisp
 
     manexp(x) ==
       zero? x => [0, 0]
@@ -468,6 +472,7 @@ JLFloat64() : Exports == Implementation where
 
     urand01() == jl_dbl_eval_string("rand(Float64)")$Lisp
     nrand()   == jl_dbl_eval_string("randn(Float64)")$Lisp
+    exprand() == jl_dbl_eval_string("randexp(Float64)")$Lisp
 
     manexp(x) ==
       zero? x => [0, 0]
