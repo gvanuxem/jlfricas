@@ -7,6 +7,11 @@
 
 ![Capture](https://github.com/user-attachments/assets/86832053-744d-452a-a032-60c12ce8b3b4)
 
+Graphics:
+
+<img width="1632" height="982" alt="Capture d'écran 2025-09-30 232410" src="https://github.com/user-attachments/assets/4d891733-9849-4797-bafd-15e775407f1e" />
+
+
 
 [FriCAS](https://fricas.github.io) is a general purpose computer algebra
 system (CAS).
