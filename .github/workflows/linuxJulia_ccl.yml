@@ -7,10 +7,10 @@ jobs:
 
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    env:
-      JULIA_VERSION: '1.11.2'
+
     steps:
     - uses: actions/checkout@v4
+    - uses: julia-actions/setup-julia@latest
     - name: install dependencies
       run: |
         sudo apt-get update
@@ -19,12 +19,6 @@ jobs:
       run: wget -c https://github.com/roswell/roswell/releases/download/v22.12.14.113/roswell_22.12.14.113-1_amd64.deb
     - name: install roswell and dependencies
       run: sudo dpkg -i roswell_22.12.14.113-1_amd64.deb && ros install ccl-bin && ros install hunchentoot && ros install queues  
-    - name: Download and install Julia
-      run: |
-        wget https://julialang-s3.julialang.org/bin/linux/x64/1.11/julia-${JULIA_VERSION}-linux-x86_64.tar.gz
-        tar zxf julia-${JULIA_VERSION}-linux-x86_64.tar.gz
-        sudo cp -rf julia-${JULIA_VERSION}/* /usr/local/
-        sudo ldconfig
     - name: install Julia libraries
       run: |
         julia -e "import Pkg;Pkg.add(\"Nemo\");Pkg.add(\"Suppressor\");Pkg.add(\"SpecialFunctions\")"
