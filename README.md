@@ -23,7 +23,7 @@ In this experimantal work-in-progress repository, a C wrapper using libjulia is 
 For general installation instructions see INSTALL. For general documentation
 consult <https://fricas.github.io>.
 
-To build FriCAS with Julia support, the <code>julia</code> executable needs to be available in your PATH, and a simple <code>./configure --enable-julia</code> should do the trick. We require Julia 1.7 or higher. Please see https://julialang.org/downloads/ for instructions on how to obtain Julia for your system. The required Julia packages are:
+To build FriCAS with Julia support, the <code>julia</code> executable needs to be available in your PATH, and a simple <code>./configure --enable-julia && make && sudo make install</code> should do the trick. We require Julia 1.7 or higher. Please see https://julialang.org/downloads/ for instructions on how to obtain Julia for your system. The required Julia packages are:
  - Suppressor
  - Nemo
  - SpecialFunctions
@@ -31,7 +31,7 @@ To build FriCAS with Julia support, the <code>julia</code> executable needs to b
 
  And optionnally:
   - MathLink (use the option `--enable-mathlink` at configure time)
-  - PythonCall (and CondaPkg if you want to install some Python® packages)
+  - PythonCall (and CondaPkg if you want to install some Python® packages, use Julia for this)
   - Plots
   - UnicodePlots (will be used by default if installed)
   - Latexify

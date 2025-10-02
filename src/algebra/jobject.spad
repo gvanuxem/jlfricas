@@ -951,26 +951,26 @@ JLObjDict() : Exports == Implementation where
 JLObjPy() : Exports == Implementation where
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
   Exports ==> JLObjectType with
-    jlApply : (String, String, %) -> %
-    ++ jlApply(func, mod, pyobj) applies the Python function func
+    jlPyApply : (String, String, %) -> %
+    ++ jlPyApply(mod, func, pyobj) applies the Python function func
     ++ from the module mod to the Python object pyobj.
     ++ For example:
     ++ Numpy needs to be installed, see the Julia package CondaPkg.
-    ++ \example{jlApply("array", "numpy", jpyobj("[1,2,3]"))}
+    ++ \example{jlPyApply("numpy", "array", jpyobj("[1,2,3]"))}
     ++ creates a numpy array from the Python list [1,2,3].
-    ++ jlApply("sqrt", "math", 2) computes the square root of 2.
-    jlApply : (String, String, %, %) -> %
-    ++ jlApply(func, mod, pyobj1, pyobj2) applies the Python function func
+    ++ jlApply("math", "sqrt", 2) computes the square root of 2.
+    jlPyApply : (String, String, %, %) -> %
+    ++ jlPyApply(mod, func, pyobj1, pyobj2) applies the Python function func
     ++ from the module mod to the Python objects pyobj1 and pyobj2
-    jlApply : (String, String, %, %, %) -> %
-    ++ jlApply(func, mod, pyobj1, pyobj2, pyobj3) applies the Python function
+    jlPyApply : (String, String, %, %, %) -> %
+    ++ jlPyApply(mod, func, pyobj1, pyobj2, pyobj3) applies the Python function
     ++ func from the module mod to the Python objects pyobj1, pyobj2 and pyobj3.
-    jlApply : (String, String, %, %, %, %) -> %
-    ++ jlApply(func, mod, pyobj1, pyobj2, pyobj3, pyobj4) applies the Python
+    jlPyApply : (String, String, %, %, %, %) -> %
+    ++ jlPyApply(mod, func, pyobj1, pyobj2, pyobj3, pyobj4) applies the Python
     ++ function func from the module mod to the Python objects pyobj1, pyobj2,
     ++ pyobj3 and pyobj4.
-    jlApply : (String, String, %, %, %, %, %) -> %
-    ++ jlApply(func, mod, pyobj1, pyobj2, pyobj3, pyobj4, pyobj5) applies
+    jlPyApply : (String, String, %, %, %, %, %) -> %
+    ++ jlPyApply(mod, func, pyobj1, pyobj2, pyobj3, pyobj4, pyobj5) applies
     ++ the Python function func from the module mod to the Python objects
     ++ pyobj1, pyobj2, pyobj3, pyobj4 and pyobj5.
     jlPyConvert : (%, String) -> JLObject
@@ -981,7 +981,7 @@ JLObjPy() : Exports == Implementation where
     ++ for the Python object obj.
     jlPyImport : String -> %
     ++ jlPyImport(mod) imports the Python module mod in the
-    ++ Julia Python environment. No use at this time.
+    ++ Julia Python environment.
     coerce : Integer -> %
     ++ coerce(i) coerces the integer i to a Julia Python object.
     coerce : Float -> %
@@ -1004,21 +1004,22 @@ JLObjPy() : Exports == Implementation where
       jlref(concat(["pyimport(_"", pmod, "_")"]))
     
     -- TODO: pycall?
-    jlApply(func, m, pyobj) ==
+    jlPyApply(m, func, pyobj) ==
       jlref(concat(["pyimport(_"", m, "_").", func, "(", getind(pyobj), ")"]))
-    jlApply(func, m, pyobj1, pyobj2) ==
+    jlPyApply(m, func, pyobj1, pyobj2) ==
       jlref(concat(["pyimport(_"", m, "_").", func, "(", getind(pyobj1), ",",
         getind(pyobj2), ")"]))
-    jlApply(func, m, pyobj1, pyobj2, pyobj3) ==
+    jlPyApply(m, func, pyobj1, pyobj2, pyobj3) ==
       jlref(concat(["pyimport(_"", m, "_").", func, "(", getind(pyobj1), ",",
         getind(pyobj2), ",", getind(pyobj3), ")"]))
-    jlApply(func, m, pyobj1, pyobj2, pyobj3, pyobj4) ==
+    jlPyApply(m, func, pyobj1, pyobj2, pyobj3, pyobj4) ==
       jlref(concat(["pyimport(_"", m, "_").", func, "(", getind(pyobj1), ",",
         getind(pyobj2), ",", getind(pyobj3), ",", getind(pyobj4), ")"]))
-    jlApply(func, m, pyobj1, pyobj2, pyobj3, pyobj4, pyobj5) ==
+    jlPyApply(m, func, pyobj1, pyobj2, pyobj3, pyobj4, pyobj5) ==
       jlref(concat(["pyimport(_"", m, "_").", func, "(", getind(pyobj1), ",",
         getind(pyobj2), ",", getind(pyobj3), ",", getind(pyobj4), ",",
           getind(pyobj5), ")"]))
+
     jlPyConvert(pyobj, type) ==
       jlref(concat(["pyconvert(", type, ",", getind(pyobj),")"]))
     jlPyDocumentation(obj) ==
