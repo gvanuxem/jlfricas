@@ -5,11 +5,11 @@
 [![FriCAS CI on Windows (with Julia support - SBCL based)](https://github.com/gvanuxem/jlfricas/actions/workflows/windowsJulia_sbcl.yml/badge.svg)](https://github.com/gvanuxem/jlfricas/actions/workflows/windowsJulia_sbcl.yml)\
 [![FriCAS CI on macOS (with Julia support - SBCL based)](https://github.com/gvanuxem/jlfricas/actions/workflows/macOS_Julia_sbcl.yml/badge.svg)](https://github.com/gvanuxem/jlfricas/actions/workflows/macOS_Julia_sbcl.yml)
 
-![Capture](https://github.com/user-attachments/assets/86832053-744d-452a-a032-60c12ce8b3b4)
+![Capture1](https://github.com/user-attachments/assets/86832053-744d-452a-a032-60c12ce8b3b4)
 
 Graphics:
+![Capture2](https://github.com/user-attachments/assets/b6bd0c9a-feab-438b-9e15-08ba25d7bde3)
 
-<img width="1920" height="1027" alt="Capture d'écran 2025-10-02 051957" src="https://github.com/user-attachments/assets/b6bd0c9a-feab-438b-9e15-08ba25d7bde3" />
 
 
 
