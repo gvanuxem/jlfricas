@@ -51,16 +51,16 @@ WSUtilityFunctions() : Exports == Implementation where
     ++ identityMatrix(n) returns the identity matrix of size n.
     zeroMatrix : (PositiveInteger, PositiveInteger) ->
                     WSMatrix(WSInteger)
-    ++ \spad{zeroMatrix(m, n)} returns an m-by-n zero matrix.
+    ++ \spad{zeroMatrix(m, n)} returns a m-by-n zero matrix.
     jlWSRange : WSInteger -> WSList(WSInteger)
-    ++ jlWSRange(n) returns a WS agg that ranges from 1 to n.
+    ++ jlWSRange(n) returns a WSList that ranges from 1 to n.
     ++ For example:
     ++ \example{jlWSRange(10)@WSLIST(WSINT)}
     jlWSRange : (WSInteger, WSInteger) -> WSList(WSInteger)
-    ++ jlWSRange(n,m) returns a WS agg that ranges from n to m.
+    ++ jlWSRange(n,m) returns a WSList that ranges from n to m.
     jlWSRange : (WSInteger, WSInteger, WSInteger) ->
               WSList(WSInteger)
-    ++ jlWSRange(n,m,d) returns a WS agg that ranges from n to m with step d.
+    ++ jlWSRange(n,m,d) returns a WSList that ranges from n to m with step d.
     jWSDateObject : () -> WSExpression
     ++ jWSDateObject() returns the WSExpression object of the
     ++ local date and time.
@@ -71,7 +71,7 @@ WSUtilityFunctions() : Exports == Implementation where
     ++ jWSDateObject(date,type) returns the WSExpression object of
     ++ the date and type, for example "Month".
     jlWSDateString : () -> WSExpression
-    ++ dateString() returns the WSExpression string of the local date and time.
+    ++ jlWSDateString() returns the WSExpression string of the local date and time.
     ++ For example:
     ++ \example{toString dateTime()}
     jlWSDateString : WSExpression -> WSExpression
@@ -82,7 +82,7 @@ WSUtilityFunctions() : Exports == Implementation where
     jlWSDateString : (WSExpression, WSExpression) -> WSExpression
     ++ jlWSDateString(expr, form) returns WSExpression string of the date
     ++ from a WS date object with WS format form.
-    ++ Fo example:
+    ++ For example:
     ++ \example{jlWSDateString(jWSExpr("Now"), jWSExpr("Entity[_"Language_", _"French::367gk_"]"))}
     jlWSDocumentation : Symbol -> WSExpression
     ++ jlWSDocumentation(sym) prints WS informations about the symbol sym.
@@ -120,7 +120,7 @@ WSUtilityFunctions() : Exports == Implementation where
     ++ \example{x:=jWSExpr(x);opt:=jWSList [x,-5,5]}
     ++ \example{jlWSExport("sin.png", jlWSPlot(sin(x),opt))}
   Implementation ==> add
-    import WSInteger
+    import from WSInteger
     import from WSList(WSInteger)
   
     junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))

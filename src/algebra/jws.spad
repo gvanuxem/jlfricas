@@ -31,7 +31,11 @@ WSObject() : Category == JLObjectType with
     jlHead   : % -> WSSymbol
     ++ jlHead(expr) returns the Head type of expr.
     toString : % -> String
-    ++ toString(obj) returns its string representation.
+    ++ toString(obj) returns the string representation of obj.
+    string : % -> String
+    ++ string(obj) returns the string representation of obj in
+    ++ the Julia WS format.
+
   add
     import from JLUtilityFunctions
     import from String
