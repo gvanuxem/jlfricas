@@ -102,8 +102,6 @@ JLMachineFloat() : Category ==
   negativeInfinity: () -> %
   ++ negativeInfinity() returns the Julia Float64
   ++ negtive infinity constant.
-  jlString : % -> String
-  ++ jlString(x) returns the string representation of x.
 
 )abbrev domain JSYM JLSymbol
 ++ Domain for Julia symbols
@@ -124,7 +122,7 @@ JLSymbol() : Exports == Implementation where
     ++ jsym(sym) converts sym to a Julia symbol.
   Implementation ==> add
     import from JLUtilityFunctions
-    import from String
+
     jlInitialize(true)
 
     x:% = y:% == EQUAL(x,y)$Lisp
@@ -147,11 +145,11 @@ JLSymbol() : Exports == Implementation where
 ++  usually they differ, for example Lisp MOST-POSITIVE-FIXNUM on 
 ++  x86_64 GNU/Linux is 4611686018427387903 with SBCL whereas it is
 ++  1152921504606846975 with Clozure CL. They will be passed as an Int64
-++  to Julia nevertheless, but returned value can not fit in a Lisp fixnum. 
-++  In Julia, typemax(Int64) is 9223372036854775807 on this arch. 
-++  This domain is therefore not intented to perfom "advanced" computation,
-++  it just includes basic arthmetic and is used, for example,
-++  for returned pivot vectors in linear algebra.
+++  to Julia nevertheless, but returned value can possibly not fit
+++  in a Lisp fixnum. In Julia, typemax(Int64) is 9223372036854775807
+++  on this arch. This domain is therefore not intented to perfom
+++  "advanced" computation, it just includes basic arthmetic
+++  and is used, for example, for returned pivot vectors in linear algebra.
 JLInt64() : Exports == Implementation where
   Exports ==> Join(JLMachineType, IntegerNumberSystem) with
     min     : () -> %
@@ -196,7 +194,7 @@ JLInt64() : Exports == Implementation where
 ++  underlying Lisp implementation, so the usual pure arithmetic
 ++  operations occur there. For other functions like sqrt, log, exp,
 ++  transcendental functions etc. the computation is performed
-++  at machine level (generally in C language, or even using
+++  at machine level using Julia (generally in C language, or even using
 ++  assembly language).
 JLFloat32() : Exports == Implementation where
   JSF   ==> JLSpecialFunctions
@@ -214,7 +212,6 @@ JLFloat32() : Exports == Implementation where
     ++ jf32(x) coerces x to a Julia Float32.
   Implementation ==> add
     import from JLUtilityFunctions
-    import from String
 
     jlInitialize(true)
 
@@ -372,7 +369,6 @@ JLFloat32() : Exports == Implementation where
       rationalApproximation(convert(x)@DoubleFloat,
         (precision() - 1)::NonNegativeInteger, base())
 
-    jlString(x) == jl_string_function_flt("string", x)$Lisp
     convert(x) : String == string x
     convert(x) : DoubleFloat == parsef(convert(x)@String)
     convert(x : DoubleFloat)  == convertDFToSF(x)$Lisp
@@ -424,7 +420,7 @@ JLComplexF32() : Exports == Implementation where
 ++  underlying Lisp implementation, so the usual pure arithmetic
 ++  operations occur there. For other functions like sqrt, log, exp,
 ++  transcendental functions etc. the computation is performed
-++  at machine level (generally in C language, or even using
+++  at machine level using Julia (generally in C language, or even using
 ++  assembly language).
 JLFloat64() : Exports == Implementation where
   JSF   ==> JLSpecialFunctions
@@ -446,7 +442,6 @@ JLFloat64() : Exports == Implementation where
     ++ Convenience function.
   Implementation ==> DoubleFloat add
     import from JLUtilityFunctions
-    import from String
 
     jlInitialize(true)
     defined?(func) ==>
@@ -596,9 +591,7 @@ JLFloat64() : Exports == Implementation where
     max()            == max_SF
     min()            == MOST_-NEGATIVE_-DOUBLE_-FLOAT$Lisp
     order(a)         == precision() + exponent a - 1
-
-    jlString(x) == jl_string_function_dbl("string", x)$Lisp
-    
+  
     coerce(x : %) : DoubleFloat == x pretend DoubleFloat
     coerce(x : DoubleFloat) : %  == x pretend %
     convert(x : Float) == convert(x)@DoubleFloat pretend %

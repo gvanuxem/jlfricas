@@ -239,6 +239,18 @@ JLFloat32Matrix() :  Exports == Implementation where
   Col         ==> JLFloat32Vector
   MLAF        ==> MatrixLinearAlgebraFunctions(JF32, Row, Col, %)
   Exports ==> JLMatrixCategory(JF32, Row, Col) with
+    elt: (%, NonNegativeInteger) -> JF32
+    ++ elt(m, i) returns the i-th elements of m.
+    ++ Column major order.
+    qelt: (%, NonNegativeInteger) -> JF32
+    ++ qelt(m, i) returns the i-th elements of m.
+    ++ Column major order.
+    setelt!: (%, NonNegativeInteger, JF32) -> JF32
+    ++ setelt!(m, i, r) sets the i-th elements of m to r.
+    ++ Column major order.
+    qsetelt!: (%, NonNegativeInteger, JF32) -> JF32
+    ++ qsetelt!(m,) sets the i-th elements of m to r.
+    ++ Column major order.
     jlVector: % -> JLFloat32Vector
     ++ jlVector(m) returns reference to the internal vector representation.
     jlApply : (String, %) -> Void
@@ -326,6 +338,17 @@ JLFloat32Matrix() :  Exports == Implementation where
       i < 1 or i > m.ncols or j < 1 or j > m.nrows=>
         error "setelt!$JLFloat32Matrix: index(es) out of range"
       Qsetelt2(m.elts, m.ncols, m.nrows, j, i, r)
+    elt(m:%, i:NonNegativeInteger) ==
+      i > #m => error "elt$JLFloat64Matrix: index out of range"
+      SFAREF11(m.elts,i)$Lisp
+    qelt(m:%, i:NonNegativeInteger) ==
+      SFAREF11(m.elts,i)$Lisp
+    setelt!(m : %, i : NonNegativeInteger, r : JF32) ==
+      i > #m =>
+        error "setelt!$JLFloat64Matrix: index out of range"
+      SFSETAREF11(m.elts,i,r)$Lisp
+    qsetelt!(m : %, i : NonNegativeInteger, r : JF32) ==
+      SFSETAREF11(m.elts,i,r)$Lisp
     empty() == error "empty()$JLFloat32Matrix is not supported"
     qnew(rows, cols) ==
       m: JLFloat32Vector := Qnew(rows, cols)
@@ -673,6 +696,18 @@ JLComplexF32Matrix() : Exports == Implementation where
   Col         ==> JLComplexF32Vector
   MLAF        ==> MatrixLinearAlgebraFunctions(JCF32, Row, Col, %)
   Exports ==> JLMatrixCategory(JCF32, Row, Col) with
+    elt: (%, NonNegativeInteger) -> JCF32
+    ++ elt(m, i) returns the i-th elements of m.
+    ++ Column major order.
+    qelt: (%, NonNegativeInteger) -> JCF32
+    ++ qelt(m, i) returns the i-th elements of m.
+    ++ Column major order.
+    setelt!: (%, NonNegativeInteger, JCF32) -> JCF32
+    ++ setelt!(m, i, r) sets the i-th elements of m to r.
+    ++ Column major order.
+    qsetelt!: (%, NonNegativeInteger, JCF32) -> JCF32
+    ++ qsetelt!(m,) sets the i-th elements of m to r.
+    ++ Column major order.
     coerce: JF32MAT -> %
     ++ coerce(m) coerces m to a a Julia Complex Float 32 matrix.
     jlDisplay : % -> Void  
@@ -761,6 +796,17 @@ JLComplexF32Matrix() : Exports == Implementation where
         i < 1 or i > m.ncols or j < 1 or j > m.nrows =>
             error "setelt!$JLComplexF32Matrix: index(es) out of range"
         Qsetelt2(m.elts, m.ncols, j, i, r)
+    elt(m:%, i:NonNegativeInteger) ==
+      i > #m => error "elt$JLFloat64Matrix: index out of range"
+      JCFELT(m.elts,i)$Lisp
+    qelt(m:%, i:NonNegativeInteger) ==
+      JCFELT(m.elts,i)$Lisp
+    setelt!(m : %, i : NonNegativeInteger, r : JCF32) ==
+      i > #m =>
+        error "setelt!$JLFloat64Matrix: index out of range"
+      JCFSETELT(m.elts,i,r)$Lisp
+    qsetelt!(m : %, i : NonNegativeInteger, r : JCF32) ==
+      JCFSETELT(m.elts,i,r)$Lisp
     empty() == error "empty()$JLComplexF32Matrix is not supported"
     qnew(rows, cols) ==
         vec : JCF32VEC := Qnew(rows*cols)

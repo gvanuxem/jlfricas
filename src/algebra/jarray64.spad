@@ -306,6 +306,18 @@ JLFloat64Matrix() :  Exports == Implementation where
   Col         ==> JLFloat64Vector
   MLAF        ==> MatrixLinearAlgebraFunctions(JF64, Row, Col, %)
   Exports ==> JLMatrixCategory(JF64, Row, Col) with
+    elt: (%, NonNegativeInteger) -> JF64
+    ++ elt(m, i) returns the i-th elements of m.
+    ++ Column major order.
+    qelt: (%, NonNegativeInteger) -> JF64
+    ++ qelt(m, i) returns the i-th elements of m.
+    ++ Column major order.
+    setelt!: (%, NonNegativeInteger, JF64) -> JF64
+    ++ setelt!(m, i, r) sets the i-th elements of m to r.
+    ++ Column major order.
+    qsetelt!: (%, NonNegativeInteger, JF64) -> JF64
+    ++ qsetelt!(m,) sets the i-th elements of m to r.
+    ++ Column major order.
     coerce: % -> Matrix(DoubleFloat)
     ++ coerce(m) coerces a copy of m to a Matrix(DoubleFloat).
     jlVector: % -> JLFloat64Vector
@@ -386,12 +398,24 @@ JLFloat64Matrix() :  Exports == Implementation where
     qelt(m, i, j) == Qelt2(m.elts, m.ncols, m.nrows, j, i)
     elt(m:%, i:INT, j:INT) : JF64 ==
       i < 1 or i > m.ncols or j < 1 or j > m.ncols =>
-        error "elt$JLFloat64Matrix: index(es) out of ranges"
+        error "elt$JLFloat64Matrix: index(es) out of range"
       Qelt2(m.elts, m.ncols, m.nrows, j, i)
+    elt(m:%, i:NonNegativeInteger) ==
+      i > #m => error "elt$JLFloat64Matrix: index out of range"
+      DFAREF11(m.elts,i)$Lisp
+    qelt(m:%, i:NonNegativeInteger) ==
+      DFAREF11(m.elts,i)$Lisp
+    setelt!(m : %, i : NonNegativeInteger, r : JF64) ==
+      i > #m =>
+        error "setelt!$JLFloat64Matrix: index out of range"
+      DFSETAREF11(m.elts,i,r)$Lisp
+    qsetelt!(m : %, i : NonNegativeInteger, r : JF64) ==
+      DFSETAREF11(m.elts,i,r)$Lisp
+
     qsetelt!(m, i, j, r) == Qsetelt2(m.elts, m.ncols, m.nrows, j, i, r)
     setelt!(m : %, i : Integer, j : Integer, r : JF64) ==
       i < 1 or i > m.ncols or j < 1 or j > m.ncols =>
-        error "elt$JLFloat64Matrix: index(es) out of ranges"
+        error "elt$JLFloat64Matrix: index(es) out of range"
       Qsetelt2(m.elts, m.ncols, m.nrows, j, i, r)
     empty() == error "empty()$JLFloat64Matrix is not supported"
     qnew(rows, cols) ==
@@ -739,6 +763,18 @@ JLComplexF64Matrix() : Exports == Implementation where
   Col         ==> JLComplexF64Vector
   MLAF        ==> MatrixLinearAlgebraFunctions(JCF64, Row, Col, %)
   Exports ==> JLMatrixCategory(JCF64, Row, Col) with
+    elt: (%, NonNegativeInteger) -> JCF64
+    ++ elt(m, i) returns the i-th elements of m.
+    ++ Column major order.
+    qelt: (%, NonNegativeInteger) -> JCF64
+    ++ qelt(m, i) returns the i-th elements of m.
+    ++ Column major order.
+    setelt!: (%, NonNegativeInteger, JCF64) -> JCF64
+    ++ setelt!(m, i, r) sets the i-th elements of m to r.
+    ++ Column major order.
+    qsetelt!: (%, NonNegativeInteger, JCF64) -> JCF64
+    ++ qsetelt!(m,) sets the i-th elements of m to r.
+    ++ Column major order.
     coerce: JF64MAT -> %
     ++ coerce(m) coerces m to a a Julia Complex Float 64 matrix.
     jlDisplay : % -> Void  
@@ -820,13 +856,24 @@ JLComplexF64Matrix() : Exports == Implementation where
     qelt(m, i, j) == Qelt2(m.elts, m.ncols, j, i)
     elt(m : %, i : Integer, j : Integer) : JCF64 ==
       i < 1 or i > m.ncols or j < 1 or j > m.ncols =>
-        error "elt$JLComplexF64Matrix: index(es) out of ranges"
+        error "elt$JLComplexF64Matrix: index(es) out of range"
       Qelt2(m.elts, m.ncols, j, i)
     qsetelt!(m, i, j, r) == Qsetelt2(m.elts, m.ncols, j, i, r)
     setelt!(m : %, i : Integer, j : Integer, r : JCF64) ==
       i < 1 or i > m.ncols or j < 1 or j > m.ncols =>
-        error "setelt!$JLComplexF64Matrix: index(es) out of ranges"
+        error "setelt!$JLComplexF64Matrix: index(es) out of range"
       Qsetelt2(m.elts, m.ncols, j, i, r)
+    elt(m:%, i:NonNegativeInteger) ==
+      i > #m => error "elt$JLFloat64Matrix: index out of range"
+      JCDELT(m.elts,i)$Lisp
+    qelt(m:%, i:NonNegativeInteger) ==
+      JCDELT(m.elts,i)$Lisp
+    setelt!(m : %, i : NonNegativeInteger, r : JCF64) ==
+      i > #m =>
+        error "setelt!$JLFloat64Matrix: index out of range"
+      JCDSETELT(m.elts,i,r)$Lisp
+    qsetelt!(m : %, i : NonNegativeInteger, r : JCF64) ==
+      JCDSETELT(m.elts,i,r)$Lisp
     empty() == error "empty()$JLComplexF64Matrix is not supported"
     qnew(rows, cols) ==
       vec : JCF64VEC := Qnew(rows*cols)

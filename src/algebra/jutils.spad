@@ -39,7 +39,7 @@ JLUtilityFunctions() : Exports == Implementation where
     jlDocumentation  : Symbol -> Void
     ++ jlDocumentation(op) shows the documentation of the
     ++ operation op. Trivial implementation.
-    ++ TODO: Use StyledStrings and Julia ouput in another operation?
+    -- TODO: Use StyledStrings and Julia ouput in another operation?
     jlSeed! : JLInt64 -> Void
     ++ jlSeed!(n) reseeds the Julia random number generator
     ++ if applicable (Some random number generators don't accept a seed).
@@ -127,17 +127,9 @@ JLUtilityFunctions() : Exports == Implementation where
         outl := concat(outl,jlEvalString(concat[ _
           "replace(raw_"", wdqstr, _
           "_", _"{}_" => _"_",", _
-          -- Only in generic.spad (em)
-          -- "_" {\\em_" => _"_",", _
-          "_"\\spadfun{_" => _"_",", _
-          "_"\\spadop{_" => _"_",", _
-          "_"\\spadfunFrom{_" => _"_",", _
-          "_"\\spadtype{_" => _"_",", _
-          "_"\\spadignore{_" => _"_",", _
-          "_"\\spad{_" =>_"_"," _
-          "_"\\example{_" =>_"Example: _"," _
-          "_"\\_" => _"_"," _
-          "_"{_" =>_"\$_",", _
+          "r_" {\\\b\w+_" => _"_",", _
+          "r_"\\spad\w*{_" => _"_",", _
+          "_"\\example{_" =>_"\n  Example: _"," _
           "_"}_" =>_"_")"])@String)
         outl := concat(outl,
           [" Signature: ", remove(char("_""), types.i)])

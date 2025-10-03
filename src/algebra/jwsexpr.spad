@@ -473,6 +473,7 @@ WSExpression() : Exports == Implementation where
     maxLimit : (%, %) -> %
     ++ maxLimit(expr, params) returns the max limit, eventually nested or
     ++  multivariate, of expr.
+    -- TODO: documentation
     solve : (Equation(%), %) -> WSL(WSL(%))
     ++ solve(eq, vars) tries to solve the equation eq.
     solve : (%, %) -> WSL(WSL(%))
@@ -830,7 +831,7 @@ WSExpression() : Exports == Implementation where
     ++ assuming(assumption(s), expr) uses the assumptions for use of
     ++ expr with refine, simplify and integrate for example.
     ++ The assumption(s) are not always supported by MathLink.
-    ++ Use assumptions directly whith 'refine' etc. directly
+    ++ Use assumptions whith 'refine' etc. directly instead.
     expand : % -> %
     ++ expand(expr) puts out products and positive powers of integers
     ++ of the expression expr.
@@ -2009,8 +2010,7 @@ WSExpression() : Exports == Implementation where
       pagew := string(_$LINELENGTH$Lisp pretend Integer - 2)
       sexpr := toString(expr, jWSExpr concat("PageWidth -> ", pagew))
       str : String := jlEvalString(concat(["replace(_"", sexpr,
-        "_", '[' => '(', ']' => ')', _"ArcS_" => _"as_", _"ArcC_" => _"ac_",",
-        " _"ArcT_" => _"at_" , r_"\b[A-Z][a-z]{2}_" => x -> lowercase(x))"]))
+        "_", '[' => '(', ']' => ')', r_"\b[A-Z][a-z]{2}_" => x -> lowercase(x))"]))
       l := split(str, newline())
       #l > 1 => pile(append([""],l) pretend List(OutputForm))
       str pretend OutputForm
