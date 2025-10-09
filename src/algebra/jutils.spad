@@ -74,6 +74,7 @@ JLUtilityFunctions() : Exports == Implementation where
     QQ : Fraction(Integer) -> NMFraction(NMInteger)
     ++ QQ(q) is the convenience function for coercing q.
   Implementation ==> add
+    import from String
     import from JLStringUtilities
 
     jlInitialize(true)
@@ -120,16 +121,22 @@ JLUtilityFunctions() : Exports == Implementation where
       outl : List(String) := []
       for i in 1 .. #docs repeat
         -- clean it up first
-        -- TODO: keep double quotes for string parameters
-        -- Example:  jlDlOpen "libopenlibm"
-        wdqstr := remove(char("_""),docs.i)
+        -- TODO: too expensive. 'insert'?
+        wdqstr : String := ""
+        for j in 1..#docs.i repeat
+          if docs.i.j = char "_"" then
+            wdqstr := concat(wdqstr, "\_"")
+          else
+            wdqstr := concat(wdqstr, docs.i.j)
         -- remove some HyperDoc LaTeX commands
         outl := concat(outl,jlEvalString(concat[ _
           "replace(raw_"", wdqstr, _
           "_", _"{}_" => _"_",", _
+          "r_"\\indented{\d+}{_" =>_"_"," _
           "r_" {\\\b\w+_" => _"_",", _
+          "r_"\\spadfunFrom{([\w!\?]+)}{(\w+)}_" => s_"\1 from \2_",", _
           "r_"\\spad\w*{_" => _"_",", _
-          "_"\\example{_" =>_"\n  Example: _"," _
+          "r_"\\example{_" => s_"Example: _"," _
           "_"}_" =>_"_")"])@String)
         outl := concat(outl,
           [" Signature: ", remove(char("_""), types.i)])
@@ -350,10 +357,10 @@ JLObjDynamicLinker() : Exports == Implementation where
     ++ Returned value is assumed to be a C type ctype
     ++ (or any Julia supported types). For example:
     ++ \example{libm:= jlDlOpen "libopenlibm"}
-    ++ \example{squareRoot:= jlDlSym(libm,jsym(sqrt)}
-    ++ \example{jlDlCApply(squareRoot, "Cdouble" jobject("2."), "Cdouble")}
+    ++ \example{squareRoot:= jlDlSym(libm,jsym(sqrt))}
+    ++ \example{jlDlCApply(squareRoot, "Cdouble", jobject("2."), "Cdouble")}
     ++ \example{sinus:=jlDlSym(libm,jsym(sin))}
-    ++ \example{jlDlCApply(sinus,"Float64"), jobject("2."), "Float64")}
+    ++ \example{jlDlCApply(sinus,"Float64", jobject("2."), "Float64")}
     jlDlCApply : (%, JOBJ, JOBJ) -> JOBJ
     ++ jlDlCApply(func,x,y) applies the function pointer func to x and y.
     ++ Type of the returned value is assumed to be the same than the type of x.
@@ -362,9 +369,9 @@ JLObjDynamicLinker() : Exports == Implementation where
     ++ \example{ipower:=jlDlSym(libgsl, gsl_pow_int)}
     ++ \example{jlDlCApply(ipower,jobject("2.0"),jobject("7"))}
     jlDlCApply : (%, STR, JOBJ, STR, JOBJ, STR) -> JOBJ
-    ++ jlDlCApply(func, ctype, x, xctype, y, xctype) applies the
+    ++ jlDlCApply(func, ctype, x, xctype, y, yctype) applies the
     ++ function pointer func to x and y given their Julia C type
-    ++ (xctype and xctype) or their supported Julia type,
+    ++ (xctype and yctype) or their supported Julia type,
     ++ for example "Float64" or "Cdouble".
     ++ Returned value is assumed to be a C type ctype
     ++ (or any Julia supported types).
@@ -378,9 +385,10 @@ JLObjDynamicLinker() : Exports == Implementation where
     ++ \example{jlDlCApply(hypot3,jobject("2."),jobject("7."),jobject("9.0"))}
     ++ \example{jlDlCApply(hypot3,jfloat64("2."),jfloat64("7."),9.0::JLObjFloat64)}
     jlDlCApply : (%, STR, JOBJ, STR, JOBJ, STR, JOBJ, STR) -> JOBJ
-    ++ jlDlCApply(func, ctype, x, xctype, y, ctype, z, ztype) applies the
-    ++ function pointer func to x, y and z given its Julia C type (xctype) or its
-    ++ supported Julia type, for example "Float64" or "Cdouble".
+    ++ jlDlCApply(func, ctype, x, xctype, y, yctype, z, zctype) applies the
+    ++ function pointer func to x, y and z given its Julia C type
+    ++ (xctype, yctype and zctype) or its supported Julia type,
+    ++ for example "Float64" or "Cdouble".
     ++ Returned value is assumed to be a C type ctype
     ++ (or any Julia supported types).
     jlDlOpen : STR -> %
