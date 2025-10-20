@@ -229,11 +229,11 @@ WSInteger() : Exports == Implementation where
     factor : % -> WSList WSList(%)
     ++ factor(n) returns the WS factorization of n.
     coerce  : Integer  -> %
-    ++ coerce(z): coeeces z. Convenience function.
+    ++ coerce(z): coerces z. Convenience function.
     coerce  : % -> WSRational
-    ++ coerce(z): coeeces z. Convenience function.
+    ++ coerce(z): coerces z. Convenience function.
     coerce  : % -> WSExpression
-    ++ coerce(z): coeeces z. Convenience function.
+    ++ coerce(z): coerces z. Convenience function.
     jWSInt : Integer -> %
     ++ jWSInt(int) constructs int as a WSInteger.
   Implementation ==> JLObject add

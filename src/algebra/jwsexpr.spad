@@ -633,6 +633,18 @@ WSExpression() : Exports == Implementation where
     polynomial? : (%, WSL(%)) -> Boolean
     ++ polynomial?(p,vlist) check whether or not p is a polynomial in
     ++ the list of variables vlist.
+    polynomialExpression? : (%, %) -> Boolean
+    ++ polynomialExpression?(p,x) check whether or not p is a 
+    ++ polynomial expression in x.
+    polynomialExpression? : (%, WSL(%)) -> Boolean
+    ++ polynomialExpression?(p,vlist) check whether or not p is a
+    ++ polynomial expression in the list of variables vlist.
+    rationalExpression? : (%, %) -> Boolean
+    ++ rationalExpression?(p,x) check whether or not p is a 
+    ++ rational expression in x.
+    rationalExpression? : (%, WSL(%)) -> Boolean
+    ++ rationalExpression?(p,vlist) check whether or not p is a
+    ++ rational expression in the list of variables vlist.
     variables : % -> WSL(%)
     ++ variables(p) returns the list of variables in p.
     exponent  : (%, %) -> %
@@ -678,7 +690,7 @@ WSExpression() : Exports == Implementation where
     ++ of p1 and p2 in x.
 
     padeApproximant : (%, %) -> %
-    ++ padeApproximant(expr, {x,x0, {n,m}}) returns the Padé approximant at x0.
+    ++ padeApproximant(expr, "{x,x0, {n,m}"}) returns the Padé approximant at x0.
 
     symmetricPolynomial : (%, WSL(%)) -> %
     ++ symmetricPolynomial(n,lvars) returns the n-th elementary symmetric
@@ -728,12 +740,12 @@ WSExpression() : Exports == Implementation where
     ++ the polynomial poly in terms of the polynomial list lpoly with
     ++ respect to the list of variables lvar. 
 
-    polynomialFactor : % -> %
-    ++ polynomialFactor(p) factorizes the polynomial p.
+    factorPolynomial : % -> %
+    ++ factorPolynomial(p) factorizes the polynomial p.
     ++ For example:
     ++ \example{x := jWSExpr x}
     ++ \example{p:=expand(chebyshevT(7,x)* chebyshevU(9,x))}
-    ++ \example{polynomialFactor p}
+    ++ \example{factorPolynomial p}
     factor : % -> %
     ++ factor(expr) factors the expression or polynomial expr.
     factor : (%, %) -> %
@@ -817,7 +829,7 @@ WSExpression() : Exports == Implementation where
     ++ extendedSimplify(expr) is the extended version of simplify.
     ++ This is the full version of simplify.
     ++ \example{x:= jWSExpr x}
-    ++ \example{expr := Gamma(x)/Gamma(x-1))
+    ++ \example{expr := Gamma(x)/Gamma(x-1)}
     ++ Compare with simplify(expr).
     ++ \example{extendedSimplify(expr)}
     extendedSimplify : (%, %) -> %
@@ -1694,6 +1706,15 @@ WSExpression() : Exports == Implementation where
       jbinfunc("W_"PolynomialQ_"(", expr, var) = WTrue()
     polynomial?(expr, vars : WSL(%)) ==
       jbinfunc("W_"PolynomialQ_"(", expr, vars) = WTrue()
+    polynomialExpression?(expr, var : %) ==
+      jbinfunc("W_"PolynomialExpressionQ_"(", expr, var) = WTrue()
+    polynomialExpression?(expr, vars : WSL(%)) ==
+      jbinfunc("W_"PolynomialExpressionQ_"(", expr, vars) = WTrue()
+    rationalExpression?(expr, var : %) ==
+      jbinfunc("W_"RationalExpressionQ_"(", expr, var) = WTrue()
+    rationalExpression?(expr, vars : WSL(%)) ==
+      jbinfunc("W_"RationalExpressionQ_"(", expr, vars) = WTrue()
+    
     variables(p) : WSL(%) == junfunc("W_"Variables_"(", p)
     variables(p) : List(Symbol) ==
       l : List(Symbol) := []
@@ -1742,7 +1763,7 @@ WSExpression() : Exports == Implementation where
     polynomialReduce(poly,lpoly,lvar) ==
       jterfunc("W_"PolynomialReduce_"(",poly,lpoly,lvar)
 
-    polynomialFactor(p) == junfunc("W_"Factor_"(", p)
+    factorPolynomial(p) == junfunc("W_"Factor_"(", p)
     factor(p) == junfunc("W_"Factor_"(", p)
     factor(p, opt) == jbinfunc("W_"Factor_"(", p, opt)
     factorTerms(p) == junfunc("W_"FactorTerms_"(", p)
