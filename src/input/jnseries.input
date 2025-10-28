@@ -1,0 +1,16 @@
+)set break resume
+)set mess type off
+)expose UnittestCount UnittestAux Unittest
+
+testsuite "Julia Nemo Series"
+testcase "NMUnivariatePuiseuxSeries"
+R := NUPXS(NFRAC(NINT),'x,30)
+x := x::R
+p1 := 23*x+3*19*x^7+x^(1/7)
+p2 := exp(p1)
+p3 := log(p2)
+
+-- Check if log(exp(p)) = p up to precision
+testEquals("0$R","p1 - p3")
+
+statistics()

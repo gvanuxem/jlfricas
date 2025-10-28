@@ -1,0 +1,97 @@
+)set break resume
+)set mess type off
+)expose UnittestCount UnittestAux Unittest
+
+testsuite "Julia Nemo"
+
+testcase "NMInteger arithmetic"
+a := jnint 2;
+b := jnint 4;
+testEquals("a+a", "b")
+testEquals("a-a", "0$NMInteger")
+testEquals("a*a", "b")
+testEquals("2*a", "b")
+testEquals("a^2", "b")
+
+testcase "NM Rational arithmetic"
+a := coerce(2)@NMFraction(NMInteger);
+b := coerce(4)@NMFraction(NMInteger);
+c := coerce(1/2)@NMFraction(NMInteger);
+testEquals("a+a", "b")
+testEquals("a-a", "0$NMFraction(NMInteger)")
+testEquals("a*a", "b")
+testEquals("2*a", "b")
+testEquals("a^2", "b")
+testEquals("b/a", "a")
+testEquals("a/b", "c")
+
+testcase "NMAlgebraicNumber Arithmetic"
+a := coerce(2)@NMFraction(NMInteger);
+b := coerce(4)@NMFraction(NMInteger);
+c := coerce(1/2)@NMFraction(NMInteger);
+testEquals("a+a", "b")
+testEquals("a-a", "0$NAN")
+testEquals("a*a", "b")
+testEquals("2*a", "b")
+testEquals("a^2", "b")
+testEquals("b/a", "a")
+testEquals("a/b", "c")
+
+testcase "NMAlgebraicNumber minimal polynomial"
+a:=sqrt(jnan(7))+3/sqrt jnan(-3)
+v1:=conjugates(a);
+v2 := roots(minimalPolynomial(a)@NUP(NINT,'x))
+testEquals("v1", "v2")
+
+testcase "NMIntegerMod arithmetic"
+a := jnzmod(2)$NZMOD(5);
+b := jnzmod(4)$NZMOD(5);
+testEquals("a+a", "b")
+testEquals("a-a", "0$NMIntegerMod(5)")
+testEquals("a*a", "b")
+testEquals("2*a", "b")
+testEquals("a^2", "b")
+testEquals("b+1", "0$NMIntegerMod(5)")
+
+testcase "NMPrimeField arithmetic"
+a := jnpf(2)$NPF(5);
+b := jnpf(4)$NPF(5);
+testEquals("a+a", "b")
+testEquals("a-a", "0$NMPrimeField(5)")
+testEquals("a*a", "b")
+testEquals("2*a", "b")
+testEquals("a^2", "b")
+testEquals("b/a", "a")
+testEquals("b+1", "0$NMPrimeField(5)")
+
+-- ??? TODO: why rank?
+--testcase "NMFiniteField arithmetic"
+--a := jnff(2)$NFF(5,3);
+--b := jnff(4)$NFF(5,3);
+--testEquals("a+a", "b")
+--testEquals("a-a", "0$NMFiniteField(5,3)")
+--testEquals("a*a", "b")
+--testEquals("2*a", "b")
+--testEquals("a^2", "b")
+--testEquals("b/a", "a")
+--testEquals("b+1", "0$NMFiniteField(5,3)")
+
+testcase "NMExactCalciumField arithmetic"
+a := jnecf(2);
+b := jnecf(4);
+c := jnecf(1/2);
+testEquals("a+a", "b")
+testEquals("a-a", "0$NECF")
+testEquals("a*a", "b")
+testEquals("2*a", "b")
+testEquals("a^2", "b")
+testEquals("b/a", "a")
+testEquals("a/b", "c")
+
+testcase "NMExactCalciumField"
+a := jnecf(1/2)
+testEquals("asin sin(a)", "a")
+testEquals("cos acos(a)", "a")
+testEquals("tan atan(a)", "a")
+
+statistics()
