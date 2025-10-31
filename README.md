@@ -20,6 +20,10 @@ Take into account that this is absolutely not the official documentation even th
 Graphics:
 ![Capture2](https://github.com/user-attachments/assets/b6bd0c9a-feab-438b-9e15-08ba25d7bde3)
 
+Linear Algebra:
+![Capture3](https://github.com/user-attachments/assets/76b14416-001c-4b95-ae64-21eaf30b4559)
+
+
 ## Building and Installing
 
 For general installation instructions see INSTALL. For general documentation
