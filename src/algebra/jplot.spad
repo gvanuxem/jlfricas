@@ -88,15 +88,15 @@ JLPlotFunctions() : Exports == Implementation where
     ++ jlPlotZlims!(z1,z2) sets z plot limits.
     jlPlotXlabel! : String -> Void
     ++ jlPlotXlabel!(str) sets x label.
-    ++ See \spadfunFromX{jlPlotTitle}{JLPlotFunctions} for more
+    ++ See \spadfunFrom{jlPlotTitle}{JLPlotFunctions} for more
     ++ informations on the diffent supported formats.
     jlPlotYlabel! : String -> Void
     ++ jlPlotYlabel!(str) sets y label.
-    ++ See \spadfunFromX{jlPlotTitle}{JLPlotFunctions} for more
+    ++ See \spadfunFrom{jlPlotTitle}{JLPlotFunctions} for more
     ++ informations on the diffent supported formats.
     jlPlotZlabel! : String -> Void
     ++ jlPlotZlabel!(str) sets z label.
-    ++ See \spadfunFromX{jlPlotTitle}{JLPlotFunctions} for more
+    ++ See \spadfunFrom{jlPlotTitle}{JLPlotFunctions} for more
     ++ informations on the diffent supported formats.
     
     -- Should be moved to another package 

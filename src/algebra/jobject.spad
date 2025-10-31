@@ -958,7 +958,7 @@ JLObjPy() : Exports == Implementation where
     ++ Numpy needs to be installed, see the Julia package CondaPkg.
     ++ \example{jlPyApply("numpy", "array", jpyobj("[1,2,3]"))}
     ++ creates a numpy array from the Python list [1,2,3].
-    ++ jlApply("math", "sqrt", 2) computes the square root of 2.
+    ++ jlPyApply("math", "sqrt", 2) computes the square root of 2.
     jlPyApply : (String, String, %, %) -> %
     ++ jlPyApply(mod, func, pyobj1, pyobj2) applies the Python function func
     ++ from the module mod to the Python objects pyobj1 and pyobj2

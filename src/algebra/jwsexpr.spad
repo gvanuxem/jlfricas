@@ -5,11 +5,11 @@
 ++ Description:
 ++  Julia Wolfram Symbolic expressions using the MathLink Julia package.
 ++ It supports the Eltable category (interface) so, for example
-++ using Fibonacci polynomials:
-++ fp := fibonacci(12,jWSExpr x) =>
+++ using Fibonacci polynomials
+++ fibonacci(12,jWSExpr x) =>
 ++             3       5       7       9    11
 ++   6 x + 35 x  + 56 x  + 36 x  + 10 x  + x
-++ fp.5 => 10*x^9
+++ %.5 => 10*x^9
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 -- TODO
 -- Reduce or FindInstance
@@ -346,8 +346,8 @@ WSExpression() : Exports == Implementation where
     ellipticPi : (%, %, %)-> %
     ++ ellipticPi(n,phi,m) computes the elliptic integral of the third kind.
     jacobiZeta : (%, %)-> %
-    --++ jacobiZeta(ϕ,m) computes the Jacobi Zeta function.
-    ++ jacobiZeta(phi,m) computes the Jacobi Zeta function.
+    ++ jacobiZeta(ϕ,m) computes the Jacobi Zeta function.
+    --++ jacobiZeta(phi,m) computes the Jacobi Zeta function.
     dedekindEta : % -> %
     ++ dedekindEta(tau) computes the Dedekind modular elliptic eta.
     dirichletEta : % -> %
@@ -364,19 +364,19 @@ WSExpression() : Exports == Implementation where
     ++ \example{series(cos(x),"\{x, 0, 12\}")}
     ++ \example{series(inverseErfc(x),"\{x,0,3\}")}
     sum : (%, %) -> %
-    ++ sum(f(n),range) returns the sum f(imin) + .. + f(imax) defined
+    ++ sum(f(n),range) returns the sum f(imin) + ... + f(imax) defined
     ++ by the list range, for example \example{jWSExpr("\{i, imin, imax\}")}.
     ++ See Wolfram Language specifications.
     sum : (%, %, Segment(Integer)) -> %
-    ++ sum(f(n),n, a..b) returns the sum f(a) + .. + f(b).
+    ++ sum(f(n),n, a..b) returns the sum f(a) + ... + f(b).
     sum : (%, Symbol) -> %
     ++ sum(f(n),n) returns the indefinite sum of f(n).
     product : (%, %) -> %
-    ++ product(f(n),range) returns the product f(imin) * .. * f(imax) defined
+    ++ product(f(n),range) returns the product f(imin) * ... * f(imax) defined
     ++ by the list range, for example \example{jWSExpr("\{i, imin, imax\}")}.
     ++ See Wolfram language specifications.
     product : (%, %, Segment(Integer)) -> %
-    ++ product(f(n),n, a..b) returns the product f(a) * .. * f(b).
+    ++ product(f(n),n, a..b) returns the product f(a) * ... * f(b).
     product : (%, Symbol) -> %
     ++ product(f(n),n) returns the indefinite product of f(n).
     numericSum : (%, %) -> %
@@ -1179,7 +1179,7 @@ WSExpression() : Exports == Implementation where
     ++ as a WSExpression.
     jWSExpr : String -> %
     ++ jWSExpr(str) constructs str as a WSExpression evaluating
-    ++ str as a Wolfram Symbolic Language Expression.
+    ++ str as a Wolfram Symbolic Language expression.
     ++ For example:
     ++ \example{jWSExpr "Factorial[5]"}
     ++ \example{jWSExpr "3.14159"}

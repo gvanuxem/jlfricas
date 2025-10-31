@@ -132,12 +132,22 @@ JLUtilityFunctions() : Exports == Implementation where
         outl := concat(outl,jlEvalString(concat[ _
           "replace(raw_"", wdqstr, _
           "_", _"{}_" => _"_",", _
+          "_"\\undocumented_" => _"is undocumented._",", _
+          "_"\\em{_" => _"_",", _
+          "_"\\it{_" => _"_",", _
+          "_"\\TeX{_" => _"TeX: _",", _
+          "_"\\LaTeX{_" => _"LaTeX: _",", _
+          "_"\\space_" => _" _"," _
+          "_"\\tab_" => _"    _"," _
+          "_"\\newline_" => _"\n_"," _
+          "_"\\blankline_" => _"\n\n_"," _
+          "_"\\spadignore_" => _"Ignore: _"," _
           "r_"\\indented{\d+}{_" =>_"_"," _
-          "r_" {\\\b\w+_" => _"_",", _
+          "r_"\\spadopFrom{([\w!\?\+\-\*\\=]+)}{(\w+)}_" => s_"\1 from \2_",", _
           "r_"\\spadfunFrom{([\w!\?]+)}{(\w+)}_" => s_"\1 from \2_",", _
           "r_"\\spad\w*{_" => _"_",", _
           "r_"\\example{_" => s_"Example: _"," _
-          "_"}_" =>_"_")"])@String)
+          "r_"[{|}|\\|\_"|}]_" =>_"_")"])@String)
         outl := concat(outl,
           [" Signature: ", remove(char("_""), types.i)])
         outl := concat(outl,
