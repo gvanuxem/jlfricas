@@ -1,4 +1,4 @@
-name: FriCAS CI on Linux (with Julia support - SBCL based)
+name: FriCAS CI on x64|arm64 Linux (with Julia support - SBCL based)
 
 on: [push, pull_request]
 permissions: {}

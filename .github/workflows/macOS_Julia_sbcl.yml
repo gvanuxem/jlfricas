@@ -1,4 +1,4 @@
-name: FriCAS CI on macOS (with Julia support - SBCL based)
+name: FriCAS CI on arm64|intel macOS (with Julia support - SBCL based)
 
 on: [push, pull_request]
 
