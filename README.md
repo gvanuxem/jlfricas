@@ -17,10 +17,12 @@ Take into account that this is absolutely not the official documentation even th
 ![Capture1](https://github.com/user-attachments/assets/85af3a0a-2920-41a0-9929-dfa914a906ae)
 
 Julia graphics and HyperDoc:
+
 ![Capture2](https://github.com/user-attachments/assets/c742dac3-2639-41d5-b8ea-1471c8162247)
 
 
 Linear Algebra:
+
 ![Capture3](https://github.com/user-attachments/assets/9c1e8b3d-470a-4ee5-9f75-11c03dd73237)
 
 
