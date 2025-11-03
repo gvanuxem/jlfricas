@@ -35,11 +35,11 @@ jobs:
       run: |
         rm -r target/*/src
         mkdir jlfricas && mv target jlfricas/
-        tar -cjf jlFriCAS-linux-x86_64-${{ github.sha }}.tar.bz2 jlfricas/
+        tar -cjf jlFriCAS-linux-ccl-x86_64-${{ github.sha }}.tar.bz2 jlfricas/
     - name: Upload Linux binary
       uses: actions/upload-artifact@v4
       with:
-        name: jlFriCAS-linux-x86_64-binary
-        path: jlFriCAS-linux-x86_64-${{ github.sha }}.tar.bz2
+        name: jlFriCAS-linux-ccl-x86_64-binary
+        path: jlFriCAS-linux-ccl-x86_64-${{ github.sha }}.tar.bz2
 
 
