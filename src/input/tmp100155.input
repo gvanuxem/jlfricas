@@ -1,0 +1,4 @@
+)set message test on
+)set message auto off
+)read bugs2012.input
+)quit

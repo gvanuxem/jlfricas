@@ -23,13 +23,13 @@ jobs:
         mkdir ../build && cd ../build
         wget https://github.com/Clozure/ccl/releases/download/v1.13/ccl-1.13-windowsx86.zip
         unzip ccl-1.13-windowsx86.zip
-        ../fricas/configure --with-lisp=`pwd`/ccl/wx86cl64.exe --enable-gmp || cat config.log
+        ../jlfricas/configure --with-lisp=`pwd`/ccl/wx86cl64.exe --enable-gmp || cat config.log
         make -j4 --output-sync
 
     - name: Create artifact archives
       run: |
         cp -rp ../build/target/x86_64-w64-mingw32 FriCAS-windows-x86_64
-        rm FriCAS-windows-x86_64/bin/{fricas,fricas-readline}
+        rm FriCAS-windows-x86_64/bin/fricas
         cp /mingw64/bin/libgmp-10.dll FriCAS-windows-x86_64/lib/
         zip -r FriCAS-windows-CCL-x86_64-${{ github.sha }}.zip FriCAS-windows-x86_64
 

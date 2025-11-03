@@ -1,0 +1,14 @@
+)set break resume
+)set mess type off
+)expose UnittestCount UnittestAux Unittest
+
+testsuite "JL Object"
+testcase "JLFloat"
+a := identity(10)$JLMatrix(JFLOAT);
+b := map(i+->nrand()$JFLOAT,a);
+testTrue("jlApprox?(inverse(b)*b,a)")
+testcase "JLVector indexing"
+v:=conjugates(sqrt(jnan(-2)));
+testTrue("(v.2^2=jnan(-2))@Boolean")
+testTrue("(qelt(v,2)^2=jnan(-2))@Boolean")
+statistics()
