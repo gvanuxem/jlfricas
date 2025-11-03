@@ -14,13 +14,14 @@ In this experimantal work-in-progress repository, a C wrapper using libjulia is 
 A general source of information can also be found in HTML format [here](https://gvanuxem.github.io/jlfricas.documentation/).
 Take into account that this is absolutely not the official documentation even though it is highly based on the official FriCAS web site which can be built from the FriCAS source code (thanks to Ralf Hemmecke and Kurt Pagani for their amazing work).
 
-![Capture1](https://github.com/user-attachments/assets/86832053-744d-452a-a032-60c12ce8b3b4)
+![Capture1](https://github.com/user-attachments/assets/85af3a0a-2920-41a0-9929-dfa914a906ae)
 
-Graphics:
-![Capture2](https://github.com/user-attachments/assets/b6bd0c9a-feab-438b-9e15-08ba25d7bde3)
+Julia graphics and HyperDoc:
+![Capture2](https://github.com/user-attachments/assets/c742dac3-2639-41d5-b8ea-1471c8162247)
+
 
 Linear Algebra:
-![Capture3](https://github.com/user-attachments/assets/76b14416-001c-4b95-ae64-21eaf30b4559)
+![Capture3](https://github.com/user-attachments/assets/9c1e8b3d-470a-4ee5-9f75-11c03dd73237)
 
 
 ## Building and Installing
