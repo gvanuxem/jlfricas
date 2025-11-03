@@ -34,13 +34,13 @@ jobs:
 
     - name: Create artifact archives
       run: |
-        tar -czf jlFriCAS-linux-${ARCH}-${{ github.sha }}.tar.gz target/
+        tar -czf jlFriCAS-linux-sbcl-${ARCH}-${{ github.sha }}.tar.gz target/
 
     - name: Upload Linux binary
       uses: actions/upload-artifact@v4
       with:
-        name: jlFriCAS-linux-${{ env.ARCH }}-binary
-        path: jlFriCAS-linux-${{ env.ARCH }}-${{ github.sha }}.tar.gz
+        name: jlFriCAS-linux-sbcl-${{ env.ARCH }}-binary
+        path: jlFriCAS-linux-sbcl-${{ env.ARCH }}-${{ github.sha }}.tar.gz
 
     - name: make check
       run: make check -j4 --output-sync
