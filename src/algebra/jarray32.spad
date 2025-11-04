@@ -410,12 +410,12 @@ JLFloat32Matrix() : Exports == Implementation where
       b
 
     copy(a) ==
-      b := qnew(a.nrows, a.ncols)
+      b := qnew(a.ncols, a.nrows)
       jl_2d2ffunction(0$NNI,"copy!", b.elts, b.ncols, a.elts, a.ncols)$Lisp
       b
 
     transpose(m) ==
-      b := qnew(m.ncols, m.nrows)
+      b := qnew(m.nrows, m.ncols)
       jl_2d2ffunction(0$NNI,"transpose!", b.elts, b.ncols, m.elts, m.ncols)$Lisp
       b
 
@@ -854,12 +854,12 @@ JLComplexF32Matrix() : Exports == Implementation where
             a.elts, a.ncols)$Lisp
         b
     copy(a) ==
-        b := qnew(a.nrows, a.ncols)
+        b := qnew(a.ncols, a.nrows)
         jl_2d2ffunction(1$NNI,"copy!",
             b.elts, b.ncols, a.elts, a.ncols)$Lisp
         b
     transpose(m) ==
-        b := qnew(m.ncols, m.nrows)
+        b := qnew(m.nrows, m.ncols)
         jl_2d2ffunction(1$NNI,"transpose!",
             b.elts, b.ncols, m.elts, m.ncols)$Lisp
         b

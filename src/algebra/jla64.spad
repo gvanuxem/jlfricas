@@ -340,7 +340,7 @@ JLF64LinearAlgebra() : Exports == Implementation where
       u    := new(mn, n, 0)$JF64MAT
       ipiv := qnew(mn)$JI64VEC
       copy!(lu,a)
-      jl_iarray_2dfunction(0$NNI,"lu!", ipiv, jlVector(lu),m)$Lisp            
+      jl_iarray_2dfunction(0$NNI,"lu!", ipiv, jlVector(lu), m)$Lisp            
       for i in 1 .. m repeat
         for j in 1 .. n repeat
           if j < i then
