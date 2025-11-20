@@ -1,5 +1,5 @@
 )abbrev package JF32AF JLF32ArrayFunctions
-++ Utility package for Julia functions applied to 32bit arrays.
+++ Utility package for Julia functions applied to 32-bit arrays.
 ++ Author: G. Vanuxem
 ++ Date Created: Dec, 2024
 ++ Description:
@@ -145,7 +145,7 @@ JLF32ArrayFunctions() : Exports == Implementation where
       jl_array_2dffunction(1$NNI,1$NNI, func, carray, cmat, nr)$Lisp
 
 )abbrev package JF64AF JLF64ArrayFunctions
-++ Utility package for Julia functions applied to 64bit arrays.
+++ Utility package for Julia functions applied to 64-bit arrays.
 ++ Author: G. Vanuxem
 ++ Date Created: Dec, 2024
 ++ Description:

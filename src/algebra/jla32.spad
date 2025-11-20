@@ -668,7 +668,8 @@ JLCF32LinearAlgebra() : Exports == Implementation where
       ret
 
 )abbrev package JF32MTF JLF32MatrixTranscendentalFunctions
-++ Linear Algebra functions computed using Julia and its algorithms.
+++ Matrix transcendental functions computed
+++ using Julia and its algorithms. 32 bits version.
 JLF32MatrixTranscendentalFunctions() : Exports == Implementation where
   JF32     ==> JLFloat32
   JI64     ==> JLInt64
@@ -989,7 +990,8 @@ JLF32MatrixTranscendentalFunctions() : Exports == Implementation where
       ret
 
 )abbrev package JCF32MTF JLComplexF32MatrixTranscendentalFunctions
-++ Linear Algebra functions computed using Julia and its algorithms.
+++ Complex Matrix transcendental functions computed
+++ using Julia and its algorithms. 32 bits version.
 JLComplexF32MatrixTranscendentalFunctions() : Exports == Implementation where
   JF32     ==> JLFloat32
   JI64     ==> JLInt64

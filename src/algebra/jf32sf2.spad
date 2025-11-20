@@ -168,7 +168,7 @@ JLFloat32SpecialFunctions2() : Exports == Implementation where
     digamma(x) == jlApply("digamma", x)
     invdigamma(x) == jlApply("invdigamma", x)
     trigamma(x) == jlApply("trigamma", x)
-    polygamma(m,x) == jl_dbl_function_int64_dbl("polygamma", m, x)$Lisp
+    polygamma(m,x) == jl_flt_function_int64_flt("polygamma", m, x)$Lisp
     Gamma(a,z) == jlApply("gamma", a, z)
     logGamma(a,z) == jlApply("loggamma", a, z)
     --gamma_inc(a,x,IND) == jlApply("gamma_inc", a, x, IND)

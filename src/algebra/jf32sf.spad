@@ -63,7 +63,7 @@ JLFloat32SpecialFunctions() : Exports == Implementation where
 
   Implementation ==> add
 
-    ldexp(x,n) == jl_dbl_function_dbl_int64("ldexp", x, n)$Lisp
+    ldexp(x,n) == jl_flt_function_flt_int64("ldexp", x, n)$Lisp
     exp2(x)    == jlApply("exp2", x)
     exp10(x)   == jlApply("exp10", x)
     log1p(x)   == jlApply("log1p", x)
