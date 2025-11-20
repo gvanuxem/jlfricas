@@ -1,0 +1,36 @@
+)set break resume
+)set mess type off
+)expose UnittestCount UnittestAux Unittest
+
+testsuite "Julia Nemo Extensions"
+
+testcase "NMPrimeField Extensions"
+p := 5
+F := NMPrimeField(p)
+a := jnpf(2)$F
+-- trace(a, 1) should be a
+testEquals("trace(a, 1)", "a")
+-- norm(a, 1) should be a
+testEquals("norm(a, 1)", "a")
+
+-- quadraticNonResidue
+q := quadraticNonResidue()$F
+-- In field of size 5, squares are 0, 1, 4. Non-squares are 2, 3.
+-- q should be 2 (smallest non-negative)
+testEquals("convert(q)@Integer", "2")
+
+testcase "NMAlgebraicNumber Extensions"
+-- norm
+-- Create an algebraic number. sqrt(2)
+a := sqrt(jnan(2))
+-- minimal polynomial is x^2 - 2. Roots are sqrt(2), -sqrt(2).
+-- norm is product of roots = -2.
+testEquals("norm(a)$NMAlgebraicNumber", "jnan(-2)")
+
+-- Another one: 1 + sqrt(2).
+-- conjugates: 1+sqrt(2), 1-sqrt(2).
+-- product: 1 - 2 = -1.
+b := 1 + a
+testEquals("norm(b)$NMAlgebraicNumber", "jnan(-1)")
+
+statistics()

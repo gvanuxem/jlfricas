@@ -207,8 +207,7 @@ NMInteger() : Exports == Implementation where
 ++  for Julia (Calcium based).
 ++  https://fredrikj.net/calcium/
 ++ References: https://flintlib.org/; https://nemocas.github.io/Nemo.jl/stable/
--- TODO: norm etc... See AN in constants.spad
--- rootOf : SparseUnivariatePolynomial(%)
+-- TODO: rootOf : SparseUnivariatePolynomial(%)
 NMAlgebraicNumber() : Exports == Implementation where
   NNI       ==> NonNegativeInteger
   JI64      ==> JLInt64
@@ -311,6 +310,8 @@ NMAlgebraicNumber() : Exports == Implementation where
     csign : % -> %
     ++ csign(a) returns an extension of the real sign function
     ++ equivalent to a/sqrt(a^2).
+    norm : % -> %
+    ++ norm(a) returns the norm of a.
     coerce : % -> AlgebraicNumber
     ++ coerce(nan) coerces nan to AlgebraicNumber using
     ++ the root of the minimal polynomial.
@@ -445,6 +446,11 @@ NMAlgebraicNumber() : Exports == Implementation where
     asinpi(a) == junfunc("asinpi",a)
     acospi(a) == junfunc("acospi",a)
     atanpi(a) == junfunc("atanpi",a)
+    norm(a) ==
+      v := conjugates(a)
+      res : % := 1
+      for i in 1..#v repeat res := res * v.i
+      res
 
     conjugates(a) ==
       jlref(concat(["conjugates(", getind(a),")"]))$JLVector(%)
@@ -604,6 +610,9 @@ NMPrimeField(p : PositiveInteger) : Exports == Implementation where
     sqrt : % -> %
     ++ sqrt(x) returns quare root of x.
     ++ Throw a Julia error if there is no square root and returns 0.
+    quadraticNonResidue: () ->  %
+    ++ quadraticNonResidue() computes the smallest non negative integer,
+    ++ which represents a quadratic non residue.
     coerce : Integer -> %
     ++ coerce(i) coerces i as a NMPrimeField element. 
     coerce : NMInteger -> %
@@ -615,6 +624,7 @@ NMPrimeField(p : PositiveInteger) : Exports == Implementation where
   Implementation ==> add
     import from JLUtilityFunctions
     import from String
+    import from IntegerNumberTheoryFunctions
 
     jlInitialize(true)
     Rep := SExpression
@@ -704,6 +714,16 @@ NMPrimeField(p : PositiveInteger) : Exports == Implementation where
       monomial(1, 1)$(SUP %) - monomial(x, 0)$(SUP %)
 
     sqrt(x) == junfunc("sqrt", x)
+
+    quadraticNonResidue(): % ==
+      found? : Boolean := false
+      q : Integer := 1
+      while not found? repeat
+        q := q+1
+        found? := jacobi(q, p)$IntegerNumberTheoryFunctions = -1
+      coerce(q)
+
+
 
     convert(x : %) : Integer == parsei string(x)
     coerce(x : NMInteger) : % == junfunc(NPF, x)

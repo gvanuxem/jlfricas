@@ -221,7 +221,7 @@ JLFloat32() : Exports == Implementation where
     MER ==> Record(MANTISSA : Integer, EXPONENT : Integer)
 
     manexp : % -> MER
-    -- TODO
+
     0                == FLOAT(0$Lisp, MAX)$Lisp pretend %
     1                == FLOAT(1$Lisp, MAX)$Lisp pretend %
     exp()            == jl_flt_function_flt("exp", 1$%)$Lisp
