@@ -750,10 +750,6 @@ NMFiniteField(p : PositiveInteger, n: PositiveInteger) : Exports == Implementati
   Exports ==> Join(NMCommutativeRing, FiniteFieldCategory,
                    FiniteAlgebraicExtensionField(NMPrimeField(p)),
                    ConvertibleTo(Integer)) with
-    "=" : (%,%) -> Boolean
-    ++ a = b checks equality.
-    "~=" : (%,%) -> Boolean
-    ++ a ~= b checks inequality.
     generator? : % -> Boolean
     ++ generator?(x) checks whether or not x a generator
     ++ of the finite filed.
@@ -770,6 +766,8 @@ NMFiniteField(p : PositiveInteger, n: PositiveInteger) : Exports == Implementati
     ++ absoluteNorm(x) returns the absolute norm of x.
     order : () -> NNI
     ++ order() returns the order of the finite field.
+    rank : () -> PositiveInteger
+    ++ rank() returns the degree of the extension.
     "*" : (%, NMInteger) -> %
     ++ x*i is the integer multiplication (NMInteger).
     "*" : (%, Integer) -> %
@@ -788,6 +786,7 @@ NMFiniteField(p : PositiveInteger, n: PositiveInteger) : Exports == Implementati
   Implementation ==> add
     import from JLUtilityFunctions
     import from String
+    import from Boolean
 
     jlInitialize(true)
     Rep := SExpression
@@ -820,7 +819,7 @@ NMFiniteField(p : PositiveInteger, n: PositiveInteger) : Exports == Implementati
     x quo y == jbinfunc("÷", x, y)
     -- x quo y == jbinfunc("div", x, y)
     x rem y ==
-      zero? y => error "rem$NPF: Division by 0"
+      zero? y => error "rem$NFF: Division by 0"
       0
     recip(x) ==
       zero? x => "failed"
@@ -839,6 +838,7 @@ NMFiniteField(p : PositiveInteger, n: PositiveInteger) : Exports == Implementati
     order() == p^n pretend NNI
     representationType() == "polynomial"
     extensionDegree() : PI == n
+    rank() == n
     charthRoot(x : %) : % == x
     inGroundField?(x) == false
     coordinates(x : %) : Vector(NMPrimeField(p)) ==

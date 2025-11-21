@@ -64,17 +64,17 @@ testEquals("a^2", "b")
 testEquals("b/a", "a")
 testEquals("b+1", "0$NMPrimeField(5)")
 
--- ??? TODO: why rank?
---testcase "NMFiniteField arithmetic"
---a := jnff(2)$NFF(5,3);
---b := jnff(4)$NFF(5,3);
---testEquals("a+a", "b")
---testEquals("a-a", "0$NMFiniteField(5,3)")
---testEquals("a*a", "b")
---testEquals("2*a", "b")
---testEquals("a^2", "b")
---testEquals("b/a", "a")
---testEquals("b+1", "0$NMFiniteField(5,3)")
+testcase "NMFiniteField arithmetic"
+a := jnff(2)$NFF(5,3);
+b := jnff(4)$NFF(5,3);
+testTrue("equal?(a+a, b)")
+testTrue("equal?(a-a, 0$NMFiniteField(5,3))")
+testTrue("equal?(a*a, b)")
+testTrue("equal?(2*a, b)")
+testTrue("equal?(a^2, b)")
+testTrue("equal?(b/a, a)")
+testTrue("equal?(b+1, 0$NMFiniteField(5,3))")
+testEquals("rank()$NMFiniteField(5,3)", "3")
 
 testcase "NMExactCalciumField arithmetic"
 a := jnecf(2);
@@ -88,7 +88,7 @@ testEquals("a^2", "b")
 testEquals("b/a", "a")
 testEquals("a/b", "c")
 
-testcase "NMExactCalciumField"
+testcase "NMExactCalciumField trigonometric functions"
 a := jnecf(1/2)
 testEquals("asin sin(a)", "a")
 testEquals("cos acos(a)", "a")

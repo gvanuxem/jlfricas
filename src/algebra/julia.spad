@@ -372,9 +372,10 @@ JLFloat32() : Exports == Implementation where
         (precision() - 1)::NonNegativeInteger, base())
 
     convert(x) : String == string x
-    convert(x) : DoubleFloat == parsef(convert(x)@String)
+    convert(x) : DoubleFloat == convertSFToDF(x)$Lisp
+    convert(x) : Float == convert(convertSFToDF(x)$Lisp pretend DoubleFloat)
     convert(x : DoubleFloat)  == convertDFToSF(x)$Lisp
-    convert(x : JLFloat64 ) == convertDFToSF(x)$Lisp
+    convert(x : JLFloat64) == convertDFToSF(x)$Lisp
     --convert(x) : InputForm == convert(x pretend SExpression)
     toString(x : %) == convert(x)
     toString(x, n) == toString(convert(x)@DoubleFloat, n)
