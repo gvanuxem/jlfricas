@@ -158,9 +158,6 @@ REGRESS0 += jf64sf.output jla.output jnemo_ag.output \
            jnpadic.output jnseries.output julia.output jwssf.output \
            jf32sf.output jfsf.output jnball.output jnemo.output \
            jobject.output jnpoly.output
-#ifeq ($(JULIA_USE_MLINK),yes)
-#REGRESS0 += jwssf.output
-#endif
 endif
 
 
