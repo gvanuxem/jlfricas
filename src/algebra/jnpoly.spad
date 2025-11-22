@@ -101,6 +101,8 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
     jnup  : UnivariatePolynomial(x, R) -> %
     ++ jnup(p) converts the univariate polynomial p to
     ++ a Nemo univariate polynomial.
+    compose : (%, %) -> %
+    ++ compose(p, q) returns the composition p(q(x)).
     factor   : % -> NMFactored(%)
     ++ factor(p) returns the factorization of p using the
     ++ NMFactored domain.
@@ -178,9 +180,9 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
       cosMinimalPolynomial(n,p) ==
         jlref(concat ["cos_minpoly(",string(n),",", getind(p),")"])
       thetaQExp(r,n,p) ==
-        jlref(concat ["theta_qexp(",string(r),",", string(n), "," getind(p),")"])
+        jlref(concat ["theta_qexp(",string(r),",", string(n), ",", getind(p),")"])
       etaQExp(r,n,p) ==
-        jlref(concat ["eta_qexp(",string(r),",", string(n), "," getind(p),")"])
+        jlref(concat ["eta_qexp(",string(r),",", string(n), ",", getind(p),")"])
     else if R is NMFraction(NMInteger) then
       roots(p) ==
         jlref(concat(["roots(QQBar,",
@@ -274,7 +276,7 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
     -- unit(p) == unit factor(p)
 
     coefficient(p : %, n : NNI) ==
-      jlref(concat ["coeff(", getind(p),",", string(n) ")"])$R
+      jlref(concat ["coeff(", getind(p),",", string(n), ")"])$R
     leadingCoefficient(p : %) ==
       junfunc("leading_coefficient", p)
     trailingCoefficient(p) ==
@@ -309,6 +311,8 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
     shiftRight!(p,n) == jlref(concat ["shift_right!(", getind(p),",", string(n),")"])
 
     elt(p, at : R) : R == jbinfunc("evaluate",p,at)
+    compose(p, q) ==
+      jlref(concat ["compose(", getind(p),",", getind(q),",inner=:second)"])$%
     differentiate(p) == junfunc("derivative",p)
     integrate(p) == junfunc("integral", p)
     coerce(v : Variable(x)) == jlref(concat(NUPRing,"[2]"))
@@ -529,7 +533,7 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
     factor(p : %) : Factored(%) == factor(p)$NMFactored(%)
 
     coefficient(p : %, n : NNI) ==
-      jlref(concat ["coeff(", getind(p),",", string(n) ")"])$R
+      jlref(concat ["coeff(", getind(p),",", string(n), ")"])$R
     coefficients(p : %, r : Segment(Integer)) ==
       jlref(concat ["coeff.(", getind(p),",",
         string(low(r)),":", string(high(r)), ")"])$JLVector(R)

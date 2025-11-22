@@ -154,10 +154,10 @@ REGRESS0 = agcd.output array.output bezout.output bugs2007.output \
       table.output tensor.output vsbasis.output
 
 ifdef JULIA_WRAP_SO_TARGET
-REGRESS0 += julia.output jla.output jf64sf.output jf32sf.output \
-            jfsf.output jnemo.output jnemo_ag.output jnseries.output \
-            jobject.output jutils.output jnball.output \
-            jnpadic.output
+REGRESS0 += jf64sf.output jla.output jnemo_ag.output \
+           jnpadic.output jnseries.output julia.output jwssf.output \
+           jf32sf.output jfsf.output jnball.output jnemo.output \
+           jobject.output jnpoly.output
 #ifeq ($(JULIA_USE_MLINK),yes)
 #REGRESS0 += jwssf.output
 #endif
