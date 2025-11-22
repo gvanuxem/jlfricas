@@ -55,9 +55,9 @@ NMUnivariatePowerSeries(R, x, prec, abs) : Exports == Implementation where
       HyperbolicFunctionCategory
       ArcHyperbolicFunctionCategory
       exp   : % -> %
-      ++ exp(s) returns the exponential of the power serie s.
+      ++ exp(s) returns the exponential of the power series s.
       log   : % -> %
-      ++ exp(s) returns the logarithm of the power serie s.
+      ++ log(s) returns the logarithm of the power series s.
       "/" : (%, INT) -> %
       ++ x / n is the division by an integer.
       "/" : (%, NMInteger) -> %
@@ -65,13 +65,13 @@ NMUnivariatePowerSeries(R, x, prec, abs) : Exports == Implementation where
       "/" : (%, R) -> %
       ++ x / n is the division operation.
       "*" : (%, R) -> %
-      ++ x  n is the multiplication operation.
+      ++ x * n is the multiplication operation.
       "+" : (%, Fraction(INT)) -> %
       ++ x + n is the addition operation.
       "-" : (%, Fraction(INT)) -> %
       ++ x - n is the addition operation.
     coerce   : Variable(x) -> %
-    ++ coerce(x) converts the variable x to a Nemo univariate power serie.
+    ++ coerce(x) converts the variable x to a Nemo univariate power series.
   Implementation ==> add
     import from JLUtilityFunctions
     import from JLStringUtilities
@@ -227,9 +227,9 @@ NMUnivariateLaurentSeries(R, x, prec) : Exports == Implementation where
     ++ s ^ z computes the z-th power of s.
     if R has Algebra NMFraction(NMInteger) then
       exp   : % -> %
-      ++ exp(s) returns the exponential of the Laurent serie s.
+      ++ exp(s) returns the exponential of the Laurent series s.
       log   : % -> %
-      ++ exp(s) returns the logarithm of the Laurent serie s.
+      ++ log(s) returns the logarithm of the Laurent series s.
       "/" : (%, INT) -> %
       ++ x / n is the division by an integer.
       "/" : (%, NMInteger) -> %
@@ -237,7 +237,7 @@ NMUnivariateLaurentSeries(R, x, prec) : Exports == Implementation where
       "/" : (%, R) -> %
       ++ x / n is the division operation.
       "*" : (%, R) -> %
-      ++ x  n is the multiplication operation.
+      ++ x * n is the multiplication operation.
       "+" : (%, Fraction(INT)) -> %
       ++ x + n is the addition operation.
       "-" : (%, Fraction(INT)) -> %
@@ -262,7 +262,7 @@ NMUnivariateLaurentSeries(R, x, prec) : Exports == Implementation where
     ++ integrate(f(x)) returns an anti-derivative of the power series
     ++ \spad{f(x)} with constant coefficient 0.
     coerce   : Variable(x) -> %
-    ++ coerce(x) converts the variable x to a Nemo univariate power serie.
+    ++ coerce(x) converts the variable x to a Nemo univariate power series.
   Implementation ==> add
     import from JLUtilityFunctions
     import from JLStringUtilities
@@ -394,9 +394,9 @@ NMUnivariatePuiseuxSeries(R, x, prec) : Exports == Implementation where
     ++ s ^ q computes the q power of s.
     if R has Algebra NMFraction(NMInteger) then
       exp   : % -> %
-      ++ exp(s) returns the exponential of the Puiseux serie s.
+      ++ exp(s) returns the exponential of the Puiseux series s.
       log   : % -> %
-      ++ exp(s) returns the logarithm of the Puiseux serie s.
+      ++ log(s) returns the logarithm of the Puiseux series s.
       "/" : (%, INT) -> %
       ++ x / n is the division by an integer.
       "/" : (%, NMInteger) -> %
@@ -404,7 +404,7 @@ NMUnivariatePuiseuxSeries(R, x, prec) : Exports == Implementation where
       "/" : (%, R) -> %
       ++ x / n is the division operation.
       "*" : (%, R) -> %
-      ++ x  n is the multiplication operation.
+      ++ x * n is the multiplication operation.
       "+" : (%, Fraction(INT)) -> %
       ++ x + n is the addition operation.
       "-" : (%, Fraction(INT)) -> %

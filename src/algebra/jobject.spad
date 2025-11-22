@@ -1564,11 +1564,20 @@ JLComplexFloat() : Exports == Implementation where
     ++ coerce(r) coerces to a JLComplexFloat.
     jcfloat : Integer -> %
     ++ jcfloat(z) returns z as a JLComplexFloat.
+    jcfloat : (Integer, Integer) -> %
+    ++ jcfloat(r,i) returns r+i as a JLComplexFloat.
     jcfloat : Fraction(Integer) -> %
     ++ jcfloat(q) returns q as a JLComplexFloat.
     jcfloat : Float -> %
     ++ jcfloat(r) returns r as a JLComplexFloat.
-    -- TODO jcfloat(string) 
+    jcfloat : (Float, Float) -> %
+    ++ jcfloat(r,i) returns r+i as a JLComplexFloat.
+    jcfloat : JLFloat -> %
+    ++ jcfloat(r) returns r as a JLComplexFloat.
+    jcfloat : (JLFloat, JLFloat) -> %
+    ++ jcfloat(r,i) returns r+i as a JLComplexFloat.
+    jcfloat : String -> %
+    ++ jcfloat(str) returns str as a JLComplexFloat.
   Implementation ==> add
     import from JLUtilityFunctions
     import from NMInteger
@@ -1701,6 +1710,17 @@ JLComplexFloat() : Exports == Implementation where
     jcfloat(i : Integer) : % == jlref(concat(["Complex{BigFloat}(", string(i),")"]))
     jcfloat(fi : Fraction(Integer)) == coerce(fi)
     jcfloat(x : Float) : % == coerce(x)
+    jcfloat(r : Float, i : Float) : % ==
+      jlref(concat(["Complex{BigFloat}(", getind(coerce(r)@JLFloat), ",",
+        getind(coerce(i)@JLFloat), ")"]))
+    jcfloat(x : JLFloat) : % ==
+      jlref(concat(["Complex{BigFloat}(", getind(x), ")"]))
+    jcfloat(r : JLFloat, i : JLFloat) : % ==
+      jlref(concat(["Complex{BigFloat}(", getind(r), ",", getind(i), ")"]))
+    jcfloat(str : String) : % ==
+      jlref(concat(["Complex{BigFloat}(", str, ")"]))
+    jcfloat(r : Integer, i : Integer) : % ==
+      jlref(concat(["Complex{BigFloat}(", string(r), ",", string(i), ")"]))
 
 )abbrev domain JDFRAME JLDataFrame
 ++ Description: Julia DataFrames support
