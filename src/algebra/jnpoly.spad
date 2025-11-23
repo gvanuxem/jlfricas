@@ -158,11 +158,11 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
     jbinbfunc(op,a,b) ==>
       jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
-    strToExpr(s : String) : Union(Expression(Fraction Integer), "failed") ==
-      str := concat("0$Expression(Fraction Integer)+", s)
+    strToPoly(s : String) : Union(Polynomial(Fraction Integer), "failed") ==
+      str := concat("0$Polynomial(Fraction Integer)+", s)
       af := parse(str)$InputForm
       av := interpret_in_new_env(af)$InputForm
-      retract(av)$AnyFunctions1(Expression(Fraction Integer))
+      retract(av)$AnyFunctions1(Polynomial(Fraction Integer))
 
     -- Set up the ring
     jlEvalString(concat([NUPRing,"=polynomial_ring(",
@@ -321,10 +321,14 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
     coerce(p : %) : OutputForm ==
       --outputForm(listOfTerms(p) pretend SUP, outputForm x) -- too expensive
       if R is NMInteger then
-        coerce strToExpr string p
+        str := string p
+        (ret := strToPoly(str)) case "failed" => str pretend OutputForm
+        coerce(ret)
       else if R is NMFraction(NMInteger) then
-        coerce strToExpr jlRegexReplace((string p),
+        str := jlRegexReplace((string p),
           jlString("//"),jlString("/"))
+        (ret := strToPoly(str)) case "failed" => str pretend OutputForm
+        coerce(ret)
       else
         jlRegexReplace(string(p),
           jlString("//"),jlString("/")) pretend OutputForm
@@ -581,10 +585,14 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
     coerce(p : %) : OutputForm ==
       --outputForm(listOfTerms(p) pretend SUP, outputForm x) -- too expensive
       if R is NMInteger then
-        coerce strToExpr string p
+        str := string p
+        (ret := strToExpr(str)) case "failed" => str pretend OutputForm
+        coerce(ret)
       else if R is NMFraction(NMInteger) then
-        coerce strToExpr jlRegexReplace((string p),
+        str := jlRegexReplace((string p),
           jlString("//"),jlString("/"))
+        (ret := strToExpr(str)) case "failed" => str pretend OutputForm
+        coerce(ret)
       else
         jlRegexReplace(string(p),
           jlString("//"),jlString("/")) pretend OutputForm
@@ -599,7 +607,7 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
 ++ Related Constructors: Polynomial, NMUnivariatePolynomial
 ++ Also See:
 ++ AMS Classifications:
-++ Keywords: polynomial, multivariate
+++ Keywords: polynomial, multivariate, universal polynomial
 ++ References:
 ++ Description:
 ++   This type is a basic representation of generic sparse distributed
@@ -680,7 +688,7 @@ InnerNMPolynomial(R : NMRing, Ordering : JLSymbol) : Exports == Implementation w
     ++ vectorOfTerms(p) returns the Julia vector whose elements are terms of p.
     nemoPPrint : Boolean -> Boolean
     ++ nemoPPrint(bool) set the output mode. If set to false (default), use
-    ++ the FriCAS output mode. Otherwise use the Nemo one.
+    ++ the FriCAS output mode if possible. Otherwise use the Nemo one.
   Implementation ==> add
     import from JLUtilityFunctions
     import from JLStringUtilities
@@ -907,11 +915,18 @@ InnerNMPolynomial(R : NMRing, Ordering : JLSymbol) : Exports == Implementation w
     coerce(c : R) == jlref(concat([NUNPRing, "(", getind(c),")"]))
     coerce(p : %) : OutputForm ==
       -- reverse order (TODO)
-      if not nprint and R is NMInteger then
-        coerce strToPoly string p
-      else if not nprint and R is NMFraction(NMInteger) then
-        coerce strToPoly jlRegexReplace((string p),
+      if nprint then
+        jlRegexReplace(string(p),
+          jlString("//"),jlString("/")) pretend OutputForm
+      else if R is NMInteger then
+        str := string p
+        (ret := strToPoly str) case "failed" => str pretend OutputForm
+        coerce(ret)
+      else if R is NMFraction(NMInteger) then
+        str := jlRegexReplace((string p),
           jlString("//"),jlString("/"))
+        (ret := strToPoly str) case "failed" => str pretend OutputForm
+        coerce(ret)
       else
         jlRegexReplace(string(p),
           jlString("//"),jlString("/")) pretend OutputForm
@@ -932,7 +947,7 @@ InnerNMPolynomial(R : NMRing, Ordering : JLSymbol) : Exports == Implementation w
 ++   This type is a basic representation of generic sparse distributed
 ++  multivariable polynomial types using the Julia package Nemo
 ++  (AbstractAlgebra). It is parameterized by the coefficient ring.
--- Experimental domain.
+++ Experimental domain.
 -- TODO: eval, elt, subst, compose, evaluate, constructOrdered ???
 NMPolynomial(R : NMRing) == InnerNMPolynomial(R, coerce("lex")@JLSymbol)
 
@@ -1055,8 +1070,8 @@ InnerNMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
     leading_exponent_vector : % -> JLVector(JLObjInt64)
     ++ leading_exponent_vector(lp) returns the of leading exponent.
     nemoMPPrint : Boolean -> Boolean
-    ++ nemoMPPrint(bool) set the output mode. If set to false, use
-    ++ the FriCAS output mode (default). Otherwise use the Nemo one.
+    ++ nemoMPPrint(bool) set the output mode. If set to false (default), use
+    ++ the FriCAS output mode if possible. Otherwise use the Nemo one.
   Implementation ==> add
     import from JLUtilityFunctions
     import from JLStringUtilities
@@ -1304,11 +1319,18 @@ InnerNMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
     coerce(c : R) == jlref(concat([NMPRing, "[1](", getind(c),")"]))
     coerce(p : %) : OutputForm ==
       -- reverse order (TODO)
-      if not nprint and R is NMInteger then
-        coerce strToPoly string p
-      else if not nprint and R is NMFraction(NMInteger) then
-        coerce strToPoly jlRegexReplace((string p),
+      if nprint then
+        jlRegexReplace(string(p),
+          jlString("//"),jlString("/")) pretend OutputForm
+      else if R is NMInteger then
+        str := string p
+        (ret := strToPoly str) case "failed" => str pretend OutputForm
+        coerce(ret)
+      else if R is NMFraction(NMInteger) then
+        str := jlRegexReplace((string p),
           jlString("//"),jlString("/"))
+        (ret := strToPoly str) case "failed" => str pretend OutputForm
+        coerce(ret)
       else
         jlRegexReplace(string(p),
           jlString("//"),jlString("/")) pretend OutputForm
