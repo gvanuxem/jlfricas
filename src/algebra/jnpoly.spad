@@ -1055,15 +1055,15 @@ InnerNMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
     leading_exponent_vector : % -> JLVector(JLObjInt64)
     ++ leading_exponent_vector(lp) returns the of leading exponent.
     nemoMPPrint : Boolean -> Boolean
-    ++ nemoMPPrint(bool) set the output mode. If set to falsz, use
-    ++ the FriCAS output mode. Otherwise use the Nemo one (default).
+    ++ nemoMPPrint(bool) set the output mode. If set to false, use
+    ++ the FriCAS output mode (default). Otherwise use the Nemo one.
   Implementation ==> add
     import from JLUtilityFunctions
     import from JLStringUtilities
 
     jlInitialize(true)
     Rep := SExpression
-    nprint := true
+    nprint := false
 
     tmp : SExpression := devaluate(R)$Lisp
     op_of_Ring : Symbol := CAR(tmp)$Lisp
@@ -1522,7 +1522,6 @@ NMMultivariateLaurentPolynomial(R : NMRing,
     jvars := first lines formatExpression(lvars::OutputForm)$Format1D
     
     -- Our Julia ring
-    
     NMLPRing := concat([NMLPRing, concat(lvars)])
 
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
