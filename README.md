@@ -16,7 +16,7 @@ Take into account that this is absolutely not the official documentation even th
 
 ![Capture1](https://github.com/user-attachments/assets/85af3a0a-2920-41a0-9929-dfa914a906ae)
 
-Julia graphics and HyperDoc:
+Julia Plots and HyperDoc:
 
 ![Capture2](https://github.com/user-attachments/assets/c742dac3-2639-41d5-b8ea-1471c8162247)
 
@@ -31,7 +31,7 @@ Linear Algebra:
 For general installation instructions see INSTALL. For general documentation
 consult <https://fricas.github.io>.
 
-To build FriCAS with Julia support, the <code>julia</code> executable needs to be available in your PATH, and a simple <code>./configure --enable-julia && make && sudo make install</code> should do the trick. We require Julia 1.7 or higher. Please see https://julialang.org/downloads/ for instructions on how to obtain Julia for your system. The required Julia packages are (see the Julia package manager):
+To build FriCAS with Julia support, the <code>julia</code> executable needs to be available in your PATH, and a simple <code>./configure --enable-julia && make && sudo make install</code> should do the trick. We require Julia 1.7 or higher. Please see https://julialang.org/downloads/ for instructions on how to obtain Julia for your system. The required Julia packages are (see the Julia package manager or if you install them later using `jlAddPackage` restart jlFriCAS):
  - [Nemo](https://nemocas.github.io/Nemo.jl/stable/)
  - [Suppressor](https://github.com/JuliaIO/Suppressor.jl)
  - [SpecialFunctions](https://specialfunctions.juliamath.org/stable/)
