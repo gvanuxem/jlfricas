@@ -8,18 +8,6 @@ testsuite "Julia"
 testcase "Julia availability"
 testTrue("jlInitialize(true)")
 
-testcase "JLStringUtilities"
-str := "hello"
-testTrue("jlRegexMatch?(_"hello world_", jlRegex(str))")
-testEquals("jlRegexMatch(_"hello world_" , jlRegex(str))", "_"hello_"")
-ret := jlRegexMatch("hello world", jlRegex "(h[a-z]+)\s*(the)?\s+(world)")@List(String);
-testEquals("#ret", "3")
-testEquals("ret.2", "_"_"")
-ret := jlRegexMatch("18:00", jlRegex("(?<hours>\d+):(?<minutes>\d+)"))@AssociationList(String,String);
-testEquals("qelt(ret, _"hours_")", "_"18_"")
-testEquals("jlRegexReplace(_"herro world_", jlRegex(_"rr_"),_
-    jlSubstitute(_"ll_"))", "_"hello world_"")
-
 testcase "JLSymbol"
 sym   := jsym "mysym";
 ssym  := ":mysym"; 

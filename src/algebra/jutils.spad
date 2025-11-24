@@ -235,9 +235,9 @@ JLStringUtilities() : Exports == Implementation where
     jlRegexMatch    : (String, String, PI) -> List(String)
     ++ jlRegexMatch(s, regex, i) returns the matched regular expressions in s,
     ++ starting at index i.
-    jlRegexMatch    : (String, String) -> AssociationList(String,String)
+    jlRegexMatch    : (String, String) -> StringTable(String)
     ++ jlRegexMatch(s, regex) returns the matched regular expressions in s.
-    jlRegexMatch    : (String, String, PI) -> AssociationList(String,String)
+    jlRegexMatch    : (String, String, PI) -> StringTable(String)
     ++ jlRegexMatch(s, regex, i) returns the matched regular expressions in s,
     ++ starting at index i.
     jlRegexReplace  : (String, String, String) -> String
@@ -249,8 +249,7 @@ JLStringUtilities() : Exports == Implementation where
     import from JLUtilityFunctions
     import from JLStringUtilities
     import from JLSymbol
-    -- TODO: StringTable?
-    import from AssociationList(String,String)
+    import from StringTable(String)
 
     jlInitialize(true)
 
@@ -321,14 +320,13 @@ JLStringUtilities() : Exports == Implementation where
       jlEvalString("reg=nothing")@Void    
       resl
 
-    jlRegexMatch(s : String, r : String) : AssociationList(String,String) ==
+    jlRegexMatch(s : String, r : String) : StringTable(String) ==
       jlRegexMatch(s,r,1)
 
     jlRegexMatch(s : String, r : String, ind : PI) :
-        AssociationList(String,String) ==
+        StringTable(String) ==
       name : String  
-      --  StringTable?
-      resal : AssociationList(String, String) := table()
+      resal : StringTable(String) := table()
       estr : String :=
         concat(["reg=match(", r, ",_"",
           s, "_",", string(ind), ");"])
