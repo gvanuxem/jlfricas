@@ -122,6 +122,7 @@ NMExtendedPadicInteger(p : Integer, prec : Integer) :
     jbinbfunc(op,a,b) ==> jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
     Rep := SExpression
+    not prime?(p) => error "p must be a prime number"
     
     -- Set up the field
     EXPADICZP := concat(["PADICZ", string(p), "p",string(prec)])

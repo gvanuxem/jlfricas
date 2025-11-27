@@ -1296,7 +1296,7 @@ the contents.
 
 \par\noindent{\bf Command Description:}
 
-This command searches for {\it Pattern} in available docstrings and
+This command searches for {\it Pattern} in available Julia docstrings and
 displays entries found if any. No check is done at this level so if
 {\it Pattern} is not found, Julia will throw an error. Case is ignored.
 

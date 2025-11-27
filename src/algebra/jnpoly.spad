@@ -159,10 +159,11 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
       jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
     strToPoly(s : String) : Union(Polynomial(Fraction Integer), "failed") ==
+      jlRegexMatch?(s, jlRegex("[\[|{|O]")) => "failed"
       str := concat("0$Polynomial(Fraction Integer)+", s)
       af := parse(str)$InputForm
       av := interpret_in_new_env(af)$InputForm
-      retract(av)$AnyFunctions1(Polynomial(Fraction Integer))
+      retractIfCan(av)$AnyFunctions1(Polynomial(Fraction Integer))
 
     -- Set up the ring
     jlEvalString(concat([NUPRing,"=polynomial_ring(",
@@ -320,18 +321,9 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
     coerce(c : R) ==  jlref(concat([NUPRing,"[1](",getind(c),")"]))
     coerce(p : %) : OutputForm ==
       --outputForm(listOfTerms(p) pretend SUP, outputForm x) -- too expensive
-      if R is NMInteger then
-        str := string p
-        (ret := strToPoly(str)) case "failed" => str pretend OutputForm
-        coerce(ret)
-      else if R is NMFraction(NMInteger) then
-        str := jlRegexReplace((string p),
-          jlString("//"),jlString("/"))
-        (ret := strToPoly(str)) case "failed" => str pretend OutputForm
-        coerce(ret)
-      else
-        jlRegexReplace(string(p),
-          jlString("//"),jlString("/")) pretend OutputForm
+      str := jlRegexReplace(string(p), jlString("//"),jlString("/"))
+      (ret := strToPoly(str)) case "failed" => str pretend OutputForm
+      coerce(ret)
 
 )abbrev domain NULP NMUnivariateLaurentPolynomial
 ++ Univariate laurent polynomial domain using Julia AbstractAlgebra package 
@@ -427,12 +419,16 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
     ++ the leading term if necessary
     coerce   : Variable(x) -> %
     ++ coerce(x) converts the variable x to a Nemo univariate polynomial.
+    nemoULPPrint : Boolean -> Boolean
+    ++ nemoULPPrint(bool) set the output mode. If set to false, use
+    ++ the FriCAS output mode if possible. Otherwise use the Nemo one (default).
   Implementation ==> add
     import from JLUtilityFunctions
     import from JLStringUtilities
 
     jlInitialize(true)
     Rep := SExpression
+    nprint := true
 
     tmp : SExpression := devaluate(R)$Lisp
     op_of_Ring : Symbol := CAR(tmp)$Lisp
@@ -453,10 +449,16 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
       jlNMRing()$R, ",_"", string(x), "_")"])$String)
 
     strToExpr(s : String) : Union(Expression(Fraction Integer), "failed") ==
+      jlRegexMatch?(s, jlRegex("[\[|{|O]")) => "failed"
       str := concat("0$Expression(Fraction Integer)+", s)
       af := parse(str)$InputForm
       av := interpret_in_new_env(af)$InputForm
-      retract(av)$AnyFunctions1(Expression(Fraction Integer))
+      retractIfCan(av)$AnyFunctions1(Expression(Fraction Integer))
+
+    nemoULPPrint(b) ==
+      oldnprint := nprint
+      nprint:=b
+      oldnprint
 
     if R is NMFraction(NMInteger) then
       p : % + q : Fraction(Integer) == jbinfunc("+", p, coerce(q)@NRAT)
@@ -583,19 +585,11 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
     coerce(i : Integer) == jlref(concat([NULPRing,"[1](",string(i),")"]))
     coerce(c : R) == jlref(concat [NULPRing,"[1](", getind(c),")"])
     coerce(p : %) : OutputForm ==
-      --outputForm(listOfTerms(p) pretend SUP, outputForm x) -- too expensive
-      if R is NMInteger then
-        str := string p
-        (ret := strToExpr(str)) case "failed" => str pretend OutputForm
-        coerce(ret)
-      else if R is NMFraction(NMInteger) then
-        str := jlRegexReplace((string p),
-          jlString("//"),jlString("/"))
-        (ret := strToExpr(str)) case "failed" => str pretend OutputForm
-        coerce(ret)
+      str := jlRegexReplace(string(p), jlString("//"),jlString("/"))
+      if nprint then str pretend OutputForm
       else
-        jlRegexReplace(string(p),
-          jlString("//"),jlString("/")) pretend OutputForm
+        (ret := strToExpr(str)) case "failed" => str pretend OutputForm
+        coerce(ret)
 
 )abbrev domain INPOLY InnerNMPolynomial
 ++ Generic sparse multivariate polynomial domain using
@@ -715,6 +709,7 @@ InnerNMPolynomial(R : NMRing, Ordering : JLSymbol) : Exports == Implementation w
       jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
     strToPoly(s : String) : Union(Polynomial(Fraction Integer), "failed") ==
+      jlRegexMatch?(s, jlRegex("[\[|{|O]")) => "failed"
       str := concat("0$Polynomial(Fraction Integer)+", s)
       af := parse(str)$InputForm
       av := interpret_in_new_env(af)$InputForm
@@ -915,21 +910,11 @@ InnerNMPolynomial(R : NMRing, Ordering : JLSymbol) : Exports == Implementation w
     coerce(c : R) == jlref(concat([NUNPRing, "(", getind(c),")"]))
     coerce(p : %) : OutputForm ==
       -- reverse order (TODO)
-      if nprint then
-        jlRegexReplace(string(p),
-          jlString("//"),jlString("/")) pretend OutputForm
-      else if R is NMInteger then
-        str := string p
-        (ret := strToPoly str) case "failed" => str pretend OutputForm
-        coerce(ret)
-      else if R is NMFraction(NMInteger) then
-        str := jlRegexReplace((string p),
-          jlString("//"),jlString("/"))
-        (ret := strToPoly str) case "failed" => str pretend OutputForm
-        coerce(ret)
+      str := jlRegexReplace(string(p), jlString("//"),jlString("/"))
+      if nprint then str pretend OutputForm
       else
-        jlRegexReplace(string(p),
-          jlString("//"),jlString("/")) pretend OutputForm
+        (ret := strToPoly(str)) case "failed" => str pretend OutputForm
+        coerce(ret)
 
 )abbrev domain NPOLY NMPolynomial
 ++ Generic sparse multivariate polynomial domain using
@@ -1110,12 +1095,11 @@ InnerNMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
       jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
     strToPoly(s : String) : Union(Polynomial(Fraction Integer), "failed") ==
+      jlRegexMatch?(s, jlRegex("[\[|{|O]")) => "failed"
       str := concat("0$Polynomial(Fraction Integer)+", s)
       af := parse(str)$InputForm
       av := interpret_in_new_env(af)$InputForm
-      (p:=retractIfCan(av)$AnyFunctions1(Polynomial(Fraction Integer)))
-        case "failed" => "failed"
-      p
+      retractIfCan(av)$AnyFunctions1(Polynomial(Fraction Integer))
 
     jlEvalString(concat([NMPRing, "=polynomial_ring(",
       jlNMRing()$R,",", jvars,";internal_ordering=",
@@ -1319,21 +1303,11 @@ InnerNMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
     coerce(c : R) == jlref(concat([NMPRing, "[1](", getind(c),")"]))
     coerce(p : %) : OutputForm ==
       -- reverse order (TODO)
-      if nprint then
-        jlRegexReplace(string(p),
-          jlString("//"),jlString("/")) pretend OutputForm
-      else if R is NMInteger then
-        str := string p
-        (ret := strToPoly str) case "failed" => str pretend OutputForm
-        coerce(ret)
-      else if R is NMFraction(NMInteger) then
-        str := jlRegexReplace((string p),
-          jlString("//"),jlString("/"))
-        (ret := strToPoly str) case "failed" => str pretend OutputForm
-        coerce(ret)
+      str := jlRegexReplace(string(p), jlString("//"),jlString("/"))
+      if nprint then str pretend OutputForm
       else
-        jlRegexReplace(string(p),
-          jlString("//"),jlString("/")) pretend OutputForm
+        (ret := strToPoly(str)) case "failed" => str pretend OutputForm
+        coerce(ret)
 
 )abbrev domain NMP NMMultivariatePolynomial
 ++ Multivariate polynomial domain using the Julia package Nemo
@@ -1518,12 +1492,16 @@ NMMultivariateLaurentPolynomial(R : NMRing,
 
     --derivative : (%, OrderedVariableList(VarSet)) -> %
     --derivative : (%, NonNegativeInteger) -> %
+    nemoMLPPrint : Boolean -> Boolean
+    ++ nemoMLPPrint(bool) set the output mode. If set to false, use
+    ++ the FriCAS output mode if possible. Otherwise use the Nemo one (default).
   Implementation ==> add
     import from JLUtilityFunctions
     import from JLStringUtilities
 
     jlInitialize(true)
     Rep := SExpression
+    nprint := true
 
     tmp : SExpression := devaluate(R)$Lisp
     op_of_Ring : Symbol := CAR(tmp)$Lisp
@@ -1555,6 +1533,14 @@ NMMultivariateLaurentPolynomial(R : NMRing,
 
     jlEvalString(concat([NMLPRing, "=laurent_polynomial_ring(",
       jlNMRing()$R, ",", jvars,")"])$String)
+
+    strToExpr(s : String) : Union(Expression(Fraction Integer), "failed") ==
+      jlRegexMatch?(s, jlRegex("[\[|{|O]")) => "failed"
+      str := concat("0$Expression(Fraction Integer)+", s)
+      af := parse(str)$InputForm
+      av := interpret_in_new_env(af)$InputForm
+      retractIfCan(av)$AnyFunctions1(Expression(Fraction Integer))
+
     if R is NMFraction(NMInteger) then
       p : % + q : Fraction(Integer) == jbinfunc("+", p, coerce(q)@NRAT)
       p : % * q : Fraction(Integer) == jbinfunc("*", p, coerce(q)@NRAT)
@@ -1564,6 +1550,10 @@ NMMultivariateLaurentPolynomial(R : NMRing,
 
     jlNMRing() == NMLPRing
     jlObject() == jlEvalString(concat(["string(", NMLPRing,")"]))@String
+    nemoMLPPrint(b) ==
+      oldnprint := nprint
+      nprint:=b
+      oldnprint
 
     0 == jlref(concat(["zero(",NMLPRing,"[1])"]))
     1 == jlref(concat(["one(",NMLPRing,"[1])"]))
@@ -1759,5 +1749,9 @@ NMMultivariateLaurentPolynomial(R : NMRing,
     coerce(i : Integer) == jlref(concat([NMLPRing, "[1](", string(i), ")"]))
     coerce(c : R) == jlref(concat([NMLPRing, "[1](", getind(c),")"]))
     coerce(p : %) : OutputForm ==
-      jlRegexReplace(string(p),
-        jlString("//"),jlString("/")) pretend OutputForm
+      str := jlRegexReplace(string(p), jlString("//"),jlString("/"))
+      if nprint then str pretend OutputForm
+      else
+        (ret := strToExpr(str)) case "failed" => str pretend OutputForm
+        coerce(ret)
+
