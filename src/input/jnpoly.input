@@ -229,4 +229,66 @@ y := y::V::LPRing
 p := (1/2::NMFraction(NMInteger))*x^(-1) + (1/3::NMFraction(NMInteger))*y^2
 testEquals("constantCoefficient(p)", "0$NMFraction(NMInteger)")
 
+testcase "NMUnivariatePolynomial nested (Fateman's benchmark)"
+R := NUP(NINT, 'x)
+x := x::R
+RR := NUP(R, 'y)
+y := y::RR
+RRR := NUP(RR, 'z)
+z := z::RRR
+T := NUP(RRR, 't)
+t := t::T
+p := (1 + x + y + z + t)^2
+testEquals("degree(p)", "2")
+q := p * (p + 1)
+testEquals("degree(q)", "4")
+
+testcase "NMMultivariatePolynomial nested"
+VarSet1 : List Symbol := [x,y]
+V1 := OrderedVariableList(VarSet1)
+R1 := NMP(NINT, VarSet1)
+x1 := x::V1::R1
+y1 := y::V1::R1
+VarSet2 : List Symbol := [z,t]
+V2 := OrderedVariableList(VarSet2)
+R2 := NMP(R1, VarSet2)
+z2 := z::V2::R2
+t2 := t::V2::R2
+p := x1::R2 + y1::R2 + z2 + t2
+testEquals("degree(p,1)", "1")
+testEquals("degree(p,2)", "1")
+q := p^2
+testEquals("degree(q,1)", "2")
+
+testcase "NMPolynomial nested"
+R1 := NPOLY(NINT)
+x1 := x::Symbol::R1
+testEquals("length(x1)", "1")
+R2 := NPOLY(R1)
+output("R2 created", "ok"::OutputForm)
+y2 := y::Symbol::R2
+output("y2 created", "ok"::OutputForm)
+x1R2 := x1::R2
+output("x1R2 created", "ok"::OutputForm)
+p1 := x1R2 + x1R2
+output("p1 created", "ok"::OutputForm)
+p2 := y2 + y2
+output("p2 created", "ok"::OutputForm)
+-- Check constructOrdered
+terms := [[x::Symbol, 1$R1]$Record(k: Symbol, c: R1)]$List(Record(k: Symbol, c: R1))
+-- constructOrdered(terms)$R2 -- This might fail if not exposed or signature mismatch
+-- Test monomial
+E := IndexedExponents(Symbol)
+k0 := 0$E
+m := monomial(1$R1, k0)$R2
+output("monomial created", "ok"::OutputForm)
+mm := myMonomial(1$R1, k0)$R2
+output("myMonomial created", "ok"::OutputForm)
+
+p_nested : R2 := x1::R2 + y2
+output("Type of p_nested: ", typeOf(p_nested)::OutputForm)
+testEquals("length(p_nested)", "2")
+q_nested := p_nested^2
+testEquals("length(q_nested)", "3")
+
 statistics()

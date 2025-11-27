@@ -11,6 +11,19 @@ NMAlgebraicallyClosedFunctionSpace(R : Join(Comparable, IntegralDomain)):
 ++ Univariate polynomial domain using the Julia package Nemo
 ++ Author: G. Vanuxem
 ++ Date Created: March, 2024
+++ Nested polynomials Fatemans's benchmark:
+++ \example{R:=NUP(NINT,'x)}
+++ \example{x:=x::R}
+++ \example{RR := NUP(R,'y)}
+++ \example{y:=y::RR}
+++ \example{RRR := NUP(RR,'z)}
+++ \example{z:=z::RRR}
+++ \example{T:=NUP(RRR,'t)}
+++ \example{t:=t::T}
+++ \example{f := 1 + x + y + z + t}
+++ \example{p :=  f^30;}
+++ \example{)set message time on}
+++ \example{p*(p + 1);}
 -- TODO: eval, elt, subst, compose, evaluate (elt???)
 NMUnivariatePolynomial(R : NMRing, x : Symbol):
       Exports == Implementation where
@@ -166,8 +179,15 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
       retractIfCan(av)$AnyFunctions1(Polynomial(Fraction Integer))
 
     -- Set up the ring
-    jlEvalString(concat([NUPRing,"=polynomial_ring(",
-      jlNMRing()$R, ",_"", string(x), "_")"]))
+    tuple : Boolean := jbinbfunc("isa", jobject(jlNMRing()$R)$JLObject,
+      jobject("Tuple")$JLObject)
+    if tuple then
+      jlEvalString(concat([NUPRing,"=polynomial_ring(",
+        jlNMRing()$R, "[1],_"", string(x), "_")"]))
+    else
+      jlEvalString(concat([NUPRing,"=polynomial_ring(",
+        jlNMRing()$R, ",_"", string(x), "_")"]))
+
     if R is NMInteger then
       roots(p) ==
         jlref(concat(["roots(QQBar,",
@@ -445,8 +465,14 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
       jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
     -- Set up the ring
-    jlEvalString(concat([NULPRing,"=laurent_polynomial_ring(",
-      jlNMRing()$R, ",_"", string(x), "_")"])$String)
+    tuple : Boolean := jbinbfunc("isa", jobject(jlNMRing()$R)$JLObject,
+      jobject("Tuple")$JLObject)
+    if tuple then
+      jlEvalString(concat([NULPRing,"=laurent_polynomial_ring(",
+        jlNMRing()$R, "[1],_"", string(x), "_")"])$String)
+    else
+      jlEvalString(concat([NULPRing,"=laurent_polynomial_ring(",
+        jlNMRing()$R, ",_"", string(x), "_")"])$String)
 
     strToExpr(s : String) : Union(Expression(Fraction Integer), "failed") ==
       jlRegexMatch?(s, jlRegex("[\[|{|O]")) => "failed"
@@ -708,16 +734,24 @@ InnerNMPolynomial(R : NMRing, Ordering : JLSymbol) : Exports == Implementation w
     jbinbfunc(op,a,b) ==>
       jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
+    -- Set up the ring
+    tuple : Boolean := jbinbfunc("isa", jobject(jlNMRing()$R)$JLObject,
+      jobject("Tuple")$JLObject)
+    if tuple then
+      jlEvalString(concat([NUNPRing, "=universal_polynomial_ring(",
+        jlNMRing()$R,"[1];internal_ordering=",
+          string(Ordering),")"]))
+    else
+      jlEvalString(concat([NUNPRing, "=universal_polynomial_ring(",
+        jlNMRing()$R,";internal_ordering=",
+          string(Ordering),")"]))
+
     strToPoly(s : String) : Union(Polynomial(Fraction Integer), "failed") ==
       jlRegexMatch?(s, jlRegex("[\[|{|O]")) => "failed"
       str := concat("0$Polynomial(Fraction Integer)+", s)
       af := parse(str)$InputForm
       av := interpret_in_new_env(af)$InputForm
       retractIfCan(av)$AnyFunctions1(Polynomial(Fraction Integer))
-   
-    jlEvalString(concat([NUNPRing, "=universal_polynomial_ring(",
-      jlNMRing()$R,";internal_ordering=",
-        string(Ordering),")"]))
 
     if R is NMFraction(NMInteger) then
       p : % + q : Fraction(Integer) == jbinfunc("+", p, coerce(q)@NRAT)
@@ -757,6 +791,30 @@ InnerNMPolynomial(R : NMRing, Ordering : JLSymbol) : Exports == Implementation w
     a : % ^ i : PI  == jbinfunc("^", a, coerce(i pretend Integer)@NINT)
     a : % ^ i : NNI  == jbinfunc("^", a, coerce(i pretend Integer)@NINT)
     exactDivide(p,q) == jbinfunc("divexact", p, q)
+    (x : %) + (y : %) == jbinfunc("+", x, y)
+    (x : %) - (y : %) == jbinfunc("-", x, y)
+    - (x : %)   == junfunc("-", x)
+    (x : %) * (y : %) == jbinfunc("*", x, y)
+
+    monomial(c : R, k : IndexedExponents(Symbol)) : % ==
+      res : % := c::%
+      while k ~= 0 repeat
+        v := leadingSupport(k)
+        e := leadingCoefficient(k)
+        res := res * (v::%)^e
+        k := reductum(k)
+      res
+
+    myMonomial(c : R, k : IndexedExponents(Symbol)) : % ==
+      monomial(c, k)
+
+    constructOrdered(terms : List Record(k: IndexedExponents(Symbol), c: R)) : % ==
+      res : % := 0
+      for t in terms repeat
+        res := res + monomial(t.c, t.k)
+      res
+
+    construct(terms) == constructOrdered(terms)
 
     (p1:% exquo p2:%) ==
       ret : JLObjTuple := jbinfunc("divides", p1, p2)
@@ -1094,16 +1152,24 @@ InnerNMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
     jbinbfunc(op,a,b) ==>
       jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
+    -- Set up the ring
+    tuple : Boolean := jbinbfunc("isa", jobject(jlNMRing()$R)$JLObject,
+      jobject("Tuple")$JLObject)
+    if tuple then
+      jlEvalString(concat([NMPRing, "=polynomial_ring(",
+        jlNMRing()$R,"[1],", jvars,";internal_ordering=",
+          string(Ordering),")"])$String)
+    else
+      jlEvalString(concat([NMPRing, "=polynomial_ring(",
+        jlNMRing()$R,",", jvars,";internal_ordering=",
+          string(Ordering),")"])$String)
+
     strToPoly(s : String) : Union(Polynomial(Fraction Integer), "failed") ==
       jlRegexMatch?(s, jlRegex("[\[|{|O]")) => "failed"
       str := concat("0$Polynomial(Fraction Integer)+", s)
       af := parse(str)$InputForm
       av := interpret_in_new_env(af)$InputForm
       retractIfCan(av)$AnyFunctions1(Polynomial(Fraction Integer))
-
-    jlEvalString(concat([NMPRing, "=polynomial_ring(",
-      jlNMRing()$R,",", jvars,";internal_ordering=",
-        string(Ordering),")"])$String)
 
     if R is NMFraction(NMInteger) then
       p : % + q : Fraction(Integer) == jbinfunc("+", p, coerce(q)@NRAT)
@@ -1531,8 +1597,15 @@ NMMultivariateLaurentPolynomial(R : NMRing,
     jbinbfunc(op,a,b) ==>
       jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
-    jlEvalString(concat([NMLPRing, "=laurent_polynomial_ring(",
-      jlNMRing()$R, ",", jvars,")"])$String)
+    -- Set up the ring
+    tuple : Boolean := jbinbfunc("isa", jobject(jlNMRing()$R)$JLObject,
+      jobject("Tuple")$JLObject)
+    if tuple then
+      jlEvalString(concat([NMLPRing, "=laurent_polynomial_ring(",
+        jlNMRing()$R, "[1],", jvars,")"])$String)
+    else
+      jlEvalString(concat([NMLPRing, "=laurent_polynomial_ring(",
+        jlNMRing()$R, ",", jvars,")"])$String)
 
     strToExpr(s : String) : Union(Expression(Fraction Integer), "failed") ==
       jlRegexMatch?(s, jlRegex("[\[|{|O]")) => "failed"
