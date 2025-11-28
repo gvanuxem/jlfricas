@@ -248,6 +248,18 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
     a : % ^ i : PI  == jlref(concat [getind(a),"^", string(i)])
     a : % ^ i : NNI  == jlref(concat [getind(a),"^", string(i)])
     exactDivide(p,q) == jbinfunc("divexact", p, q)
+
+    monomial(c : R, n : NonNegativeInteger) : % ==
+      jlref(concat(["monomial(", getind(c::%), ",", string(n), ")"]))
+
+    constructOrdered(terms : List Record(k: NonNegativeInteger, c: R)) : % ==
+      res : % := 0
+      for t in terms repeat
+        res := res + monomial(t.c, t.k)
+      res
+
+    construct(terms) == constructOrdered(terms)
+
     (p1:% exquo p2:%) ==
       ret : JLObjTuple := jbinfunc("divides", p1, p2)
       not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
@@ -791,10 +803,6 @@ InnerNMPolynomial(R : NMRing, Ordering : JLSymbol) : Exports == Implementation w
     a : % ^ i : PI  == jbinfunc("^", a, coerce(i pretend Integer)@NINT)
     a : % ^ i : NNI  == jbinfunc("^", a, coerce(i pretend Integer)@NINT)
     exactDivide(p,q) == jbinfunc("divexact", p, q)
-    (x : %) + (y : %) == jbinfunc("+", x, y)
-    (x : %) - (y : %) == jbinfunc("-", x, y)
-    - (x : %)   == junfunc("-", x)
-    (x : %) * (y : %) == jbinfunc("*", x, y)
 
     monomial(c : R, k : IndexedExponents(Symbol)) : % ==
       res : % := c::%
@@ -804,9 +812,6 @@ InnerNMPolynomial(R : NMRing, Ordering : JLSymbol) : Exports == Implementation w
         res := res * (v::%)^e
         k := reductum(k)
       res
-
-    myMonomial(c : R, k : IndexedExponents(Symbol)) : % ==
-      monomial(c, k)
 
     constructOrdered(terms : List Record(k: IndexedExponents(Symbol), c: R)) : % ==
       res : % := 0
@@ -1209,6 +1214,23 @@ InnerNMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
     a : % ^ i : PI  == jbinfunc("^", a, coerce(i pretend Integer)@NINT)
     a : % ^ i : NNI  == jbinfunc("^", a, coerce(i pretend Integer)@NINT)
     exactDivide(p,q) == jbinfunc("divexact", p, q)
+
+    monomial(c : R, k : IndexedExponents(OrderedVariableList(VarSet))) : % ==
+      res : % := c::%
+      while k ~= 0 repeat
+        v := leadingSupport(k)
+        e := leadingCoefficient(k)
+        res := res * (v::%)^e
+        k := reductum(k)
+      res
+
+    constructOrdered(terms : List Record(k: IndexedExponents(OrderedVariableList(VarSet)), c: R)) : % ==
+      res : % := 0
+      for t in terms repeat
+        res := res + monomial(t.c, t.k)
+      res
+
+    construct(terms) == constructOrdered(terms)
 
     (p1:% exquo p2:%) ==
       ret : JLObjTuple := jbinfunc("divides", p1, p2)
@@ -1648,6 +1670,23 @@ NMMultivariateLaurentPolynomial(R : NMRing,
     a : % ^ i : NNI  == jbinfunc("^", a, coerce(i pretend Integer)@NINT)
     a : % ^ i : INT  == jbinfunc("^", a, coerce(i pretend Integer)@NINT)
     exactDivide(p,q) == jbinfunc("divexact", p, q)
+
+    monomial(c : R, k : IndexedExponents(OrderedVariableList(VarSet))) : % ==
+      res : % := c::%
+      while k ~= 0 repeat
+        v := leadingSupport(k)
+        e := leadingCoefficient(k)
+        res := res * (v::%)^e
+        k := reductum(k)
+      res
+
+    constructOrdered(terms : List Record(k: IndexedExponents(OrderedVariableList(VarSet)), c: R)) : % ==
+      res : % := 0
+      for t in terms repeat
+        res := res + monomial(t.c, t.k)
+      res
+
+    construct(terms) == constructOrdered(terms)
 
     -- Nemo interface (AbstractAlgebra)
     symbols() == jlref(concat(["symbols(", NMLPRing,"[1])"]))

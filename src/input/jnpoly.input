@@ -265,15 +265,10 @@ R1 := NPOLY(NINT)
 x1 := x::Symbol::R1
 testEquals("length(x1)", "1")
 R2 := NPOLY(R1)
-output("R2 created", "ok"::OutputForm)
 y2 := y::Symbol::R2
-output("y2 created", "ok"::OutputForm)
 x1R2 := x1::R2
-output("x1R2 created", "ok"::OutputForm)
 p1 := x1R2 + x1R2
-output("p1 created", "ok"::OutputForm)
 p2 := y2 + y2
-output("p2 created", "ok"::OutputForm)
 -- Check constructOrdered
 terms := [[x::Symbol, 1$R1]$Record(k: Symbol, c: R1)]$List(Record(k: Symbol, c: R1))
 -- constructOrdered(terms)$R2 -- This might fail if not exposed or signature mismatch
@@ -281,12 +276,8 @@ terms := [[x::Symbol, 1$R1]$Record(k: Symbol, c: R1)]$List(Record(k: Symbol, c: 
 E := IndexedExponents(Symbol)
 k0 := 0$E
 m := monomial(1$R1, k0)$R2
-output("monomial created", "ok"::OutputForm)
-mm := myMonomial(1$R1, k0)$R2
-output("myMonomial created", "ok"::OutputForm)
 
 p_nested : R2 := x1::R2 + y2
-output("Type of p_nested: ", typeOf(p_nested)::OutputForm)
 testEquals("length(p_nested)", "2")
 q_nested := p_nested^2
 testEquals("length(q_nested)", "3")
