@@ -575,6 +575,26 @@ WSNumericalSpecialFunctions(R : WSNumber) : Exports ==Implementation where
       ret : R := jterfunc("W_"PolyLog_"(", n,p,z)
       jtypeassert(z,ret)
       ret
+    weierstrassP(g2,g3,z) ==
+      ret := jbinfunc("W_"WeierstrassP_"(", z, jWSList([g2,g3])@WSList(R))
+      jtypeassert(z,ret)
+      ret
+    weierstrassPPrime(g2,g3,z) ==
+      ret := jbinfunc("W_"WeierstrassPPrime_"(", z, jWSList([g2,g3])@WSList(R))
+      jtypeassert(z,ret)
+      ret
+    weierstrassSigma(g2,g3,z) ==
+      ret := jbinfunc("W_"WeierstrassSigma_"(", z, jWSList([g2,g3])@WSList(R))
+      jtypeassert(z,ret)
+      ret
+    weierstrassZeta(g2,g3,z) ==
+      ret := jbinfunc("W_"WeierstrassZeta_"(", z, jWSList([g2,g3])@WSList(R))
+      jtypeassert(z,ret)
+      ret
+    weierstrassPInverse(g2,g3,z) ==
+      ret := jbinfunc("W_"InverseWeierstrassP_"(", z, jWSList([g2,g3])@WSList(R))
+      jtypeassert(z,ret)
+      ret
     ramanujanTau(n) ==
       ret : R := junfunc("W_"RamanujanTau_"(", n)
       jtypeassert(n,ret)

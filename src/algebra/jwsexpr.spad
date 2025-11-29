@@ -157,6 +157,19 @@ WSExpression() : Exports == Implementation where
     ++ lerchPhi(z,s,a) returns Lerch's transcendent phi of arguments.
     polylog : (%, %, %) -> %
     ++ polylog(n,p,x) is the Nielsen generalized polylogarithm function.
+    weierstrassP : (%, %, %) -> %
+    ++ weierstrassP(g2, g3, z) is the Weierstrass P function.
+    weierstrassPPrime : (%, %, %) -> %
+    ++ weierstrassPPrime(g2, g3, z) is the derivative of Weierstrass P
+    ++ function.
+    weierstrassSigma : (%, %, %) -> %
+    ++ weierstrassSigma(g2, g3, z) is the Weierstrass Sigma function.
+    weierstrassZeta : (%, %, %) -> %
+    ++ weierstrassZeta(g2, g3, z) is the Weierstrass Zeta function.
+    weierstrassPInverse : (%, %, %) -> %
+    ++ weierstrassPInverse(g2, g3, z) is the inverse of Weierstrass
+    ++ P function, defined by the formula
+    ++ \spad{weierstrassP(g2, g3, weierstrassPInverse(g2, g3, z)) = z}.
     ramanujanTau : % -> %
     ++ ramanujanTau(n) returns the Ramanujan tau of n.
     ramanujanTauL : % -> %
@@ -1184,6 +1197,7 @@ WSExpression() : Exports == Implementation where
     ++ \example{jWSExpr "Factorial[5]"}
     ++ \example{jWSExpr "3.14159"}
     ++ \example{jlWSDateString(jWSExpr "Tomorrow")}
+    ++ \example{toString jWSExpr "TextSentences[WikipediaData[_"Sun_"]][[;; 40]]"}
   Implementation ==> JLObject add
     import from JLUtilityFunctions
     import from JLStringUtilities
@@ -1250,6 +1264,7 @@ WSExpression() : Exports == Implementation where
     WT : WSSymbol := WTrue()
     WF : WSSymbol := WFalse()
     WR : WSSymbol := WRational()
+    --WC : WSSymbol := WComplex()
 
     defined?(x) == junfunc("W_"NameQ_"(", x) = WT
     member?(list, expr) == jbinfunc("W_"MemberQ_"(", list, expr) = WT 
@@ -1361,6 +1376,17 @@ WSExpression() : Exports == Implementation where
     dawson(x)   == junfunc("W_"DawsonF_"(",x)
 
     polylog(x,y) == jbinfunc("W_"PolyLog_"(", x, y)
+
+    weierstrassP(g2,g3,z) ==
+      jbinfunc("W_"WeierstrassP_"(", z, jWSList([g2,g3])@WSList(%))
+    weierstrassPPrime(g2,g3,z) ==
+      jbinfunc("W_"WeierstrassPPrime_"(", z, jWSList([g2,g3])@WSList(%))
+    weierstrassSigma(g2,g3,z) ==
+      jbinfunc("W_"WeierstrassSigma_"(", z, jWSList([g2,g3])@WSList(%))
+    weierstrassZeta(g2,g3,z) ==
+      jbinfunc("W_"WeierstrassZeta_"(", z, jWSList([g2,g3])@WSList(%))
+    weierstrassPInverse(g2,g3,z) ==
+      jbinfunc("W_"InverseWeierstrassP_"(", z, jWSList([g2,g3])@WSList(%))
 
     riemannZeta(x) == junfunc("W_"Zeta_"(",x)
     riemannZeta(x,y) == jbinfunc("W_"Zeta_"(",x, y)
@@ -2049,7 +2075,8 @@ WSExpression() : Exports == Implementation where
       jbinfunc("W_"QuantityForm_"(", expr, form)
     coerce(expr) : OutputForm ==
       jlHead(expr) = WS => coerce(string(expr))
-      rational?(expr) => coerce(coerce(expr)@WSRational)
+      --jlHead(expr) = WC => coerce(expr pretend WSComplex)?? => "()"
+      jlHead(expr)= WR => coerce(expr pretend WSRational)
       pagew := string(_$LINELENGTH$Lisp pretend Integer - 2)
       sexpr := toString(expr, jWSExpr concat("PageWidth -> ", pagew))
       str : String := jlEvalString(concat(["replace(_"", sexpr,
