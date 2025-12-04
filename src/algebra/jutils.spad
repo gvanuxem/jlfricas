@@ -1,0 +1,565 @@
+)abbrev package JUF JLUtilityFunctions
+++ Utility package for Julia related data.
+++ Author: G. Vanuxem
+++ Date Created:
+++ Description:
+++  This package provides different Julia utility functions.
+JLUtilityFunctions() : Exports == Implementation where
+  NNI       ==> NonNegativeInteger
+  PI        ==> PositiveInteger
+  JSYM      ==> JLSymbol
+  JI64      ==> JLInt64
+  JF32      ==> JLFloat32
+  JF64      ==> JLFloat64
+  STR       ==> String
+  Exports ==> with
+    jlInitialize  : Boolean -> Boolean
+    ++ jlInitialize(init) initializes the Julia environment if init is true,
+    ++ otherwise clears the Julia environment. Normally, it should
+    ++ not be used since it is automatically called.
+    jlUsing      : String -> Boolean
+    ++ jlUsing(modpack) loads the module or package modpack
+    ++ and makes its exported names available.
+    ++ Returns false if it can not be loaded.
+    jlImport     : String -> Boolean
+    ++ jlImport(modpackfunc) imports the module, package or function
+    ++ modpackfunc and makes it available.
+    ++ Returns false if it can not be imported.
+    jlAddPackage  : String -> Void
+    ++ jlAddPackage(package) add package to Julia.
+    jlInclude    : String -> Boolean
+    ++ jlInclude(file.jl) loads and evaluates the content of the Julia
+    ++ file file.jl in the current global scope.
+    jlGCCollect : () -> Void
+    ++ jlGCCollect() forces a Julia garbage collector run.
+    jlDefined?    : JLSymbol -> Boolean
+    ++ jlDefined?(sym) checks whether or not sym is defined in Julia.
+    jlDefined?    : String -> Boolean
+    ++ jlDefined?(str) checks whether or not str is defined in Julia.
+    jlDocumentation  : Symbol -> Void
+    ++ jlDocumentation(op) shows the documentation of the
+    ++ operation op. Trivial implementation.
+    -- TODO: Use StyledStrings and Julia ouput in another operation?
+    jlSeed! : JLInt64 -> Void
+    ++ jlSeed!(n) reseeds the Julia random number generator
+    ++ if applicable (Some random number generators don't accept a seed).
+    jlRandomString : PI -> String
+    ++ jlRandomString(n) returns a random string of n characters.
+    jlEvalString   : STR -> Void
+    ++ jlEvalString(str) evaluates str in Julia with no output.
+    jlEvalString   : STR -> Boolean
+    ++ jlEvalString(str) evaluates str in Julia,
+    ++ where the output is a Boolean.
+    jlEvalString   : STR -> JI64
+    ++ jlEvalString(str) evaluates str in Julia,
+    ++ where the output is a JLInt64.
+    jlEvalString   : STR -> Integer
+    ++ jlEvalString(str) evaluates str in Julia,
+    ++ where the output is an Integer.
+    jlEvalString   : STR -> NonNegativeInteger
+    ++ jlEvalString(str) evaluates str in Julia,
+    ++ where the output is an Non Negative Integer.
+    jlEvalString   : STR -> PositiveInteger
+    ++ jlEvalString(str) evaluates str in Julia,
+    ++ where the output is an Positive Integer.
+    jlEvalString   : STR -> STR
+    ++ jlEvalString(str) evaluates str in Julia,
+    ++ where the output is a String.
+    jlEvalString   : STR -> JF32
+    ++ jlEvalString(str) evaluates str in Julia,
+    ++ where the output is a JLFloat32.
+    jlEvalString   : STR -> JF64
+    ++ jlEvalString(str) evaluates str in Julia,
+    ++ where the output is a JLFloat64.
+    QQ : Fraction(Integer) -> NMFraction(NMInteger)
+    ++ QQ(q) returns q as a Nemo rational.
+    ++ Convenience function.
+    ZZ : Integer -> NMInteger
+    ++ ZZ(i) returns i as a Nemo integer.
+    ++ Convenience function.
+  Implementation ==> add
+    import from String
+    import from JLStringUtilities
+
+    jlInitialize(true)
+    
+    defined?(func) ==>
+      not jlDefined?(func) =>
+        error concat(string(func), " is not defined in Julia")
+
+    jlInitialize(init) ==
+      if init then init_julia_env()$Lisp
+      else clear_julia_env()$Lisp
+
+    jlUsing(m) == jl_using_package(m)$Lisp
+    jlImport(m) == jl_import_symbol(m)$Lisp
+    jlInclude(file) == jl_include_file(file)$Lisp
+    jlGCCollect() == jl_gc_collect()$Lisp
+
+    jlDefined?(sym : JLSymbol) ==
+      jlEvalString(concat(["isdefined(Main,", string(sym),")"]))
+    jlDefined?(str : String) ==
+      lsym := split(str, char ".")
+      (size:=#lsym) = 1 => jlEvalString(concat(["isdefined(Main,",
+        string(coerce(str)@JSYM),")"]))
+      sym := coerce(last lsym)@JSYM
+      nspace : String := first lsym
+      for i in 2..(size-1) repeat nspace := concat(concat(nspace, "."), lsym.i)
+      jlEvalString(concat(["isdefined(", nspace, "," string(sym),")"]))
+
+    jlAddPackage(str : String) ==
+      jlEvalString(concat(["import Pkg;Pkg.add(_"", str,"_")"]))
+
+    jlSeed!(n) == jlEvalString(concat ["Random.seed!(", string(n),")"])
+
+    jlRandomString(n) ==
+      jl_string_eval_string(concat ["randstring(", string(n),")"])$Lisp
+
+    jlDocumentation(op) ==
+      ops := getDatabase("o")$OperationsQuery
+      req := elt(ops,equation('name, string op)$QueryEquation)
+      -- See alql.spad
+      docs : DataList(String) := elt(req,'doc)
+      origs : DataList(String) := elt(req,'origin)
+      types : DataList(String) := elt(req, 'type)
+      outl : List(String) := []
+      for i in 1 .. #docs repeat
+        -- clean it up first
+        -- TODO: too expensive. 'insert'?
+        wdqstr : String := ""
+        for j in 1..#docs.i repeat
+          if docs.i.j = char "_"" then
+            wdqstr := concat(wdqstr, "\_"")
+          else
+            wdqstr := concat(wdqstr, docs.i.j)
+        -- remove some HyperDoc LaTeX commands
+        outl := concat(outl,jlEvalString(concat[ _
+          "replace(raw_"", wdqstr, _
+          "_", _"{}_" => _"_",", _
+          "_"\\undocumented_" => _"is undocumented._",", _
+          "_"{\\em _" => _"_",", _
+          "_"{\\it _" => _"_",", _
+          "_"\\TeX{_" => _"TeX: _",", _
+          "_"\\LaTeX{_" => _"LaTeX: _",", _
+          "_"\\space_" => _" _"," _
+          "_"\\tab_" => _"    _"," _
+          "_"\\newline_" => _"\n_"," _
+          "_"\\blankline_" => _"\n\n_"," _
+          -- "_"\\spadignore_" => _"Ignore: _"," _
+          "r_"\\indented{\d+}{_" =>_"_"," _
+          "r_"\\spadopFrom{([\w!\?\+\-\*\\=]+)}{(\w+)}_" => s_"\1 from \2_",", _
+          "r_"\\spadfunFrom{([\w!\?]+)}{(\w+)}_" => s_"\1 from \2_",", _
+          "r_"\\spad\w*{_" => _"_",", _
+          "r_"\\example{_" => s_"Example: _"," _
+          "r_"[{|}|\\|\_"|}]_" =>_"_")"])@String)
+        outl := concat(outl,
+          [" Signature: ", remove(char("_""), types.i)])
+        outl := concat(outl,
+          [" From: ", remove(char("_""), origs.i)])
+        concat!(outl, newline()$Character::String)
+      output(pile(outl pretend List(OutputForm)))$OutputPackage
+
+    jlEvalString(s : STR)   : Void    == jl_eval_string(s)$Lisp
+    jlEvalString(s : STR)   : Boolean == jl_bool_eval_string(s)$Lisp
+    jlEvalString(s : STR)   : JI64    == jl_int64_eval_string(s)$Lisp
+    jlEvalString(s : STR)   : Integer == jl_int64_eval_string(s)$Lisp
+    jlEvalString(s : STR)   : NNI     == jl_int64_eval_string(s)$Lisp
+    jlEvalString(s : STR)   : PI      == jl_int64_eval_string(s)$Lisp
+    jlEvalString(s : STR)   : STR     == jl_string_eval_string(s)$Lisp
+    jlEvalString(s : STR)   : JF32    == jl_flt_eval_string(s)$Lisp
+    jlEvalString(s : STR)   : JF64    == jl_dbl_eval_string(s)$Lisp
+    ZZ(i) == jlref(concat(["ZZ(",string(i),")"]))
+    QQ(q) ==
+      jlref(concat(["QQ(",string(numer(q)),"//",string(denom(q)),")"]))
+
+)abbrev package JSTRU JLStringUtilities
+++ Utility package for strings using Julia facilities
+++ Author: G. Vanuxem
+++ Date Created: Oct, 2024
+++ Description:
+++  This package provides Julia facilities to work with
+++  strings.
+JLStringUtilities() : Exports == Implementation where
+  STR  ==> String
+  PI   ==> PositiveInteger
+  NNI  ==> NonNegativeInteger
+  Exports ==> with
+    jlMessageStyled : String -> Void
+    ++ jlMessageStyled(message) print the message with formatted 
+    ++ style within braces (I am {red:here}).
+    ++ For example:
+    ++ \example{jlMessageStyled("{red:■} {green:■} {yellow:■} {blue:■} {magenta:■} {cyan:■}")}
+    jlMessageStyled : (String, JLSymbol) -> Void
+    ++ jlMessageStyled(message, color) print the message with formatted 
+    ++ `color` (english color).
+    ++ For example:
+    ++ \example{jlMessageStyled("I AM HERE!!!", "red")}
+    jlToLatex : String -> String
+    ++ jlToLatex(str) converts the string str to LaTeX
+    ++ for supported expressions.
+    ++ The Julia package Latexify needs to be installed.
+    ++ jlToLatex("sin(sqrt(2))") => "$\sin\left( \sqrt{2} \right)$"
+    jlSplit  :(String, String, NNI) -> List(String)
+    ++ jlSplit(str, delims, n) split str with delimiter(s) delims
+    ++ (a string or a regular expression). Return a list of size n.
+    ++ Parse entirely str if n = 0.
+    jlSplit  :(String, String) -> List(String)
+    ++ jlSplit(str, delims) split str with delimiter(s) delims
+    ++ (a string or a regular expression). Equivalent to
+    ++ jlSplit(str, delims, 0).
+    jlRegex  : String -> String
+    ++ jlRegex(str) returns the String corresponding to a Julia
+    ++ regular expression, that is, "r_"str_"". Convenience function.
+    jlSubstitute  : String -> String
+    ++ jlSubstitute(str) returns the String corresponding to a Julia
+    ++ subtitute expression, that is, "s_"str_"". Convenience function.
+    jlLatex  : String -> String
+    ++ jlLatex(str) returns the String corresponding to a Julia
+    ++ LaTeX expression, that is, "L"str"" if your Julia installation
+    ++ supports it (LaTeXStrings package). Convenience function.
+    jlStyled  : String -> String
+    ++ jlStyled(str) returns the String corresponding to a Julia
+    ++ styled expression, that is, "styled_"str_"" if your Julia support it.
+    ++ (StyledStrings is an official package). Convenience function.
+    jlString : String -> String
+    ++ jlString(str) constructs an escaped string usable by the Julie parser.
+    jlRegexMatch?   : (String, String) -> Boolean
+    ++ jlRegexMatch?(s, regex) checks if the regular expression matches in s.
+    jlRegexMatch    : (String, String) -> String
+    ++ jlRegexMatch(s, regex) returns the matched regular expression in s.
+    jlRegexMatch    : (String, String, PI) -> String
+    ++ jlRegexMatch(s, regex, i) returns the matched regular expression in s,
+    ++ starting at index i.
+    jlRegexMatch    : (String, String) -> List(String)
+    ++ jlRegexMatch(s, regex) returns the matched regular expressions in s.
+    jlRegexMatch    : (String, String, PI) -> List(String)
+    ++ jlRegexMatch(s, regex, i) returns the matched regular expressions in s,
+    ++ starting at index i.
+    jlRegexMatch    : (String, String) -> StringTable(String)
+    ++ jlRegexMatch(s, regex) returns the matched regular expressions in s.
+    jlRegexMatch    : (String, String, PI) -> StringTable(String)
+    ++ jlRegexMatch(s, regex, i) returns the matched regular expressions in s,
+    ++ starting at index i.
+    jlRegexReplace  : (String, String, String) -> String
+    ++ jlRegexReplace(str, regex, subst) will replace captured regular expressions
+    ++ in str with subst. More information in String documentation of Julia.
+    ++ For example:
+    ++  jlRegexReplace("hey", jlRegex("$"), jlSubstitute(" you!"))
+  Implementation ==> add
+    import from JLUtilityFunctions
+    import from JLStringUtilities
+    import from JLSymbol
+    import from StringTable(String)
+
+    jlInitialize(true)
+
+    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+
+    if not jlUsing "StyledStrings" then
+      error "The Julia package StyledStrings must be installed"
+    if not jlUsing "Latexify" then
+      jlMessageStyled("The Julia package Latexify must be installed",
+        jsym "green")
+      jlMessageStyled(
+        "You will not be able to latexitfy a string 'jlToLatex'", jsym "green")
+    jlRegex(s) == concat ["r_"", s, "_""]
+    jlSubstitute(s) == concat ["s_"", s, "_""]
+    jlLatex(s) == concat ["L_"", s, "_""]
+    jlStyled(s) == concat ["styled_"", s, "_""]
+    jlMessageStyled(mess, color) ==
+      jlEvalString(concat ["printstyled(" "_"\n     ", mess,
+        "_";color=", string(color), ")"])
+    jlString(str) == concat(["_"", str, "_""])
+    jlMessageStyled(mess) ==
+      jl_eval_string(concat(["print(styled_"\n     ", mess,"_")"]))$Lisp
+    jlToLatex(str) ==
+      string(jlref(concat(["latexify(", jlString(str),").s"]))$JLObject)
+
+    jlSplit(str, delims, n) == 
+      resl : List(String) := []
+      if #delims = 1 or (delims.1 ~= char("r") and delims.2 ~= char"_"") then
+        delims := jlRegex delims
+      estr : String :=
+        concat(["splt=split(_"", str, "_",", delims, ", limit=", 
+          string(n),");"])
+      jlEvalString(estr)@Void
+      n: Integer := jlEvalString("length(splt)")
+      for i in 1..n repeat
+        estr := concat(["string(if((ret=splt[",string(i), _
+          "])===nothing) _"_" else ret end)"])
+        resl := concat!(resl, jlEvalString(estr)@String)
+      jlEvalString("splt=nothing")@Void     
+      resl
+
+    jlSplit(str, delims) == jlSplit(str, delims, 0)
+
+    jlRegexMatch?(s, r)  ==
+      estr : String := concat(
+        ["occursin(", r, ",", string(s::OutputForm)$OutputFormTools,")"])
+      jlEvalString(estr)@Boolean
+
+    jlRegexMatch(s, r) : String == jlRegexMatch(s, r, 1)
+
+    jlRegexMatch(s, r, ind) : String ==
+      estr : String := concat(
+        ["string(match(", r, ",_"", s, "_",", string(ind), ").match)"])
+      jlEvalString(estr)@String
+
+    jlRegexMatch(s, r) : List(String) == jlRegexMatch(s, r, 1)
+
+    jlRegexMatch(s, r, ind) : List(String) ==
+      resl : List(String) := []
+      estr : String :=
+        concat(["reg=match(", r, ",_"", s, "_",", string(ind),");"])
+      jlEvalString(estr)@Void
+      n := jlEvalString("size(reg.captures,1)")@Integer
+      for i in 1..n repeat
+        estr := concat(["string(if((ret=reg.captures[", string(i), _
+          "])===nothing) _"_" else ret end)"])
+        resl := concat!(resl, jlEvalString(estr)@String)   
+      jlEvalString("reg=nothing")@Void    
+      resl
+
+    jlRegexMatch(s : String, r : String) : StringTable(String) ==
+      jlRegexMatch(s,r,1)
+
+    jlRegexMatch(s : String, r : String, ind : PI) :
+        StringTable(String) ==
+      name : String  
+      resal : StringTable(String) := table()
+      estr : String :=
+        concat(["reg=match(", r, ",_"",
+          s, "_",", string(ind), ");"])
+      jlEvalString(estr)@Void
+      -- TODO: check bad regex, actually Julia throws error(s).
+      -- if (reg===nothing) ...
+      n := jlEvalString("size(reg.captures,1)")@Integer
+      for i in n..1 by -1 repeat
+        if not empty?(name:=jlEvalString(concat(["keys(reg)[",
+            string(i), "];"]))@String) then
+          estr := concat(["string(reg.captures[",string(i), "])"])  
+          resal.name := jlEvalString(estr)@String
+      jlEvalString("reg=nothing")@Void
+      resal
+
+    jlRegexReplace(str, r, s) ==
+      t : String := concat(["replace(_"", str,
+        "_",", r, "=>", s, ")"])
+      jlEvalString(t)@String
+
+)abbrev domain JOBDLINK JLObjDynamicLinker
+++ Domain for dynamic linking shared libraries using Julia
+++ Author: G.Vanuxem
+++ Date Created: Oct. 2024
+++ Description:
+++  Generic Julia objects used for dynamically linking shared libraries.
+JLObjDynamicLinker() : Exports == Implementation where
+  INT  ==> Integer
+  NNI  ==> NonNegativeInteger
+  JOBJ ==> JLObject
+  STR  ==> String
+  Exports ==> JLObjectType with
+    jlDlCApply : (%, JOBJ) -> JOBJ
+    ++ jlDlCApply(func,x) applies the function pointer func to x.
+    ++ The Julia type of x must be compatible with the Libdl
+    ++ Julia module. Type of the returned value is assumed to be
+    ++ the same than the type of x. For example:
+    ++ \example{libm:= jlDlOpen "libopenlibm"}
+    ++ \example{squareRoot:=jlDlSym(libm,jsym(sqrt))}
+    ++ \example{jlDlCApply(squareRoot,jobject("2."))}
+    jlDlCApply : (%, STR, JOBJ, STR) -> JOBJ
+    ++ jlDlCApply(func, ctype, x, xctype) applies the function
+    ++ pointer func to x given its Julia C type (xctype) or its
+    ++ supported Julia type, for example "Float64" or "Cdouble".
+    ++ Returned value is assumed to be a C type ctype
+    ++ (or any Julia supported types). For example:
+    ++ \example{libm:= jlDlOpen "libopenlibm"}
+    ++ \example{squareRoot:= jlDlSym(libm,jsym(sqrt))}
+    ++ \example{jlDlCApply(squareRoot, "Cdouble", jobject("2."), "Cdouble")}
+    ++ \example{sinus:=jlDlSym(libm,jsym(sin))}
+    ++ \example{jlDlCApply(sinus,"Float64", jobject("2."), "Float64")}
+    jlDlCApply : (%, JOBJ, JOBJ) -> JOBJ
+    ++ jlDlCApply(func,x,y) applies the function pointer func to x and y.
+    ++ Type of the returned value is assumed to be the same than the type of x.
+    ++ For example:
+    ++ \example{libgsl:= jlDlOpen "libgsl"}
+    ++ \example{ipower:=jlDlSym(libgsl, gsl_pow_int)}
+    ++ \example{jlDlCApply(ipower,jobject("2.0"),jobject("7"))}
+    jlDlCApply : (%, STR, JOBJ, STR, JOBJ, STR) -> JOBJ
+    ++ jlDlCApply(func, ctype, x, xctype, y, yctype) applies the
+    ++ function pointer func to x and y given their Julia C type
+    ++ (xctype and yctype) or their supported Julia type,
+    ++ for example "Float64" or "Cdouble".
+    ++ Returned value is assumed to be a C type ctype
+    ++ (or any Julia supported types).
+    jlDlCApply : (%, JOBJ, JOBJ, JOBJ) -> JOBJ
+    ++ jlDlCApply(func,x,y,z) applies the function pointer func to x, y and z.
+    ++ Returned value is assumed the same type than type of x. Use jlDlCApply
+    ++ with type options if necessary.
+    ++ For example with GSL:
+    ++ \example{gsl:= jlDlOpen "libgsl"}
+    ++ \example{hypot3:= jlDlSym(gsl,jsym(gsl_hypot3))}
+    ++ \example{jlDlCApply(hypot3,jobject("2."),jobject("7."),jobject("9.0"))}
+    ++ \example{jlDlCApply(hypot3,jfloat64("2."),jfloat64("7."),9.0::JLObjFloat64)}
+    jlDlCApply : (%, STR, JOBJ, STR, JOBJ, STR, JOBJ, STR) -> JOBJ
+    ++ jlDlCApply(func, ctype, x, xctype, y, yctype, z, zctype) applies the
+    ++ function pointer func to x, y and z given its Julia C type
+    ++ (xctype, yctype and zctype) or its supported Julia type,
+    ++ for example "Float64" or "Cdouble".
+    ++ Returned value is assumed to be a C type ctype
+    ++ (or any Julia supported types).
+    jlDlOpen : STR -> %
+    ++ jlDlOpen(lib) opens/loads the dynamic shared library lib and
+    ++ returns a reference pointer that can
+    ++ be used to obtain adresses of its exported symbols using jlDlSym.
+    ++ It is up to the user to unload the shared object when it is
+    ++ no longer used. Does not throw an error if the library can not
+    ++ be loaded and returns 'nothing' in this case. Use
+    ++ the nothing? operation on the returned value if necessary.
+    jlDlOpen : (STR, JOBJ) -> %
+    ++ jlDlOpen(lib, flags) opens/loads the dynamic shared library lib and
+    ++ returns a reference pointer that can
+    ++ be used to obtain adresses of its exported symbols using jlDlSym.
+    ++ It is up to the user to unload the shared object when it is
+    ++ no longer used. Does not throw an error if the library can not
+    ++ be loaded by default and returns nothing in this case. Use
+    ++ the nothing? operation on the returned value if necessary.
+    ++ The Julia module Libdl must be loaded/imported before using
+    ++ this function.
+    ++ \example{jlUsing "Libdl"} -- for flags
+    ++ \example{jlDlOpen("libopenlibm", jobject "Libdl.RTLD_NOW")}
+    ++ flags can be one or combinaison of:
+    ++ RTLD_DEEPBIND
+    ++ RTLD_FIRST
+    ++ RTLD_GLOBAL
+    ++ RTLD_LAZY
+    ++ RTLD_LOCAL
+    ++ RTLD_NODELETE
+    ++ RTLD_NOLOAD
+    ++ RTLD_NOW
+    ++ Note: the Julia module Libdl must be loaded or imported before using
+    ++ these flags.
+    jlDlOpen : (STR, Boolean) -> %
+    ++ jlDlOpen(lib, throw) opens/loads the dynamic shared library lib and
+    ++ returns a reference pointer that can
+    ++ be used to obtain adresses of its exported symbols using jlDlSym.
+    ++ It is up to the user to unload the shared object when it is
+    ++ no longer used. 'throw' determines whether or not Julia throws an error
+    ++ if the library can not be loaded.
+    ++ \example{jlDlOpen("libopenlibm", true)}
+    jlDlOpen : (STR, JOBJ, Boolean) -> %
+    ++ jlDlOpen(lib, flags, throw) opens/loads the dynamic shared library lib and
+    ++ returns a reference pointer that can
+    ++ be used to obtain adresses of its exported symbols using jlDlSym.
+    ++ It is up to the user to unload the shared object when it is
+    ++ no longer used. Does not throw an error if the library can not
+    ++ be loaded by default and returns nothing in this case. Use
+    ++ the nothing? operation on the returned value if necessary.
+    ++ 'throw' determines whether or not Julia throws an error
+    ++ if the library can not be loaded. The Julia module must be
+    ++ be loaded/imported before using this function.
+    ++ \example{jlDlOpen("libopenlibm", jobject "Libdl.RTLD_NOW", false)}
+    ++ flags can be one or combinaison of:
+    ++ RTLD_DEEPBIND
+    ++ RTLD_FIRST
+    ++ RTLD_GLOBAL
+    ++ RTLD_LAZY
+    ++ RTLD_LOCAL
+    ++ RTLD_NODELETE
+    ++ RTLD_NOLOAD
+    ++ RTLD_NOW
+    ++ Note: the Julia module Libdl must be loaded or imported before using
+    ++ these flags.
+    jlDlClose : % -> Boolean
+    ++ jlDlClose(libPtr) unload explicitely the shared library
+    ++ referenced by libPtr.
+    jlDlSym : (%, JLSymbol) -> %
+    ++ jlDlSym(lib, sym) returns the pointer to the symbol sym in
+    ++ the library referenced by lib. See jlDlOpen.
+    ++ \example{lnk:=jdlink "libjulia"}
+    ++ \example{sym := jlDlSym(lnk,"jl_eval_string")}
+    ++ \example{TODO}
+    jlDlList : () -> JOBJ
+    ++ jlDlList() returns the list of loaded shared objects
+    ++ by the currect processus in a JLObject referencing
+    ++ a Julia vector of strings.
+    jlDlPath : String -> String
+    ++ jlDlPath(lib) returns the path of the library lib.
+    ++ Julia warns if it is not found and returns an empty string.
+    jlDlPath : % -> String
+    ++ jlDlPath(lib) returns the path of the loaded library lib.
+    jlDlFindLib : String -> String
+    ++ jlDlFindLib(lib) returns the the library lib.
+    ++ Returns an empty string if it is not found.
+    jdlink : STR -> %
+    ++ jdlink(lib) opens/loads the dynamic shared library lib and
+    ++ returns a reference pointer that can
+    ++ be used to obtain adresses of its exported symbols using jlDlSym.
+    ++ It is up to the user to unload the shared object when it is
+    ++ no longer necessary using jlDlClose.
+    ++ \example{libm := jdlink "libopenlibm"}
+    ++ Throws a Julia error if it is not found. Use jlDlOpen
+    ++ for a version with options and/or without Julia errors.
+  Implementation ==> add
+    import from JLUtilityFunctions
+    import from String
+    import from JLObject
+
+    jlInitialize(true)
+    jlUsing("Libdl")
+
+    Rep := SExpression
+    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+    jlDlCApply(func, x) ==
+      type := jlType x
+      jlref(concat ["ccall(", getind(func),
+        ",", type, ",(", type, ",),", getind(x),")"])
+    jlDlCApply(func, type, x, xtype : String) ==
+        jlref(concat ["ccall(", getind(func),
+          ",", type, ",(", xtype, ",),", getind(x),")"])
+    jlDlCApply(func, x : JOBJ, y : JOBJ) ==
+      xtype := jlType x
+      ytype := jlType y
+      jlref(concat ["ccall(", getind(func),
+        ",", xtype, ",(", xtype, ",", ytype, "),", getind(x), ",", getind(y),")"])
+    jlDlCApply(func, type, x, xtype, y, ytype) ==
+        jlref(concat ["ccall(", getind(func),
+          ",", type, ",(", xtype, ",", ytype, "),", getind(x), ",", getind(y),")"])
+    jlDlCApply(func, x, y, z) ==
+      xtype := jlType x
+      ytype := jlType y
+      ztype := jlType z
+      jlref(concat ["ccall(", getind(func), 
+        ",", xtype, ",(", xtype, ",", ytype, "," , ztype,"),",
+          getind(x), ",", getind(y), ",", getind(z), ")"])
+    jlDlCApply(func, type, x, xtype,  y, ytype, z, ztype) ==
+      jlref(concat ["ccall(", getind(func), 
+        ",", type, ",(", xtype, ",", ytype, "," , ztype,"),",
+          getind(x), ",", getind(y), ",", getind(z), ")"])
+    jlDlOpen(library) ==
+      jlref(concat(["Libdl.dlopen(_"", library, "_",throw_error=false)"]))
+    jlDlOpen(library, throw : Boolean) ==
+      if throw then
+        jlref(concat(["Libdl.dlopen(_"", library, "_")"]))
+      else
+        jlref(concat(["Libdl.dlopen(_"", library, "_",throw_error=false)"]))
+    jlDlOpen(library, flags : JOBJ) ==
+      jlref(concat(["Libdl.dlopen(_"", library, "_",", getind(flags), ")"]))
+    jlDlOpen(library, flags : JOBJ, throw : Boolean) ==
+      if throw then
+        jlref(concat(["Libdl.dlopen(_"", library, "_",", getind(flags), ")"]))
+      else
+        jlref(concat(["Libdl.dlopen(_"", library, "_",", 
+          getind(flags), ",throw_error=false)"]))
+    jlDlClose(library) ==
+      jlEvalString(concat ["Libdl.dlclose(", getind(library),")"])@Boolean
+    jlDlSym(library, sym) == jlref(concat(["Libdl.dlsym(",
+      getind(library),",", string(sym),")"]))
+    jlDlList() == jobject("dllist()")
+    jlDlPath(lib : String) ==
+      jlEvalString(concat ["dlpath(_"", lib, "_")"])@String
+    jlDlPath(lib : %) ==
+      jlEvalString(concat ["dlpath(", getind(lib), ")"])@String
+    jlDlFindLib(str) ==
+      jlEvalString(concat ["find_library(_"", str, "_")"])@String
+    jdlink(str: String) == jlref(concat(["Libdl.dlopen(_"", str, "_")"]))

@@ -1,0 +1,57 @@
+name: FriCAS CI on arm64|intel macOS (with Julia support - SBCL based)
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    strategy:
+        fail-fast: false
+        matrix:
+          os: [macos-15-intel, macos-14]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    env:
+      SBCL_VER: ${{ matrix.os == 'macos-15-intel' && '2.2.9' || '2.4.0' }}
+      ARCH: ${{ matrix.os == 'macos-15-intel' && 'x86-64' || 'arm64' }}
+    steps:
+    - uses: actions/checkout@v4
+    - uses: julia-actions/setup-julia@latest
+
+    - name: download and install prerequities
+      run: |
+        wget https://downloads.sourceforge.net/project/sbcl/sbcl/${SBCL_VER}/sbcl-${SBCL_VER}-${ARCH}-darwin-binary.tar.bz2
+        tar xvf sbcl-${SBCL_VER}-${ARCH}-darwin-binary.tar.bz2
+        cd sbcl-${SBCL_VER}-${ARCH}-darwin && sudo ./install.sh
+        brew install sphinx-doc
+
+    - name: install Julia libraries
+      run: julia -e "import Pkg;Pkg.add(\"Nemo\");Pkg.add(\"Suppressor\");Pkg.add(\"SpecialFunctions\");Pkg.add(\"DataFrames\")"
+
+    - name: configure
+      run: |
+        mkdir ../build && cd ../build
+        ../jlfricas/configure --with-lisp=sbcl --with-gmp=`brew --prefix` --enable-julia  --enable-mathlink || cat config.log
+
+    - name: make
+      run: |
+        cd ../build && make all htmldoc
+
+    - name: make check
+      run: cd ../build && make check -j4
+
+    - name: Create artifact archives
+      run: |
+        cd ../build
+        test "$GITHUB_REF_TYPE" != "tag" && rm -r target/*/src
+        make dist-macos
+        cp -v `brew list gmp | grep libgmp.10.dylib` FriCAS.app/Contents/Resources/usr/local/lib/fricas/target/*/lib/
+        ## reduce chance of error caused by "hdiutil: Resource busy"
+        make dist-macos-dmg || make dist-macos-dmg
+        mv FriCAS.dmg ../jlfricas/FriCAS-macOS-julia-${ARCH}-${{ github.sha }}.dmg
+
+    - name: Upload macOS binary
+      uses: actions/upload-artifact@v4
+      with:
+        name: FriCAS-macOS-julia-${{ env.ARCH }}-binary
+        path: FriCAS-macOS-julia-${{ env.ARCH }}-${{ github.sha }}.dmg
+

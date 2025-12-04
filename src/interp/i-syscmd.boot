@@ -1026,11 +1026,11 @@ helpSpad2Cmd args ==
 
   sayBrightly '"Available help topics for system commands are:"
   sayBrightly '""
-  sayBrightly '" boot   cd     clear    close     compile   display"
-  sayBrightly '" edit   fin    frame    help      history   library"
-  sayBrightly '" lisp   load   ltrace   pquit     quit      read"
-  sayBrightly '" set    show   spool    synonym   system    trace"
-  sayBrightly '" undo   what"
+  sayBrightly '" boot    cd      clear    close    compile   display"
+  sayBrightly '" edit    fin     frame    help     history   jlapropos"
+  sayBrightly '" jldoc   julia   juliad   library  lisp      load"
+  sayBrightly '" ltrace  pquit   quit     read     set       show"
+  sayBrightly '" spool   synonym system   trace    undo      what"
   sayBrightly '""
   sayBrightly '"Issue _")help help_" for more information about the help command."
 
@@ -1878,7 +1878,9 @@ quitSpad2Cmd() ==
   sayKeyedMsg("S2IZ0032",NIL)
   terminateSystemCommand()
 
-leaveScratchpad () == QUIT()
+leaveScratchpad () ==
+  clear_julia_env()
+  QUIT()
 
 --% )version
 version() == FORMAT(true, '"~S~%",
@@ -1906,7 +1908,7 @@ readSpad2Cmd l ==
   if SYMBOLP(l) then l := SYMBOL_-NAME(l)
   not(STRINGP(l)) => BREAK()
 
-  devFTs := '("input" "boot" "lisp")
+  devFTs := '("input" "boot" "lisp" "jl")
   fileTypes :=
       $UserLevel = 'interpreter or $UserLevel = 'compiler => '("input")
       devFTs
@@ -1941,6 +1943,10 @@ read_or_compile(quiet, i_name) ==
         LOAD(fricas_compile_fasl(input_file, ffile))
     type = $lisp_bin_filetype => LOAD(input_file)
     type = '"input" => ncINTERPFILE(input_file, not(quiet))
+    if type = '"jl" then
+        if not _*JULIA_-INITIALIZED_* then
+            init_julia_env()
+        _*JULIA_-INITIALIZED_* => jl_include_file input_file
 
 --% )show
 
@@ -2601,6 +2607,16 @@ handleNoParseCommands(unab, string) ==
     else npsystem(unab, string)
   unab = "synonym" =>
     npsynonym(unab, (null spaceIndex => '""; SUBSEQ(string, spaceIndex+1)))
+  member(unab, '( jlapropos _
+    jldoc  _
+    julia  _
+    juliad  )) =>
+      if (null spaceIndex) then
+        sayKeyedMsg("S2IV0005", NIL)
+        nil
+      else
+        funName := INTERN CONCAT('"np",STRING unab)
+        FUNCALL(funName, SUBSEQ(string, spaceIndex+1)) 
   null spaceIndex =>
     FUNCALL unab
   member(unab, '( quit     _
@@ -2636,6 +2652,27 @@ stripLisp str ==
 nplisp str ==
     ans := EVAL(READ_-FROM_-STRING(str))
     FORMAT(true, '"~&Value = ~S~%", ans)
+
+npjlapropos str ==
+  if not _*JULIA_-INITIALIZED_* then
+    init_julia_env() 
+  jl_eval_string CONCAT('"Base.Docs.apropos(",str,")")
+
+npjldoc str ==
+  if not _*JULIA_-INITIALIZED_* then
+    init_julia_env() 
+  jl_eval_string CONCAT('"display(@doc ",str,")")
+
+npjulia str ==
+  if not _*JULIA_-INITIALIZED_* then
+    init_julia_env()
+  jl_eval_string str
+  TERPRI()
+
+npjuliad str ==
+  if not _*JULIA_-INITIALIZED_* then
+    init_julia_env() 
+  jl_eval_string CONCAT('"display(",str,")")
 
 npsystem(unab, str) ==
   spaceIndex := SEARCH('" ", str)

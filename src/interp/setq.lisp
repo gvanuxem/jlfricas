@@ -100,6 +100,10 @@
    (|frame|                          . |interpreter|)
    (|help|                           . |interpreter|)
    (|history|                        . |interpreter|)
+   (|jlapropos|                      . |interpreter|)
+   (|jldoc|                          . |interpreter|)
+   (|julia|                          . |development|)
+   (|juliad|                         . |development|)
    (|lisp|                           . |development|)
    (|library|                        . |interpreter|)
    (|load|                           . |interpreter|)
@@ -126,6 +130,10 @@
     |copyright|
     |credits|
     |fin|
+    |jlapropos|
+    |jldoc|
+    |julia|
+    |juliad|
     |lisp|
     |piles|
     |pquit|
@@ -175,6 +183,8 @@
        (|fortran|    . "set output fortran")
        (|h|          . "help")
        (|hd|         . "system hypertex &")
+       (|ju|         . "julia")
+       (|jud|        . "juliad")
        (|kclam|      . "boot clearClams ( )")
        (|killcaches| . "boot clearConstructorCaches()")
        (|prompt|     . "set message prompt")
