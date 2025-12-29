@@ -517,12 +517,12 @@ extern int space_width;
 
 /***      default fonts      ***/
 
-#define RmFontDefault         "-adobe-courier-medium-r-normal--18-*-*-*-m-*-iso8859-1"
-#define TtFontDefault         "-adobe-courier-medium-r-normal--18-*-*-*-m-*-iso8859-1"
-#define ActiveFontDefault     "-adobe-courier-bold-r-normal--18-*-*-*-m-*-iso8859-1"
-#define fricas_font_default      "-adobe-courier-bold-o-normal--18-*-*-*-m-*-iso8859-1"
-#define EmphasizeFontDefault  "-adobe-courier-medium-o-normal--18-*-*-*-m-*-iso8859-1"
-#define BoldFontDefault       "-adobe-courier-bold-r-normal--18-*-*-*-m-*-iso8859-1"
+#define RmFontDefault         "-adobe-courier-medium-r-normal--18-*-*-*-m-*-iso10646-1"
+#define TtFontDefault         "-adobe-courier-medium-r-normal--18-*-*-*-m-*-iso10646-1"
+#define ActiveFontDefault     "-adobe-courier-bold-r-normal--18-*-*-*-m-*-iso10646-1"
+#define fricas_font_default   "-adobe-courier-bold-o-normal--18-*-*-*-m-*-iso10646-1"
+#define EmphasizeFontDefault  "-adobe-courier-medium-o-normal--18-*-*-*-m-*-iso10646-1"
+#define BoldFontDefault       "-adobe-courier-bold-r-normal--18-*-*-*-m-*-iso10646-1"
 
 
 

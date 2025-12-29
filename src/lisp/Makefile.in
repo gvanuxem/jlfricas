@@ -4,7 +4,7 @@
 # of Lisp, which is used during the rest of build process
 
 fricas_quiet_flags = @fricas_quiet_flags@
-lisp_flavor=@fricas_lisp_flavor@
+lisp_flavor = $(word 1, @fricas_lisp_flavor@)
 fricas_gcl_rsym_hack = @fricas_gcl_rsym_hack@
 fricas_c_runtime_extra = @fricas_c_runtime_extra@
 fricas_algebra_optimization = @fricas_algebra_optimization@
@@ -12,6 +12,10 @@ fricas_has_directory_operations = @fricas_has_directory_operations@
 GMP_WRAP_SO_TARGET = @GMP_WRAP_SO_TARGET@
 GMP_LIBDIR = @GMP_LIBDIR@
 GMP_EXT = @GMP_EXT@
+JULIA_WRAP_SO_TARGET=@JULIA_WRAP_SO_TARGET@
+JULIA_LIBDIR = @JULIA_LIBDIR@
+JULIA_EXT=@JULIA_EXT@
+JULIA_LISP_REQUIREMENTS=@JULIA_LISP_REQUIREMENTS@
 LISP_CMD = $(FRICAS_LISP) $(fricas_quiet_flags)
 
 ## Create a fresh image for building interpsys and FRICASsys
@@ -25,13 +29,21 @@ lisp_DEPENDENCIES = $(build_libdir)/cfuns-c.o \
 		    $(build_libdir)/sockio-c.o \
 		    $(build_libdir)/libspad.a
 
-ifeq ($(lisp_flavor),sbcl)
+ifeq ($(lisp_flavor),SBCL)
 NUM_GMP = num_gmpx.lisp
+NUM_JULIA = julia.lisp julia_sbcl.lisp
 else
-ifeq ($(lisp_flavor),openmcl)
+ifeq ($(lisp_flavor),Clozure)
 NUM_GMP = num_gmpx.lisp
+NUM_JULIA = julia.lisp julia_ccl.lisp
+else
+ifeq ($(lisp_flavor),GNU)
+NUM_GMP =
+NUM_JULIA = julia.lisp julia_gcl.lisp
 else
 NUM_GMP =
+NUM_JULIA =
+endif
 endif
 endif
 
@@ -53,13 +65,17 @@ lisp_c_objects = \
 
 $(OUT)/lisp$(EXEEXT): do_it.$(lisp_flavor)
 
-do_it.gcl: fricas-lisp.lisp fricas-package.lisp fricas-config.lisp \
+do_it.GNU: fricas-lisp.lisp fricas-package.lisp fricas-config.lisp \
            primitives.lisp $(srcdir)/../lib/bsdsignal.c \
            $(srcdir)/../lib/cfuns-c.c $(srcdir)/../lib/sockio-c.c
 	$(fricas_gcl_rsym_hack)
 	echo '(setq si::*optimize-maximum-pages* nil)' \
 	     '(load "fricas-package.lisp") (load "fricas-config.lisp")' \
+         '${JULIA_LISP_REQUIREMENTS}' \
 	     '(load "fricas-lisp.lisp")' \
+	     '#+:fricas_has_julia' \
+	     '(load (compile-file "julia.lisp"))' \
+         '(load (compile-file "julia_gcl.lisp"))' \
 	     '(setq compiler::*default-system-p* t)' \
 	     '(let ((compiler::*cc* (concatenate (quote string) ' \
 	         'compiler::*cc* " -I../../config -I$(srcdir)/../include ' \
@@ -94,6 +110,15 @@ num_gmpx.lisp: $(srcdir)/num_gmp.lisp
 	     echo '(defun uninstall-gmp-multiplication() nil)') > $@ ; \
 	fi
 
+julia.lisp: $(srcdir)/julia.lisp
+	cp $< $@
+
+julia_sbcl.lisp: $(srcdir)/julia_sbcl.lisp
+	cp $< $@
+
+julia_ccl.lisp: $(srcdir)/julia_ccl.lisp
+	cp $< $@
+
 fricas-config.lisp:
 	echo '(in-package "FRICAS-LISP")' > $@
 	echo '(defparameter algebra-optimization' \
@@ -104,8 +129,14 @@ fricas-config.lisp:
 	             '(push :fricas_has_remove_directory *features*))' \
 	       >> $@ ; \
 	fi
+	if  [ x$(JULIA_WRAP_SO_TARGET) != x ] ; then \
+	    echo '(if (not (member :fricas_has_julia' \
+                          ' *features*)) ' \
+	             '(push :fricas_has_julia *features*))' \
+	       >> $@ ; \
+	fi
 
-do_it.ecl: fricas-lisp.lisp fricas-package.lisp fricas-config.lisp \
+do_it.ECL: fricas-lisp.lisp fricas-package.lisp fricas-config.lisp \
            primitives.lisp
 	echo "(in-package \"FRICAS-LISP\")" > fricas-ecl.lisp
 	echo "(defvar *fricas-extra-c-files* (quote (" \
@@ -135,13 +166,21 @@ do_it.ecl: fricas-lisp.lisp fricas-package.lisp fricas-config.lisp \
 	     '(make-program "${OUT}/lisp$(EXEEXT)" nil)' | $(FRICAS_LISP)
 	$(STAMP) $@
 
-do_it.sbcl do_it.clisp do_it.openmcl do_it.lispworks do_it.cmucl: \
+do_it.SBCL do_it.CLISP do_it.Clozure do_it.lispworks do_it.CMUCL: \
    fricas-lisp.lisp fricas-package.lisp fricas-config.lisp $(NUM_GMP) \
-   primitives.lisp
+   $(NUM_JULIA) primitives.lisp
 	echo '(load "fricas-package.lisp")' \
 	    '(load "fricas-config.lisp")' \
-            '#+(or :sbcl :openmcl) (load (compile-file "num_gmpx.lisp"))' \
-	    '(load (compile-file "fricas-lisp.lisp"))' \
+	     '#+(or :sbcl :openmcl)' \
+	     '(load (compile-file "num_gmpx.lisp"))' \
+       '${JULIA_LISP_REQUIREMENTS}' \
+	     '(load (compile-file "fricas-lisp.lisp"))' \
+	     '#+:fricas_has_julia' \
+	     '(load (compile-file "julia.lisp"))' \
+	     '#+(and :sbcl :fricas_has_julia)' \
+	     '(load (compile-file "julia_sbcl.lisp"))' \
+	     '#+(and :openmcl :fricas_has_julia)' \
+	     '(load (compile-file "julia_ccl.lisp"))' \
 	    '(load (compile-file "primitives.lisp"))' \
             '(in-package "FRICAS-LISP") (save-core "${OUT}/lisp$(EXEEXT)")' \
          | $(LISP_CMD)
@@ -157,4 +196,3 @@ clean-local: mostlyclean
 	-rm -f *.fn *.data *.lib raw_prelisp_map
 
 distclean-local: clean-local
-	-rm -f Makefile
