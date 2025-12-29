@@ -8,7 +8,7 @@ jobs:
     runs-on: windows-latest
     timeout-minutes: 30
     env:
-      SBCL_VER: 2.4.9
+      SBCL_VER: 2.6.0
     defaults:
       run:
         shell: msys2 {0}
