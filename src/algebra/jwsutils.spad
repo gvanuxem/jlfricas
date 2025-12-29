@@ -52,15 +52,15 @@ WSUtilityFunctions() : Exports == Implementation where
     zeroMatrix : (PositiveInteger, PositiveInteger) ->
                     WSMatrix(WSInteger)
     ++ \spad{zeroMatrix(m, n)} returns a m-by-n zero matrix.
-    jlWSRange : WSInteger -> WSList(WSInteger)
-    ++ jlWSRange(n) returns a WSList that ranges from 1 to n.
+    jWSRange : WSInteger -> WSList(WSInteger)
+    ++ jWSRange(n) returns a WSList that ranges from 1 to n.
     ++ For example:
-    ++ \example{jlWSRange(10)@WSLIST(WSINT)}
-    jlWSRange : (WSInteger, WSInteger) -> WSList(WSInteger)
-    ++ jlWSRange(n,m) returns a WSList that ranges from n to m.
-    jlWSRange : (WSInteger, WSInteger, WSInteger) ->
+    ++ \example{jWSRange(10)@WSLIST(WSINT)}
+    jWSRange : (WSInteger, WSInteger) -> WSList(WSInteger)
+    ++ jWSRange(n,m) returns a WSList that ranges from n to m.
+    jWSRange : (WSInteger, WSInteger, WSInteger) ->
               WSList(WSInteger)
-    ++ jlWSRange(n,m,d) returns a WSList that ranges from n to m with step d.
+    ++ jWSRange(n,m,d) returns a WSList that ranges from n to m with step d.
     jWSDateObject : () -> WSExpression
     ++ jWSDateObject() returns the WSExpression object of the
     ++ local date and time.
@@ -73,7 +73,7 @@ WSUtilityFunctions() : Exports == Implementation where
     jlWSDateString : () -> WSExpression
     ++ jlWSDateString() returns the WSExpression string of the local date and time.
     ++ For example:
-    ++ \example{toString dateTime()}
+    ++ \example{toString jlWSDateString()}
     jlWSDateString : WSExpression -> WSExpression
     ++ jlWSDateString(expr) returns the WSExpression string of the date
     ++ from a WS date object.
@@ -89,23 +89,24 @@ WSUtilityFunctions() : Exports == Implementation where
     ++ For example:
     ++ \example{jlWSDocumentation sin}
     jlWSImport : WSExpression -> WSExpression
-    ++ jWSImport(src) imports the source src.
+    ++ jlWSImport(src) imports the source src.
     ++ For example:
-    ++ \example{jWSImport jWSString "test.csv"}
+    ++ \example{file:=jlWSImport jWSString "examples/customers-100.csv";}
+    ++ \example{jlWSDateString(file.2.11)}
     jlWSImport : (WSExpression, WSExpression) -> WSExpression
-    ++ jWSImport(myfile, form) imports the file myfile with format form.
+    ++ jlWSImport(myfile, form) imports the file myfile with format form.
     ++ For example:
-    ++ \example{jWSImport(jWSString("test.csv"), jWSString "CSV")}
+    ++ \example{jlWSImport(jWSString("examples/customers-100.csv"), jWSString "CSV")}
     jlWSFileFormat : String -> WSExpression
     ++ jlWSFileFormat(src) tries to determine the format of the source src
     ++ from its content. Can be used with jWSImport.
     ++ For example:
-    ++ \example{jlWSFileFormat("test.csv")}
+    ++ \example{jlWSFileFormat("examples/customers-100.csv")}
     jlWSFileFormat : (String, WSExpression) -> WSExpression
     ++ jlWSFileFormat(src, list(form)) tries to determine the format of the source src
-    ++ from its content using the list of formats form. Can be used with jWSImport.
-    ++ For example:
-    ++ \example{jlWSFileFormat("test.csv", jWSList([jWSExpr "CSV", jWSExpr "TSV"])@WSList(WSExpression))}
+    ++ from its content using the list of formats form. Returns WS None if no format is found.
+    ++ Can be used with jWSImport.
+    ++ For example: \spad{jlWSFileFormat("examples/customers-100.csv",jWSExpr "{_"CSV_",_"TSV_"}")}
     jlWSExport : (String, WSExpression) -> WSExpression
     ++ jlWSExport(file.ext, obj) exports the object obj to the file file.ext.
     ++ The extension ext will determine the saved format. A WS expression for
@@ -124,7 +125,6 @@ WSUtilityFunctions() : Exports == Implementation where
     ++ \example{jWSExpr \"Probability[x < 0, x \\[Distributed] NormalDistribution[]]\"}
     ++ \example{jWSExpr \"Probability[x < 1, x \\[Distributed] NormalDistribution[]]\"}
     ++ \example{string jlWSExportString(%,jWSString "TeX")}
-
     jlWSPlot : (WSExpression, WSExpression) -> WSExpression
     ++ jlWSPlot(expr, options) is the WS plot function. Since it should be run
     ++ in a Wolfram notebook or any other supported graphical interfaces,
@@ -188,11 +188,11 @@ WSUtilityFunctions() : Exports == Implementation where
       dims := jWSList([jWSInt(rows),jWSInt(cols)])@WSList(WSInteger)
       jbinfunc("W_"RandomComplex_"(", range, dims)
 
-    jlWSRange(n) ==
+    jWSRange(n) ==
       junfunc("W_"Range_"(", n)
-    jlWSRange(m,n) ==
+    jWSRange(m,n) ==
       jbinfunc("W_"Range_"(", m, n)
-    jlWSRange(m,n,step) ==
+    jWSRange(m,n,step) ==
       jterfunc("W_"Range_"(", m, n, step)
 
     hankelMatrix(n) == junfunc("W_"HankelMatrix_"(", jWSInt(n))

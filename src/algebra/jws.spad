@@ -141,6 +141,8 @@ WSSymbol() : Exports == Implementation where
     ++ WSymbol() returns the WS Symbol symbol.
     WMissing  : () -> %
     ++ WMissing() returns the WS Missing symbol.
+    WNone     : () -> %
+    ++ WNone() returns the WS None symbol.
     coerce  : % -> Boolean
     ++ coerce(sym) coerces sym to a FriCAS boolean.
     ++ Sym must be a Julia WS boolean
@@ -188,8 +190,9 @@ WSSymbol() : Exports == Implementation where
     WList()     == jlref("WSymbol(_"List_")")
     WString()   == jlref("WSymbol(_"String_")")
     WSymbol()   == jlref("WSymbol(_"Symbol_")")
-    WFailure()   == jlref("WSymbol(_"Failure_")")
-    WMissing()   == jlref("WSymbol(_"Missing_")")
+    WFailure()  == jlref("WSymbol(_"Failure_")")
+    WMissing()  == jlref("WSymbol(_"Missing_")")
+    WNone()     == jlref("WSymbol(_"None_")")
   
     coerce(bool : Boolean) ==
       bool => WTrue()

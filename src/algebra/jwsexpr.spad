@@ -1205,6 +1205,7 @@ WSExpression() : Exports == Implementation where
     ++ \example{jWSExpr "3.14159"}
     ++ \example{jlWSDateString(jWSExpr "Tomorrow")}
     ++ \example{toString jWSExpr "TextSentences[WikipediaData[_"Sun_"]][[;; 40]]"}
+    ++\example{jWSExpr "Probability[x < 1, x \[Distributed] NormalDistribution[]]"}
   Implementation ==> JLObject add
     import from JLUtilityFunctions
     import from JLStringUtilities
