@@ -88,10 +88,24 @@ WSUtilityFunctions() : Exports == Implementation where
     ++ jlWSDocumentation(sym) prints WS informations about the symbol sym.
     ++ For example:
     ++ \example{jlWSDocumentation sin}
-    jlWSImport : String -> WSExpression
-    ++ jWSImport(expr) imports expr.
-    jlWSImport : (String, WSExpression) -> WSExpression
-    ++ jWSImport(expr, form) imports expr with format form.
+    jlWSImport : WSExpression -> WSExpression
+    ++ jWSImport(src) imports the source src.
+    ++ For example:
+    ++ \example{jWSImport jWSString "test.csv"}
+    jlWSImport : (WSExpression, WSExpression) -> WSExpression
+    ++ jWSImport(myfile, form) imports the file myfile with format form.
+    ++ For example:
+    ++ \example{jWSImport(jWSString("test.csv"), jWSString "CSV")}
+    jlWSFileFormat : String -> WSExpression
+    ++ jlWSFileFormat(src) tries to determine the format of the source src
+    ++ from its content. Can be used with jWSImport.
+    ++ For example:
+    ++ \example{jlWSFileFormat("test.csv")}
+    jlWSFileFormat : (String, WSExpression) -> WSExpression
+    ++ jlWSFileFormat(src, list(form)) tries to determine the format of the source src
+    ++ from its content using the list of formats form. Can be used with jWSImport.
+    ++ For example:
+    ++ \example{jlWSFileFormat("test.csv", jWSList([jWSExpr "CSV", jWSExpr "TSV"])@WSList(WSExpression))}
     jlWSExport : (String, WSExpression) -> WSExpression
     ++ jlWSExport(file.ext, obj) exports the object obj to the file file.ext.
     ++ The extension ext will determine the saved format. A WS expression for
@@ -102,8 +116,7 @@ WSUtilityFunctions() : Exports == Implementation where
     --outputForm
     --*Form
     -- TODO: OutputForm?
-    jlWSExportString : (WSExpression, WSExpression)
-      -> WSExpression
+    jlWSExportString : (WSExpression, WSExpression) -> WSExpression
     ++ jlWSExportString(expr, jWSString(format)) returns the string
     ++ representation of expr in the format form. Use toString or string
     ++ to obtain the FriCAS String.
@@ -146,9 +159,13 @@ WSUtilityFunctions() : Exports == Implementation where
     jlWSDateString(expr) == junfunc("W_"DateString_"(", expr)
     jlWSDateString(expr, form) == jbinfunc("W_"DateString_"(", expr, form)
 
-    jlWSImport(file) == junfunc("W_"Import_"(", jWSString file)
-    jlWSImport(file, options) ==
-      jbinfunc("W_"Import_"(", jWSString(file), options)
+    jlWSImport(src) == junfunc("W_"Import_"(", src)
+    jlWSImport(src, options) ==
+      jbinfunc("W_"Import_"(", src, options)
+    jlWSFileFormat(src) ==
+      junfunc("W_"FileFormat_"(", jWSString(src))
+    jlWSFileFormat(src, options) ==
+      jbinfunc("W_"FileFormat_"(", jWSString(src), options)
     jlWSExport(file, options) ==
       savefile : WSExpression := coerce(concat(["_"", file, "_""]))
       jbinfunc("W_"Export_"(", savefile, options)
