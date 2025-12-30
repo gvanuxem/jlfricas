@@ -366,7 +366,7 @@ NMUnivariateLaurentSeries(R, x, prec) : Exports == Implementation where
 ++ References:
 ++ Description: NMUnivariatePuiseuxSeries is the Nemo univariate
 ++  Puiseux series using Julia.
-++  x := x::NUPSX(NFRAC(NINT),'x,30)
+++  x := x::NUPXS(NFRAC(NINT),'x,30)
 ++  23*x+3*19*x^7+x^(1/7)
 ++  exp %
 ++  log %
