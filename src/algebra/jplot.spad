@@ -1,6 +1,6 @@
 )abbrev package JPLOT JLPlotFunctions
 ++ Author: G. Vanuxem
-++ Date Created: march 2023
+++ Date Created: March 2023
 ++ Basic Operations: jlPlot, jlSurface
 ++ Keywords: plot, surface
 ++ Description: low level plotting functions
@@ -75,7 +75,7 @@ JLPlotFunctions() : Exports == Implementation where
     ++ if you have the LaTeXStrings Julia package
     ++ \example{jlPlotTitle! jlLatex latex sin(x)}
     ++ For simple expressions title will automatically
-    ++ be enclosed betweek $. 
+    ++ be enclosed between $. 
     ++ So use:
     ++ \example{jlPlotTitle! jlLatex "sin(x)"}
     ++ For normal text and equations insert dollar signs $ as needed.
@@ -89,15 +89,15 @@ JLPlotFunctions() : Exports == Implementation where
     jlPlotXlabel! : String -> Void
     ++ jlPlotXlabel!(str) sets x label.
     ++ See \spadfunFrom{jlPlotTitle}{JLPlotFunctions} for more
-    ++ informations on the diffent supported formats.
+    ++ informations on the different supported formats.
     jlPlotYlabel! : String -> Void
     ++ jlPlotYlabel!(str) sets y label.
     ++ See \spadfunFrom{jlPlotTitle}{JLPlotFunctions} for more
-    ++ informations on the diffent supported formats.
+    ++ informations on the different supported formats.
     jlPlotZlabel! : String -> Void
     ++ jlPlotZlabel!(str) sets z label.
     ++ See \spadfunFrom{jlPlotTitle}{JLPlotFunctions} for more
-    ++ informations on the diffent supported formats.
+    ++ informations on the different supported formats.
     
     -- Should be moved to another package 
     jlPlot : (DF -> DF, SEG) -> Void
@@ -160,7 +160,7 @@ JLPlotFunctions() : Exports == Implementation where
     ++ Fill area between contours.
     jlSavePlot : String -> Void
     ++ jlSavePlot(file) save the current plot in file.
-    ++ Supported fomat by default:
+    ++ Supported format by default:
     ++ png (default), PDF, svg and more.
     ++ See https://docs.juliaplots.org/latest/output/#savefig-/-format 
   Implementation ==> add
@@ -399,7 +399,7 @@ JLPlotFunctions() : Exports == Implementation where
 
 )abbrev package JDRAW JLDrawFunctions
 ++ Author: G. Vanuxem
-++ Date Created: march 2023
+++ Date Created: March 2023
 ++ Basic Operations: jlPlot, jlSurface
 ++ Related Constructors: JLPlotFunctions
 ++ Keywords: jlPlot, jlSurface
@@ -477,14 +477,14 @@ JLDrawFunctions(Ex : Join(ConvertibleTo InputForm, SetCategory)):
       ++ \spad{z = f(x, y)} as x ranges from \spad{min(a, b)} to
       ++ to \spad{max(a, b)} and y ranges from \spad{min(c, d)}
       ++ to \spad{max(c, d)}. \spad{f(x, y)} appears as the title.
-      ++ Fill area between contours.
+      ++ Fills area between contours.
       jlContourf! : (Ex, BIND, BIND) -> Void
       ++ jlContourf!(f(x, y), x = a..b, y = c..d) adds the surface of
       ++ \spad{z = f(x, y)} as x ranges from \spad{min(a, b)}
       ++ to \spad{max(a, b)} and y ranges from \spad{min(c, d)}
       ++ to \spad{max(c, d)} on the existing graph window.
       ++ \spad{f(x, y)} appears as the title.
-      ++ Fill area between contours.
+      ++ Fills area between contours.
 
     Implementation ==> add
       import from JLPlotFunctions

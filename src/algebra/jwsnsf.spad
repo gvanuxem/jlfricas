@@ -1,7 +1,7 @@
 )abbrev package WSNSF WSNumericalSpecialFunctions
 ++ Generic package for Julia WS numerical special functions
 ++ Author: G.Vanuxem
-++ Date Created: Jun. 2024
+++ Date Created: June 2024
 ++ Description:
 ++  Julia Wolfram Symbolic numerical special functions using
 ++  the MathLink Julia package.
@@ -68,7 +68,7 @@ WSNumericalSpecialFunctions(R : WSNumber) : Exports ==Implementation where
     dawson  : R -> R
     ++ dawson(x) computes the Dawson integral of x.
     lambertW : R -> R
-    ++ lambertW(z) = w is the principial branch of the solution
+    ++ lambertW(z) = w is the principal branch of the solution
     ++ to the equation \spad{we^w = z}.
     polylog : (R, R) -> R
     ++ polylog(s, z) is the polylogarithm of order s at z.
@@ -101,7 +101,7 @@ WSNumericalSpecialFunctions(R : WSNumber) : Exports ==Implementation where
     ++ struveL(v, z) is the Struve L function defined by the formula
     ++ \spad{struveL(v, z) = -Ri^exp(-v*Rpi*Ri/2)*struveH(v, Ri*z)}.
     hankelH1 : (R, R) -> R
-    ++ hankelH1(v, z) is first Hankel function (Bessel function of
+    ++ hankelH1(v, z) is the first Hankel function (Bessel function of
     ++ the third kind).
     hankelH2 : (R, R) -> R
     ++ hankelH2(v, z) is the second Hankel function (Bessel function of
@@ -280,7 +280,7 @@ WSNumericalSpecialFunctions(R : WSNumber) : Exports ==Implementation where
     laguerreL : (R, R) -> R
     ++ laguerreL(n, z) evaluates the Laguerre polynomial at z.
     laguerreL : (R, R, R) -> R
-    ++ laguerreL(n, a, z) evaluates he genralized Laguerre polynomial a z.
+    ++ laguerreL(n, a, z) evaluates the generalized Laguerre polynomial a z.
     zernikeR : (R, R, R) -> R
     ++ zernikeR(n, m, z) evaluates the Zernike radial polynomial at z.
     jacobiP  : (R, R, R, R) -> R
@@ -298,9 +298,9 @@ WSNumericalSpecialFunctions(R : WSNumber) : Exports ==Implementation where
     hypergeometricU : (R, R, R) -> R
     ++ hypergeometricU(a,b,z) is the confluent hypergeometric function U.
     whittakerM : (R, R, R) -> R
-    ++ whittakerM(k,m,z) computes the Whittaker function M de z.
+    ++ whittakerM(k,m,z) computes the Whittaker function M of z.
     whittakerW : (R, R, R) -> R
-    ++ whittakerW(k,m,z) computes the Whittaker function W de z.
+    ++ whittakerW(k,m,z) computes the Whittaker function W of z.
     parabolicCylinderD : (R, R) -> R
     ++ parabolicCylinderD(nu,z) computes the parabolic cylinder function D of z.
     coulombF : (R, R, R) -> R
@@ -322,7 +322,7 @@ WSNumericalSpecialFunctions(R : WSNumber) : Exports ==Implementation where
     QGamma : (R, R) -> R
     ++ QGamma(z,q) returns the q-analog of Euler gamma of z.
     QPolyGamma : (R, R)-> R
-    ++ QPolyGamma(z,q) returs the q-digamma of z.
+    ++ QPolyGamma(z,q) returns the q-digamma of z.
     QPolyGamma : (R, R, R) -> R
     ++ QPolyGamma(n,z,q) returns the n-th derivative of the q-digamma function of z.
     mathieuC : (R, R, R) -> R
@@ -342,8 +342,8 @@ WSNumericalSpecialFunctions(R : WSNumber) : Exports ==Implementation where
     ++ mathieuCharacteristicB(r,q) returns the characteristic
     ++ for odd Mathieu function.
     mathieuCharacteristicExponent : (R, R) -> R
-    ++ mathieuCharacteristicExponent(a,q) returns the characterisitc exponent
-    ++ o he Mathieu function.
+    ++ mathieuCharacteristicExponent(a,q) returns the characteristic exponent
+    ++ of the Mathieu function.
     jacobiAmplitude : (R, R) -> R
     ++ jacobiAmplitude(u,m) computes the amplitude function am.
     unitStep : R -> WSExpression

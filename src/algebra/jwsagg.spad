@@ -1,7 +1,7 @@
 )abbrev category WSAGG WSAggregate
 ++ Generic category for Julia WS aggregates 
 ++ Author: G.Vanuxem
-++ Date Created: Jun. 2024
+++ Date Created: June 2024
 ++ Description:
 ++  Julia Wolfram Symbolic aggregate (WS list) using the MathLink
 ++ Julia package.
@@ -47,7 +47,7 @@ WSAggregate(E : WSObject) : Category == WSObject with
     delete : (%, WSList(WSInteger)) -> %
     ++ delete(l, inds) deletes element(s) of the list l at index(es) inds.
     join   : (%, %) -> %
-    ++ join(agg1, agg2) join the two aggreagtes agg1 and agg2.
+    ++ join(agg1, agg2) joins the two aggregates agg1 and agg2.
     union : (%, %) -> %
     ++ union(agg1, agg2) is the union set operator. Elements are sorted on output.
     intersection : (%, %) -> %
@@ -55,10 +55,10 @@ WSAggregate(E : WSObject) : Category == WSObject with
     setIntersection : (%, %) -> %
     ++ setIntersection(agg1, agg2) is the intersection set operator.
     riffle : (%, %) -> %
-    ++ riffle(agg, elts) riffles (interleaves) element(s) elts i.e. insert them.
+    ++ riffle(agg, elts) riffles (interleaves) element(s) elts i.e. inserts them.
     riffle : (%, %, %) -> %
-    ++ riffle(agg, elts, inds) riffles (interleaves) element(s) elts i.e. insert them.
-    ++ If inds is {min, max, n} insert at position min, min+n, min+2n..max. 
+    ++ riffle(agg, elts, inds) riffles (interleaves) element(s) elts i.e. inserts them.
+    ++ If inds is {min, max, n} inserts at position min, min+n, min+2n..max. 
     removeDuplicates : % -> %
     ++ removeDuplicates(agg) removes duplicate elements.
     reverse : % -> %
@@ -212,7 +212,7 @@ WSAggregate(E : WSObject) : Category == WSObject with
 )abbrev domain WSLIST WSList
 ++ Generic domain for Julia WS lists
 ++ Author: G.Vanuxem
-++ Date Created: Jun. 2024
+++ Date Created: June 2024
 ++ Description:
 ++  Julia Wolfram Symbolic lists using the MathLink Julia package.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
@@ -248,7 +248,7 @@ WSList(E : WSObject) : Exports == Implementation where
 )abbrev domain WSVEC WSVector
 ++ Generic domain for Julia WS vectors
 ++ Author: G.Vanuxem
-++ Date Created: Jun. 2024
+++ Date Created: June 2024
 ++ Description:
 ++  Julia Wolfram Symbolic vectors using the MathLink Julia package.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
@@ -259,11 +259,11 @@ WSVector(E : WSObject) : Exports == Implementation where
     "+" : (%, %) -> %
     ++ a + b is the vector addition. WS error if dimensions are incompatible.
     "-" : (%, %) -> %
-    ++ a - b is the vector substraction. WS error if dimensions are incompatible.
+    ++ a - b is the vector subtraction. WS error if dimensions are incompatible.
     "-" : % -> %
     ++ -a negates each elements of the vector a.
     "*" : (WSInteger, %) -> %
-    ++ n*a scale the vector a by n.
+    ++ n*a scales the vector a by n.
     "*": (E,%) -> %
     ++ \spad{r*x} is the left scalar multiple of the scalar r and the
     ++ vector x.
@@ -341,7 +341,7 @@ WSVector(E : WSObject) : Exports == Implementation where
 )abbrev domain WSMAT WSMatrix
 ++ Generic domain for Julia WS matrices
 ++ Author: G.Vanuxem
-++ Date Created: Jun. 2024
+++ Date Created: June 2024
 ++ Description:
 ++  Julia Wolfram Symbolic matrices using the MathLink Julia package.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
@@ -378,14 +378,14 @@ WSMatrix(E : WSRing) : Exports == Implementation where
     "+" : (%, %) -> %
     ++ a + b is the matrix addition. WS error if dimensions are incompatible.
     "-" : (%, %) -> %
-    ++ a - b is the matrix substraction. WS error if dimensions are incompatible.
+    ++ a - b is the matrix subtraction. WS error if dimensions are incompatible.
     "-" : % -> %
     ++ -a negates each elements of the matrix a.
     "*" : (%, %) -> %
     ++ a * b is the matrix multiplication, not the element-wise multiplication.
     ++ WS error if dimensions are incompatible.
     "*" : (Integer, %) -> %
-    ++ n*a scale the matrix a by n.
+    ++ n*a scales the matrix a by n.
     "*": (E,%) -> %
     ++ \spad{r*x} is the left scalar multiple of the scalar r and the
     ++ matrix x.
@@ -402,7 +402,7 @@ WSMatrix(E : WSRing) : Exports == Implementation where
     "^" : (%, PositiveInteger) -> %
     ++ a^n is the matrix power by the positive integer n.
     "^" : (%, NonNegativeInteger) -> %
-    ++ a^n is the matrix power by the non negative integer n.
+    ++ a^n is the matrix power by the non-negative integer n.
     elt : (%, Integer, Integer) -> E
     ++ elt(mat, m, n) returns the element (m,n) of the matrix mat.
     qelt : (%, Integer, Integer) -> E
@@ -422,7 +422,7 @@ WSMatrix(E : WSRing) : Exports == Implementation where
     column : (%, Integer) -> %
     ++ column(mat,i) returns the i-th column.
     transpose : % -> %
-    ++ transpose(m) returns the tranposition of m.
+    ++ transpose(m) returns the transposition of m.
     adjoint : % -> %
     ++ adjoint(m) returns the adjoint of m, i.e. the conjugate transposition of m.
     adjugate : % -> %
@@ -451,7 +451,7 @@ WSMatrix(E : WSRing) : Exports == Implementation where
       ++ If the matrix is not invertible, "failed" is returned.
       ++ Error: if the matrix is not square.
     generalizedInverse : % -> %
-    ++ generalizedInverse(m) computes the pseudo inverse of m also knows as
+    ++ generalizedInverse(m) computes the pseudo inverse of m also known as
     ++ Moore-Penrose inverse.
     linearSolve : (%, %) -> %
     ++ linearSolve(mat, b) finds x, solution of the equation mat * x = b.
@@ -489,7 +489,7 @@ WSMatrix(E : WSRing) : Exports == Implementation where
     ++ cholesky(m) computes the Cholesky decomposition of
     ++ the square matrix m.
     lu : % -> Record(lu : %, p : %, c : %)
-    ++ lu(m) computes the lU decomposition of the matrix m.
+    ++ lu(m) computes the LU decomposition of the matrix m.
     matrixFunction : (WSExpression, %) -> WSMatrix(WSExpression)
     ++ matrixFunction(func, m) applies the matrix function func,
     ++ if available, to the matrix m. Note that it is not

@@ -24,7 +24,7 @@ JLF32LinearAlgebra() : Exports == Implementation where
     norm    : JF32VEC -> JF32
     ++ norm(v) computes the 2-norm of v.
     norm    : (JF32VEC,JF32) -> JF32
-    ++ norm(v,p) computes th p-norm of v.
+    ++ norm(v,p) computes the p-norm of v.
     norm    : JF32MAT -> JF32
     ++ norm(m) computes the 2-norm of m,
     ++ also known as the Frobenius norm.
@@ -53,12 +53,12 @@ JLF32LinearAlgebra() : Exports == Implementation where
     ++ memory space.
     logDeterminant : JF32MAT -> JF32
     ++ logDeterminant(m) computes the logarithm of the determinant of m,
-    ++ possibly with more accuracy and avoding nder/overflow.
+    ++ possibly with more accuracy and avoiding under/overflow.
     svd : JF32MAT -> Record(U:JF32MAT, sv:JF32VEC, Vt:JF32MAT)
     ++ svd(m) computes the singular value decomposition SVD of m
     ++ such that SVD.U * diagonalMatrix(SVD.sv) * SVD.Vt = m.
     svd! : JF32MAT -> Record(U:JF32MAT, sv:JF32VEC, Vt:JF32MAT)
-    ++ svd!(m) is the same as svd(m) but overwites a to save
+    ++ svd!(m) is the same as svd(m) but overwrites a to save
     ++ memory space.
     svdvals : JF32MAT -> JF32VEC
     ++ svdvals(m) returns the singular values of m.
@@ -81,23 +81,23 @@ JLF32LinearAlgebra() : Exports == Implementation where
         Record(values:JCF32VEC, leftVectors:JF32MAT, rightVectors:JF32MAT)
     ++ eigenSystem(m) computes the spectral decomposition of m.
     ++ If the j-th eigenvalue (values) is real, then the left eigenvectors
-    ++ u(j) = column(lefVectors,j), the j-th column of lefVectors.
+    ++ u(j) = column(leftVectors,j), the j-th column of leftVectors.
     ++ If the j-th and (j+1)-st eigenvalues form a complex
     ++ conjugate pair, then the left eigenvectors are
-    ++ u(j) = column(lefVectors,j) + %i*column(lefVectors,j+1) and
-    ++ u(j+1) = column(lefVectors,j) - %i*column((lefVectors,j+1).
-    ++ This applieas also to righVectors.
+    ++ u(j) = column(leftVectors,j) + %i*column(leftVectors,j+1) and
+    ++ u(j+1) = column(leftVectors,j) - %i*column(leftVectors,j+1).
+    ++ This applies also to rightVectors.
     eigenSystem! : JF32MAT ->
         Record(values:JCF32VEC, leftVectors:JF32MAT, rightVectors:JF32MAT)
     ++ eigenSystem!(m) computes the spectral decomposition of m but overwrites
     ++ m to save memory space.
     ++ If the j-th eigenvalue (values) is real, then the left eigenvectors
-    ++ u(j) = column(lefVectors,j), the j-th column of lefVectors.
+    ++ u(j) = column(leftVectors,j), the j-th column of leftVectors.
     ++ If the j-th and (j+1)-st eigenvalues form a complex
     ++ conjugate pair, then the left eigenvectors are
-    ++ u(j) = column(lefVectors,j) + %i*column(lefVectors,j+1) and
-    ++ u(j+1) = column(lefVectors,j) - %i*column((lefVectors,j+1).
-    ++ This applieas also to righVectors.
+    ++ u(j) = column(leftVectors,j) + %i*column(leftVectors,j+1) and
+    ++ u(j+1) = column(leftVectors,j) - %i*column(leftVectors,j+1).
+    ++ This applies also to rightVectors.
     solve : (JF32MAT, JF32MAT) -> JF32MAT
     ++ solve(A,B) solves the matrix equation A*X=B, and returns X.
     solve! : (JF32MAT, JF32MAT) -> JF32MAT
@@ -108,7 +108,7 @@ JLF32LinearAlgebra() : Exports == Implementation where
     ++ lu(m) computes the LU factorisation of m.
     lu!     : JF32MAT -> Record(LU:JF32MAT, ipiv:JI64VEC)
     ++ lu!(m) computes in-place the LU factorisation of m.
-    ++ m isoverwritten by its decomposition.
+    ++ m is overwritten by its decomposition.
     luReorder : (JF32MAT, JI64VEC) -> JF32MAT
     ++ luReorder(mat, ipiv) returns a copy of mat reordered
     ++ using the ipiv pivot indices.
@@ -123,7 +123,7 @@ JLF32LinearAlgebra() : Exports == Implementation where
     ++ exp(m) returns the matrix exponential of m.
     log : JF32MAT -> JCF32MAT
     ++ log(m) tries to compute the principal matrix logarithm of m.
-    ++ Otherwise, returns a non pricipal matrix logarithm of m if possible.
+    ++ Otherwise, returns a non principal matrix logarithm of m if possible.
     triu    : JF32MAT -> JF32MAT
     ++ triu(m) returns the upper triangular matrix of m.
     triu!   : JF32MAT -> JF32MAT
@@ -415,7 +415,7 @@ JLCF32LinearAlgebra() : Exports == Implementation where
     norm    : JCF32VEC -> JF32
     ++ norm(v) computes the 2-norm of v.
     norm    : (JCF32VEC,JF32) -> JF32
-    ++ norm(v,p) computes th p-norm of v.
+    ++ norm(v,p) computes the p-norm of v.
     norm    : JCF32MAT -> JF32
     ++ norm(m) computes the 2-norm of m,
     ++ also known as the Frobenius norm.
@@ -449,7 +449,7 @@ JLCF32LinearAlgebra() : Exports == Implementation where
     ++ svd(m) computes the singular value decomposition SVD of m
     ++ such that SVD.U * diagonalMatrix(SVD.sv) * SVD.Vt = m.
     svd! : JCF32MAT -> Record(U:JCF32MAT, sv:JF32VEC, Vt:JCF32MAT)
-    ++ svd!(m) is the same as svd(m) but overwites a to save
+    ++ svd!(m) is the same as svd(m) but overwrites a to save
     ++ memory space.
     eigen : JCF32MAT -> Record(values:JCF32VEC, vectors:JCF32MAT)
     ++ eigen(m) computes the spectral decomposition of m.
@@ -483,7 +483,7 @@ JLCF32LinearAlgebra() : Exports == Implementation where
     ++ exp(m) returns the matrix exponential of m.
     log : JCF32MAT -> JCF32MAT
     ++ log(m) tries to compute the principal matrix logarithm of m.
-    ++ Otherwise, returns a non pricipal matrix logarithm of m if possible.
+    ++ Otherwise, returns a non principal matrix logarithm of m if possible.
   Implementation ==> add
     import from JLUtilityFunctions
     import from JLF32ArrayFunctions

@@ -59,7 +59,7 @@ JLFloat32SpecialFunctions() : Exports == Implementation where
     rad2deg  : JF32 -> JF32
     ++ rad2deg(x) converts x to degrees, where x is in radians.
     deg2rad  : JF32 -> JF32
-    ++ deg2rad(x) converts x to radian, where x is in degrees.
+    ++ deg2rad(x) converts x to radians, where x is in degrees.
 
   Implementation ==> add
 

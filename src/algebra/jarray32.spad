@@ -16,10 +16,10 @@ JLFloat32Vector() : Exports == Implementation where
     vector  : List JF32 -> %
     ++ vector(l) converts the list l to a vector.
     qnew    : NonNegativeInteger -> %
-    ++ qnew(n) returns an unitialized vector of dimension n.
+    ++ qnew(n) returns an uninitialized vector of dimension n.
     copy! : (%, %) -> %
-    ++ copy!(b,a) copies efficiently a to b. No check are done on
-    ++ arrays dimension.
+    ++ copy!(b,a) efficiently copies a to b. No checks are performed on
+    ++ array dimensions.
     jlApply : (String, %) -> Void
     ++ jlApply(func, v) applies func to argument v.
     jlApply : (String, %) -> JF32
@@ -40,10 +40,10 @@ JLFloat32Vector() : Exports == Implementation where
     ++ jlApprox?(x,y) computes inexact equality comparison
     ++ with default parameters. Two numbers compare equal
     ++ if their relative distance or their absolute distance
-    ++ is within tolerance bounds. Applied component-vise.
+    ++ is within tolerance bounds. Applied component-wise.
     urand : (PositiveInteger, JF32) -> %
     ++ urand(n, x) returns a uniformly (0..x) distributed
-    ++ Julia vector of size n. Use the underying Common
+    ++ Julia vector of size n. Use the underlying Common
     ++ Lisp random number generator so jlSeed! will not
     ++ affect it.
     urand01 : PositiveInteger -> %
@@ -254,13 +254,13 @@ JLFloat32Matrix() : Exports == Implementation where
     jlVector : % -> JLFloat32Vector
     ++ jlVector(m) returns reference to the internal vector representation.
     jlApply : (String, %) -> Void
-    ++ jlApply(func, x) apply func to argument x.
+    ++ jlApply(func, x) applies func to argument x.
     jlApply : (String, %) -> JF32
-    ++ jlApply(func, x) apply func to argument x.
+    ++ jlApply(func, x) applies func to argument x.
     jlApply : (String, %, JF32) -> JF32
-    ++ jlApply(func, x, val) apply func to arguments x and val.
+    ++ jlApply(func, x, val) applies func to arguments x and val.
     jlApply : (String, %) -> %
-    ++ jlApply(func, x) apply func to argument x.
+    ++ jlApply(func, x) applies func to argument x.
     jlDisplay : % -> Void
     ++ jlDisplay(m) pretty prints m (à la Julia).
     juliaMPrint : Boolean -> Boolean
@@ -269,13 +269,13 @@ JLFloat32Matrix() : Exports == Implementation where
     ++ its OutputForm version. Returns previous value.
     ++ By default it is the Julia version.
     copy! : (%, %) -> %
-    ++ copy!(b,a) copies efficiently a to b.No check are done on
-    ++ arrays dimensions.
+    ++ copy!(b,a) efficiently copies a to b. No checks are performed on
+    ++ array dimensions.
     identity : PositiveInteger -> %
-    ++ identity(n) returns a n by n identity matrix.S
+    ++ identity(n) returns a n by n identity matrix.
     urand : (PositiveInteger, PositiveInteger, JF32) -> %
     ++ urand(m,n,x) returns a uniformly (0..x) distributed
-    ++ Julia matrix of size (m,n). Use the underying Common
+    ++ Julia matrix of size (m,n). Use the underlying Common
     ++ Lisp random number generator so jlSeed! will not
     ++ affect it.
     urand01 : (PositiveInteger, PositiveInteger) -> %
@@ -283,13 +283,13 @@ JLFloat32Matrix() : Exports == Implementation where
     ++ Julia matrix of size (m,n).
     nrand : (PositiveInteger, PositiveInteger) -> %
     ++ nrand(m,n) returns a Julia matrix of size (m,n) with random
-    ++ element from the normal distribution with mean=0
+    ++ elements from the normal distribution with mean=0
     ++ and standard deviation=1.
     exprand : (PositiveInteger, PositiveInteger) -> %
-    ++ exprand(m,n) return a Julia matrix of size (m,n) with random elements
+    ++ exprand(m,n) returns a Julia matrix of size (m,n) with random elements
     ++ from the exponential distribution with scale 1.
     positiveDefinite? : % -> Boolean
-    ++ positiveDefinite?(m) tests wether or not m is positive definite.
+    ++ positiveDefinite?(m) tests whether or not m is positive definite.
     ++ Use a Cholesky factorisation.
     jlApprox?: (%, %) -> Boolean
     ++ jlApprox?(x,y) computes inexact equality comparison
@@ -299,7 +299,7 @@ JLFloat32Matrix() : Exports == Implementation where
     symmetricPart : % -> %
     ++ symmetricPart(m) returns the symmetric part of m (m + m')/2.
     symmetricPart! : % -> %
-    ++ symmetricPart!(m) overwites m with the symmetric part of m (m + m')/2
+    ++ symmetricPart!(m) overwrites m with the symmetric part of m (m + m')/2
     ++ to save memory space and returns m.
     skewPart : % -> %
     ++ skewPart(m) returns the skew part of m (m - m')/2.
@@ -567,17 +567,17 @@ JLComplexF32Vector() : Exports == Implementation where
     ++ imag(v) returns a JLFloat32 vector with the imaginary part
     ++ of the v elements.
     copy!   : (%, %) -> %
-    ++ copy!(b,a) copies efficiently a to b. No check are done on
-    ++ arrays dimension.
+    ++ copy!(b,a) efficiently copies a to b. No checks are performed on
+    ++ array dimensions.
     jlApply : (String, %) -> Void
-    ++ jlApply(func, x) apply func to argument x.
+    ++ jlApply(func, x) applies func to argument x.
     jlApply : (String, %) -> JF32
-    ++ jlApply(func, x) apply func to argument x.
+    ++ jlApply(func, x) applies func to argument x.
     jlApply : (String, %, JF32) -> JF32
-    ++ jlApply(func, x, val) apply func to arguments x and val.
+    ++ jlApply(func, x, val) applies func to arguments x and val.
     jlApprox?: (%, %) -> Boolean
     ++ jlApprox?(x,y) computes inexact equality comparison
-    ++ with default parameters.Two numbers compare equal
+    ++ with default parameters. Two numbers compare equal
     ++ if their relative distance or their absolute distance
     ++ is within tolerance bounds. Applied component-wise.
     urand01 : PositiveInteger -> %
@@ -721,15 +721,15 @@ JLComplexF32Matrix() : Exports == Implementation where
     ++ imag(m) returns a JLFloat32 matrix with the imaginary part
     ++ of the m elements.
     jlApply : (String, %) -> Void
-    ++ jlApply(func, x) apply func to argument x.
+    ++ jlApply(func, x) applies func to argument x.
     jlApply : (String, %) -> JF32
-    ++ jlApply(func, x) apply func to argument x.
+    ++ jlApply(func, x) applies func to argument x.
     jlApply : (String, %, JF32) -> JF32
-    ++ jlApply(func, x, val) apply func to arguments x and val.
+    ++ jlApply(func, x, val) applies func to arguments x and val.
     hermitian? : % -> Boolean
     ++ hermitian?(m) tests hermiticity of m.
     positiveDefinite? : % -> Boolean
-    ++ positiveDefinite?(m) tests wether or not m is Hermitian
+    ++ positiveDefinite?(m) tests whether or not m is Hermitian
     ++ positive definite using a Cholesky factorisation.
     jlApprox?: (%, %) -> Boolean
     ++ jlApprox?(x,y) computes inexact equality comparison
@@ -739,11 +739,11 @@ JLComplexF32Matrix() : Exports == Implementation where
     hermitianPart : % -> %
     ++ hermitianPart(m) returns the symmetric part of m (m + m')/2.
     hermitianPart! : % -> %
-    ++ hermitianPart!(m) overwites m with the symmetric part of m (m + m')/2
+    ++ hermitianPart!(m) overwrites m with the symmetric part of m (m + m')/2
     ++ to save memory space and returns m.
     copy!   : (%, %) -> %
-    ++ copy!(b,a) copies efficiently a to b. No check are done on
-    ++ arrays dimensions.
+    ++ copy!(b,a) efficiently copies a to b. No checks are performed on
+    ++ array dimensions.
     diagonalMatrix : JCF32VEC -> %
     ++ diagonalMatrix(v) returns a diagonal matrix with elements of v.
     urand01 : (PositiveInteger, PositiveInteger) -> %
@@ -751,7 +751,7 @@ JLComplexF32Matrix() : Exports == Implementation where
     ++ Julia matrix of size (m,n).
     nrand : (PositiveInteger, PositiveInteger) -> %
     ++ nrand(m,n) returns a Julia matrix of size (m,n) with random
-    ++ element from the normal distribution with mean=0
+    ++ elements from the normal distribution with mean=0
     ++ and standard deviation=1.
     ++ See Julia documentation (randn) for this complex version used here.
     transpose! : (%, %) -> %

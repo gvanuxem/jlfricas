@@ -24,7 +24,7 @@ NMArbField(p: PositiveInteger) : Exports == Implementation where
     exact? : % -> Boolean
     ++ exact?(x) checks whether x is exact i.e. with 0 radius.
     nonZero? : % -> Boolean
-    ++ nonZero?(x) returns true if x is equal to 0.
+    ++ nonZero?(x) returns true if x is not equal to 0.
     nonNegative? : % -> Boolean
     ++ nonNegative?(v) checks whether or not x is greater or equal to zero.
     nonPositive? : % -> Boolean
@@ -38,12 +38,12 @@ NMArbField(p: PositiveInteger) : Exports == Implementation where
     glaisher : () -> %
     ++ glaisher() returns the Glaisher's constant.
     urand01 : () -> %
-    ++ urand01() returns an uniformly distributed random number
+    ++ urand01() returns a uniformly distributed random number
     ++ contained in [0,1].
     randtest : JLSymbol -> %
     ++ randtest(randtype) returns a random number depending on the
     ++ Julia symbol randtype.
-    ++ :urandom an  uniformly distributed random number contained in [0,1].
+    ++ :urandom a uniformly distributed random number contained in [0,1].
     ++ To test corner cases:
     ++ :randtest returns a finite random number,
     ++ :randtest_exact returns a zero radius random number,
@@ -696,15 +696,15 @@ NMRealField() : Exports == Implementation where
     exact? : % -> Boolean
     ++ exact?(x) checks whether x is exact i.e. with 0 radius.
     nonZero? : % -> Boolean
-    ++ nonZero?(x) returns true if x is equal to 0.
+    ++ nonZero?(x) returns true if x is not equal to 0.
     nonNegative? : % -> Boolean
     ++ nonNegative?(v) checks whether or not x is greater or equal to zero.
     nonPositive? : % -> Boolean
     ++ nonPositive?(v) checks whether or not x is lower or equal to zero.
     exp : () -> %
-    ++ exp() returns the NMRealField represenation of ℯ (exp(1)).
+    ++ exp() returns the NMRealField representation of ℯ (exp(1)).
     exp1 : () -> %
-    ++ exp1() returns the NMRealField represenation of ℯ (exp(1)).
+    ++ exp1() returns the NMRealField representation of ℯ (exp(1)).
     eulerGamma : () -> %
     ++ eulerGamma() returns the Euler's constant gamma (γ).
     catalan : () -> %
@@ -714,12 +714,12 @@ NMRealField() : Exports == Implementation where
     glaisher : () -> %
     ++ glaisher() returns the Glaisher's constant.
     urand01 : () -> %
-    ++ urand01() returns an uniformly distributed random number
+    ++ urand01() returns a uniformly distributed random number
     ++ contained in [0,1].
     randtest : JLSymbol -> %
     ++ randtest(randtype) returns a random number depending on the
     ++ Julia symbol randtype.
-    ++ :urandom an  uniformly distributed random number contained in [0,1].
+    ++ :urandom a uniformly distributed random number contained in [0,1].
     ++ To test corner cases:
     ++ :randtest returns a finite random number,
     ++ :randtest_exact returns a zero radius random number,
@@ -732,7 +732,7 @@ NMRealField() : Exports == Implementation where
     abs2 : % -> %
     ++ abs2(x) returns the square of the absolute value of x.
     "*" : (%, Integer) -> %
-    ++ x*i is the multplication by an integer.
+    ++ x*i is the multiplication by an integer.
     "/" : (Integer, %) -> %
     ++ x/i returns the division of an integer by x.
     expm1 : % -> %

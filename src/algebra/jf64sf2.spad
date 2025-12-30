@@ -1,5 +1,5 @@
 )abbrev package JF64SF2 JLFloat64SpecialFunctions2
-++ Special functions computed using Julia's ecosystem.
+++ Special functions computed using Julia's Ecosystem.
 ++ They are here essentially for "completeness" purpose with
 ++ JLFloat64. You should use the DoubleFloat's special
 ++ functions if available, calling Julia functions is costly.

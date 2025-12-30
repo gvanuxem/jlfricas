@@ -20,12 +20,12 @@ NMRing() : Category == Join(NMType, JLObjectRing) with
       exact? : % -> Boolean 
       ++ exact?(x) check whether or not x is exact.
       unit? : % -> Boolean 
-      ++ unit?(x) checks whther or not x is a unit, i.e. invertible.
+      ++ unit?(x) checks whether or not x is a unit, i.e. invertible.
       equal? : (% , %) -> Boolean
-      ++ equal?(x,y) checks whether or not x and y ar equal.
+      ++ equal?(x,y) checks whether or not x and y are equal.
       exactDivide : (%, %) -> %
       ++ exactDivide(x,y) returns the exact division
-      ++ of x by y. Throws a Julia error if it is no
+      ++ of x by y. Throws a Julia error if it is not
       ++ an exact division.
       jlNMRing : () -> String
       ++ jlNMRing(x) returns the FriCAS Nemo ring type
@@ -54,7 +54,7 @@ NMRing() : Category == Join(NMType, JLObjectRing) with
 NMCommutativeRing() : Category == Join(NMRing, CommutativeRing)
 
 )abbrev category NFIELD NMField
-++ Category for Nemo commutative Field domains.
+++ Category for Nemo commutative field domains.
 ++ Author: G.Vanuxem
 ++ Date Created: Dec, 2025
 ++ Description:
@@ -91,7 +91,7 @@ NMInteger() : Exports == Implementation where
     coerce : JI64 -> %
     ++ coerce(i) coerces i to a NMInteger.
     coerce : % -> JI64
-    ++ coerce(ni) ro a JLInt64 if possible.
+    ++ coerce(ni) to a JLInt64 if possible.
     coerce : % -> Expression Integer
     ++ coerce(x) coerces x.
     inverse : % -> NMFraction(NMInteger)
@@ -266,9 +266,9 @@ NMAlgebraicNumber() : Exports == Implementation where
     logPiI : % -> %
     ++ logPiI(a) returns log(a)/(%pi*%i).
     rootOfUnity : (NNI) -> %
-    ++ rootOfUnity(n)Return the root of unity exp(2*%pi*%i/n).
+    ++ rootOfUnity(n) returns the root of unity exp(2*%pi*%i/n).
     rootOfUnity : (NNI, Integer) -> %
-    ++ rootOfUnity(n,k)Return the root of unity exp(2*%pi*%i*k/n).
+    ++ rootOfUnity(n,k) returns the root of unity exp(2*%pi*%i*k/n).
     sinpi : % -> %
     ++ sinpi(x) returns sin(%pi*x).
     cospi : % -> %
@@ -307,7 +307,7 @@ NMAlgebraicNumber() : Exports == Implementation where
     conjugate : % -> %
     ++ conjugate(a) returns the complex conjugate of a.
     floor : % -> %
-    ++ floor(a) returns the largest integer below or equal ot a.
+    ++ floor(a) returns the largest integer below or equal to a.
     ceiling : % -> %
     ++ ceiling(a) returns the smallest integer above or equal to a.
     sign : % -> %
@@ -656,16 +656,16 @@ NMPrimeField(p : PositiveInteger) : Exports == Implementation where
                    FiniteAlgebraicExtensionField(%),
                    ConvertibleTo(Integer)) with
     generator? : % -> Boolean
-    ++ generator?(x) checks whether or not of the NMPrimeField.
+    ++ generator?(x) checks whether or not x is a generator of the NMPrimeField.
     order : () -> NNI
     ++ order() returns the order of the NMPrimeField.
     "*" : (%, NMInteger) -> %
-    ++ x*i is the multiplication by a an integer (NMInteger).
+    ++ x*i is the multiplication by an integer (NMInteger).
     "*" : (%, Integer) -> %
     ++ * x*i is the multiplication by an integer.
     sqrt : % -> %
-    ++ sqrt(x) returns quare root of x.
-    ++ Throw a Julia error if there is no square root and returns 0.
+    ++ sqrt(x) returns square root of x.
+    ++ Throws a Julia error if there is no square root and returns 0.
     quadraticNonResidue: () ->  %
     ++ quadraticNonResidue() computes the smallest non negative integer,
     ++ which represents a quadratic non residue.

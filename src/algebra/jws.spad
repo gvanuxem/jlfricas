@@ -21,13 +21,13 @@ WSObject() : Category == JLObjectType with
     jWSInterpret : (String, String, String) -> %
     ++ jWSInterpret(form1,form2,form3) interprets forms.
     jlEval  : % -> %
-    ++ jlEval(expr) evaluate expr using the Wolfram Symbolic Transport Protocol.
+    ++ jlEval(expr) evaluates expr using the Wolfram Symbolic Transport Protocol.
     jlSymbolic : % -> String
     ++ jlSymbolic(expr) returns the symbolic 'FullForm'
     numeric : % -> WSExpression
     ++ numeric(expr) returns numerical expr if possible.
     numeric : (%, PositiveInteger) -> WSExpression
-    ++ numeric(expr, prec) returns numerical expr with digits precision prec
+    ++ numeric(expr, prec) returns the numerical expr with digits precision prec
     ++ if possible.
     jlHead   : % -> WSSymbol
     ++ jlHead(expr) returns the Head type of expr.
@@ -220,14 +220,14 @@ WSInteger() : Exports == Implementation where
   Exports ==> Join(WSNumber, IntegerNumberSystem,
                   Canonical, canonicalsClosed) with
     integer : % -> Integer
-    ++ integer(i) return i as a FriCAS Integer.
+    ++ integer(i) returns i as a FriCAS Integer.
     ++ Convenience function.
     hyperFactorial : % -> %
     ++ hyperFactorial(n) computes the hyperfactorial of n.
     QFactorial : (%, %) -> %
     ++ QFactorial(x,q) returns the q-analog of factorial of x.
     fibonacci : % -> %
-    ++ fibonacci(n) returns the Fibonacci numberi Fn.
+    ++ fibonacci(n) returns the Fibonacci number Fn.
     stirling1 : (%, %) -> %
     ++ stirling1(n,m) returns the Stirling number of the first kind
     ++ from n and m. For example:
@@ -347,7 +347,7 @@ WSRational() : Exports == Implementation where
   Exports ==> Join(WSNumber,
       QuotientFieldCategory(WSInteger)) with
     coerce  : Integer  -> %
-    ++ coerce(z): coerces(z). Convenience function.
+    ++ coerce(z): coerces z. Convenience function.
     "/"     : (WSInteger, WSInteger) -> %
     ++ a/b returns the Julia WS rational a/b.
     -- TODO:
@@ -475,11 +475,11 @@ WSReal() : Exports == Implementation where
     exp    : () -> %
     ++ exp() returns the WSAPReal ℯ (%e or exp(1)).
     sinc    : % -> %
-    ++ sinc(x) compues the unormalized sinc of x, sin(x)/x.
+    ++ sinc(x) computes the unnormalized sinc of x, sin(x)/x.
     log2    : % -> %
-    ++ log2(x) compute logarithm of x in base 2.
+    ++ log2(x) computes the logarithm of x in base 2.
     log10   : % -> %
-    ++ log10(x) compute logarithm of x in base 10.
+    ++ log10(x) computes the logarithm of x in base 10.
     atan    : (%, %) -> %
     ++ atan(x,y) computes the arc tangent of y/x.
     erf     : (%, %) -> %
@@ -487,7 +487,7 @@ WSReal() : Exports == Implementation where
     erfc    : % -> %
     ++ erfc(x) computes the complementary error function of x.
     rationalApproximation : % -> WSRational
-    ++ rationalApproximation(x) try to find a rational approximation
+    ++ rationalApproximation(x) tries to find a rational approximation
     ++ of x. Error if x can not be retracted.
     rationalApproximation : (%, %) -> WSRational
     ++ rationalApproximation(x, dx) returns a rational approximation
@@ -495,11 +495,11 @@ WSReal() : Exports == Implementation where
     coerce : % -> DoubleFloat
     ++ coerce(r) coerces r to a DoubleFloat.
     coerce : % -> JLFloat64
-    ++ coerce(r) coerce r to a JLFloat64.
+    ++ coerce(r) coerces r to a JLFloat64.
     coerce  : % -> JLFloat
     ++ coerce(x) converts x as a JLFloat.
     coerce  : String -> %
-    ++ coerce(str) construct str as a WSReal.
+    ++ coerce(str) constructs str as a WSReal.
     coerce  : JLFloat64  -> %
     ++ coerce(x) converts x as a WSReal.
     coerce  : DoubleFloat  -> %
@@ -509,13 +509,13 @@ WSReal() : Exports == Implementation where
     coerce  : JLFloat  -> %
     ++ coerce(x) converts x as a WSReal.
     coerce  : % -> WSExpression
-    ++ coerce(x) coerce x to a WSExpression.
+    ++ coerce(x) coerces x to a WSExpression.
     jWSReal : DoubleFloat -> %
-    ++ jWSReal(z) coerces the integer z to a WSReal.
+    ++ jWSReal(z) coerces z to a WSReal.
     jWSReal : Float -> %
-    ++ jWSReal(z) coerces the integer z to a WSReal.
+    ++ jWSReal(z) coerces z to a WSReal.
     jWSReal : JLFloat64 -> %
-    ++ jWSReal(z) coerces the integer z to a WSReal.
+    ++ jWSReal(z) coerces z to a WSReal.
     jWSReal : Integer -> %
     ++ jWSReal(z) coerces the integer z to a WSReal.
     jWSReal : String -> %
@@ -751,7 +751,7 @@ WSReal() : Exports == Implementation where
 ++ Author: G.Vanuxem
 ++ Date Created: April. 2024
 ++ Description:
-++  Julia Wolfram Symbolic arbitrary pecision real numbers using
+++  Julia Wolfram Symbolic arbitrary precision real numbers using
 ++  Wolfram Symbolic Transport Protocol.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 WSAPReal(prec : PositiveInteger) : Exports == Implementation where
@@ -771,11 +771,11 @@ WSAPReal(prec : PositiveInteger) : Exports == Implementation where
     exp    : () -> %
     ++ exp() returns the WSAPReal ℯ (%e or exp(1)).
     sinc    : % -> %
-    ++ sinc(x) compues the unormalized sinc of x, sin(x)/x and 0 if x = 0.
+    ++ sinc(x) computes the unnormalized sinc of x, sin(x)/x and 0 if x = 0.
     log2    : % -> %
-    ++ log2(x) compute logarithm of x in base 2.
+    ++ log2(x) computes the logarithm of x in base 2.
     log10   : % -> %
-    ++ log10(x) compute logarithm of x in base 10.
+    ++ log10(x) computes the logarithm of x in base 10.
     atan    : (%, %) -> %
     ++ atan(x,y) computes the arc tangent of y/x.
     erf     : (%, %) -> %
@@ -783,21 +783,21 @@ WSAPReal(prec : PositiveInteger) : Exports == Implementation where
     erfc    : % -> %
     ++ erfc(x) computes the complementary error function of x.
     rationalApproximation : % -> WSRational
-    ++ rationalApproximation(x) try to find a rational approximation
+    ++ rationalApproximation(x) tries to find a rational approximation
     ++ of x.
     rationalApproximation : (%, %) -> WSRational
-    ++ rationalApproximation(x, dx) try to find a rational approximation
+    ++ rationalApproximation(x, dx) tries to find a rational approximation
     ++ of x within tolerance dx.
     coerce  : % -> JLFloat
     ++ coerce(x) converts x as a JLFloat.
     coerce  : String -> %
-    ++ coerce(str) construct str as a WSAPReal.
+    ++ coerce(str) constructs str as a WSAPReal.
     coerce  : Float  -> %
     ++ coerce(x) converts x as a WSAPReal.
     coerce  : JLFloat  -> %
     ++ coerce(x) converts x as a WSAPReal.
     coerce  : % -> WSExpression
-    ++ coerce(x) coerce x to a WSExpression.
+    ++ coerce(x) coerces x to a WSExpression.
     jWSReal : Integer -> %
     ++ jWSReal(i) coerces i to a WSAPReal.
     jWSReal : DoubleFloat -> %

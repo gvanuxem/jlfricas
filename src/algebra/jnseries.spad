@@ -37,10 +37,10 @@ NMUnivariatePowerSeries(R, x, prec, abs) : Exports == Implementation where
     ++ valuation(s) returns the valuation of the given power series,
     ++ the degree of the first nonzero term
     inverse : % -> %
-    ++ inverse(s) returns the inverse of s. Throw a Julia error
+    ++ inverse(s) returns the inverse of s. Throws a Julia error
     ++ if no such inverse exists.
     sqrt : % -> %
-    ++ sqrt(f) return square root of f if it exists, a Julia error
+    ++ sqrt(f) returns the square root of f if it exists, a Julia error
     ++ is thrown if f has no square root.
     monomial? : % -> Boolean
     ++ monomial?(f) tests if f is a single monomial.
@@ -249,10 +249,10 @@ NMUnivariateLaurentSeries(R, x, prec) : Exports == Implementation where
     ++ valuation(s) returns the valuation of the given power series,
     ++ the degree of the first nonzero term
     inverse : % -> %
-    ++ inverse(s) returns the inverse of s. Throw a Julia error
+    ++ inverse(s) returns the inverse of s. Throws a Julia error
     ++ if no such inverse exists.
     sqrt : % -> %
-    ++ sqrt(f) return square root of f if it exists, a Julia error
+    ++ sqrt(f) returns the square root of f if it exists, a Julia error
     ++ is thrown if f has no square root.
     monomial? : % -> Boolean
     ++ monomial?(f) tests if f is a single monomial.
@@ -418,16 +418,16 @@ NMUnivariatePuiseuxSeries(R, x, prec) : Exports == Implementation where
     ++ valuation(s) returns the valuation of the given power series,
     ++ the degree of the first nonzero term
     inverse : % -> %
-    ++ inverse(s) returns the inverse of s. Throw a Julia error
+    ++ inverse(s) returns the inverse of s. Throws a Julia error
     ++ if no such inverse exists.
     sqrt : % -> %
-    ++ sqrt(f) return square root of f if it exists, a Julia error
+    ++ sqrt(f) returns the square root of f if it exists, a Julia error
     ++ is thrown if f has no square root.
     integrate : % -> %
     ++ integrate(f(x)) returns an anti-derivative of the power series
     ++ \spad{f(x)} with constant coefficient 0.
     coefficient : (%, INT) -> R
-    ++ coefficient(s, i) return the coefficient of the term of degree n.
+    ++ coefficient(s, i) returns the coefficient of the term of degree i.
     coerce   : Variable(x) -> %
     ++ coerce(x) converts the variable x to a Nemo univariate Puiseux series.
   Implementation ==> add

@@ -41,7 +41,7 @@ WSExpression() : Exports == Implementation where
     ++ realNumeric?(x) checks whether or not x represents
     ++ a real value (numeric).
     integer? : % -> Boolean
-    ++ integer?(i) checks whteher or not i is an integer.
+    ++ integer?(i) checks whether or not i is an integer.
     rational? : % -> Boolean
     ++ rational?(q) checks whether or not q is a rational number.
     number? : % -> Boolean
@@ -58,7 +58,7 @@ WSExpression() : Exports == Implementation where
     member? : (%, %) -> Boolean
     ++ member?(list, expr) checks if expr is in list.
     key? : (%, %) -> Boolean
-    ++ key?(assoc,key) checks wheter or not key exist
+    ++ key?(assoc,key) checks whether or not key exists
     ++ in the association assoc.
     missing? : % -> Boolean
     ++ missing?(data) checks whether or not data is Missing.
@@ -89,7 +89,7 @@ WSExpression() : Exports == Implementation where
     goldenRatio : () -> %
     ++ goldenRatio() returns the golden ratio.
     sinc    : % -> %
-    ++ sinc(x) computes the unormalized sinc of x, sin(x)/x and 0 if x = 0.
+    ++ sinc(x) computes the unnormalized sinc of x, sin(x)/x and 0 if x = 0.
     log2    : % -> %
     ++ log2(x) computes logarithm of x in base 2.
     log10   : % -> %
@@ -109,7 +109,7 @@ WSExpression() : Exports == Implementation where
     eulerE : WSInteger -> %
     ++ eulerE(n) returns the Euler number En.
     eulerE : (WSInteger , %) -> %
-    ++ eulerE(n,z) return the Euler E polynomial of degree n.
+    ++ eulerE(n,z) returns the Euler E polynomial of degree n.
     lambertW : (WSInteger, %) -> %
     ++ lambertW(k,z) returns the k-th solution to LambertW function.
     haversine : % -> %
@@ -137,7 +137,7 @@ WSExpression() : Exports == Implementation where
     ++ sphericalBesselY(n,z) returns the spherical Bessel
     ++ of the second kind of z.
     sphericalHankelH1 : (% , %)-> %
-    ++ sphericalHankelH1(n,z) returns the spherical Hankel
+    ++ sphericalHankelH1(n,z) returns the spherical Hankel function
     ++ of the first kind of z.
     sphericalHankelH2 : (% , %)-> %
     ++ sphericalHankelH2(n,z) computes the spherical Hankel
@@ -267,7 +267,7 @@ WSExpression() : Exports == Implementation where
     ++ For example:
     ++ \example{laguerreL(5, jWSExpr x)}
     laguerreL : (%, %, %) -> %
-    ++ laguerreL(n, a, x) returns the genralized laguerre polynomial
+    ++ laguerreL(n, a, x) returns the generalized Laguerre polynomial
     ++ or evaluates it at x if x is a number.
     zernikeR : (%, %, %) -> %
     ++ zernikeR(n, m, x) returns the Zernike radial polynomial
@@ -302,7 +302,7 @@ WSExpression() : Exports == Implementation where
     coulombH2: (%, %, %) -> %
     ++ coulombH2(l,eta,ro) is the incoming irregular Coulomb wave function H^(-).
     QPochhammer : (%, %) -> %
-    ++ QPochhammer(x,q) returns the q-Pochammer symbol of x.
+    ++ QPochhammer(x,q) returns the q-Pochhammer symbol of x.
     QPochhammer : (%, %, %) -> %
     ++ QPochhammer(x,q,n) returns the q-Pochammer symbol of x.
     QFactorial : (%, %) -> %
@@ -312,7 +312,7 @@ WSExpression() : Exports == Implementation where
     QGamma : (%, %) -> %
     ++ QGamma(x,q) returns the q-analog of Euler gamma of x.
     QPolyGamma : (%, %)-> %
-    ++ QPolyGamma(x,q) returs the q-digamma of x.
+    ++ QPolyGamma(x,q) returns the q-digamma of x.
     QPolyGamma : (%, %, %) -> %
     ++ QPolyGamma(n,x,q) returns the n-th derivative of the q-digamma
     ++ function of x.
@@ -333,7 +333,7 @@ WSExpression() : Exports == Implementation where
     ++ mathieuCharacteristicB(r,q) returns the characteristic
     ++ for odd Mathieu function.
     mathieuCharacteristicExponent : (%, %) -> %
-    ++ mathieuCharacteristicExponent(a,q) returns the characterisitc exponent
+    ++ mathieuCharacteristicExponent(a,q) returns the characteristic exponent
     ++ of the Mathieu function. 
     jacobiAmplitude : (%, %) -> %
     ++ jacobiAmplitude(u,m) computes the amplitude function am.
@@ -377,7 +377,7 @@ WSExpression() : Exports == Implementation where
     modularLambda : % -> %
     ++ modularLambda() computes the lambda modular function.
     series : (%, %) -> %
-    ++ series(expr, opt) returns a serie from expr.
+    ++ series(expr, opt) returns a series from expr.
     ++ \example{x:=jWSExpr(x);a:=jWSExpr(a);}
     ++ \example{opt:=jWSList [x,pi()$WSEXPR/4,7]}
     ++ \example{series(sin(a*x),opt)}
@@ -482,7 +482,7 @@ WSExpression() : Exports == Implementation where
     ++ with respect to var using segment seg. 
     integrate : (%, Symbol) -> %
     ++ integrate(expr, var) is the indefinite integration of expr
-    ++ with repect to var.
+    ++ with respect to var.
     numericIntegrate : (%, %) -> %
     ++ numericIntegrate(expr, opt|var) integrate numerically expr with respect
     ++ to opt or var as options.
@@ -559,7 +559,7 @@ WSExpression() : Exports == Implementation where
     ++ \example{fprimex:=derivative(operator('f),1,x)}
     dSolve : (%, %, %) -> %
     ++ dSolve(expr, funcs, vars) solves the (list of) differential equation(s)
-    ++ expr for the function(s) funcs with independant variable(s) vars.
+    ++ expr for the function(s) funcs with independent variable(s) vars.
     ++ \example{x:=jWSExpr x;}
     ++ \example{fx:=derivative(operator('f),0,x)}
     ++ \example{fprimex:=derivative(operator('f),1,x)}
@@ -595,14 +595,14 @@ WSExpression() : Exports == Implementation where
     numericDSolve : (%, %, %, %) -> %
     ++ numericDSolve(expr,fun,xrange,yrange) solves numerically the differential
     ++ equation(s) in expr for the function fun, in the ranges xrange and yrange.
-    ++ Other combinaisons of parameters are also available (see documentation).
+    ++ Other combinations of parameters are also available (see documentation).
     numericDSolveValue : (%, %, %) -> %
     ++ numericDSolveValue(expr,fun,xrange) returns the numerical value solution
     ++ of the differential equation(s) in expr for the function fun,
     ++ in the range xrange.
     ++ Other combinaisons of parameters are also available (see documentation).
     numericDSolveValue : (Equation(%), %, %) -> %
-    ++ numericDSolveValue(eq,fun,xrange) return the numerical solution of
+    ++ numericDSolveValue(eq,fun,xrange) returns the numerical solution of
     ++ the differential equation eq for the function fun, in the range xrange.
     numericDSolveValue : (%, %, %, %) -> %
     ++ numericDSolveValue(expr,fun,xrange,yrange) returns the numerical solution
@@ -630,12 +630,12 @@ WSExpression() : Exports == Implementation where
     ++ reduce(lhs, rel,rhs,lvars,dom) tries to reduce the (in)equation
     ++ in expr where rel is the relation operator ("=" or "<=" for example).
     findInstance : (Equation(%), %) -> WSL(WSL(%))
-    ++ findInstance(expr,lvars) tries to find an instance the equation in expr.
+    ++ findInstance(expr,lvars) tries to find an instance of the equation in expr.
     findInstance : (%, %) -> WSL(WSL(%))
-    ++ findInstance(expr,lvars) tries to find an instance the
+    ++ findInstance(expr,lvars) tries to find an instance of the
     ++ (in)equation in expr.
     findInstance : (Equation(%), %, %) -> WSL(WSL(%))
-    ++ findInstance(expr,lvars,dom) tries to find an instance the equation
+    ++ findInstance(expr,lvars,dom) tries to find an instance of the equation
     ++ in expr.
     findInstance : (Equation(%), %, %, %) -> WSL(WSL(%))
     ++ findInstance(expr,lvars,dom,n) tries to find n instance(s) to the
@@ -675,7 +675,7 @@ WSExpression() : Exports == Implementation where
     variables : % -> WSL(%)
     ++ variables(p) returns the list of variables in p.
     exponent  : (%, %) -> %
-    ++ exponent(p,expr) returns the maximaum exponent of p for expr.
+    ++ exponent(p,expr) returns the maximum exponent of p for expr.
     ++ \example{x:= jWSExpr x;y := jWSExpr y}
     ++ \example{p:=(x^2-2)^3*(y*x^3+x^11*y^7)*(y^5+x*y^2+x^11+y)}
     ++ \example{exponent(%,(x^2-2))}
@@ -745,7 +745,7 @@ WSExpression() : Exports == Implementation where
     ++ polynomialLCM(p1,p2,opt) returns the least common divisor of p1 and p2
     ++ with options opt, for example an Extension rule.
     polynomialMod : (%, %) -> %
-    ++ polynomialMod(p,mod) reduces modulo p the intger coefficients
+    ++ polynomialMod(p,mod) reduces modulo p the integer coefficients
     ++ of the polynomial p.
     resultant : (%, %, %) -> %
     ++ resultant(p1,p2,x) returns the resultant of p1 and p2.

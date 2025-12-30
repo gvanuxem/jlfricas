@@ -28,7 +28,7 @@ JLMachineType() : Category == JLType() add
 JLRing() : Category == Join(JLType, Ring)
 
 )abbrev category JCRING JLCommutativeRing
-++ Category for Julia commuative rings
+++ Category for Julia commutative rings
 ++ Author: G.Vanuxem
 ++ Date Created: Dec, 2024
 ++ Description:
@@ -71,7 +71,7 @@ JLMachineFloat() : Category ==
   ++ installed:
   ++ \example{jlCApply("libgsl",jsym(gsl_hypot3),jf64(2.0),jf64(7.0),jf64(9.0))}
   urand01 : () -> %
-  ++ urand01() returns an uniformly distributed random number
+  ++ urand01() returns a uniformly distributed random number
   ++ contained in [0,1].
   nrand : () -> %
   ++ nrand() returns a normally distributed random number.
@@ -93,7 +93,7 @@ JLMachineFloat() : Category ==
   eulerGamma : () -> %
   ++ eulerGamma() returns the Euler's constant gamma (γ).
   catalan : () -> %
-  ++ catalan() return the Catalan's constant.
+  ++ catalan() returns the Catalan's constant.
   goldenRatio : () -> %
   ++ goldenRatio() returns the golden ratio.
   nan : () -> %
@@ -103,7 +103,7 @@ JLMachineFloat() : Category ==
   ++ positive infinity constant.
   negativeInfinity : () -> %
   ++ negativeInfinity() returns the Julia Float64
-  ++ negtive infinity constant.
+  ++ negative infinity constant.
 
 )abbrev domain JSYM JLSymbol
 ++ Domain for Julia symbols
@@ -149,8 +149,8 @@ JLSymbol() : Exports == Implementation where
 ++  1152921504606846975 with Clozure CL. They will be passed as an Int64
 ++  to Julia nevertheless, but returned value can possibly not fit
 ++  in a Lisp fixnum. In Julia, typemax(Int64) is 9223372036854775807
-++  on this arch. This domain is therefore not intented to perfom
-++  "advanced" computation, it just includes basic arthmetic
+++  on this arch. This domain is therefore not intended to perform
+++  "advanced" computation, it just includes basic arithmetic
 ++  and is used, for example, for returned pivot vectors in linear algebra.
 JLInt64() : Exports == Implementation where
   Exports ==> Join(JLMachineType, IntegerNumberSystem) with
@@ -165,10 +165,10 @@ JLInt64() : Exports == Implementation where
     coerce : % -> SingleInteger
     ++ coerce(x) coerces x to a SingleInteger.
     ji64 : SingleInteger -> %
-    ++ ji64(x) returns x a a Julia Int64 (in Julia memory area).
+    ++ ji64(x) returns x as a Julia Int64 (in Julia memory area).
     ji64 : Integer -> %
-    ++ ji64(x) returns x a a Julia Int64 (in Julia memory area).
-    ++ Error if x is can not be coerced.
+    ++ ji64(x) returns x as a Julia Int64 (in Julia memory area).
+    ++ Error if x cannot be coerced.
   Implementation ==> SingleInteger add
     import JLUtilityFunctions
     jlInitialize(true)
@@ -188,7 +188,7 @@ JLInt64() : Exports == Implementation where
 )abbrev domain JF32 JLFloat32
 ++ Domain for Julia Float32
 ++ Author: G. Vanuxem
-++ Date Created: november 2024
+++ Date Created: November 2024
 ++ Description:
 ++  \spadtype{JLFloat32} implements 32 bits floating
 ++  point arithmetic using Julia Float32 type. Bear in mind that,
@@ -388,7 +388,7 @@ JLFloat32() : Exports == Implementation where
 )abbrev domain JCF32 JLComplexF32
 ++ Domain for Complex Julia F32
 ++ Author: G. Vanuxem
-++ Date Created: novemebr 2024
+++ Date Created: November 2024
 ++ Description: \spadtype{JLComplexF32} implements complex 32 bits
 ++ floating point arithmetic. Only basic arithmetic is supported.
 ++ Convenience domain.

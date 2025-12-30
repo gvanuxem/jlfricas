@@ -1,5 +1,5 @@
 )abbrev package JFSF2 JLFloatSpecialFunctions2
-++ Special functions computed using Julia's ecosystem.
+++ Special functions computed using Julia's Ecosystem.
 ++ They are here essentially for "completeness" purpose with
 ++ JLFloat.
 JLFloatSpecialFunctions2() : Exports == Implementation where

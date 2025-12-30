@@ -46,7 +46,7 @@ JLComplexFloatSpecialFunctions() : Exports == Implementation where
     rad2Deg  : JCF -> JCF
     ++ rad2Deg(x) converts x to degrees, where x is in radians.
     deg2Rad  : JCF -> JCF
-    ++ deg2Rad(x) converts x to radian, where x is in degrees.
+    ++ deg2Rad(x) converts x to radians, where x is in degrees.
 
   Implementation ==> add
 

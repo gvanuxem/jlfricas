@@ -3,7 +3,7 @@
 )abbrev category JOBTYPE JLObjectType
 ++ Category for arbitrary Julia objects
 ++ Author: G.Vanuxem
-++ Date Created: April. 2024
+++ Date Created: April 2024
 ++ Description:
 ++  Category for arbitrary Julia objects, more precisely
 ++  objects that are used within Julia.
@@ -39,14 +39,14 @@ JLObjectType() : Category == JLType() with
     ++ \example{jlText(df, "csv")}
     ++ \example{jlText(df, "latex")}
     jlApply : (String, %) -> JLObject
-    ++jlApply(func, obj) applies the function func with obj as parameter
+    ++ jlApply(func, obj) applies the function func with obj as parameter
     ++ and returns the result as a FriCAS JLObject.
     ++ For example, using JLMatrix(JLObjFloat64):
     ++ \example{M:=nrand(4,4);}
     ++ \example{jlApply("svd", M::JLMatrix(JLObjFloat64)).S}
     ++ should be "equivalent" to svdvals(M).
     jlApply : (String, %, %) -> JLObject
-    ++jlApply(func, obj1, obj2) applies the function func with obj1 and obj2
+    ++ jlApply(func, obj1, obj2) applies the function func with obj1 and obj2
     ++ as parameters and returns the result as a FriCAS JLObject.
     ++ For example (equivalent to map(cos, v)):
     ++ \example{v:=urand01(5)$JLVector(JLFloat)}
@@ -62,7 +62,7 @@ JLObjectType() : Category == JLType() with
     ++ obj2, obj3, obj4 and obj5 as parameters and returns the result as a FriCAS
     ++ JLObject.
     jlAbout : % -> Void
-    ++ jlAbout(obj) displays Julia informations about obj
+    ++ jlAbout(obj) displays Julia information about obj
     ++ if you have About.jl installed in Julia.
     ++ In the Julia interpreter, enter in the package management mode
     ++ with ']', and issue:
@@ -246,7 +246,7 @@ JLArbitraryPrecision() : Category ==  JLType with
 )abbrev domain JOBJECT JLObject
 ++ Generic domain for Julia objects
 ++ Author: G.Vanuxem
-++ Date Created: April. 2024
+++ Date Created: April 2024
 ++ Description:
 ++  Generic Julia objects i.e. objects that are used within Julia,
 ++ and not directly by the underlying FriCAS Common Lisp. It also
@@ -278,7 +278,7 @@ JLObject() : Exports == Implementation where
     ++ \example{jobject("rand(Float64,(2,3,4))")}
     ++ returns a 2x3x4 array of Float64 elements.
     ++ A Julia exception is raised if error(s) occur(s)
-    ++ during parsing/evalution.
+    ++ during parsing/evaluation.
   Implementation ==> add
     import from JLUtilityFunctions
 
@@ -358,19 +358,19 @@ JLObjFloat32() : Exports == Implementation where
     ++ Two numbers compare equal if their relative distance
     ++ or their absolute distance is within tolerance bounds.
     jlF32CApply : (JLObjDynamicLinker, %) -> %
-    ++ jlF32CApply(func,x) applies the function pointer func to x.
+    ++ jlF32CApply(func, x) applies the function pointer func to x.
     ++ For example:
     ++ \example{libm:= jlDlOpen "libopenlibm"}
     ++ \example{squareRoot:=jlDlSym(libm,jsym(sqrtf))}
     ++ \example{jlF32CApply(squareRoot,jfloat32(2))}
     jlF32CApply : (JLObjDynamicLinker, %, %) -> %
-    ++ jlF32CApply(func,x,y) applies the function pointer func to x and y.
+    ++ jlF32CApply(func, x, y) applies the function pointer func to x and y.
     ++ For example:
     ++ \example{libm:= jlDlOpen "libopenlibm"}
     ++ \example{power:=jlDlSym(libm,jsym(powf))}
     ++ \example{jlF32CApply(power,jfloat32(2),jfloat32(7))}
     jlF32CApply : (JLObjDynamicLinker, %, %, %) -> %
-    ++ jlF32CApply(func,x,y,z) applies the function pointer func to x, y and z.
+    ++ jlF32CApply(func, x, y, z) applies the function pointer func to x, y and z.
     cis : % -> JLObjComplexF32
     ++ cis(x) returns exp(%i*x) computed efficiently.
     cispi : % -> JLObjComplexF32
@@ -484,19 +484,19 @@ JLObjFloat64() : Exports == Implementation where
     ++ Two numbers compare equal if their relative distance
     ++ or their absolute distance is within tolerance bounds.
     jlF64CApply : (JLObjDynamicLinker, %) -> %
-    ++ jlF64CApply(func,x) applies the function pointer func to x.
+    ++ jlF64CApply(func, x) applies the function pointer func to x.
     ++ For example:
     ++ \example{libm:= jlDlOpen "libopenlibm"}
     ++ \example{squareRoot:=jlDlSym(libm,jsym(sqrt))}
     ++ \example{jlF64CApply(squareRoot,jfloat64(2))}
     jlF64CApply : (JLObjDynamicLinker, %, %) -> %
-    ++ jlF64CApply(func,x,y) applies the function pointer func to x and y.
+    ++ jlF64CApply(func, x, y) applies the function pointer func to x and y.
     ++ For example:
     ++ \example{libm:= jlDlOpen "libopenlibm"}
     ++ \example{power:=jlDlSym(libm,jsym(pow))}
     ++ \example{jlF64CApply(power,jfloat64(2),jfloat64(7))}
     jlF64CApply : (JLObjDynamicLinker, %, %, %) -> %
-    ++ jlF64CApply(func,x,y,z) applies the function pointer func to x, y and z.
+    ++ jlF64CApply(func, x, y, z) applies the function pointer func to x, y and z.
     ++ For example with GSL-2.8:
     ++ \example{gsl:= jlDlOpen "libgsl.so.28"}
     ++ \example{hypot3:= jlDlSym(gsl,jsym(gsl_hypot3))}
@@ -603,9 +603,9 @@ JLObjComplexF32() : Exports == Implementation where
     "/" : (Integer, %) -> %
     ++ i/x is the division of an integer by x.
     jlApply : (String, %) -> %
-    ++jlApply(func, x) applies the function func with x as parameter.
+    ++ jlApply(func, x) applies the function func with x as parameter.
     jlApply : (String, %, %) -> %
-    ++jlApply(func, x, y) applies the function func to x and y.
+    ++ jlApply(func, x, y) applies the function func to x and y.
     jlApply : (String, %, %, %) -> %
     ++ jlApply(func, x, y, z) applies the function func to x,
     ++ y and z.
@@ -665,11 +665,11 @@ JLObjComplexF64() : Exports == Implementation where
     "/" : (%, Integer) -> %
     ++ x/i is the division by an integer.
     "/" : (Integer, %) -> %
-    ++ i/x is the division of an integer by c
+    ++ i/x is the division of an integer by c.
     jlApply : (String, %) -> %
-    ++jlApply(func, x) applies the function func with x as parameter.
+    ++ jlApply(func, x) applies the function func with x as parameter.
     jlApply : (String, %, %) -> %
-    ++jlApply(func, x, y) applies the function func to x and y.
+    ++ jlApply(func, x, y) applies the function func to x and y.
     jlApply : (String, %, %, %) -> %
     ++ jlApply(func, x, y, z) applies the function func to x,
     ++ y and z.
@@ -715,14 +715,14 @@ JLObjComplexF64() : Exports == Implementation where
 )abbrev domain JOBUI64 JLObjUInt64
 ++ Convenience domain for Julia UInt64 (64 bits unsigned int)
 ++ Author: G.Vanuxem
-++ Date Created: Nov. 2025
+++ Date Created: November 2025
 ++ Description:
 ++  Convenience domain for Julia UInt64, 64 bits unsigned integers,
 ++ objects that are used within Julia, and not directly by the
 ++ underlying FriCAS Common Lisp.
 ++ It is not meant to be used directly, but rather for returned value
 ++ or function argument for example. Only basic arithmetic operations
-++ are supported. By defaut the hexadecimal notation is used.
+++ are supported. By default the hexadecimal notation is used.
 ++ Use the juliaUI64Print to change it to false if the integer
 ++ representation is required. Note that operations defined here
 ++ check overflow imposing a performance penalty.
@@ -735,7 +735,7 @@ JLObjUInt64() : Exports == Implementation where
     coerce : NonNegativeInteger -> %
     ++ coerce(z : NonNegativeInteger) returns z as a JLObjUInt64.
     juliaUI64Print : Boolean -> Boolean
-    ++ juliaUI6Pprint(bool) set the output mode. If set to false, use
+    ++ juliaUI64Print(bool) set the output mode. If set to false, use
     ++ the FriCAS output mode. Otherwise use the Julia one, in
     ++ hexadecimal notation (default).
     juint64 : NonNegativeInteger -> %
@@ -945,7 +945,7 @@ JLObjBigInt() : Exports == Implementation where
 )abbrev domain JOBPAIR JLObjPair
 ++ Convenience domain for Julia Pair.
 ++ Author: G.Vanuxem
-++ Date Created: Dec. 2024
+++ Date Created: December 2024
 ++ Description:
 ++  Convenience domain for Julia Pairs, objects that are used
 ++ within Julia, and not directly by the underlying FriCAS Common Lisp.
@@ -1046,13 +1046,13 @@ JLObjDict() : Exports == Implementation where
     ++ setelt!(dict, ind, val) sets the val to the index ind of dict.
     ++ If the index does not exist it will be created.
     delete! : (%, Any) -> JLObject
-    ++ delete!(dict, key) delete the mapping corresponding to the
+    ++ delete!(dict, key) deletes the mapping corresponding to the
     ++ the key of dict.
     delete! : (%, JLSymbol) -> JLObject
-    ++ delete!(dict, key) delete the mapping corresponding to the
+    ++ delete!(dict, key) deletes the mapping corresponding to the
     ++ the key of dict.
     delete! : (%, JLObject) -> JLObject
-    ++ delete!(dict, key) delete the mapping corresponding to the
+    ++ delete!(dict, key) deletes the mapping corresponding to the
     ++ the key of dict.
     jdict : String -> %
     ++ jdict(str) returns a Julia Dict from the Julia command str.
@@ -1114,7 +1114,7 @@ JLObjDict() : Exports == Implementation where
 ++ Convenience domain for Julia Python objects using
 ++ the PythonCall Julia package.
 ++ Author: G.Vanuxem
-++ Date Created: Sep. 2025
+++ Date Created: September 2025
 ++ Description:
 ++  Convenience domain for Julia Python objects that are used
 ++ within Julia, and not directly by the underlying FriCAS Common Lisp.
@@ -1216,7 +1216,7 @@ JLObjPy() : Exports == Implementation where
 )abbrev domain JFLOAT JLFloat
 ++ Domain for Julia (Big) floats
 ++ Author: G. Vanuxem
-++ Date Created: Feb. 2024
+++ Date Created: February 2024
 ++ Keywords: float, floating point, number
 ++ Description:
 ++  \spadtype{JLFloat} implements arbitrary precision floating
@@ -1252,14 +1252,14 @@ JLFloat() : Exports == Implementation where
     precision : (%, PI) -> %
     ++ precision(x, p) returns a copy of x with precision p.
     jlApply : (String, %) -> %
-    ++jlApply(func, x) applies the function func with x as parameter.
+    ++ jlApply(func, x) applies the function func with x as parameter.
     jlApply : (String, %, %) -> %
-    ++jlApply(func, x, y) applies the function func to x and y.
+    ++ jlApply(func, x, y) applies the function func to x and y.
     jlApply : (String, %, %, %) -> %
     ++ jlApply(func, x, y, z) applies the function func to x,
     ++ y and z.
     jlMPFRApply : (JLObject, %) -> %
-    ++ jlMPFRApply(func,x) applies the function pointer func to x.
+    ++ jlMPFRApply(func, x) applies the function pointer func to x.
     ++ It is expected that the C function modifies the first parameters
     ++ for the returned value (provided by FriCAS and returned here) and
     ++ and as a last parameter, the rounding mode. See MPFR.
@@ -1271,7 +1271,7 @@ JLFloat() : Exports == Implementation where
     ++ => 1.29805533264755778568117117915281161778...
     ++ \example{jlDlClose(mpfr)}
     jlMPFRApply : (JLObject, %, %) -> %
-    ++ jlMPFRApply(func,x,y) applies the function pointer func to x and y.
+    ++ jlMPFRApply(func, x, y) applies the function pointer func to x and y.
     ++ It is expected that the C function modifies the first parameters
     ++ for the returned value (provided by FriCAS and returned here) and
     ++ and as a last parameter, the rounding mode. See MPFR.
@@ -1282,7 +1282,7 @@ JLFloat() : Exports == Implementation where
     ++ \example{jlMPFRApply(sym,val, jfloat(2))}
     ++ \example{jlDlClose(mpfr)}
     jlMPFRApply : (JLObject, %, %, %) -> %
-    ++ jlMPFRApply(func,x,y,z) applies the function pointer func to x, y and z.
+    ++ jlMPFRApply(func, x, y, z) applies the function pointer func to x, y and z.
     ++ It is expected that the C function modifies the first parameters
     ++ for the returned value (provided by FriCAS and returned here) and
     ++ as a last parameter, the rounding mode (the default mode is used here).
@@ -1301,7 +1301,7 @@ JLFloat() : Exports == Implementation where
     exp10 : % -> %
     ++ exp10(x) computes the base 10 exponential of x. 
     log1p : % -> %
-    ++log1p(x) computes accurately log(1+x)
+    ++ log1p(x) computes accurately log(1+x)
     log2 : % -> %
     ++ log2(x) computes the base 2 logarithm of x.
     log10 : % -> %
@@ -1520,10 +1520,10 @@ JLFloat() : Exports == Implementation where
 )abbrev domain JCFLOAT JLComplexFloat
 ++ Domain for Julia (Big) complex floats
 ++ Author: G. Vanuxem
-++ Date Created: May. 2024
+++ Date Created: May 2024
 ++ Keywords: float, floating point, complex number
 ++ Description:
-++  \spadtype{JLFComplexloat} implements arbitrary precision floating
+++  \spadtype{JLComplexFloat} implements arbitrary precision floating
 ++  point arithmetic for complex numbers using Julia BigFloats (MPFR based).
 ++ https://www.mpfr.org/
 JLComplexFloat() : Exports == Implementation where
@@ -1554,9 +1554,9 @@ JLComplexFloat() : Exports == Implementation where
     precision : (%, PI) -> %
     ++ precision(x, p) returns a copy of x with precision p.
     jlApply : (String, %) -> %
-    ++jlApply(func, x) applies the function func with x as parameter.
+    ++ jlApply(func, x) applies the function func with x as parameter.
     jlApply : (String, %, %) -> %
-    ++jlApply(func, x, y) applies the function func to x and y.
+    ++ jlApply(func, x, y) applies the function func to x and y.
     jlApply : (String, %, %, %) -> %
     ++ jlApply(func, x, y, z) applies the function func to x,
     ++ y and z.
@@ -1568,7 +1568,7 @@ JLComplexFloat() : Exports == Implementation where
     exp10 : % -> %
     ++ exp10(x) computes the base 10 exponential of x. 
     log1p : % -> %
-    ++log1p(x) computes accurately log(1+x)
+    ++ log1p(x) computes accurately log(1+x)
     log2 : % -> %
     ++ log2(x) computes the base 2 logarithm of x.
     log10 : % -> %
@@ -1763,7 +1763,7 @@ JLComplexFloat() : Exports == Implementation where
 )abbrev domain JDFRAME JLDataFrame
 ++ Description: Julia DataFrames support
 ++ Author: G. Vanuxem
-++ Date Created: May. 2024
+++ Date Created: May 2024
 ++ Keywords: tabular data, sciences, statistics, description
 ++ Description:
 ++  \spadtype{JLDataFrame} adds support of the DataFrames.jl
@@ -2147,7 +2147,7 @@ JLMatrix(R : JLObjectRing) : Exports == Implementation where
         ++ \example{qr.Q * qr.R}
     inverse : % -> %
     ++ inverse(m) returns inverse matrix. Throws a Julia error if m
-    ++ is no invertible.
+    ++ is not invertible.
     trace : % -> R
     ++ trace(m) returns the trace of square matrix m.
     ++ Julia error if m is not square.
@@ -2167,19 +2167,19 @@ JLMatrix(R : JLObjectRing) : Exports == Implementation where
     ++ coerce(x): convenience function.
     factorize : JLMatrix(JLObjFloat32) -> JLObject
     ++ factorize(m) factorizes m using a suited matrix factorization for m.
-    ++ For a symmetric matrix the Bunch-Kaufman factorization will be choosen
+    ++ For a symmetric matrix the Bunch-Kaufman factorization will be chosen
     ++ whereas for generic matrices, a LU or a QR factorization will be used.
     factorize : JLMatrix(JLObjComplexF32) -> JLObject
     ++ factorize(m) factorizes m using a suited matrix factorization for m.
-    ++ For a symmetric matrix the Bunch-Kaufman factorization will be choosen
+    ++ For a symmetric matrix the Bunch-Kaufman factorization will be chosen
     ++ whereas for generic matrices, a LU or a QR factorization will be used.
     factorize : JLMatrix(JLObjFloat64) -> JLObject
     ++ factorize(m) factorizes m using a suited matrix factorization for m.
-    ++ For a symmetric matrix the Bunch-Kaufman factorization will be choosen
+    ++ For a symmetric matrix the Bunch-Kaufman factorization will be chosen
     ++ whereas for generic matrices, a LU or a QR factorization will be used.
     factorize : JLMatrix(JLObjComplexF64) -> JLObject
     ++ factorize(m) factorizes m using a suited matrix factorization for m.
-    ++ For a symmetric matrix the Bunch-Kaufman factorization will be choosen
+    ++ For a symmetric matrix the Bunch-Kaufman factorization will be chosen
     ++ whereas for generic matrices, a LU or a QR factorization will be used.
     jmatrix : String -> %
     ++ jmatrix(str) evaluates the string str and returns the generated matrix.

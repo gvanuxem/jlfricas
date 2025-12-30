@@ -34,7 +34,7 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
     ++ monomial?(p) checks whether or not p is a monomial.
     monomialRecursive? : % -> Boolean
     ++ monomialRecursive?(p) checks whether or not p is
-    ++ monomial recurisvely (all scalar types).
+    ++ monomial recursively (all scalar types).
     term? : % -> Boolean
     ++ term?(p) checks whether or not p is a one term polynomial.
     termRecursive? : % -> Boolean
@@ -73,15 +73,15 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
       etaQExp : (INT, PI, %) -> %
       ++ etaQExp(r,n,p) returns the q-expansion to length n
       ++ of the Dedekind eta function (without the leading factor
-      ++ q^(1/ 24)) raised to the power r, (q^(−1/24)*η(q))^r.
+       ++ q^(1/24)) raised to the power r, (q^(−1/24)*η(q))^r.
     if R has Algebra(NMFraction(NMInteger)) then
       "+" : (%, Fraction(Integer)) -> %
-      ++ p * q is the sum of p and a rational number q (Fraction(Intger))
+      ++ p * q is the sum of p and a rational number q (Fraction(Integer))
       "*" : (%, Fraction(Integer)) -> %
       ++ p * q is the product of p with a rational
       ++ number q (Fraction(Integer))
       "+" : (Fraction(Integer), %) -> %
-      ++ q * p is the sum of p and a rational number q (Fraction(Intger))
+      ++ q * p is the sum of p and a rational number q (Fraction(Integer))
       "*" : (Fraction(Integer), %) -> %
       ++ q * p is the product of p with a rational
       ++ number q (Fraction(Integer))
@@ -114,11 +114,11 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
     ++ length(p) returns the number of coefficients
     ++ in its dense representation. It includes zero coefficients.
     trailingCoefficient : % -> R
-    ++ trailingCoefficient(p) returns the trailing coefficientof p.
+    ++ trailingCoefficient(p) returns the trailing coefficient of p.
     constantCoefficient : % -> R
     ++ constantCoefficient(p) returns the constant of p.
     truncate : (%, NNI) -> %
-    ++ truncate(p, n) return p truncated to n term. It's the remainder
+    ++ truncate(p, n) returns p truncated to n terms. It's the remainder
     ++ of the division by x^n.
     mullow : (%, %, NNI) -> %
     ++ mullow(p1,p2,n) is the truncated multiplication of p1 and p2 by n.
@@ -131,9 +131,9 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
     ++ the resulting polynomial is truncated or padded with zeroes before
     ++ the leading term if necessary
     shiftLeft : (%, NNI) -> %
-    ++ shiftLeft(p) left shift p.
+    ++ shiftLeft(p) shifts p left.
     shiftRight : (%, NNI) -> %
-    ++ shiftRight(p) right shift p.
+    ++ shiftRight(p) shifts p right.
     shiftLeft! : (%, NNI) -> %
     ++ shiftLeft(p) left shift p.
     shiftRight! : (%, NNI) -> %
@@ -356,7 +356,7 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
 -- TODO: *term*, truncate, mullow, *degree, reverse, integrate,
 -- constantMonomial checks
 --   with other Nemo ring than NINT an NRAT to see if they
---   should be removed or rewrited. See commented out implementations.
+--   should be removed or rewritten. See commented out implementations.
 NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
       Exports == Implementation where
   NINT      ==> NMInteger
@@ -375,7 +375,7 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
     ++ monomial?(p) checks whether or not p is a monomial.
     monomialRecursive? : % -> Boolean
     ++ monomialRecursive?(p) checks whether or not p is
-    ++ monomial recurisvely (all scalar types).
+    ++ monomial recursively (all scalar types).
     --term? : % -> Boolean
     --++ term?(p) checks whether or not p is a one term polynomial.
     termRecursive? : % -> Boolean
@@ -389,12 +389,12 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
     ++ ^ is the integer exponentiation (possibly negative).
     if R has Algebra(NMFraction(NMInteger)) then
       "+" : (%, Fraction(Integer)) -> %
-      ++ p * q is the sum of p and a rational number q (Fraction(Intger))
+      ++ p * q is the sum of p and a rational number q (Fraction(Integer))
       "*" : (%, Fraction(Integer)) -> %
       ++ p * q is the product of p with a rational
       ++ number q (Fraction(Integer))
       "+" : (Fraction(Integer), %) -> %
-      ++ q * p is the sum of p and a rational number q (Fraction(Intger))
+      ++ q * p is the sum of p and a rational number q (Fraction(Integer))
       "*" : (Fraction(Integer), %) -> %
       ++ q * p is the product of p with a rational
       ++ number q (Fraction(Integer))
@@ -421,14 +421,14 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
     minimumDegree : % -> INT
     ++ minimumDegree(p) returns the minimal exponent of p.
     trailingCoefficient : % -> R
-    ++ trailingCoefficient(p) returns the trailing coefficientof p.
+    ++ trailingCoefficient(p) returns the trailing coefficient of p.
     constantCoefficient : % -> R
     ++ constantCoefficient(p) returns the constant of p.
     coefficients : (%, Segment(Integer)) -> JLVector(R)
     ++ coefficients(p, seg) returns the coefficients from the exponent
     ++ range seg.
     truncate : (%, NNI) -> %
-    ++ truncate(p, n) return p truncated to n term. It's the remainder
+    ++ truncate(p, n) returns p truncated to n terms. It's the remainder
     ++ of the division by x^n.
     mullow : (%, %, NNI) -> %
     ++ mullow(p1,p2,n) is the truncated multiplication of p1 and p2 by n.
@@ -438,7 +438,7 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
     reverse : (%, NNI) -> %
     ++ reverse the coefficients of p (the leading becomes the trailing)
     ++ and normalise the resulting polynomial. Adjust the length to n so
-    ++ the resulting polynomial is trucated or padded with zeroes before
+    ++ the resulting polynomial is truncated or padded with zeroes before
     ++ the leading term if necessary
     coerce   : Variable(x) -> %
     ++ coerce(x) converts the variable x to a Nemo univariate polynomial.
@@ -654,7 +654,7 @@ InnerNMPolynomial(R : NMRing, Ordering : JLSymbol) : Exports == Implementation w
     ++ monomial?(p) checks whether or not p is a monomial.
     monomialRecursive? : % -> Boolean
     ++ monomialRecursive?(p) checks whether or not p is
-    ++ monomial recurisvely (all scalar types).
+    ++ monomial recursively (all scalar types).
     term? : % -> Boolean
     ++ term?(p) checks whether or not p is a one term polynomial.
     termRecursive? : % -> Boolean
@@ -676,7 +676,7 @@ InnerNMPolynomial(R : NMRing, Ordering : JLSymbol) : Exports == Implementation w
       ++ number q (Fraction(Integer))
       "*" : (Fraction(Integer), %) -> %
       ++ q * p is the product of p with a rational
-      ++ q (Fraction(Intger)) 
+      ++ q (Fraction(Integer)) 
     "*"      : (%, PositiveInteger) -> %
     ++ * is the positive integer multiplication.
     "*"      : (%, NonNegativeInteger) -> %
@@ -691,17 +691,17 @@ InnerNMPolynomial(R : NMRing, Ordering : JLSymbol) : Exports == Implementation w
     degree   : (%, PI) -> NNI
     ++ degree(p,i) returns the degree of the i-th variable.
     length   : % -> NNI
-    ++ length(p) retruns the number of terms of p.
+    ++ length(p) returns the number of terms of p.
     coefficients : % -> JLVector(R)
     ++ coefficients(p) returns a Julia vector of coefficients of p.
     monomials : % -> JLVector(%)
     ++ monomials(p) returns the list of non-zero monomials of p
-    ++ includind its coefficients.
+    ++ including its coefficients.
     primitiveMonomials : % -> JLVector(%)
     ++ primitiveMonomials(p) returns the list of non-zero
     ++ primitive monomials of p i.e. not including its coefficients.
     trailingCoefficient : % -> R
-    ++ trailingCoefficient(p) returns the trailing coefficientof p.
+    ++ trailingCoefficient(p) returns the trailing coefficient of p.
     constantCoefficient : % -> R
     ++ constantCoefficient(p) returns the constant of p.
     internalOrdering : () -> JLObject

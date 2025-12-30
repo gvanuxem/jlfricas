@@ -8,7 +8,7 @@
 ++ Keywords: p-adic, completion
 ++ Examples:
 ++ References:
-++ Description: This is the category representations of
+++ Description: This category provides representations of
 ++   the p-adic numbers using the Nemo Julia package.
 NMPadicNumberCategory(p) : Category == Definition where
   p     : Integer
@@ -41,7 +41,7 @@ NMPadicNumberCategory(p) : Category == Definition where
     --  ++ Argument \spad{a} must be a root of \spad{f} \spad{(mod p)}.
 
 )abbrev domain NXPADICZ NMExtendedPadicInteger
-++ Author: Vanuxem Grégory
+++ Author: Grégory Vanuxem
 ++ Date Created: 1 February 2025
 ++ Basic Operations:
 ++ Related Domains:
@@ -79,7 +79,7 @@ NMExtendedPadicInteger(p : Integer, prec : Integer) :
     ++ x * q is the multiplication of a p-adic number
     ++ and a Julia Nemo Fraction integer.
     "*" : (NFINT, %) -> %
-    ++ q * x is the multiplication of Julia Nemo Fraction integer
+    ++ q * x is the multiplication of a Julia Nemo Fraction integer
     ++ and a p-adic number.
     "*" : (NINT, %) -> %
     ++ i * x is the multiplication of a NemoInteger and a p-adic number.
@@ -253,7 +253,7 @@ NMPadic2() == NMExtendedPadicInteger(2, 64)
 
 )abbrev domain NXPADICR NMExtendedPadicRational
 ++ Author: Grégory Vanuxem
-++ Date Created: 4 april 2025
+++ Date Created: April 2025
 ++ Basic Operations:
 ++ Related Domains:
 ++ Also See:
@@ -261,7 +261,7 @@ NMPadic2() == NMExtendedPadicInteger(2, 64)
 ++ Keywords: q-adic, completion
 ++ Examples:
 ++ References:
-++ Description: This is a domain of Qp.
+++ Description: This is a domain for Qp.
 NMExtendedPadicRational(p,deg,prec) : Exports == Implementation where
   p     : Integer
   deg   : Integer
@@ -286,13 +286,13 @@ NMExtendedPadicRational(p,deg,prec) : Exports == Implementation where
     ++ x + q is the addition of a q-adic number
     ++ and a Julia Nemo Fraction integer.
     "+" : (NFINT, %) -> %
-    ++ q + x is the addition of Julia Nemo Fraction integer
+    ++ q + x is the addition of a Julia Nemo Fraction integer
     ++ and a q-adic number.
     "*" : (%, NFINT) -> %
     ++ x * q is the multiplication of a q-adic number
     ++ and a Julia Nemo Fraction integer.
     "*" : (NFINT, %) -> %
-    ++ q * x is the multiplication of Julia Nemo Fraction integer
+    ++ q * x is the multiplication of a Julia Nemo Fraction integer
     ++ and a q-adic number.
     "*" : (NINT, %) -> %
     ++ i * x is the multiplication of a NemoInteger and a q-adic number.
@@ -303,12 +303,12 @@ NMExtendedPadicRational(p,deg,prec) : Exports == Implementation where
     valuation : % -> %
     ++ valuation(x) is the valuation of x.
     liftZ : % -> NINT
-    ++ liftZ(x) lift x to a Nemo Integer if possible.
+    ++ liftZ(x) lifts x to a Nemo Integer if possible.
     teichmuller : % -> %
     ++ teichmuller(x) computes the Teichmuller lift of x.
     ++ The valuation of x must be non negative.
     frobenius : (%, I) -> %
-    ++ frobenius(x,i) returns  the image of the i-th power of Frobenius
+    ++ frobenius(x,i) returns the image of the i-th power of Frobenius
     ++ of x.
     coerce : NMInteger -> %
     ++ coerce(x) returns x as the q-adic completion of the Nemo Integer.    
@@ -439,7 +439,7 @@ NMExtendedPadicRational(p,deg,prec) : Exports == Implementation where
 
 )abbrev domain NPADICR NMPadicRational
 ++ Author: Grégory Vanuxem
-++ Date Created: 4 april 2025
+++ Date Created: April 2025
 ++ Basic Operations:
 ++ Related Domains:
 ++ Also See:
@@ -447,5 +447,5 @@ NMExtendedPadicRational(p,deg,prec) : Exports == Implementation where
 ++ Keywords: q-adic, completion
 ++ Examples:
 ++ References:
-++ Description: This is a domain of Qp.
+++ Description: This is a domain for Qp.
 NMPadicRational(p : Integer) == NMExtendedPadicRational(p, 1, 64)

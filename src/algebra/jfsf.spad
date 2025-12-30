@@ -52,7 +52,7 @@ JLFloatSpecialFunctions() : Exports == Implementation where
     rad2Deg  : JF -> JF
     ++ rad2Deg(x) converts x to degrees, where x is in radians.
     deg2Rad  : JF -> JF
-    ++ deg2Rad(x) converts x to radian, where x is in degrees.
+    ++ deg2Rad(x) converts x to radians, where x is in degrees.
 
   Implementation ==> add
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])

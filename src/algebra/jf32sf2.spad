@@ -1,5 +1,5 @@
 )abbrev package JF32SF2 JLFloat32SpecialFunctions2
-++ Special functions computed using JL's ecosystem.
+++ Special functions computed using JL's Ecosystem.
 ++ They are here essentially for "completeness" purpose with
 ++ JLFloat32. You should use the DoubleFloat's special
 ++ functions if available, calling JL functions is costly.
