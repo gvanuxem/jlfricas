@@ -68,7 +68,7 @@ NMField() : Category == Join(NMCommutativeRing, Field)
 ++ Last Modified: Jun. 2025
 ++ Description:
 ++  This domain allows the manipulation of Nemo integers
-++  using the Nemo package for Julia (FLINT based).
+++  using the Nemo Julia package (FLINT based).
 ++ References: https://flintlib.org/; https://nemocas.github.io/Nemo.jl/stable/
 NMInteger() : Exports == Implementation where
   Z         ==> Integer
@@ -211,8 +211,8 @@ NMInteger() : Exports == Implementation where
 ++ Description:
 ++  This domain allows the manipulation of Nemo algebraic numbers,
 ++  i.e. algebraic closure of rational field,
-++  represented by minimal polynomials using the Nemo package
-++  for Julia (Calcium based).
+++  represented by minimal polynomials using the Nemo Julia package
+++  (Calcium library based).
 ++  https://fredrikj.net/calcium/
 ++ References: https://flintlib.org/; https://nemocas.github.io/Nemo.jl/stable/
 
@@ -570,7 +570,7 @@ NMAlgebraicNumber() : Exports == Implementation where
 ++ Last Modified: Jun. 2025
 ++ Description:
 ++  This domain allows the manipulation of Nemo integer mod n
-++  elements using the Nemo package for Julia (FLINT based).
+++  elements using the Nemo Julia package (FLINT based).
 ++ References: https://flintlib.org/; https://nemocas.github.io/Nemo.jl/stable/
 NMIntegerMod(p : PositiveInteger) : Exports == Implementation where
   PI      ==> PositiveInteger
@@ -941,7 +941,7 @@ NMFiniteField(p : PositiveInteger, n: PositiveInteger) : Exports == Implementati
 ++ Keywords: float, floating point, number, complex
 ++ Description:
 ++  \spadtype{InnerNMExactCalciumField} implements exact complex field
-++  arithmetic using the Nemo package. Inner domain using options,
+++  arithmetic using the Nemo Julia package. Inner domain using options,
 ++  see https://fredrikj.net/calcium/ca.html#context-options for hints.
 ++ References: https://flintlib.org/; https://nemocas.github.io/Nemo.jl/stable/
 ++  See https://flintlib.org/doc/introduction_calcium.html for the C library.
@@ -1358,7 +1358,7 @@ InnerNMExactCalciumField(Options : JLObjDict) : Exports ==
 ++ Keywords: float, floating point, number, complex
 ++ Description:
 ++  \spadtype{NMExactCalciumField} implements exact complex field
-++  arithmetic using the Nemo package.
+++  arithmetic using the Nemo Julia package.
 ++ References: https://flintlib.org/; https://nemocas.github.io/Nemo.jl/stable/
 ++ See also: https://flintlib.org/doc/introduction_calcium.html for the C library.
 NMExactCalciumField() : Exports == Implementation where

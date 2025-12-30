@@ -131,7 +131,6 @@ JLObjectType() : Category == JLType() with
         error(concat("jlAbout: the _"About.jl_" Julia package is not installed.",
           " See the JLObjectType category for information"))
       jlEvalString(concat(["about(", getind(obj),")"]))@Void
-
     jlFieldNames(obj) ==
       jlref(concat(["fieldnames(", getind(obj),")"]))
     jlPropertyNames(obj) ==

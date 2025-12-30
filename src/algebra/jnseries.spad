@@ -1,5 +1,5 @@
 )abbrev domain NUPS NMUnivariatePowerSeries
-++ Nemo univariate power series ring using the Julia Nemo package
+++ Nemo univariate power series ring using the Nemo Julia package
 ++ Author: G. Vanuxem
 ++ Date Created: Jun, 2025
 ++ Basic Operations:
@@ -194,7 +194,7 @@ NMUnivariatePowerSeries(R, x, prec, abs) : Exports == Implementation where
         jlRegex("//"), jlSubstitute("/")) pretend OutputForm
 
 )abbrev domain NULS NMUnivariateLaurentSeries
-++ Nemo univariate Laurent series ring using the Julia Nemo package
+++ Nemo univariate Laurent series ring using the Nemo Julia package
 ++ Author: G. Vanuxem
 ++ Date Created: Jun, 2025
 ++ Basic Operations:
@@ -355,7 +355,7 @@ NMUnivariateLaurentSeries(R, x, prec) : Exports == Implementation where
         jlRegex("//"), jlSubstitute("/")) pretend OutputForm
 
 )abbrev domain NUPXS NMUnivariatePuiseuxSeries
-++ Nemo univariate Puiseux series ring using the Julia Nemo package
+++ Nemo univariate Puiseux series ring using the Nemo Julia package
 ++ Author: G. Vanuxem
 ++ Date Created: Jun, 2025
 ++ Basic Operations:

@@ -9,7 +9,7 @@
 ++ Examples:
 ++ References:
 ++ Description: This is the category representations of
-++   the p-adic numbers.
+++   the p-adic numbers using the Nemo Julia package.
 NMPadicNumberCategory(p) : Category == Definition where
   p     : Integer
   NINT  ==> NMInteger
@@ -52,7 +52,8 @@ NMPadicNumberCategory(p) : Category == Definition where
 ++ Examples:
 ++ References:
 ++ Description:
-++   This domain implements Zp, the p-adic completion of the integers.
+++   This domain implements Zp, the p-adic completion of the integers
+++   using the Nemo Julia package.
 NMExtendedPadicInteger(p : Integer, prec : Integer) :
     Exports == Implementation where
   --unBalanced? : Boolean
@@ -231,7 +232,8 @@ NMExtendedPadicInteger(p : Integer, prec : Integer) :
 ++ References:
 ++ Description:
 ++   Implementation of Zp: p-adic numbers are represented as
-++   sum(i = 0.., a[i] * p^i), where the a[i] lie in 0, 1, ..., (p - 1).
+++   sum(i = 0.., a[i] * p^i), where the a[i] lie in 0, 1, ..., (p - 1)
+++   using the Nemo Julia package.
 NMPadicInteger(p : Integer) == NMExtendedPadicInteger(p, 64)
 
 )abbrev domain NPADIC2 NMPadic2

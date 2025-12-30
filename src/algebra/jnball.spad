@@ -5,7 +5,7 @@
 ++ Keywords: float, floating point, number, real, ball
 ++ Description:
 ++  \spadtype{NMArbField} implements fixed precision ball
-++  arithmetic using the Julia Nemo package - based on the Arb library.
+++  arithmetic using the Nemo Julia package - based on the Arb library.
 ++ Reference: https://nemocas.github.io/Nemo.jl/stable/
 NMArbField(p: PositiveInteger) : Exports == Implementation where
   PI        ==> PositiveInteger
@@ -356,7 +356,7 @@ NMRealBall() == NMArbField(256)
 ++ Description:
 ++  \spadtype{NMAcbField} implements fixed precision
 ++  complex ball arithmetic using
-++  the Julia Nemo package - based on the Arb library.
+++  the Nemo Julia package - based on the Arb library.
 ++ Reference: https://nemocas.github.io/Nemo.jl/stable/
 NMAcbField(p: PositiveInteger) : Exports == Implementation where
   PI        ==> PositiveInteger

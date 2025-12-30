@@ -1,5 +1,5 @@
 )abbrev domain NUP NMUnivariatePolynomial
-++ Univariate polynomial domain using the Julia package Nemo
+++ Univariate polynomial domain using the Nemo Julia package
 ++ Author: G. Vanuxem
 ++ Date Created: March, 2024
 ++ Nested polynomials Fatemans's benchmark:
@@ -349,7 +349,7 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
       coerce(ret)
 
 )abbrev domain NULP NMUnivariateLaurentPolynomial
-++ Univariate laurent polynomial domain using Julia AbstractAlgebra package 
+++ Univariate laurent polynomial domain using the AbstractAlgebra Julia package
 ++ Author: G. Vanuxem
 ++ Date Created: Dec, 2024
 -- TODO: eval, elt, subst, compose, evaluate
@@ -622,7 +622,7 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
 
 )abbrev domain INPOLY InnerNMPolynomial
 ++ Generic sparse multivariate polynomial domain using
-++ the Julia package Nemo (using AbstractAlgebra)
+++ the Nemo Julia package (using AbstractAlgebra)
 ++ Author: G. Vanuxem
 ++ Basic Functions: degree, eval, coefficient, monomial, differentiate,
 ++ resultant, gcd
