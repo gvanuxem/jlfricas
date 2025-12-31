@@ -27,6 +27,24 @@ JLUtilityFunctions() : Exports == Implementation where
     ++ Returns false if it cannot be imported.
     jlAddPackage  : String -> Void
     ++ jlAddPackage(package) adds package to Julia.
+    ++ For example, jlAddPackage("PyCall") will add the PyCall package.
+    jlRemovePackage  : String -> Void
+    ++ jlRemovePackage(package) removes package from Julia.
+    ++ For example, jlRemovePackage("PyCall") will remove the PyCall package.
+    jlBuildPackage   : String -> Void
+    ++ jlBuildPackage(package) builds package in Julia.
+    ++ For example, jlBuildPackage("PyCall") will build the PyCall package.
+    jlPrecompilePackage : String -> Void
+    ++ jlPrecompilePackage(package) precompiles package in Julia.
+    ++ For example, jlPrecompilePackage("PyCall") will precompile the PyCall package.
+    jlUpdatePackage   : String -> Void
+    ++ jlUpdatePackage(package) updates package in Julia.
+    ++ For example, jlUpdatePackage("PyCall") will update the PyCall package.
+    jlUpdateAllPackages : () -> Void
+    ++ jlUpdateAllPackages() updates all packages in Julia.
+    jlTestPackage   : String -> Void
+    ++ jlTestPackage(package) tests package in Julia.
+    ++ For example, jlTestPackage("PyCall") will test the PyCall package.
     jlInclude    : String -> Boolean
     ++ jlInclude(file.jl) loads and evaluates the content of the Julia
     ++ file file.jl in the current global scope.
@@ -41,7 +59,7 @@ JLUtilityFunctions() : Exports == Implementation where
     ++ operation op. Trivial implementation.
     -- TODO: Use StyledStrings and Julia ouput in another operation?
     jlSeed! : JLInt64 -> Void
-    ++ jlSeed!(n) reseeds the Julia random number generator.
+    ++ jlSeed!(n) reseeds the Julia random number generator
     ++ if applicable (Some random number generators don't accept a seed).
     jlRandomString : PI -> String
     ++ jlRandomString(n) returns a random string of n characters.
@@ -109,6 +127,18 @@ JLUtilityFunctions() : Exports == Implementation where
 
     jlAddPackage(str : String) ==
       jlEvalString(concat(["import Pkg;Pkg.add(_"", str,"_")"]))
+    jlRemovePackage(str : String) ==
+      jlEvalString(concat(["import Pkg;Pkg.rm(_"", str,"_")"]))
+    jlBuildPackage(str : String) ==
+      jlEvalString(concat(["import Pkg;Pkg.build(_"", str,"_")"]))
+    jlPrecompilePackage(str : String) ==
+      jlEvalString(concat(["import Pkg;Pkg.precompile(_"", str,"_")"]))
+    jlUpdatePackage(str : String) ==
+      jlEvalString(concat(["import Pkg;Pkg.update(_"", str,"_")"]))
+    jlUpdateAllPackages() ==
+      jlEvalString("import Pkg;Pkg.update()")
+    jlTestPackage(str : String) ==
+      jlEvalString(concat(["import Pkg;Pkg.test(_"", str, "_")"]))
 
     jlSeed!(n) == jlEvalString(concat ["Random.seed!(", string(n),")"])
 

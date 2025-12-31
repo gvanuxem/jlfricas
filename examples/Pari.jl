@@ -250,7 +250,7 @@ function run_examples()
 
     finally
         println("\nClosing PARI library...")
-        pari_close()
+        #pari_close()
     end
 end
 
