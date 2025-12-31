@@ -58,6 +58,7 @@ JLUtilityFunctions() : Exports == Implementation where
     ++ jlDefined?(sym) checks whether or not sym is defined in Julia.
     jlDefined?    : String -> Boolean
     ++ jlDefined?(str) checks whether or not str is defined in Julia.
+    ++ For example: jlDefined?("sin") will check if sin is defined.
     jlDocumentation  : Symbol -> Void
     ++ jlDocumentation(op) shows the documentation of the
     ++ operation op. Trivial implementation.

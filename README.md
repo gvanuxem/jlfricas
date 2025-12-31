@@ -19,6 +19,12 @@ Take into account that this is absolutely not the official documentation even th
 
 Julia Plots and HyperDoc:
 
+Beware, actually, on WSL you may need to export:
+``
+export QT_WAYLAND_SHELL_INTEGRATION=xdg-shell
+``
+in your shell first.
+
 ![Capture2](https://github.com/user-attachments/assets/97f35ad1-a6bc-41f9-986f-47e8d3281ad6)
 
 
