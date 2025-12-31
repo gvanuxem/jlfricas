@@ -19,7 +19,7 @@ du = collect(du)
 lotka_volterra!(du, u, p, t)
 println(du)
 
-build_function(du, u, p, t, target=Symbolics.CTarget())
+println(build_function(du, u, p, t, target=Symbolics.CTarget()))
 
 f = build_function(du, u, p, t, target=Symbolics.CTarget(), expression=Val{false})
 println(f)
