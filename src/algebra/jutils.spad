@@ -45,6 +45,10 @@ JLUtilityFunctions() : Exports == Implementation where
     jlTestPackage   : String -> Void
     ++ jlTestPackage(package) tests package in Julia.
     ++ For example, jlTestPackage("PyCall") will test the PyCall package.
+    jlListPackages : () -> Void
+    ++ jlListPackages() displays the status of all installed packages in Julia.
+    jlGCPackages : () -> Void
+    ++ jlGCPackages() forces a Julia garbage collector run on all installed packages.
     jlInclude    : String -> Boolean
     ++ jlInclude(file.jl) loads and evaluates the content of the Julia
     ++ file file.jl in the current global scope.
@@ -139,6 +143,10 @@ JLUtilityFunctions() : Exports == Implementation where
       jlEvalString("import Pkg;Pkg.update()")
     jlTestPackage(str : String) ==
       jlEvalString(concat(["import Pkg;Pkg.test(_"", str, "_")"]))
+    jlListPackages() ==
+      jlEvalString("import Pkg;Pkg.status()")
+    jlGCPackages() ==
+      jlEvalString("import Pkg;Pkg.gc()")
 
     jlSeed!(n) == jlEvalString(concat ["Random.seed!(", string(n),")"])
 
