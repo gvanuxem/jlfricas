@@ -1782,6 +1782,7 @@ NMFraction(R : Join(NMCommutativeRing, IntegralDomain)) :
     "*" : (NMInteger, %) -> %
     ++ i*x is the integer multiplication (NMInteger).
     if R has IntegerNumberSystem then
+      RetractableTo(Fraction(Integer))
       abs2 : % -> %
       ++ abs2(x) returns the square of the absolute value of x.
       random : PositiveInteger -> %
@@ -1852,6 +1853,14 @@ NMFraction(R : Join(NMCommutativeRing, IntegralDomain)) :
       zero?(x) => "failed"
       junfunc("inv",x) pretend %
         
+    if R has IntegerNumberSystem then
+      retract(x : %) : Fraction(Integer) ==
+           retract(numer x)@Integer / retract(denom x)@Integer
+      retractIfCan(x : %) : Union(Fraction(Integer), "failed") ==
+           (n := retractIfCan(numer x)@Union(Integer, "failed")) case "failed" => "failed"
+           (d := retractIfCan(denom x)@Union(Integer, "failed")) case "failed" => "failed"
+           (n::Integer) / (d::Integer)
+
     if R is NMInteger then
       random(p : PositiveInteger) ==
         jlref(concat ["rand_bits(QQ,",string(p), ")"])

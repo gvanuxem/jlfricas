@@ -1,5 +1,5 @@
 # Test Symbolics.jl
-# Test is using ')read examples/Symbolics.jl' or 'jlInclude("examples/Symbolics.jl")'
+# Test it using ')read examples/Symbolics.jl' or 'jlInclude("examples/Symbolics.jl")'
 # Official example from the documentation of Symbolics.jl, see:
 # https://docs.sciml.ai/Symbolics/stable/tutorials/converting_to_C/
 

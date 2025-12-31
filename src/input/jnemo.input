@@ -162,4 +162,17 @@ testEquals("asin sin(a)", "a")
 testEquals("cos acos(a)", "a")
 testEquals("tan atan(a)", "a")
 
+testcase "NMFraction(NMInteger) retraction"
+nf1 := coerce(3/4)@NMFraction(NMInteger)
+res1 := retractIfCan(nf1)@Union(Fraction(Integer), "failed")
+testTrue("not (res1 case _"failed_")")
+testEquals("res1::Fraction(Integer)", "3/4")
+testEquals("retract(nf1)@Fraction(Integer)", "3/4")
+
+nf2 := coerce(5)@NMFraction(NMInteger)
+res2 := retractIfCan(nf2)@Union(Fraction(Integer), "failed")
+testTrue("not (res2 case _"failed_")")
+testEquals("res2::Fraction(Integer)", "5/1")
+testEquals("retract(nf2)@Fraction(Integer)", "5/1")
+
 statistics()
