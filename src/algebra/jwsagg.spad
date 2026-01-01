@@ -36,11 +36,11 @@ WSAggregate(E : WSObject) : Category == WSObject with
     -- {1, 2, 4} is not a variable with a value, so its value cannot be changed
     -- rvalue
     --append! : (%, E) -> %
-    --++ append!(l, elt) appends inplace elt to the list l. 
+    --++ append!(l, elt) appends elt to the list l in place. 
     prepend : (%, E) -> %
     ++ prepend(l, elt) prepends elt to the list l. 
     --prepend! : (%, E) -> %
-    --++ prepend!(l, elt) inplace prepends elt to the list l. 
+    --++ prepend!(l, elt) prepends elt to the list l in place. 
     -- TODO: inds
     insert : (% , E, WSInteger) -> %
     ++ insert(l, elt, ind) inserts elt to the list l at index ind.
@@ -261,7 +261,7 @@ WSVector(E : WSObject) : Exports == Implementation where
     "-" : (%, %) -> %
     ++ a - b is the vector subtraction. WS error if dimensions are incompatible.
     "-" : % -> %
-    ++ -a negates each elements of the vector a.
+    ++ -a negates each element of the vector a.
     "*" : (WSInteger, %) -> %
     ++ n*a scales the vector a by n.
     "*": (E,%) -> %
@@ -380,7 +380,7 @@ WSMatrix(E : WSRing) : Exports == Implementation where
     "-" : (%, %) -> %
     ++ a - b is the matrix subtraction. WS error if dimensions are incompatible.
     "-" : % -> %
-    ++ -a negates each elements of the matrix a.
+    ++ -a negates each element of the matrix a.
     "*" : (%, %) -> %
     ++ a * b is the matrix multiplication, not the element-wise multiplication.
     ++ WS error if dimensions are incompatible.
@@ -415,8 +415,8 @@ WSMatrix(E : WSRing) : Exports == Implementation where
     ++ qsetelt(mat,n,m,elt) returns a new matrix with element (n,m)
     ++ replaced by the element elt.
     qsetelt! : (%, Integer, Integer, E) -> E
-    ++ qsetelt!(mat,n,m,elt) returns matrix mat with element (n,m)
-    ++ replaced by the element elt.
+    ++ qsetelt!(mat,n,m,elt) returns the element elt.
+    ++ The matrix mat is modified in place.
     row : (%, Integer) -> %
     ++ row(mat,i) returns the i-th row.
     column : (%, Integer) -> %
@@ -492,8 +492,8 @@ WSMatrix(E : WSRing) : Exports == Implementation where
     ++ lu(m) computes the LU decomposition of the matrix m.
     matrixFunction : (WSExpression, %) -> WSMatrix(WSExpression)
     ++ matrixFunction(func, m) applies the matrix function func,
-    ++ if available, to the matrix m. Note that it is not
-    ++ an element-wise operation. For example:
+    ++ if available, to the matrix m. The Wolfram Language operator needs to be used.
+    ++ Note that it is not an element-wise operation. For example:
     ++ \example{m := jWSMatrix("\{\{1.2, 1.7\},\{1.12, -2.1\}\}")@WSMAT(WSREAL)}
     ++ \example{matrixFunction("Sqrt", m)}
     randomRealMatrix :

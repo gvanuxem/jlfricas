@@ -172,11 +172,11 @@ WSNumericalSpecialFunctions(R : WSNumber) : Exports ==Implementation where
     haversine : R -> R
     ++ haversine(z)	computes the haversine of z.
     inverseHaversine : R -> R
-    ++ inverseHaversine(z)	computes the inverse haversine.
+    ++ inverseHaversine(z)	computes the inverse haversine of z.
     gudermannian : R -> R
     ++ gudermannian(z) computes the gudermannian of z.
     inverseGudermannian : R -> R
-    ++ inverseGudermannian(z)	computes the inverse gudermannian.
+    ++ inverseGudermannian(z)	computes the inverse gudermannian of z.
     digamma     : (R , R) -> R
     ++ digamma(n,z)	 the n-th derivative of the digamma function
     sphericalBesselJ : (R , R)-> R
@@ -211,7 +211,7 @@ WSNumericalSpecialFunctions(R : WSNumber) : Exports ==Implementation where
     ++ riemannSiegelTheta(t) returns the Riemann-Siegel theta function of t.
     riemannSiegelZ : R -> R
     ++ riemannSiegelZ(t)  computes the Riemann-Siegel Z function of t.
-    -- expect a non negative integer:
+    -- expect a non-negative integer:
     stieltjesGamma : WSInteger -> R
     ++ stieltjesGamma(n) returns the n-th Stieltjes constant.
     stieltjesGamma : (WSInteger, R) -> R
@@ -348,7 +348,7 @@ WSNumericalSpecialFunctions(R : WSNumber) : Exports ==Implementation where
     ++ jacobiAmplitude(u,m) computes the amplitude function am.
     unitStep : R -> WSExpression
     ++ unitStep(x) returns the unit step function i.e. 0 for x less
-    ++ than 0, 1 for x bigger or equal 0.
+    ++ than 0, 1 for x greater or equal to 0.
     inverseJacobiSn : (R, R) -> R
     ++ inverseJacobiSn(nu, m) computes the inverse JacobiSN elliptic function.
     inverseJacobiCn : (R, R) -> R

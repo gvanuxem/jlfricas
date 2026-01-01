@@ -10,8 +10,8 @@
 WSUtilityFunctions() : Exports == Implementation where
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
   Exports ==> with
-    seedRandom : WSInteger -> WSExpression
-    ++ seedRandom(n) reseeds the random number generator with n as seed.
+    jlWSSeedRandom! : WSInteger -> WSExpression
+    ++ jlWSSeedRandom!(n) reseeds the random number generator with n as seed.
     ++ Returns the random generator state.
     urand01Real : PositiveInteger -> WSVector(WSReal)
     ++ urand01Real(n) returns a Julia WS vector with uniformly
@@ -85,9 +85,11 @@ WSUtilityFunctions() : Exports == Implementation where
     ++ For example:
     ++ \example{jlWSDateString(jWSExpr("Now"), jWSExpr("Entity[_"Language_", _"French::367gk_"]"))}
     jlWSDocumentation : Symbol -> WSExpression
-    ++ jlWSDocumentation(sym) prints WS informations about the symbol sym.
+    ++ jlWSDocumentation(sym) prints WS information about the symbol sym.
+    ++ Note that the WS language is preferable.
     ++ For example:
     ++ \example{jlWSDocumentation sin}
+    ++ \example{jlWSDocumentation ArcSin}
     jlWSImport : WSExpression -> WSExpression
     ++ jlWSImport(src) imports the source src.
     ++ For example:
@@ -107,6 +109,10 @@ WSUtilityFunctions() : Exports == Implementation where
     ++ from its content using the list of formats form. Returns WS None if no format is found.
     ++ Can be used with jWSImport.
     ++ For example: \spad{jlWSFileFormat("examples/customers-100.csv",jWSExpr "{_"CSV_",_"TSV_"}")}
+    jlWSSnippet : (WSExpression, WSInteger) -> WSExpression
+    ++ jlWSSnippet(expr, n) returns the n part string of the WSExpression expr.
+    ++ For example:
+    ++ \example{jlWSSnippet(jlWSImport jWSString "http://www.fricas.org/",-2)}
     jlWSExport : (String, WSExpression) -> WSExpression
     ++ jlWSExport(file.ext, obj) exports the object obj to the file file.ext.
     ++ The extension ext will determine the saved format. A WS expression for
@@ -150,7 +156,7 @@ WSUtilityFunctions() : Exports == Implementation where
     jlInitialize(true)
     if not jlUsing("MathLink") then
       error "The Julia MathLink package is not installed."
-    seedRandom(n) == junfunc("W_"SeedRandom_"(", n)
+    jlWSSeedRandom!(n) == junfunc("W_"SeedRandom_"(", n)
 
     jWSDateObject() == jWSExpr "DateObject[]"
     jWSDateObject(expr) == junfunc("W_"DateObject_"(", expr)
@@ -158,6 +164,7 @@ WSUtilityFunctions() : Exports == Implementation where
     jlWSDateString() == jWSExpr "DateString[]"
     jlWSDateString(expr) == junfunc("W_"DateString_"(", expr)
     jlWSDateString(expr, form) == jbinfunc("W_"DateString_"(", expr, form)
+    jlWSSnippet(expr, n) == jbinfunc("W_"Snippet_"(", expr, n)
 
     jlWSImport(src) == junfunc("W_"Import_"(", src)
     jlWSImport(src, options) ==

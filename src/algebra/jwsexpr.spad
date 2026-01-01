@@ -400,7 +400,7 @@ WSExpression() : Exports == Implementation where
     product : (%, Symbol) -> %
     ++ product(f(n),n) returns the indefinite product of f(n).
     numericSum : (%, %) -> %
-    ++ numericSum(f(n),range) an evaluated numerical approximation of
+    ++ numericSum(f(n),range) returns an evaluated numerical approximation of
     ++ the sum f(imin) + .. + f(imax) defined by the list range,
     ++ for example \example{jWSExpr("\{i, imin, imax\}")}.
     ++ See Wolfram language specifications.
@@ -408,7 +408,7 @@ WSExpression() : Exports == Implementation where
     ++ numericSum(f(n),n, a..b) returns an evaluated numerical approximation
     ++ sum f(a) + f(a2) + .. + f(b).
     numericProduct : (%, %) -> %
-    ++ numericProduct(f(n),range) an evaluated numerical approximation of
+    ++ numericProduct(f(n),range) returns an evaluated numerical approximation of
     ++ the sum f(imin) + .. + f(imax) defined by the list range,
     ++ for example \example{jWSExpr("\{i, imin, imax\}")}.
     ++ See Wolfram language specifications.
@@ -566,7 +566,7 @@ WSExpression() : Exports == Implementation where
     ++ \example{dSolve(jWSEqual(fprimex + fx , a *sin(x)),fx,x)}
     dSolve : (Equation(%), %, %)  -> %
     ++ dSolve(eq, func,var) solves the differential equation eq
-    ++ for the function(s) funcs with independant variable(s) vars.
+    ++ for the function(s) funcs with independent variable(s) vars.
     ++ \example{x:=jWSExpr x;}
     ++ \example{fx:=derivative(operator('f),0,x)}
     ++ \example{fprimex:=derivative(operator('f),1,x)}
@@ -574,7 +574,7 @@ WSExpression() : Exports == Implementation where
     dSolveValue : (%, %, %) -> %
     ++ dSolveValue(expr,funcs, vars)returns the value determined by the
     ++ differential equation(s) in expr for the function(s) funcs
-    ++ with independant variable(s) vars.
+    ++ with independent variable(s) vars.
     ++ \example{x:=jWSExpr x;}
     ++ \example{f:=derivative(operator('f),0)}
     ++ \example{f0:=derivative(operator('f),0,0)}
@@ -584,11 +584,11 @@ WSExpression() : Exports == Implementation where
     dSolveValue : (Equation(%), %, %)  -> %
     ++ dSolveValue(eq, func,var) returns the value determined by the
     ++ differential equation eq for the function func
-    ++ with independant variable var.
+    ++ with independent variable var.
     numericDSolve : (%, %, %) -> %
     ++ numericDSolve(expr,fun,xrange) solves numerically the differential
     ++ equation(s) in expr for the function fun, in the range xrange.
-    ++ Other combinaisons of parameters are also available.
+    ++ Other combinations of parameters are also available.
     numericDSolve : (Equation(%), %, %) -> %
     ++ numericDSolve(eq,fun,xrange) solves numerically the differential
     ++ equation eq for the function fun, in the range xrange.
@@ -600,7 +600,7 @@ WSExpression() : Exports == Implementation where
     ++ numericDSolveValue(expr,fun,xrange) returns the numerical value solution
     ++ of the differential equation(s) in expr for the function fun,
     ++ in the range xrange.
-    ++ Other combinaisons of parameters are also available (see documentation).
+    ++ Other combinations of parameters are also available (see documentation).
     numericDSolveValue : (Equation(%), %, %) -> %
     ++ numericDSolveValue(eq,fun,xrange) returns the numerical solution of
     ++ the differential equation eq for the function fun, in the range xrange.
@@ -608,7 +608,7 @@ WSExpression() : Exports == Implementation where
     ++ numericDSolveValue(expr,fun,xrange,yrange) returns the numerical solution
     ++ of the differential equation(s) in expr for the function fun,
     ++ in the ranges xrange and yrange.
-    ++ Other combinaisons of parameters are also available (see documentation).
+    ++ Other combinations of parameters are also available (see documentation).
 
     residue : (%, %) -> %
     ++ residue(expr, {x,x0}) returns the residue of expr at x0.
@@ -976,7 +976,7 @@ WSExpression() : Exports == Implementation where
     ++ For example:
     ++ \example{x:=jWSExpr("x");jlEval(sqrt(x),"x=2.0")}
     jlEval    : (%, String, String) -> %
-    ++ jlEval(expr, param11, param2) evaluates expression expr
+    ++ jlEval(expr, param1, param2) evaluates expression expr
     ++ with param1 and param2 as parameters.
     ++ \example{a:=jWSExpr("a");b:=jWSExpr("b");}
     ++ \example{jlEval(sqrt(a^2+b^2),"a=1.0","b=1.0")}

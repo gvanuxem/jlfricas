@@ -1406,15 +1406,15 @@ WSAPComplex(prec : PositiveInteger) : Exports == Implementation where
     exp     : () -> %
     ++ exp() returns the WSAPReal ℯ (%e or exp(1)).
     sinc    : % -> %
-    ++ sinc(z) compues the unormalized sinc of z, sin(z)/z and 0 if z = 0.
+    ++ sinc(z) computes the unnormalized sinc of z, sin(z)/z and 0 if z = 0.
     log2    : % -> %
-    ++ log2(z) compute logarithm of z in base 2.
+    ++ log2(z) computes the logarithm of z in base 2.
     log10   : % -> %
-    ++ log10(z) compute logarithm of z in base 10.
+    ++ log10(z) computes the logarithm of z in base 10.
     atan    : (%, %) -> %
     ++ atan(z1,z2) computes the arc tangent of z2/z1.
     erf     : (%, %) -> %
-    ++ erf(z) the error function of z.
+    ++ erf(z) computes the error function of z.
     erfc    : % -> %
     ++ erfc(z) returns the complementary error function of z.
     toString : (%, WSExpression) -> String

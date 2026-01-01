@@ -61,7 +61,9 @@ JLUtilityFunctions() : Exports == Implementation where
     ++ For example: jlDefined?("sin") will check if sin is defined.
     jlDocumentation  : Symbol -> Void
     ++ jlDocumentation(op) shows the documentation of the
-    ++ operation op. Trivial implementation.
+    ++ operation op. Trivial implementation. For example double quote will
+    ++ be removed and the documentation without double quotes of the operation
+    ++  will be shown. See the Signature.
     -- TODO: Use StyledStrings and Julia ouput in another operation?
     jlSeed! : JLInt64 -> Void
     ++ jlSeed!(n) reseeds the Julia random number generator
