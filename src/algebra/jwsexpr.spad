@@ -81,11 +81,11 @@ WSExpression() : Exports == Implementation where
     degree : () -> %
     ++ degree() returns conversion factor from degrees to radians, π/180.
     eulerGamma : () -> %
-    ++ eulerGamma() returns the Euler's constant gamma (γ).
+    ++ eulerGamma() returns Euler's constant gamma (γ).
     positiveInfinity : () -> %
     ++ positiveInfinity() returns positive infinity (∞).
     catalan : () -> %
-    ++ catalan() returns the Catalan's constant.
+    ++ catalan() returns Catalan's constant.
     goldenRatio : () -> %
     ++ goldenRatio() returns the golden ratio.
     sinc    : % -> %
@@ -104,14 +104,14 @@ WSExpression() : Exports == Implementation where
     ++ dawson(x) computes the Dawson integral of x.
     -- TODO: WSINT package
     eulerPhi : WSInteger -> %
-    ++ eulerPhi(n) is the totient function i.e. the number of integers
+    ++ eulerPhi(n) is the totient function, i.e. the number of integers
     ++ that are relatively prime to n in the range [1,n].
     eulerE : WSInteger -> %
     ++ eulerE(n) returns the Euler number En.
     eulerE : (WSInteger , %) -> %
     ++ eulerE(n,z) returns the Euler E polynomial of degree n.
     lambertW : (WSInteger, %) -> %
-    ++ lambertW(k,z) returns the k-th solution to LambertW function.
+    ++ lambertW(k,z) returns the k-th solution to the LambertW function.
     haversine : % -> %
     ++ haversine(z)	computes the haversine of z.
     inverseHaversine : % -> %
@@ -123,7 +123,7 @@ WSExpression() : Exports == Implementation where
     inverseGudermannian : % -> %
     ++ inverseGudermannian(z)	computes the inverse gudermannian.
     digamma     : (% , %) -> %
-    ++ digamma(n,z)	 the n-th derivative of the digamma function
+    ++ digamma(n,z)	 is the n-th derivative of the digamma function.
     besselJZero : (%, %) -> %
     ++ besselJZero(n,x) returns the n-th zero of the
     ++ Bessel J n-th function.
@@ -143,13 +143,13 @@ WSExpression() : Exports == Implementation where
     ++ sphericalHankelH2(n,z) computes the spherical Hankel
     ++ of the second kind of z.
     airyAiZero : % -> %
-    ++ airyAiZero(n) is n-th zero function of the Airy function \spad{Ai(z)}.
+    ++ airyAiZero(n) is the n-th zero of the Airy function \spad{Ai(z)}.
     airyAiZero : (%, %) -> %
-    ++ airyAiZero(n,x) is n-th zero function of the Airy function \spad{Ai(z)}
+    ++ airyAiZero(n,x) is the n-th zero of the Airy function \spad{Ai(z)}
     airyBiZero : % -> %
-    ++ airyBiZero(n) is n-th zero function of the Airy function \spad{Bi(z)}.
+    ++ airyBiZero(n) is the n-th zero of the Airy function \spad{Bi(z)}.
     airyBiZero : (%, %) -> %
-    ++ airyBiZero(n,x) is n-th zero function of the Airy function \spad{Bi(z)}
+    ++ airyBiZero(n,x) is the n-th zero of the Airy function \spad{Bi(z)}.
     weberE : (%, %, %) -> %
     ++ weberE(v,n,z) is the associated Weber E function.
     --unitStep : % -> % -- TODO: implement
@@ -165,7 +165,7 @@ WSExpression() : Exports == Implementation where
     weierstrassP : (%, %, %) -> %
     ++ weierstrassP(g2, g3, z) is the Weierstrass P function.
     weierstrassPPrime : (%, %, %) -> %
-    ++ weierstrassPPrime(g2, g3, z) is the derivative of Weierstrass P
+    ++ weierstrassPPrime(g2, g3, z) is the derivative of the Weierstrass P
     ++ function.
     weierstrassSigma : (%, %, %) -> %
     ++ weierstrassSigma(g2, g3, z) is the Weierstrass Sigma function.
@@ -212,9 +212,9 @@ WSExpression() : Exports == Implementation where
     Gamma : (%, %, %) -> %
     ++ Gamma(a,z1,z2) computes the generalized incomplete gamma function.
     inverseBetaRegularized : (%, %, %) -> %
-    ++ inverseBetaRegularized(s,a,b) computes the beta inverse.
+    ++ inverseBetaRegularized(s,a,b) computes the inverse beta regularized function.
     inverseGammaRegularized : (%, %) -> %
-    ++ inverseGammaRegularized(a,s) computes the gamma inverse.
+    ++ inverseGammaRegularized(a,s) computes the inverse gamma regularized function.
     jacobiTheta : (WSInteger, %, %) -> %
     ++ jacobiTheta(n, z, m) are the Jacobi Theta functions.
     pochhammer : (%, %) -> %
@@ -222,7 +222,7 @@ WSExpression() : Exports == Implementation where
     logGamma : % -> %
     ++ logGamma(z) returns the log-gamma of z.
     logBarnesG : % -> %
-    ++ logBarnesG(x) is the logarithm of Barnes-G. 
+    ++ logBarnesG(x) is the logarithm of the Barnes G-function.
     barnesG : % -> %
     ++ barnesG(z) computes the Barnes G-function of z.
     hyperFactorial : % -> %
@@ -232,7 +232,7 @@ WSExpression() : Exports == Implementation where
     ++ at x if x is a number.
     legendreP : (%, %) -> %
     ++ legendreP(n, x) returns the legendre polynomial
-    ++ of the first kind or evaluates it at x is x a number. 
+    ++ of the first kind or evaluates it at x if x is a number. 
     legendreQ : (%, %) -> %
     ++ legendreQ(n, x) returns the Legendre function
     ++ of the second kind or evaluates it at x if x is a number.
@@ -245,7 +245,7 @@ WSExpression() : Exports == Implementation where
     ++ of the second kind or evaluates it at x if x is a number.
     sphericalHarmonicY : (%, %, %, %) -> %
     ++ sphericalHarmonicY(l, m, theta, phi) returns the spherical
-    ++ harmonic Y or evaluates it.
+    ++ harmonic Y function or evaluates it.
     gegenbauerC : (%, %) -> %
     ++ gegenbauerC(n,x) returns the renormalized form of the
     ++ Gegenbauer polynomial or evaluates it at x if x is a number.
@@ -288,9 +288,9 @@ WSExpression() : Exports == Implementation where
     hypergeometricU : (%, %, %) -> %
     ++ hypergeometricU(a,b,z) is the confluent hypergeometric function U.
     whittakerM : (%, %, %) -> %
-    ++ whittakerM(k,m,x) computes the Whittaker function M de x.
+    ++ whittakerM(k,m,x) computes the Whittaker function M of x.
     whittakerW : (%, %, %) -> %
-    ++ whittakerW(k,m,z) computes the Whittaker function W de x.
+    ++ whittakerW(k,m,z) computes the Whittaker function W of z.
     parabolicCylinderD : (%, %) -> %
     ++ parabolicCylinderD(nu,x) computes the parabolic cylinder function D of x.
     coulombF : (%, %, %) -> %
@@ -298,7 +298,7 @@ WSExpression() : Exports == Implementation where
     coulombG : (%, %, %) -> %
     ++ coulombG(l,eta,ro) is the irregular Coulomb wave function.
     coulombH1 : (%, %, %) -> %
-    ++ coulombH1(l,eta,ro)  is the incoming irregular Coulomb wave function H^(+).
+    ++ coulombH1(l,eta,ro) is the incoming irregular Coulomb wave function H^(+).
     coulombH2: (%, %, %) -> %
     ++ coulombH2(l,eta,ro) is the incoming irregular Coulomb wave function H^(-).
     QPochhammer : (%, %) -> %
@@ -323,9 +323,9 @@ WSExpression() : Exports == Implementation where
     ++ mathieuS(b,q,z) is the odd Mathieu function with
     ++ characteristic b and parameter q.
     mathieuCPrime : (%, %, %) -> %
-    ++ mathieuCPrime(a,q,z) derivative of the even Mathieu function.
+    ++ mathieuCPrime(a,q,z) is the derivative of the even Mathieu function.
     mathieuSPrime : (%, %, %) -> %
-    ++ mathieuSPrime(b,q,z) derivative of the odd Mathieu function.
+    ++ mathieuSPrime(b,q,z) is the derivative of the odd Mathieu function.
     mathieuCharacteristicA : (%, %) -> %
     ++ mathieuCharacteristicA(r,q) returns the characteristic
     ++ for even Mathieu function.
@@ -405,16 +405,16 @@ WSExpression() : Exports == Implementation where
     ++ for example \example{jWSExpr("\{i, imin, imax\}")}.
     ++ See Wolfram language specifications.
     numericSum     : (%, %, Segment(Integer)) -> %
-    ++ numericSum(f(n),n, a..b) returns an evaluated numerical approximation
-    ++ sum f(a) + f(a2) + .. + f(b).
+    ++ numericSum(f(n),n, a..b) returns an evaluated numerical approximation of the
+    ++ sum f(a) + ... + f(b).
     numericProduct : (%, %) -> %
     ++ numericProduct(f(n),range) returns an evaluated numerical approximation of
     ++ the sum f(imin) + .. + f(imax) defined by the list range,
     ++ for example \example{jWSExpr("\{i, imin, imax\}")}.
     ++ See Wolfram language specifications.
     numericProduct : (%, %, Segment(Integer)) -> %
-    ++ numericProduct(f(n),n, a..b) returns an evaluated numerical approximation
-    ++ product f(a) * f(a2) * .. * f(b).
+    ++ numericProduct(f(n),n, a..b) returns an evaluated numerical approximation of the
+    ++ product f(a) * ... * f(b).
 
     minimize : (%, %) -> %
     ++ minimize(expr, vars) is the WS symbolic minimization function.
@@ -469,7 +469,7 @@ WSExpression() : Exports == Implementation where
     ++ to the domain dom.
 
     integrate : (%, %) -> %
-    ++ integrate(expr, opts|var) integrate expr with respect to opt or var
+    ++ integrate(expr, opts|var) integrates expr with respect to opt or var
     ++ as options. For example:
     ++ \example{x:=jWSExpr x;integrate(1/(x^4-1),x)}
     ++ \example{opt:=jWSList [x,-1,1]}
@@ -484,7 +484,7 @@ WSExpression() : Exports == Implementation where
     ++ integrate(expr, var) is the indefinite integration of expr
     ++ with respect to var.
     numericIntegrate : (%, %) -> %
-    ++ numericIntegrate(expr, opt|var) integrate numerically expr with respect
+    ++ numericIntegrate(expr, opt|var) integrates numerically expr with respect
     ++ to opt or var as options.
     numericIntegrate : (%, %, Segment(Integer)) -> %
     ++ numericIntegrate(expr, var, seg) integrates expr using segment seg
@@ -572,7 +572,7 @@ WSExpression() : Exports == Implementation where
     ++ \example{fprimex:=derivative(operator('f),1,x)}
     ++ \example{dSolve(fprimex + fx = a * sin(x)/cos(x),fx,x)}
     dSolveValue : (%, %, %) -> %
-    ++ dSolveValue(expr,funcs, vars)returns the value determined by the
+    ++ dSolveValue(expr,funcs, vars) returns the value determined by the
     ++ differential equation(s) in expr for the function(s) funcs
     ++ with independent variable(s) vars.
     ++ \example{x:=jWSExpr x;}
@@ -723,10 +723,10 @@ WSExpression() : Exports == Implementation where
     ++ symmetricPolynomial(n,lvars) returns the n-th elementary symmetric
     ++ polynomial with respect to variables in lvars.
     symmetricReduction : (%, WSL(%)) -> WSL(%)
-    ++ symmetricReduction(f,lvars) return a pair of polynomial representing
+    ++ symmetricReduction(f,lvars) returns a pair of polynomials representing
     ++ f = p+q where p is a symmetric polynomial, q the remainder. 
     symmetricReduction : (%, WSL(%), WSL(%)) -> WSL(%)
-    ++ symmetricReduction(f, lvars, replnt) return a pair of polynomial
+    ++ symmetricReduction(f, lvars, replnt) returns a pair of polynomials
     ++ representing f = p+q where p is a symmetric polynomial, q the remainder
     ++ where variables in p replaced by the ones in replnt.
 
@@ -738,7 +738,7 @@ WSExpression() : Exports == Implementation where
     ++ p1 and p2 with options opt, for example Modulus->p. 
     polynomialExtendedGCD : (%, %, %) -> %
     ++ polynomialExtendedGCD(p1, p2, x) returns the greatest common divisor
-    ++ of p1 and p2 considered as univariate polynomial in x
+    ++ of p1 and p2 considered as univariate polynomials in x
     polynomialLCM : (%, %) -> %
     ++ polynomialLCM(p1,p2) returns the least common divisor of p1 and p2.
     polynomialLCM : (%, %, %) -> %
@@ -784,27 +784,27 @@ WSExpression() : Exports == Implementation where
     ++ factorSquareFree(expr) factors the expression or polynomial expr in square
     ++ free factors.
     factorTerms : % -> %
-    ++ factorTerms(p) factors out numerical factor of the expression
+    ++ factorTerms(p) factors out numerical factors of the expression
     ++ or polynomial expr.
     factorTerms : (%, %) -> %
-    ++ factorTerms(p, var) factors out numerical factor of the expression
+    ++ factorTerms(p, var) factors out numerical factors of the expression
     ++ or polynomial expr without those related to var.
     factorTerms : (%, WSL(%)) -> %
-    ++ factorTerms(p, vars) factors the expression or polynomial expr by putting out
+    ++ factorTerms(p, vars) factors the expression or polynomial expr by pulling out
     ++ numerical factors without those related to var(s).
     factorTermsList : % -> WSList(%)
     ++ factorTermsList(expr) is the counterpart of factorTerms but here returned as
-    ++ a list of pair (numerical factor, polynomial factor).
+    ++ a list of pairs (numerical factor, polynomial factor).
     factorTermsList : (%, %) -> WSList(%)
     ++ factorTermsList(expr, vars) is the counterpart of factorTerms but here
-    ++ returned as a list of pair (numerical factor, polynomial factor).
+    ++ returned as a list of pairs (numerical factor, polynomial factor).
     ++ The numerical factors related to var(s) are not factored.
     factorList : % -> WSList(WSList(%))
-    ++ factorList(expr) factor the expression or polynomial expr, but
-    ++ returns result as a list of pair (factor, exponent).
+    ++ factorList(expr) factors the expression or polynomial expr, but
+    ++ returns the result as a list of pairs (factor, exponent).
     factorSquareFreeList : % -> WSList(WSList(%))
     ++ factorSquareFreeList(expr) factors the expression or polynomial expr
-    ++ in square free factors but returns result as a list of pair
+    ++ in square free factors but returns the result as a list of pairs
     ++ (factor, exponent).
     irreducible? : % -> Boolean
     ++ irreducible?(p) checks whether or not p is irreducible.
@@ -826,7 +826,7 @@ WSExpression() : Exports == Implementation where
     ++ minimalPolynomial(expr,var, elem) returns the minimal polynomial
     ++ in the variable var of the expression expr.
     findRoot : (%, %) -> %
-    ++ findRoot(exp,start) try to find the root of expr starting at start.
+    ++ findRoot(expr,start) tries to find the root of expr starting at start.
     ++ \example{x:= jWSExpr x}
     ++ \example{findRoot(sin(x) + cos(x), "\{x, 0\}")}
 
@@ -835,7 +835,7 @@ WSExpression() : Exports == Implementation where
 
     normal   : % -> %
     ++ normal(expr) converts expr to a normal expression from different
-    ++ expression types. Can be applied to a power serie for example.
+    ++ expression types. Can be applied to a power series for example.
     ++ For example:
     ++ \example{x:=jWSExpr x}
     ++ \example{s:=series(exp(x),jWSExpr "\{x,0,10\}")}
@@ -870,13 +870,13 @@ WSExpression() : Exports == Implementation where
     ++ assuming(assumption(s), expr) uses the assumptions for use of
     ++ expr with refine, simplify and integrate for example.
     ++ The assumption(s) are not always supported by MathLink.
-    ++ Use assumptions whith 'refine' etc. directly instead.
+    ++ Use assumptions with 'refine' etc. directly instead.
     expand : % -> %
     ++ expand(expr) puts out products and positive powers of integers
     ++ of the expression expr.
     expand : (%, %) -> %
-    ++ expand(expr, opt) this the expand version with excluded pattern-s
-    ++ or any other options avaiable (for example "Modulus->p").
+    ++ expand(expr, opt) is the expand version with excluded pattern-s
+    ++ or any other options available (for example "Modulus->p").
     extendedExpand : % -> %
     ++ extendedExpand(expr) puts out all products and positive powers
     ++ of integers.
@@ -891,7 +891,7 @@ WSExpression() : Exports == Implementation where
     ++ reducing denominator(s).
     apart : (%, %) -> %
     ++ apart(expr, vars) converts a rational expression as a sum of terms
-    ++ as one arg apart do but only for vars (the others are considered
+    ++ as the one arg apart does but only for vars (the others are considered
     ++ as constants).
     expandNumerator   : % -> %
     ++ expandNumerator(expr) expands numerators of rational expression expr.
@@ -902,7 +902,7 @@ WSExpression() : Exports == Implementation where
     ++ cancel(expr) cancels common factors in numerators and denominators
     ++ of the rational expression expr.
     together : % -> % 
-    ++ together(expr) put together terms over a common denominator cancelling
+    ++ together(expr) puts together terms over a common denominator cancelling
     ++ common factors.
     distribute : % -> % 
     ++ distribute(expr) distributes expr over addition.
@@ -947,7 +947,7 @@ WSExpression() : Exports == Implementation where
     ++ trigonometric functions in expr.
     trigToExp : % -> %
     ++ trigToExp(expr) returns expr with (hyperbolic) trigonometric
-    ++ functions converted to, evetually complex, exponentials.
+    ++ functions converted to, eventually complex, exponentials.
     expToTrig : % -> %
     ++ expToTrig(expr) returns expr with exponentials converted to
     ++ (hyperbolic) trigonometric functions.
@@ -961,15 +961,15 @@ WSExpression() : Exports == Implementation where
     ++ with output in the format form.
     toExpression : (String, %, %) -> %
     ++ toExpression(expr, form, h) converts expr to a WS expression and evaluates it
-    ++ with output in the format form but wrap the head with h. `Hold` for example. 
+    ++ with output in the format form but wrapping the head with h. `Hold` for example. 
     rationalApproximation : % -> %
-    ++ rationalApproximation(expr) try to find a rational approximation
+    ++ rationalApproximation(expr) tries to find a rational approximation
     ++ of the expression expr.
     rationalApproximation : (%, %) -> %
-    ++ rationalApproximation(expr, dx) try to find a rational approximation
+    ++ rationalApproximation(expr, dx) tries to find a rational approximation
     ++ of the expression expr within tolerance dx.
     jlGreedyEval : Boolean -> Void
-    ++ jlGreedyEval(bool) toogles or not to automatic arithmetic operations.
+    ++ jlGreedyEval(bool) toggles automatic arithmetic operations.
     ++ Plus[a, a] can become Times[2, a] using or not Julia `weval`.
     jlEval    : (%, String) -> %
     ++ jlEval(expr, param) evaluates expression expr with param as parameter(s).
@@ -1008,11 +1008,11 @@ WSExpression() : Exports == Implementation where
 
     jlDisplay : WSExpression -> WSExpression
     ++ jlDisplay(expr) returns the traditional form of expr.
-    ++ This is equilavtent to:
-    ++ jWSExpr "Format[Sin[x]" => sin(x)]
+    ++ This is equivalent to:
+    ++ jWSExpr "Format[Sin[x]]" => sin(x)
     jlDisplay : (WSExpression, WSExpression) -> WSExpression
     ++ jlDisplay(expr, form) returns the `form` form of expr
-    ++ Resulting for example in: "Format[Sin[x], TeXForm]" => \sin x
+    ++ resulting for example in: "Format[Sin[x], TeXForm]" => \sin x
 
     baseForm : (%, %) -> %
     ++ baseForm(x, n) returns the printed representation of x in base b.
@@ -1100,7 +1100,7 @@ WSExpression() : Exports == Implementation where
     coerce  : Integer  -> %
     ++ coerce(z) coerces the integer z to a WSExpression.
     ++ Convenience function.
-    coerce   : Complex(Integer) -> % -- %i operations for example
+    coerce   : Complex(Integer) -> % -- for example, %i operations
     ++ coerce(gi) coerces gi to a WSExpression. Convenience function.
     coerce  : Fraction(Integer)  -> %
     ++ coerce(q) coerces the rational q to a WSExpression.
@@ -1275,6 +1275,7 @@ WSExpression() : Exports == Implementation where
     WF : WSSymbol := WFalse()
     WR : WSSymbol := WRational()
     --WC : WSSymbol := WComplex()
+    WFormat : WSSymbol := WFormat()
 
     defined?(x) == junfunc("W_"NameQ_"(", x) = WT
     member?(list, expr) == jbinfunc("W_"MemberQ_"(", list, expr) = WT 
@@ -2011,7 +2012,7 @@ WSExpression() : Exports == Implementation where
       (out := retractIfCan(expr)@Union(Expression(Integer), "failed"))
         case "failed" =>
           error(concat("Unable to retract to an Expression(Integer).",
-            " Maybe Epression(Float) should be used."))
+            " Maybe Expression(Float) should be used."))
       out
     retractIfCan(expr : %) : Union(Expression(Float), "failed") == --TODO: weberE etc.
       str : String := jlEvalString(concat(["replace(_"",
@@ -2101,6 +2102,7 @@ WSExpression() : Exports == Implementation where
       jbinfunc("W_"QuantityForm_"(", expr, form)
     coerce(expr) : OutputForm ==
       jlHead(expr) = WS => coerce(string(expr))
+      jlHead(expr) = WFormat => toString(expr) pretend OutputForm
       --jlHead(expr) = WC => coerce(expr pretend WSComplex)?? => "()"
       jlHead(expr)= WR => coerce(expr pretend WSRational)
       pagew := string(_$LINELENGTH$Lisp pretend Integer - 2)

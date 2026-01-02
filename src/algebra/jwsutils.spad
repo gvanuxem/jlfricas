@@ -110,7 +110,7 @@ WSUtilityFunctions() : Exports == Implementation where
     ++ Can be used with jWSImport.
     ++ For example: \spad{jlWSFileFormat("examples/customers-100.csv",jWSExpr "{_"CSV_",_"TSV_"}")}
     jlWSSnippet : (WSExpression, WSInteger) -> WSExpression
-    ++ jlWSSnippet(expr, n) returns the n part string of the WSExpression expr.
+    ++ jlWSSnippet(expr, n) returns the n-th part string of the WSExpression expr.
     ++ For example:
     ++ \example{jlWSSnippet(jlWSImport jWSString "http://www.fricas.org/",-2)}
     jlWSExport : (String, WSExpression) -> WSExpression
