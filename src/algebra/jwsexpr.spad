@@ -146,10 +146,12 @@ WSExpression() : Exports == Implementation where
     ++ airyAiZero(n) is the n-th zero of the Airy function \spad{Ai(z)}.
     airyAiZero : (%, %) -> %
     ++ airyAiZero(n,x) is the n-th zero of the Airy function \spad{Ai(z)}
+    ++ less than x.
     airyBiZero : % -> %
     ++ airyBiZero(n) is the n-th zero of the Airy function \spad{Bi(z)}.
     airyBiZero : (%, %) -> %
-    ++ airyBiZero(n,x) is the n-th zero of the Airy function \spad{Bi(z)}.
+    ++ airyBiZero(n,x) is the n-th zero of the Airy function \spad{Bi(z)}
+    ++ less than x.
     weberE : (%, %, %) -> %
     ++ weberE(v,n,z) is the associated Weber E function.
     --unitStep : % -> % -- TODO: implement
@@ -1205,11 +1207,13 @@ WSExpression() : Exports == Implementation where
     ++ \example{jWSExpr "3.14159"}
     ++ \example{jlWSDateString(jWSExpr "Tomorrow")}
     ++ \example{toString jWSExpr "TextSentences[WikipediaData[_"Sun_"]][[;; 40]]"}
-    ++\example{jWSExpr "Probability[x < 1, x \[Distributed] NormalDistribution[]]"}
+    ++ example: jWSExpr "Probability[x < 1, x \[Distributed] NormalDistribution[]]"
   Implementation ==> JLObject add
     import from JLUtilityFunctions
     import from JLStringUtilities
     import from WSRational
+    import from WSComplex
+    import from WSReal
 
     jlInitialize(true)
     if not jlUsing("MathLink") then
@@ -1273,8 +1277,9 @@ WSExpression() : Exports == Implementation where
     WL : WSSymbol := WList()
     WT : WSSymbol := WTrue()
     WF : WSSymbol := WFalse()
-    WR : WSSymbol := WRational()
-    --WC : WSSymbol := WComplex()
+    WRat : WSSymbol := WRational()
+    WR : WSSymbol := WReal()
+    WC : WSSymbol := WComplex()
     WFormat : WSSymbol := WFormat()
 
     defined?(x) == junfunc("W_"NameQ_"(", x) = WT
@@ -1284,7 +1289,7 @@ WSExpression() : Exports == Implementation where
     real?(x)    == junfunc("W_"RealValuedNumberQ_"(", x) = WT
     realNumeric?(x) == junfunc("W_"RealValuedNumericQ_"(", x) = WT
     integer?(x) == junfunc("W_"IntegerQ_"(", x) = WT
-    rational?(x) == jlHead(x) = WR
+    rational?(x) == jlHead(x) = WRat
     number?(x) == junfunc("W_"NumberQ_"(", x) = WT
     machineNumber?(x) == junfunc("W_"MachineNumberQ_"(", x) = WT
     exactNumber?(x) == junfunc("W_"ExactNumberQ_"(", x) = WT
@@ -2102,9 +2107,11 @@ WSExpression() : Exports == Implementation where
       jbinfunc("W_"QuantityForm_"(", expr, form)
     coerce(expr) : OutputForm ==
       jlHead(expr) = WS => coerce(string(expr))
+      (jlHead(expr) = WR and machineNumber?(expr)) => coerce(expr pretend WSReal)$WSReal
+      (jlHead(expr) = WC and machineNumber?(real expr) and machineNumber?(imag expr)) => coerce(expr pretend WSComplex)$WSComplex
+      jlHead(expr) = WRat => coerce(expr pretend WSRational)$WSRational
       jlHead(expr) = WFormat => toString(expr) pretend OutputForm
-      --jlHead(expr) = WC => coerce(expr pretend WSComplex)?? => "()"
-      jlHead(expr)= WR => coerce(expr pretend WSRational)
+
       pagew := string(_$LINELENGTH$Lisp pretend Integer - 2)
       sexpr := toString(expr, jWSExpr concat("PageWidth -> ", pagew))
       str : String := jlEvalString(concat(["replace(_"", sexpr,
