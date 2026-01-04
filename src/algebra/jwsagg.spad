@@ -1,7 +1,7 @@
 )abbrev category WSAGG WSAggregate
 ++ Generic category for Julia WS aggregates 
-++ Author: G.Vanuxem
-++ Date Created: June 2024
+++ Author: G. Vanuxem
+++ Date Created: June, 2024
 ++ Description:
 ++  Julia Wolfram Symbolic aggregate (WS list) using the MathLink
 ++ Julia package.
@@ -20,9 +20,9 @@ WSAggregate(E : WSObject) : Category == WSObject with
     part : (%, WSInteger) -> E
     ++ part(agg,i) returns the i-th element.
     take : (%, Integer) -> %
-    ++ take(l,i) returns the first i-th elements.
+    ++ take(l,i) returns the first i elements.
     take : (%, WSList(WSInteger)) -> %
-    ++ take(l,i) returns the first i-th elements.
+    ++ take(l,i) returns the first i elements.
     extract : (%, WSExpression) -> %
     ++ extract(agg, parts) extracts parts of agg.
     first : % -> E
@@ -72,9 +72,10 @@ WSAggregate(E : WSObject) : Category == WSObject with
       total : % -> E
       ++ total(agg) returns the sum of the elements in agg.
       differences : % -> %
-      ++ differences(agg)
+      ++ differences(agg) returns the differences between adjacent
+      ++ elements in agg.
       accumulate : % -> %
-      ++ accumulate(agg) 
+      ++ accumulate(agg) returns the partial sums of elements in agg.
       --ratios : % -> E
     reverse : (%, WSList(WSInteger)) -> %
     ++ reverse(agg, levels) reverses the elements of agg using levels.
@@ -211,8 +212,8 @@ WSAggregate(E : WSObject) : Category == WSObject with
 
 )abbrev domain WSLIST WSList
 ++ Generic domain for Julia WS lists
-++ Author: G.Vanuxem
-++ Date Created: June 2024
+++ Author: G. Vanuxem
+++ Date Created: June, 2024
 ++ Description:
 ++  Julia Wolfram Symbolic lists using the MathLink Julia package.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
@@ -247,8 +248,8 @@ WSList(E : WSObject) : Exports == Implementation where
 
 )abbrev domain WSVEC WSVector
 ++ Generic domain for Julia WS vectors
-++ Author: G.Vanuxem
-++ Date Created: June 2024
+++ Author: G. Vanuxem
+++ Date Created: June, 2024
 ++ Description:
 ++  Julia Wolfram Symbolic vectors using the MathLink Julia package.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
@@ -340,8 +341,8 @@ WSVector(E : WSObject) : Exports == Implementation where
 
 )abbrev domain WSMAT WSMatrix
 ++ Generic domain for Julia WS matrices
-++ Author: G.Vanuxem
-++ Date Created: June 2024
+++ Author: G. Vanuxem
+++ Date Created: June, 2024
 ++ Description:
 ++  Julia Wolfram Symbolic matrices using the MathLink Julia package.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
@@ -398,7 +399,6 @@ WSMatrix(E : WSRing) : Exports == Implementation where
     "*": (WSVector(E),%) -> %
     ++ \spad{r * x} is the product of the row vector r and the matrix x.
     ++ Error: if the dimensions are incompatible.
-  -- "^" : (%, PositveInteger) -> %
     "^" : (%, PositiveInteger) -> %
     ++ a^n is the matrix power by the positive integer n.
     "^" : (%, NonNegativeInteger) -> %
@@ -426,7 +426,7 @@ WSMatrix(E : WSRing) : Exports == Implementation where
     adjoint : % -> %
     ++ adjoint(m) returns the adjoint of m, i.e. the conjugate transposition of m.
     adjugate : % -> %
-    ++ adjugate(m) returns the adjugate of square m. 
+    ++ adjugate(m) returns the adjugate of square m.
     norm : % -> E
     ++ norm(m) returns the norm of m, i.e. the value of the maximum
     ++ singular values of m.
@@ -456,7 +456,7 @@ WSMatrix(E : WSRing) : Exports == Implementation where
     linearSolve : (%, %) -> %
     ++ linearSolve(mat, b) finds x, solution of the equation mat * x = b.
     nullSpace : % -> WSList(WSVector(E))
-    ++ nullSpace(m) returns the list of vector
+    ++ nullSpace(m) returns the null space of m as a list of vectors.
     minors : % -> %
     ++ minors(m) returns the minors of m.
     minors : (%, WSInteger) -> %
@@ -475,13 +475,11 @@ WSMatrix(E : WSRing) : Exports == Implementation where
     svdvals : % -> WSList(E)
     ++ svdvals(m) returns the singular values of the matrix m.
     schur : % -> Record(q : %, t : %)
-    ++ schur(m) computes the Schur decomposition of
-    ++ of the square matrix m.
+    ++ schur(m) computes the Schur decomposition of the square matrix m.
     qr : % -> Record(q : %, r : %)
     ++ qr(m) computes the QR decomposition of the matrix m.
     jordan : % -> Record(s : %, j : %)
-    ++ jordan(m) computes the Jordan decomposition of
-    ++ of the square matrix m.
+    ++ jordan(m) computes the Jordan decomposition of the square matrix m.
     hessenberg : % -> Record(p : %, h : %)
     ++ hessenberg(m) computes the Hessenberg decomposition of
     ++ the square matrix m.
@@ -608,7 +606,7 @@ WSMatrix(E : WSRing) : Exports == Implementation where
     setelt!(mat : %,i : Integer,j : Integer, elem : E) ==
       dims := dimensions(mat)
       i > integer first(dims) or j > integer last(dims) =>
-        error "setelt!$WSMatrix: index(s) is/are too large"
+        error "setelt!$WSMatrix: index(es) is/are too large"
       inds : List(WSInteger)  := [jWSInt(i), jWSInt(j)]
       rule := jWSRule(jWSList(inds)@WSList(WSInteger) pretend WSExpression,
         elem pretend WSExpression)

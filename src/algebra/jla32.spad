@@ -12,15 +12,15 @@ JLF32LinearAlgebra() : Exports == Implementation where
   NNI      ==> NonNegativeInteger
   Exports ==> with
     normalize : JF32VEC -> JF32VEC
-    ++ normalize(v) returns normalized v such that its norm equals to 1.
+    ++ normalize(v) returns normalized v such that its norm equals 1.
     normalize! : JF32VEC -> JF32VEC
     ++ normalize!(v) destructively normalize v such that
-    ++ norm(v) equals to 1.
+    ++ norm(v) equals 1.
     normalize : JF32MAT -> JF32MAT
-    ++ normalize(m) returns normalized m such that its norm equals to 1.
+    ++ normalize(m) returns normalized m such that its norm equals 1.
     normalize! : JF32MAT -> JF32MAT
     ++ normalize!(m) destructively normalize m such that
-    ++ its norm equals to 1.
+    ++ its norm equals 1.
     norm    : JF32VEC -> JF32
     ++ norm(v) computes the 2-norm of v.
     norm    : (JF32VEC,JF32) -> JF32
@@ -45,10 +45,10 @@ JLF32LinearAlgebra() : Exports == Implementation where
     trace   : JF32MAT -> JF32
     ++ trace(m) computes the trace of m.
     rank        : (JF32MAT, JF32) -> NNI
-    ++ rank(m, tol) computes rank of m. Counts singular value
+    ++ rank(m, tol) computes the rank of m. Counts singular value
     ++ with magnitude greater than tol.
     rank!        : (JF32MAT, JF32) -> NNI
-    ++ rank!(m, tol) computes rank of m. Counts singular value
+    ++ rank!(m, tol) computes the rank of m. Counts singular value
     ++ with magnitude greater than tol but overwrites m to save
     ++ memory space.
     logDeterminant : JF32MAT -> JF32
@@ -58,7 +58,7 @@ JLF32LinearAlgebra() : Exports == Implementation where
     ++ svd(m) computes the singular value decomposition SVD of m
     ++ such that SVD.U * diagonalMatrix(SVD.sv) * SVD.Vt = m.
     svd! : JF32MAT -> Record(U:JF32MAT, sv:JF32VEC, Vt:JF32MAT)
-    ++ svd!(m) is the same as svd(m) but overwrites a to save
+    ++ svd!(m) is the same as svd(m) but overwrites m to save
     ++ memory space.
     svdvals : JF32MAT -> JF32VEC
     ++ svdvals(m) returns the singular values of m.
@@ -130,9 +130,9 @@ JLF32LinearAlgebra() : Exports == Implementation where
     ++ triu!(m) overwrites m with its upper triangular matrix counterpart.
     ++ Returns m.
     tril    : JF32MAT -> JF32MAT
-    ++ tril(m) returns the lower triangular matrix of m
+    ++ tril(m) returns the lower triangular matrix of m.
     tril!   : JF32MAT -> JF32MAT
-    ++ tril!(m) overwrites m with its upper triangular matrix counterpart.
+    ++ tril!(m) overwrites m with its lower triangular matrix counterpart.
     ++ Returns m.
   Implementation ==> add
     import from JLUtilityFunctions
@@ -403,15 +403,15 @@ JLCF32LinearAlgebra() : Exports == Implementation where
   NNI      ==> NonNegativeInteger
   Exports ==> with
     normalize : JCF32VEC -> JCF32VEC
-    ++ normalize(v) returns normalized v such that its norm equals to 1.
+    ++ normalize(v) returns normalized v such that its norm equals 1.
     normalize! : JCF32VEC -> JCF32VEC
     ++ normalize!(v) destructively normalize v such that
-    ++ norm(v) equals to 1.
+    ++ norm(v) equals 1.
     normalize : JCF32MAT -> JCF32MAT
-    ++ normalize(m) returns normalized m such that its norm equals to 1.
+    ++ normalize(m) returns normalized m such that its norm equals 1.
     normalize! : JCF32MAT -> JCF32MAT
     ++ normalize!(m) destructively normalize m such that
-    ++ its norm equals to 1.
+    ++ its norm equals 1.
     norm    : JCF32VEC -> JF32
     ++ norm(v) computes the 2-norm of v.
     norm    : (JCF32VEC,JF32) -> JF32
@@ -430,7 +430,7 @@ JLCF32LinearAlgebra() : Exports == Implementation where
     conditionNumber    : JCF32MAT -> JF32
     ++ conditionNumber(m) computes the condition number of m.
     conditionNumber    : (JCF32MAT,JF32) -> JF32
-    ++ conditionNumber(m) computes the p-condition number of m.
+    ++ conditionNumber(m, p) computes the p-condition number of m.
     condSkeel    : JCF32MAT -> JF32
     ++ condSkeel(m) computes the Skeel condition number of m.
     rank        : (JCF32MAT, JF32) -> NNI
@@ -449,7 +449,7 @@ JLCF32LinearAlgebra() : Exports == Implementation where
     ++ svd(m) computes the singular value decomposition SVD of m
     ++ such that SVD.U * diagonalMatrix(SVD.sv) * SVD.Vt = m.
     svd! : JCF32MAT -> Record(U:JCF32MAT, sv:JF32VEC, Vt:JCF32MAT)
-    ++ svd!(m) is the same as svd(m) but overwrites a to save
+    ++ svd!(m) is the same as svd(m) but overwrites m to save
     ++ memory space.
     eigen : JCF32MAT -> Record(values:JCF32VEC, vectors:JCF32MAT)
     ++ eigen(m) computes the spectral decomposition of m.

@@ -1,7 +1,7 @@
 )abbrev domain JF32VEC JLFloat32Vector
 ++ Domain for Julia Float32 vectors
 ++ Author: G. Vanuxem
-++ Date Created: november 2024
+++ Date Created: November, 2024
 ++ Description: This domain provides a fast JLFloat32 vector type
 ++ with no bound checking on elt's. Minimum index is 1.
 JLFloat32Vector() : Exports == Implementation where
@@ -23,10 +23,10 @@ JLFloat32Vector() : Exports == Implementation where
     jlApply : (String, %) -> Void
     ++ jlApply(func, v) applies func to argument v.
     jlApply : (String, %) -> JF32
-    ++ jlApply(func, v) applies func to argument v
+    ++ jlApply(func, v) applies func to argument v.
     ++ and returns a Julia Float32.
     jlApply : (String, %) -> %
-    ++ jlApply(func, v) applies func to argument v
+    ++ jlApply(func, v) applies func to argument v.
     ++ and returns a JLFloat32Vector.
     jlApply : (String, %, JF32) -> JF32
     ++ jlApply(func, v, val) applies func to arguments v and val
@@ -53,7 +53,7 @@ JLFloat32Vector() : Exports == Implementation where
     ++ nrand(n) returns a normally distributed Julia vector of size n
     ++ with mean=0 and standard deviation=1.
     exprand : PositiveInteger -> %
-    ++ exprand(n) return a vector of size n with random elements
+    ++ exprand(n) returns a vector of size n with random elements
     ++ from the exponential distribution with scale 1.
     jlDisplay : % -> Void
     ++ jlDisplay(v) pretty prints v (à la Julia).
@@ -170,7 +170,7 @@ JLFloat32Vector() : Exports == Implementation where
 )abbrev package JF32VEC2 JLFloat32VectorFunctions2
 ++ Package for operations on Julia Float32 vectors
 ++ Author: G. Vanuxem
-++ Date Created: november 2024
+++ Date Created: November, 2024
 ++ Basic Functions:
 ++ Related Constructors:
 ++ Also See:
@@ -223,7 +223,7 @@ JLFloat32VectorFunctions2() : Exports == Implementation where
 )abbrev domain JF32MAT JLFloat32Matrix
 ++ Domain for Julia Float32 matrices
 ++ Author: G. Vanuxem
-++ Date Created: november 2024
+++ Date Created: November, 2024
 ++ Description: This domain provides a fast JLFloat32 matrix type
 ++ with no bound checking on elt's. Minimum index is 1.
 JLFloat32Matrix() : Exports == Implementation where
@@ -240,16 +240,16 @@ JLFloat32Matrix() : Exports == Implementation where
   MLAF        ==> MatrixLinearAlgebraFunctions(JF32, Row, Col, %)
   Exports ==> JLMatrixCategory(JF32, Row, Col) with
     elt : (%, NonNegativeInteger) -> JF32
-    ++ elt(m, i) returns the i-th elements of m.
+    ++ elt(m, i) returns the i-th element of m.
     ++ Column major order.
     qelt : (%, NonNegativeInteger) -> JF32
-    ++ qelt(m, i) returns the i-th elements of m.
+    ++ qelt(m, i) returns the i-th element of m.
     ++ Column major order.
     setelt! : (%, NonNegativeInteger, JF32) -> JF32
-    ++ setelt!(m, i, r) sets the i-th elements of m to r.
+    ++ setelt!(m, i, r) sets the i-th element of m to r.
     ++ Column major order.
     qsetelt! : (%, NonNegativeInteger, JF32) -> JF32
-    ++ qsetelt!(m,) sets the i-th elements of m to r.
+    ++ qsetelt!(m, i, r) sets the i-th element of m to r.
     ++ Column major order.
     jlVector : % -> JLFloat32Vector
     ++ jlVector(m) returns reference to the internal vector representation.
@@ -504,7 +504,7 @@ JLFloat32Matrix() : Exports == Implementation where
 )abbrev domain JF32SMAT JLF32SquareMatrix
 ++ Domain for Julia Float32 square matrices
 ++ Author: G. Vanuxem
-++ Date Created: november 2024
+++ Date Created: November, 2024
 ++ Description: This domain provides a fast Julia Float32
 ++ square matrix type with no bound checking on elt's. Minimum index is 1.
 JLF32SquareMatrix(n: NonNegativeInteger) : Exports == Implementation where
@@ -544,7 +544,7 @@ JLF32SquareMatrix(n: NonNegativeInteger) : Exports == Implementation where
 )abbrev domain JCF32VEC JLComplexF32Vector
 ++ Domain for Julia Complex Float32 vectors
 ++ Author: G. Vanuxem
-++ Date Created: november 2024
+++ Date Created: November, 2024
 ++ Description: This domain provides a fast JLComplexF32 vector type
 ++ with no bound checking on elt's. Minimum index is 1.
 JLComplexF32Vector() : Exports == Implementation where
@@ -680,7 +680,7 @@ JLComplexF32Vector() : Exports == Implementation where
 )abbrev domain JCF32MAT JLComplexF32Matrix
 ++ Domain for Julia Complex Float32 matrices.
 ++ Author: G. Vanuxem
-++ Date Created: november 2024
+++ Date Created: November, 2024
 ++ Description: This domain provides a fast JLComplexF32 matrix type
 ++ with no bound checking on elt's. Minimum index is 1.
 JLComplexF32Matrix() : Exports == Implementation where
@@ -697,19 +697,19 @@ JLComplexF32Matrix() : Exports == Implementation where
   MLAF        ==> MatrixLinearAlgebraFunctions(JCF32, Row, Col, %)
   Exports ==> JLMatrixCategory(JCF32, Row, Col) with
     elt : (%, NonNegativeInteger) -> JCF32
-    ++ elt(m, i) returns the i-th elements of m.
+    ++ elt(m, i) returns the i-th element of m.
     ++ Column major order.
     qelt : (%, NonNegativeInteger) -> JCF32
-    ++ qelt(m, i) returns the i-th elements of m.
+    ++ qelt(m, i) returns the i-th element of m.
     ++ Column major order.
     setelt! : (%, NonNegativeInteger, JCF32) -> JCF32
-    ++ setelt!(m, i, r) sets the i-th elements of m to r.
+    ++ setelt!(m, i, r) sets the i-th element of m to r.
     ++ Column major order.
     qsetelt! : (%, NonNegativeInteger, JCF32) -> JCF32
-    ++ qsetelt!(m,) sets the i-th elements of m to r.
+    ++ qsetelt!(m, i, r) sets the i-th element of m to r.
     ++ Column major order.
     coerce : JF32MAT -> %
-    ++ coerce(m) coerces m to a a Julia Complex Float 32 matrix.
+    ++ coerce(m) coerces m to a Julia Complex Float 32 matrix.
     jlDisplay : % -> Void  
     ++ jlDisplay(m) pretty prints m (à la Julia).
     jlVector : % -> JLComplexF32Vector
@@ -797,13 +797,13 @@ JLComplexF32Matrix() : Exports == Implementation where
             error "setelt!$JLComplexF32Matrix: index(es) out of range"
         Qsetelt2(m.elts, m.ncols, j, i, r)
     elt(m:%, i:NonNegativeInteger) ==
-      i > #m => error "elt$JLFloat64Matrix: index out of range"
+      i > #m => error "elt$JLComplexF32Matrix: index out of range"
       JCFELT(m.elts,i)$Lisp
     qelt(m:%, i:NonNegativeInteger) ==
       JCFELT(m.elts,i)$Lisp
     setelt!(m : %, i : NonNegativeInteger, r : JCF32) ==
       i > #m =>
-        error "setelt!$JLFloat64Matrix: index out of range"
+        error "setelt!$JLComplexF32Matrix: index out of range"
       JCFSETELT(m.elts,i,r)$Lisp
     qsetelt!(m : %, i : NonNegativeInteger, r : JCF32) ==
       JCFSETELT(m.elts,i,r)$Lisp
@@ -949,7 +949,7 @@ JLComplexF32Matrix() : Exports == Implementation where
 )abbrev domain JCF32SMA JLComplexF32SquareMatrix
 ++ Domain for Julia Complex Float32 square matrices
 ++ Author: G. Vanuxem
-++ Date Created: november 2024
+++ Date Created: November, 2024
 ++ Description: This domain provides a fast Julia Float32
 ++ square matrix type with no bound checking on elt's. Minimum index is 1.
 JLComplexF32SquareMatrix(n : NonNegativeInteger) : Exports == Implementation where

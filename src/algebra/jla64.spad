@@ -12,15 +12,15 @@ JLF64LinearAlgebra() : Exports == Implementation where
   NNI      ==> NonNegativeInteger
   Exports ==> with
     normalize : JF64VEC -> JF64VEC
-    ++ normalize(v) returns normalized v such that its norm equals to 1.
+    ++ normalize(v) returns normalized v such that its norm equals 1.
     normalize! : JF64VEC -> JF64VEC
     ++ normalize!(v) destructively normalize v such that
-    ++ norm(v) equals to 1.
+    ++ norm(v) equals 1.
     normalize : JF64MAT -> JF64MAT
-    ++ normalize(m) returns normalized m such that its norm equals to 1.
+    ++ normalize(m) returns normalized m such that its norm equals 1.
     normalize! : JF64MAT -> JF64MAT
     ++ normalize!(m) destructively normalize m such that
-    ++ its norm equals to 1.
+    ++ its norm equals 1.
     norm    : JF64VEC -> JF64
     ++ norm(v) computes the 2-norm of v.
     norm    : (JF64VEC,JF64) -> JF64
@@ -45,10 +45,10 @@ JLF64LinearAlgebra() : Exports == Implementation where
     trace   : JF64MAT -> JF64
     ++ trace(m) computes the trace of m.
     rank        : (JF64MAT, JF64) -> NNI
-    ++ rank(m, tol) computes rank of m. Counts singular value
+    ++ rank(m, tol) computes the rank of m. Counts singular value
     ++ with magnitude greater than tol.
     rank!        : (JF64MAT, JF64) -> NNI
-    ++ rank!(m, tol) computes rank of m. Counts singular value
+    ++ rank!(m, tol) computes the rank of m. Counts singular value
     ++ with magnitude greater than tol but overwrites m to save
     ++ memory space.
     logDeterminant    : JF64MAT -> JF64
@@ -58,7 +58,7 @@ JLF64LinearAlgebra() : Exports == Implementation where
     ++ svd(m) computes the singular value decomposition SVD of m
     ++ such that SVD.U * diagonalMatrix(SVD.sv) * SVD.Vt = m.
     svd! : JF64MAT -> Record(U:JF64MAT, sv:JF64VEC, Vt:JF64MAT)
-    ++ svd!(m) is the same as svd(m) but overwrites a to save
+    ++ svd!(m) is the same as svd(m) but overwrites m to save
     ++ memory space.
     svdvals : JF64MAT -> JF64VEC
     ++ svdvals(m) returns the singular values of m.
@@ -107,7 +107,7 @@ JLF64LinearAlgebra() : Exports == Implementation where
                 L:JF64MAT, U:JF64MAT, ipiv:JI64VEC)
     ++ lu(m) computes the LU factorisation of m.
     lu!     : JF64MAT -> Record(LU:JF64MAT, ipiv:JI64VEC)
-    ++ lu!(m) computes in-place LU factorisation of m.
+    ++ lu!(m) computes in-place the LU factorisation of m.
     ++ m is overwritten by its decomposition.
     luReorder : (JF64MAT, JI64VEC) -> JF64MAT
     -- TODO
@@ -131,9 +131,9 @@ JLF64LinearAlgebra() : Exports == Implementation where
     ++ triu!(m) overwrites m with its upper triangular matrix counterpart.
     ++ Returns m.
     tril    : JF64MAT -> JF64MAT
-    ++ tril(m) returns the lower triangular matrix of m
+    ++ tril(m) returns the lower triangular matrix of m.
     tril!   : JF64MAT -> JF64MAT
-    ++ tril!(m) overwrites m with its upper triangular matrix counterpart.
+    ++ tril!(m) overwrites m with its lower triangular matrix counterpart.
     ++ Returns m.
     jlPeakFlops : () -> JF64
     ++ jlPeakFlops() returns the peak flop rate
@@ -409,15 +409,15 @@ JLCF64LinearAlgebra() : Exports == Implementation where
   NNI      ==> NonNegativeInteger
   Exports ==> with
     normalize : JCF64VEC -> JCF64VEC
-    ++ normalize(v) returns normalized v such that its norm equals to 1.
+    ++ normalize(v) returns normalized v such that its norm equals 1.
     normalize! : JCF64VEC -> JCF64VEC
     ++ normalize!(v) destructively normalize v such that
-    ++ norm(v) equals to 1.
+    ++ norm(v) equals 1.
     normalize : JCF64MAT -> JCF64MAT
-    ++ normalize(m) returns normalized m such that its norm equals to 1.
+    ++ normalize(m) returns normalized m such that its norm equals 1.
     normalize! : JCF64MAT -> JCF64MAT
     ++ normalize!(m) destructively normalize m such that
-    ++ its norm equals to 1.
+    ++ its norm equals 1.
     norm    : JCF64VEC -> JF64
     ++ norm(v) computes the 2-norm of v.
     norm    : (JCF64VEC,JF64) -> JF64
@@ -436,7 +436,7 @@ JLCF64LinearAlgebra() : Exports == Implementation where
     conditionNumber    : JCF64MAT -> JF64
     ++ conditionNumber(m) computes the condition number of m.
     conditionNumber    : (JCF64MAT,JF64) -> JF64
-    ++ conditionNumber(m) computes the p-condition number of m.
+    ++ conditionNumber(m, p) computes the p-condition number of m.
     condSkeel    : JCF64MAT -> JF64
     ++ condSkeel(m) computes the Skeel condition number of m.
     rank        : (JCF64MAT, JF64) -> NNI
@@ -455,7 +455,7 @@ JLCF64LinearAlgebra() : Exports == Implementation where
     ++ svd(m) computes the singular value decomposition SVD of m
     ++ such that SVD.U * diagonalMatrix(SVD.sv) * SVD.Vt = m.
     svd! : JCF64MAT -> Record(U:JCF64MAT, sv:JF64VEC, Vt:JCF64MAT)
-    ++ svd!(m) is the same as svd(m) but overwites a to save
+    ++ svd!(m) is the same as svd(m) but overwrites m to save
     ++ memory space.
     eigen : JCF64MAT -> Record(values:JCF64VEC, vectors:JCF64MAT)
     ++ eigen(m) computes the spectral decomposition of m.

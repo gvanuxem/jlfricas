@@ -1,7 +1,7 @@
 )abbrev category WSO WSObject
 ++ Category for Julia WS objects
-++ Author: G.Vanuxem
-++ Date Created: May. 2024
+++ Author: G. Vanuxem
+++ Date Created: May, 2024
 ++ Description:
 ++  Julia Wolfram Symbolic Object category using the Wolfram Symbol
 ++  Transport Protocol.
@@ -27,7 +27,7 @@ WSObject() : Category == JLObjectType with
     numeric : % -> WSExpression
     ++ numeric(expr) returns numerical expr if possible.
     numeric : (%, PositiveInteger) -> WSExpression
-    ++ numeric(expr, prec) returns the numerical expr with digits precision prec
+    ++ numeric(expr, prec) returns the numerical expr with prec digits of precision
     ++ if possible.
     jlHead   : % -> WSSymbol
     ++ jlHead(expr) returns the Head type of expr.
@@ -88,8 +88,8 @@ WSObject() : Category == JLObjectType with
     
 )abbrev category WSRING WSRing
 ++ Category for Julia WS rings
-++ Author: G.Vanuxem
-++ Date Created: Jun. 2024
+++ Author: G. Vanuxem
+++ Date Created: Jun, 2024
 ++ Description:
 ++  Julia Wolfram Symbolic category for rings using the Wolfram Symbol
 ++  Transport Protocol.
@@ -98,8 +98,8 @@ WSRing() : Category == Join(WSObject, JLObjectRing)
 
 )abbrev category WSNUM WSNumber
 ++ Category for Julia WS numbers
-++ Author: G.Vanuxem
-++ Date Created: Jun. 2024
+++ Author: G. Vanuxem
+++ Date Created: Jun, 2024
 ++ Description:
 ++  Julia Wolfram Symbolic category for numbers using the Wolfram Symbol
 ++  Transport Protocol.
@@ -108,8 +108,8 @@ WSNumber() : Category == WSRing
 
 )abbrev domain WSSYM WSSymbol
 ++ Generic domain for Julia WS symbols
-++ Author: G.Vanuxem
-++ Date Created: May. 2024
+++ Author: G. Vanuxem
+++ Date Created: May, 2024
 ++ Description:
 ++  Julia Wolfram Symbolic symbols using the MathLink Julia package.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
@@ -146,7 +146,7 @@ WSSymbol() : Exports == Implementation where
     WFormat   : () -> %
     ++ WFormat() returns the WS Format symbol.
     coerce  : % -> Boolean
-    ++ coerce(sym) coerces sym to a FriCAS boolean.
+    ++ coerce(sym) coerces sym to a FriCAS Boolean.
     ++ Sym must be a Julia WS boolean
     coerce : Boolean -> %
     ++ coerce(bool) coerces bool to a Julia WS boolean.
@@ -211,8 +211,8 @@ WSSymbol() : Exports == Implementation where
 
 )abbrev domain WSINT WSInteger
 ++ Generic domain for Julia WS integers
-++ Author: G.Vanuxem
-++ Date Created: May. 2024
+++ Author: G. Vanuxem
+++ Date Created: May, 2024
 ++ Description:
 ++  Julia Wolfram Symbolic integers using the MathLink Julia package.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
@@ -224,11 +224,10 @@ WSInteger() : Exports == Implementation where
                   Canonical, canonicalsClosed) with
     integer : % -> Integer
     ++ integer(i) returns i as a FriCAS Integer.
-    ++ Convenience function.
     hyperFactorial : % -> %
     ++ hyperFactorial(n) computes the hyperfactorial of n.
-    QFactorial : (%, %) -> %
-    ++ QFactorial(x,q) returns the q-analog of factorial of x.
+    qFactorial : (%, %) -> %
+    ++ qFactorial(x,q) returns the q-analog of factorial of x.
     fibonacci : % -> %
     ++ fibonacci(n) returns the Fibonacci number Fn.
     stirling1 : (%, %) -> %
@@ -242,11 +241,11 @@ WSInteger() : Exports == Implementation where
     factor : % -> WSList WSList(%)
     ++ factor(n) returns the WS factorization of n.
     coerce  : Integer  -> %
-    ++ coerce(z): coerces z. Convenience function.
+    ++ coerce(z) coerces z.
     coerce  : % -> WSRational
-    ++ coerce(z): coerces z. Convenience function.
+    ++ coerce(z) coerces z.
     coerce  : % -> WSExpression
-    ++ coerce(z): coerces z. Convenience function.
+    ++ coerce(z) coerces z.
     jWSInt : Integer -> %
     ++ jWSInt(int) constructs int as a WSInteger.
   Implementation ==> JLObject add
@@ -312,7 +311,7 @@ WSInteger() : Exports == Implementation where
     factorial(n)      == junfunc("W_"Factorial_"(", n)
     binomial(n,m)     == jbinfunc("W_"Binomial_"(", n, m)
     hyperFactorial(n) == junfunc("W_"Hyperfactorial_"(", n)
-    QFactorial(z,q)   == jbinfunc("W_"QFactorial_"(", z,q)
+    qFactorial(z,q)   == jbinfunc("W_"qFactorial_"(", z,q)
     fibonacci(n)      == junfunc("W_"Fibonacci_"(", n)
     permutation(n,m)  == permutation(n, m)$IntegerCombinatoricFunctions(%)
     -- TODO: length for FriCAS factor function
@@ -338,8 +337,8 @@ WSInteger() : Exports == Implementation where
 
 )abbrev domain WSRAT WSRational
 ++ Generic domain for Julia WS rational numbers
-++ Author: G.Vanuxem
-++ Date Created: May. 2024
+++ Author: G. Vanuxem
+++ Date Created: May, 2024
 ++ Description:
 ++  Julia Wolfram Symbolic rational numbers using the MathLink Julia package.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
@@ -350,15 +349,15 @@ WSRational() : Exports == Implementation where
   Exports ==> Join(WSNumber,
       QuotientFieldCategory(WSInteger)) with
     coerce  : Integer  -> %
-    ++ coerce(z): coerces z. Convenience function.
+    ++ coerce(z) coerces z. Convenience function.
     "/"     : (WSInteger, WSInteger) -> %
     ++ a/b returns the Julia WS rational a/b.
     -- TODO:
     ++ Beware of erroneous interpreter coercions.
     convert : % -> Fraction(Integer)
-    ++ convert(q) returns q as a Fraction(Integer)
+    ++ convert(q) returns q as a Fraction(Integer).
     coerce  : % -> WSExpression
-    ++ coerce(q) coerces q. Convenience function. 
+    ++ coerce(q) coerces q.
     jWSRat : Fraction(Integer) -> %
     ++ jWSRat(q) constructs q as a WSRational.
   Implementation ==> JLObject add
@@ -454,8 +453,8 @@ WSRational() : Exports == Implementation where
 
 )abbrev domain WSREAL WSReal
 ++ Generic domain for WS real numbers
-++ Author: G.Vanuxem
-++ Date Created: April. 2024
+++ Author: G. Vanuxem
+++ Date Created: April, 2024
 ++ Description:
 ++  Julia Wolfram Symbolic real numbers using
 ++  the MathLink Julia package.
@@ -500,17 +499,17 @@ WSReal() : Exports == Implementation where
     coerce : % -> JLFloat64
     ++ coerce(r) coerces r to a JLFloat64.
     coerce  : % -> JLFloat
-    ++ coerce(x) converts x as a JLFloat.
+    ++ coerce(x) converts x to a JLFloat.
     coerce  : String -> %
     ++ coerce(str) constructs str as a WSReal.
     coerce  : JLFloat64  -> %
-    ++ coerce(x) converts x as a WSReal.
+    ++ coerce(x) converts x to a WSReal.
     coerce  : DoubleFloat  -> %
-    ++ coerce(x) converts x as a WSReal.
+    ++ coerce(x) converts x to a WSReal.
     coerce  : Float  -> %
-    ++ coerce(x) converts x as a WSReal.
+    ++ coerce(x) converts x to a WSReal.
     coerce  : JLFloat  -> %
-    ++ coerce(x) converts x as a WSReal.
+    ++ coerce(x) converts x to a WSReal.
     coerce  : % -> WSExpression
     ++ coerce(x) coerces x to a WSExpression.
     jWSReal : DoubleFloat -> %
@@ -751,8 +750,8 @@ WSReal() : Exports == Implementation where
 
 )abbrev domain WSAPR WSAPReal
 ++ Generic domain for Julia WS arbitrary precision real numbers
-++ Author: G.Vanuxem
-++ Date Created: April. 2024
+++ Author: G. Vanuxem
+++ Date Created: April, 2024
 ++ Description:
 ++  Julia Wolfram Symbolic arbitrary precision real numbers using
 ++  Wolfram Symbolic Transport Protocol.
@@ -939,7 +938,7 @@ WSAPReal(prec : PositiveInteger) : Exports == Implementation where
       error1("asin: result is not real for argument", x)
     acos(x)   ==
       abs(x) <= 1 => junfunc("W_"ArcCos_"(",x)
-      error1("acos: result is not real fo argument", x)
+      error1("acos: result is not real for argument", x)
     atan(x)   == junfunc("W_"ArcTan_"(",x)
     atan(x,y) == jbinfunc("W_"ArcTan_"(",x, y)
     asec(x)   ==
@@ -967,7 +966,7 @@ WSAPReal(prec : PositiveInteger) : Exports == Implementation where
       junfunc("W_"ArcTanh_"(",x)
     asech(x) ==
       one? x => 0
-      if (x < 0 or x > 1) then error1("asech: rsult is not real argument", x)
+      if (x < 0 or x > 1) then error1("asech: result is not real for argument", x)
       junfunc("W_"ArcSech_"(",x)
     acsch(x) ==
       if zero? x then error1("acsch: not defined for argument", x)
@@ -1048,8 +1047,8 @@ WSAPReal(prec : PositiveInteger) : Exports == Implementation where
 
 )abbrev domain WSGINT WSGaussianInteger
 ++ Generic domain for Julia WS gaussian integers
-++ Author: G.Vanuxem
-++ Date Created: May. 2024
+++ Author: G. Vanuxem
+++ Date Created: May, 2024
 ++ Description:
 ++  Julia Wolfram Symbolic gaussian integers using the MathLink Julia package.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
@@ -1060,7 +1059,7 @@ WSGaussianInteger() : Exports == Implementation where
   Exports ==> Join(WSNumber, ComplexCategory(WSInteger)) with
     random   : WSInteger -> %
     ++ random(n) returns a gaussian integer where real part is in the range 0..n
-    ++ as the imagniray part.
+    ++ as the imaginary part.
     coerce   : Integer  -> %
     ++ coerce(x): convenience function.
     coerce  : % -> WSExpression
@@ -1151,8 +1150,8 @@ WSGaussianInteger() : Exports == Implementation where
 
 )abbrev domain WSCPLX WSComplex
 ++ Generic domain for Julia WS complex numbers
-++ Author: G.Vanuxem
-++ Date Created: May. 2024
+++ Author: G. Vanuxem
+++ Date Created: May, 2024
 ++ Description:
 ++  Julia Wolfram Symbolic complex numbers using the MathLink Julia package.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
@@ -1170,13 +1169,13 @@ WSComplex() : Exports == Implementation where
     ++ jlApprox?(x,y) computes inexact equality comparison
     ++ with WS default parameters (Equal).
     exp     : () -> %
-    ++ exp() returns the WSAPJLWSComplexReal ℯ (%e or exp(1)).
+    ++ exp() returns the WSComplex ℯ (%e or exp(1)).
     sinc    : % -> %
-    ++ sinc(z) compues the unormalized sinc of z, sin(z)/z and 0 if z = 0.
+    ++ sinc(z) computes the unnormalized sinc of z, sin(z)/z and 0 if z = 0.
     log2    : % -> %
-    ++ log2(z) compute logarithm of z in base 2.
+    ++ log2(z) computes the logarithm of z in base 2.
     log10   : % -> %
-    ++ log10(z) compute logarithm of z in base 10.
+    ++ log10(z) computes the logarithm of z in base 10.
     atan    : (%, %) -> %
     ++ atan(z1,z2) computes the arc tangent of z2/z1.
     erf     : (%, %) -> %
@@ -1215,7 +1214,7 @@ WSComplex() : Exports == Implementation where
     jbinfunc(func,a,b) ==>
       jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
     jterfunc(func,a,b,c) ==>
-      jlref(concat("weval(",[func, "(", getind(a), ",", getind(b), ",", getind(c)"))"]))
+      jlref(concat(["weval(", func, getind(a), ",", getind(b), ",", getind(c), "))"]))
     jquatfunc(func,a,b,c,d) ==>
       jlref(concat(["weval(", func, getind(a), ",", getind(b), ",",
         getind(c), ",", getind(d)"))"]))
@@ -1387,8 +1386,8 @@ WSComplex() : Exports == Implementation where
 
 )abbrev domain WSAPCPX WSAPComplex
 ++ Generic domain for Julia WS arbitrary precision complex numbers
-++ Author: G.Vanuxem
-++ Date Created: May. 2024
+++ Author: G. Vanuxem
+++ Date Created: May, 2024
 ++ Description:
 ++  Julia Wolfram Symbolic arbitrary precision complex numbers using Wolfram Symbolic
 ++  Transport Protocol.

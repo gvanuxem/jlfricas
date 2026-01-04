@@ -307,16 +307,16 @@ JLFloat64Matrix() : Exports == Implementation where
   MLAF        ==> MatrixLinearAlgebraFunctions(JF64, Row, Col, %)
   Exports ==> JLMatrixCategory(JF64, Row, Col) with
     elt : (%, NonNegativeInteger) -> JF64
-    ++ elt(m, i) returns the i-th elements of m.
+    ++ elt(m, i) returns the i-th element of m.
     ++ Column major order.
     qelt : (%, NonNegativeInteger) -> JF64
-    ++ qelt(m, i) returns the i-th elements of m.
+    ++ qelt(m, i) returns the i-th element of m.
     ++ Column major order.
     setelt! : (%, NonNegativeInteger, JF64) -> JF64
-    ++ setelt!(m, i, r) sets the i-th elements of m to r.
+    ++ setelt!(m, i, r) sets the i-th element of m to r.
     ++ Column major order.
     qsetelt! : (%, NonNegativeInteger, JF64) -> JF64
-    ++ qsetelt!(m,) sets the i-th elements of m to r.
+    ++ qsetelt!(m, i, r) sets the i-th element of m to r.
     ++ Column major order.
     coerce : % -> Matrix(DoubleFloat)
     ++ coerce(m) coerces a copy of m to a Matrix(DoubleFloat).
@@ -764,19 +764,19 @@ JLComplexF64Matrix() : Exports == Implementation where
   MLAF        ==> MatrixLinearAlgebraFunctions(JCF64, Row, Col, %)
   Exports ==> JLMatrixCategory(JCF64, Row, Col) with
     elt : (%, NonNegativeInteger) -> JCF64
-    ++ elt(m, i) returns the i-th elements of m.
+    ++ elt(m, i) returns the i-th element of m.
     ++ Column major order.
     qelt : (%, NonNegativeInteger) -> JCF64
-    ++ qelt(m, i) returns the i-th elements of m.
+    ++ qelt(m, i) returns the i-th element of m.
     ++ Column major order.
     setelt! : (%, NonNegativeInteger, JCF64) -> JCF64
-    ++ setelt!(m, i, r) sets the i-th elements of m to r.
+    ++ setelt!(m, i, r) sets the i-th element of m to r.
     ++ Column major order.
     qsetelt! : (%, NonNegativeInteger, JCF64) -> JCF64
-    ++ qsetelt!(m,) sets the i-th elements of m to r.
+    ++ qsetelt!(m, i, r) sets the i-th element of m to r.
     ++ Column major order.
     coerce : JF64MAT -> %
-    ++ coerce(m) coerces m to a a Julia Complex Float 64 matrix.
+    ++ coerce(m) coerces m to a Julia Complex Float 64 matrix.
     jlDisplay : % -> Void  
     ++ jlDisplay(m) pretty prints m (à la Julia).
     jlVector : % -> JLComplexF64Vector

@@ -1,7 +1,7 @@
 )abbrev domain WSEXPR WSExpression
 ++ Generic domain for Julia WS expressions
-++ Author: G.Vanuxem
-++ Date Created: May. 2024
+++ Author: G. Vanuxem
+++ Date Created: May, 2024
 ++ Description:
 ++  Julia Wolfram Symbolic expressions using the MathLink Julia package.
 ++ It supports the Eltable category (interface) so, for example
@@ -81,7 +81,7 @@ WSExpression() : Exports == Implementation where
     degree : () -> %
     ++ degree() returns conversion factor from degrees to radians, π/180.
     eulerGamma : () -> %
-    ++ eulerGamma() returns Euler's constant gamma (γ).
+    ++ eulerGamma() returns Euler's constant Gamma(γ).
     positiveInfinity : () -> %
     ++ positiveInfinity() returns positive infinity (∞).
     catalan : () -> %
@@ -91,9 +91,9 @@ WSExpression() : Exports == Implementation where
     sinc    : % -> %
     ++ sinc(x) computes the unnormalized sinc of x, sin(x)/x and 0 if x = 0.
     log2    : % -> %
-    ++ log2(x) computes logarithm of x in base 2.
+    ++ log2(x) computes the logarithm of x in base 2.
     log10   : % -> %
-    ++ log10(x) computes logarithm of x in base 10.
+    ++ log10(x) computes the logarithm of x in base 10.
     atan    : (%, %) -> %
     ++ atan(x,y) computes the arc tangent of y/x.
     erf     : (%, %) -> %
@@ -113,17 +113,17 @@ WSExpression() : Exports == Implementation where
     lambertW : (WSInteger, %) -> %
     ++ lambertW(k,z) returns the k-th solution to the LambertW function.
     haversine : % -> %
-    ++ haversine(z)	computes the haversine of z.
+    ++ haversine(z) computes the Haversine of z.
     inverseHaversine : % -> %
-    ++ inverseHaversine(z)	computes the inverse haversine.
+    ++ inverseHaversine(z) computes the inverse Haversine.
     angerJ : (%, %, %) -> %
     ++ angerJ(v, n, z) is the associated Anger J function.
     gudermannian : % -> %
-    ++ gudermannian(z) computes the gudermannian of z.
+    ++ gudermannian(z) computes the Gudermannian of z.
     inverseGudermannian : % -> %
-    ++ inverseGudermannian(z)	computes the inverse gudermannian.
-    digamma     : (% , %) -> %
-    ++ digamma(n,z)	 is the n-th derivative of the digamma function.
+    ++ inverseGudermannian(z) computes the inverse Gudermannian.
+    digamma     : (%, %) -> %
+    ++ digamma(n,z) is the n-th derivative of the digamma function.
     besselJZero : (%, %) -> %
     ++ besselJZero(n,x) returns the n-th zero of the
     ++ Bessel J n-th function.
@@ -140,7 +140,7 @@ WSExpression() : Exports == Implementation where
     ++ sphericalHankelH1(n,z) returns the spherical Hankel function
     ++ of the first kind of z.
     sphericalHankelH2 : (% , %)-> %
-    ++ sphericalHankelH2(n,z) computes the spherical Hankel
+    ++ sphericalHankelH2(n,z) returns the spherical Hankel function
     ++ of the second kind of z.
     airyAiZero : % -> %
     ++ airyAiZero(n) is the n-th zero of the Airy function \spad{Ai(z)}.
@@ -170,13 +170,13 @@ WSExpression() : Exports == Implementation where
     ++ weierstrassPPrime(g2, g3, z) is the derivative of the Weierstrass P
     ++ function.
     weierstrassSigma : (%, %, %) -> %
-    ++ weierstrassSigma(g2, g3, z) is the Weierstrass Sigma function.
+    ++ weierstrassSigma(g2, g3, z) is the Weierstrass sigma function.
     weierstrassZeta : (%, %, %) -> %
     ++ weierstrassZeta(g2, g3, z) is the Weierstrass Zeta function.
     weierstrassPInverse : (%, %, %) -> %
     ++ weierstrassPInverse(g2, g3, z) is the inverse of Weierstrass
     ++ P function, defined by the formula
-    ++ \spad{weierstrassP(g2, g3, weierstrassPInverse(g2, g3, z)) = z}.
+    ++ \spad{WeierstrassP(g2, g3, WeierstrassPInverse(g2, g3, z)) = z}.
     ramanujanTau : % -> %
     ++ ramanujanTau(n) returns the Ramanujan tau of n.
     ramanujanTauL : % -> %
@@ -207,22 +207,22 @@ WSExpression() : Exports == Implementation where
     ++ error function of x.
     EiEn : (%,%) -> %
     ++ EiEn(n,z) returns the exponential integral En(z).
-    BetaRegularized : (%, %, %) -> %
-    ++ BetaRegularized(x,a,b) computes the regularized incomplete beta function.
-    GammaRegularized : (%, %) -> %
-    ++ GammaRegularized(a,x) computes the regularized incomplete gamma function.
+    betaRegularized : (%, %, %) -> %
+    ++ betaRegularized(x,a,b) computes the regularized incomplete Beta function.
+    gammaRegularized : (%, %) -> %
+    ++ gammaRegularized(a,x) computes the regularized incomplete Gamma function.
     Gamma : (%, %, %) -> %
-    ++ Gamma(a,z1,z2) computes the generalized incomplete gamma function.
+    ++ Gamma(a,z1,z2) computes the generalized incomplete Gamma function.
     inverseBetaRegularized : (%, %, %) -> %
-    ++ inverseBetaRegularized(s,a,b) computes the inverse beta regularized function.
+    ++ inverseBetaRegularized(s,a,b) computes the inverse Beta regularized function.
     inverseGammaRegularized : (%, %) -> %
-    ++ inverseGammaRegularized(a,s) computes the inverse gamma regularized function.
+    ++ inverseGammaRegularized(a,s) computes the inverse Gamma regularized function.
     jacobiTheta : (WSInteger, %, %) -> %
     ++ jacobiTheta(n, z, m) are the Jacobi Theta functions.
     pochhammer : (%, %) -> %
     ++ pochhammer(a,n) returns the Pochhammer symbol. 
     logGamma : % -> %
-    ++ logGamma(z) returns the log-gamma of z.
+    ++ logGamma(z) returns the log-Gamma of z.
     logBarnesG : % -> %
     ++ logBarnesG(x) is the logarithm of the Barnes G-function.
     barnesG : % -> %
@@ -233,7 +233,7 @@ WSExpression() : Exports == Implementation where
     ++ fibonacci(n, x) returns the Fibonacci polynomial or evaluates it
     ++ at x if x is a number.
     legendreP : (%, %) -> %
-    ++ legendreP(n, x) returns the legendre polynomial
+    ++ legendreP(n, x) returns the Legendre polynomial
     ++ of the first kind or evaluates it at x if x is a number. 
     legendreQ : (%, %) -> %
     ++ legendreQ(n, x) returns the Legendre function
@@ -255,16 +255,16 @@ WSExpression() : Exports == Implementation where
     ++ gegenbauerC(n,lambda,x) returns the Gegenbauer polynomial
     ++ or evaluates it at x if x is a number.
     chebyshevT : (%, %) -> %
-    ++ chebyshevT(n, x) returns the chebyshev polynomial of the first kind
+    ++ chebyshevT(n, x) returns the Chebyshev polynomial of the first kind
     ++ or evaluates it at x if x is a number.
     chebyshevU : (%, %) -> %
-    ++ chebyshevU(n, x) returns chebyshev polynomial of the second kind
+    ++ chebyshevU(n, x) returns Chebyshev polynomial of the second kind
     ++ or evaluates it at x if x is a number.
     hermiteH : (%, %) -> %
     ++ hermiteH(n, x) returns the Hermite polynomial or evaluates
     ++ it at x if x is a number.
     laguerreL : (%, %) -> %
-    ++ laguerreL(n, x) returns the laguerre polynomial or evaluates
+    ++ laguerreL(n, x) returns the Laguerre polynomial or evaluates
     ++ it at x if x is a number.
     ++ For example:
     ++ \example{laguerreL(5, jWSExpr x)}
@@ -303,20 +303,20 @@ WSExpression() : Exports == Implementation where
     ++ coulombH1(l,eta,ro) is the incoming irregular Coulomb wave function H^(+).
     coulombH2: (%, %, %) -> %
     ++ coulombH2(l,eta,ro) is the incoming irregular Coulomb wave function H^(-).
-    QPochhammer : (%, %) -> %
-    ++ QPochhammer(x,q) returns the q-Pochhammer symbol of x.
-    QPochhammer : (%, %, %) -> %
-    ++ QPochhammer(x,q,n) returns the q-Pochammer symbol of x.
-    QFactorial : (%, %) -> %
-    ++ QFactorial(x,q) returns the q-analog of factorial of x.
-    QBinomial : (%, %, %) -> %
-    ++ QBinomial(n,m,q) returns the q-analog of binomial coefficient.
-    QGamma : (%, %) -> %
-    ++ QGamma(x,q) returns the q-analog of Euler gamma of x.
-    QPolyGamma : (%, %)-> %
-    ++ QPolyGamma(x,q) returns the q-digamma of x.
-    QPolyGamma : (%, %, %) -> %
-    ++ QPolyGamma(n,x,q) returns the n-th derivative of the q-digamma
+    qPochhammer : (%, %) -> %
+    ++ qPochhammer(x,q) returns the q-Pochhammer symbol of x.
+    qPochhammer : (%, %, %) -> %
+    ++ qPochhammer(x,q,n) returns the q-Pochhammer symbol of x.
+    qFactorial : (%, %) -> %
+    ++ qFactorial(x,q) returns the q-analog of factorial of x.
+    qBinomial : (%, %, %) -> %
+    ++ qBinomial(n,m,q) returns the q-analog of binomial coefficient.
+    qGamma : (%, %) -> %
+    ++ qGamma(x,q) returns the q-analog of Euler Gamma of x.
+    qPolyGamma : (%, %)-> %
+    ++ qPolyGamma(x,q) returns the q-Digamma of x.
+    qPolyGamma : (%, %, %) -> %
+    ++ qPolyGamma(n,x,q) returns the n-th derivative of the q-digamma
     ++ function of x.
     mathieuC : (%, %, %) -> %
     ++ mathieuC(a,q,z) is the even Mathieu function with
@@ -340,9 +340,9 @@ WSExpression() : Exports == Implementation where
     jacobiAmplitude : (%, %) -> %
     ++ jacobiAmplitude(u,m) computes the amplitude function am.
     inverseJacobiSn : (%, %) -> %
-    ++ inverseJacobiSn(nu, m) computes the inverse JacobiSN elliptic function.
+    ++ inverseJacobiSn(nu, m) computes the inverse Jacobi SN elliptic function.
     inverseJacobiCn : (%, %) -> %
-    ++ inverseJacobiCn(nu, m) computes the inverse JacobiCN elliptic function.
+    ++ inverseJacobiCn(nu, m) computes the inverse Jacobi CN elliptic function.
     ellipticTheta : (%, %, %) -> %
     ++ ellipticTheta(a, u, q) computes the theta function,
     ++ a ranges from 1 to 4.
@@ -403,7 +403,7 @@ WSExpression() : Exports == Implementation where
     ++ product(f(n),n) returns the indefinite product of f(n).
     numericSum : (%, %) -> %
     ++ numericSum(f(n),range) returns an evaluated numerical approximation of
-    ++ the sum f(imin) + .. + f(imax) defined by the list range,
+    ++ the sum f(imin) + ... + f(imax) defined by the list range,
     ++ for example \example{jWSExpr("\{i, imin, imax\}")}.
     ++ See Wolfram language specifications.
     numericSum     : (%, %, Segment(Integer)) -> %
@@ -411,7 +411,7 @@ WSExpression() : Exports == Implementation where
     ++ sum f(a) + ... + f(b).
     numericProduct : (%, %) -> %
     ++ numericProduct(f(n),range) returns an evaluated numerical approximation of
-    ++ the sum f(imin) + .. + f(imax) defined by the list range,
+    ++ the sum f(imin) + ... + f(imax) defined by the list range,
     ++ for example \example{jWSExpr("\{i, imin, imax\}")}.
     ++ See Wolfram language specifications.
     numericProduct : (%, %, Segment(Integer)) -> %
@@ -1078,7 +1078,7 @@ WSExpression() : Exports == Implementation where
     replacePart : (%, %) -> %
     ++ replacePart(expr, part) replaces expr using rule(s) expressing position(s).
     replaceAt : (%, %, %) -> %
-    ++ replaceAt(expr, part, n) replaces the n-th element of expr using rule(s).  
+    ++ replaceAt(expr, part, n) replaces the n-th element of expr using rule(s).
     replaceAll : (%, %) -> %
     ++ replaceAll(expr, rule) applies rule(s) to expr.
     replaceRepeated : (%, %) -> %
@@ -1207,7 +1207,7 @@ WSExpression() : Exports == Implementation where
     ++ \example{jWSExpr "3.14159"}
     ++ \example{jlWSDateString(jWSExpr "Tomorrow")}
     ++ \example{toString jWSExpr "TextSentences[WikipediaData[_"Sun_"]][[;; 40]]"}
-    ++ example: jWSExpr "Probability[x < 1, x \[Distributed] NormalDistribution[]]"
+    ++ Example: jWSExpr "Probability[x < 1, x \[Distributed] NormalDistribution[]]"
   Implementation ==> JLObject add
     import from JLUtilityFunctions
     import from JLStringUtilities
@@ -1381,7 +1381,7 @@ WSExpression() : Exports == Implementation where
     erfi(x)     == junfunc("W_"Erfi_"(",x)
 
     Si(x)       == junfunc("W_"SinIntegral_"(",x)
-    Shi(x)       == junfunc("W_"SinhIntegral_"(",x)
+    Shi(x)      == junfunc("W_"SinhIntegral_"(",x)
     Ci(x)       == junfunc("W_"CosIntegral_"(",x)
     Chi(x)      == junfunc("W_"CoshIntegral_"(",x)
     Ei(x)       == junfunc("W_"ExpIntegralEi_"(",x)
@@ -1489,12 +1489,12 @@ WSExpression() : Exports == Implementation where
 
     Beta(x,y) == jbinfunc("W_"Beta_"(", x, y)
     Beta(z,a,b) == jterfunc("W_"Beta_"(", z,a,b)
-    BetaRegularized(z,a,b) == jterfunc("W_"BetaRegularized_"(", z,a,b)
+    betaRegularized(z,a,b) == jterfunc("W_"BetaRegularized_"(", z,a,b)
     Gamma(x) == junfunc("W_"Gamma_"(", x)
     Gamma(a,z) == jbinfunc("W_"Gamma_"(", a,z)
     Gamma(a, z1, z2) == jterfunc("W_"Gamma_"(", a, z1,z2)
     -- Checks?
-    GammaRegularized(a,z) == jbinfunc("W_"GammaRegularized_"(", a,z) 
+    gammaRegularized(a,z) == jbinfunc("W_"GammaRegularized_"(", a,z) 
     inverseBetaRegularized(s,a,b) ==
       jterfunc("W_"InverseBetaRegularized_"(", s,a,b)
     inverseGammaRegularized(a,s) ==
@@ -1542,13 +1542,13 @@ WSExpression() : Exports == Implementation where
     coulombH1(l,eta,ro) == jterfunc("W_"CoulombH1_"(", l, eta, ro)
     coulombH2(l,eta,ro) == jterfunc("W_"CoulombH2_"(", l, eta, ro)
 
-    QPochhammer(z,q) == jbinfunc("W_"QPochhammer_"(", z,q)
-    QPochhammer(z,q,n) == jterfunc("W_"QPochhammer_"(", z,q,n)
-    QFactorial(z,q) == jbinfunc("W_"QFactorial_"(", z,q)
-    QBinomial(n,m,q) == jterfunc("W_"QBinomial_"(", n,m,q)
-    QGamma(z,q) == jbinfunc("W_"QGamma_"(", z,q)
-    QPolyGamma(z,q) == jbinfunc("W_"QPolyGamma_"(", z,q)
-    QPolyGamma(n,z,q) == jterfunc("W_"QPolyGamma_"(", n,z,q)
+    qPochhammer(z,q) == jbinfunc("W_"QPochhammer_"(", z,q)
+    qPochhammer(z,q,n) == jterfunc("W_"QPochhammer_"(", z,q,n)
+    qFactorial(z,q) == jbinfunc("W_"QFactorial_"(", z,q)
+    qBinomial(n,m,q) == jterfunc("W_"QBinomial_"(", n,m,q)
+    qGamma(z,q) == jbinfunc("W_"QGamma_"(", z,q)
+    qPolyGamma(z,q) == jbinfunc("W_"QPolyGamma_"(", z,q)
+    qPolyGamma(n,z,q) == jterfunc("W_"QPolyGamma_"(", n,z,q)
 
     mathieuC(a,q,z) == jterfunc("W_"MathieuC_"(", a,q,z)
     mathieuS(b,q,z)== jterfunc("W_"MathieuS_"(", b,q,z)
@@ -2106,12 +2106,13 @@ WSExpression() : Exports == Implementation where
     quantityForm(expr, form : WSL(%)) ==
       jbinfunc("W_"QuantityForm_"(", expr, form)
     coerce(expr) : OutputForm ==
-      jlHead(expr) = WS => coerce(string(expr))
-      (jlHead(expr) = WR and machineNumber?(expr)) => coerce(expr pretend WSReal)$WSReal
-      (jlHead(expr) = WC and machineNumber?(real expr) and machineNumber?(imag expr)) => coerce(expr pretend WSComplex)$WSComplex
-      jlHead(expr) = WRat => coerce(expr pretend WSRational)$WSRational
-      jlHead(expr) = WFormat => toString(expr) pretend OutputForm
-
+      head := jlHead expr
+      head = WS => coerce(string(expr))
+      (head = WR and machineNumber?(expr)) => coerce(expr pretend WSReal)$WSReal
+      (head = WC and machineNumber?(real expr) and machineNumber?(imag expr)) =>
+        coerce(expr pretend WSComplex)$WSComplex
+      head = WRat => coerce(expr pretend WSRational)$WSRational
+      head = WFormat => toString(expr) pretend OutputForm
       pagew := string(_$LINELENGTH$Lisp pretend Integer - 2)
       sexpr := toString(expr, jWSExpr concat("PageWidth -> ", pagew))
       str : String := jlEvalString(concat(["replace(_"", sexpr,

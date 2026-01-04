@@ -1,7 +1,7 @@
 )abbrev package WSNSF WSNumericalSpecialFunctions
 ++ Generic package for Julia WS numerical special functions
-++ Author: G.Vanuxem
-++ Date Created: June 2024
+++ Author: G. Vanuxem
+++ Date Created: June, 2024
 ++ Description:
 ++  Julia Wolfram Symbolic numerical special functions using
 ++  the MathLink Julia package.
@@ -46,16 +46,16 @@ WSNumericalSpecialFunctions(R : WSNumber) : Exports ==Implementation where
     airyAiPrime : R -> R
     ++ airyAiPrime(z) is the derivative of the Airy function \spad{Ai(z)}.
     airyAiZero : R -> R
-    ++ airyAiZero(n) is n-th zero function of the Airy function \spad{Ai(z)}.
+    ++ airyAiZero(n) is the n-th zero function of the Airy function \spad{Ai(z)}.
     airyAiZero : (R, R) -> R
-    ++ airyAiZero(n,x) is n-th zero function of the Airy function \spad{Ai(z)}
+    ++ airyAiZero(n,x) is the n-th zero function of the Airy function \spad{Ai(z)}
     ++ smaller than x.
     airyBi : R -> R
     ++ airyBi(z) is the Airy function \spad{Bi(z)}.
     airyBiZero : R -> R
-    ++ airyBiZero(n) is n-th zero function of the Airy function \spad{Bi(z)}.
+    ++ airyBiZero(n) is the n-th zero function of the Airy function \spad{Bi(z)}.
     airyBiZero : (R, R) -> R
-    ++ airyBiZero(n,x) is n-th zero function of the Airy function \spad{Bi(z)}
+    ++ airyBiZero(n,x) is the n-th zero function of the Airy function \spad{Bi(z)}
     ++ smaller than x.
     airyBiPrime : R -> R
     ++ airyBiPrime(z) is the derivative of the Airy function \spad{Bi(z)}.
@@ -78,7 +78,7 @@ WSNumericalSpecialFunctions(R : WSNumber) : Exports ==Implementation where
     ++ weierstrassPPrime(g2, g3, z) is the derivative of Weierstrass P
     ++ function.
     weierstrassSigma : (R, R, R) -> R
-    ++ weierstrassSigma(g2, g3, z) is the Weierstrass Sigma function.
+    ++ weierstrassSigma(g2, g3, z) is the Weierstrass sigma function.
     weierstrassZeta : (R, R, R) -> R
     ++ weierstrassZeta(g2, g3, z) is the Weierstrass Zeta function.
     weierstrassPInverse : (R, R, R) -> R
@@ -128,7 +128,7 @@ WSNumericalSpecialFunctions(R : WSNumber) : Exports ==Implementation where
     ++ imag(exp(-v*Rpi*Ri/2)*besselK(v, exp(Rpi*Ri/4)*z))}
     ++ for z and v real.
     kelvinKer : (R, R) -> R
-    ++ kelvinKer(v, z) is the Kelvin kei function defined by equality
+    ++ kelvinKer(v, z) is the Kelvin ker function defined by equality
     ++ \spad{kelvinKer(v, z) =
     ++ real(exp(-v*Rpi*Ri/2)*besselK(v, exp(Rpi*Ri/4)*z))}
     ++ for z and v real.
@@ -149,7 +149,7 @@ WSNumericalSpecialFunctions(R : WSNumber) : Exports ==Implementation where
     ++ jacobiDn(z, m)^2 - ellipticE(m)/ellipticK(m)} and
     ++ \spad{jacobiZeta(0, m) = 0}.
     jacobiTheta : (WSInteger, R, R) -> R
-    ++ jacobiTheta(n, z, m) are the Jacobi Theta functions.
+    ++ jacobiTheta(n, z, m) are the Jacobi theta functions.
     lerchPhi : (R, R, R) -> R
     ++ lerchPhi(z, s, a) is the Lerch Phi function.
     riemannZeta : R -> R
@@ -170,15 +170,15 @@ WSNumericalSpecialFunctions(R : WSNumber) : Exports ==Implementation where
     lambertW : (WSInteger, R) -> R
     ++ lambertW(k,z) returns the k-th solution to LambertW function.
     haversine : R -> R
-    ++ haversine(z)	computes the haversine of z.
+    ++ haversine(z)	computes the Haversine of z.
     inverseHaversine : R -> R
-    ++ inverseHaversine(z)	computes the inverse haversine of z.
+    ++ inverseHaversine(z)	computes the inverse Haversine of z.
     gudermannian : R -> R
-    ++ gudermannian(z) computes the gudermannian of z.
+    ++ gudermannian(z) computes the Gudermannian of z.
     inverseGudermannian : R -> R
-    ++ inverseGudermannian(z)	computes the inverse gudermannian of z.
+    ++ inverseGudermannian(z)	computes the inverse Gudermannian of z.
     digamma     : (R , R) -> R
-    ++ digamma(n,z)	 the n-th derivative of the digamma function
+    ++ digamma(n,z) is the n-th derivative of the digamma function.
     sphericalBesselJ : (R , R)-> R
     ++ sphericalBesselJ(n,z) returns the spherical Bessel
     ++ of the first kind of z.
@@ -219,28 +219,28 @@ WSNumericalSpecialFunctions(R : WSNumber) : Exports ==Implementation where
     hurwitzZeta : (R, R) -> R
     ++ hurwitzZeta(s,a) computes the Hurwitz zeta.
     hurwitzLerchPhi : (R, R, R) -> R
-    ++ hurwitzLerchPhi(z,s,a) computes the Hurwitz–Lerch transcendent phi function.
+    ++ hurwitzLerchPhi(z,s,a) computes the Hurwitz-Lerch transcendent phi function.
     riemannZeta : (R, R) -> R
-    ++ riemannZeta(s,a) is the generalized Riemann zeta function.
+    ++ riemannZeta(s,a) is the generalized Riemann Zeta function.
     inverseErf : R -> R
     ++ inverseErf(z) computes the inverse error function of z.
     inverseErfc : R -> R
     ++ inverseErfc(z) computes the inverse complementary
     ++ error function of z.
-    BetaRegularized : (R, R, R) -> R
-    ++ BetaRegularized(z,a,b) computes the regularized incomplete beta function.
-    GammaRegularized : (R, R) -> R
-    ++ GammaRegularized(a,z) computes the regularized incomplete gamma function.
+    betaRegularized : (R, R, R) -> R
+    ++ betaRegularized(z,a,b) computes the regularized incomplete Beta function.
+    gammaRegularized : (R, R) -> R
+    ++ gammaRegularized(a,z) computes the regularized incomplete Gamma function.
     Gamma : (R, R, R) -> R
-    ++ Gamma(a,z1,z2) computes the generalized incomplete gamma function.
+    ++ Gamma(a,z1,z2) computes the generalized incomplete Gamma function.
     inverseBetaRegularized : (R, R, R) -> R
-    ++ inverseBetaRegularized(s,a,b) computes the beta inverse.
+    ++ inverseBetaRegularized(s,a,b) computes the Beta inverse.
     inverseGammaRegularized : (R, R) -> R
-    ++ inverseGammaRegularized(a,s) computes the gamma inverse.
+    ++ inverseGammaRegularized(a,s) computes the Gamma inverse.
     pochhammer : (R, R) -> R
     ++ pochhammer(a,n) returns the Pochhammer symbol. 
     logGamma : R -> R
-    ++ logGamma(z) returns the log-gamma of z.
+    ++ logGamma(z) returns the log-Gamma of z.
     logBarnesG : R -> R
     ++ logBarnesG(z) is the logarithm of Barnes-G. 
     barnesG : R -> R
@@ -250,11 +250,10 @@ WSNumericalSpecialFunctions(R : WSNumber) : Exports ==Implementation where
     fibonacci : (WSInteger, R) -> R
     ++ fibonacci(n, z) evaluates the Fibonacci polynomial at z.
     legendreP : (R, R) -> R
-    ++ legendreP(n, z) evaluates the legendre polynomial
+    ++ legendreP(n, z) evaluates the Legendre polynomial
     ++ of the first kind at z. 
     legendreQ : (R, R) -> R
-    ++ legendreQ(n, z) returns the Legendre function
-    ++ of the second kind.
+    ++ legendreQ(n, z) returns the Legendre function of the second kind.
     legendreP  : (R, R, R) -> R
     ++ legendreP(n, m, z) evaluates the associated Legendre polynomial
     ++ of the first type at z.
@@ -270,10 +269,10 @@ WSNumericalSpecialFunctions(R : WSNumber) : Exports ==Implementation where
     gegenbauerC : (WSInteger, R, R) -> R
     ++ gegenbauerC(n,lambda,z) evaluates the Gegenbauer polynomial at z.
     chebyshevT : (R, R) -> R
-    ++ chebyshevT(n, z) evaluates the chebyshev polynomial of the first kind
+    ++ chebyshevT(n, z) evaluates the Chebyshev polynomial of the first kind
     ++ at z.
     chebyshevU : (R, R) -> R
-    ++ chebyshevU(n, expr) evaluates the chebyshev polynomial of the
+    ++ chebyshevU(n, expr) evaluates the Chebyshev polynomial of the
     ++ second kind at z.
     hermiteH : (R, R) -> R
     ++ hermiteH(n, z) evaluates the Hermite polynomial at z.
@@ -308,23 +307,23 @@ WSNumericalSpecialFunctions(R : WSNumber) : Exports ==Implementation where
     coulombG : (R, R, R) -> R
     ++ coulombG(l,eta,ro) is the irregular Coulomb wave function.
     coulombH1 : (R, R, R) -> R
-    ++ coulombH1(l,eta,ro)  is the incoming irregular Coulomb wave function H^(+).
+    ++ coulombH1(l,eta,ro) is the incoming irregular Coulomb wave function H^(+).
     coulombH2: (R, R, R) -> R
     ++ coulombH2(l,eta,ro) is the incoming irregular Coulomb wave function H^(-).
-    QPochhammer : (R, R) -> R
-    ++ QPochhammer(z,q) returns the q-Pochammer symbol of z.
-    QPochhammer : (R, R, R) -> R
-    ++ QPochhammer(z,q,n) returns the q-Pochammer symbol of z.
-    QFactorial : (R, R) -> R
-    ++ QFactorial(z,q) returns the q-analog of factorial of z.
-    QBinomial : (R, R, R) -> R
-    ++ QBinomial(n,m,q) returns the q-analog of binomial coefficient.
-    QGamma : (R, R) -> R
-    ++ QGamma(z,q) returns the q-analog of Euler gamma of z.
-    QPolyGamma : (R, R)-> R
-    ++ QPolyGamma(z,q) returns the q-digamma of z.
-    QPolyGamma : (R, R, R) -> R
-    ++ QPolyGamma(n,z,q) returns the n-th derivative of the q-digamma function of z.
+    qPochhammer : (R, R) -> R
+    ++ qPochhammer(z,q) returns the q-Pochhammer symbol of z.
+    qPochhammer : (R, R, R) -> R
+    ++ qPochhammer(z,q,n) returns the q-Pochhammer symbol of z.
+    qFactorial : (R, R) -> R
+    ++ qFactorial(z,q) returns the q-analog of factorial of z.
+    qBinomial : (R, R, R) -> R
+    ++ qBinomial(n,m,q) returns the q-analog of binomial coefficient.
+    qGamma : (R, R) -> R
+    ++ qGamma(z,q) returns the q-analog of Euler Gamma of z.
+    qPolyGamma : (R, R)-> R
+    ++ qPolyGamma(z,q) returns the q-digamma of z.
+    qPolyGamma : (R, R, R) -> R
+    ++ qPolyGamma(n,z,q) returns the n-th derivative of the q-digamma function of z.
     mathieuC : (R, R, R) -> R
     ++ mathieuC(a,q,z) is the even Mathieu function with
     ++ characteristic a and parameter q.
@@ -350,9 +349,9 @@ WSNumericalSpecialFunctions(R : WSNumber) : Exports ==Implementation where
     ++ unitStep(x) returns the unit step function i.e. 0 for x less
     ++ than 0, 1 for x greater or equal to 0.
     inverseJacobiSn : (R, R) -> R
-    ++ inverseJacobiSn(nu, m) computes the inverse JacobiSN elliptic function.
+    ++ inverseJacobiSn(nu, m) computes the inverse Jacobi's SN elliptic function.
     inverseJacobiCn : (R, R) -> R
-    ++ inverseJacobiCn(nu, m) computes the inverse JacobiCN elliptic function.
+    ++ inverseJacobiCn(nu, m) computes the inverse Jacobi's CN elliptic function.
     ellipticTheta : (R, R, R) -> R
     ++ ellipticTheta(a, u, q) computes the theta function, a ranges from 1 to 4.
     ellipticThetaPrime : (R, R, R) -> R
@@ -380,13 +379,13 @@ WSNumericalSpecialFunctions(R : WSNumber) : Exports ==Implementation where
     --++ jacobiZeta(ϕ,m) computes the Jacobi Zeta function.
     ++ jacobiZeta(phi,m) computes the Jacobi Zeta function.
     dedekindEta : R -> R
-    ++ dedekindEta(tau) computes the Dedekind modular elliptic eta.
+    ++ dedekindEta(tau) computes the Dedekind eta modular function.
     dirichletEta : R -> R
-    ++ dirichletEta(z) computes the Dirichlet eta of z.
+    ++ dirichletEta(z) computes the Dirichlet eta function of z.
     kleinInvariantJ : R -> R
     ++ kleinInvariantJ(tau) computes the Klein's absolute invariant.
     modularLambda : R -> R
-    ++ modularLambda() computes the lambda modular function.
+    ++ modularLambda(tau) computes the lambda modular function.
   Implementation ==> add
     junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
     jbinfunc(func,a,b) ==>
@@ -671,7 +670,7 @@ WSNumericalSpecialFunctions(R : WSNumber) : Exports ==Implementation where
       ret : R := jterfunc("W_"Beta_"(", z,a,b)
       jtypeassert(b,ret)
       ret
-    BetaRegularized(z,a,b) ==
+    betaRegularized(z,a,b) ==
       ret : R := jterfunc("W_"BetaRegularized_"(", z,a,b)
       jtypeassert(b,ret)
       ret
@@ -688,7 +687,7 @@ WSNumericalSpecialFunctions(R : WSNumber) : Exports ==Implementation where
       jtypeassert(z2,ret)
       ret
 
-    GammaRegularized(a,z) ==
+    gammaRegularized(a,z) ==
       ret : R := jbinfunc("W_"GammaRegularized_"(", a,z) 
       jtypeassert(z,ret)
       ret
@@ -856,31 +855,31 @@ WSNumericalSpecialFunctions(R : WSNumber) : Exports ==Implementation where
       jtypeassert(ro,ret)
       ret
 
-    QPochhammer(z,q) ==
+    qPochhammer(z,q) ==
       ret : R := jbinfunc("W_"QPochhammer_"(", z,q)
       jtypeassert(q,ret)
       ret
-    QPochhammer(z,q,n) ==
+    qPochhammer(z,q,n) ==
       ret : R := jterfunc("W_"QPochhammer_"(", z,q,n)
       jtypeassert(q,ret)
       ret
-    QFactorial(z,q) ==
+    qFactorial(z,q) ==
       ret : R := jbinfunc("W_"QFactorial_"(", z,q)
       jtypeassert(q,ret)
       ret
-    QBinomial(n,m,q) ==
+    qBinomial(n,m,q) ==
       ret : R := jterfunc("W_"QBinomial_"(", n,m,q)
       jtypeassert(q,ret)
       ret
-    QGamma(z,q) ==
+    qGamma(z,q) ==
       ret : R := jbinfunc("W_"QGamma_"(", z,q)
       jtypeassert(q,ret)
       ret
-    QPolyGamma(z,q) ==
+    qPolyGamma(z,q) ==
       ret : R := jbinfunc("W_"QPolyGamma_"(", z,q)
       jtypeassert(q,ret)
       ret
-    QPolyGamma(n,z,q) ==
+    qPolyGamma(n,z,q) ==
       ret : R := jterfunc("W_"QPolyGamma_"(", n,z,q)
       jtypeassert(q,ret)
       ret

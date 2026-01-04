@@ -1,7 +1,7 @@
 )abbrev package WSUF WSUtilityFunctions
 ++ Generic package for Julia WS based utilities
-++ Author: G.Vanuxem
-++ Date Created: July. 2024
+++ Author: G. Vanuxem
+++ Date Created: July, 2024
 ++ Description:
 ++  Julia Wolfram Symbolic utility functions using
 ++  the MathLink Julia package.
@@ -51,7 +51,7 @@ WSUtilityFunctions() : Exports == Implementation where
     ++ identityMatrix(n) returns the identity matrix of size n.
     zeroMatrix : (PositiveInteger, PositiveInteger) ->
                     WSMatrix(WSInteger)
-    ++ \spad{zeroMatrix(m, n)} returns a m-by-n zero matrix.
+    ++ \spad{zeroMatrix(m, n)} returns an m-by-n zero matrix.
     jWSRange : WSInteger -> WSList(WSInteger)
     ++ jWSRange(n) returns a WSList that ranges from 1 to n.
     ++ For example:
@@ -86,7 +86,7 @@ WSUtilityFunctions() : Exports == Implementation where
     ++ \example{jlWSDateString(jWSExpr("Now"), jWSExpr("Entity[_"Language_", _"French::367gk_"]"))}
     jlWSDocumentation : Symbol -> WSExpression
     ++ jlWSDocumentation(sym) prints WS information about the symbol sym.
-    ++ Note that the WS language is preferable.
+    ++ Note that the WS language is preferable. Trivial implementation.
     ++ For example:
     ++ \example{jlWSDocumentation sin}
     ++ \example{jlWSDocumentation ArcSin}
@@ -110,14 +110,14 @@ WSUtilityFunctions() : Exports == Implementation where
     ++ Can be used with jWSImport.
     ++ For example: \spad{jlWSFileFormat("examples/customers-100.csv",jWSExpr "{_"CSV_",_"TSV_"}")}
     jlWSSnippet : (WSExpression, WSInteger) -> WSExpression
-    ++ jlWSSnippet(expr, n) returns the n-th part string of the WSExpression expr.
+    ++ jlWSSnippet(expr, n) returns the first (or last) n snippets of the WSExpression expr.
     ++ For example:
     ++ \example{jlWSSnippet(jlWSImport jWSString "http://www.fricas.org/",-2)}
     jlWSExport : (String, WSExpression) -> WSExpression
     ++ jlWSExport(file.ext, obj) exports the object obj to the file file.ext.
     ++ The extension ext will determine the saved format. A WS expression for
     ++ example can be exported in an image file, it will be saved in the WS
-    ++ 'StandardForm' whereas in FriCAS it is outputted in WS 'OutputForm':
+    ++ 'StandardForm' whereas in FriCAS it is displayed in WS 'OutputForm':
     ++ \example{x:=jWSExpr(x);jlWSExport("legendreP.png", legendreP(7, x))} 
     --inputForm() -- jRule NumberMarks > False||True
     --outputForm
@@ -125,7 +125,7 @@ WSUtilityFunctions() : Exports == Implementation where
     -- TODO: OutputForm?
     jlWSExportString : (WSExpression, WSExpression) -> WSExpression
     ++ jlWSExportString(expr, jWSString(format)) returns the string
-    ++ representation of expr in the format form. Use toString or string
+    ++ representation of expr in the specified format. Use toString or string
     ++ to obtain the FriCAS String.
     ++ For example:
     ++ \example{jWSExpr \"Probability[x < 0, x \\[Distributed] NormalDistribution[]]\"}
