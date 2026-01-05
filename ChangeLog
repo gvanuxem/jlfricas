@@ -1,3 +1,13 @@
+2026-01-05  Waldek Hebisch  <cas@fricas.org>
+
+	Add a package giving browser information
+	* src/algebra/hypertex.spad: New file
+
+2026-01-05  Waldek Hebisch  <cas@fricas.org>
+
+	* src/interp/c-doc.boot: Do not put empty groups
+	after commas
+
 2026-01-04  Waldek Hebisch  <cas@fricas.org>
 
 	Add TeX parser
