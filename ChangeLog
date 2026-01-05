@@ -1,3 +1,27 @@
+2026-01-04  Waldek Hebisch  <cas@fricas.org>
+
+	Add TeX parser
+	* src/algebra/texd.spad: New file
+	src/algebra/Makefile.in: Adjust
+
+2026-01-04  Waldek Hebisch  <cas@fricas.org>
+
+	* src/interp/functor.boot: Fix missing categories in DMP
+
+2026-01-03  Waldek Hebisch  <cas@fricas.org>
+
+	* src/algebra/u32vec.spad: New package for modular matrix
+	operations
+	src/algebra/ffact.spad: Use it instead of own functions
+	src/lisp/primitives.lisp: Add support for linear (row
+	major) indexing
+	src/algebra/Makefile.in: Adjust
+
+2026-01-03  Waldek Hebisch  <cas@fricas.org>
+
+	* src/algebra/rdeefx.spad: Allow differing minimal
+	indices in map between matrix domains
+
 2025-12-29  Waldek Hebisch  <cas@fricas.org>
 
 	* src/interp/br-data.boot, src/interp/define.boot,
