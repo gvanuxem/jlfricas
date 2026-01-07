@@ -1028,6 +1028,7 @@ InnerNMExactCalciumField(Options : JLObjDict) : Exports ==
     ++ :exponential
     ++ :tangent
     ++ :direct
+    ++ Example: sin(x,"exponential") -- automatically coerced.
     cos : (%, JLSymbol) -> %
     ++ cos(x, repr) returns cos(x) using one of the repr representations:
     ++ :default (since 'default' is a FriCAS keyword use jsym(String) to coerce it)
@@ -1055,7 +1056,6 @@ InnerNMExactCalciumField(Options : JLObjDict) : Exports ==
     ++ :default (since 'default' is a FriCAS keyword use jsym(String) to coerce it)
     ++ :logarithm
     ++ :direct
-
     Gamma : % -> %
     ++ Gamma(x) is the Euler Gamma function evaluated at x. 
     erf : % -> %

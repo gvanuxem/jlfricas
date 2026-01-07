@@ -59,12 +59,20 @@ JLUtilityFunctions() : Exports == Implementation where
     jlDefined?    : String -> Boolean
     ++ jlDefined?(str) checks whether or not str is defined in Julia.
     ++ For example: jlDefined?("sin") will check if sin is defined.
-    jlDocumentation  : Symbol -> Void
-    ++ jlDocumentation(op) shows the documentation of the
+    jlOperationDocumentation  : Symbol -> Void
+    ++ jlOperationDocumentation(op) shows the documentation of the
     ++ operation op. Trivial implementation. For example double quote will
     ++ be removed and the documentation without double quotes of the operation
     ++  will be shown. See the Signature.
     -- TODO: Use StyledStrings and Julia ouput in another operation?
+    jlConstructorDocumentation  : Symbol -> Void
+    ++ jlConstructorDocumentation(term) shows the documentation of the
+    ++ constructor term. Trivial implementation. For example double quote will
+    ++ be removed and the documentation without double quotes of the constructor
+    ++  will be shown. Temporary implementation.
+    ++ For example:
+    ++ \example{jlConstructorDocumentation('AbelianMonoidRing)  }
+    ++ will show the documentation of the constructor AbelianMonoidRing.
     jlSeed! : JLInt64 -> Void
     ++ jlSeed!(n) reseeds the Julia random number generator
     ++ if applicable (Some random number generators don't accept a seed).
@@ -105,6 +113,7 @@ JLUtilityFunctions() : Exports == Implementation where
   Implementation ==> add
     import from String
     import from JLStringUtilities
+    import from BrowserInformation
 
     jlInitialize(true)
     
@@ -155,8 +164,37 @@ JLUtilityFunctions() : Exports == Implementation where
 
     jlRandomString(n) ==
       jl_string_eval_string(concat ["randstring(", string(n),")"])$Lisp
+    
+    jlConstructorDocumentation(term) ==
+      doc := constructor_documentation(term)
+      wdqstr : String := ""
+      for j in 1..#doc repeat
+        if doc.j = char "_"" then
+          wdqstr := concat(wdqstr, "\_"")
+        else
+          wdqstr := concat(wdqstr, doc.j)
+      outl : List(String) := [jlEvalString(concat[ _
+        "replace(raw_"", wdqstr, _
+        "_", _"{}_" => _"_",", _
+        "_"\\undocumented_" => _"is undocumented._",", _
+        "_"{\\em _" => _"_",", _
+        "_"{\\it _" => _"_",", _
+        "_"\\TeX{_" => _"TeX: _",", _
+        "_"\\LaTeX{_" => _"LaTeX: _",", _
+        "_"\\space_" => _" _"," _
+        "_"\\tab_" => _"    _"," _
+        "_"\\newline_" => _"\n_"," _
+        "_"\\blankline_" => _"\n\n_"," _
+        -- "_"\\spadignore_" => _"Ignore: _"," _
+        "r_"\\indented{\d+}{_" =>_"_"," _
+        "r_"\\spadopFrom{([\w!\?\+\-\*\\=]+)}{(\w+)}_" => s_"\1 from \2_",", _
+        "r_"\\spadfunFrom{([\w!\?]+)}{(\w+)}_" => s_"\1 from \2_",", _
+        "r_"\\spad\w*{_" => _"_",", _
+        "r_"\\example{_" => s_"Example: _"," _
+        "r_"[{|}|\\|\_"|}]_" =>_"_")"])@String]
+      output(pile(outl pretend List(OutputForm)))$OutputPackage
 
-    jlDocumentation(op) ==
+    jlOperationDocumentation(op) ==
       ops := getDatabase("o")$OperationsQuery
       req := elt(ops,equation('name, string op)$QueryEquation)
       -- See alql.spad
