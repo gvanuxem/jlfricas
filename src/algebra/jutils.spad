@@ -71,7 +71,7 @@ JLUtilityFunctions() : Exports == Implementation where
     ++ be removed and the documentation without double quotes of the constructor
     ++  will be shown. Temporary implementation.
     ++ For example:
-    ++ \example{jlConstructorDocumentation('AbelianMonoidRing)  }
+    ++ \example{jlConstructorDocumentation('AbelianMonoidRing)}
     ++ will show the documentation of the constructor AbelianMonoidRing.
     jlSeed! : JLInt64 -> Void
     ++ jlSeed!(n) reseeds the Julia random number generator

@@ -1131,9 +1131,9 @@ WSExpression() : Exports == Implementation where
     jlWSAccuracy : % -> %
     ++ jlWSAccuracy(expr) get accuracy of expr. 
     jlWSSetPrecision : (%, %) -> %
-    ++ jlWSSetPrecision(expr, prec) set precision of expr to prec.
+    ++ jlWSSetPrecision(expr, prec) sets precision of expr to prec.
     jlWSSetAccuracy : (%, %) -> %
-    ++ jlWSSetAccuracy(expr, acc) set accuracy of expr to acc.
+    ++ jlWSSetAccuracy(expr, acc) sets accuracy of expr to acc.
     jlWSSetOptions : (%, %) -> %
     ++ jlWSSetOptions(type, opts) sets some internal engine options.
     -- SetAttributes Hold*
