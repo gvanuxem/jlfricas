@@ -2040,7 +2040,7 @@ JLVectorFunctions2(A, B) : Exports == Implementation where
 ++ Description: This domain provides a generic Julia matrix type
 ++ stored in Julia with no bound checking on elt's. Minimum index is 1.
 ++ Beware, for matrix with Nemo elements, contrary to Julia matrix,
-++ Nemo follows the convention of the C libraries, it wraps and uses
+++ Nemo follows the C language convention, it wraps and uses
 ++ row major representation.
 ++ See:
 ++ https://nemocas.github.io/Nemo.jl/stable/developer/interfaces/#Column-major-vs-row-major-matrices
