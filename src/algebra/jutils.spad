@@ -65,6 +65,12 @@ JLUtilityFunctions() : Exports == Implementation where
     ++ be removed and the documentation without double quotes of the operation
     ++  will be shown. See the Signature.
     -- TODO: Use StyledStrings and Julia ouput in another operation?
+    jlNewOperationDocumentation  : Symbol -> Void
+    ++ jlNewOperationDocumentation(op) shows the documentation of the
+    ++ operation op. Trivial implementation. For example double quote will
+    ++ be removed and the documentation without double quotes of the operation
+    ++  will be shown. See the Signature.
+    -- TODO: Use StyledStrings and Julia ouput in another operation?
     jlConstructorDocumentation  : Symbol -> Void
     ++ jlConstructorDocumentation(term) shows the documentation of the
     ++ constructor term. Trivial implementation. For example double quote will
@@ -166,7 +172,7 @@ JLUtilityFunctions() : Exports == Implementation where
       jl_string_eval_string(concat ["randstring(", string(n),")"])$Lisp
     
     jlConstructorDocumentation(term) ==
-      doc := constructor_documentation(term)
+      doc := constructor_documentation('term)
       wdqstr : String := ""
       for j in 1..#doc repeat
         if doc.j = char "_"" then
@@ -238,6 +244,50 @@ JLUtilityFunctions() : Exports == Implementation where
         concat!(outl, newline()$Character::String)
       output(pile(outl pretend List(OutputForm)))$OutputPackage
 
+    jlNewOperationDocumentation(op) ==
+      ops := search_operations(string op)
+      docs := coerce(ops)@List(Record(name: Symbol,
+        sdl: List(Record(signature: SExpression,condition: SExpression,
+          origin: SExpression,documentation: String))))
+      outl : List(OutputForm) := []
+      for ops in docs repeat
+        for op in ops.sdl repeat
+          -- clean it up first
+          -- TODO: too expensive. 'insert'?
+          wdqstr : String := ""
+          for j in 1..#op.documentation repeat
+            if op.documentation.j = char "_"" then
+              wdqstr := concat(wdqstr, "\_"")
+            else
+              wdqstr := concat(wdqstr, op.documentation.j)
+        -- remove some HyperDoc LaTeX commands
+          outl := concat(outl,jlEvalString(concat[ _
+            "replace(raw_"", wdqstr, _
+            "_", _"{}_" => _"_",", _
+            "_"\\undocumented_" => _"is undocumented._",", _
+            "_"{\\em _" => _"_",", _
+            "_"{\\it _" => _"_",", _
+            "_"\\TeX{_" => _"TeX: _",", _
+            "_"\\LaTeX{_" => _"LaTeX: _",", _
+            "_"\\space_" => _" _"," _
+            "_"\\tab_" => _"    _"," _
+            "_"\\newline_" => _"\n_"," _
+            "_"\\blankline_" => _"\n\n_"," _
+            -- "_"\\spadignore_" => _"Ignore: _"," _
+            "r_"\\indented{\d+}{_" =>_"_"," _
+            "r_"\\spadopFrom{([\w!\?\+\-\*\\=]+)}{(\w+)}_" => s_"\1 from \2_",", _
+            "r_"\\spadfunFrom{([\w!\?]+)}{(\w+)}_" => s_"\1 from \2_",", _
+            "r_"\\spad\w*{_" => _"_",", _
+            "r_"\\example{_" => s_"Example: _"," _
+            "r_"[{|}|\\|\_"|]_" =>_"_")"])@String pretend OutputForm)
+
+          outl := concat(outl,
+            hconcat([message(" Signature: ")$OutputForm, cdr(op.signature) pretend OutputForm,
+              message(" -> ")$OutputForm, car(op.signature) pretend OutputForm])$OutputForm)
+          outl := concat(outl, [message(" From: ")$OutputForm, op.origin pretend OutputForm])
+          outl := concat(outl, message(newline()::String)$OutputForm)
+      output(pile(outl))$OutputPackage
+  
     jlEvalString(s : STR)   : Void    == jl_eval_string(s)$Lisp
     jlEvalString(s : STR)   : Boolean == jl_bool_eval_string(s)$Lisp
     jlEvalString(s : STR)   : JI64    == jl_int64_eval_string(s)$Lisp

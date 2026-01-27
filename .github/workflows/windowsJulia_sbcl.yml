@@ -6,7 +6,7 @@ jobs:
   build:
 
     runs-on: windows-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     env:
       SBCL_VER: 2.6.0
     defaults:
@@ -27,7 +27,7 @@ jobs:
         unzip julia-1.11.7-win64.zip
         cp -rf julia-1.11.7/* /usr/local/
     - name: install Julia libraries
-      run: julia -e "import Pkg;Pkg.add(\"Nemo\");Pkg.add(\"Suppressor\");Pkg.add(\"SpecialFunctions\");Pkg.add(\"DataFrames\")"
+      run: julia -e "import Pkg;Pkg.add([\"Nemo\", \"Suppressor\", \"SpecialFunctions\", \"DataFrames\", \"Latexify\", \"LaTeXStrings\", \"Statistics\"]);Pkg.precompile()"
     - uses: actions/checkout@v4
     - name: configure and make
       run: |

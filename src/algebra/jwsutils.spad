@@ -98,7 +98,7 @@ WSUtilityFunctions() : Exports == Implementation where
     jlWSImport : (WSExpression, WSExpression) -> WSExpression
     ++ jlWSImport(myfile, form) imports the file myfile with format form.
     ++ For example:
-    ++ \example{jlWSImport(jWSString("examples/customers-100.csv"), jWSString "CSV")}
+    ++ \example{file:=jlWSImport(jWSString("examples/customers-100.csv"), jWSString "CSV");}
     jlWSFileFormat : String -> WSExpression
     ++ jlWSFileFormat(src) tries to determine the format of the source src
     ++ from its content. Can be used with jWSImport.

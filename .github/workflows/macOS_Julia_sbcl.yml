@@ -9,7 +9,7 @@ jobs:
         matrix:
           os: [macos-15-intel, macos-15]
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 45
+    timeout-minutes: 60
     env:
       SBCL_VER: ${{ matrix.os == 'macos-15-intel' && '2.2.9' || '2.4.0' }}
       ARCH: ${{ matrix.os == 'macos-15-intel' && 'x86-64' || 'arm64' }}
@@ -25,7 +25,7 @@ jobs:
         brew install sphinx-doc
 
     - name: install Julia libraries
-      run: julia -e "import Pkg;Pkg.add(\"Nemo\");Pkg.add(\"Suppressor\");Pkg.add(\"SpecialFunctions\");Pkg.add(\"DataFrames\")"
+      run: julia -e "import Pkg;Pkg.add([\"Nemo\", \"Suppressor\", \"SpecialFunctions\", \"DataFrames\", \"Latexify\", \"LaTeXStrings\", \"Statistics\"]);Pkg.precompile()"
 
     - name: configure
       run: |

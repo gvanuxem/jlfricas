@@ -7,7 +7,7 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
 
     steps:
     - uses: actions/checkout@v4
@@ -22,7 +22,7 @@ jobs:
         `pwd`/ccl/lx86cl64 -l ~/quicklisp/setup.lisp -e "(progn (ql:quickload \"queues\") (quit))"
     - name: install Julia libraries
       run: |
-        julia -e "import Pkg;Pkg.add(\"Nemo\");Pkg.add(\"Suppressor\");Pkg.add(\"SpecialFunctions\")"
+        julia -e "import Pkg;Pkg.add([\"Nemo\", \"Suppressor\", \"SpecialFunctions\", \"DataFrames\", \"Latexify\", \"LaTeXStrings\", \"Statistics\"]);Pkg.precompile()"
     - name: configure
       run: |       
         ./configure --with-lisp=`pwd`/ccl/lx86cl64 --with-quicklisp --enable-gmp --enable-julia --enable-hunchentoot --enable-mathlink || cat config.log
