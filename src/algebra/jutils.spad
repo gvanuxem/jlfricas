@@ -67,9 +67,9 @@ JLUtilityFunctions() : Exports == Implementation where
     -- TODO: Use StyledStrings and Julia ouput in another operation?
     jlNewOperationDocumentation  : Symbol -> Void
     ++ jlNewOperationDocumentation(op) shows the documentation of the
-    ++ operation op. Trivial implementation. For example double quote will
+    ++ operation op. Experimental implementation. For example double quote will
     ++ be removed and the documentation without double quotes of the operation
-    ++  will be shown. See the Signature.
+    ++  will be shown. Signature shown is not completely implemented.
     -- TODO: Use StyledStrings and Julia ouput in another operation?
     jlConstructorDocumentation  : Symbol -> Void
     ++ jlConstructorDocumentation(term) shows the documentation of the

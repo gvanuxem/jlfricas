@@ -137,7 +137,7 @@ TeXTree : Exports == Implementation where
     get_math : % -> %
       ++ get_math(t) extracts content of text or display math node.
     text : String -> %
-      ++ text(s) builds a node representing text s.
+      ++ text(s) build a node representing text s.
     text? : % -> Boolean
       ++ text?(t) returns true if and only if t is a node representing text.
     get_text : % -> String
@@ -171,11 +171,11 @@ TeXTree : Exports == Implementation where
     text?(x : %) : Boolean == x case text
     get_text(x : %) : String == x.text
 
-)abbrev package TEXPARSE TeXParser
+)abbrev package TEXPARSE TexParser
 ++ Author: Waldek Hebisch
-++ Description: This package implements TeX parser, currently limited
+++ Description: This package implement TeX parser, currently limited
 ++ to constructs appearing in docstrings.
-TeXParser : Exports == Implementation where
+TexParser : Exports == Implementation where
   Exports ==> with
     parse : String -> TeXTree
       ++ parse(s) parses s and returns resulting parse tree.
@@ -288,7 +288,7 @@ TeXParser : Exports == Implementation where
             member?(name, macro0) => 0
             member?(name, macro1) => 1
             member?(name, macro2) => 2
-            -- print(message(name)$OutputForm)$OutputForm
+            print(message(name)$OutputForm)$OutputForm
             error "parse_macro: unknown macro name"
         args : List(TeXTree) := []
         for i in 1..n repeat
