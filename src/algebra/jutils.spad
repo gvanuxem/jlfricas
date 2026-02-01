@@ -59,26 +59,42 @@ JLUtilityFunctions() : Exports == Implementation where
     jlDefined?    : String -> Boolean
     ++ jlDefined?(str) checks whether or not str is defined in Julia.
     ++ For example: jlDefined?("sin") will check if sin is defined.
+    --jlOperationDocumentation  : Symbol -> Void
+    --++ jlOperationDocumentation(op) shows the documentation of the
+    --++ operation op. Trivial implementation. For example double quote will
+    --++ be removed and the documentation without double quotes of the operation
+    --++  will be shown. See the Signature.
+    -- TODO: Use StyledStrings and Julia ouput in another operation?
     jlOperationDocumentation  : Symbol -> Void
     ++ jlOperationDocumentation(op) shows the documentation of the
-    ++ operation op. Trivial implementation. For example double quote will
+    ++ operation op. For example double quote will
     ++ be removed and the documentation without double quotes of the operation
-    ++  will be shown. See the Signature.
-    -- TODO: Use StyledStrings and Julia ouput in another operation?
-    jlNewOperationDocumentation  : Symbol -> Void
-    ++ jlNewOperationDocumentation(op) shows the documentation of the
-    ++ operation op. Experimental implementation. For example double quote will
-    ++ be removed and the documentation without double quotes of the operation
-    ++  will be shown. Signature part is partially implemented.
+    ++ will be shown. Signature part is partially implemented.
+    ++ Temporary and trivial implementation that uses BrowserInformation.
     -- TODO: Use StyledStrings and Julia ouput in another operation?
     jlConstructorDocumentation  : Symbol -> Void
     ++ jlConstructorDocumentation(term) shows the documentation of the
-    ++ constructor term. Trivial implementation. For example double quote will
+    ++ constructor term. For example double quote will
     ++ be removed and the documentation without double quotes of the constructor
-    ++  will be shown. Temporary implementation.
+    ++ will be shown. Temporary and trivial implementation that uses BrowserInformation.
     ++ For example:
     ++ \example{jlConstructorDocumentation('AbelianMonoidRing)}
-    ++ will show the documentation of the constructor AbelianMonoidRing.
+    ++ will show the documentation of the category AbelianMonoidRing.
+    jlListConstructors : Symbol -> Record(categories: List(Symbol), domains: List(Symbol), packages: List(Symbol))
+    ++ jlListConstructors(const) returns a list of the categories, domains, and packages
+    ++ that the constructor const belongs to.
+    ++ For example:
+    ++ \example{jlListConstructors('AbelianMonoidRing)}
+    ++ \example{jlListConstructors("Int*"}
+    jlListCategories : Symbol -> List(Symbol)
+    ++ jlListCategories(cat) returns a list of the categories matching the categories cat.
+    ++ Convenience and temporary function.
+    jlListDomains : Symbol -> List(Symbol)
+    ++ jlListDomains(dom) returns a list of the domains matching the domains dom.
+    ++ Convenience and temporary function.
+    jlListPackages : Symbol -> List(Symbol)
+    ++ jlListPackages(pack) returns a list of the packages matching the packages pack.
+    ++ Convenience and temporary function.
     jlSeed! : JLInt64 -> Void
     ++ jlSeed!(n) reseeds the Julia random number generator
     ++ if applicable (Some random number generators don't accept a seed).
@@ -200,51 +216,51 @@ JLUtilityFunctions() : Exports == Implementation where
         "r_"[{|}|\\|\_"|}]_" =>_"_")"])@String]
       output(pile(outl pretend List(OutputForm)))$OutputPackage
 
-    jlOperationDocumentation(op) ==
-      ops := getDatabase("o")$OperationsQuery
-      req := elt(ops,equation('name, string op)$QueryEquation)
-      -- See alql.spad
-      docs : DataList(String) := elt(req,'doc)
-      origs : DataList(String) := elt(req,'origin)
-      types : DataList(String) := elt(req, 'type)
-      outl : List(String) := []
-      for i in 1 .. #docs repeat
-        -- clean it up first
-        -- TODO: too expensive. 'insert'?
-        wdqstr : String := ""
-        for j in 1..#docs.i repeat
-          if docs.i.j = char "_"" then
-            wdqstr := concat(wdqstr, "\_"")
-          else
-            wdqstr := concat(wdqstr, docs.i.j)
-        -- remove some HyperDoc LaTeX commands
-        outl := concat(outl,jlEvalString(concat[ _
-          "replace(raw_"", wdqstr, _
-          "_", _"{}_" => _"_",", _
-          "_"\\undocumented_" => _"is undocumented._",", _
-          "_"{\\em _" => _"_",", _
-          "_"{\\it _" => _"_",", _
-          "_"\\TeX{_" => _"TeX: _",", _
-          "_"\\LaTeX{_" => _"LaTeX: _",", _
-          "_"\\space_" => _" _"," _
-          "_"\\tab_" => _"    _"," _
-          "_"\\newline_" => _"\n_"," _
-          "_"\\blankline_" => _"\n\n_"," _
-          -- "_"\\spadignore_" => _"Ignore: _"," _
-          "r_"\\indented{\d+}{_" =>_"_"," _
-          "r_"\\spadopFrom{([\w!\?\+\-\*\\=]+)}{(\w+)}_" => s_"\1 from \2_",", _
-          "r_"\\spadfunFrom{([\w!\?]+)}{(\w+)}_" => s_"\1 from \2_",", _
-          "r_"\\spad\w*{_" => _"_",", _
-          "r_"\\example{_" => s_"Example: _"," _
-          "r_"[{|}|\\|\_"|}]_" =>_"_")"])@String)
-        outl := concat(outl,
-          [" Signature: ", remove(char("_""), types.i)])
-        outl := concat(outl,
-          [" From: ", remove(char("_""), origs.i)])
-        concat!(outl, newline()$Character::String)
-      output(pile(outl pretend List(OutputForm)))$OutputPackage
+    -- jlOperationDocumentation(op) ==
+    --   ops := getDatabase("o")$OperationsQuery
+    --   req := elt(ops,equation('name, string op)$QueryEquation)
+    --   -- See alql.spad
+    --   docs : DataList(String) := elt(req,'doc)
+    --   origs : DataList(String) := elt(req,'origin)
+    --   types : DataList(String) := elt(req, 'type)
+    --   outl : List(String) := []
+    --   for i in 1 .. #docs repeat
+    --     -- clean it up first
+    --     -- TODO: too expensive. 'insert'?
+    --     wdqstr : String := ""
+    --     for j in 1..#docs.i repeat
+    --       if docs.i.j = char "_"" then
+    --         wdqstr := concat(wdqstr, "\_"")
+    --       else
+    --         wdqstr := concat(wdqstr, docs.i.j)
+    --     -- remove some HyperDoc LaTeX commands
+    --     outl := concat(outl,jlEvalString(concat[ _
+    --       "replace(raw_"", wdqstr, _
+    --       "_", _"{}_" => _"_",", _
+    --       "_"\\undocumented_" => _"is undocumented._",", _
+    --       "_"{\\em _" => _"_",", _
+    --       "_"{\\it _" => _"_",", _
+    --       "_"\\TeX{_" => _"TeX: _",", _
+    --       "_"\\LaTeX{_" => _"LaTeX: _",", _
+    --       "_"\\space_" => _" _"," _
+    --       "_"\\tab_" => _"    _"," _
+    --       "_"\\newline_" => _"\n_"," _
+    --       "_"\\blankline_" => _"\n\n_"," _
+    --       -- "_"\\spadignore_" => _"Ignore: _"," _
+    --       "r_"\\indented{\d+}{_" =>_"_"," _
+    --       "r_"\\spadopFrom{([\w!\?\+\-\*\\=]+)}{(\w+)}_" => s_"\1 from \2_",", _
+    --       "r_"\\spadfunFrom{([\w!\?]+)}{(\w+)}_" => s_"\1 from \2_",", _
+    --       "r_"\\spad\w*{_" => _"_",", _
+    --       "r_"\\example{_" => s_"Example: _"," _
+    --       "r_"[{|}|\\|\_"|}]_" =>_"_")"])@String)
+    --     outl := concat(outl,
+    --       [" Signature: ", remove(char("_""), types.i)])
+    --     outl := concat(outl,
+    --       [" From: ", remove(char("_""), origs.i)])
+    --     concat!(outl, newline()$Character::String)
+    --   output(pile(outl pretend List(OutputForm)))$OutputPackage
 
-    jlNewOperationDocumentation(op) ==
+    jlOperationDocumentation(op) ==
       ops := search_operations(string op)
       docs := coerce(ops)@List(Record(name: Symbol,
         sdl: List(Record(signature: SExpression,condition: SExpression,
@@ -280,13 +296,28 @@ JLUtilityFunctions() : Exports == Implementation where
             "r_"\\spad\w*{_" => _"_",", _
             "r_"\\example{_" => s_"Example: _"," _
             "r_"[{|}|\\|\_"|]_" =>_"_")"])@String pretend OutputForm)
-
           outl := concat(outl,
-            hconcat([message(" Signature: ")$OutputForm, cdr(op.signature) pretend OutputForm,
-              message(" -> ")$OutputForm, car(op.signature) pretend OutputForm])$OutputForm)
-          outl := concat(outl, [message(" From: ")$OutputForm, op.origin pretend OutputForm])
+            hconcat([message(" Signature: ")$OutputForm, PRINC_-TO_-STRING(cdr (op.signature))$Lisp pretend OutputForm,
+              message(" -> ")$OutputForm, PRINC_-TO_-STRING(car(op.signature))$Lisp pretend OutputForm])$OutputForm)
+          outl := concat(outl, [message(" From: ")$OutputForm, PRINC_-TO_-STRING(op.origin)$Lisp pretend OutputForm])
           outl := concat(outl, message(newline()::String)$OutputForm)
       output(pile(outl))$OutputPackage
+
+    jlListConstructors(const) ==
+      consts := search_constructors(string(const), 'k)
+      coerce(consts)@Record(categories: List(Symbol), domains: List(Symbol), packages: List(Symbol))
+    jlListCategories(cat : Symbol) ==
+      cats := search_constructors(string(cat), 'c)
+      res := coerce(cats)@Record(categories: List(Symbol), domains: List(Symbol), packages: List(Symbol))
+      res.categories
+    jlListDomains(dom : Symbol) ==
+      doms := search_constructors(string(dom), 'd)
+      res := coerce(doms)@Record(categories: List(Symbol), domains: List(Symbol), packages: List(Symbol))
+      res.domains
+    jlListPackages(pack : Symbol) ==
+      packs := search_constructors(string(pack), 'p)
+      res := coerce(packs)@Record(categories: List(Symbol), domains: List(Symbol), packages: List(Symbol))
+      res.packages
   
     jlEvalString(s : STR)   : Void    == jl_eval_string(s)$Lisp
     jlEvalString(s : STR)   : Boolean == jl_bool_eval_string(s)$Lisp
