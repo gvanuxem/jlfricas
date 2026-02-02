@@ -14,6 +14,7 @@ jobs:
         shell: msys2 {0}
 
     steps:
+    - uses: julia-actions/setup-julia@latest
     - uses: msys2/setup-msys2@v2
       with:
         install: make mingw-w64-x86_64-gcc mingw-w64-x86_64-gmp gmp-devel unzip zip
@@ -21,11 +22,6 @@ jobs:
       run: |
         wget https://downloads.sourceforge.net/project/sbcl/sbcl/${SBCL_VER}/sbcl-${SBCL_VER}-x86-64-windows-binary.msi
         msiexec -i sbcl-${SBCL_VER}-x86-64-windows-binary.msi -passive
-    - name: download and install Julia
-      run: |
-        wget https://julialang-s3.julialang.org/bin/winnt/x64/1.11/julia-1.11.7-win64.zip
-        unzip julia-1.11.7-win64.zip
-        cp -rf julia-1.11.7/* /usr/local/
     - name: install Julia libraries
       run: julia -e "import Pkg;Pkg.add([\"Nemo\", \"Suppressor\", \"SpecialFunctions\", \"DataFrames\", \"Latexify\", \"LaTeXStrings\", \"Statistics\"]);Pkg.precompile()"
     - uses: actions/checkout@v4
