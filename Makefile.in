@@ -214,6 +214,9 @@ clean-local: mostlyclean-local
 distclean-local: clean-local
 	@-rm -rf build
 	-rm -rf target
+	-rm -rf debian/jlfricas
+	-rm -rf debian/.debhelper
+	-rm -f debian/files debian/jlfricas.debhelper.log debian/jlfricas.substvars
 	-rm -rf FriCAS.app FriCAS.dmg
 	-cd contrib/emacs && ${MAKE} distclean
 	-rm -f config/fricas_c_macros.h

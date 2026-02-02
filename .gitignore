@@ -17,6 +17,12 @@
 
 build/
 
+debian/files
+debian/jlfricas.debhelper.log
+debian/jlfricas.substvars
+debian/jlfricas
+debian/.debhelper
+
 config.log
 config.status
 config/fricas_c_macros.h

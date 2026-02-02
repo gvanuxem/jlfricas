@@ -186,8 +186,6 @@ After this function is called the image is clean and can be saved.
             (format t "Checking for foreign routines~%")
             (format t "FRICAS=~S~%" |$spadroot|)
             (format t "spad-lib=~S~%" spad-lib)
-            #+:fricas_has_julia
-            (format t "julia-wrapper=~S~%" julia-wrapper)
             (if (|fricas_probe_file| spad-lib)
                 (progn
                     (setf *fricas-load-libspad* nil)
