@@ -39,6 +39,7 @@ jobs:
       run: |
         test "$GITHUB_REF_TYPE" != "tag" && rm -r ../build/target/*/src
         rm ../build/target/x86_64-w64-mingw32/bin/fricas
+        rm ../build/target/x86_64-w64-mingw32/bin/jlfricas
         mv ../build/target/x86_64-w64-mingw32 jlFriCAS-windows-x86_64
         cp /mingw64/bin/libgmp-10.dll jlFriCAS-windows-x86_64/lib/
         zip -r jlFriCAS-windows-x86_64-${{ github.sha }}.zip jlFriCAS-windows-x86_64
