@@ -27,11 +27,13 @@ in your shell first.
 
 ![Capture2](https://github.com/user-attachments/assets/97f35ad1-a6bc-41f9-986f-47e8d3281ad6)
 
+Julia Plots on Windows/cmd.exe:
+
+![Capture3](https://github.com/user-attachments/assets/4c6bec2c-6344-470c-b467-d3571794de51)
 
 
 Linear Algebra:
-![Capture3](https://github.com/user-attachments/assets/21ca03f1-0cff-407f-b8f6-339e38abe4ed)
-
+![Capture4](https://github.com/user-attachments/assets/21ca03f1-0cff-407f-b8f6-339e38abe4ed)
 
 
 
