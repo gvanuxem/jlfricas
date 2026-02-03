@@ -140,10 +140,10 @@ char* jl_call_string_function_dbl(const char* function, double arg)
 int64_t jl_setindex_wrap_eval_string(int64_t index, const char* code)
 {
     if (index == 0){
-        jl_printf(jl_stderr_stream(), "ERROR: setindex: index is 0\n");
+        jl_printf(jl_stderr_stream(), "ERROR: index is 0 (jl_setindex_wrap_eval_string)\n");
         return(0);
     }else if (code == NULL){
-        jl_printf(jl_stderr_stream(), "ERROR: jl_eval_string: empty code string\n");
+        jl_printf(jl_stderr_stream(), "ERROR: empty code string (jl_setindex_wrap_eval_string)\n");
         return(0);  
     }
     jl_value_t *res = jl_eval_string(code);
@@ -164,7 +164,7 @@ int64_t jl_setindex_wrap_eval_string(int64_t index, const char* code)
 void jl_delete_wrapped_index(int64_t index)
 {
     if (index == 0){
-        jl_printf(jl_stderr_stream(), "ERROR: delete(index): index is 0\n");
+        jl_printf(jl_stderr_stream(), "ERROR: index is 0 (jl_delete_wrapped_index)\n");
         return;
     }
 
@@ -188,7 +188,7 @@ char* jl_stringify_wrapped_index(int64_t index)
 
     if (index == 0){
         jl_printf(jl_stderr_stream(),
-            "ERROR: index is 0 (no element at this index)\n");
+            "ERROR: index is 0 (jl_stringify_wrapped_index)\n");
         return(nstr);
     }
 

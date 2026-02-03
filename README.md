@@ -46,7 +46,7 @@ To build FriCAS with Julia support, the <code>julia</code> executable needs to b
  - [Nemo](https://nemocas.github.io/Nemo.jl/stable/)
  - [Suppressor](https://github.com/JuliaIO/Suppressor.jl)
  - [SpecialFunctions](https://specialfunctions.juliamath.org/stable/)
- - [StyledStrings](https://julialang.github.io/StyledStrings.jl/dev/)
+ - [StyledStrings](https://julialang.github.io/StyledStrings.jl/dev/) (if it is not already installed in Julia)
 
  And optionnally:
   - [MathLink](https://github.com/JuliaInterop/MathLink.jl) (use the option `--enable-mathlink` at configure time)

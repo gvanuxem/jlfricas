@@ -175,8 +175,9 @@ JLPlotFunctions() : Exports == Implementation where
       error "JLPlotFunctions: the Julia package Plots is not installed"
 
     if not jlUsing("LaTeXStrings") then
-      jlEvalString("printstyled(_"LaTeXStrings is not installed in Julia " _
-      "do not use it (axis, title, etc.).\n_"; color=:green)")
+      jlMessageStyled("LaTeXStrings is not installed in Julia." _
+        "Do not use it (axis, title, etc.).\n",
+          jsym("green")$JLSymbol)$JLStringUtilities
     --if jlUsing "Gaston" then
     --  jlEvalString("gaston()")
     if jlUsing "UnicodePlots" then

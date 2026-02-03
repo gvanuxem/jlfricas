@@ -151,7 +151,9 @@ JLObjectType() : Category == JLType() with
         "_"text/plain_"", jlId(obj))$Lisp
       if #ret ~= 0 then
         for i in 1..#ret repeat
-          ret.i := jlRegexReplace(ret.i, jlString("//"), jlString("/"))
+          -- FIXME: Avoid object that contains Julia String(s) here
+          if not jlRegexMatch?(jlType(obj), jlRegex "String") then
+            ret.i := jlRegexReplace(ret.i, jlString("//"), jlString("/"))
       -- first line length only
       #ret ~= 1 or more?(elt(ret,1), _$LINELENGTH$Lisp)
         => pile(append(["" pretend OutputForm], ret pretend List OutputForm))
@@ -1768,7 +1770,7 @@ JLComplexFloat() : Exports == Implementation where
 ++ Description:
 ++  \spadtype{JLDataFrame} adds support of the DataFrames.jl
 ++  Julia package, i.e. to work with tabular data.
-++ As of now, most of its use has to be done in
+++  As of now, most of its use has to be done in
 ++  a generic manner using jlApply.
 -- Report results for example. 
 JLDataFrame() : Exports == Implementation where

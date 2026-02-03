@@ -418,10 +418,8 @@ JLStringUtilities() : Exports == Implementation where
     if not jlUsing "StyledStrings" then
       error "The Julia package StyledStrings must be installed"
     if not jlUsing "Latexify" then
-      jlMessageStyled("The Julia package Latexify must be installed",
-        jsym "green")
-      jlMessageStyled(
-        "You will not be able to latexify a string 'jlToLatex'", jsym "green")
+      jlMessageStyled("The Julia package Latexify must be installed. " _
+        "You will not be able to latexify a string (jlToLatex).\n\n", jsym "green")
     jlRegex(s) == concat ["r_"", s, "_""]
     jlSubstitute(s) == concat ["s_"", s, "_""]
     jlLatex(s) == concat ["L_"", s, "_""]
