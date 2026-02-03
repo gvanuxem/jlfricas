@@ -2001,10 +2001,10 @@ WSExpression() : Exports == Implementation where
     toExpression(expr, form) == jbinfunc("W_"ToExpression_"(", jWSString(expr), form)
     toExpression(expr, form, h) == jterfunc("W_"ToExpression_"(", jWSString(expr), form, h)
     retractIfCan(expr : %) : Union(JLFloat64, "failed") ==
-      jlType(expr) = "Float64" => jlEvalString(getind(expr))
+      jlType(expr) = 'Float64 => jlEvalString(getind(expr))
       "failed"
     retractIfCan(expr : %) : Union(DoubleFloat, "failed") ==
-      jlType(expr) = "Float64" => jlEvalString(getind(expr))@JF64 pretend DoubleFloat
+      jlType(expr) = 'Float64 => jlEvalString(getind(expr))@JF64 pretend DoubleFloat
       "failed"
     retractIfCan(expr) : Union(Expression(Integer), "failed") == --TODO: weberE etc.
       str : String := jlEvalString(concat(["replace(_"",

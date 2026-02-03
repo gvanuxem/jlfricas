@@ -2422,8 +2422,7 @@ void jl_init_env(void){
     jl_complex32_type = (jl_value_t *) jl_eval_string("ComplexF32");
     jl_complex64_type = (jl_value_t *) jl_eval_string("ComplexF64");
 
-    refs = jl_eval_string("refs = Dict{Int64, Any}()");
-    //irefs = jl_eval_string("irefs = IdDict{Int64, Any}()");
+    refs = (jl_value_t *) jl_eval_string("refs = IdDict{Int64, Any}()");
     V = (jl_value_t *) jl_eval_string("'V'");
     array_int64 = jl_apply_array_type((jl_value_t*) jl_int64_type, 1);
     array_dbl = jl_apply_array_type((jl_value_t*) jl_float64_type, 1);

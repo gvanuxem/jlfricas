@@ -14,11 +14,15 @@ JLObjectType() : Category == JLType() with
     jlId : % -> JLInt64
     ++ jlId(obj) returns the Julia indexed dictionary index referencing
     ++ the object obj.
-    jlType : % -> String
+    jlType : % -> Symbol
     ++ jlType(obj) returns the Julia type of obj.
     jlRef : % -> SExpression
     ++ jlRef(obj) returns the internal Lisp representation
     ++ of the Julia object obj.
+    jlGetJuliaIndex : % -> String
+    ++ jlGetJuliaIndex(obj) returns the Julia indexed dictionary index
+    ++ referencing the object obj.
+    ++ Convenience function for use in the interpreter.
     jlDump : JLObject -> Void
     ++ jlDump(obj) dumps (shows) the Julia object (internal structure with type).
     mutable? : % -> Boolean
@@ -100,8 +104,10 @@ JLObjectType() : Category == JLType() with
 
     jlref(cmd)   == make_jlref(cmd)$Lisp  
     jlId(obj)    == JLREFID(obj)$Lisp
-    jlType(obj)  == jlEvalString(concat(["string(typeof(",getind(obj),"))"]))
+    jlType(obj)  ==
+      coerce(jlEvalString(concat(["string(typeof(", getind(obj),"))"])))
     jlRef(obj)   == obj pretend SExpression
+    jlGetJuliaIndex(obj) == concat(["getindex(refs,", string(jlId(obj)),")"])
     jlDump(obj)  == jlEvalString(concat(["dump(", getind(obj),")"]))
 
     x = y == jl_call2_bool_wrapped_index("==", jlId(x), jlId(y))$Lisp
@@ -129,7 +135,7 @@ JLObjectType() : Category == JLType() with
     jlAbout(obj) ==
       not jlUsing("About") =>
         error(concat("jlAbout: the _"About.jl_" Julia package is not installed.",
-          " See the JLObjectType category for information"))
+          " See the JLObjectType category documentation for information"))
       jlEvalString(concat(["about(", getind(obj),")"]))@Void
     jlFieldNames(obj) ==
       jlref(concat(["fieldnames(", getind(obj),")"]))
@@ -151,8 +157,7 @@ JLObjectType() : Category == JLType() with
         "_"text/plain_"", jlId(obj))$Lisp
       if #ret ~= 0 then
         for i in 1..#ret repeat
-          -- FIXME: Avoid object that contains Julia String(s) here
-          if not jlRegexMatch?(jlType(obj), jlRegex "String") then
+          if not jlRegexMatch?(string(jlType(obj)), jlRegex "String") then
             ret.i := jlRegexReplace(ret.i, jlString("//"), jlString("/"))
       -- first line length only
       #ret ~= 1 or more?(elt(ret,1), _$LINELENGTH$Lisp)
@@ -452,7 +457,7 @@ JLObjFloat32() : Exports == Implementation where
     jfloat32(r : JLFloat32) == jlref(toString(r))
     jfloat32(str : String) ==
       ret : % := jlref(str)
-      jlType(ret) ~= "Float32" => error "jfloat32: not a Julia Float32"
+      jlType(ret) ~= 'Float32 => error "jfloat32: not a Julia Float32"
       ret
 
 )abbrev domain JOBF64 JLObjFloat64
@@ -583,7 +588,7 @@ JLObjFloat64() : Exports == Implementation where
     jfloat64(r : JLFloat64) == jlref(toString(r))
     jfloat64(str : String) ==
       ret : % := jlref(str)
-      jlType(ret) ~= "Float64" => error "jfloat64: not a Julia Float64"
+      jlType(ret) ~= 'Float64 => error "jfloat64: not a Julia Float64"
       ret
 
 )abbrev domain JOBCF32 JLObjComplexF32
@@ -647,7 +652,7 @@ JLObjComplexF32() : Exports == Implementation where
     cispi(x) == junfunc("cispi",x)
     jcfloat32(str) ==
       ret : % := jlref(str)
-      jlType(ret) ~= "ComplexF32" => error "jcfloat32: not a Julia ComplexF32"
+      jlType(ret) ~= 'ComplexF32 => error "jcfloat32: not a Julia ComplexF32"
       ret
 
 )abbrev domain JOBCF64 JLObjComplexF64
@@ -711,7 +716,7 @@ JLObjComplexF64() : Exports == Implementation where
     cispi(x) == junfunc("cispi",x)
     jcfloat64(str) ==
       ret : % := jlref(str)
-      jlType(ret) ~= "ComplexF64" => error "jcfloat64: not a Julia ComplexF64"
+      jlType(ret) ~= 'ComplexF64 => error "jcfloat64: not a Julia ComplexF64"
       ret
 
 )abbrev domain JOBUI64 JLObjUInt64
@@ -854,11 +859,11 @@ JLObjInt64() : Exports == Implementation where
     coerce(z : Integer) == jlref(string z)
     jint64(z : Integer) ==
       a := jlref(string z)
-      jlType(a) = "Int64" => a
+      jlType(a) = 'Int64 => a
       error "jint64: not a Julia Int64"
     jint64(str : String) ==
       a := jlref(str)
-      jlType(a) = "Int64" => a
+      jlType(a) = 'Int64 => a
       error "jint64: not a Julia Int64"
 
 )abbrev domain JOBBINT JLObjBigInt
@@ -1003,9 +1008,55 @@ JLObjTuple() : Exports == Implementation where
 
     #tuple == jlEvalString(concat(["length(", getind(tuple), ")"]))
     jtuple(l : List(Any)) ==
-      jlref(concat ["Tuple(",
+      res := jlref(concat ["Tuple(",
         first lines formatExpression(l::OutputForm)$Format1D,")"])
-    jtuple(str : String) == jlref str
+      not (jlEvalString(concat ["isa(", getind(res), ", Tuple)"])) =>
+        error "jtuple: not a Julia Tuple"
+      res
+    jtuple(str : String) ==
+      res := jlref str
+      not (jlEvalString(concat ["isa(", getind(res), ", Tuple)"])) =>
+        error "jtuple: not a Julia Tuple"
+      res
+
+)abbrev domain JOBNTPL JLObjNamedTuple
+++ Convenience domain for Julia Named Tuple.
+++ Author: G.Vanuxem
+++ Date Created: Aug. 2024
+++ Description:
+++  Convenience domain for Julia Named Tuples, objects that are used
+++ within Julia, and not directly by the underlying FriCAS Common Lisp.
+++ It is not meant to be used directly, but rather for returned value
+++ or function argument for example.
+JLObjNamedTuple() : Exports == Implementation where
+  Exports ==> JLObjectAggregate() with
+    jntuple : Tuple(Any) -> %
+    ++ jntuple(lst) returns a Julia Named Tuple from the List lst.
+    ++ lst must be compatible with 1D format.
+    jnamedtuple : String -> %
+    ++ jnamedtuple(str) returns a Julia Named Tuple
+    ++ from the evaluation of the Julia command str.
+    ++ To avoid bad function selection in the interpreter
+    ++ we rename jntuple to jnamedtuple.
+  Implementation ==> add
+    import from JLUtilityFunctions
+
+    jlInitialize(true)
+    Rep := SExpression
+    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+
+    #tuple == jlEvalString(concat(["length(", getind(tuple), ")"]))
+    jntuple(l : Tuple(Any)) ==
+      res := jlref(concat ["NamedTuple(",
+        first lines formatExpression(l::OutputForm)$Format1D,")"])
+      not (jlEvalString(concat ["isa(", getind(res), ", NamedTuple)"]))
+        => error "jntuple: not a Julia NamedTuple"
+      res
+    jnamedtuple(str : String) : % ==
+      res := jlref(str)
+      not (jlEvalString(concat ["isa(", getind(res), ", NamedTuple)"]))
+        => error "jnamedtuple: not a Julia NamedTuple"
+      res
 
 )abbrev domain JOBDICT JLObjDict
 ++ Convenience domain for Julia Dict.

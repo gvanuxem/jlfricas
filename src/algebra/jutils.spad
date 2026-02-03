@@ -418,7 +418,7 @@ JLStringUtilities() : Exports == Implementation where
     if not jlUsing "StyledStrings" then
       error "The Julia package StyledStrings must be installed"
     if not jlUsing "Latexify" then
-      jlMessageStyled("The Julia package Latexify must be installed. " _
+      jlMessageStyled("The Julia package Latexify should be installed. " _
         "You will not be able to latexify a string (jlToLatex).\n\n", jsym "green")
     jlRegex(s) == concat ["r_"", s, "_""]
     jlSubstitute(s) == concat ["s_"", s, "_""]
@@ -669,24 +669,24 @@ JLObjDynamicLinker() : Exports == Implementation where
     Rep := SExpression
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     jlDlCApply(func, x) ==
-      type := jlType x
+      type := string jlType x
       jlref(concat ["ccall(", getind(func),
         ",", type, ",(", type, ",),", getind(x),")"])
     jlDlCApply(func, type, x, xtype : String) ==
         jlref(concat ["ccall(", getind(func),
           ",", type, ",(", xtype, ",),", getind(x),")"])
     jlDlCApply(func, x : JOBJ, y : JOBJ) ==
-      xtype := jlType x
-      ytype := jlType y
+      xtype := string jlType x
+      ytype := string jlType y
       jlref(concat ["ccall(", getind(func),
         ",", xtype, ",(", xtype, ",", ytype, "),", getind(x), ",", getind(y),")"])
     jlDlCApply(func, type, x, xtype, y, ytype) ==
         jlref(concat ["ccall(", getind(func),
           ",", type, ",(", xtype, ",", ytype, "),", getind(x), ",", getind(y),")"])
     jlDlCApply(func, x, y, z) ==
-      xtype := jlType x
-      ytype := jlType y
-      ztype := jlType z
+      xtype := string jlType x
+      ytype := string jlType y
+      ztype := string jlType z
       jlref(concat ["ccall(", getind(func), 
         ",", xtype, ",(", xtype, ",", ytype, "," , ztype,"),",
           getind(x), ",", getind(y), ",", getind(z), ")"])

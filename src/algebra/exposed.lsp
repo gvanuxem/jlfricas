@@ -178,6 +178,7 @@
   (|JLObjDynamicLinker| . JOBDLINK)
   (|JLObjFloat32| . JOBF32) (|JLObjFloat64| . JOBF64)
   (|JLObjInt64| . JOBI64)
+  (|JLObjNamedTuple| . JOBNTPL)
   (|JLObjPair| . JOBPAIR)
   (|JLObjPy| . JOBPY)
   (|JLObjTuple| . JOBTPLE)
