@@ -1,7 +1,11 @@
 #include <julia.h>
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
+
+static jl_value_t *jl_complex64_type, *jl_complex32_type, *V, *refs; // *irefs;
+static jl_value_t *array_int64, *array_dbl, *array_cdbl, *array2_dbl,
+    *array2_cdbl;
+static jl_value_t *array_flt, *array_cflt, *array2_flt, *array2_cflt;
+static jl_function_t *setind, *getind, *delind, *stringify, *Stringify, *MIME,
+    *printstyle;
 
 #define JL_CHECK_EXCEPT(retval)                                                \
   if (jl_exception_occurred()) {                                               \
@@ -12,12 +16,6 @@
     return retval;                                                             \
   }
 
-static jl_value_t *jl_complex64_type, *jl_complex32_type, *V, *refs; // *irefs;
-static jl_value_t *array_int64, *array_dbl, *array_cdbl, *array2_dbl,
-    *array2_cdbl;
-static jl_value_t *array_flt, *array_cflt, *array2_flt, *array2_cflt;
-static jl_function_t *setind, *getind, *delind, *stringify, *Stringify, *MIME,
-    *printstyle;
 // Macros for 1D/2D Array wrappers
 #define GEN_JL_CALL_1D_VOID(name, c_type, arr_flt, arr_cflt)                   \
   void name(int64_t cplx, const char *func, c_type *array, int64_t size) {     \
