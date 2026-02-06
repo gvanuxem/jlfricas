@@ -185,14 +185,14 @@ WSAggregate(E : WSObject) : Category == WSObject with
       i > integer length(agg) => error "setelt!: index too large"
       cmd := concat(["weval(W_"ReplacePart_"(", getind(agg), ",",
         getind(jWSRule(jWSExpr(i), elem pretend WSExpression)),"))"])
-      ret : String := jl_setindex_wrap_eval_string(jlId(agg), cmd)$Lisp
-      if ret = "" then error "setelt!: bad element in input"
+      ret : Integer := jl_setindex_wrap_eval_string(jlId(agg), cmd)$Lisp
+      if ret = 0 then error "setelt!: bad element in input"
       agg
     qsetelt!(agg,i,elem) ==
       cmd := concat(["weval(W_"ReplacePart_"(", getind(agg), ",",
         getind(jWSRule(jWSExpr(i), elem pretend WSExpression)),"))"])
-      ret : String := jl_setindex_wrap_eval_string(jlId(agg),cmd)$Lisp
-      if ret = "" then error "setelt!: bad element in input"
+      ret : Integer := jl_setindex_wrap_eval_string(jlId(agg),cmd)$Lisp
+      if ret = 0 then error "setelt!: bad element in input"
       agg
     replacePart(agg, part) == jbinfunc("W_"ReplacePart_"(", agg, part)
     sort(agg) == junfunc("W_"Sort_"(", agg)
@@ -611,8 +611,8 @@ WSMatrix(E : WSRing) : Exports == Implementation where
       rule := jWSRule(jWSList(inds)@WSList(WSInteger) pretend WSExpression,
         elem pretend WSExpression)
       cmd := concat(["weval(W_"ReplacePart_"(", getind(mat), ",", getind(rule),"))"])
-      ret : String := jl_setindex_wrap_eval_string(jlId(mat), cmd)$Lisp
-      if ret = "" then error "setelt!$WSMatrix: bad element in input"
+      ret : Integer := jl_setindex_wrap_eval_string(jlId(mat), cmd)$Lisp
+      if ret = 0 then error "setelt!$WSMatrix: bad element in input"
       elem
     qsetelt!(mat,i,j,elem) ==
       dims := dimensions(mat)
@@ -620,8 +620,8 @@ WSMatrix(E : WSRing) : Exports == Implementation where
       rule := jWSRule(jWSList(inds)@WSList(WSInteger) pretend WSExpression,
         elem pretend WSExpression)
       cmd := concat(["weval(W_"ReplacePart_"(", getind(mat), ",", getind(rule),"))"])
-      ret : String := jl_setindex_wrap_eval_string(jlId(mat), cmd)$Lisp
-      if ret = "" then error "setelt!$WSMatrix: bad element in input"
+      ret : Integer := jl_setindex_wrap_eval_string(jlId(mat), cmd)$Lisp
+      if ret = 0 then error "setelt!$WSMatrix: bad element in input"
       elem
     elt(m, i) ==
       i > integer last(dimensions(m)) =>
