@@ -1,3 +1,20 @@
+2026-02-19  Waldek Hebisch  <cas@fricas.org>
+
+	* src/algebra/efstruc.spad, src/algebra/elfuts.spad,
+	src/algebra/fs2expxp.spad, src/algebra/special2.spad,
+	src/algebra/fdalg.spad: More adequate conditions
+	src/algebra/mantepse.spad: Use 'recip' as it needs
+	weaker condition
+
+2026-02-19  Waldek Hebisch  <cas@fricas.org>
+
+	* src/interp/format.boot, src/interp/i-syscmd.boot:
+	Simplify ')show' of operations
+
+2026-02-19  Waldek Hebisch  <cas@fricas.org>
+
+	* src/algebra/amodgcd.spad: Add 'alg_exquo'
+
 2026-02-17  Waldek Hebisch  <cas@fricas.org>
 
 	* src/algebra/alql.spad: Implement IndexCard using
