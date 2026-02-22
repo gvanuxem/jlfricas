@@ -10,7 +10,11 @@
 JLObjectType() : Category == JLType() with
     jlref : String -> %
     ++ jlref(str) evaluates the Julia command str and returns
-    ++ the corresponding FriCAS Julia object.
+    ++ the corresponding FriCAS Julia mutable object.
+    jlimref : String -> %
+    ++ jlimref(str) evaluates the Julia command str and returns
+    ++ the corresponding FriCAS Julia immutable object
+    ++ wrapped in a Julia RefValue{Any}
     jlId : % -> JLInt64
     ++ jlId(obj) returns the Julia indexed dictionary index referencing
     ++ the object obj.
@@ -102,7 +106,8 @@ JLObjectType() : Category == JLType() with
       not jlDefined?(func)$JLUtilityFunctions =>
         error concat(func, " is not defined in Julia")
 
-    jlref(cmd)   == make_jlref(cmd)$Lisp  
+    jlref(cmd)   == make_jlref(cmd)$Lisp
+    jlimref(cmd) == make_jlimref(cmd)$Lisp
     jlId(obj)    == JLREFID(obj)$Lisp
     jlType(obj)  ==
       coerce(jlEvalString(concat(["string(typeof(", getind(obj),"))"])))
@@ -746,7 +751,7 @@ JLObjUInt64() : Exports == Implementation where
     ++ the FriCAS output mode. Otherwise use the Julia one, in
     ++ hexadecimal notation (default).
     juint64 : NonNegativeInteger -> %
-    ++ juint64(i) returns i as a JLObjInt64.
+    ++ juint64(i) returns i as a JLObjUInt64.
     juint64 : Integer -> %
     ++ juint64(i) returns i as a JLObjUInt64 if possible.
     juint64 : String -> %
@@ -969,7 +974,7 @@ JLObjPair(F : JLObjectType, L : JLObjectType)
     ++ jpair(str) returns a Julia Pair
     ++ from the evaluation of the Julia command str.
     ++ For example:
-    ++ \example{}
+    ++ \example{jpair("_"a_"=>7")$JLObjPair(JLObject,JLObjInt64)}
   Implementation ==> add
     import from JLUtilityFunctions
 

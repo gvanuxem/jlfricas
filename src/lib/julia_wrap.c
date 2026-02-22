@@ -1,6 +1,7 @@
 #include <julia.h>
 
 static jl_value_t *jl_complex64_type, *jl_complex32_type, *V, *refs; // *irefs;
+static jl_datatype_t* reft;
 static jl_value_t *array_int64, *array_dbl, *array_cdbl, *array2_dbl,
     *array2_cdbl;
 static jl_value_t *array_flt, *array_cflt, *array2_flt, *array2_cflt;
@@ -459,14 +460,15 @@ GEN_JL_CALL_STRING_ARG1(jl_call_string_function_flt, float, jl_box_float32)
 
 GEN_JL_CALL_STRING_ARG1(jl_call_string_function_dbl, double, jl_box_float64)
 
-int64_t jl_setindex_wrap_eval_string(int64_t index, const char *code) {
+// mutable
+int64_t jl_setindex_mwrap_eval_string(int64_t index, const char *code) {
   if (index == 0) {
     jl_printf(jl_stderr_stream(),
-              "ERROR: index is 0 (jl_setindex_wrap_eval_string)\n");
+              "ERROR: index is 0 (jl_setindex_mwrap_eval_string)\n");
     return (0);
   } else if (code == NULL) {
     jl_printf(jl_stderr_stream(),
-              "ERROR: empty code string (jl_setindex_wrap_eval_string)\n");
+              "ERROR: empty code string (jl_setindex_mwrap_eval_string)\n");
     return (0);
   }
   jl_value_t *res = jl_eval_string(code);
@@ -474,6 +476,27 @@ int64_t jl_setindex_wrap_eval_string(int64_t index, const char *code) {
   JL_GC_PUSH1(&res);
   jl_call3(setind, refs, res, jl_box_int64(index));
   JL_GC_POP();
+  return (index);
+}
+
+// immutable
+// -- getindex
+int64_t jl_setindex_imwrap_eval_string(int64_t index, const char *code) {
+  if (index == 0) {
+    jl_printf(jl_stderr_stream(),
+              "ERROR: index is 0 (jl_setindex_imwrap_eval_string)\n");
+    return (0);
+  } else if (code == NULL) {
+    jl_printf(jl_stderr_stream(),
+              "ERROR: empty code string (jl_setindex_imwrap_eval_string)\n");
+    return (0);
+  }
+  jl_value_t *res = jl_eval_string(code);
+  JL_CHECK_EXCEPT(0)
+  JL_GC_PUSH1(&res);
+  jl_value_t* rvar = jl_new_struct(reft, res);
+  JL_GC_POP();
+  jl_call3(setind, refs, rvar, jl_box_int64(index));
   return (index);
 }
 
@@ -1420,6 +1443,7 @@ void jl_init_env(void) {
   jl_complex64_type = (jl_value_t *)jl_eval_string("ComplexF64");
 
   refs = (jl_value_t *)jl_eval_string("refs = IdDict{Int64, Any}()");
+  reft = (jl_datatype_t*)jl_eval_string("Base.RefValue{Any}");
   V = (jl_value_t *)jl_eval_string("'V'");
   array_int64 = jl_apply_array_type((jl_value_t *)jl_int64_type, 1);
   array_dbl = jl_apply_array_type((jl_value_t *)jl_float64_type, 1);

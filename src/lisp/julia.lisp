@@ -26,7 +26,9 @@
 (fricas-foreign-call boot::|jl_call5_wrapped_index| "jl_call5_wrapped_index" long
         (func c-string) (index long) (ind1 long) (ind2 long) (ind3 long)
             (ind4 long) (ind5 long))
-(fricas-foreign-call boot::|jl_setindex_wrap_eval_string| "jl_setindex_wrap_eval_string"
+(fricas-foreign-call boot::|jl_setindex_mwrap_eval_string| "jl_setindex_mwrap_eval_string"
+    long (index long) (command c-string))
+(fricas-foreign-call boot::|jl_setindex_imwrap_eval_string| "jl_setindex_imwrap_eval_string"
     long (index long) (command c-string))
 
 ; 64 bits floating point numbers
@@ -174,7 +176,18 @@
 (defun |make_jlref| (str)
     (let* ((index (or (make-jlindex)
         (error "Amount of Julia references excedeed")))
-            (id (|jl_setindex_wrap_eval_string| index str)))
+            (id (|jl_setindex_mwrap_eval_string| index str)))
+        (if (not (zerop id))
+            (let ((ret (make-instance 'jlref :id id)))
+                    #+:sbcl (sb-ext:finalize ret (lambda ()
+                        (sb-concurrency:enqueue index *jqueue*)))
+                ret)
+            (error "Invalid command given to Julia"))))
+
+(defun |make_jlimref| (str)
+    (let* ((index (or (make-jlindex)
+        (error "Amount of Julia references excedeed")))
+            (id (|jl_setindex_imwrap_eval_string| index str)))
         (if (not (zerop id))
             (let ((ret (make-instance 'jlref :id id)))
                     #+:sbcl (sb-ext:finalize ret (lambda ()
