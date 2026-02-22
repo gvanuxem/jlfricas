@@ -1,3 +1,30 @@
+2026-02-22  Qian Yun <oldk1331@gmail.com>
+
+	* src/sman/sman.c: Remove unused '-comp' option
+
+2026-02-20  Waldek Hebisch  <cas@fricas.org>
+
+	* src/interp/br-search.boot, src/interp/br-util.boot,
+	src/interp/c-doc.boot, src/interp/c-util.boot,
+	src/interp/functor.boot, src/interp/vmlisp.lisp:
+	Misc cleanups
+
+2026-02-19  Waldek Hebisch  <cas@fricas.org>
+
+	* src/algebra/amodgcd.spad, src/algebra/alql.spad:
+	Minor cleanup
+
+2026-02-19  Waldek Hebisch  <cas@fricas.org>
+
+	* src/interp/util.lisp: Remove GCL specific
+	'init-memory-config'
+
+2026-02-19  Waldek Hebisch  <cas@fricas.org>
+
+	* src/interp/msgdb.boot, src/interp/pf2sex.boot,
+	src/interp/i-spec1.boot, src/interp/i-eval.boot:
+	Better support for inline messages
+
 2026-02-19  Waldek Hebisch  <cas@fricas.org>
 
 	* src/algebra/efstruc.spad, src/algebra/elfuts.spad,
