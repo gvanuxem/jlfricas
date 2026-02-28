@@ -37,7 +37,7 @@ jobs:
         cd ../build && make all htmldoc
 
     - name: make check
-      run: cd ../build && make check -j4
+      run: cd ../build && make check -j4 --output-sync
 
     - name: Create artifact archives
       run: |
