@@ -348,7 +348,7 @@ typedef struct {
   int border_width;             /* Width of the border                   */
   HyperDocPage *page;           /* currently displayed page              */
   int width, height;            /* in pixels                             */
-  int columns;                  /* Width in characters, only settable    */
+  int columns;                  /* Width in characters, only setable     */
                                 /*      for form pages                   */
   HyperDocPage **fMemoStack;    /* stack of memo links */
   HyperDocPage **fDownLinkStack;/* stack of down links */
@@ -517,12 +517,12 @@ extern int space_width;
 
 /***      default fonts      ***/
 
-#define RmFontDefault         "-adobe-courier-medium-r-normal--18-*-*-*-m-*-iso8859-1"
-#define TtFontDefault         "-adobe-courier-medium-r-normal--18-*-*-*-m-*-iso8859-1"
-#define ActiveFontDefault     "-adobe-courier-bold-r-normal--18-*-*-*-m-*-iso8859-1"
-#define fricas_font_default      "-adobe-courier-bold-o-normal--18-*-*-*-m-*-iso8859-1"
-#define EmphasizeFontDefault  "-adobe-courier-medium-o-normal--18-*-*-*-m-*-iso8859-1"
-#define BoldFontDefault       "-adobe-courier-bold-r-normal--18-*-*-*-m-*-iso8859-1"
+#define RmFontDefault         "-adobe-courier-medium-r-normal--18-*-*-*-m-*-iso10646-1"
+#define TtFontDefault         "-adobe-courier-medium-r-normal--18-*-*-*-m-*-iso10646-1"
+#define ActiveFontDefault     "-adobe-courier-bold-r-normal--18-*-*-*-m-*-iso10646-1"
+#define fricas_font_default   "-adobe-courier-bold-o-normal--18-*-*-*-m-*-iso10646-1"
+#define EmphasizeFontDefault  "-adobe-courier-medium-o-normal--18-*-*-*-m-*-iso10646-1"
+#define BoldFontDefault       "-adobe-courier-bold-r-normal--18-*-*-*-m-*-iso10646-1"
 
 
 
