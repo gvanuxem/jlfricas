@@ -146,6 +146,9 @@ while [ "$*" != "" ] ; do
             showuse
             exit 0
             ;;
+        --mcp)
+            otheropts="$otheropts --mcp"
+            ;;
         --version)
             echo "FriCAS $FRICAS_VERSION"
             echo "based on $FRICAS_LISP_FLAVOR $FRICAS_LISP_VERSION"

@@ -1029,7 +1029,7 @@ helpSpad2Cmd args ==
   sayBrightly '" boot    cd      clear    close    compile   display"
   sayBrightly '" edit    fin     frame    help     history   jlapropos"
   sayBrightly '" jldoc   julia   juliad   library  lisp      load"
-  sayBrightly '" ltrace  pquit   quit     read     set       show"
+  sayBrightly '" ltrace  mcp     pquit    quit     read      set       show"
   sayBrightly '" spool   synonym system   trace    undo      what"
   sayBrightly '""
   sayBrightly '"Issue _")help help_" for more information about the help command."
@@ -2771,6 +2771,33 @@ getFirstWord string ==
   stripSpaces SUBSEQ(string, 0, spaceIndex)
 
 ltrace l == trace l
+
+--% )mcp
+
+mcp() == mcpStatus()
+
+npmcp str ==
+  str := stripSpaces str
+  str = '"status" => mcpStatus()
+  str = '"on" or str = '"start" => mcpStart()
+  str = '"off" or str = '"stop" => mcpStop()
+  sayKeyedMsg("S2IZ0080", [str])
+
+mcpStart() ==
+  startMCPServer()
+  terminateSystemCommand()
+
+mcpStop() ==
+  stopMCPServer()
+  terminateSystemCommand()
+
+mcpStatus() ==
+  s := FIND_-SYMBOL('"*MCP-RUNNING*", '"FRICAS-MCP")
+  if s and SYMBOL_-VALUE(s) then
+    sayBrightly '"MCP server is running."
+  else
+    sayBrightly '"MCP server is not running."
+  terminateSystemCommand()
 
 --------------------> NEW DEFINITION (see intint.lisp)
 stripSpaces str ==

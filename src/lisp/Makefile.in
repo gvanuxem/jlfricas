@@ -31,7 +31,7 @@ lisp_DEPENDENCIES = $(build_libdir)/cfuns-c.o \
 
 ifeq ($(lisp_flavor),SBCL)
 NUM_GMP = num_gmpx.lisp
-NUM_JULIA = julia.lisp julia_sbcl.lisp
+NUM_JULIA = julia.lisp julia_sbcl.lisp mcp.lisp
 else
 ifeq ($(lisp_flavor),Clozure)
 NUM_GMP = num_gmpx.lisp
@@ -119,6 +119,9 @@ julia_sbcl.lisp: $(srcdir)/julia_sbcl.lisp
 julia_ccl.lisp: $(srcdir)/julia_ccl.lisp
 	cp $< $@
 
+mcp.lisp: $(srcdir)/mcp.lisp
+	cp $< $@
+
 fricas-config.lisp:
 	echo '(in-package "FRICAS-LISP")' > $@
 	echo '(defparameter algebra-optimization' \
@@ -179,6 +182,8 @@ do_it.SBCL do_it.CLISP do_it.Clozure do_it.lispworks do_it.CMUCL: \
 	     '(load (compile-file "julia.lisp"))' \
 	     '#+(and :sbcl :fricas_has_julia)' \
 	     '(load (compile-file "julia_sbcl.lisp"))' \
+	     '#+(and :sbcl :fricas_has_julia)' \
+	     '(load (compile-file "mcp.lisp"))' \
 	     '#+(and :openmcl :fricas_has_julia)' \
 	     '(load (compile-file "julia_ccl.lisp"))' \
 	    '(load (compile-file "primitives.lisp"))' \

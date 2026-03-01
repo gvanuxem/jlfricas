@@ -108,6 +108,7 @@
    (|library|                        . |interpreter|)
    (|load|                           . |interpreter|)
    (|ltrace|                         . |interpreter|)
+   (|mcp|                            . |interpreter|)
    (|nopiles|                        . |interpreter|)
    (|piles|                          . |interpreter|)
    (|pquit|                          . |interpreter|)
@@ -141,6 +142,7 @@
     |suspend|
     |synonym|
     |system|
+    |mcp|
     |version|
     ))
 

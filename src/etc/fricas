@@ -12,6 +12,7 @@ showuse() {
   echo "The following options are recognized."
   echo "  -clef | -noclef    use Clef (default: -clef)"
   echo "  -clefprog fname    use named program for Clef"
+  echo "  --mcp              start as an MCP (Model Context Protocol) server"
   echo "  -eval code         evaluate specified code at start"
   echo "  -go   | -nogo      whether to start system"
   echo "  -gr   | -nogr      use Graphics (default: -gr)"
@@ -137,6 +138,9 @@ while [ "$*" != "" ] ; do
         -h|--help)
             showuse
             exit 0
+            ;;
+        --mcp)
+            otheropts="$otheropts --mcp"
             ;;
         --version)
             echo "FriCAS $FRICAS_VERSION"

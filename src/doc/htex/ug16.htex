@@ -1496,6 +1496,38 @@ It is not supported for general use.
 
 
 % *********************************************************************
+\head{section}{)mcp}{ugSysCmdmcp}
+% *********************************************************************
+\syscmdindex{mcp}
+
+
+\par\noindent{\bf User Level Required:} interpreter
+
+\par\noindent{\bf Command Syntax:}
+\begin{simpleList}
+\item{\tt )mcp} \lanb{{\it option}\ranb{}}
+\end{simpleList}
+
+\par\noindent{\bf Command Description:}
+
+This command is used to manage the \Language{} Model Context Protocol (MCP) server.
+The MCP server allow an external AI agent to communicate with \Language{}
+using a standard JSON-RPC protocol over standard input and output.
+
+The {\it option} can be one of:
+\begin{description}
+\item[{\bf status}] (default) displays whether the server is currently running.
+\item[{\bf start}] or {\bf on} starts the server in a background thread.
+\item[{\bf stop}] or {\bf off} stops the server.
+\end{description}
+
+Note: if \Language{} is started with the {\tt --mcp} flag, the server starts 
+automatically in the main loop and this command is not needed.
+
+Be aware, the stdio of the MCP server is the same as the stdio of the 
+\Language{} interpreter.
+
+% *********************************************************************
 \head{section}{)pquit}{ugSysCmdpquit}
 % *********************************************************************
 \syscmdindex{pquit}

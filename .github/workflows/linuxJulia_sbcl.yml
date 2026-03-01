@@ -20,7 +20,7 @@ jobs:
     - name: install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install sbcl libgmp-dev libxpm-dev cl-hunchentoot python3-sphinx
+        sudo apt-get install sbcl libgmp-dev libxpm-dev cl-hunchentoot cl-yason python3-sphinx
         # wget https://github.com/gvanuxem/aldor/releases/download/20241216/aldor_1.4.0+20241216_amd64.deb
         # sudo dpkg -i aldor_1.4.0+20241216_amd64.deb
     - name: install Julia libraries

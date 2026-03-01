@@ -221,7 +221,9 @@ WSString() : Exports == Implementation where
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
   Exports ==> WSObject with
     characters : % -> WSList(%)
-    ++ 
+    ++ characters(str) returns the characters of str as a WSList.
+    elt : (%, INT) -> %
+    ++ elt(str,i) returns the i-th character of str.
     coerce  : % -> String
     ++ coerce(str) coerces str to a FriCAS String.
     ++ str must be a Julia WS string
@@ -249,8 +251,7 @@ WSString() : Exports == Implementation where
     x = y  == jbinbop("==", x, y)
     x ~= y == jbinbop("!=", x, y)
 
-    -- TODO?: elt(str,i) -> Part[Characters[str],i]
-
+    elt(obj,i) == characters(obj).i
     characters(str : %) : WSList(%) == junfunc("W_"Characters_"(", str)
     coerce(str : String) : % == jWSString(str)
     coerce(str : %) : String == string(str)
