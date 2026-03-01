@@ -31,7 +31,11 @@ lisp_DEPENDENCIES = $(build_libdir)/cfuns-c.o \
 
 ifeq ($(lisp_flavor),SBCL)
 NUM_GMP = num_gmpx.lisp
+ifeq (uname -s,Linux)
 NUM_JULIA = julia.lisp julia_sbcl.lisp mcp.lisp
+else
+NUM_JULIA = julia.lisp julia_sbcl.lisp
+endif
 else
 ifeq ($(lisp_flavor),Clozure)
 NUM_GMP = num_gmpx.lisp
