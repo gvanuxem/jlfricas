@@ -36,6 +36,9 @@ jobs:
       run: |
         cd ../build && make all htmldoc
 
+    - name: make check
+      run: cd ../build && make check -j4
+
     - name: Create artifact archives
       run: |
         cd ../build
@@ -52,6 +55,4 @@ jobs:
         name: FriCAS-macOS-julia-${{ env.ARCH }}-binary
         path: FriCAS-macOS-julia-${{ env.ARCH }}-${{ github.sha }}.dmg
 
-    - name: make check
-      run: cd ../build && make check -j4
   
