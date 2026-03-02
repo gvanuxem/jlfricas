@@ -651,6 +651,7 @@ ALDOR_foreignStyle
 ALDOR
 ALDOR_datadir
 sys_ALDOR
+BUILD_MCP_INTERFACE
 WEBSPAD_REQUIREMENTS
 SBCL_HOME
 JULIA_USE_MLINK
@@ -799,6 +800,7 @@ enable_julia
 enable_mathlink
 with_julia_config
 with_sbcl_home
+enable_mcp
 enable_aldor
 with_aldor_binary
 '
@@ -1452,6 +1454,7 @@ Optional Features:
                           (yes/no)
   --enable-julia          use Julia with Clozure CL, SBCL or GCL
   --enable-mathlink       use MathLink.jl with Julia if enabled (yes/no)
+  --enable-mcp            build the SBCL MCP interface on Linux, (yes/no)
   --enable-aldor          build an interface to the Aldor compiler, (yes/no)
 
 Optional Packages:
@@ -7737,6 +7740,26 @@ ac_config_files="$ac_config_files src/input/Makefile:config/var-def.mk:src/input
 
 ac_config_files="$ac_config_files src/etc/Makefile:config/var-def.mk:src/etc/Makefile.in:config/setup-dep.mk"
 
+
+## This handles the cases if one of the following options is given on the
+## command line. If none is given, then we will skip MCP interface.
+## --enable-mcp, --enable-mcp=yes:
+##   User requires to build the MCP interface.
+## --enable-mcp=no, --disable-mcp:
+##   User asks to skip the build of the MCP interface.
+BUILD_MCP_INTERFACE=no
+# Check whether --enable-mcp was given.
+if test ${enable_mcp+y}
+then :
+  enableval=$enable_mcp; case $enableval in #(
+  yes|no) :
+    BUILD_MCP_INTERFACE=$enableval ;; #(
+  *) :
+    as_fn_error $? "only yes/no allowed as value for --enable-mcp" "$LINENO" 5
+   ;;
+esac
+
+fi
 
 
 ###################################################################

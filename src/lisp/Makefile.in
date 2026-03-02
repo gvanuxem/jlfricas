@@ -16,6 +16,7 @@ JULIA_WRAP_SO_TARGET=@JULIA_WRAP_SO_TARGET@
 JULIA_LIBDIR = @JULIA_LIBDIR@
 JULIA_EXT=@JULIA_EXT@
 JULIA_LISP_REQUIREMENTS=@JULIA_LISP_REQUIREMENTS@
+BUILD_MCP_INTERFACE = @BUILD_MCP_INTERFACE@
 LISP_CMD = $(FRICAS_LISP) $(fricas_quiet_flags)
 
 ## Create a fresh image for building interpsys and FRICASsys
@@ -79,6 +80,7 @@ do_it.GNU: fricas-lisp.lisp fricas-package.lisp fricas-config.lisp \
 	     '(load "fricas-lisp.lisp")' \
 	     '#+:fricas_has_julia' \
 	     '(load (compile-file "julia.lisp"))' \
+		 '#+:fricas_has_julia' \
          '(load (compile-file "julia_gcl.lisp"))' \
 	     '(setq compiler::*default-system-p* t)' \
 	     '(let ((compiler::*cc* (concatenate (quote string) ' \
@@ -139,9 +141,15 @@ fricas-config.lisp:
 	if  [ x$(JULIA_WRAP_SO_TARGET) != x ] ; then \
 	    echo '(if (not (member :fricas_has_julia' \
                           ' *features*)) ' \
-	             '(push :fricas_has_julia *features*))' \
-	       >> $@ ; \
-	fi
+             '(push :fricas_has_julia *features*))' \
+       >> $@ ; \
+    fi
+	if [ x$(BUILD_MCP_INTERFACE) = xyes ] ; then \
+	    echo '(if (not (member :fricas_has_mcp' \
+                          ' *features*)) ' \
+             '(push :fricas_has_mcp *features*))' \
+       >> $@ ; \
+    fi
 
 do_it.ECL: fricas-lisp.lisp fricas-package.lisp fricas-config.lisp \
            primitives.lisp
@@ -186,7 +194,7 @@ do_it.SBCL do_it.CLISP do_it.Clozure do_it.lispworks do_it.CMUCL: \
 	     '(load (compile-file "julia.lisp"))' \
 	     '#+(and :sbcl :fricas_has_julia)' \
 	     '(load (compile-file "julia_sbcl.lisp"))' \
-	     '#+(and :sbcl :fricas_has_julia)' \
+	     '#+(and :sbcl :fricas_has_mcp)' \
 	     '(load (compile-file "mcp.lisp"))' \
 	     '#+(and :openmcl :fricas_has_julia)' \
 	     '(load (compile-file "julia_ccl.lisp"))' \

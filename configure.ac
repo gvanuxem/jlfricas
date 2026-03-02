@@ -1078,7 +1078,22 @@ FRICAS_MAKEFILE([src/algebra/Makefile])
 FRICAS_MAKEFILE([src/input/Makefile])
 FRICAS_MAKEFILE([src/etc/Makefile])
 
-
+## This handles the cases if one of the following options is given on the
+## command line. If none is given, then we will skip MCP interface.
+## --enable-mcp, --enable-mcp=yes:
+##   User requires to build the MCP interface.
+## --enable-mcp=no, --disable-mcp:
+##   User asks to skip the build of the MCP interface.
+BUILD_MCP_INTERFACE=no
+AC_ARG_ENABLE(mcp,
+  [AS_HELP_STRING([--enable-mcp],
+                  [build the SBCL MCP interface on Linux, (yes/no)])],
+  [AS_CASE([$enableval],
+    [yes|no], [BUILD_MCP_INTERFACE=$enableval],
+    [AC_MSG_ERROR([only yes/no allowed as value for --enable-mcp])]
+  )]
+)
+AC_SUBST(BUILD_MCP_INTERFACE)
 ###################################################################
 ## The following section deals with the generation of the
 ## aldor interface.
