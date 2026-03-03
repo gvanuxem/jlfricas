@@ -1,0 +1,14 @@
+{
+    "mcpServers": {
+        "jlfricas": {
+            "command": "/usr/local/bin/fricas",
+            "args": [
+                "-nosman",
+                "--mcp"
+            ],
+            "env": {
+                "FRICAS": "/usr/local/lib/fricas/target/x86_64-linux-gnu"
+            }
+        }
+    }
+}
