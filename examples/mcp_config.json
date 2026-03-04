@@ -7,7 +7,8 @@
                 "--mcp"
             ],
             "env": {
-                "FRICAS": "/usr/local/lib/fricas/target/x86_64-linux-gnu"
+                "FRICAS": "/usr/local/lib/fricas/target/x86_64-linux-gnu",
+                "FRICAS_ALGEBRA_DIR": "/usr/local/lib/fricas/target/x86_64-linux-gnu/src/algebra/"
             }
         }
     }
