@@ -1088,7 +1088,7 @@ BUILD_MCP_INTERFACE=no
 MCP_LISP_REQUIREMENT=""
 AC_ARG_ENABLE(mcp,
   [AS_HELP_STRING([--enable-mcp],
-                  [build the SBCL MCP interface on Linux, (yes/no)])],
+                  [build the SBCL MCP interface on Linux (require the YASON CL library), (yes/no)])],
   [AS_IF([test x"$enableval" = xyes], [BUILD_MCP_INTERFACE=yes] [MCP_LISP_REQUIREMENT="(require :asdf)"],
     [AS_IF([test x"$enableval" = xno], [BUILD_MCP_INTERFACE=no] [MCP_LISP_REQUIREMENT=""],
     [AC_MSG_ERROR([only yes/no allowed as value for --enable-mcp])])])]

@@ -111,9 +111,9 @@
        (if (or (not entity-name) (not entity-type))
            (send-error id -32602 "Missing name or type parameter")
            (let* ((fricas-func (if (string= entity-type "constructor")
-                                   "jlConstructorDocumentation"
-                                   "jlOperationDocumentation"))
-                  (cmd (format nil "~A('~A)$JUF" fricas-func entity-name))
+                                   "jlGetConstructorDocumentation"
+                                   "jlGetOperationDocumentation"))
+                  (cmd (format nil "~A('~A)$SDOC" fricas-func entity-name))
                   (output (capture-fricas-output cmd)))
              (let ((result (make-hash-table :test 'equal))
                    (content (make-hash-table :test 'equal)))
@@ -123,17 +123,35 @@
                (send-result id result))))))
     (t (send-error id -32601 (format nil "Tool not found: ~A" name)))))
 
+(defun fricas-split-lines (string)
+  (let ((lines nil)
+        (start 0))
+    (loop for pos = (position #\Newline string :start start)
+          while pos
+          do (push (subseq string start pos) lines)
+             (setf start (1+ pos))
+          finally (push (subseq string start) lines))
+    (nreverse lines)))
+
 (defun clean-fricas-doc-output (text)
-  "Clean up FriCAS output for documentation tools without regex."
+  "Clean up FriCAS output for documentation tools."
   (if (not (stringp text)) (return-from clean-fricas-doc-output ""))
-  (let* ((trimmed (string-trim '(#\Space #\Newline #\Return) text))
-         (marker "Type: Void")
-         (t-len (length trimmed))
+  (let* ((lines (fricas-split-lines text))
+         (cleaned-lines (mapcar (lambda (line)
+                                  (let ((p (search ")  " line)))
+                                    (if (and p (< p 10))
+                                        (subseq line (+ p 3))
+                                        line)))
+                                lines))
+         (joined (string-trim '(#\Space #\Newline #\Return)
+                              (format nil "~{~A~^~%~}" cleaned-lines)))
+         (marker "Type: String")
+         (t-len (length joined))
          (m-len (length marker)))
     (if (and (>= t-len m-len)
-             (string= trimmed marker :start1 (- t-len m-len)))
-        (string-trim '(#\Space #\Newline #\Return) (subseq trimmed 0 (- t-len m-len)))
-        trimmed)))
+             (string= joined marker :start1 (- t-len m-len)))
+        (string-trim '(#\Space #\Newline #\Return) (subseq joined 0 (- t-len m-len)))
+        joined)))
 
 
 (defun capture-fricas-output (expr)

@@ -1455,7 +1455,8 @@ Optional Features:
                           (yes/no)
   --enable-julia          use Julia with Clozure CL, SBCL or GCL
   --enable-mathlink       use MathLink.jl with Julia if enabled (yes/no)
-  --enable-mcp            build the SBCL MCP interface on Linux, (yes/no)
+  --enable-mcp            build the SBCL MCP interface on Linux (require the
+                          YASON CL library), (yes/no)
   --enable-aldor          build an interface to the Aldor compiler, (yes/no)
 
 Optional Packages:

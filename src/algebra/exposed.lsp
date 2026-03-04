@@ -365,6 +365,7 @@
   (|RightOpenIntervalRootCharacterization| . ROIRC)
   (|RomanNumeral| . ROMAN)
   (|Ruleset| . RULESET)
+  (|SpadDoc| . SDOC)
   (|Segment| . SEG)
   (|SegmentBinding| . SEGBIND)
   (|SegmentBindingFunctions2| . SEGBIND2)
