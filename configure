@@ -651,6 +651,7 @@ ALDOR_foreignStyle
 ALDOR
 ALDOR_datadir
 sys_ALDOR
+MCP_LISP_REQUIREMENT
 BUILD_MCP_INTERFACE
 WEBSPAD_REQUIREMENTS
 SBCL_HOME
@@ -7620,7 +7621,7 @@ fi
                        or ARM processors" "$LINENO" 5
         esac
     else
-        as_fn_error $? "Julia support is only valid with SBCL, Clozure CL or GCL" "$LINENO" 5
+        as_fn_error $? "Julia support is only valid with SBCL or Clozure CL" "$LINENO" 5
     fi
 fi
 
@@ -7748,18 +7749,26 @@ ac_config_files="$ac_config_files src/etc/Makefile:config/var-def.mk:src/etc/Mak
 ## --enable-mcp=no, --disable-mcp:
 ##   User asks to skip the build of the MCP interface.
 BUILD_MCP_INTERFACE=no
+MCP_LISP_REQUIREMENT=""
 # Check whether --enable-mcp was given.
 if test ${enable_mcp+y}
 then :
-  enableval=$enable_mcp; case $enableval in #(
-  yes|no) :
-    BUILD_MCP_INTERFACE=$enableval ;; #(
-  *) :
-    as_fn_error $? "only yes/no allowed as value for --enable-mcp" "$LINENO" 5
-   ;;
+  enableval=$enable_mcp; if test x"$enableval" = xyes
+then :
+  BUILD_MCP_INTERFACE=yes MCP_LISP_REQUIREMENT="(require :asdf)"
+else case e in #(
+  e) if test x"$enableval" = xno
+then :
+  BUILD_MCP_INTERFACE=no MCP_LISP_REQUIREMENT=""
+else case e in #(
+  e) as_fn_error $? "only yes/no allowed as value for --enable-mcp" "$LINENO" 5 ;;
 esac
+fi ;;
+esac
+fi
 
 fi
+
 
 
 ###################################################################

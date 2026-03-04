@@ -17,6 +17,7 @@ JULIA_LIBDIR = @JULIA_LIBDIR@
 JULIA_EXT=@JULIA_EXT@
 JULIA_LISP_REQUIREMENTS=@JULIA_LISP_REQUIREMENTS@
 BUILD_MCP_INTERFACE = @BUILD_MCP_INTERFACE@
+MCP_LISP_REQUIREMENT=@MCP_LISP_REQUIREMENT@
 LISP_CMD = $(FRICAS_LISP) $(fricas_quiet_flags)
 
 ## Create a fresh image for building interpsys and FRICASsys
@@ -32,22 +33,26 @@ lisp_DEPENDENCIES = $(build_libdir)/cfuns-c.o \
 
 ifeq ($(lisp_flavor),SBCL)
 NUM_GMP = num_gmpx.lisp
-ifeq ($(shell uname -s),Linux)
-NUM_JULIA = julia.lisp julia_sbcl.lisp mcp.lisp
-else
 NUM_JULIA = julia.lisp julia_sbcl.lisp
+ifeq ($(shell uname -s)-$(BUILD_MCP_INTERFACE),Linux-yes)
+LISP_MCP = mcp.lisp
+else
+LISP_MCP = 
 endif
 else
 ifeq ($(lisp_flavor),Clozure)
 NUM_GMP = num_gmpx.lisp
 NUM_JULIA = julia.lisp julia_ccl.lisp
+LISP_MCP =
 else
 ifeq ($(lisp_flavor),GNU)
 NUM_GMP =
 NUM_JULIA = julia.lisp julia_gcl.lisp
+LISP_MCP =
 else
 NUM_GMP =
 NUM_JULIA =
+LISP_MCP =
 endif
 endif
 endif
@@ -183,12 +188,14 @@ do_it.ECL: fricas-lisp.lisp fricas-package.lisp fricas-config.lisp \
 
 do_it.SBCL do_it.CLISP do_it.Clozure do_it.lispworks do_it.CMUCL: \
    fricas-lisp.lisp fricas-package.lisp fricas-config.lisp $(NUM_GMP) \
-   $(NUM_JULIA) primitives.lisp
+   $(NUM_JULIA) $(LISP_MCP) primitives.lisp
 	echo '(load "fricas-package.lisp")' \
 	    '(load "fricas-config.lisp")' \
 	     '#+(or :sbcl :openmcl)' \
 	     '(load (compile-file "num_gmpx.lisp"))' \
-       '${JULIA_LISP_REQUIREMENTS}' \
+         '${JULIA_LISP_REQUIREMENTS}' \
+		 '#+(and :sbcl :fricas_has_mcp):fricas_has_mcp' \
+		 '${MCP_LISP_REQUIREMENT}' \
 	     '(load (compile-file "fricas-lisp.lisp"))' \
 	     '#+:fricas_has_julia' \
 	     '(load (compile-file "julia.lisp"))' \

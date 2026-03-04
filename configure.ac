@@ -986,7 +986,7 @@ if test -n "$JULIA_WRAP_SO_TARGET" ; then
                        or ARM processors])
         esac
     else
-        AC_MSG_ERROR([Julia support is only valid with SBCL, Clozure CL or GCL])
+        AC_MSG_ERROR([Julia support is only valid with SBCL or Clozure CL])
     fi
 fi
 
@@ -1085,15 +1085,16 @@ FRICAS_MAKEFILE([src/etc/Makefile])
 ## --enable-mcp=no, --disable-mcp:
 ##   User asks to skip the build of the MCP interface.
 BUILD_MCP_INTERFACE=no
+MCP_LISP_REQUIREMENT=""
 AC_ARG_ENABLE(mcp,
   [AS_HELP_STRING([--enable-mcp],
                   [build the SBCL MCP interface on Linux, (yes/no)])],
-  [AS_CASE([$enableval],
-    [yes|no], [BUILD_MCP_INTERFACE=$enableval],
-    [AC_MSG_ERROR([only yes/no allowed as value for --enable-mcp])]
-  )]
+  [AS_IF([test x"$enableval" = xyes], [BUILD_MCP_INTERFACE=yes] [MCP_LISP_REQUIREMENT="(require :asdf)"],
+    [AS_IF([test x"$enableval" = xno], [BUILD_MCP_INTERFACE=no] [MCP_LISP_REQUIREMENT=""],
+    [AC_MSG_ERROR([only yes/no allowed as value for --enable-mcp])])])]
 )
 AC_SUBST(BUILD_MCP_INTERFACE)
+AC_SUBST(MCP_LISP_REQUIREMENT)
 ###################################################################
 ## The following section deals with the generation of the
 ## aldor interface.

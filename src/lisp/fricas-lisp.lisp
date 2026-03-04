@@ -109,6 +109,7 @@ with this hack and will try to convince the GCL crowd to fix this.
                    #'(lambda () nil)))
          (top-fun #'(lambda ()
                        (set-initial-parameters)
+                       #+:fricas_has_mcp
                        (let ((mcp-check (and (find-package "FRICAS-MCP")
                                              (find-symbol "CHECK-MCP-ARGS" "FRICAS-MCP"))))
                          (when mcp-check (funcall mcp-check)))

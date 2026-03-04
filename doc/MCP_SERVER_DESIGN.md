@@ -30,7 +30,7 @@ The server follows a three-layer bridge architecture:
 ## 🚀 Operational Workflow
 1.  **Startup**: 
     *   **Automated**: Launch via shell with the `--mcp` flag (e.g., `jlfricas --mcp`). This enters MCP mode immediately and bypasses the REPL.
-    *   **Manual**: Initiated via interpreter command `)mcp start` (Not implemented yet, use `--mcp` flag).
+    *   **Manual**: Initiated via interpreter command `)mcp start` (Not supported yet, use `--mcp` flag).
 2.  **I/O Handling**:
     *   `stdout`: Reserved exclusively for JSON-RPC messages.
     *   `stderr`: Used for all non-protocol output (logs, Julia warnings, etc.).
@@ -47,4 +47,4 @@ The server follows a three-layer bridge architecture:
 ## 💡 Assumptions
 *   The environment has `yason` installed and available to SBCL.
 *   The user is operating in a trusted environment where the LLM can generate and execute code.
-*   Julia packages `LaTeXStrings.jl` and `Plots.jl` are present for rich output generation.
+*   Julia packages `LaTeXStrings.jl` and `Plots.jl` are present for rich output generation (not supported yet).
