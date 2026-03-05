@@ -1,8 +1,9 @@
 )abbrev package SDOC SpadDoc
 ++ Author: G. Vanuxem
-++ Date Created: 2026-03-04
+++ Date Created: march 2026
 ++ Description: This package provides simple
-++ Spad documentation for use in the interpreter or the MCP server.
+++ Spad documentation for use in the interpreter and
+++ the MCP server.
 SpadDoc : Exports == Implementation where
   Exports ==> with
     jlOperationDocumentation  : Symbol -> Void
