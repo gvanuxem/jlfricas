@@ -1,3 +1,18 @@
+2026-05-18  Waldek Hebisch  <cas@fricas.org>
+
+	* src/interp/br-util.boot: Fix breakage due move of code
+
+2026-05-17  Waldek Hebisch  <cas@fricas.org>
+
+	* src/algebra/fops.spad, src/interp/br-data.boot,
+	src/interp/br-search.boot, src/interp/c-doc.boot,
+	src/interp/g-boot.boot, src/interp/htcheck.boot,
+	src/interp/htsetvar.boot, src/interp/i-resolv.boot,
+	src/interp/i-syscmd.boot, src/interp/interop.boot,
+	src/interp/m_util.boot, src/interp/macex.boot,
+	src/interp/macros.lisp, src/interp/msgdb.boot,
+	src/interp/vmlisp.lisp: Misc cleanups
+
 2026-05-17  Waldek Hebisch  <cas@fricas.org>
 
 	* src/interp/br-util.boot: Move some code from here

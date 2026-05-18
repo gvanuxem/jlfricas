@@ -1565,7 +1565,7 @@ writeInputLines(fn,initial) ==
   if fn ~= 'redo then
       say_msg("S2IH0014", '"Edit %b %1 %d to see the saved input lines.",
               [file])
-  SHUT inp
+  CLOSE(inp)
   NIL
 
 
@@ -2227,7 +2227,7 @@ reportOpsFromUnitDirectly1 D ==
   $sayBrightlyStream : fluid := MAKE_OUTSTREAM(showFile)
   sayShowWarning()
   reportOpsFromUnitDirectly D
-  SHUT $sayBrightlyStream
+  CLOSE($sayBrightlyStream)
   editFile showFile
   delete_file(showFile)
 
@@ -2251,7 +2251,7 @@ reportOpsFromLisplib1(unitForm,u)  ==
   $sayBrightlyStream : fluid := MAKE_OUTSTREAM(showFile)
   sayShowWarning()
   reportOpsFromLisplib(unitForm,u)
-  SHUT $sayBrightlyStream
+  CLOSE($sayBrightlyStream)
   editFile showFile
   delete_file(showFile)
 
