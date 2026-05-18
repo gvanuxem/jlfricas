@@ -190,7 +190,7 @@ antisymmetric?(m) returns true if the matrix m is square and antisymmetric (i.e.
 
 ### `cholesky` &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L479)\]
 
-cholesky(m) computes the Cholesky decomposition of the square matrix m.
+cholesky(m) computes the Cholesky decomposition of the positive definite/hermitian square matrix m.
 
 - **Signature**: `(%)->Record(l:%,u:%)`
 

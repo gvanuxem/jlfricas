@@ -19,8 +19,9 @@ Julia Wolfram Symbolic utility functions using the MathLink Julia package.
  jWSDateObject : WSExpression -> WSExpression           jWSRange : WSInteger -> WSList(WSInteger)
  jlWSDateString : () -> WSExpression                    jlWSDateString : WSExpression -> WSExpression
  jlWSDocumentation : Symbol -> WSExpression             jlWSExport : (String, WSExpression) -> WSExpression
- jlWSFileFormat : String -> WSExpression                jlWSImport : WSExpression -> WSExpression
- jlWSSeedRandom! : WSInteger -> WSExpression            urand01Real : PositiveInteger -> WSVector(WSReal)
+ jlWSFileFormat : WSString -> WSExpression              jlWSImport : WSString -> WSExpression
+ jlWSImport : (WSString, WSString) -> WSExpression      jlWSSeedRandom! : WSInteger -> WSExpression
+ urand01Real : PositiveInteger -> WSVector(WSReal)
  fourierMatrix : PositiveInteger -> WSMatrix(WSExpression)
  hankelMatrix : PositiveInteger -> WSMatrix(WSInteger)
  hilbertMatrix : PositiveInteger -> WSMatrix(WSRational)
@@ -29,9 +30,8 @@ Julia Wolfram Symbolic utility functions using the MathLink Julia package.
  jWSRange : (WSInteger, WSInteger) -> WSList(WSInteger)
  jWSRange : (WSInteger, WSInteger, WSInteger) -> WSList(WSInteger)
  jlWSDateString : (WSExpression, WSExpression) -> WSExpression
- jlWSExportString : (WSExpression, WSExpression) -> WSExpression
- jlWSFileFormat : (String, WSExpression) -> WSExpression
- jlWSImport : (WSExpression, WSExpression) -> WSExpression
+ jlWSExportString : (WSExpression, WSString) -> WSExpression
+ jlWSFileFormat : (WSString, WSExpression) -> WSExpression
  jlWSPlot : (WSExpression, WSExpression) -> WSExpression
  jlWSSnippet : (WSExpression, WSInteger) -> WSExpression
  urand01Complex : PositiveInteger -> WSVector(WSComplex)
@@ -170,11 +170,11 @@ x:=jWSExpr(x);jlWSExport("legendreP.png" , legendreP(7, x))
 
 ### `jlWSExportString` &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L125)\]
 
-jlWSExportString(expr, jWSString(format)) returns the string representation of expr in the specified format. Use toString or string to obtain the FriCAS String. For example: 
+jlWSExportString(expr, form) returns the string representation of expr in the specified format. Use toString or string to obtain the FriCAS String. For example: 
 
 **Example**:
 ```fricas
-jWSExpr "Probability[x < 0, x \[Dist ributed] NormalDistribution[]]"
+jWSExpr "Probability[x < 0, x \[Distributed] Norm alDistribution[]]"
 ```
 
 **Example**:
@@ -184,10 +184,10 @@ jWSExpr "Probability[x < 1, x \[Distributed] NormalDistribution[]]"
 
 **Example**:
 ```fricas
-string jlWSExportString(%,jWSString "TeX")
+s tring jlWSExportString(%,jWSString "TeX")
 ```
 
-- **Signature**: `(WSExpression,WSExpression)->WSExpression`
+- **Signature**: `(WSExpression,WSString)->WSExpression`
 
 ### `jlWSFileFormat` &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L101)\]
 
@@ -198,11 +198,11 @@ jlWSFileFormat(src) tries to determine the format of the source src from its con
 jlWSFileFormat("examples/customers-100.csv")
 ```
 
-- **Signature**: `(String)->WSExpression`
+- **Signature**: `(WSString)->WSExpression`
 
 jlWSFileFormat(src, list(form)) tries to determine the format of the source src from its content using the list of formats form. Returns WS None if no format is found. Can be used with jWSImport. For example: jlWSFileFormat("examples/customers-100.csv",jWSExpr "_"CSV_",_"TSV_"")
 
-- **Signature**: `(String,WSExpression)->WSExpression`
+- **Signature**: `(WSString,WSExpression)->WSExpression`
 
 ### `jlWSImport` &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L92)\]
 
@@ -218,7 +218,7 @@ file:=jlWSImport jWSString "examples/customers- 100.csv";
 jlWSDateString(file.2.11)
 ```
 
-- **Signature**: `(WSExpression)->WSExpression`
+- **Signature**: `(WSString)->WSExpression`
 
 jlWSImport(myfile, form) imports the file myfile with format form. For example:
 
@@ -227,7 +227,7 @@ jlWSImport(myfile, form) imports the file myfile with format form. For example:
 file:=jlWSImport(jWS String("examples/customers-100.csv"), jWSString "CSV");
 ```
 
-- **Signature**: `(WSExpression,WSExpression)->WSExpression`
+- **Signature**: `(WSString,WSString)->WSExpression`
 
 ### `jlWSPlot` &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L133)\]
 
