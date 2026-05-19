@@ -298,7 +298,7 @@
              ;; Echo code to terminal REPL
              (format *error-output* "~A~%" expr)
              (finish-output *error-output*)
-             (let ((output (evaluate-expr expr)))
+             (let ((output (evaluate-expr expr t)))
                ;; Echo result to terminal REPL
                (when (and output (not (string= output "")))
                  (format *error-output* "~A~%" output)
@@ -362,7 +362,7 @@
           ;; Always echo code to terminal REPL
           (format *error-output* "~A~%" code)
           (finish-output *error-output*)
-          (let ((output (evaluate-expr code)))
+          (let ((output (evaluate-expr code t)))
             ;; Always echo result to terminal REPL
             (when (and output (not (string= output "")))
               (format *error-output* "~A~%" output)
@@ -541,7 +541,7 @@
             statements))
     (nreverse statements)))
 
-(defun evaluate-expr (expr)
+(defun evaluate-expr (expr &optional eq-num-p)
   "Evaluate FriCAS input, handling multi-line code blocks correctly.
    Single-line or system-command input is passed directly to capture-fricas-output.
    Multi-line input is split into individual statements; each is evaluated
@@ -552,14 +552,14 @@
         (let* ((stmts (split-fricas-statements clean))
                (parts
                  (loop for stmt in stmts
-                       for result = (capture-fricas-output stmt)
+                       for result = (capture-fricas-output stmt eq-num-p)
                        when (and result (not (string= result "")))
                          collect result)))
           (format nil "~{~A~^~%~}" parts))
         ;; Single line: fast path
-        (capture-fricas-output clean))))
+        (capture-fricas-output clean eq-num-p))))
 
-(defun capture-fricas-output (expr)
+(defun capture-fricas-output (expr &optional eq-num-p)
   (let ((out-str (make-string-output-stream))
         (boot-pkg (find-package "BOOT")))
     (flet ((do-eval ()
@@ -591,7 +591,9 @@
                              (*package* boot-pkg))
                          (let ((res (catch 'boot::|top_level|
                                       (catch 'boot::SPAD_READER
-                                        (boot::|parseAndEvalToString| expr)))))
+                                        (if eq-num-p
+                                            (boot::|parseAndEvalToStringEqNum| expr)
+                                            (boot::|parseAndEvalToString| expr))))))
                            (let ((extra (get-output-stream-string out-str))
                                  (res-str (cond
                                             ((null res) "")
