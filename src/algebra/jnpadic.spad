@@ -11,7 +11,7 @@
 ++ Description: This category provides representations of
 ++   the p-adic numbers using the Nemo Julia package.
 NMPadicNumberCategory(p) : Category == Definition where
-  p     : Integer
+  p : NMInteger
   NINT  ==> NMInteger
   I     ==> Integer
   NNI   ==> NonNegativeInteger
@@ -54,12 +54,11 @@ NMPadicNumberCategory(p) : Category == Definition where
 ++ Description:
 ++   This domain implements Zp, the p-adic completion of the integers
 ++   using the Nemo Julia package.
-NMExtendedPadicInteger(p : Integer, prec : Integer) :
+NMExtendedPadicInteger(p : NMInteger, prec : Integer) :
     Exports == Implementation where
   --unBalanced? : Boolean
   I    ==> Integer
   NNI  ==> NonNegativeInteger
-  OUT  ==> OutputForm
   NINT ==> NMInteger
   NFINT ==> NMFraction(NMInteger)
   Exports ==> NMPadicNumberCategory(p) with
@@ -160,7 +159,7 @@ NMExtendedPadicInteger(p : Integer, prec : Integer) :
 
     --euclideanSize(x) == order(retract x)
 
-    prime(x) == p
+    prime(x) == convert p
     precision(x) == prec
     sqrt(x) == junfunc("sqrt",x)
     valuation(x) == junfunc("valuation",x)
@@ -189,7 +188,7 @@ NMExtendedPadicInteger(p : Integer, prec : Integer) :
     --invModP : I -> I
     --invModP n == invmod(n, p)
 
-    modulus() == p
+    modulus() == convert p
     --moduloP x     == (empty? x => 0; frst x)
     --quotientByP x == (empty? x => x; rst x)
 
@@ -218,7 +217,7 @@ NMExtendedPadicInteger(p : Integer, prec : Integer) :
     coerce(i : NMInteger) == jlref(concat([EXPADICZPP, string(i),")"]))
     jnpadic(x : Integer) == jlref(concat([EXPADICZPP, string(x),")"]))
     jnpadic(i : NMInteger) == jlref(concat([EXPADICZPP, string(i),")"]))
-    coerce(x) : OUT == string(x) pretend OUT
+    coerce(x) : OutputForm == message(string(x))
 
 )abbrev domain NPADICZ NMPadicInteger
 ++ Author: Grégory Vanuxem
@@ -234,7 +233,7 @@ NMExtendedPadicInteger(p : Integer, prec : Integer) :
 ++   Implementation of Zp: p-adic numbers are represented as
 ++   sum(i = 0.., a[i] * p^i), where the a[i] lie in 0, 1, ..., (p - 1)
 ++   using the Nemo Julia package.
-NMPadicInteger(p : Integer) == NMExtendedPadicInteger(p, 64)
+NMPadicInteger(p : NMInteger) == NMExtendedPadicInteger(p, 64)
 
 )abbrev domain NXPADICR NMExtendedPadicRational
 ++ Author: Grégory Vanuxem
@@ -248,7 +247,7 @@ NMPadicInteger(p : Integer) == NMExtendedPadicInteger(p, 64)
 ++ References:
 ++ Description: This is a domain for Qp.
 NMExtendedPadicRational(p,deg,prec) : Exports == Implementation where
-  p     : Integer
+  p     : NMInteger
   deg   : Integer
   prec  : Integer
   NINT ==> NMInteger
@@ -256,7 +255,6 @@ NMExtendedPadicRational(p,deg,prec) : Exports == Implementation where
   PADIC ==> NMPadicNumberCategory(p)
   I     ==> Integer
   NNI   ==> NonNegativeInteger
-  OUT   ==> OutputForm
   RN    ==> Fraction Integer
   Exports ==> Join(NMCommutativeRing,
       QuotientFieldCategory(NMExtendedPadicInteger(p,prec)),
@@ -303,12 +301,12 @@ NMExtendedPadicRational(p,deg,prec) : Exports == Implementation where
     ++ jnpadic(x) returns x as the q-adic completion of the Nemo Integer.
     O : () -> %
     ++ O() returns the default Big-oh from domain parameters.
-    prime : % -> I
+    prime : % -> NINT
     ++ prime(x) returns the modulus used for x.
     ++ Convenience function.
     precision : % -> I
     ++ precision(x) returns the precision used for x.
-    modulus : () -> I
+    modulus : () -> NINT
       ++ \spad{modulus()} returns the value of p.
   Implementation ==> add
     import from JLUtilityFunctions
@@ -418,9 +416,9 @@ NMExtendedPadicRational(p,deg,prec) : Exports == Implementation where
   
     coerce(i : Integer) == jlref(concat([PADICQP, string(i),")"]))
     coerce(i : NMInteger) == jlref(concat([PADICQP, string(i),")"]))
-    jnpadic(x:Integer) == jlref(concat([PADICQP, string(x),")"]))
+    jnpadic(x : Integer) == jlref(concat([PADICQP, string(x),")"]))
     jnpadic(i : NMInteger) == jlref(concat([PADICQP, string(i),")"]))
-    coerce(x) : OUT == string(x) pretend OUT
+    coerce(x) : OutputForm == message(string(x))
 
 )abbrev domain NPADICR NMPadicRational
 ++ Author: Grégory Vanuxem
@@ -433,4 +431,4 @@ NMExtendedPadicRational(p,deg,prec) : Exports == Implementation where
 ++ Examples:
 ++ References:
 ++ Description: This is a domain for Qp.
-NMPadicRational(p : Integer) == NMExtendedPadicRational(p, 1, 64)
+NMPadicRational(p : NMInteger) == NMExtendedPadicRational(p, 1, 64)
