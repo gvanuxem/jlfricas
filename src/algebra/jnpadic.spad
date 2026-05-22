@@ -10,8 +10,7 @@
 ++ References:
 ++ Description: This category provides representations of
 ++   the p-adic numbers using the Nemo Julia package.
-NMPadicNumberCategory(p) : Category == Definition where
-  p : NMInteger
+NMPadicNumberCategory(R : NMCommutativeRing) : Category == Definition where
   NINT  ==> NMInteger
   I     ==> Integer
   NNI   ==> NonNegativeInteger
@@ -61,7 +60,7 @@ NMExtendedPadicInteger(p : NMInteger, prec : Integer) :
   NNI  ==> NonNegativeInteger
   NINT ==> NMInteger
   NFINT ==> NMFraction(NMInteger)
-  Exports ==> NMPadicNumberCategory(p) with
+  Exports ==> NMPadicNumberCategory(NMInteger) with
     "+" : (NINT, %) -> %
     ++ i + x is the addition of a Julia Nemo Integer
     ++ and a p-adic number.
