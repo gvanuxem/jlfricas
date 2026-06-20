@@ -1,0 +1,45 @@
+name: FriCAS CI on x64 Linux (with Julia support - Clozure CL based)
+
+on: [push, pull_request]
+permissions: {}
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+    - uses: actions/checkout@v6
+    - uses: julia-actions/setup-julia@v3
+    - name: install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install libgmp-dev libxpm-dev python3 python3-sphinx
+        wget https://github.com/roswell/roswell/releases/download/v26.02.116/roswell_26.02.116-1_amd64.deb
+        sudo dpkg -i roswell_26.02.116-1_amd64.deb
+        ros install ccl-bin && ros install hunchentoot yason queues
+    - name: install Julia libraries
+      run: |
+        julia -e "import Pkg;Pkg.add([\"Nemo\", \"Suppressor\", \"SpecialFunctions\", \"DataFrames\", \"Latexify\", \"LaTeXStrings\", \"Statistics\"])"
+    - name: configure
+      run: |       
+        ./configure --with-lisp='ros run' --enable-gmp --enable-julia --enable-hunchentoot --enable-mcp --enable-mathlink || cat config.log
+    - name: make
+      run: make
+    - name: make check
+      run: make check -j4 --output-sync
+    - name: make html doc
+      run: make -j4 --output-sync htmldoc
+    - name: Create artifact archives
+      run: |
+        rm -r target/*/src
+        mkdir jlfricas && mv target jlfricas/
+        tar -cjf jlFriCAS-linux-x86_64-${{ github.sha }}.tar.bz2 jlfricas/
+    - name: Upload Linux binary
+      uses: actions/upload-artifact@v7
+      with:
+        name: jlFriCAS-linux-x86_64-binary
+        path: jlFriCAS-linux-x86_64-${{ github.sha }}.tar.bz2
+
+
