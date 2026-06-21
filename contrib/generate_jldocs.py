@@ -14,7 +14,12 @@ For each constructor we run FriCAS in batch mode:
       FriCAS core entries.
 """
 
-import subprocess, re, os, textwrap
+import subprocess, re, os, textwrap, argparse
+
+parser = argparse.ArgumentParser(description="Build Markdown documentation for jlFriCAS constructors.")
+parser.add_argument("--ws", action="store_true", help="Also build WS* (Wolfram/MathLink) constructor documentation")
+parser.add_argument("--ws-only", action="store_true", help="Only build WS* (Wolfram/MathLink) constructor documentation")
+args = parser.parse_args()
 
 OUT_DIR = "docs/constructors"
 os.makedirs(OUT_DIR, exist_ok=True)
@@ -551,16 +556,26 @@ def render_md(name: str, kind: str, group: str, info: dict) -> str:
 
 # ── Main loop ─────────────────────────────────────────────────────────────────
 
-CONSTRUCTORS = [
-    *[(n, "Category", "JL — Native Julia") for n in JL_CATEGORIES],
-    *[(n, "Domain",   "JL — Native Julia") for n in JL_DOMAINS],
-    *[(n, "Package",  "JL — Native Julia") for n in JL_PACKAGES],
-    *[(n, "Category", "NM — Nemo (FLINT)") for n in NM_CATEGORIES],
-    *[(n, "Domain",   "NM — Nemo (FLINT)") for n in NM_DOMAINS],
-    *[(n, "Category", "WS — Wolfram/MathLink") for n in WS_CATEGORIES],
-    *[(n, "Domain",   "WS — Wolfram/MathLink") for n in WS_DOMAINS],
-    *[(n, "Package",  "WS — Wolfram/MathLink") for n in WS_PACKAGES],
-]
+if args.ws_only:
+    CONSTRUCTORS = [
+        *[(n, "Category", "WS — Wolfram/MathLink") for n in WS_CATEGORIES],
+        *[(n, "Domain",   "WS — Wolfram/MathLink") for n in WS_DOMAINS],
+        *[(n, "Package",  "WS — Wolfram/MathLink") for n in WS_PACKAGES],
+    ]
+else:
+    CONSTRUCTORS = [
+        *[(n, "Category", "JL — Native Julia") for n in JL_CATEGORIES],
+        *[(n, "Domain",   "JL — Native Julia") for n in JL_DOMAINS],
+        *[(n, "Package",  "JL — Native Julia") for n in JL_PACKAGES],
+        *[(n, "Category", "NM — Nemo (FLINT)") for n in NM_CATEGORIES],
+        *[(n, "Domain",   "NM — Nemo (FLINT)") for n in NM_DOMAINS],
+    ]
+    if args.ws:
+        CONSTRUCTORS += [
+            *[(n, "Category", "WS — Wolfram/MathLink") for n in WS_CATEGORIES],
+            *[(n, "Domain",   "WS — Wolfram/MathLink") for n in WS_DOMAINS],
+            *[(n, "Package",  "WS — Wolfram/MathLink") for n in WS_PACKAGES],
+        ]
 
 print(f"Generating documentation for {len(CONSTRUCTORS)} constructors …\n")
 

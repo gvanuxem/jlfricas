@@ -122,7 +122,9 @@ src/doc/util-ht
 src/doc/util.ht
 src/doc/viewports
 
-docs/constructors
+docs/constructors/JL*
+docs/constructors/NM*
+
 
 src/etc/gen-cpl.in
 

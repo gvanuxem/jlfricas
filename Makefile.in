@@ -200,7 +200,7 @@ install-contrib: install-src
 clean-local: clean-distdir
 	@-rm -f lastBuildDate
 	-rm -f stamp-*
-	-rm -f docs/constructors/*
+	-rm -f docs/constructors/{JL*,NM*}
 	-cd contrib/emacs && ${MAKE} clean
 	-rm -rf $(fricas_targetdir)
 	-rm -rf build/$(target)
