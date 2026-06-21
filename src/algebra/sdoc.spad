@@ -143,6 +143,19 @@ SpadDoc : Exports == Implementation where
       output("")$OutputPackage
       output(clean_tex(doc))$OutputPackage
 
+    format_signature(sig : SExpression) : String ==
+      l : List SExpression := destruct(sig)
+      empty?(l) => ""
+      target : String := formString(first(l))$Lisp
+      sources : List SExpression := rest(l)
+      empty?(sources) => concat(["() -> ", target])
+      #sources = 1 => concat([formString(first(sources))$Lisp, " -> ", target])
+      src_strs : List String := [formString(s)$Lisp for s in sources]
+      src_str : String := src_strs.1
+      for s in rest(src_strs) repeat
+        src_str := concat([src_str, ", ", s])
+      concat(["(", src_str, ") -> ", target])
+
     listOperationDocumentation(op : Symbol) : List(OutputForm) ==
       ops := search_operations(string op)
       docs := coerce(ops)@List(Record(name: Symbol,
@@ -153,14 +166,10 @@ SpadDoc : Exports == Implementation where
       for ops_rec in docs repeat
         for item in elt(ops_rec, sdl) repeat
           res_list := concat(res_list, message(clean_tex(elt(item, documentation))))
-          --PRINT(destruct(elt(item, signature)))$Lisp
-          --PRINT(elt(item, origin))$Lisp
-          --sl := cons(convert('Mapping)$SExpression,
-          --  destruct(elt(item, signature)))
-          --res_list := concat(res_list, message(concat ["Signature: ",
-          --  form2LispString(sl)$Lisp]))
-          --res_list := concat(res_list, message(concat ["From: ",
-          --  form2LispString(elt(item, origin))$Lisp]))
+          res_list := concat(res_list, message(concat ["Signature: ",
+            format_signature(elt(item, signature))]))
+          res_list := concat(res_list, message(concat ["From: ",
+            formString(elt(item, origin))$Lisp]))
           res_list := concat(res_list, coerce newline())
       res_list
 

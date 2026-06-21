@@ -327,7 +327,8 @@ NMAlgebraicNumber() : Exports == Implementation where
     jnanumber : NMFraction(NMInteger) -> %
     ++ jnanumber(q) returns q as a NMAlgebraicNumber.
     jnanumber : String -> %
-    ++ jnanumber(str) evaluates str in Julia that returns a NMAlgebraicNumber.
+    ++ jnanumber(str) evaluates str (which must return a Nemo AlgebraicNumber
+    ++ in Julia) and returns the corresponding NMAlgebraicNumber.
     QQbar : Integer -> %
     ++ QQbar(x) returns x as a NMAlgebraicNumber.
     QQbar : Fraction(Integer) -> %
@@ -335,7 +336,8 @@ NMAlgebraicNumber() : Exports == Implementation where
     QQbar : NMInteger -> %
     ++ QQbar(x) returns x as a NMAlgebraicNumber.
     QQbar : NMFraction(NMInteger) -> %
-    ++ jnanumber(q) returns q as a NMAlgebraicNumber.
+    ++ QQbar(q) returns q as a NMAlgebraicNumber.
+
   Implementation ==> add
     import from JLUtilityFunctions
     import from JLStringUtilities
