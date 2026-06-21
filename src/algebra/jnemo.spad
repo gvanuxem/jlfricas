@@ -329,11 +329,11 @@ NMAlgebraicNumber() : Exports == Implementation where
     jnanumber : String -> %
     ++ jnanumber(str) evaluates str in Julia that returns a NMAlgebraicNumber.
     QQbar : Integer -> %
-    ++ jnanumber(x) returns x as a NMAlgebraicNumber.
+    ++ QQbar(x) returns x as a NMAlgebraicNumber.
     QQbar : Fraction(Integer) -> %
-    ++ jnanumber(q) returns q as a NMAlgebraicNumber.
+    ++ QQbar(q) returns q as a NMAlgebraicNumber.
     QQbar : NMInteger -> %
-    ++ jnanumber(x) returns x as a NMAlgebraicNumber.
+    ++ QQbar(x) returns x as a NMAlgebraicNumber.
     QQbar : NMFraction(NMInteger) -> %
     ++ jnanumber(q) returns q as a NMAlgebraicNumber.
   Implementation ==> add

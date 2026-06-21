@@ -122,8 +122,6 @@ src/doc/util-ht
 src/doc/util.ht
 src/doc/viewports
 
-docs/constructors
-
 src/etc/gen-cpl.in
 
 src/interp/database.date

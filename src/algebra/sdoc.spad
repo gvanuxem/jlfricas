@@ -153,12 +153,14 @@ SpadDoc : Exports == Implementation where
       for ops_rec in docs repeat
         for item in elt(ops_rec, sdl) repeat
           res_list := concat(res_list, message(clean_tex(elt(item, documentation))))
-          sl := cons(convert('Mapping)$SExpression,
-            destruct(elt(item, signature)))
-          res_list := concat(res_list, message(concat ["Signature: ",
-            form2LispString(sl)$Lisp]))
-          res_list := concat(res_list, message(concat ["From: ",
-            form2LispString(elt(item, origin))$Lisp]))
+          --PRINT(destruct(elt(item, signature)))$Lisp
+          --PRINT(elt(item, origin))$Lisp
+          --sl := cons(convert('Mapping)$SExpression,
+          --  destruct(elt(item, signature)))
+          --res_list := concat(res_list, message(concat ["Signature: ",
+          --  form2LispString(sl)$Lisp]))
+          --res_list := concat(res_list, message(concat ["From: ",
+          --  form2LispString(elt(item, origin))$Lisp]))
           res_list := concat(res_list, coerce newline())
       res_list
 
