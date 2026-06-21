@@ -443,8 +443,8 @@ WSMatrix(E : WSRing) : Exports == Implementation where
       ++ invertIfCan(m) returns the inverse of the matrix m.
       ++ If the matrix is not invertible, "failed" is returned.
       ++ Error: if the matrix is not square.
-    generalizedInverse : % -> %
-    ++ generalizedInverse(m) computes the pseudo inverse of m also known as
+    pseudoInverse : % -> %
+    ++ pseudoInverse(m) computes the pseudo inverse of m also known as
     ++ Moore-Penrose inverse.
     linearSolve : (%, %) -> %
     ++ linearSolve(mat, b) finds x, solution of the equation mat * x = b.
@@ -642,7 +642,7 @@ WSMatrix(E : WSRing) : Exports == Implementation where
     inverse(mat) ==
       not square?(mat) => error "inverse$WSMatrix: not a square matrix"
       junfunc("W_"Inverse_"(", mat)
-    generalizedInverse(mat) == junfunc("W_"PseudoInverse_"(", mat)
+    pseudoInverse(mat) == junfunc("W_"PseudoInverse_"(", mat)
     linearSolve(mat, b) == jbinfunc("W_"LinearSolve_"(", mat, b)
     matrixFunction(func, mat) == jbinfunc("W_"MatrixFunction_"(", func, mat)
 

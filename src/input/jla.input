@@ -93,10 +93,10 @@ esys := eigenSystem(a_esys);
 -- to implement here. We will just check if the function runs.
 testEquals("nrows(esys.leftVectors)", "4")
 
-testcase "mpInverse (Moore-Penrose pseudo-inverse)"
+testcase "pseudoInverse (Moore-Penrose pseudo-inverse)"
 
 a_mp := nrand(4,4)$JF64MAT;
-a_pinv := mpInverse(a_mp);
+a_pinv := pseudoInverse(a_mp);
 testTrue("jlApprox?(a_mp, a_mp * a_pinv * a_mp)")
 testTrue("jlApprox?(a_pinv, a_pinv * a_mp * a_pinv)")
 

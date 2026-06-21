@@ -116,8 +116,8 @@ JLF64LinearAlgebra() : Exports == Implementation where
     luReorder! : (JF64MAT, JI64VEC) -> JF64MAT
     ++ luReorder!(mat, ipiv) returns mat reordered
     ++ in-place using the ipiv pivot indices.
-    mpInverse : JF64MAT -> JF64MAT
-    ++ mpInverse(m) returns the Moore-Penrose pseudo inverse of m.
+    pseudoInverse : JF64MAT -> JF64MAT
+    ++ pseudoInverse(m) returns the Moore-Penrose pseudo inverse of m.
     sqrt : JF64MAT -> JCF64MAT
     ++ sqrt(m) returns the principal square root of m.
     exp : JF64MAT -> JF64MAT
@@ -300,7 +300,7 @@ JLF64LinearAlgebra() : Exports == Implementation where
         jlVector(b), nrows(b))
       b
 
-    mpInverse(a) ==
+    pseudoInverse(a) ==
       mpinv := qnew(ncols(a), nrows(a))$JF64MAT
       jlApplyFunction!("pinv", jlVector(mpinv),
         jlVector(a), nrows(a))
@@ -481,8 +481,8 @@ JLCF64LinearAlgebra() : Exports == Implementation where
     ++ m to save memory space.
     eigvecs : JCF64MAT -> JCF64MAT
     ++ eigvecs(m) returns the eigen vectors of m.
-    mpInverse : JCF64MAT -> JCF64MAT
-    ++ mpInverse(m) returns the Moore-Penrose pseudo inverse of m.
+    pseudoInverse : JCF64MAT -> JCF64MAT
+    ++ pseudoInverse(m) returns the Moore-Penrose pseudo inverse of m.
     sqrt : JCF64MAT -> JCF64MAT
     ++ sqrt(m) returns the principal square root of m.
     exp : JCF64MAT -> JCF64MAT
@@ -548,7 +548,7 @@ JLCF64LinearAlgebra() : Exports == Implementation where
         jlVector(b), nrows(b))
       b
 
-    mpInverse(a) ==
+    pseudoInverse(a) ==
       mpinv := qnew(ncols(a), nrows(a))$JCF64MAT
       jlApplyFunction!("pinv", jlVector(mpinv),
         jlVector(a), nrows(a))

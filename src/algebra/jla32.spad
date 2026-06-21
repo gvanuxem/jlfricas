@@ -115,8 +115,8 @@ JLF32LinearAlgebra() : Exports == Implementation where
     luReorder! : (JF32MAT, JI64VEC) -> JF32MAT
     ++ luReorder!(mat, ipiv) returns mat reordered
     ++ in-place using the ipiv pivot indices.
-    mpInverse : JF32MAT -> JF32MAT
-    ++ mpInverse(m) returns the Moore-Penrose pseudo inverse of m.
+    pseudoInverse : JF32MAT -> JF32MAT
+    ++ pseudoInverse(m) returns the Moore-Penrose pseudo inverse of m.
     sqrt : JF32MAT -> JCF32MAT
     ++ sqrt(m) returns the principal square root of m.
     exp : JF32MAT -> JF32MAT
@@ -293,7 +293,7 @@ JLF32LinearAlgebra() : Exports == Implementation where
         jlVector(b), nrows(b))
       b
 
-    mpInverse(a) ==
+    pseudoInverse(a) ==
       mpinv := qnew(ncols(a), nrows(a))$JF32MAT
       jlApplyFunction!("pinv", jlVector(mpinv),
         jlVector(a), nrows(a))
@@ -475,8 +475,8 @@ JLCF32LinearAlgebra() : Exports == Implementation where
     ++ m to save memory space.
     eigvecs : JCF32MAT -> JCF32MAT
     ++ eigvecs(m) returns the eigen vectors of m.
-    mpInverse : JCF32MAT -> JCF32MAT
-    ++ mpInverse(m) returns the Moore-Penrose pseudo inverse of m.
+    pseudoInverse : JCF32MAT -> JCF32MAT
+    ++ pseudoInverse(m) returns the Moore-Penrose pseudo inverse of m.
     sqrt : JCF32MAT -> JCF32MAT
     ++ sqrt(m) returns the principal square root of m.
     exp : JCF32MAT -> JCF32MAT
@@ -542,7 +542,7 @@ JLCF32LinearAlgebra() : Exports == Implementation where
         jlVector(b), nrows(b))
       b
 
-    mpInverse(a) ==
+    pseudoInverse(a) ==
       mpinv := qnew(ncols(a), nrows(a))$JCF32MAT
       jlApplyFunction!("pinv", jlVector(mpinv),
         jlVector(a), nrows(a))

@@ -53,7 +53,7 @@ consult <https://fricas.github.io>.
 To build FriCAS with Julia support, the <code>julia</code> executable needs to be available in your PATH, and a simple <code>./configure --enable-julia && make && sudo make install</code> should do the trick. We require Julia 1.10 or higher. Please see https://julialang.org/downloads/ for instructions on how to obtain Julia for your system. The required Julia packages are (see the Julia package manager or if you install them later using `jlAddPackage` restart jlFriCAS):
  - [Nemo](https://nemocas.github.io/Nemo.jl/stable/) (must be installed)
  - [Suppressor](https://github.com/JuliaIO/Suppressor.jl) (must be installed)
- - [SpecialFunctions](https://specialfunctions.juliamath.org/stable/) 
+ - [SpecialFunctions](https://specialfunctions.juliamath.org/stable/) (must be installed)
  - [StyledStrings](https://julialang.github.io/StyledStrings.jl/dev/) (if it is not already installed in Julia by default)
 
  And optionnally:

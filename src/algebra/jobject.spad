@@ -1675,6 +1675,14 @@ JLMatrix(R : JLObjectRing) : Exports == Implementation where
                 JLMatrixCategory(R, Row, Col)) with
     new : (NNI, NNI, R) -> %
     ++ new(m, n, x) creates a matrix of size m by n with all elements x.
+    smith : JLMatrix(NMInteger) -> JLMatrix(NMInteger)
+    ++ smith(mat) returns the Smith normal form of mat.
+    smithDiagonal : JLMatrix(NMInteger) -> JLMatrix(NMInteger)
+    ++ smithDiagonal(mat) returns the Smith normal form of
+    ++ the diagonal matrix mat. There is no checking that mat
+    ++ is a diagonal matrix.
+    hermite : JLMatrix(NMInteger) -> JLMatrix(NMInteger)
+    ++ hermite(mat) returns the Hermite normal form of mat.
     if R has NMRing and (R has IntegerNumberSystem or
         R has Algebra NMFraction(NINT)) then
       radicalEigenvalues : % -> JLVector(NMAlgebraicNumber)
@@ -1928,6 +1936,11 @@ JLMatrix(R : JLObjectRing) : Exports == Implementation where
         jlref(concat ["eigenvalues(", getind(m), ")"])$JLVector(R)
       eigenvaluesWithMultiplicities(m) ==
         jlref(concat ["eigenvalues_with_multiplicities(", getind(m), ")"])$JLVector(JLObjTuple)
+    
+    smith(m : JLMatrix(NMInteger)) : JLMatrix(NMInteger) == junfunc("snf", m)
+    smithDiagonal(m : JLMatrix(NMInteger)) : JLMatrix(NMInteger) == junfunc("snf_diagonal", m)
+    hermite(m: JLMatrix(NMInteger)) : JLMatrix(NMInteger) == junfunc("hnf", m)
+  
     square?(m) == nrows(m) = ncols(m)
     zero?(m) == jlEvalString(concat(["iszero(", getind(m), ")"]))
     diagonal?(m) == jlEvalString(concat(["is_diagonal(", getind(m), ")"]))
