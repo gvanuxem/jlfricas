@@ -1692,23 +1692,9 @@ JLMatrix(R : JLObjectRing) : Exports == Implementation where
       ++ radicalEigenvaluesWithMultiplicities(mat) returns a Julia vector
       ++ containing Julia tuples of the eigenvalues and their multiplicities.
       ++ The tuples are of internal type (NMAlgebraicNumber, JLObjInt64).
-    if R has NMField then
-      eigenSpaces : (%, JLSymbol) -> JLObjDict
-      ++ eigenSpace(mat, side) returns a Julia Dict containing the :left or :right side of the eigen
-      ++ space of mat associated to the eigenvalue key.
-      ++ \example{a:=matrix([[111::NPF(127),91,50],[31,6,97],[117,63,6]])$JLMatrix(NPF(127))}
-      ++ \example{eigenSpaces(a, "left")}
-      eigenvalues: % -> JLVector(R)
-      ++ eigenvalues(mat) returns a Julia vector containing the eigenvalues of mat.
-      ++ \example{a:=matrix([[111::NPF(127),91,50],[31,6,97],[117,63,6]])$JLMatrix(NPF(127))}
-      ++ \example{eigenvalues(a)}
-      eigenvaluesWithMultiplicities: % -> JLVector(JLObjTuple)
-      ++ eigenvaluesWithMultiplicities(mat) returns a Julia vector
-      ++ containing Julia tuples of the eigenvalues and their multiplicities.
-      ++ The tuples are of internal type (%, JLObjInt64).
-      ++ \example{a:=matrix([[111::NPF(127),91,50],[31,6,97],[117,63,6]])$JLMatrix(NPF(127))}
-      ++ \example{eigenvaluesWithMultiplicities(a)}
     if R has NMRing then
+      gram : % -> %
+      ++ gram(mat) returns the Gram matrix of mat.
       eigenSpaces : (String, %, JLSymbol) -> JLObjDict
       ++ eigenSpaces(JRing, mat, side) returns a Julia Dict containing the :left or :right side of the eigen
       ++ space of mat associated to the eigenvalue key and the field JRing.
@@ -1725,6 +1711,27 @@ JLMatrix(R : JLObjectRing) : Exports == Implementation where
       ++ in the field JRing. The tuples are of internal type (JLRing, JLObjInt64).
       ++ \example{a:=matrix([[111::NINT,91,50],[31,6,97],[117,63,6]])$JLMatrix(NINT)}
       ++ \example{eigenvaluesWithMultiplicities(jlNMRing()$NCF, a)}
+      if R has Finite then
+        howellForm : % -> %
+        ++ howellForm(mat) returns the Howell normal form of mat. Only supported for NMIntegerMod.
+        strongEchelonForm : % -> %
+        ++ strongEchelonForm(mat) returns the strong echelon form of mat. Only supported for NMIntegerMod.
+    if R has NMField then
+      eigenSpaces : (%, JLSymbol) -> JLObjDict
+      ++ eigenSpace(mat, side) returns a Julia Dict containing the :left or :right side of the eigen
+      ++ space of mat associated to the eigenvalue key.
+      ++ \example{a:=matrix([[111::NPF(127),91,50],[31,6,97],[117,63,6]])$JLMatrix(NPF(127))}
+      ++ \example{eigenSpaces(a, "left")}
+      eigenvalues: % -> JLVector(R)
+      ++ eigenvalues(mat) returns a Julia vector containing the eigenvalues of mat.
+      ++ \example{a:=matrix([[111::NPF(127),91,50],[31,6,97],[117,63,6]])$JLMatrix(NPF(127))}
+      ++ \example{eigenvalues(a)}
+      eigenvaluesWithMultiplicities: % -> JLVector(JLObjTuple)
+      ++ eigenvaluesWithMultiplicities(mat) returns a Julia vector
+      ++ containing Julia tuples of the eigenvalues and their multiplicities.
+      ++ The tuples are of internal type (%, JLObjInt64).
+      ++ \example{a:=matrix([[111::NPF(127),91,50],[31,6,97],[117,63,6]])$JLMatrix(NPF(127))}
+      ++ \example{eigenvaluesWithMultiplicities(a)}
     if R has IntegralDomain then
       invertIfCan : % -> Union(%,"failed")
       ++ invertIfCan(m) returns the inverse of the matrix m.
@@ -1736,8 +1743,7 @@ JLMatrix(R : JLObjectRing) : Exports == Implementation where
       ++ with default parameters.
       ++ Two numbers compare equal if their relative distance
       ++ or their absolute distance is within tolerance bounds.
-      if R has Join(JLObjectRing, FloatingPointSystem,
-          arbitraryPrecision) then
+      if R has Join(FloatingPointSystem, arbitraryPrecision) then
         urand01 : (m : PI, n : PI) -> JLMatrix(JLFloat)
         ++ urand01(m,n) returns a JLMatrix of size (m,n) with
         ++ uniformly distributed random number contained in [0,1].
@@ -1755,7 +1761,7 @@ JLMatrix(R : JLObjectRing) : Exports == Implementation where
         ++ distributed random numbers.
         ++ \example{mat := exprand(4,4)$JLMatrix(JLFloat)}
         ++ \example{svd := jlApply("svd", mat)}
-      if R has Join(JLObjectRing, ComplexCategory(JLFloat)) then
+      if R has ComplexCategory(JLFloat) then
         urand01 : (m : PI, n : PI) -> JLMatrix(JLComplexFloat)
         ++ urand01(m,n) returns a JLMatrix of size (m,n) with
         ++ uniformly distributed random number contained in
@@ -1815,7 +1821,6 @@ JLMatrix(R : JLObjectRing) : Exports == Implementation where
     op_of_Ring : Symbol := CAR(devaluate(R)$Lisp)$Lisp
 
     Rep := SExpression
-
     NRing : String := string(op_of_Ring)
 
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
@@ -1846,6 +1851,12 @@ JLMatrix(R : JLObjectRing) : Exports == Implementation where
       eigenvaluesWithMultiplicities(jlring, mat) ==
         jlref(concat(["eigenvalues_with_multiplicities(", jlring, ",",
           getind(mat), ")"]))
+      gram(mat) == junfunc("gram", mat)
+      if R has Finite then
+        howellForm(mat) ==
+          jlref(concat(["howell_form(", getind(mat), ")"]))
+        strongEchelonForm(mat) ==
+          jlref(concat(["strong_echelon_form(", getind(mat), ")"]))
     else
       new(rows, cols, a : R) ==
         jlref(concat(["fill(", getind(a), ",(",
