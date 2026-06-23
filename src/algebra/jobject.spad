@@ -1662,6 +1662,7 @@ JLVectorFunctions2(A, B) : Exports == Implementation where
 ++ https://nemocas.github.io/Nemo.jl/stable/developer/interfaces/#Column-major-vs-row-major-matrices
 ++ for more information.
 -- TODO: to be improved for partially implemented JLObjectType
+-- TODO: dissociate in two domains (Julia/Nemo)
 JLMatrix(R : JLObjectRing) : Exports == Implementation where
   PI      ==> PositiveInteger
   NNI     ==> NonNegativeInteger
@@ -1675,14 +1676,39 @@ JLMatrix(R : JLObjectRing) : Exports == Implementation where
                 JLMatrixCategory(R, Row, Col)) with
     new : (NNI, NNI, R) -> %
     ++ new(m, n, x) creates a matrix of size m by n with all elements x.
-    smith : JLMatrix(NMInteger) -> JLMatrix(NMInteger)
+    smith : JLMatrix(NINT) -> JLMatrix(NINT)
     ++ smith(mat) returns the Smith normal form of mat.
-    smithDiagonal : JLMatrix(NMInteger) -> JLMatrix(NMInteger)
+    smithDiagonal : JLMatrix(NINT) -> JLMatrix(NINT)
     ++ smithDiagonal(mat) returns the Smith normal form of
-    ++ the diagonal matrix mat. There is no checking that mat
-    ++ is a diagonal matrix.
-    hermite : JLMatrix(NMInteger) -> JLMatrix(NMInteger)
+    ++ the diagonal matrix mat.
+    gramSchmidtOrthogonalisation : JLMatrix(NMFraction(NINT)) ->
+        JLMatrix(NMFraction(NINT))
+    ++ gramSchmidtOrthogonalisation(mat) returns the Gram-Schmidt
+    ++ orthogonalization of mat.
+    hermite : JLMatrix(NINT) -> JLMatrix(NINT)
     ++ hermite(mat) returns the Hermite normal form of mat.
+    hermiteModular : (JLMatrix(NINT), NINT) -> JLMatrix(NINT)
+    ++ hermiteModular(mat, n) returns the Hermite normal form of mat
+    ++ where n is a multiple of the determinant of the nonzero rows of mat.
+    hermiteModularElDiv : (JLMatrix(NINT), NINT) -> JLMatrix(NINT)
+    ++ hermiteModularElDiv(mat, n) returns the Hermite normal form of mat
+    ++ where n is a multiple of the largest elementary divisor of the
+    ++ full rank mat.
+    lll : JLMatrix(NINT) -> JLMatrix(NINT)
+    ++ lll(mat) returns the LLL-reduced lattice basis reduction of mat.
+    ++ lll! can also be used in place, see jlApply.
+    lll : (JLMatrix(NINT), JLObject) -> JLMatrix(NINT)
+    ++ lll(mat, cont) returns the LLL-reduced lattice basis reduction of mat
+    ++ with context cont. See the Nemo documentation for more information
+    ++ on the context cont. lll! can also be used inplace, see jlApply.
+    lllGram : JLMatrix(NINT) -> JLMatrix(NINT)
+    ++ lllGram(mat) returns the Gram LLL-reduced lattice basis reduction of
+    ++ the Gram matrix mat. lllGram! can also be used inplace, see jlApply.
+    lllGram : (JLMatrix(NINT), JLObject) -> JLMatrix(NINT)
+    ++ lllGram(mat, cont) returns the Gram LLL-reduced lattice basis
+    ++ reduction of the Gram matrix mat with context cont. See the Nemo
+    ++ documentation for more information about the context cont.
+    ++ lllGram! can also be used inplace, see jlApply.
     if R has NMRing and (R has IntegerNumberSystem or
         R has Algebra NMFraction(NINT)) then
       radicalEigenvalues : % -> JLVector(NMAlgebraicNumber)
@@ -1713,9 +1739,11 @@ JLMatrix(R : JLObjectRing) : Exports == Implementation where
       ++ \example{eigenvaluesWithMultiplicities(jlNMRing()$NCF, a)}
       if R has Finite then
         howellForm : % -> %
-        ++ howellForm(mat) returns the Howell normal form of mat. Only supported for NMIntegerMod.
+        ++ howellForm(mat) returns the Howell normal form of mat.
+        ++ Only supported for NMIntegerMod.
         strongEchelonForm : % -> %
-        ++ strongEchelonForm(mat) returns the strong echelon form of mat. Only supported for NMIntegerMod.
+        ++ strongEchelonForm(mat) returns the strong echelon form of mat.
+        ++ Only supported for NMIntegerMod.
     if R has NMField then
       eigenSpaces : (%, JLSymbol) -> JLObjDict
       ++ eigenSpace(mat, side) returns a Julia Dict containing the :left or :right side of the eigen
@@ -1818,10 +1846,8 @@ JLMatrix(R : JLObjectRing) : Exports == Implementation where
     import from JLUtilityFunctions
 
     jlInitialize(true)
-    op_of_Ring : Symbol := CAR(devaluate(R)$Lisp)$Lisp
 
     Rep := SExpression
-    NRing : String := string(op_of_Ring)
 
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
@@ -1853,10 +1879,8 @@ JLMatrix(R : JLObjectRing) : Exports == Implementation where
           getind(mat), ")"]))
       gram(mat) == junfunc("gram", mat)
       if R has Finite then
-        howellForm(mat) ==
-          jlref(concat(["howell_form(", getind(mat), ")"]))
-        strongEchelonForm(mat) ==
-          jlref(concat(["strong_echelon_form(", getind(mat), ")"]))
+        howellForm(mat) == junfunc("howell_form",mat)
+        strongEchelonForm(mat) == junfunc("strong_echelon_form", mat)
     else
       new(rows, cols, a : R) ==
         jlref(concat(["fill(", getind(a), ",(",
@@ -1933,7 +1957,7 @@ JLMatrix(R : JLObjectRing) : Exports == Implementation where
         nrand(rows, cols) : JLMatrix(JLComplexFloat) ==
           jlref(concat(["randn(Complex{BigFloat},", string(rows), ",",
             string(cols),")"]))
-    else if R is NMInteger or R is NMFraction(NMInteger) then
+    else if R is NINT or R is NMFraction(NINT) then
       radicalEigenvalues(m) == jlref(concat ["eigenvalues(QQBar,",
         getind(m), ")"])$JLVector(NMAlgebraicNumber)
       radicalEigenvaluesWithMultiplicities(m) ==
@@ -1947,11 +1971,25 @@ JLMatrix(R : JLObjectRing) : Exports == Implementation where
         jlref(concat ["eigenvalues(", getind(m), ")"])$JLVector(R)
       eigenvaluesWithMultiplicities(m) ==
         jlref(concat ["eigenvalues_with_multiplicities(", getind(m), ")"])$JLVector(JLObjTuple)
-    
-    smith(m : JLMatrix(NMInteger)) : JLMatrix(NMInteger) == junfunc("snf", m)
-    smithDiagonal(m : JLMatrix(NMInteger)) : JLMatrix(NMInteger) == junfunc("snf_diagonal", m)
-    hermite(m: JLMatrix(NMInteger)) : JLMatrix(NMInteger) == junfunc("hnf", m)
-  
+
+    smith(m : JLMatrix(NINT)) : JLMatrix(NINT) == junfunc("snf", m)
+    smithDiagonal(m : JLMatrix(NINT)) : JLMatrix(NINT) ==
+      diagonal?(m) => junfunc("snf_diagonal", m)
+      error "smithDiagonal: not a diagonal matrix"
+    gramSchmidtOrthogonalisation(m : JLMatrix(NMFraction(NINT))) : JLMatrix(NMFraction(NINT))==
+      junfunc("gram_schmidt_orthogonalisation", m)
+    hermite(m: JLMatrix(NINT)) : JLMatrix(NINT) == junfunc("hnf", m)
+    hermiteModular(m : JLMatrix(NINT), n : NINT) : JLMatrix(NINT) ==
+      jbinfunc("hnf_modular", m, n)
+    hermiteModularElDiv(m : JLMatrix(NINT), n : NINT) : JLMatrix(NINT) ==
+      jbinfunc("hnf_modular_eldiv", m, n)
+    lll(mat : JLMatrix(NINT)) : JLMatrix(NINT) == junfunc("lll", mat)
+    lll(mat : JLMatrix(NINT), cont : JLObject) : JLMatrix(NINT) ==
+      jbinfunc("lll", mat, cont)
+    lllGram(mat : JLMatrix(NINT)) : JLMatrix(NINT) == junfunc("lll_gram", mat)
+    lllGram(mat : JLMatrix(NINT), cont : JLObject) : JLMatrix(NINT) ==
+      jbinfunc("lll_gram", mat, cont)
+
     square?(m) == nrows(m) = ncols(m)
     zero?(m) == jlEvalString(concat(["iszero(", getind(m), ")"]))
     diagonal?(m) == jlEvalString(concat(["is_diagonal(", getind(m), ")"]))
