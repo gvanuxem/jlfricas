@@ -46,47 +46,47 @@ Julia Wolfram Symbolic matrices using the MathLink Julia package.
  empty : () -> %                                        empty? : % -> Boolean
  eq? : (%, %) -> Boolean                                extract : (%, WSExpression) -> %
  fill! : (%, E) -> %                                    first : % -> WSVector(E)
- generalizedInverse : % -> %                            hash : % -> SingleInteger if E has HASHABL
- hermitian? : % -> Boolean                              hessenberg : % -> Record(p: %,h: %)
- horizConcat : (%, %) -> %                              horizConcat : List(%) -> %
- horizSplit : (%, PositiveInteger) -> List(%)           insert : (%, WSVector(E), WSInteger) -> %
- intersection : (%, %) -> %                             inverse : % -> %
- jWSAggregate : List(WSVector(E)) -> %                  jWSInterpret : (String, String, String) -> %
- jWSInterpret : (String, String) -> %                   jWSInterpret : String -> %
- jWSMatrix : String -> %                                jlAbout : % -> Void
- jlApply : (String, %, %, %, %, %) -> JLObject          jlApply : (String, %, %, %, %) -> JLObject
- jlApply : (String, %, %, %) -> JLObject                jlApply : (String, %, %) -> JLObject
- jlApply : (String, %) -> JLObject                      jlDisplay : % -> Void
- jlDump : JLObject -> Void                              jlEval : % -> %
- jlFieldNames : % -> JLObject                           jlGetField : (%, JLSymbol) -> JLObject
- jlGetJuliaIndex : % -> String                          jlGetProperty : (%, JLSymbol) -> JLObject
- jlHead : % -> WSSymbol                                 jlId : % -> JLInt64
- jlObject : () -> String                                jlPropertyNames : % -> JLObject
- jlRef : % -> SExpression                               jlSymbolic : % -> String
- jlText : (%, String) -> List(String)                   jlType : % -> Symbol
- jlimref : String -> %                                  jlref : String -> %
- join : (%, %) -> %                                     jordan : % -> Record(s: %,j: %)
- kroneckerProduct : (%, %) -> % if E has SRNG           kroneckerProduct : List(%) -> % if E has SRNG
- kroneckerSum : (%, %) -> %                             kroneckerSum : List(%) -> %
- last : % -> WSVector(E)                                latex : % -> String
- length : % -> WSInteger                                less? : (%, NonNegativeInteger) -> Boolean
- linearSolve : (%, %) -> %                              listOfLists : % -> List(List(E))
- lu : % -> Record(lu: %,p: %,c: %)                      map : ((E -> E), %) -> %
- map : (((E, E) -> E), %, %) -> %                       map : (((E, E) -> E), %, %, E) -> %
- map! : ((E -> E), %) -> %                              matrix : WSVector(E) -> %
- matrix : List(List(E)) -> %                            maxColIndex : % -> Integer
- maxRowIndex : % -> Integer                             members : % -> List(E) if % has ATFINAG
- minColIndex : % -> Integer                             minRowIndex : % -> Integer
- minordet : % -> E if E has COMRING                     minors : (%, WSInteger) -> %
- minors : % -> %                                        missing? : % -> Boolean
- more? : (%, NonNegativeInteger) -> Boolean             mutable? : % -> Boolean
- ncols : % -> NonNegativeInteger                        norm : (%, WSExpression) -> E
- norm : % -> E                                          nothing? : % -> Boolean
- nrows : % -> NonNegativeInteger                        nullSpace : % -> WSList(WSVector(E))
- numeric : (%, PositiveInteger) -> WSExpression         numeric : % -> WSExpression
- numeric? : % -> Boolean                                part : (%, WSInteger) -> WSVector(E)
- parts : % -> List(E)                                   permanent : % -> E
- positiveDefinite? : % -> Boolean                       prepend : (%, WSVector(E)) -> %
+ hash : % -> SingleInteger if E has HASHABL             hermitian? : % -> Boolean
+ hessenberg : % -> Record(p: %,h: %)                    horizConcat : (%, %) -> %
+ horizConcat : List(%) -> %                             horizSplit : (%, PositiveInteger) -> List(%)
+ insert : (%, WSVector(E), WSInteger) -> %              intersection : (%, %) -> %
+ inverse : % -> %                                       jWSAggregate : List(WSVector(E)) -> %
+ jWSInterpret : (String, String, String) -> %           jWSInterpret : (String, String) -> %
+ jWSInterpret : String -> %                             jWSMatrix : String -> %
+ jlAbout : % -> Void                                    jlApply : (String, %, %, %, %, %) -> JLObject
+ jlApply : (String, %, %, %, %) -> JLObject             jlApply : (String, %, %, %) -> JLObject
+ jlApply : (String, %, %) -> JLObject                   jlApply : (String, %) -> JLObject
+ jlDisplay : % -> Void                                  jlDump : JLObject -> Void
+ jlEval : % -> %                                        jlFieldNames : % -> JLObject
+ jlGetField : (%, JLSymbol) -> JLObject                 jlGetJuliaIndex : % -> String
+ jlGetProperty : (%, JLSymbol) -> JLObject              jlHead : % -> WSSymbol
+ jlId : % -> JLInt64                                    jlObject : () -> String
+ jlPropertyNames : % -> JLObject                        jlRef : % -> SExpression
+ jlSymbolic : % -> String                               jlText : (%, String) -> List(String)
+ jlType : % -> Symbol                                   jlimref : String -> %
+ jlref : String -> %                                    join : (%, %) -> %
+ jordan : % -> Record(s: %,j: %)                        kroneckerProduct : (%, %) -> % if E has SRNG
+ kroneckerProduct : List(%) -> % if E has SRNG          kroneckerSum : (%, %) -> %
+ kroneckerSum : List(%) -> %                            last : % -> WSVector(E)
+ latex : % -> String                                    length : % -> WSInteger
+ less? : (%, NonNegativeInteger) -> Boolean             linearSolve : (%, %) -> %
+ listOfLists : % -> List(List(E))                       lu : % -> Record(lu: %,p: %,c: %)
+ map : ((E -> E), %) -> %                               map : (((E, E) -> E), %, %) -> %
+ map : (((E, E) -> E), %, %, E) -> %                    map! : ((E -> E), %) -> %
+ matrix : WSVector(E) -> %                              matrix : List(List(E)) -> %
+ maxColIndex : % -> Integer                             maxRowIndex : % -> Integer
+ members : % -> List(E) if % has ATFINAG                minColIndex : % -> Integer
+ minRowIndex : % -> Integer                             minordet : % -> E if E has COMRING
+ minors : (%, WSInteger) -> %                           minors : % -> %
+ missing? : % -> Boolean                                more? : (%, NonNegativeInteger) -> Boolean
+ mutable? : % -> Boolean                                ncols : % -> NonNegativeInteger
+ norm : (%, WSExpression) -> E                          norm : % -> E
+ nothing? : % -> Boolean                                nrows : % -> NonNegativeInteger
+ nullSpace : % -> WSList(WSVector(E))                   numeric : (%, PositiveInteger) -> WSExpression
+ numeric : % -> WSExpression                            numeric? : % -> Boolean
+ part : (%, WSInteger) -> WSVector(E)                   parts : % -> List(E)
+ permanent : % -> E                                     positiveDefinite? : % -> Boolean
+ prepend : (%, WSVector(E)) -> %                        pseudoInverse : % -> %
  qelt : (%, Integer, Integer) -> E                      qelt : (%, Integer) -> WSVector(E)
  qr : % -> Record(q: %,r: %)                            qsetelt : (%, Integer, Integer, E) -> %
  qsetelt : (%, Integer, WSVector(E)) -> %               qsetelt! : (%, Integer, Integer, E) -> E
@@ -242,12 +242,6 @@ elt(mat, m, n) returns the element (m,n) of the matrix mat.
 
 - **Signature**: `(%, Integer, Integer) -> E`
 
-### `generalizedInverse` &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L446)\]
-
-generalizedInverse(m) computes the pseudo inverse of m also known as Moore-Penrose inverse.
-
-- **Signature**: `% -> %`
-
 ### `hermitian?` &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L370)\]
 
 hermitian?(m) checks whether or not m is hermitian.
@@ -267,10 +261,6 @@ inverse(m) computes the inverse of m. For example:
 **Example**:
 ```fricas
 m:=jWSMatrix("{{a, b}, {b, a}}")@WSMAT(WSEXPR)
-```
-
-**Example**:
-```fricas
 inverse m
 ```
 
@@ -319,10 +309,6 @@ matrixFunction(func, m) applies the matrix function func, if available, to the m
 **Example**:
 ```fricas
 m := jWSMatri x("{{1.2, 1.7},{1.12, -2.1}}")@WSMAT(WSREAL)
-```
-
-**Example**:
-```fricas
 matrixFunction("Sqrt", m)
 ```
 
@@ -366,6 +352,12 @@ positiveDefinite?(m) checks whether or not m is positive definite.
 
 - **Signature**: `% -> Boolean`
 
+### `pseudoInverse` &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L446)\]
+
+pseudoInverse(m) computes the pseudo inverse of m also known as Moore-Penrose inverse.
+
+- **Signature**: `% -> %`
+
 ### `qelt` &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L401)\]
 
 qelt(mat, m, n) returns the element (m,n) of the matrix mat. No checks are done at the FriCAS level.
@@ -397,10 +389,6 @@ randomComplexMatrix(range, dims) returns a random matrix with random complex num
 **Example**:
 ```fricas
 range:=jWSList("{1+I}")@WSLIST(WSCPLX)
-```
-
-**Example**:
-```fricas
 randomComplexMatrix(range,jWSList(" {3,3}")$WSLIST(WSINT))@WSMAT(WSCPLX)
 ```
 
@@ -413,10 +401,6 @@ randomRealMatrix(range, dims) returns a random matrix with random numbers in the
 **Example**:
 ```fricas
 range := jWSList("{-5,5}")$WSLIST(WSREAL)
-```
-
-**Example**:
-```fricas
 randomRealMatrix(range,jWSList("{3,3}")$WSL IST(WSINT))@WSMAT(WSREAL)
 ```
 

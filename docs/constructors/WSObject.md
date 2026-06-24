@@ -57,14 +57,8 @@ jWSInterpret(Type|Form, Expr) interprets Expr to be of type Type or Form using t
 **Example**:
 ```fricas
 jWSInterpret("Number","3.2")@WSREAL
-```
-
-**Example**:
-```fricas
 jWSInterpret("Real","3.2")@WSREAL
 ```
-
-Exam ple: jWSInterpret("Location","Lille")$WSEXPR See jWSExpr "$InterpreterTypes"
 
 - **Signature**: `(String, String) -> %`
 

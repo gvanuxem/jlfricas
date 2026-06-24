@@ -148,10 +148,6 @@ jlWSDocumentation(sym) prints WS information about the symbol sym. Note that the
 **Example**:
 ```fricas
 jlWSDocumentation sin
-```
-
-**Example**:
-```fricas
 jlWSDocumentation ArcSin
 ```
 
@@ -175,15 +171,7 @@ jlWSExportString(expr, form) returns the string representation of expr in the sp
 **Example**:
 ```fricas
 jWSExpr "Probability[x < 0, x \[Distributed] Norm alDistribution[]]"
-```
-
-**Example**:
-```fricas
 jWSExpr "Probability[x < 1, x \[Distributed] NormalDistribution[]]"
-```
-
-**Example**:
-```fricas
 s tring jlWSExportString(%,jWSString "TeX")
 ```
 
@@ -211,10 +199,6 @@ jlWSImport(src) imports the source src. For example:
 **Example**:
 ```fricas
 file:=jlWSImport jWSString "examples/customers- 100.csv";
-```
-
-**Example**:
-```fricas
 jlWSDateString(file.2.11)
 ```
 
@@ -236,10 +220,6 @@ jlWSPlot(expr, options) is the WS plot function. Since it should be run in a Wol
 **Example**:
 ```fricas
 x:=jWSExpr(x);opt:=jWSList [x,-5,5]
-```
-
-**Example**:
-```fricas
 jlW SExport("sin.png", jlWSPlot(sin(x),opt))
 ```
 

@@ -284,23 +284,39 @@ def clean(text: str, unwrap: bool = False) -> str:
     final_text = re.sub(r"Ex\s*ample:", "Example:", final_text)
     
     # Format examples as markers and code blocks
-    # We split by "Example:" and handle each block
+    # We split by "Example:" and combine consecutive ones into a single block
     parts = re.split(r"(Example:)", final_text)
     new_parts = []
     i = 0
     while i < len(parts):
         if parts[i] == "Example:":
             if i + 1 < len(parts):
-                # The next part is the code until the next "Example:" or a double newline
-                code_parts = re.split(r"(\n\n)", parts[i+1])
-                code = code_parts[0].strip()
-                new_parts.append(f"\n\n**Example**:\n```fricas\n{code}\n```\n")
-                if len(code_parts) > 1:
-                    new_parts.append("".join(code_parts[1:]))
-                i += 2
-            else:
-                new_parts.append(parts[i])
-                i += 1
+                # Collect all consecutive Example: blocks
+                code_lines = []
+                while i < len(parts) and parts[i] == "Example:":
+                    if i + 1 < len(parts):
+                        # Extract code until next "Example:" or double newline
+                        code_parts = re.split(r"(\n\n)", parts[i+1])
+                        code = code_parts[0].strip()
+                        if code:
+                            code_lines.append(code)
+                        # Handle remainder
+                        remainder = "".join(code_parts[1:]) if len(code_parts) > 1 else ""
+                        i += 2
+                        # Check if next part is another "Example:"
+                        if i < len(parts) and parts[i] != "Example:":
+                            # If there's text between examples, stop combining
+                            if remainder.strip() and remainder.strip() != "":
+                                parts[i] = remainder + parts[i]
+                            break
+                    else:
+                        i += 1
+                        break
+                
+                # Create single code block for all collected examples
+                if code_lines:
+                    combined_code = "\n".join(code_lines)
+                    new_parts.append(f"\n\n**Example**:\n```fricas\n{combined_code}\n```\n")
         else:
             new_parts.append(parts[i])
             i += 1

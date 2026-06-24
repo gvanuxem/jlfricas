@@ -1696,7 +1696,7 @@ JLMatrix(R : JLObjectRing) : Exports == Implementation where
     ++ full rank mat.
     lll : JLMatrix(NINT) -> JLMatrix(NINT)
     ++ lll(mat) returns the LLL-reduced lattice basis reduction of mat.
-    ++ lll! can also be used in place, see jlApply.
+    ++ lll! can also be used inplace, see jlApply.
     lll : (JLMatrix(NINT), JLObject) -> JLMatrix(NINT)
     ++ lll(mat, cont) returns the LLL-reduced lattice basis reduction of mat
     ++ with context cont. See the Nemo documentation for more information

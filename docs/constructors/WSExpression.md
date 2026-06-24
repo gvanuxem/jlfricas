@@ -603,10 +603,6 @@ coefficient(p,expr) returns the coefficient of expr in p.
 **Example**:
 ```fricas
 x:= jWSExpr x
-```
-
-**Example**:
-```fricas
 coefficient((x - y)^4, x * y^3)
 ```
 
@@ -731,20 +727,8 @@ dSolve(expr, funcs, vars) solves the (list of) differential equation(s) expr for
 **Example**:
 ```fricas
 x:=jWSExpr x;
-```
-
-**Example**:
-```fricas
 fx:=derivative(operator('f),0,x)
-```
-
-**Example**:
-```fricas
 fpr imex:=derivative(operator('f),1,x)
-```
-
-**Example**:
-```fricas
 dSolve(jWSEqual(fprimex + fx , a *sin(x)),fx,x)
 ```
 
@@ -755,20 +739,8 @@ dSolve(eq, func,var) solves the differential equation eq for the function(s) fun
 **Example**:
 ```fricas
 x:=jWSExpr x;
-```
-
-**Example**:
-```fricas
 fx:=derivative(operator('f),0,x)
-```
-
-**Example**:
-```fricas
 fprimex:=derivative(ope rator('f),1,x)
-```
-
-**Example**:
-```fricas
 dSolve(fprimex + fx = a * sin(x)/cos(x),fx,x)
 ```
 
@@ -781,30 +753,10 @@ dSolveValue(expr,funcs, vars) returns the value determined by the differential e
 **Example**:
 ```fricas
 x:=jWSExpr x;
-```
-
-**Example**:
-```fricas
 f:=derivative(operator('f ),0)
-```
-
-**Example**:
-```fricas
 f0:=derivative(operator('f),0,0)
-```
-
-**Example**:
-```fricas
 fx:=derivative(operator('f),0,x)
-```
-
-**Example**:
-```fricas
 fprime x:=derivative(operator('f),1,x)
-```
-
-**Example**:
-```fricas
 dSolveValue(jWSExpr([jWSEqual(fprimex + fx , a *sin(x)/cos(x)), jWS Equal(f0,0)]),f,x)
 ```
 
@@ -876,10 +828,6 @@ derivative(func, n, var) returns the derivative of order n of func applied to va
 **Example**:
 ```fricas
 x := jWSExpr x
-```
-
-**Example**:
-```fricas
 fprimex:=derivative(operator('f),1,x)
 ```
 
@@ -1059,15 +1007,7 @@ exponent(p,expr) returns the maximum exponent of p for expr.
 **Example**:
 ```fricas
 x:= jWSExpr x;y := jWSExpr y
-```
-
-**Example**:
-```fricas
 p:=(x^2-2)^3*(y*x^3+x^11*y^7)*(y^5+x*y^2+x^11+y)
-```
-
-**Example**:
-```fricas
 exponent(%,(x^2-2))
 ```
 
@@ -1079,8 +1019,6 @@ exponent(p, expr, map) applies map to the exponents related to expr and returns 
 ```fricas
 p:=expand((x^2-2)^3*(y*x^3+x^11*y^7)*(y^5+x*y^2+x^11+y))
 ```
-
-Exa mple: exponent(p,x,"Min")
 
 - **Signature**: `(%, %, %) -> %`
 
@@ -1097,15 +1035,7 @@ extendedSimplify(expr) is the extended version of simplify. This is the full ver
 **Example**:
 ```fricas
 x: = jWSExpr x
-```
-
-**Example**:
-```fricas
 expr := Gamma(x)/Gamma(x-1) Compare with simplify(expr).
-```
-
-**Example**:
-```fricas
 extendedSimplify(ex pr)
 ```
 
@@ -1132,10 +1062,6 @@ factor(expr, opt) factors the expression or polynomial expr. For example:
 **Example**:
 ```fricas
 x := jWSExpr x;
-```
-
-**Example**:
-```fricas
 factor(1 + x^2, "GaussianIntegers -> True")
 ```
 
@@ -1154,15 +1080,7 @@ factorPolynomial(p) factorizes the polynomial p. For example:
 **Example**:
 ```fricas
 x := jWSExpr x
-```
-
-**Example**:
-```fricas
 p:=expand(ch ebyshevT(7,x)* chebyshevU(9,x))
-```
-
-**Example**:
-```fricas
 factorPolynomial p
 ```
 
@@ -1243,10 +1161,6 @@ findRoot(expr,start) tries to find the root of expr starting at start.
 **Example**:
 ```fricas
 x:= jWSExpr x
-```
-
-**Example**:
-```fricas
 find Root(sin(x) + cos(x), "{x, 0}")
 ```
 
@@ -1283,15 +1197,7 @@ fromCoefficientRules(list, vars) constructs the polynomial from the list of coef
 **Example**:
 ```fricas
 x:= jWSExpr x;y := jWSExpr y
-```
-
-**Example**:
-```fricas
 coefficientRules((x + y)^2+x^11,jWSExpr [x,y])
-```
-
-**Example**:
-```fricas
 fr omCoefficientRules(%, jWSExpr [x,y])
 ```
 
@@ -1478,20 +1384,8 @@ integrate(expr, opts|var) integrates expr with respect to opt or var as options.
 **Example**:
 ```fricas
 x:=jWS Expr x;integrate(1/(x^4-1),x)
-```
-
-**Example**:
-```fricas
 opt:=jWSList [x,-1,1]
-```
-
-**Example**:
-```fricas
 integrate(cos(x),opt) => 2 sin(1)
-```
-
-**Example**:
-```fricas
 integrate(cos(x),"{x,-1.0,1.0}") => 1.68294
 ```
 
@@ -1652,25 +1546,9 @@ jWSExpr(str) constructs str as a WSExpression evaluating str as a Wolfram Symbol
 **Example**:
 ```fricas
 jWSExpr "Factorial[5]"
-```
-
-**Example**:
-```fricas
 jWSExpr "3.14159"
-```
-
-**Example**:
-```fricas
 jlWSDateString(jWSExpr "Tomorr ow")
-```
-
-**Example**:
-```fricas
 toString jWSExpr "TextSentences[WikipediaData[_"Sun_"]][[;; 40]]"
-```
-
-**Example**:
-```fricas
 jWSExpr "Probabili ty[x < 1, x [Distributed] NormalDistribution[]]"
 ```
 
@@ -1741,15 +1619,7 @@ jWSRule(eq) returns the Julia WS rule lhs->rhs for the equation eq. For example:
 **Example**:
 ```fricas
 x := jWSExpr x
-```
-
-**Example**:
-```fricas
 p := 1/2 * legendreQ(5,x)
-```
-
-**Example**:
-```fricas
 replaceAll(p, jWSRule(x = jWSExpr "1.55555556444883838383833777333 333333"))
 ```
 
@@ -1815,10 +1685,6 @@ jlEval(expr, param1, param2) evaluates expression expr with param1 and param2 as
 **Example**:
 ```fricas
 a:=jWSExpr("a");b:=jWSExpr("b");
-```
-
-**Example**:
-```fricas
 jlEval(sqrt(a^2+b^2),"a=1.0","b=1.0")
 ```
 
@@ -2142,14 +2008,8 @@ normal(expr) converts expr to a normal expression from different expression type
 **Example**:
 ```fricas
 x:=jWSExpr x
-```
-
-**Example**:
-```fricas
 s:=series(exp(x),jWSExpr "{x,0,10}")
 ```
-
-Examp le: normal(s)::EXPR INT
 
 - **Signature**: `% -> %`
 
@@ -2250,15 +2110,7 @@ numericMinimize(expr, vars) minimizes numerically the expression function expr w
 **Example**:
 ```fricas
 x := jWSExpr(x);y:=jWSExpr y;
-```
-
-**Example**:
-```fricas
 expr := exp(sin(50*x))+sin(60*exp(y))+ sin(70*sin(x))+ sin(sin(80*y))-sin(10*(x+y))+(x^2+y^2)/4
-```
-
-**Example**:
-```fricas
 nu mericMinimize(expr, jWSList [x,y])
 ```
 
@@ -2758,25 +2610,9 @@ series(expr, opt) returns a series from expr.
 **Example**:
 ```fricas
 x:=jWSExpr(x);a:=jWSExpr(a);
-```
-
-**Example**:
-```fricas
 opt:=jWSList [ x,pi()$WSEXPR/4,7]
-```
-
-**Example**:
-```fricas
 series(sin(a*x),opt)
-```
-
-**Example**:
-```fricas
 series(cos(x),"{x, 0, 12}")
-```
-
-**Example**:
-```fricas
 series(in verseErfc(x),"{x,0,3}")
 ```
 
