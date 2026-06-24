@@ -22,7 +22,8 @@ A full source of information can also be found in [HTML format](https://gvanuxem
 Take into account that this is absolutely not the official documentation even though it is highly based on the official FriCAS web site which can be built from the FriCAS source code (thanks to Ralf Hemmecke and Kurt Pagani for their amazing work).
 
 
-![Capture1](https://github.com/user-attachments/assets/f5a6d7ec-0dea-482d-805a-0074cea8be72)
+<img width="1920" height="1035" alt="Capture d&#39;écran 2025-06-08 092530" src="https://github.com/user-attachments/assets/2d4b72ef-c974-4fe3-9b83-0ab87b21884b" />
+
 
 
 Julia Plots and HyperDoc:
@@ -33,15 +34,20 @@ export QT_WAYLAND_SHELL_INTEGRATION=xdg-shell
 ``
 in your shell first.
 
-![Capture2](https://github.com/user-attachments/assets/97f35ad1-a6bc-41f9-986f-47e8d3281ad6)
+<img width="1920" height="1080" alt="graphics" src="https://github.com/user-attachments/assets/c3ed787f-743a-46f0-a3c0-0183f64389be" />
+
 
 Julia Plots on Windows/cmd.exe:
 
-![Capture3](https://github.com/user-attachments/assets/4c6bec2c-6344-470c-b467-d3571794de51)
+
+
+<img width="1920" height="1080" alt="Capture d&#39;écran 2026-02-02 055715" src="https://github.com/user-attachments/assets/a283aac4-f848-4ebd-a132-85d1dc6dfd3f" />
 
 
 Linear Algebra:
-![Capture4](https://github.com/user-attachments/assets/21ca03f1-0cff-407f-b8f6-339e38abe4ed)
+
+<img width="1920" height="1035" alt="Capture d&#39;écran 2025-10-31 160555" src="https://github.com/user-attachments/assets/f4ecba05-1b16-4fca-8815-0b64cc760506" />
+
 
 
 
