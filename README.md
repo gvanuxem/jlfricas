@@ -26,7 +26,7 @@ Take into account that this is absolutely not the official documentation even th
 
 
 
-Julia Plots and HyperDoc:
+## Julia Plots and HyperDoc
 
 Beware, actually, on WSL you may need to export:
 ``
@@ -37,18 +37,14 @@ in your shell first.
 ![Capture2](https://github.com/user-attachments/assets/c3ed787f-743a-46f0-a3c0-0183f64389be)
 
 
-Julia Plots on Windows/cmd.exe:
-
-
+## Julia Plots on Windows/cmd.exe
 
 ![Capture3](https://github.com/user-attachments/assets/a283aac4-f848-4ebd-a132-85d1dc6dfd3f)
 
 
-Linear Algebra:
+## Linear Algebra
 
 ![Capture4](https://github.com/user-attachments/assets/f4ecba05-1b16-4fca-8815-0b64cc760506)
-
-
 
 
 ## Building and Installing
