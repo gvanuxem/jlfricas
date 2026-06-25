@@ -1662,7 +1662,6 @@ JLVectorFunctions2(A, B) : Exports == Implementation where
 ++ https://nemocas.github.io/Nemo.jl/stable/developer/interfaces/#Column-major-vs-row-major-matrices
 ++ for more information.
 -- TODO: to be improved for partially implemented JLObjectType
--- TODO: dissociate in two domains (Julia/Nemo)
 JLMatrix(R : JLObjectRing) : Exports == Implementation where
   PI      ==> PositiveInteger
   NNI     ==> NonNegativeInteger
@@ -1709,6 +1708,16 @@ JLMatrix(R : JLObjectRing) : Exports == Implementation where
     ++ reduction of the Gram matrix mat with context cont. See the Nemo
     ++ documentation for more information about the context cont.
     ++ lllGram! can also be used inplace, see jlApply.
+    determinantDivisor : JLMatrix(NINT) -> NINT
+    ++ determinantDivisor(mat) returns some divisor of the determinant of mat.
+    ++ 0 if the determinant is 0.
+    determinantGivenDivisor : (JLMatrix(NINT), NINT) -> NINT 
+    ++ determinantGivenDivisor(mat, d) returns the determinant of mat from
+    ++ the divisor d.
+    nullspaceRightRational : JLMatrix(NINT) -> Record(r: JLObjInt64, U: JLMatrix(NINT))
+    ++ nullspaceRightRational(mat) returns the Q-basis of the right nullspace of mat.
+    ++ mat is considered as a matrix over rational. The record (r, U) returned is such that
+    ++ the first r columns of U form the Q-basis of the right nullspace of mat.
     if R has NMRing and (R has IntegerNumberSystem or
         R has Algebra NMFraction(NINT)) then
       radicalEigenvalues : % -> JLVector(NMAlgebraicNumber)
@@ -1721,6 +1730,11 @@ JLMatrix(R : JLObjectRing) : Exports == Implementation where
     if R has NMRing then
       gram : % -> %
       ++ gram(mat) returns the Gram matrix of mat.
+      hessenberg : % -> %
+      ++ hessenberg(mat) returns the Hessenberg form of mat.
+      nullspace : % -> Record(v:JLObjInt64, N:%)
+      ++ nullspace(mat) returns a record (v, N), v being the nullity ν of mat
+      ++ and N being a basis of the right nullspace of mat. i.e. M*N = 0.
       eigenSpaces : (String, %, JLSymbol) -> JLObjDict
       ++ eigenSpaces(JRing, mat, side) returns a Julia Dict containing the :left or :right side of the eigen
       ++ space of mat associated to the eigenvalue key and the field JRing.
@@ -1878,6 +1892,9 @@ JLMatrix(R : JLObjectRing) : Exports == Implementation where
         jlref(concat(["eigenvalues_with_multiplicities(", jlring, ",",
           getind(mat), ")"]))
       gram(mat) == junfunc("gram", mat)
+      nullspace(mat) == 
+        tuple : JLObjTuple := junfunc("nullspace", mat)
+        [tuple.1 pretend JLObjInt64, tuple.2 pretend %]
       if R has Finite then
         howellForm(mat) == junfunc("howell_form",mat)
         strongEchelonForm(mat) == junfunc("strong_echelon_form", mat)
@@ -1957,26 +1974,33 @@ JLMatrix(R : JLObjectRing) : Exports == Implementation where
         nrand(rows, cols) : JLMatrix(JLComplexFloat) ==
           jlref(concat(["randn(Complex{BigFloat},", string(rows), ",",
             string(cols),")"]))
-    else if R is NINT or R is NMFraction(NINT) then
-      radicalEigenvalues(m) == jlref(concat ["eigenvalues(QQBar,",
-        getind(m), ")"])$JLVector(NMAlgebraicNumber)
-      radicalEigenvaluesWithMultiplicities(m) ==
-        jlref(concat ["eigenvaluesWithMultiplicities(QQBar,",
-          getind(m), ")"])$JLVector(JLObjTuple)
-    if R has NMField then
-      eigenSpaces(m, side) ==
-        jlref(concat ["eigenspaces(", getind(m),
-          ";side=", string(side), ")"])$JLObjDict
-      eigenvalues(m) ==
-        jlref(concat ["eigenvalues(", getind(m), ")"])$JLVector(R)
-      eigenvaluesWithMultiplicities(m) ==
-        jlref(concat ["eigenvalues_with_multiplicities(", getind(m), ")"])$JLVector(JLObjTuple)
+    else
+      hessenberg(m) == junfunc("hessenberg", m)
+      if R is NINT or R is NMFraction(NINT) then
+        radicalEigenvalues(m) == jlref(concat ["eigenvalues(QQBar,",
+          getind(m), ")"])$JLVector(NMAlgebraicNumber)
+        radicalEigenvaluesWithMultiplicities(m) ==
+          jlref(concat ["eigenvaluesWithMultiplicities(QQBar,",
+            getind(m), ")"])$JLVector(JLObjTuple)
+      if R has NMField then
+        eigenSpaces(m, side) ==
+          jlref(concat ["eigenspaces(", getind(m),
+            ";side=", string(side), ")"])$JLObjDict
+        eigenvalues(m) == junfunc("eigenvalues", m)
+        eigenvaluesWithMultiplicities(m) == junfunc("eigenvalues_with_multiplicities", m)
 
+    determinantDivisor(m : JLMatrix(NINT)) : NINT == junfunc("det_divisor", m)
+    determinantGivenDivisor(m : JLMatrix(NINT), d : NINT) : NINT ==
+      jbinfunc("det_given_divisor", m, d)
+    nullspaceRightRational(m : JLMatrix(NINT)) : Record(r: JLObjInt64, U: JLMatrix(NINT)) ==
+      tuple: JLObjTuple := junfunc("nullspace_right_rational", m)
+      [tuple.1 pretend JLObjInt64, tuple.2 pretend JLMatrix(NINT)]
     smith(m : JLMatrix(NINT)) : JLMatrix(NINT) == junfunc("snf", m)
     smithDiagonal(m : JLMatrix(NINT)) : JLMatrix(NINT) ==
       diagonal?(m) => junfunc("snf_diagonal", m)
       error "smithDiagonal: not a diagonal matrix"
-    gramSchmidtOrthogonalisation(m : JLMatrix(NMFraction(NINT))) : JLMatrix(NMFraction(NINT))==
+    gramSchmidtOrthogonalisation(m : JLMatrix(NMFraction(NINT))) :
+        JLMatrix(NMFraction(NINT)) ==
       junfunc("gram_schmidt_orthogonalisation", m)
     hermite(m: JLMatrix(NINT)) : JLMatrix(NINT) == junfunc("hnf", m)
     hermiteModular(m : JLMatrix(NINT), n : NINT) : JLMatrix(NINT) ==
