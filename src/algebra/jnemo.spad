@@ -23,6 +23,8 @@ NMRing() : Category == Join(NMType, JLObjectRing) with
       ++ unit?(x) checks whether or not x is a unit, i.e. invertible.
       equal? : (% , %) -> Boolean
       ++ equal?(x,y) checks whether or not x and y are equal.
+      irreducible? : % -> Boolean
+      ++ irreducible?(x) checks whether or not x is irreducible.
       exactDivide : (%, %) -> %
       ++ exactDivide(x,y) returns the exact division
       ++ of x by y. Throws a Julia error if it is not
@@ -44,6 +46,7 @@ NMRing() : Category == Join(NMType, JLObjectRing) with
       exact?(x) == junbfunc("is_exact_type",x)
       unit?(x) == junbfunc("is_unit",x)
       equal?(x,y) == jbinbfunc("==",x,y)
+      irreducible?(x) == junbfunc("is_irreducible",x)
       exactDivide(x,y) == jbinfunc("divexact",x,y)
 
 )abbrev category NCRING NMCommutativeRing
@@ -361,8 +364,9 @@ NMAlgebraicNumber() : Exports == Implementation where
     0 == jlref("zero(QQBar)")
     1 == jlref("one(QQBar)")
 
-    rightPower(x,n) == jbinfunc("^",x,n)
-    leftPower(x,n) == jbinfunc("^",x,n)
+    -- TODO
+    -- rightPower(x,n) == jbinfunc("^",x,n)
+    -- leftPower(x,n) == jbinfunc("^",x,n)
 
     characteristic() == 0
     rootOfUnity(n) == jlref(concat(["root_of_unity(QQBar,", string(n),")"]))
@@ -568,7 +572,7 @@ NMAlgebraicNumber() : Exports == Implementation where
 ++  Note: this is only implemented for univariate polynomial rings.
 NMResidueRing(R, P, poly) : Exports == Implementation where
   R : NMCommutativeRing
-  P : Join(NMUnivariatePolynomialCategory(R), EuclideanDomain)
+  P : Join(NMUnivariatePolynomialCategory(R), GcdDomain)
   poly : P
   PI      ==> PositiveInteger
   NNI     ==> NonNegativeInteger
@@ -659,8 +663,8 @@ NMResidueRing(R, P, poly) : Exports == Implementation where
 ++  The ideal generated must be maximal, no check are done at jlFriCAS
 ++  level.
 NMResidueField(R, P, poly) : Exports == Implementation where
-  R : NMField
-  P : NMUnivariatePolynomialCategory(R)
+  R : NMCommutativeRing
+  P : Join(NMUnivariatePolynomialCategory(R), GcdDomain)
   poly : P
   PI      ==> PositiveInteger
   NNI     ==> NonNegativeInteger
@@ -711,6 +715,13 @@ NMResidueField(R, P, poly) : Exports == Implementation where
     jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
     junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
 
+    degree(poly) < 1 => error "The modulus must be a polynomial of degree at least 1."
+    lc := leadingCoefficient poly
+    if not unit?(lc) then error "Leading coefficient is not a unit."
+        -- make it monic - GcdDomain
+        -- poly := jbinfunc("divexact", poly, lc)@P
+    not irreducible?(poly) => error "The modulus must be irreducible."
+
     -- Set up the field
     RESFIELDD := concat("RESFIELD", string(jlApply("hash",(poly))))
     jlEvalString(concat([RESFIELDD, ",=residue_field(", jlNMRing()$P, "[1]," , getind(poly),")"]))
@@ -722,8 +733,7 @@ NMResidueField(R, P, poly) : Exports == Implementation where
     1 == jlref(concat(["one(", RESFIELDD,")"]))
     modulus() == jlref(concat(["modulus(", RESFIELDD, ")"]))
     characteristic() == characteristic()$R
-    square?(x : %) ==
-      junbfunc("issquare", x)
+    square?(x : %) == junbfunc("is_square", x)
     sqrt(x : %) ==
       square?(x) => junfunc("sqrt", x)@%
       "failed"
