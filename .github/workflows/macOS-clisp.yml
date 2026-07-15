@@ -25,7 +25,7 @@ jobs:
     - name: configure
       run: |
         mkdir ../build && cd ../build
-        ../fricas/configure --with-lisp=clisp || (cat config.log && false)
+        ../jlfricas/configure --with-lisp=clisp || (cat config.log && false)
 
     - name: make
       run: cd ../build && gmake -j4 --output-sync
@@ -36,13 +36,13 @@ jobs:
         make dist-macos
         ## reduce chance of error caused by "hdiutil: Resource busy"
         make dist-macos-dmg || make dist-macos-dmg
-        mv FriCAS.dmg ../fricas/FriCAS-macOS-CLISP-${ARCH}-${{ github.sha }}.dmg
+        mv FriCAS.dmg ../fricas/jlFriCAS-macOS-CLISP-${ARCH}-${{ github.sha }}.dmg
 
     - name: Upload macOS binary
       uses: actions/upload-artifact@v7
       with:
         archive: false
-        path: FriCAS-macOS-CLISP-${{ env.ARCH }}-${{ github.sha }}.dmg
+        path: jlFriCAS-macOS-CLISP-${{ env.ARCH }}-${{ github.sha }}.dmg
 
     - name: make check
       run: cd ../build && gmake check -j4 --output-sync

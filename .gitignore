@@ -4,10 +4,25 @@
 *.DAASE/
 *.erlib/
 *.fasl
+*.lx64fsl
+*.al
 *.NRLIB/
 *.o
+*.output
+*.data
+*.fn
+*.dat
+*.KAF
+*.fas
+*.build
 
 build/
+
+debian/files
+debian/jlfricas.debhelper.log
+debian/jlfricas.substvars
+debian/jlfricas
+debian/.debhelper
 
 config.log
 config.status
@@ -107,6 +122,10 @@ src/doc/util-ht
 src/doc/util.ht
 src/doc/viewports
 
+docs/constructors/JL*
+docs/constructors/NM*
+
+
 src/etc/gen-cpl.in
 
 src/interp/database.date
@@ -119,8 +138,14 @@ src/lib/libspad.a
 src/lisp/do_it.*
 src/lisp/fricas-config.lisp
 src/lisp/num_gmpx.lisp
+src/lisp/fricas-ecl.lisp
 
 stamp
 stamp-*
 
+src/input/*.asy
+src/input/*.lsp
+src/input/tmp*.input
+
 target/
+.vscode/

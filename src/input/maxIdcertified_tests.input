@@ -1,0 +1,140 @@
+)clear all
+
+------------------------------------------------------------------
+-- Adapt this section to your real instantiation of
+-- PolynomialIdeal(F, Expon, VarSet, DPoly): F, Expon and VarSet
+-- must correspond to those already used to compile ideal.spad
+-- with maximalCertified? added.
+------------------------------------------------------------------
+R     := Fraction Integer
+DPoly := Polynomial R
+Id    := PolynomialIdeal(R, IndexedExponents Symbol, Symbol, DPoly)   -- completer Expon / VarSet reels
+
+vars  : List Symbol := [x, y]
+vars3 : List Symbol := [x, y, z]
+
+------------------------------------------------------------------
+-- Test 1: maximal, quadratic extension
+-- I1 = (x^2+y^2-1, x-y)  ->  A/I1 = Q[y]/(2y^2-1), irreducible
+------------------------------------------------------------------
+I1 : Id := ideal [x^2+y^2-1, x-y]
+r1 := maximalCertified?(I1, vars)$Id
+output("Test 1 (expected true): ", r1::OutputForm)
+
+------------------------------------------------------------------
+-- Test 2: non-maximal, factorable
+-- I2 = (x^2-1, y)  ->  A/I2 = Q[x]/((x-1)(x+1))
+------------------------------------------------------------------
+I2 : Id := ideal [x^2-1, y]
+r2 := maximalCertified?(I2, vars)$Id
+output("Test 2 (expected false): ", r2::OutputForm)
+
+------------------------------------------------------------------
+-- Test 3: rational point
+-- I3 = (x-3, y+5)  ->  A/I3 = Q
+------------------------------------------------------------------
+I3 : Id := ideal [x-3, y+5]
+r3 := maximalCertified?(I3, vars)$Id
+output("Test 3 (expected true): ", r3::OutputForm)
+
+------------------------------------------------------------------
+-- Test 4 : ideal (1)
+------------------------------------------------------------------
+I4 : Id := ideal [1]
+r4 := maximalCertified?(I4, vars)$Id
+output("Test 4 (expected false): ", r4::OutputForm)
+
+------------------------------------------------------------------
+-- Test 5: positive dimension (not zero-dimensional)
+-- I5 = (x-y)  ->  line, dimension 1
+------------------------------------------------------------------
+I5 : Id := ideal [x-y]
+r5 := maximalCertified?(I5, vars)$Id
+output("Test 5 (expected false): ", r5::OutputForm)
+
+------------------------------------------------------------------
+-- Test 6: three variables
+-- I6 = (x-y, y-z, x^2+y^2+z^2-1)  ->  3z^2=1, irreducible over Q
+------------------------------------------------------------------
+I6 : Id := ideal [x-y, y-z, x^2+y^2+z^2-1]
+r6 := maximalCertified?(I6, vars3)$Id
+output("Test 6 (expected true): ", r6::OutputForm)
+
+------------------------------------------------------------------
+-- Test 7: comparison with the old maximal?
+------------------------------------------------------------------
+output("Test 7a [maximal?, maximalCertified?] on I1: ",
+       [maximal?(I1, vars)$Id, maximalCertified?(I1, vars)$Id]::OutputForm)
+output("Test 7b [maximal?, maximalCertified?] on I2: ",
+       [maximal?(I2, vars)$Id, maximalCertified?(I2, vars)$Id]::OutputForm)
+output("Test 7c [maximal?, maximalCertified?] on I3: ",
+       [maximal?(I3, vars)$Id, maximalCertified?(I3, vars)$Id]::OutputForm)
+output("Test 7d [maximal?, maximalCertified?] on I4: ",
+       [maximal?(I4, vars)$Id, maximalCertified?(I4, vars)$Id]::OutputForm)
+output("Test 7e [maximal?, maximalCertified?] on I5: ",
+       [maximal?(I5, vars)$Id, maximalCertified?(I5, vars)$Id]::OutputForm)
+output("Test 7f [maximal?, maximalCertified?] on I6: ",
+       [maximal?(I6, vars3)$Id, maximalCertified?(I6, vars3)$Id]::OutputForm)
+
+------------------------------------------------------------------
+-- Test 8: d = 1, short-circuit before any Krylov computation
+------------------------------------------------------------------
+I8 : Id := ideal [x, y]
+r8 := maximalCertified?(I8, vars)$Id
+output("Test 8 (expected true): ", r8::OutputForm)
+
+------------------------------------------------------------------
+-- Test 9: safeguard against false positives (non-reduced / nilpotent)
+-- I9 = (x^2, y)  ->  A/I9 = Q[x]/(x^2), non-reduced (x nilpotent)
+------------------------------------------------------------------
+I9 : Id := ideal [x^2, y]
+r9 := maximalCertified?(I9, vars)$Id
+output("Test 9 (expected false, or 'failed' to report): ", r9::OutputForm)
+
+------------------------------------------------------------------
+-- Test 10 (revised): indirect verification, without calling a
+-- local function (standardMonomials is not exported by C)
+------------------------------------------------------------------
+d10 := dimension(I1, vars)$Id
+output("Test 10 dimension() of I1 (expected 0): ", d10::OutputForm)
+
+------------------------------------------------------------------
+-- Final summary
+------------------------------------------------------------------
+output("=== SUMMARY ===", ""::OutputForm)
+output("r1..r9  = ", [r1,r2,r3,r4,r5,r6,r8,r9]::OutputForm)
+
+------------------------------------------------------------------
+-- Diagnostics: isolate which safeguard of maximalCertified? is triggered
+-- We reuse I1 = (x^2+y^2-1, x-y), which MUST be maximal
+------------------------------------------------------------------
+
+-- 1. is the Groebner basis reasonable?
+gb1 := groebner(I1)$Id
+output("groebner(I1) = ", generators(gb1)$Id :: OutputForm)
+
+-- 2. does I1 contain 1? (must be false)
+e1 := element?(1, I1)$Id
+output("element?(1,I1) [expected false] = ", e1::OutputForm)
+
+-- 3. is I1 zero-dimensional? (must be true)
+z1 := zeroDim?(I1, vars)$Id
+output("zeroDim?(I1,vars) [expected true] = ", z1::OutputForm)
+
+-- 4. what is the computed dimension? (must be 0)
+d1 := dimension(I1, vars)$Id
+output("dimension(I1,vars) [expected 0] = ", d1::OutputForm)
+
+-- 5. does the old maximal? (probabilistic) give the correct result?
+m1 := maximal?(I1, vars)$Id
+output("maximal?(I1,vars) old [expected true] = ", m1::OutputForm)
+
+------------------------------------------------------------------
+-- Same diagnostics for I8 = (x,y), trivial case d=1
+------------------------------------------------------------------
+gb8 := groebner(I8)$Id
+output("groebner(I8) = ", generators(gb8)$Id :: OutputForm)
+output("element?(1,I8) [expected false] = ", (element?(1,I8)$Id)::OutputForm)
+output("zeroDim?(I8,vars) [expected true] = ", (zeroDim?(I8,vars)$Id)::OutputForm)
+output("dimension(I8,vars) [expected 0] = ", (dimension(I8,vars)$Id)::OutputForm)
+output("maximal?(I8,vars) old [expected true] = ", (maximal?(I8,vars)$Id)::OutputForm)
