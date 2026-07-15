@@ -9,6 +9,7 @@
 *.NRLIB/
 *.o
 *.output
+*.out
 *.data
 *.fn
 *.dat
