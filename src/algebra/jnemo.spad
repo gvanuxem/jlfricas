@@ -663,8 +663,8 @@ NMResidueRing(R, P, poly) : Exports == Implementation where
 ++  The ideal generated must be maximal, no check are done at jlFriCAS
 ++  level.
 NMResidueField(R, P, poly) : Exports == Implementation where
-  R : NMCommutativeRing
-  P : Join(NMUnivariatePolynomialCategory(R), GcdDomain)
+  R : NMField
+  P : NMUnivariatePolynomialCategory(R)
   poly : P
   PI      ==> PositiveInteger
   NNI     ==> NonNegativeInteger
@@ -672,6 +672,7 @@ NMResidueField(R, P, poly) : Exports == Implementation where
   Exports ==> NMField with
     square? : % -> Boolean
     ++ square?(x) returns true if x is a square in the field.
+    ++ Only for ResFieldElem.
     "*" : (%, Integer) -> %
     ++ x*i is the multiplication by an integer.
     "*" : (%, NMInteger) -> %
@@ -691,6 +692,7 @@ NMResidueField(R, P, poly) : Exports == Implementation where
     ++ for more information for the difference with data.
     sqrt : % -> Union(%, "failed")
     ++ sqrt(x) returns the square root of x if possible.
+    ++ Only for ResFieldElem.
     coerce : Integer -> %
     ++ coerce(i) coerces i.
     coerce : NMInteger -> %
@@ -715,9 +717,9 @@ NMResidueField(R, P, poly) : Exports == Implementation where
     jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
     junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
 
-    degree(poly) < 1 => error "The modulus must be a polynomial of degree at least 1."
-    lc := leadingCoefficient poly
-    if not unit?(lc) then error "Leading coefficient is not a unit."
+    --degree(poly) < 1 => error "The modulus must be a polynomial of degree at least 1."
+    --lc := leadingCoefficient poly
+    --if not unit?(lc) then error "Leading coefficient is not a unit."
         -- make it monic - GcdDomain
         -- poly := jbinfunc("divexact", poly, lc)@P
     not irreducible?(poly) => error "The modulus must be irreducible."

@@ -12,7 +12,7 @@ NMArbField(p: PositiveInteger) : Exports == Implementation where
   NNI       ==> NonNegativeInteger
   JI64      ==> JLInt64
   JF64      ==> JLFloat64
-  Exports ==> Join(NMRing, CommutativeRing, FloatingPointSystem,
+  Exports ==> Join(NMField, FloatingPointSystem,
             Approximate, JLArbitraryPrecision,
             TranscendentalFunctionCategory,
             DifferentialRing) with
@@ -364,7 +364,7 @@ NMAcbField(p: PositiveInteger) : Exports == Implementation where
   NNI       ==> NonNegativeInteger
   JI64      ==> JLInt64
   JF64      ==> JLFloat64
-  Exports ==> Join(NMRing, CommutativeRing, ComplexCategory(NMArbField(p)),
+  Exports ==> Join(NMField, ComplexCategory(NMArbField(p)),
                 Approximate, JLArbitraryPrecision,
                 DifferentialRing) with
     integer? : % -> Boolean
@@ -687,7 +687,7 @@ NMRealField() : Exports == Implementation where
   NNI       ==> NonNegativeInteger
   JI64      ==> JLInt64
   JF64      ==> JLFloat64
-  Exports ==> Join(NMRing, CommutativeRing, FloatingPointSystem,
+  Exports ==> Join(NMField, FloatingPointSystem,
             arbitraryPrecision, TranscendentalFunctionCategory,
             DifferentialRing) with
     integer? : % -> Boolean
@@ -1021,7 +1021,7 @@ NMComplexField() : Exports == Implementation where
   PI        ==> PositiveInteger
   JF64      ==> JLFloat64
   NRF       ==> NMRealField
-  Exports ==> Join(NMRing, CommutativeRing, ComplexCategory(NMRealField),
+  Exports ==> Join(NMField, ComplexCategory(NMRealField),
             arbitraryPrecision, DifferentialRing) with
     integer? : % -> Boolean
     ++ integer?(x) checks whether or not x is an integer.
