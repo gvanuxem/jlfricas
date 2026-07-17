@@ -55,6 +55,9 @@ NMArbField(p: PositiveInteger) : Exports == Implementation where
     ++ might be big relative to its midpoint.
     abs2 : % -> %
     ++ abs2(x) returns the square of the absolute value of x.
+    rsqrt : % -> %
+    ++ rsqrt(x) returns the reciprocal of the square root of x,
+    ++ i.e. 1/sqrt(x).
     expm1 : % -> %
     ++ expm1(x) computes accurately e^x-1. It avoids the loss of precision
     ++ involved in the direct evaluation of exp(x)-1 for small values of x.
@@ -260,6 +263,7 @@ NMArbField(p: PositiveInteger) : Exports == Implementation where
     float(m, e, b) == jbinfunc("*", jnrb(m), jnrb(b)^e)
 
     sqrt(x)  == junfunc("√",x)
+    rsqrt(x) == junfunc("rsqrt",x)
     exp(x)   == junfunc("exp",x)
     log(x)   == junfunc("log",x)
     expm1(x) == junfunc("expm1",x)
@@ -400,13 +404,20 @@ NMAcbField(p: PositiveInteger) : Exports == Implementation where
     ++ eventually infinities and NaNs,
     ++ :randtest_param with very high probability of returning integers
     ++ or half-integers.
-    abs2 : % -> %
+    abs : % -> NMArbField(p)
+    ++ abs(x) returns the  absolute value of x.
+    abs2 : % -> NMArbField(p)
     ++ abs2(x) returns the square of the absolute value of real
     ++ part of x and imaginary part of x.
+    cispi : % -> %
+    ++ cispi(x) returns exp(πix).
     "*" : (%, Integer) -> %
     ++ x*i is the multiplication by an integer.
     "/"  : (Integer, %) -> %
     ++ i/x is the division of an integer by x.
+    rsqrt : % -> %
+    ++ rsqrt(x) returns the reciprocal of the square root of x,
+    ++ i.e. 1/sqrt(x).
     expm1 : % -> %
     ++ expm1(x) computes accurately e^x-1. It avoids the loss of precision
     ++ involved in the direct evaluation of exp(x)-1 for small values of x.
@@ -543,6 +554,8 @@ NMAcbField(p: PositiveInteger) : Exports == Implementation where
     0 == jlref(concat(["zero(", NACB, ")"]))
     1 == jlref(concat(["one(", NACB, ")"]))
     imaginary() == jlref(concat(["onei(", NACB, ")"]))
+    conjugate(x) == junfunc("conj", x)
+    argument(x) == junfunc("angle", x)
     pi() == jlref(concat(["const_pi(", NACB, ")"]))
     exp1() == jlref(concat(["exp(", NACB, "(1))"]))
     exp() == jlref(concat(["exp(", NACB, "(1))"]))
@@ -592,11 +605,14 @@ NMAcbField(p: PositiveInteger) : Exports == Implementation where
     abs2(x) == junfunc("abs2", x)
 
     sqrt(x)  == junfunc("√",x)
+    rsqrt(x) == junfunc("rsqrt",x)
     exp(x)   == junfunc("exp",x)
     log(x)   == junfunc("log",x)
     expm1(x) == junfunc("expm1",x)
     log1p(x) == junfunc("log1p",x)
     ldexp(x,n) == jbinfunc("ldexp",x,n)
+
+    cispi(x) == junfunc("cispi",x)
 
     sin(x)  == junfunc("sin",x)
     cos(x)  == junfunc("cos",x)
@@ -737,6 +753,9 @@ NMRealField() : Exports == Implementation where
     ++ x*i is the multiplication by an integer.
     "/" : (Integer, %) -> %
     ++ x/i returns the division of an integer by x.
+    rsqrt : % -> %
+    ++ rsqrt(x) returns the reciprocal of the square root of x,
+    ++ i.e. 1/sqrt(x).
     expm1 : % -> %
     ++ expm1(x) computes accurately e^x-1. It avoids the loss of precision
     ++ involved in the direct evaluation of exp(x)-1 for small values of x.
@@ -927,6 +946,7 @@ NMRealField() : Exports == Implementation where
     float(m, e, b) == jbinfunc("*",jnrf(m), jnrf(b)^e)
 
     sqrt(x)  == junfunc("√",x)
+    rsqrt(x) == junfunc("rsqrt",x)
     exp(x)   == junfunc("exp",x)
     log(x)   == junfunc("log",x)
     expm1(x) == junfunc("expm1",x)
@@ -1042,11 +1062,16 @@ NMComplexField() : Exports == Implementation where
     ++ contains?(x,y) checks whether or not y is contained in x.
     containsZero? : % -> Boolean
     ++ containsZero?(x) checks whether or not 0 is contained in x.
-    abs : % -> %
+    abs : % -> NMRealField
     ++ abs(x) returns the  absolute value of x.
-    abs2 : % -> %
+    abs2 : % -> NMRealField
     ++ abs2(x) returns the square of the absolute value of real
     ++ part of x and imaginary part of x.
+    cispi : % -> %
+    ++ cispi(x) returns exp(πix).
+    rsqrt : % -> %
+    ++ rsqrt(x) returns the reciprocal of the square root of x,
+    ++ i.e. 1/sqrt(x).
     expm1 : % -> %
     ++ expm1(x) computes accurately e^x-1. It avoids the loss of precision
     ++ involved in the direct evaluation of exp(x)-1 for small values of x.
@@ -1208,6 +1233,8 @@ NMComplexField() : Exports == Implementation where
     imaginary() == jlref("onei(NCF)")
     real(x) == junfunc("real", x)
     imag(x) == junfunc("imag", x)
+    conjugate(x) == junfunc("conj", x)
+    argument(x) == junfunc("angle", x)
     pi() == jlref("const_pi(NCF)")
     exp1() == jlref("exp(NCF(1))")
     exp() == jlref("exp(NCF(1))")
@@ -1253,12 +1280,15 @@ NMComplexField() : Exports == Implementation where
     abs2(x) == junfunc("abs2", x)
 
     sqrt(x)  == junfunc("√",x)
+    rsqrt(x) == junfunc("rsqrt",x)
     exp(x)   == junfunc("exp",x)
     log(x)   == junfunc("log",x)
     expm1(x) == junfunc("expm1",x)
     log1p(x) == junfunc("log1p",x)
     nthRoot(x, i) == jlref(concat(["root(", getind(x), ",", string(i), ")"]))
     ldexp(x,n) == jbinfunc("ldexp",x,n)
+
+    cispi(x) == junfunc("cispi",x)
 
     sin(x)  == junfunc("sin",x)
     cos(x)  == junfunc("cos",x)
