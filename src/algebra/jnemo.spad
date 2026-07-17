@@ -123,8 +123,6 @@ NMInteger() : Exports == Implementation where
     1 == jlref("one(ZZ)")
     inc(x) == x + 1
     dec(x) == x - 1
-    rightPower(x,n) == jlref(concat [getind(x), "^", string(n)])
-    leftPower(x,n) == jlref(concat [getind(x), "^", string(n)])
     base() == jlref("ZZ(2)")
     characteristic() == 0
 
@@ -163,8 +161,7 @@ NMInteger() : Exports == Implementation where
       jlref(concat(["powermod(", getind(a), ",", string(b), ",", getind(p), ")"]))
     invmod(a, p) == jbinfunc("invmod", a, p)
 
-    factor(a : %) : Factored(%) ==
-      factor(a)$NMFactored(%)
+    factor(a : %) : Factored(%) == factor(a)$NMFactored(%)
     -- TODO: Temporary
     squareFree(a) ==
       sfree := squareFree(convert(a)@Z)$IntegerFactorizationPackage(Z)
@@ -363,10 +360,6 @@ NMAlgebraicNumber() : Exports == Implementation where
 
     0 == jlref("zero(QQBar)")
     1 == jlref("one(QQBar)")
-
-    -- TODO
-    -- rightPower(x,n) == jbinfunc("^",x,n)
-    -- leftPower(x,n) == jbinfunc("^",x,n)
 
     characteristic() == 0
     rootOfUnity(n) == jlref(concat(["root_of_unity(QQBar,", string(n),")"]))
