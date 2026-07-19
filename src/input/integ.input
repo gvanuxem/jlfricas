@@ -1,8 +1,7 @@
 )set break resume
 )expose UnittestCount UnittestAux Unittest
 
-)unexpose WSExpression
-)unexpose NMExactCalciumField
+)unexpose WSExpression NMExactCalciumField NMRealField NMRealBall
 
 testsuite "integ"
 
