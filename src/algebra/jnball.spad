@@ -68,6 +68,12 @@ NMArbField(p: PositiveInteger) : Exports == Implementation where
     ++ might be big relative to its midpoint.
     abs2 : % -> %
     ++ abs2(x) returns the square of the absolute value of x.
+    bernoulli : (Integer) -> %
+    ++ bernoulli(n) returns the n-th Bernoulli number as a
+    ++ NMArbField number.
+    bell : (Integer) -> %
+    ++ bell(n) returns the n-th Bell number as a
+    ++ NMArbField number.
     rsqrt : % -> %
     ++ rsqrt(x) returns the reciprocal of the square root of x,
     ++ i.e. 1/sqrt(x).
@@ -180,6 +186,11 @@ NMArbField(p: PositiveInteger) : Exports == Implementation where
     ++ in the interval x, "failed" otherwise.
     setUnion : (%, %) -> %
     ++ setUnion(x,y) returns the unions of the intervals x and y.
+    linearDependance : (JLVector(%), PositiveInteger) -> JLVector(NMInteger)
+    ++ linearDependance(vec, prec) finds a minimal linear dependence
+    ++ of the entries of vec. Heuristic algorithm.
+    simplestRational : % -> NMFraction(NMInteger)
+    ++ simplestRational(x) returns the simplest rational number in x.
     guess    : (%, NonNegativeInteger) -> NMAlgebraicNumber
     ++ guess(a, deg) returns the reconstructed algebraic
     ++ number found if it succeeds. Up to degree deg.
@@ -291,6 +302,10 @@ NMArbField(p: PositiveInteger) : Exports == Implementation where
     precision() == p
     bits(x) == jlEvalString(concat(["bits(", getind(x),")"]))
     accuracyBits(x) == jlEvalString(concat(["accuracy_bits(", getind(x),")"]))
+    floor(x) == junfunc("floor",x)
+    ceiling(x) == junfunc("ceil",x)
+    bernoulli(n) == jlref(concat(["bernoulli(", string(n), ",", NARB, ")"]))
+    bell(n) == jlref(concat(["bell(", string(n), ",", NARB, ")"]))
 
     x : % / y : % == jbinfunc("/", x, y)
     x : % ^ y : % == jbinfunc("^", x, y)
@@ -379,6 +394,10 @@ NMArbField(p: PositiveInteger) : Exports == Implementation where
       ret := jlref(concat ["chebyshev_u2(", string(n), ",", getind(x), ")"])$JLObjTuple
       [elt(ret,1) pretend %, elt(ret,2) pretend %]
 
+    linearDependance(vec, prec) ==
+      jlref(concat ["lindep(", getind(vec), ",", string(prec), ")"])$JLVector(NMInteger)
+
+    simplestRational(x) == junfunc("simplest_rational_inside",x)
 
     guess(a, deg) ==
       jlref(concat(["guess(QQBar,", getind(a), ",",
@@ -655,6 +674,12 @@ NMAcbField(p: PositiveInteger) : Exports == Implementation where
     ++ rootOfUnity(n)Return the root of unity exp(2*%pi*%i/n).
     precision : () -> PositiveInteger
     ++ precision() returns precision in bits used.
+    linearDependance : (JLVector(%), PositiveInteger) -> JLVector(NMInteger)
+    ++ linearDependance(vec, prec) finds a minimal linear dependence
+    ++ of the entries of vec. Heuristic algorithm.
+    linearDependance : (JLMatrix(%), PositiveInteger) -> JLVector(NMInteger)
+    ++ linearDependance(mat, prec) finds a minimal linear dependence of the
+    ++ rows of mat. Heuristic algorithm.
     guess : (%, NonNegativeInteger) -> NMAlgebraicNumber
     ++ guess(a, deg) returns the reconstructed algebraic number found if it succeeds.
     ++ Up to degree deg.
@@ -872,6 +897,11 @@ NMAcbField(p: PositiveInteger) : Exports == Implementation where
       jlref(concat(["guess(QQBar,", getind(a), ",",
         string(deg),")"]))$NMAlgebraicNumber
 
+    linearDependance(vec : JLVector(%), prec) ==
+      jlref(concat ["lindep(", getind(vec), ",", string(prec), ")"])$JLVector(NMInteger)
+    linearDependance(mat : JLMatrix(%), prec) ==
+      jlref(concat ["lindep(", getind(mat), ",", string(prec), ")"])$JLVector(NMInteger)
+
     rootOfUnity(n) ==
       jlref(concat(["root_of_unity(", NACB, ",", string(n),")"]))
 
@@ -978,6 +1008,12 @@ NMRealField() : Exports == Implementation where
     ++ i.e. x(x+1)...(x+n-1).
     binomial : (%, NNI) -> %
     ++ binomial(x, n) returns the binomial coefficient C(x,n).
+    bernoulli : Integer -> %
+    ++ bernoulli(n) returns the n-th Bernoulli number as a
+    ++ NMRealField number.
+    bell : Integer -> %
+    ++ bell(n) returns the n-th Bell number as a
+    ++ NMRealField number.
     abs2 : % -> %
     ++ abs2(x) returns the square of the absolute value of x.
     "*" : (%, Integer) -> %
@@ -1079,6 +1115,11 @@ NMRealField() : Exports == Implementation where
     containsNonPositive? : % -> Boolean
     ++ containsNonPositive?(x) checks whether or not x contains
     ++ any non positive value.
+    linearDependance : (JLVector(%), PositiveInteger) -> JLVector(NMInteger)
+    ++ linearDependance(vec, prec) finds a linear dependence of the entries
+    ++ of vec. Heuristic algorithm.
+    simplestRational : % -> NMFraction(NMInteger)
+    ++ simplestRational(x) returns the simplest rational number in x.
     guess : (%, NonNegativeInteger) -> NMAlgebraicNumber
     ++ guess(a, deg) returns the reconstructed algebraic number found
     ++ if it succeeds, up to degree deg.
@@ -1153,8 +1194,6 @@ NMRealField() : Exports == Implementation where
     randtest(type) ==
       jlref(concat(["rand(NRF,randtype=", string(type),")"]))
 
-
-
     midpoint(x) == junfunc("midpoint", x)
     radius(x) == junfunc("radius", x)
     addError!(x, y) ==
@@ -1207,8 +1246,13 @@ NMRealField() : Exports == Implementation where
       zero?(x) => "failed"
       junfunc("inv",x) pretend %
 
+    bernoulli(n) == jlref(concat(["bernoulli(", string(n), ", NRF)"]))
+    bell(n) == jlref(concat(["bell(", string(n), ",NRF)"]))
+
     abs(x) == junfunc("abs", x)
     abs2(x) == junfunc("abs2", x)
+    floor(x) == junfunc("floor",x)
+    ceiling(x) == junfunc("ceil",x)
 
     -- x quo y == jbinfunc("div", x, y)
     x quo y == jbinfunc("÷", x, y)
@@ -1279,6 +1323,11 @@ NMRealField() : Exports == Implementation where
       [elt(ret,1) pretend %, elt(ret,2) pretend %]
 
     polylog(n,x) == jbinfunc("polylog",n, x)
+
+    linearDependance(vec, prec) ==
+      jlref(concat ["lindep(", getind(vec), ",", string(prec), ")"])$JLVector(NMInteger)
+
+    simplestRational(x) == junfunc("simplest_rational_inside",x)
 
     guess(a, deg) ==
       jlref(concat(["guess(QQBar,", getind(a), ",",
@@ -1510,9 +1559,6 @@ NMComplexField() : Exports == Implementation where
     jacobiTheta : (%, %) -> List(%)
     ++ jacobiTheta(z,tau) returns a list with the values of the
     ++ Jacobi theta function evaluated at z and tau.
-    -- TODO
-    --atan : (%, JI64) -> %
-    --++ atan(x, y) computes the inverse tangent of x/y.
     rootOfUnity : (NonNegativeInteger) -> %
     ++ rootOfUnity(n)Return the root of unity exp(2*%pi*%i/n).
     rootOfUnity : (NonNegativeInteger, Integer) -> %
@@ -1536,6 +1582,12 @@ NMComplexField() : Exports == Implementation where
     ++ when creating a new element.
     precision : PI -> PI
     ++ precision(p) changes the precision used for creating elements.
+    linearDependance : (JLVector(%), PositiveInteger) -> JLVector(NMInteger)
+    ++ linearDependance(vec, prec) finds a linear dependence of the
+    ++ entries of vec. Heuristic algorithm.
+    linearDependance : (JLMatrix(%), PositiveInteger) -> JLVector(NMInteger)
+    ++ linearDependance(mat, prec) finds a linear dependence of the rows of mat.
+    ++ Heuristic algorithm.
     guess : (%, NonNegativeInteger) -> NMAlgebraicNumber
     ++ guess(a, deg) returns the reconstructed algebraic number found if it succeeds.
     ++ Up to degree deg.
@@ -1760,6 +1812,11 @@ NMComplexField() : Exports == Implementation where
     rootOfUnity(n,k) ==
       jlref(concat(["root_of_unity(NCF,",
         string(n), ",",string(k) ")"]))
+
+    linearDependance(vec : JLVector(%), prec) ==
+      jlref(concat ["lindep(", getind(vec), ",", string(prec), ")"])$JLVector(NMInteger)
+    linearDependance(mat : JLMatrix(%), prec) ==
+      jlref(concat ["lindep(", getind(mat), ",", string(prec), ")"])$JLVector(NMInteger)
 
     guess(a, deg) ==
       jlref(concat(["guess(QQBar,", getind(a), ",",
