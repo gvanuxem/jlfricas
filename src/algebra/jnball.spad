@@ -186,8 +186,8 @@ NMArbField(p: PositiveInteger) : Exports == Implementation where
     ++ in the interval x, "failed" otherwise.
     setUnion : (%, %) -> %
     ++ setUnion(x,y) returns the unions of the intervals x and y.
-    linearDependance : (JLVector(%), PositiveInteger) -> JLVector(NMInteger)
-    ++ linearDependance(vec, prec) finds a minimal linear dependence
+    linearDependence : (JLVector(%), PositiveInteger) -> JLVector(NMInteger)
+    ++ linearDependence(vec, prec) finds a minimal linear dependence
     ++ of the entries of vec. Heuristic algorithm.
     simplestRational : % -> NMFraction(NMInteger)
     ++ simplestRational(x) returns the simplest rational number in x.
@@ -394,7 +394,7 @@ NMArbField(p: PositiveInteger) : Exports == Implementation where
       ret := jlref(concat ["chebyshev_u2(", string(n), ",", getind(x), ")"])$JLObjTuple
       [elt(ret,1) pretend %, elt(ret,2) pretend %]
 
-    linearDependance(vec, prec) ==
+    linearDependence(vec, prec) ==
       jlref(concat ["lindep(", getind(vec), ",", string(prec), ")"])$JLVector(NMInteger)
 
     simplestRational(x) == junfunc("simplest_rational_inside",x)
@@ -674,11 +674,11 @@ NMAcbField(p: PositiveInteger) : Exports == Implementation where
     ++ rootOfUnity(n)Return the root of unity exp(2*%pi*%i/n).
     precision : () -> PositiveInteger
     ++ precision() returns precision in bits used.
-    linearDependance : (JLVector(%), PositiveInteger) -> JLVector(NMInteger)
-    ++ linearDependance(vec, prec) finds a minimal linear dependence
+    linearDependence : (JLVector(%), PositiveInteger) -> JLVector(NMInteger)
+    ++ linearDependence(vec, prec) finds a minimal linear dependence
     ++ of the entries of vec. Heuristic algorithm.
-    linearDependance : (JLMatrix(%), PositiveInteger) -> JLVector(NMInteger)
-    ++ linearDependance(mat, prec) finds a minimal linear dependence of the
+    linearDependence : (JLMatrix(%), PositiveInteger) -> JLVector(NMInteger)
+    ++ linearDependence(mat, prec) finds a minimal linear dependence of the
     ++ rows of mat. Heuristic algorithm.
     guess : (%, NonNegativeInteger) -> NMAlgebraicNumber
     ++ guess(a, deg) returns the reconstructed algebraic number found if it succeeds.
@@ -897,9 +897,9 @@ NMAcbField(p: PositiveInteger) : Exports == Implementation where
       jlref(concat(["guess(QQBar,", getind(a), ",",
         string(deg),")"]))$NMAlgebraicNumber
 
-    linearDependance(vec : JLVector(%), prec) ==
+    linearDependence(vec : JLVector(%), prec) ==
       jlref(concat ["lindep(", getind(vec), ",", string(prec), ")"])$JLVector(NMInteger)
-    linearDependance(mat : JLMatrix(%), prec) ==
+    linearDependence(mat : JLMatrix(%), prec) ==
       jlref(concat ["lindep(", getind(mat), ",", string(prec), ")"])$JLVector(NMInteger)
 
     rootOfUnity(n) ==
@@ -1115,7 +1115,7 @@ NMRealField() : Exports == Implementation where
     containsNonPositive? : % -> Boolean
     ++ containsNonPositive?(x) checks whether or not x contains
     ++ any non positive value.
-    linearDependance : (JLVector(%), PositiveInteger) -> JLVector(NMInteger)
+    linearDependence : (JLVector(%), PositiveInteger) -> JLVector(NMInteger)
     ++ linearDependance(vec, prec) finds a linear dependence of the entries
     ++ of vec. Heuristic algorithm.
     simplestRational : % -> NMFraction(NMInteger)
@@ -1324,7 +1324,7 @@ NMRealField() : Exports == Implementation where
 
     polylog(n,x) == jbinfunc("polylog",n, x)
 
-    linearDependance(vec, prec) ==
+    linearDependence(vec, prec) ==
       jlref(concat ["lindep(", getind(vec), ",", string(prec), ")"])$JLVector(NMInteger)
 
     simplestRational(x) == junfunc("simplest_rational_inside",x)
@@ -1582,11 +1582,11 @@ NMComplexField() : Exports == Implementation where
     ++ when creating a new element.
     precision : PI -> PI
     ++ precision(p) changes the precision used for creating elements.
-    linearDependance : (JLVector(%), PositiveInteger) -> JLVector(NMInteger)
-    ++ linearDependance(vec, prec) finds a linear dependence of the
+    linearDependence : (JLVector(%), PositiveInteger) -> JLVector(NMInteger)
+    ++ linearDependence(vec, prec) finds a linear dependence of the
     ++ entries of vec. Heuristic algorithm.
-    linearDependance : (JLMatrix(%), PositiveInteger) -> JLVector(NMInteger)
-    ++ linearDependance(mat, prec) finds a linear dependence of the rows of mat.
+    linearDependence : (JLMatrix(%), PositiveInteger) -> JLVector(NMInteger)
+    ++ linearDependence(mat, prec) finds a linear dependence of the rows of mat.
     ++ Heuristic algorithm.
     guess : (%, NonNegativeInteger) -> NMAlgebraicNumber
     ++ guess(a, deg) returns the reconstructed algebraic number found if it succeeds.
@@ -1813,9 +1813,9 @@ NMComplexField() : Exports == Implementation where
       jlref(concat(["root_of_unity(NCF,",
         string(n), ",",string(k) ")"]))
 
-    linearDependance(vec : JLVector(%), prec) ==
+    linearDependence(vec : JLVector(%), prec) ==
       jlref(concat ["lindep(", getind(vec), ",", string(prec), ")"])$JLVector(NMInteger)
-    linearDependance(mat : JLMatrix(%), prec) ==
+    linearDependence(mat : JLMatrix(%), prec) ==
       jlref(concat ["lindep(", getind(mat), ",", string(prec), ")"])$JLVector(NMInteger)
 
     guess(a, deg) ==
