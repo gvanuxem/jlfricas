@@ -517,8 +517,6 @@ NMAcbField(p: PositiveInteger) : Exports == Implementation where
     risingFactorial2 : (%, Integer) -> Record(rf : %, d : %)
     ++ risingFactorial2(x, n) returns a record containing
     ++ the rising factorial x(x+1)...(x+n-1) and its derivative.
-    abs : % -> NMArbField(p)
-    ++ abs(x) returns the  absolute value of x.
     abs2 : % -> NMArbField(p)
     ++ abs2(x) returns the square of the absolute value of real
     ++ part of x and imaginary part of x.
@@ -1412,8 +1410,6 @@ NMComplexField() : Exports == Implementation where
     ++ contains?(x,y) checks whether or not y is contained in x.
     containsZero? : % -> Boolean
     ++ containsZero?(x) checks whether or not 0 is contained in x.
-    abs : % -> NMRealField
-    ++ abs(x) returns the  absolute value of x.
     abs2 : % -> NMRealField
     ++ abs2(x) returns the square of the absolute value of real
     ++ part of x and imaginary part of x.

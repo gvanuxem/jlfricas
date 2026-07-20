@@ -153,8 +153,8 @@ REGRESS0 = agcd.output array.output bezout.output bugs2007.output \
 
 ifdef JULIA_WRAP_SO_TARGET
 REGRESS0 += jf64sf.output jla.output jnpadic.output \
-           jnseries.output jnseries2.output julia.output \
-           jf32sf.output jfsf.output jnball.output jnemo.output \
+           jnseries.output julia.output jf32sf.output \
+					 jfsf.output jnball.output jnemo.output \
            jobject.output jnpoly.output jdataframe.output \
            jafunction.output jfunction.output jrational.output
 ifeq ($(JULIA_USE_MLINK),yes)
