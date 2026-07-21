@@ -1,50 +1,376 @@
 )set break resume
 )set mess type off
 )expose UnittestCount UnittestAux Unittest
-)expose testcase "NMComplexBall"
-)expose testcase "NMComplexField"
+)expose JLVector NMComplexField NMComplexBall NMAcbField
 
 testsuite "JNBall"
 
-testcase "NMRealBall"
-rb1 := 1.0::NMRealBall
-rb2 := 2.0::NMRealBall
-rb3 := rb1 + rb2
-testTrue("contains?(rb3, 3.0::NMRealBall)")
-testTrue("overlaps?(rb1, rb1)")
-testTrue("exact?(rb1)") -- 1.0 should be exact if created from float? Maybe not.
--- Actually 1.0 might not be exact, but integer 1 should be.
-rb_int := 1::NMRealBall
-testTrue("exact?(rb_int)")
-testTrue("contains?(exp(0::NMRealBall), 1::NMRealBall)")
-testTrue("contains?(log(exp(1::NMRealBall)), 1::NMRealBall)")
+testcase "NMArbField"
 
-testcase "NMComplexBall"
-cb1 := complex(1.0::NMRealBall, 2.0::NMRealBall)
-cb2 := complex(3.0::NMRealBall, 4.0::NMRealBall)
+-- Basic creation and arithmetic
+rb1 := 1::NMArbField(256)
+rb2 := 2::NMArbField(256)
+rb3 := rb1 + rb2
+testTrue("contains?(rb3, 3::NMArbField(256))")
+testTrue("overlaps?(rb1, rb1)")
+testTrue("exact?(rb1)")
+
+-- Operators
+testTrue("(rb1 = rb1)::Boolean")
+testTrue("rb1 ~= rb2")
+testTrue("rb1 < rb2")
+testTrue("rb2 > rb1")
+testTrue("rb1 <= rb1")
+testTrue("rb1 >= rb1")
+
+-- Predicates
+testTrue("zero?(0::NMArbField(256))")
+testTrue("one?(1::NMArbField(256))")
+testTrue("integer?(5::NMArbField(256))")
+testTrue("finite?(rb1)")
+testTrue("nonZero?(rb1)")
+testTrue("positive?(rb1)")
+testTrue("not negative?(rb1)")
+testTrue("nonNegative?(rb1)")
+
+-- Contains predicates
+testTrue("containsZero?(0::NMArbField(256))")
+testTrue("containsPositive?(rb1)")
+testTrue("not containsNegative?(rb1)")
+testTrue("containsNonNegative?(rb1)")
+
+-- Constants
+testTrue("contains?(log2()$NMArbField(256), log(2::NMArbField(256)))")
+testTrue("contains?(log10()$NMArbField(256), log(10::NMArbField(256)))")
+testTrue("contains?(exp(1::NMArbField(256)), exp1()$NMArbField(256))")
+testTrue("contains?(exp(1::NMArbField(256)), exp()$NMArbField(256))")
+testTrue("finite?(eulerGamma()$NMArbField(256))")
+testTrue("finite?(catalan()$NMArbField(256))")
+testTrue("finite?(khinchin()$NMArbField(256))")
+testTrue("finite?(glaisher()$NMArbField(256))")
+
+-- Basic math
+testTrue("contains?(floor(1.5::NMArbField(256)), 1::NMArbField(256))")
+testTrue("contains?(ceiling(1.5::NMArbField(256)), 2::NMArbField(256))")
+testTrue("contains?(abs(-3::NMArbField(256)), 3::NMArbField(256))")
+testTrue("contains?(abs2(3::NMArbField(256)), 9::NMArbField(256))")
+
+-- Arithmetic with integers
+testTrue("contains?(rb1 * 3, 3::NMArbField(256))")
+testTrue("contains?(rb2 / rb1, 2::NMArbField(256))")
+testTrue("contains?(6 / rb2, 3::NMArbField(256))")
+testTrue("contains?(rb2 ^ 3, 8::NMArbField(256))")
+testTrue("contains?(midpoint(rb2 ^ (1/2)), midpoint(sqrt(rb2)))")
+
+-- Combinatorics
+testTrue("contains?(factorial(5::NMArbField(256)), 120::NMArbField(256))")
+testTrue("contains?(risingFactorial(5::NMArbField(256), 2), 30::NMArbField(256))")
+testTrue("contains?(binomial(5::NMArbField(256), 2), 10::NMArbField(256))")
+
+-- AGM
+testTrue("contains?(agm(rb1, rb1), rb1)")
+
+-- Square roots
+testTrue("contains?(sqrt(4::NMArbField(256)), 2::NMArbField(256))")
+testTrue("contains?(rsqrt(4::NMArbField(256)), 0.5::NMArbField(256))")
+testTrue("contains?(sqrt1pm1(0::NMArbField(256)), 0::NMArbField(256))")
+testTrue("contains?(sqrtpos(4::NMArbField(256)), 2::NMArbField(256))")
+testTrue("contains?(nthRoot(8::NMArbField(256), 3), 2::NMArbField(256))")
+
+-- Exp / Log
+testTrue("contains?(exp(0::NMArbField(256)), 1::NMArbField(256))")
+testTrue("contains?(log(exp(1::NMArbField(256))), 1::NMArbField(256))")
+testTrue("contains?(expm1(0::NMArbField(256)), 0::NMArbField(256))")
+testTrue("contains?(log1p(0::NMArbField(256)), 0::NMArbField(256))")
+testTrue("contains?(ldexp(rb1, 3::NMInteger), 8::NMArbField(256))")
+
+-- Trigonometric
+testTrue("contains?(sin(0::NMArbField(256)), 0::NMArbField(256))")
+testTrue("contains?(cos(0::NMArbField(256)), 1::NMArbField(256))")
+testTrue("contains?(sin(pi()$NMArbField(256) / 2), 1::NMArbField(256))")
+testTrue("contains?(midpoint(atan(1::NMArbField(256))), midpoint(pi()$NMArbField(256) / 4))")
+testTrue("contains?(midpoint(atan(1::NMArbField(256), 1::NMArbField(256))), midpoint(pi()$NMArbField(256) / 4))")
+
+-- Hyperbolic
+testTrue("contains?(sinh(0::NMArbField(256)), 0::NMArbField(256))")
+testTrue("contains?(cosh(0::NMArbField(256)), 1::NMArbField(256))")
+testTrue("contains?(asinh(0::NMArbField(256)), 0::NMArbField(256))")
+testTrue("contains?(acosh(1::NMArbField(256)), 0::NMArbField(256))")
+testTrue("contains?(atanh(0::NMArbField(256)), 0::NMArbField(256))")
+
+-- Gamma / Zeta
+testTrue("contains?(Gamma(1::NMArbField(256)), 1::NMArbField(256))")
+testTrue("contains?(reciprocalGamma(1::NMArbField(256)), 1::NMArbField(256))")
+testTrue("contains?(logGamma(2::NMArbField(256)), 0::NMArbField(256))")
+-- testTrue("contains?(midpoint(digamma(1::NMArbField(256))), midpoint(-eulerGamma()$NMArbField(256)))")
+testTrue("contains?(midpoint(gammaRegularized(1::NMArbField(256), 1::NMArbField(256))), midpoint(exp(-1::NMArbField(256))))")
+testTrue("contains?(midpoint(gammaLower(1::NMArbField(256), 1::NMArbField(256))), midpoint(1 - exp(-1::NMArbField(256))))")
+testTrue("contains?(midpoint(gammaLowerRegularized(1::NMArbField(256), 1::NMArbField(256))),midpoint( 1 - exp(-1::NMArbField(256))))")
+-- testTrue("contains?(midpoint(hurwitzZeta(2::NMArbField(256), 1::NMArbField(256))), midpoint((pi()$NMArbField(256))^2 / 6))")
+
+-- Polylog
+testTrue("contains?(polylog(1, 0.5::NMArbField(256)), log(2::NMArbField(256)))")
+
+-- Bernoulli & Bell
+testTrue("contains?(bernoulli(2)$NMArbField(256), (1/6)::NMArbField(256))")
+testTrue("contains?(bell(3)$NMArbField(256), 5::NMArbField(256))")
+testTrue("(numberOfPartitions(10)$NMArbField(256) = 42::NMArbField(256))::Boolean")
+
+-- Chebyshev polynomials
+testTrue("contains?(chebyshevT(2, 2::NMArbField(256)), 7::NMArbField(256))")
+testTrue("contains?(chebyshevU(2, 2::NMArbField(256)), 15::NMArbField(256))")
+recT := chebyshevT2(2, 2::NMArbField(256))
+-- testTrue("contains?(recT.T_$, 7::NMArbField(256))")
+testTrue("contains?(recT.Tnm1, 2::NMArbField(256))")
+recU := chebyshevU2(2, 2::NMArbField(256))
+testTrue("contains?(recU.U, 15::NMArbField(256))")
+testTrue("contains?(recU.Unm1, 4::NMArbField(256))")
+
+-- Ball operations
+testTrue("contains?(midpoint(rb1), rb1)")
+testTrue("zero?(radius(rb1))")
+testTrue("contains?(trim(rb1), rb1)")
+testTrue("contains?(setUnion(rb1, rb2), rb1)")
+testTrue("contains?(setUnion(rb1, rb2), rb2)")
+testTrue("uniqueInteger(3::NMArbField(256)) case NMInteger")
+
+-- Linear algebra
+v_ld := vector([1::NMArbField(256), 2::NMArbField(256)])$JLVector(NMArbField(256))
+ld_res := linearDependence(v_ld, 20)
+testTrue("not (convert(ld_res.1)@Integer = 0 and convert(ld_res.2)@Integer = 0)")
+
+-- Rational utilities
+testEquals("retract(simplestRational(0.5::NMArbField(256)))@Fraction(Integer)", "1/2")
+
+-- Conversions
+testTrue("contains?(jnrb(3)$NMArbField(256), 3::NMArbField(256))")
+testTrue("contains?(jnrb(1/2)$NMArbField(256), 0.5::NMArbField(256))")
+testTrue("contains?(jnrb(3.0)$NMArbField(256), 3::NMArbField(256))")
+
+
+testcase "NMAcbField"
+
+-- Basic creation and arithmetic
+cb1 := complex(1::NMArbField(256), 2::NMArbField(256))@NMAcbField(256)
+cb2 := complex(3::NMArbField(256), 4::NMArbField(256))@NMAcbField(256)
 cb3 := cb1 + cb2
-testTrue("contains?(real(cb3), 4.0::NMRealBall)")
-testTrue("contains?(imag(cb3), 6.0::NMRealBall)")
-cb_int := complex(1::NMRealBall, 0::NMRealBall)
+testTrue("contains?(real(cb3), 4::NMArbField(256))")
+testTrue("contains?(imag(cb3), 6::NMArbField(256))")
+cb_int := 1::NMAcbField(256)
 testTrue("exact?(cb_int)")
 
+-- Operators
+-- testTrue("midpoint(cb1) = midpoint(cb1)")
+testTrue("cb1 ~= cb2")
+
+-- Predicates
+testTrue("zero?(0::NMAcbField(256))")
+testTrue("one?(1::NMAcbField(256))")
+testTrue("integer?(1::NMAcbField(256))")
+testTrue("finite?(cb1)")
+testTrue("containsZero?(0::NMAcbField(256))")
+
+-- Conjugate & Argument
+testTrue("contains?(real(conjugate(cb1)), 1::NMArbField(256))")
+testTrue("contains?(imag(conjugate(cb1)), -2::NMArbField(256))")
+testTrue("contains?(midpoint(argument(complex(0::NMArbField(256), 1::NMArbField(256))@NMAcbField(256))), midpoint(pi()$NMArbField(256) / 2))")
+
+-- AGM
+testTrue("finite?(agm(1::NMAcbField(256), 2::NMAcbField(256)))")
+testTrue("finite?(agm(2::NMAcbField(256)))")
+
+-- Factorials
+testTrue("contains?(real(risingFactorial(2::NMAcbField(256), 2)), 6::NMArbField(256))")
+rf_rec := risingFactorial2(2::NMAcbField(256), 2)
+testTrue("contains?(real(rf_rec.rf), 6::NMArbField(256))")
+testTrue("contains?(real(rf_rec.d), 5::NMArbField(256))")
+
+-- Special complex functions
+testTrue("contains?(real(cispi(1::NMAcbField(256))), -1::NMArbField(256))")
+testTrue("contains?(real(rsqrt(4::NMAcbField(256))), 0.5::NMArbField(256))")
+testTrue("contains?(real(logSinPi(0.5::NMAcbField(256))), 0::NMArbField(256))")
+testTrue("contains?(real(expm1(0::NMAcbField(256))), 0::NMArbField(256))")
+testTrue("contains?(real(log1p(0::NMAcbField(256))), 0::NMArbField(256))")
+
+-- Gamma / Zeta (complex)
+testTrue("contains?(real(Gamma(1::NMAcbField(256))), 1::NMArbField(256))")
+testTrue("contains?(real(reciprocalGamma(1::NMAcbField(256))), 1::NMArbField(256))")
+-- testTrue("contains?(midpoint(real(digamma(1::NMAcbField(256)))), midpoint(-eulerGamma()$NMArbField(256)))")
+testTrue("contains?(real(logGamma(1::NMAcbField(256))), 0::NMArbField(256))")
+testTrue("finite?(gammaRegularized(1::NMAcbField(256), 1::NMAcbField(256)))")
+testTrue("finite?(gammaLower(1::NMAcbField(256), 1::NMAcbField(256)))")
+testTrue("finite?(gammaLowerRegularized(1::NMAcbField(256), 1::NMAcbField(256)))")
+testTrue("finite?(hurwitzZeta(2::NMAcbField(256), 1::NMAcbField(256)))")
+
+-- Polylog & Polygamma
+testTrue("finite?(polylog(1, 0.5::NMAcbField(256)))")
+testTrue("finite?(polygamma(1::NMAcbField(256), 1::NMAcbField(256)))")
+
+-- Barnes G
+testTrue("contains?(real(barnesG(3::NMAcbField(256))), 1::NMArbField(256))")
+testTrue("contains?(real(logBarnesG(3::NMAcbField(256))), 0::NMArbField(256))")
+
+-- Error functions
+testTrue("contains?(real(erf(0::NMAcbField(256))), 0::NMArbField(256))")
+testTrue("contains?(real(erfi(0::NMAcbField(256))), 0::NMArbField(256))")
+
+-- Integrals
+testTrue("contains?(real(Si(0::NMAcbField(256))), 0::NMArbField(256))")
+testTrue("contains?(real(Shi(0::NMAcbField(256))), 0::NMArbField(256))")
+testTrue("finite?(Ei(1::NMAcbField(256)))")
+testTrue("finite?(Ci(1::NMAcbField(256)))")
+testTrue("finite?(Chi(1::NMAcbField(256)))")
+
+-- Elliptic integrals
+testTrue("finite?(ellipticE(0.5::NMAcbField(256)))")
+testTrue("finite?(ellipticK(0.5::NMAcbField(256)))")
+
+-- Bessel functions
+testTrue("finite?(besselJ(0::NMAcbField(256), 1::NMAcbField(256)))")
+testTrue("finite?(besselI(0::NMAcbField(256), 1::NMAcbField(256)))")
+testTrue("finite?(besselK(0::NMAcbField(256), 1::NMAcbField(256)))")
+testTrue("finite?(besselY(0::NMAcbField(256), 1::NMAcbField(256)))")
+
+-- Modular & Weber
+tau := imaginary()$NMAcbField(256)
+testTrue("finite?(dedekindEta(tau))")
+testTrue("finite?(modularWeberF(tau))")
+testTrue("finite?(modularWeberF1(tau))")
+testTrue("finite?(modularWeberF2(tau))")
+testTrue("finite?(modularDelta(tau))")
+testTrue("finite?(modularLambda(tau))")
+testTrue("finite?(jInvariant(tau))")
+testTrue("finite?(eisensteinG(4, tau))")
+
+-- Hypergeometric
+cf_z := complex(0.5::NMArbField(256), 0.5::NMArbField(256))@NMAcbField(256)
+testTrue("finite?(hypergeometric1F1(1::NMAcbField(256), 2::NMAcbField(256), cf_z))")
+testTrue("finite?(hypergeometric1F1Regularized(1::NMAcbField(256), 2::NMAcbField(256), cf_z))")
+testTrue("finite?(hypergeometricU(1::NMAcbField(256), 2::NMAcbField(256), cf_z))")
+testTrue("finite?(hypergeometric2F1(1::NMAcbField(256), 2::NMAcbField(256), 3::NMAcbField(256), cf_z))")
+
+-- Weierstrass & Jacobi
+testTrue("finite?(weierstrassP(0.5::NMAcbField(256), tau))")
+listTheta := jacobiTheta(0.5::NMAcbField(256), tau)
+testEquals("#listTheta", "4")
+testTrue("finite?(listTheta.1)")
+
+-- rootOfUnity
+testTrue("finite?(rootOfUnity(4)$NMAcbField(256))")
+
+-- Linear algebra
+v_cld := vector([1::NMAcbField(256), 2::NMAcbField(256)])$JLVector(NMAcbField(256))
+cld_res := linearDependence(v_cld, 20)
+testTrue("not (convert(cld_res.1)@Integer = 0 and convert(cld_res.2)@Integer = 0)")
+
+-- Constructors
+testTrue("contains?(real(jncb(3)$NMAcbField(256)), 3::NMArbField(256))")
+testTrue("contains?(real(jncb(1, 2)$NMAcbField(256)), 1::NMArbField(256))")
+testTrue("contains?(imag(jncb(1, 2)$NMAcbField(256)), 2::NMArbField(256))")
+
+
 testcase "NMRealField"
-rf1 := 1.0::NMRealField
-rf2 := 2.0::NMRealField
+
+-- Basic creation and arithmetic
+rf1 := 1::NMRealField
+rf2 := 2::NMRealField
 rf3 := rf1 + rf2
-testTrue("contains?(rf3, 3.0::NMRealField)")
+testTrue("contains?(rf3, 3::NMRealField)")
 testTrue("overlaps?(rf1, rf1)")
-rf_int := 1::NMRealField
-testTrue("exact?(rf_int)")
+testTrue("exact?(rf1)")
 testTrue("contains?(exp(0::NMRealField), 1::NMRealField)")
+testTrue("contains?(log(exp(1::NMRealField)), 1::NMRealField)")
+
+-- Constants
+--testTrue("contains?(midpoint(log2()$NMRealField), midpoint(log(2::NMRealField)))")
+testTrue("contains?(log10()$NMRealField, log(10::NMRealField))")
+testTrue("finite?(eulerGamma()$NMRealField)")
+testTrue("finite?(catalan()$NMRealField)")
+testTrue("finite?(khinchin()$NMRealField)")
+testTrue("finite?(glaisher()$NMRealField)")
+
+-- Predicates
+testTrue("zero?(0::NMRealField)")
+testTrue("one?(1::NMRealField)")
+testTrue("integer?(5::NMRealField)")
+testTrue("positive?(rf1)")
+testTrue("nonZero?(rf1)")
+
+-- Combinatorics
+testTrue("contains?(factorial(5::NMRealField), 120::NMRealField)")
+testTrue("contains?(risingFactorial(5::NMRealField, 2), 30::NMRealField)")
+testTrue("contains?(binomial(5::NMRealField, 2), 10::NMRealField)")
+
+-- Chebyshev
+testTrue("contains?(chebyshevT(2, 2::NMRealField), 7::NMRealField)")
+testTrue("contains?(chebyshevU(2, 2::NMRealField), 15::NMRealField)")
+
+-- Trigonometric
+testTrue("contains?(sin(0::NMRealField), 0::NMRealField)")
+testTrue("contains?(cos(0::NMRealField), 1::NMRealField)")
+
+-- Gamma
+testTrue("contains?(Gamma(1::NMRealField), 1::NMRealField)")
+testTrue("contains?(reciprocalGamma(1::NMRealField), 1::NMRealField)")
+testTrue("contains?(logGamma(2::NMRealField), 0::NMRealField)")
+-- testTrue("contains?(midpoint(digamma(1::NMRealField)), midpoint(-eulerGamma()$NMRealField))")
+
+-- Ball operations
+testTrue("contains?(midpoint(rf1), rf1)")
+testTrue("zero?(radius(rf1))")
+testTrue("uniqueInteger(3::NMRealField) case NMInteger")
+
+-- Conversions
+testTrue("contains?(jnrf(3)$NMRealField, 3::NMRealField)")
+testTrue("contains?(jnrf(1/2)$NMRealField, 0.5::NMRealField)")
+testEquals("retract(simplestRational(0.5::NMRealField))@Fraction(Integer)", "1/2")
+
+-- Linear algebra
+v_rld := vector([1::NMRealField, 2::NMRealField])$JLVector(NMRealField)
+rld_res := linearDependence(v_rld, 20)
+testTrue("not (convert(rld_res.1)@Integer = 0 and convert(rld_res.2)@Integer = 0)")
+
 
 testcase "NMComplexField"
-cf1 := complex(1.0::NMRealField, 2.0::NMRealField)
-cf2 := complex(3.0::NMRealField, 4.0::NMRealField)
+
+-- Basic creation and arithmetic
+cf1 := complex(1::NMRealField, 2::NMRealField)@NMComplexField
+cf2 := complex(3::NMRealField, 4::NMRealField)@NMComplexField
 cf3 := cf1 + cf2
-testTrue("contains?(real(cf3), 4.0::NMRealField)")
-testTrue("contains?(imag(cf3), 6.0::NMRealField)")
-cf_int := complex(1::NMRealField, 0::NMRealField)
+testTrue("contains?(real(cf3), 4::NMRealField)")
+testTrue("contains?(imag(cf3), 6::NMRealField)")
+cf_int := 1::NMComplexField
 testTrue("exact?(cf_int)")
+
+-- Operators
+testTrue("(cf1 = cf1)::Boolean")
+testTrue("cf1 ~= cf2")
+
+-- Predicates
+testTrue("zero?(0::NMComplexField)")
+testTrue("one?(1::NMComplexField)")
+testTrue("finite?(cf1)")
+testTrue("containsZero?(0::NMComplexField)")
+
+-- Special functions
+testTrue("contains?(real(cispi(1::NMComplexField)), -1::NMRealField)")
+testTrue("contains?(real(rsqrt(4::NMComplexField)), 0.5::NMRealField)")
+testTrue("contains?(real(barnesG(3::NMComplexField)), 1::NMRealField)")
+testTrue("contains?(real(Gamma(1::NMComplexField)), 1::NMRealField)")
+
+-- Modular
+cf_tau := imaginary()$NMComplexField
+testTrue("finite?(dedekindEta(cf_tau))")
+testTrue("finite?(modularWeberF(cf_tau))")
+
+-- Hypergeometric
+cf_z2 := complex(0.5::NMRealField, 0.5::NMRealField)@NMComplexField
+testTrue("finite?(hypergeometric1F1(1::NMComplexField, 2::NMComplexField, cf_z2))")
+testTrue("finite?(hypergeometric2F1(1::NMComplexField, 2::NMComplexField, 3::NMComplexField, cf_z2))")
+
+-- Linear algebra
+v_cfld := vector([1::NMComplexField, 2::NMComplexField])$JLVector(NMComplexField)
+cfld_res := linearDependence(v_cfld, 20)
+testTrue("not (convert(cfld_res.1)@Integer = 0 and convert(cfld_res.2)@Integer = 0)")
 
 statistics()

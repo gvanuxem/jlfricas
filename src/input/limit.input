@@ -1,6 +1,8 @@
 )set break resume
 )expose UnittestCount UnittestAux Unittest
 
+)unexpose NMRealField NMRealBall
+
 testsuite "limit"
 
 test_limit(expr : String, val : String) : Void ==

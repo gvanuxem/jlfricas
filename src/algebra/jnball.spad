@@ -70,17 +70,20 @@ NMArbField(p: PositiveInteger) : Exports == Implementation where
     ++ abs2(x) returns the square of the absolute value of x.
     bernoulli : (Integer) -> %
     ++ bernoulli(n) returns the n-th Bernoulli number as a
-    ++ NMArbField number.
+    ++ NMArbField element.
     bell : (Integer) -> %
     ++ bell(n) returns the n-th Bell number as a
-    ++ NMArbField number.
+    ++ NMArbField element.
+    numberOfPartitions : NMInteger -> %
+    ++ numberOfPartitions(n) returns the number of partitions of n
+    ++ as a NMArbField element.
     rsqrt : % -> %
     ++ rsqrt(x) returns the reciprocal of the square root of x,
     ++ i.e. 1/sqrt(x).
     sqrt1pm1 : % -> %
     ++ sqrt1pm1(x) computes accurately sqrt(1+x)-1.
-    sqrtPos : % -> %
-    ++ sqrtPos(x) computes accurately sqrt(x) assuming x >= 0.
+    sqrtpos : % -> %
+    ++ sqrtpos(x) computes accurately sqrt(x) assuming x >= 0.
     ++ Discard any negative number in the input interval.
     expm1 : % -> %
     ++ expm1(x) computes accurately e^x-1. It avoids the loss of precision
@@ -106,10 +109,10 @@ NMArbField(p: PositiveInteger) : Exports == Implementation where
     gammaRegularized : (%, %) -> %
     ++ gammaRegularized(s,x) is the regularized upper incomplete
     ++ Gamma function.
-    -- Renamed from didamma to diGamma to avoid conflict with digamma(Z)
+    -- Renamed from didamma to digamma to avoid conflict with digamma(Z)
     -- which should return an Expression(Integer).
-    diGamma : % -> %
-    ++ diGamma(x) returns logarithmic derivative of the gamma
+    digamma : % -> %
+    ++ digamma(x) returns logarithmic derivative of the gamma
     ++ function evaluated at x.
     logGamma : % -> %
     ++ logGamma(x) returns the logarithm of the gamma
@@ -119,7 +122,7 @@ NMArbField(p: PositiveInteger) : Exports == Implementation where
     gammaLowerRegularized : (%, %) -> %
     ++ gammaLowerRegularized(s,x) is the regularized lower incomplete
     ++ Gamma function.
-    polylog : (NMInteger, %) -> %
+    polylog : (Integer, %) -> %
     ++ polylog(n,x) returns the polylogarithm function Li_n(x).
     chebyshevT : (NNI, %) -> %
     ++ chebyshevT(n,x) returns the value of the Chebyshev polynomial of the
@@ -243,7 +246,7 @@ NMArbField(p: PositiveInteger) : Exports == Implementation where
 
     0 == jlref(concat(["zero(", NARB, ")"]))
     1 == jlref(concat(["one(", NARB, ")"]))
-    x = y == jbinbfunc("isequal", x, y)
+    x = y == jbinbfunc("==", x, y)
     x ~= y == jbinbfunc("!=", x, y)
     pi() == jlref(concat(["const_pi(", NARB, ")"]))
     exp1() == jlref(concat(["const_e(", NARB, ")"]))
@@ -306,6 +309,7 @@ NMArbField(p: PositiveInteger) : Exports == Implementation where
     ceiling(x) == junfunc("ceil",x)
     bernoulli(n) == jlref(concat(["bernoulli(", string(n), ",", NARB, ")"]))
     bell(n) == jlref(concat(["bell(", string(n), ",", NARB, ")"]))
+    numberOfPartitions(n) == jlref(concat(["numpart(", string(n), ",", NARB, ")"]))
 
     x : % / y : % == jbinfunc("/", x, y)
     x : % ^ y : % == jbinfunc("^", x, y)
@@ -343,7 +347,7 @@ NMArbField(p: PositiveInteger) : Exports == Implementation where
     sqrt(x)  == junfunc("√",x)
     rsqrt(x) == junfunc("rsqrt",x)
     sqrt1pm1(x) == junfunc("sqrt1pm1",x)
-    sqrtPos(x) == junfunc("sqrtPos",x)
+    sqrtpos(x) == junfunc("sqrtpos",x)
     exp(x)   == junfunc("exp",x)
     log(x)   == junfunc("log",x)
     expm1(x) == junfunc("expm1",x)
@@ -375,13 +379,13 @@ NMArbField(p: PositiveInteger) : Exports == Implementation where
     reciprocalGamma(x) == jlref(concat ["Nemo.rgamma(",getind(x),")"])
     gammaRegularized(s,x) ==
       jlref(concat ["Nemo.gamma_regularized(", getind(s), ",", getind(x), ")"])
-    diGamma(x) == jlref(concat ["Nemo.diGamma(", getind(x),")"])
+    digamma(x) == jlref(concat ["Nemo.digamma(", getind(x),")"])
     logGamma(x) == jlref(concat ["Nemo.lgamma(", getind(x),")"])
     gammaLower(s,x) == jlref(concat ["Nemo.gamma_lower(", getind(s), ",", getind(x), ")"])
     gammaLowerRegularized(s,x) == jlref(concat ["Nemo.gamma_lower_regularized(", getind(s), ",", getind(x), ")"])
     hurwitzZeta(s, x) == jlref(concat ["Nemo.zeta(",getind(s),",",getind(x),")"])
 
-    polylog(n,x) == jbinfunc("polylog",n, x)
+    polylog(n,x) == jlref(concat ["polylog(", string(n), ",", getind(x), ")"])
     
     chebyshevT(n, x) ==
       jlref(concat ["chebyshev_t(", string(n), ",", getind(x), ")"])
@@ -586,10 +590,10 @@ NMAcbField(p: PositiveInteger) : Exports == Implementation where
     gammaRegularized : (%, %) -> %
     ++ gammaRegularized(s,x) is the regularized upper incomplete
     ++ Gamma function.
-    -- Renamed from didamma to diGamma to avoid conflict with digamma(Z)
+    -- Renamed from didamma to digamma to avoid conflict with digamma(Z)
     -- which should return an Expression(Integer).
-    diGamma : % -> %
-    ++ diGamma(x) returns logarithmic derivative of the gamma
+    digamma : % -> %
+    ++ digamma(x) returns logarithmic derivative of the gamma
     ++ function evaluated at x.
     logGamma : % -> %
     ++ logGamma(x) returns the logarithm of the gamma
@@ -601,7 +605,7 @@ NMAcbField(p: PositiveInteger) : Exports == Implementation where
     ++ Gamma function.
     polygamma : (%, %) -> %
     ++ polygamma(x,y) returns the polygamma function applied to x and y.
-    polylog : (NMInteger, %) -> %
+    polylog : (Integer, %) -> %
     ++ polylog(n,x) returns the polylogarithm function Li_n(x).
     Li : % -> %
     ++ Li(z) returns the logarithm integral function applied to z.
@@ -746,7 +750,7 @@ NMAcbField(p: PositiveInteger) : Exports == Implementation where
 
     0 == jlref(concat(["zero(", NACB, ")"]))
     1 == jlref(concat(["one(", NACB, ")"]))
-    x = y == jbinbfunc("isequal", x, y)
+    x = y == jbinbfunc("==", x, y)
     x ~= y == jbinbfunc("!=", x, y) 
     imaginary() == jlref(concat(["onei(", NACB, ")"]))
     conjugate(x) == junfunc("conj", x)
@@ -828,21 +832,21 @@ NMAcbField(p: PositiveInteger) : Exports == Implementation where
     tanh(x)  == junfunc("tanh",x)
     coth(x)  == junfunc("coth",x)
 
-    polylog(n,x) == jbinfunc("polylog",n, x)
+    polylog(n,x) == jlref(concat ["polylog(", string(n), ",", getind(x), ")"])
 
     Gamma(x)  == jlref(concat ["Nemo.gamma(", getind(x),")"])
     Gamma(x,y) == jlref(concat ["Nemo.gamma(",getind(x),",",getind(y),")"])
     reciprocalGamma(x) == jlref(concat ["Nemo.rgamma(",getind(x),")"])
     gammaRegularized(s,x) ==
       jlref(concat ["Nemo.gamma_regularized(", getind(s), ",", getind(x), ")"])
-    diGamma(x) == jlref(concat ["Nemo.diGamma(", getind(x),")"])
+    digamma(x) == jlref(concat ["Nemo.digamma(", getind(x),")"])
     logGamma(x) == jlref(concat ["Nemo.lgamma(", getind(x),")"])
     gammaLower(s,x) == jlref(concat ["Nemo.gamma_lower(", getind(s), ",", getind(x), ")"])
     gammaLowerRegularized(s,x) == jlref(concat ["Nemo.gamma_lower_regularized(", getind(s), ",", getind(x), ")"])
     hurwitzZeta(x,y) == jlref(concat ["Nemo.zeta(",getind(x),",",getind(y),")"])
 
-    barnesG(x) == junfunc("Nemo.barnes_g",x)
-    logBarnesG(x) == junfunc("Nemo.log_barnes_g",x)
+    barnesG(x) == junfunc("barnes_g",x)
+    logBarnesG(x) == junfunc("log_barnes_g",x)
 
     erf(x) == jlref(concat ["Nemo.erf(", getind(x), ")"])
     erfi(x) == jlref(concat ["Nemo.erfi(", getind(x), ")"])
@@ -1008,10 +1012,13 @@ NMRealField() : Exports == Implementation where
     ++ binomial(x, n) returns the binomial coefficient C(x,n).
     bernoulli : Integer -> %
     ++ bernoulli(n) returns the n-th Bernoulli number as a
-    ++ NMRealField number.
+    ++ NMRealField element.
     bell : Integer -> %
     ++ bell(n) returns the n-th Bell number as a
-    ++ NMRealField number.
+    ++ NMRealField element.
+    numberOfPartitions : NMInteger -> %
+    ++ numberOfPartitions(n) returns the number of partitions of n
+    ++ as a NMRealField element.
     abs2 : % -> %
     ++ abs2(x) returns the square of the absolute value of x.
     "*" : (%, Integer) -> %
@@ -1023,8 +1030,8 @@ NMRealField() : Exports == Implementation where
     ++ i.e. 1/sqrt(x).
     sqrt1pm1 : % -> %
     ++ sqrt1pm1(x) computes accurately sqrt(1+x)-1.
-    sqrtPos : % -> %
-    ++ sqrtPos(x) computes accurately sqrt(x) assuming x >= 0.
+    sqrtpos : % -> %
+    ++ sqrtpos(x) computes accurately sqrt(x) assuming x >= 0.
     ++ Discard any negative number in the input interval.
     expm1 : % -> %
     ++ expm1(x) computes accurately e^x-1. It avoids the loss of precision
@@ -1044,10 +1051,10 @@ NMRealField() : Exports == Implementation where
     gammaRegularized : (%, %) -> %
     ++ gammaRegularized(s,x) is the regularized upper incomplete
     ++ Gamma function.
-    -- Renamed from didamma to diGamma to avoid conflict with digamma(Z)
+    -- Renamed from didamma to digamma to avoid conflict with digamma(Z)
     -- which should return an Expression(Integer).
-    diGamma : % -> %
-    ++ diGamma(x) returns logarithmic derivative of the gamma
+    digamma : % -> %
+    ++ digamma(x) returns logarithmic derivative of the gamma
     ++ function evaluated at x.
     logGamma : % -> %
     ++ logGamma(x) returns the logarithm of the gamma
@@ -1057,7 +1064,7 @@ NMRealField() : Exports == Implementation where
     gammaLowerRegularized : (%, %) -> %
     ++ gammaLowerRegularized(s,x) is the regularized lower incomplete
     ++ Gamma function.
-    polylog : (NMInteger, %) -> %
+    polylog : (Integer, %) -> %
     ++ polylog(n,x) returns the polylogarithm function Li_n(x).
     chebyshevT : (NNI, %) -> %
     ++ chebyshevT(n,x) returns the value of the Chebyshev polynomial of the
@@ -1176,7 +1183,7 @@ NMRealField() : Exports == Implementation where
 
     0    == jlref("zero(NRF)")
     1    == jlref("one(NRF)")
-    x = y == jbinbfunc("isequal", x, y)
+    x = y == jbinbfunc("==", x, y)
     x ~= y == jbinbfunc("!=", x, y)
     pi() == jlref("const_pi(NRF)")
     exp1() == jlref("const_e(NRF)")
@@ -1246,6 +1253,7 @@ NMRealField() : Exports == Implementation where
 
     bernoulli(n) == jlref(concat(["bernoulli(", string(n), ", NRF)"]))
     bell(n) == jlref(concat(["bell(", string(n), ",NRF)"]))
+    numberOfPartitions(n) == jlref(concat(["numpart(", string(n), ", NRF)"]))
 
     abs(x) == junfunc("abs", x)
     abs2(x) == junfunc("abs2", x)
@@ -1271,7 +1279,7 @@ NMRealField() : Exports == Implementation where
     sqrt(x)  == junfunc("√",x)
     rsqrt(x) == junfunc("rsqrt",x)
     sqrt1pm1(x) == junfunc("sqrt1pm1",x)
-    sqrtPos(x) == junfunc("sqrtPos",x)
+    sqrtpos(x) == junfunc("sqrtpos",x)
     exp(x)   == junfunc("exp",x)
     log(x)   == junfunc("log",x)
     expm1(x) == junfunc("expm1",x)
@@ -1303,7 +1311,7 @@ NMRealField() : Exports == Implementation where
     reciprocalGamma(x) == jlref(concat ["Nemo.rgamma(",getind(x),")"])
     gammaRegularized(s,x) ==
       jlref(concat ["Nemo.gamma_regularized(", getind(s), ",", getind(x), ")"])
-    diGamma(x) == jlref(concat ["Nemo.diGamma(", getind(x),")"])
+    digamma(x) == jlref(concat ["Nemo.digamma(", getind(x),")"])
     logGamma(x) == jlref(concat ["Nemo.lgamma(", getind(x),")"])
     gammaLower(s,x) == jlref(concat ["Nemo.gamma_lower(", getind(s), ",", getind(x), ")"])
     gammaLowerRegularized(s,x) == jlref(concat ["Nemo.gamma_lower_regularized(", getind(s), ",", getind(x), ")"])
@@ -1320,7 +1328,7 @@ NMRealField() : Exports == Implementation where
       ret := jlref(concat ["chebyshev_u2(", string(n), ",", getind(x), ")"])$JLObjTuple
       [elt(ret,1) pretend %, elt(ret,2) pretend %]
 
-    polylog(n,x) == jbinfunc("polylog",n, x)
+    polylog(n,x) == jlref(concat ["polylog(", string(n), ",", getind(x), ")"])
 
     linearDependence(vec, prec) ==
       jlref(concat ["lindep(", getind(vec), ",", string(prec), ")"])$JLVector(NMInteger)
@@ -1461,10 +1469,10 @@ NMComplexField() : Exports == Implementation where
     gammaRegularized : (%, %) -> %
     ++ gammaRegularized(s,x) is the regularized upper incomplete
     ++ Gamma function.
-    -- Renamed from didamma to diGamma to avoid conflict with digamma(Z)
+    -- Renamed from didamma to digamma to avoid conflict with digamma(Z)
     -- which should return an Expression(Integer).
-    diGamma : % -> %
-    ++ diGamma(x) returns logarithmic derivative of the gamma
+    digamma : % -> %
+    ++ digamma(x) returns logarithmic derivative of the gamma
     ++ function evaluated at x.
     logGamma : % -> %
     ++ logGamma(x) returns the logarithm of the gamma
@@ -1476,7 +1484,7 @@ NMComplexField() : Exports == Implementation where
     ++ Gamma function.
     polygamma : (%, %) -> %
     ++ polygamma(x,y) returns the polygamma function applied to x and y.
-    polylog : (NMInteger, %) -> %
+    polylog : (Integer, %) -> %
     ++ polylog(n,x) returns the polylogarithm function Li_n(x).
     airyAi : R -> R
     ++ airyAi(z) is the Airy function \spad{Ai(z)}.
@@ -1659,7 +1667,7 @@ NMComplexField() : Exports == Implementation where
 
     0    == jlref("zero(NCF)")
     1    == jlref("one(NCF)")
-    x = y == jbinbfunc("isequal", x, y)
+    x = y == jbinbfunc("==", x, y)
     x ~= y == jbinbfunc("!=", x, y) 
     imaginary() == jlref("onei(NCF)")
     real(x) == junfunc("real", x)
@@ -1740,14 +1748,14 @@ NMComplexField() : Exports == Implementation where
     tanh(x)  == junfunc("tanh",x)
     coth(x)  == junfunc("coth",x)
 
-    polylog(n,x) == jbinfunc("polylog",n, x)
+    polylog(n,x) == jlref(concat ["polylog(", string(n), ",", getind(x), ")"])
 
     Gamma(x)  == jlref(concat ["Nemo.gamma(", getind(x),")"])
     Gamma(x,y) == jlref(concat ["Nemo.gamma(",getind(x),",",getind(y),")"])
     reciprocalGamma(x) == jlref(concat ["Nemo.rgamma(",getind(x),")"])
     gammaRegularized(s,x) ==
       jlref(concat ["Nemo.gamma_regularized(", getind(s), ",", getind(x), ")"])
-    diGamma(x) == jlref(concat ["Nemo.diGamma(", getind(x),")"])
+    digamma(x) == jlref(concat ["Nemo.digamma(", getind(x),")"])
     logGamma(x) == jlref(concat ["Nemo.lgamma(", getind(x),")"])
     gammaLower(s,x) == jlref(concat ["Nemo.gamma_lower(", getind(s), ",", getind(x), ")"])
     gammaLowerRegularized(s,x) == jlref(concat ["Nemo.gamma_lower_regularized(", getind(s), ",", getind(x), ")"])
