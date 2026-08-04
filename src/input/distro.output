@@ -1,0 +1,1094 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read distro.input
+ 
+)set break resume
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+testsuite "distro"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+testcase "SEQU"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+ss:Sequence Integer:= sequence repeating [1]
+ 
+
+         _
+   (2)  [1]
+                                                      Type: Sequence(Integer)
+ss2:= ss+ss
+ 
+
+         _
+   (3)  [2]
+                                                      Type: Sequence(Integer)
+ss3:=2*ss
+ 
+
+         _
+   (4)  [2]
+                                                      Type: Sequence(Integer)
+ss4:=ss*2
+ 
+
+         _
+   (5)  [2]
+                                                      Type: Sequence(Integer)
+testEquals("firstn(ss2,10)", "firstn(ss3,10)")
+ 
+                                                                   Type: Void
+testEquals("firstn(ss3,10)", "firstn(ss4,10)")
+ 
+                                                                   Type: Void
+ss2a:=map(x+-> 1/x, ss2)$SequenceFunctions2(Integer, Fraction Integer) --$
+ 
+
+         _
+         1
+   (8)  [-]
+         2
+                                            Type: Sequence(Fraction(Integer))
+ss2b:Sequence Fraction Integer := sequence repeating [1/2]
+ 
+
+         _
+         1
+   (9)  [-]
+         2
+                                            Type: Sequence(Fraction(Integer))
+testEquals("firstn(ss2a,10)", "firstn(ss2b,10)")
+ 
+                                                                   Type: Void
+testcase "PATHARR"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+-- Catalan numbers
+)expose PARRPKG
+ 
+   PathArrayPackage is now explicitly exposed in frame initial 
+aa:= repeating [1]
+ 
+
+         _
+   (2)  [1]
+                                                Type: Stream(PositiveInteger)
+bb:= repeating [0]
+ 
+
+         _
+   (3)  [0]
+                                             Type: Stream(NonNegativeInteger)
+cc:= repeating [1]
+ 
+
+         _
+   (4)  [1]
+                                                Type: Stream(PositiveInteger)
+jj:= motzkinPathArray(aa, bb, cc)
+ 
+
+   (5)
+   [[1], [0, 1], [1, 0, 1], [0, 2, 0, 1], [2, 0, 3, 0, 1], [0, 5, 0, 4, 0, 1],
+    [5, 0, 9, 0, 5, 0, 1], [0, 14, 0, 14, 0, 6, 0, 1],
+    [14, 0, 28, 0, 20, 0, 7, 0, 1], [0, 42, 0, 48, 0, 27, 0, 8, 0, 1], ...]
+                                                  Type: Stream(List(Integer))
+cat0:= bottom jj
+ 
+
+   (6)  [1, 0, 1, 0, 2, 0, 5, 0, 14, 0, ...]
+                                                        Type: Stream(Integer)
+cat1:= cons(1,[(if odd? k then 0 else catalan(exquo(k, 2)::Integer)) for k in 1..])
+ 
+
+   (7)  [1, 0, 1, 0, 2, 0, 5, 0, 14, 0, ...]
+                                                        Type: Stream(Integer)
+cat0a:= entries complete first(cat0, 10)
+ 
+
+   (8)  [1, 0, 1, 0, 2, 0, 5, 0, 14, 0]
+                                                          Type: List(Integer)
+cat1a:= entries complete first(cat1, 10)
+ 
+
+   (9)  [1, 0, 1, 0, 2, 0, 5, 0, 14, 0]
+                                                          Type: List(Integer)
+testEquals("cat0a", "cat1a")
+ 
+                                                                   Type: Void
+
+-- normal law
+aa:= repeating [1]
+ 
+
+          _
+   (11)  [1]
+                                                Type: Stream(PositiveInteger)
+bb:= repeating [0]
+ 
+
+          _
+   (12)  [0]
+                                             Type: Stream(NonNegativeInteger)
+cc:= [k for k in 1..]
+ 
+
+   (13)  [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, ...]
+                                                Type: Stream(PositiveInteger)
+jj:= motzkinPathArray(aa, bb, cc)
+ 
+
+   (14)
+   [[1], [0, 1], [1, 0, 1], [0, 3, 0, 1], [3, 0, 6, 0, 1],
+    [0, 15, 0, 10, 0, 1], [15, 0, 45, 0, 15, 0, 1],
+    [0, 105, 0, 105, 0, 21, 0, 1], [105, 0, 420, 0, 210, 0, 28, 0, 1],
+    [0, 945, 0, 1260, 0, 378, 0, 36, 0, 1], ...]
+                                                  Type: Stream(List(Integer))
+mg0a:=entries complete first(bottom jj, 10)
+ 
+
+   (15)  [1, 0, 1, 0, 3, 0, 15, 0, 105, 0]
+                                                          Type: List(Integer)
+gaussk:Sequence Integer := sequence concat([0, 1], repeating [0])
+ 
+
+                _
+   (16)  [0, 1, 0]
+                                                      Type: Sequence(Integer)
+gaussm:= cumulant2moment(gaussk)$MOMPKG Integer
+ 
+
+   (17)  [0, 1, 0, 3, 0, 15, 0, 105, 0, 945, ...]
+                                                      Type: Sequence(Integer)
+mg:=cons(1, gaussm)
+ 
+
+   (18)  [1, 0, 1, 0, 3, 0, 15, 0, 105, 0, ...]
+                                                      Type: Sequence(Integer)
+mg1a:= firstn(mg, 10)
+ 
+
+   (19)  [1, 0, 1, 0, 3, 0, 15, 0, 105, 0]
+                                                          Type: List(Integer)
+testEquals("mg0a", "mg1a")
+ 
+                                                                   Type: Void
+
+-- Poisson law
+aa:= repeating [1]
+ 
+
+          _
+   (21)  [1]
+                                                Type: Stream(PositiveInteger)
+bb:= [k for k in 1..]
+ 
+
+   (22)  [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, ...]
+                                                Type: Stream(PositiveInteger)
+cc:= [k for k in 1..]
+ 
+
+   (23)  [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, ...]
+                                                Type: Stream(PositiveInteger)
+jj:= motzkinPathArray(aa, bb, cc)
+ 
+
+   (24)
+   [[1], [1, 1], [2, 3, 1], [5, 10, 6, 1], [15, 37, 31, 10, 1],
+    [52, 151, 160, 75, 15, 1], [203, 674, 856, 520, 155, 21, 1],
+    [877, 3263, 4802, 3556, 1400, 287, 28, 1],
+    [4140, 17007, 28337, 24626, 11991, 3290, 490, 36, 1],
+    [21147, 94828, 175896, 174805, 101031, 34671, 6972, 786, 45, 1], ...]
+                                                  Type: Stream(List(Integer))
+mp0a:=entries complete first(bottom jj, 10)
+ 
+
+   (25)  [1, 1, 2, 5, 15, 52, 203, 877, 4140, 21147]
+                                                          Type: List(Integer)
+poissk:Sequence Integer := sequence repeating [1]
+ 
+
+          _
+   (26)  [1]
+                                                      Type: Sequence(Integer)
+poissm:= cumulant2moment(poissk)$MOMPKG Integer
+ 
+
+   (27)  [1, 2, 5, 15, 52, 203, 877, 4140, 21147, 115975, ...]
+                                                      Type: Sequence(Integer)
+mp:=cons(1, poissm)
+ 
+
+   (28)  [1, 1, 2, 5, 15, 52, 203, 877, 4140, 21147, ...]
+                                                      Type: Sequence(Integer)
+mp1a:= firstn(mp, 10)
+ 
+
+   (29)  [1, 1, 2, 5, 15, 52, 203, 877, 4140, 21147]
+                                                          Type: List(Integer)
+testEquals("mp0a", "mp1a")
+ 
+                                                                   Type: Void
+testcase "MOMPKG"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+)expose MOMPKG
+ 
+   MomentPackage is now explicitly exposed in frame initial 
+R:= Expression Integer
+ 
+
+   (2)  Expression(Integer)
+                                                                   Type: Type
+mm:Sequence R := sequence [m[k] for k in 1..]
+ 
+
+   (3)  [m , m , m , m , m , m , m , m , m , m  , ...]
+          1   2   3   4   5   6   7   8   9   10
+                                          Type: Sequence(Expression(Integer))
+cc:Sequence R := sequence [c[k] for k in 1..]
+ 
+
+   (4)  [c , c , c , c , c , c , c , c , c , c  , ...]
+          1   2   3   4   5   6   7   8   9   10
+                                          Type: Sequence(Expression(Integer))
+c2m2c := moment2cumulant cumulant2moment cc
+ 
+
+   (5)  [c , c , c , c , c , c , c , c , c , c  , ...]
+          1   2   3   4   5   6   7   8   9   10
+                                          Type: Sequence(Expression(Integer))
+testEquals("firstn(cc, 5)", "firstn(c2m2c, 5)")
+ 
+                                                                   Type: Void
+m2c2m := cumulant2moment moment2cumulant mm
+ 
+
+   (7)  [m , m , m , m , m , m , m , m , m , m  , ...]
+          1   2   3   4   5   6   7   8   9   10
+                                          Type: Sequence(Expression(Integer))
+testEquals("firstn(mm, 5)", "firstn(m2c2m, 5)")
+ 
+                                                                   Type: Void
+c2m2c := moment2freeCumulant freeCumulant2moment cc
+ 
+
+   (9)  [c , c , c , c , c , c , c , c , c , c  , ...]
+          1   2   3   4   5   6   7   8   9   10
+                                          Type: Sequence(Expression(Integer))
+testEquals("firstn(cc, 5)", "firstn(c2m2c, 5)")
+ 
+                                                                   Type: Void
+m2c2m := freeCumulant2moment moment2freeCumulant mm
+ 
+
+   (11)  [m , m , m , m , m , m , m , m , m , m  , ...]
+           1   2   3   4   5   6   7   8   9   10
+                                          Type: Sequence(Expression(Integer))
+testEquals("firstn(mm, 5)", "firstn(m2c2m, 5)")
+ 
+                                                                   Type: Void
+c2m2c := moment2booleanCumulant booleanCumulant2moment cc
+ 
+
+   (13)  [c , c , c , c , c , c , c , c , c , c  , ...]
+           1   2   3   4   5   6   7   8   9   10
+                                          Type: Sequence(Expression(Integer))
+testEquals("firstn(cc, 5)", "firstn(c2m2c, 5)")
+ 
+                                                                   Type: Void
+m2c2m := booleanCumulant2moment moment2booleanCumulant mm
+ 
+
+   (15)  [m , m , m , m , m , m , m , m , m , m  , ...]
+           1   2   3   4   5   6   7   8   9   10
+                                          Type: Sequence(Expression(Integer))
+testEquals("firstn(mm, 5)", "firstn(m2c2m, 5)")
+ 
+                                                                   Type: Void
+
+-- semicircle distribution
+sfc:Sequence Integer:= sequence concat([0,1], repeating [0])
+ 
+
+                _
+   (17)  [0, 1, 0]
+                                                      Type: Sequence(Integer)
+smm:= [(if odd? k then 0 else catalan(exquo(k, 2)::Integer)) for k in 1..10]
+ 
+
+   (18)  [0, 1, 0, 2, 0, 5, 0, 14, 0, 42]
+                                                          Type: List(Integer)
+testEquals("firstn(freeCumulant2moment sfc, 10)", "smm")
+ 
+                                                                   Type: Void
+-- Hankel determinants
+shd:=[hankelDeterminant(freeCumulant2moment sfc, k) for k in 1..10]
+ 
+
+   (20)  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+                                                          Type: List(Integer)
+testEquals("removeDuplicates shd", "[1]")
+ 
+                                                                   Type: Void
+
+-- coercion
+w1:Distribution Integer:= wignerDistribution 1
+ 
+
+   (22)  [0, 1, 0, 2, 0, 5, 0, 14, 0, 42, ...]
+                                                  Type: Distribution(Integer)
+w2:Distribution Expression Integer:= wignerDistribution 1
+ 
+
+   (23)  [0, 1, 0, 2, 0, 5, 0, 14, 0, 42, ...]
+                                      Type: Distribution(Expression(Integer))
+w2a:= w1::Distribution Expression Integer
+ 
+
+   (24)  [0, 1, 0, 2, 0, 5, 0, 14, 0, 42, ...]
+                                      Type: Distribution(Expression(Integer))
+testEquals("firstn(moments w2, 10)","firstn(moments w2a, 10)")
+ 
+                                                                   Type: Void
+-- jacobi parameters of semicircle
+sfc1:Sequence Fraction Integer:= sequence concat([0,1], repeating [0])
+ 
+
+                   _
+   (26)  [0, 1, 0, 0]
+                                            Type: Sequence(Fraction(Integer))
+smm1:=freeCumulant2moment sfc1
+ 
+
+   (27)  [0, 1, 0, 2, 0, 5, 0, 14, 0, 42, ...]
+                                            Type: Sequence(Fraction(Integer))
+sjc:=moment2jacobi smm1
+ 
+
+   (28)
+   [an = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ...],
+    bn = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...]]
+    Type: Record(an: Stream(Fraction(Integer)),bn: Stream(Fraction(Integer)))
+testEquals("removeDuplicates entries complete first(sjc an, 10)", "[0]")
+ 
+                                                                   Type: Void
+testEquals("removeDuplicates entries complete first(sjc bn, 10)", "[1]")
+ 
+                                                                   Type: Void
+
+-- free poisson has free cumulants all equal to one
+fpm:Sequence Integer := sequence [catalan k for k in 1..]
+ 
+
+   (31)  [1, 2, 5, 14, 42, 132, 429, 1430, 4862, 16796, ...]
+                                                      Type: Sequence(Integer)
+testEquals("removeDuplicates firstn(moment2freeCumulant fpm, 10)", "[1]")
+ 
+                                                                   Type: Void
+
+-- S transform of free Poisson
+fpm1:Sequence Fraction Integer := sequence [catalan k for k in 1..]
+ 
+
+   (33)  [1, 2, 5, 14, 42, 132, 429, 1430, 4862, 16796, ...]
+                                            Type: Sequence(Fraction(Integer))
+fps1:=moment2Stransform fpm1
+ 
+
+   (34)
+   [puiseux = 1, laurent = 0,
+    coef = [1, - 1, 1, - 1, 1, - 1, 1, - 1, 1, - 1, ...]]
+Type: Record(puiseux: Fraction(Integer),laurent: Fraction(Integer),coef: Sequence(Fraction(Integer)))
+fps2:List Fraction Integer:=[(-1)^k for k in 0..9]
+ 
+
+   (35)  [1, - 1, 1, - 1, 1, - 1, 1, - 1, 1, - 1]
+                                                Type: List(Fraction(Integer))
+testEquals("firstn(fps1 coef, 10)", "fps2")
+ 
+                                                                   Type: Void
+testcase "DISTRO"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+mm:Sequence Expression Integer := sequence [m[k] for k in 1..]
+ 
+
+   (2)  [m , m , m , m , m , m , m , m , m , m  , ...]
+          1   2   3   4   5   6   7   8   9   10
+                                          Type: Sequence(Expression(Integer))
+cc:Sequence Expression Integer := sequence [c[k] for k in 1..]
+ 
+
+   (3)  [c , c , c , c , c , c , c , c , c , c  , ...]
+          1   2   3   4   5   6   7   8   9   10
+                                          Type: Sequence(Expression(Integer))
+kk:Sequence Expression Integer := sequence [k[i] for i in 1..]
+ 
+
+   (4)  [k , k , k , k , k , k , k , k , k , k  , ...]
+          1   2   3   4   5   6   7   8   9   10
+                                          Type: Sequence(Expression(Integer))
+bb:Sequence Expression Integer := sequence [b[k] for k in 1..]
+ 
+
+   (5)  [b , b , b , b , b , b , b , b , b , b  , ...]
+          1   2   3   4   5   6   7   8   9   10
+                                          Type: Sequence(Expression(Integer))
+
+dm:=distributionByMoments mm
+ 
+
+   (6)  [m , m , m , m , m , m , m , m , m , m  , ...]
+          1   2   3   4   5   6   7   8   9   10
+                                      Type: Distribution(Expression(Integer))
+dk:=distributionByClassicalCumulants kk;
+ 
+
+                                      Type: Distribution(Expression(Integer))
+dc:=distributionByFreeCumulants cc;
+ 
+
+                                      Type: Distribution(Expression(Integer))
+db:=distributionByBooleanCumulants bb;
+ 
+
+                                      Type: Distribution(Expression(Integer))
+
+dmk := distributionByClassicalCumulants classicalCumulants dm
+ 
+
+   (10)  [m , m , m , m , m , m , m , m , m , m  , ...]
+           1   2   3   4   5   6   7   8   9   10
+                                      Type: Distribution(Expression(Integer))
+testEquals("firstn(moments dmk, 10)", "firstn(mm,10)")
+ 
+                                                                   Type: Void
+
+dmc := distributionByFreeCumulants freeCumulants dm
+ 
+
+   (12)  [m , m , m , m , m , m , m , m , m , m  , ...]
+           1   2   3   4   5   6   7   8   9   10
+                                      Type: Distribution(Expression(Integer))
+testEquals("firstn(moments dmc, 10)", "firstn(mm,10)")
+ 
+                                                                   Type: Void
+
+dmb := distributionByBooleanCumulants booleanCumulants dm
+ 
+
+   (14)  [m , m , m , m , m , m , m , m , m , m  , ...]
+           1   2   3   4   5   6   7   8   9   10
+                                      Type: Distribution(Expression(Integer))
+testEquals("firstn(moments dmb, 10)", "firstn(mm,10)")
+ 
+                                                                   Type: Void
+
+dkm:=  distributionByMoments moments dk;
+ 
+
+                                      Type: Distribution(Expression(Integer))
+testEquals("firstn(classicalCumulants dkm, 10)", "firstn(kk,10)")
+ 
+                                                                   Type: Void
+
+sem:= wignerDistribution 1
+ 
+
+   (18)  [0, 1, 0, 2, 0, 5, 0, 14, 0, 42, ...]
+                                                  Type: Distribution(Integer)
+sem2:= freeConvolution(sem,sem)
+ 
+
+   (19)  [0, 2, 0, 8, 0, 40, 0, 224, 0, 1344, ...]
+                                                  Type: Distribution(Integer)
+sem2j:=jacobiParameters sem2
+ 
+
+   (20)
+   [an = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ...],
+    bn = [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, ...]]
+    Type: Record(an: Stream(Fraction(Integer)),bn: Stream(Fraction(Integer)))
+testEquals("removeDuplicates entries complete first(sem2j bn,10)", _
+    "[2::Fraction Integer]")
+ 
+                                                                   Type: Void
+
+frp:=freePoissonDistribution 1
+ 
+
+   (22)  [1, 2, 5, 14, 42, 132, 429, 1430, 4862, 16796, ...]
+                                                  Type: Distribution(Integer)
+frpj:=jacobiParameters frp
+ 
+
+   (23)
+   [an = [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, ...],
+    bn = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...]]
+    Type: Record(an: Stream(Fraction(Integer)),bn: Stream(Fraction(Integer)))
+
+gss:=gaussianDistribution 1
+ 
+
+   (24)  [0, 1, 0, 3, 0, 15, 0, 105, 0, 945, ...]
+                                                  Type: Distribution(Integer)
+gss2:= classicalConvolution(gss,gss)
+ 
+
+   (25)  [0, 2, 0, 12, 0, 120, 0, 1680, 0, 30240, ...]
+                                                  Type: Distribution(Integer)
+gss2j:=jacobiParameters gss2
+ 
+
+   (26)
+   [an = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ...],
+    bn = [2, 4, 6, 8, 10, 12, 14, 16, 18, 20, ...]]
+    Type: Record(an: Stream(Fraction(Integer)),bn: Stream(Fraction(Integer)))
+gss2j1:=[2*k for k in 1..10]
+ 
+
+   (27)  [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
+                                                  Type: List(PositiveInteger)
+testEquals("removeDuplicates entries complete first(gss2j bn,10)", "gss2j1")
+ 
+                                                                   Type: Void
+
+--  monotone convolution of arcsin results in a dilation
+bin2n:= [binomial(2*n,n) for n in 1..]
+ 
+
+   (29)  [2, 6, 20, 70, 252, 924, 3432, 12870, 48620, 184756, ...]
+                                                        Type: Stream(Integer)
+asin:Sequence Integer:= sequence [(if odd? k then 0 else bin2n
+        (exquo(k,2)::Integer)) for k in 1..]
+ 
+
+   (30)  [0, 2, 0, 6, 0, 20, 0, 70, 0, 252, ...]
+                                                      Type: Sequence(Integer)
+asind:= distributionByMoments [(if odd? k then 0 else bin2n (exquo(k,2)::Integer)) for k in 1..]
+ 
+
+   (31)  [0, 2, 0, 6, 0, 20, 0, 70, 0, 252, ...]
+                                                  Type: Distribution(Integer)
+asind2:=monotoneConvolution(asind, asind)
+ 
+
+   (32)  [0, 4, 0, 24, 0, 160, 0, 1120, 0, 8064, ...]
+                                                  Type: Distribution(Integer)
+asind4:=monotoneConvolution(asind2, asind2)
+ 
+
+   (33)  [0, 8, 0, 96, 0, 1280, 0, 17920, 0, 258048, ...]
+                                                  Type: Distribution(Integer)
+asind4d:=dilate(2, moments asind)
+ 
+
+   (34)  [0, 8, 0, 96, 0, 1280, 0, 17920, 0, 258048, ...]
+                                                      Type: Sequence(Integer)
+testEquals("firstn (moments asind4, 10)", "firstn (asind4d, 10)")
+ 
+                                                                   Type: Void
+
+-- monotone cumulants of arcsine distribution
+asin1:Distribution Fraction Integer:=arcsineDistribution 1
+ 
+
+                   3     5     35     63
+   (36)  [0, 1, 0, -, 0, -, 0, --, 0, --, ...]
+                   2     2      8      8
+                                        Type: Distribution(Fraction(Integer))
+asin1m:=monotoneCumulants asin1
+ 
+
+   (37)  [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, ...]
+                                            Type: Sequence(Fraction(Integer))
+asin1m10:List Fraction Integer:= [(if k = 2 then 1 else 0) for k in 1..10]
+ 
+
+   (38)  [0, 1, 0, 0, 0, 0, 0, 0, 0, 0]
+                                                Type: List(Fraction(Integer))
+testEquals("firstn(asin1m, 10)", "asin1m10")
+ 
+                                                                   Type: Void
+
+-- semicircle^2 = free Poisson
+sem:=wignerDistribution 1
+ 
+
+   (40)  [0, 1, 0, 2, 0, 5, 0, 14, 0, 42, ...]
+                                                  Type: Distribution(Integer)
+fps:=freePoissonDistribution 1
+ 
+
+   (41)  [1, 2, 5, 14, 42, 132, 429, 1430, 4862, 16796, ...]
+                                                  Type: Distribution(Integer)
+fps1:=sem^2
+ 
+
+   (42)  [1, 2, 5, 14, 42, 132, 429, 1430, 4862, 16796, ...]
+                                                  Type: Distribution(Integer)
+fps0m:= moments fps
+ 
+
+   (43)  [1, 2, 5, 14, 42, 132, 429, 1430, 4862, 16796, ...]
+                                                      Type: Sequence(Integer)
+fps1m:= moments fps1
+ 
+
+   (44)  [1, 2, 5, 14, 42, 132, 429, 1430, 4862, 16796, ...]
+                                                      Type: Sequence(Integer)
+testEquals("firstn(fps0m, 10)", "firstn(fps1m, 10)")
+ 
+                                                                   Type: Void
+testcase "STRANS"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+-- S transform of free Poisson
+R:= Fraction Integer
+ 
+
+   (2)  Fraction(Integer)
+                                                                   Type: Type
+macro STrans(x, z) ==
+    STransform(x)$STransformPackage(R, UTS(R, z, 0), ULS(R, z, 0), UPXS(R, z, 0)) --$
+ 
+                                                                   Type: Void
+fp:Distribution R:=freePoissonDistribution 1
+ 
+
+   (4)  [1, 2, 5, 14, 42, 132, 429, 1430, 4862, 16796, ...]
+                                        Type: Distribution(Fraction(Integer))
+fpS:=STrans (fp, z)
+ 
+
+                 2    3    4    5    6    7    8    9    10      11
+   (5)  1 - z + z  - z  + z  - z  + z  - z  + z  - z  + z   + O(z  )
+                         Type: UnivariatePuiseuxSeries(Fraction(Integer),z,0)
+fpS1:= entries complete first(coefficients fpS, 10)
+ 
+
+   (6)  [1, - 1, 1, - 1, 1, - 1, 1, - 1, 1, - 1]
+                                                Type: List(Fraction(Integer))
+fpS2:= [(-1)^k for k in 0..9]
+ 
+
+   (7)  [1, - 1, 1, - 1, 1, - 1, 1, - 1, 1, - 1]
+                                                          Type: List(Integer)
+testEquals("fpS1", "fpS2")
+ 
+                                                                   Type: Void
+-- get free Poisson from S-transform
+fp2S:Sequence Fraction Integer:= sequence [(-1)^k for k in 0..]
+ 
+
+   (9)  [1, - 1, 1, - 1, 1, - 1, 1, - 1, 1, - 1, ...]
+                                            Type: Sequence(Fraction(Integer))
+fp2:Distribution Fraction Integer:= distributionBySTransform(1,0, fp2S)$Distribution Fraction Integer
+ 
+
+   (10)  [1, 2, 5, 14, 42, 132, 429, 1430, 4862, 16796, ...]
+                                        Type: Distribution(Fraction(Integer))
+testEquals("firstn(moments fp2, 10)", "firstn(moments fp, 10)")
+ 
+                                                                   Type: Void
+
+-- free multiplicative convolution of two projections
+pa:Distribution EXPR INT:=bernoulliDistribution01 a
+ 
+
+          _
+   (12)  [a]
+                                      Type: Distribution(Expression(Integer))
+pb:Distribution EXPR INT:=bernoulliDistribution01 b
+ 
+
+          _
+   (13)  [b]
+                                      Type: Distribution(Expression(Integer))
+papb:=freeMultiplicativeConvolution(pa,pb);
+ 
+
+                                      Type: Distribution(Expression(Integer))
+papbm1:=entries complete first(moments papb, 10);
+ 
+
+                                              Type: List(Expression(Integer))
+-- the mgf of the result should be
+aa:=a+b-2*a*b+sqrt(4*a*b*(1-a)*(1-b))
+ 
+
+          +--------------------------------+
+          |    2        2         2
+   (16)  \|(4 a  - 4 a)b  + (- 4 a  + 4 a)b  + (- 2 a + 1)b + a
+                                                    Type: Expression(Integer)
+bb:=a+b-2*a*b-sqrt(4*a*b*(1-a)*(1-b))
+ 
+
+            +--------------------------------+
+            |    2        2         2
+   (17)  - \|(4 a  - 4 a)b  + (- 4 a  + 4 a)b  + (- 2 a + 1)b + a
+                                                    Type: Expression(Integer)
+Mpapb:=(1-z*(a+b)-sqrt((aa*z-1)*(bb*z-1)))/2/(z-1)
+ 
+
+            +---------------------------------------------+
+            |  2            2  2
+         - \|(b  - 2 a b + a )z  + ((4 a - 2)b - 2 a)z + 1  + (- b - a)z + 1
+   (18)  -------------------------------------------------------------------
+                                       2 z - 2
+                                                    Type: Expression(Integer)
+papbser:=series(Mpapb,z=0);
+ 
+
+                       Type: UnivariatePuiseuxSeries(Expression(Integer),z,0)
+papbm2:=entries complete first (rest coefficients papbser, 10);
+ 
+
+                                              Type: List(Expression(Integer))
+testEquals("papbm1","papbm2")
+ 
+                                                                   Type: Void
+
+
+-- polynomial evaluation
+p2:UnivariatePolynomial(z, Integer):= z^2
+ 
+
+          2
+   (22)  z
+                                        Type: UnivariatePolynomial(z,Integer)
+sem:= wignerDistribution 1
+ 
+
+   (23)  [0, 1, 0, 2, 0, 5, 0, 14, 0, 42, ...]
+                                                  Type: Distribution(Integer)
+fp1:= freePoissonDistribution 1
+ 
+
+   (24)  [1, 2, 5, 14, 42, 132, 429, 1430, 4862, 16796, ...]
+                                                  Type: Distribution(Integer)
+fp2a:=p2(sem)
+ 
+
+   (25)  [1, 2, 5, 14, 42, 132, 429, 1430, 4862, 16796, ...]
+                                                  Type: Distribution(Integer)
+testEquals("firstn(moments fp1, 10)", "firstn(moments fp2a, 10)")
+ 
+                                                                   Type: Void
+
+-- multiplicative free convolution is commutative (regression 28.01.2020)
+semfp := freeMultiplicativeConvolution(sem, fp1)
+ 
+
+   (27)  [0, 1, 0, 4, 0, 22, 0, 140, 0, 969, ...]
+                                        Type: Distribution(Fraction(Integer))
+fpsem := freeMultiplicativeConvolution(fp1, sem)
+ 
+
+   (28)  [0, 1, 0, 4, 0, 22, 0, 140, 0, 969, ...]
+                                        Type: Distribution(Fraction(Integer))
+testEquals("firstn(moments semfp, 10)", "firstn(moments fpsem, 10)")
+ 
+                                                                   Type: Void
+
+-- J continued fraction
+R:= Fraction Integer
+ 
+
+   (30)  Fraction(Integer)
+                                                                   Type: Type
+macro jcf1(x,z) ==
+    JContinuedFraction(x,z)$DistributionContinuedFractionPackage(R, z)
+ 
+                                                                   Type: Void
+
+sem1:Distribution R:= wignerDistribution 1
+ 
+
+   (32)  [0, 1, 0, 2, 0, 5, 0, 14, 0, 42, ...]
+                                        Type: Distribution(Fraction(Integer))
+j1:=jcf1(sem1, z)
+ 
+
+   (33)
+       1 |     - 1 |     - 1 |     - 1 |     - 1 |     - 1 |     - 1 |     - 1 |
+     +---+ + +-----+ + +-----+ + +-----+ + +-----+ + +-----+ + +-----+ + +-----+
+     | z     |  z      |  z      |  z      |  z      |  z      |  z      |  z
+   + 
+       - 1 |     - 1 |
+     +-----+ + +-----+ + ...
+     |  z      |  z
+           Type: ContinuedFraction(UnivariatePolynomial(z,Fraction(Integer)))
+j1c5:=(convergents j1) 5
+ 
+
+             3
+            z  - 2 z
+   (34)  -------------
+          4      2
+         z  - 3 z  + 1
+                    Type: Fraction(UnivariatePolynomial(z,Fraction(Integer)))
+j1c5a:Fraction UP(z,Fraction Integer):= (z^3-2*z)/(z^4-3*z^2+1)
+ 
+
+             3
+            z  - 2 z
+   (35)  -------------
+          4      2
+         z  - 3 z  + 1
+                    Type: Fraction(UnivariatePolynomial(z,Fraction(Integer)))
+testEquals("j1c5", "j1c5a")
+ 
+                                                                   Type: Void
+
+macro jcf2(x,z) ==
+    JContinuedFraction(x,z)$DistributionContinuedFractionPackage(Integer, z)
+ 
+                                                                   Type: Void
+
+sem2:Distribution Integer:= wignerDistribution 1
+ 
+
+   (38)  [0, 1, 0, 2, 0, 5, 0, 14, 0, 42, ...]
+                                                  Type: Distribution(Integer)
+j2:=jcf2(sem2, z)
+ 
+
+   (39)
+       1 |     - 1 |     - 1 |     - 1 |     - 1 |     - 1 |     - 1 |     - 1 |
+     +---+ + +-----+ + +-----+ + +-----+ + +-----+ + +-----+ + +-----+ + +-----+
+     | z     |  z      |  z      |  z      |  z      |  z      |  z      |  z
+   + 
+       - 1 |     - 1 |
+     +-----+ + +-----+ + ...
+     |  z      |  z
+           Type: ContinuedFraction(UnivariatePolynomial(z,Fraction(Integer)))
+j2c5:=(convergents j2) 5
+ 
+
+             3
+            z  - 2 z
+   (40)  -------------
+          4      2
+         z  - 3 z  + 1
+                    Type: Fraction(UnivariatePolynomial(z,Fraction(Integer)))
+j2c5a:Fraction UP(z,Fraction Integer):= (z^3-2*z)/(z^4-3*z^2+1)
+ 
+
+             3
+            z  - 2 z
+   (41)  -------------
+          4      2
+         z  - 3 z  + 1
+                    Type: Fraction(UnivariatePolynomial(z,Fraction(Integer)))
+testEquals("j2c5", "j2c5a")
+ 
+                                                                   Type: Void
+
+-- Orthogonal polynomials
+mm:= [m[k] for k in 1..];
+ 
+
+                                                         Type: Stream(Symbol)
+mu:= distributionByMoments mm;
+ 
+
+                                      Type: Distribution(Polynomial(Integer))
+op:= orthogonalPolynomials mu;
+ 
+
+      Type: Stream(SparseUnivariatePolynomial(Fraction(Polynomial(Integer))))
+intp34:= integrate(op 2*op 3, mu)
+ 
+
+   (46)  0
+                                          Type: Fraction(Polynomial(Integer))
+testTrue("zero? intp34")
+ 
+                                                                   Type: Void
+
+-- monotone cumulants 1
+mm1:Stream Fraction Polynomial Integer:= [m[k] for k in 1..];
+ 
+
+                                  Type: Stream(Fraction(Polynomial(Integer)))
+mu1:= distributionByMoments mm1;
+ 
+
+                            Type: Distribution(Fraction(Polynomial(Integer)))
+mc:= monotoneCumulants mu1;
+ 
+
+                                Type: Sequence(Fraction(Polynomial(Integer)))
+mm2:= distributionByMonotoneCumulants mc;
+ 
+
+                            Type: Distribution(Fraction(Polynomial(Integer)))
+m15:= mm1.5;
+ 
+
+                                          Type: Fraction(Polynomial(Integer))
+m25:= moment(mm2, 5);
+ 
+
+                                          Type: Fraction(Polynomial(Integer))
+testEquals("m15", "m25")
+ 
+                                                                   Type: Void
+
+-- monotone cumulants 2
+)clear prop mu1 mu2 mm1 mm2 hh
+ 
+hh:Stream Fraction Polynomial Integer:= [h[k] for k in 1..];
+ 
+
+                                  Type: Stream(Fraction(Polynomial(Integer)))
+mu1:= distributionByMonotoneCumulants hh;
+ 
+
+                            Type: Distribution(Fraction(Polynomial(Integer)))
+mm1:= moments mu1;
+ 
+
+                                Type: Sequence(Fraction(Polynomial(Integer)))
+mu2:= distributionByMoments mm1;
+ 
+
+                            Type: Distribution(Fraction(Polynomial(Integer)))
+h15:= hh.5;
+ 
+
+                                          Type: Fraction(Polynomial(Integer))
+h25:= monotoneCumulants(mu2).5
+ 
+
+   (60)  h
+          5
+                                          Type: Fraction(Polynomial(Integer))
+testEquals("h15", "h25")
+ 
+                                                                   Type: Void
+
+-- orthogonal convolution identity
+)clear prop mu nu mumnu muonu
+ 
+mu := distributionByMoments([a[k] for k in 1..]);
+ 
+
+                                      Type: Distribution(Polynomial(Integer))
+nu := distributionByMoments([b[k] for k in 1..]);
+ 
+
+                                      Type: Distribution(Polynomial(Integer))
+mumnu := monotoneConvolution(mu, nu);
+ 
+
+                                      Type: Distribution(Polynomial(Integer))
+muonu := booleanConvolution(nu, orthogonalConvolution(mu, nu));
+ 
+
+                                      Type: Distribution(Polynomial(Integer))
+testEquals("firstn(moments mumnu, 10)", "firstn(moments muonu, 10)")
+ 
+                                                                   Type: Void
+
+-- subordination convolution identity
+)clear prop mu nu mufnu mumnu
+ 
+mu := distributionByMoments([a[k] for k in 1..]);
+ 
+
+                                      Type: Distribution(Polynomial(Integer))
+nu := distributionByMoments([b[k] for k in 1..]);
+ 
+
+                                      Type: Distribution(Polynomial(Integer))
+mufnu := freeConvolution(mu, nu);
+ 
+
+                                      Type: Distribution(Polynomial(Integer))
+mumnu := monotoneConvolution(nu, subordinationConvolution(mu, nu));
+ 
+
+                                      Type: Distribution(Polynomial(Integer))
+testEquals("firstn(moments mufnu, 10)", "firstn(moments mumnu, 10)")
+ 
+                                                                   Type: Void
+
+
+expected() ==
+    messagePrint("testsuite | testcases: failed (total) | tests: failed (total)")$OutputForm
+    messagePrint("distro                      0     (5)               0    (40)")$OutputForm
+ 
+                                                                   Type: Void
+
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+   =============================================================================
+   WARNINGS:
+   Testsuite: distro
+   Testcase: STRANS
+   test: 6
+   testing in a domain without InputForm!
+   Testsuite: distro
+   Testcase: STRANS
+   test: 7
+   testing in a domain without InputForm!
+
+   =============================================================================
+   Testsuite: distro
+     failed (total): 0 (5)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   distro                      0     (5)               0    (40)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 40
+                                                                   Type: Void
+expected()
+ 
+   Compiling function expected with type () -> Void 
+   testsuite | testcases: failed (total) | tests: failed (total)
+   distro                      0     (5)               0    (40)
+                                                                   Type: Void
+)quit
+ 

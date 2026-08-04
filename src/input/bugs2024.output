@@ -1,0 +1,341 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read bugs2024.input
+ 
+)set break resume
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+
+testsuite "bugs2024"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testcase "name clash"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+-- Bug occurred during initialization of RSIMP, so test must be
+-- before any other use of RSIMP
+
+a : Integer := 1
+ 
+
+   (2)  1
+                                                                Type: Integer
+testTrue("rsimp(1)$RootSimplification; true")
+ 
+                                                                   Type: Void
+
+testcase "simplifyExp"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testEquals("simplifyExp(2*2^a)", "2^(a+1)")
+ 
+                                                                   Type: Void
+testEquals("simplifyExp(a*a^b)", "a^(b+1)")
+ 
+                                                                   Type: Void
+testEquals("simplifyExp((a^2)^b*a^2)", "(a^2)^(b+1)")
+ 
+                                                                   Type: Void
+testEquals("simplifyExp((a^b)^c*a^b)", "(a^b)^(c+1)")
+ 
+                                                                   Type: Void
+testEquals("simplifyExp((a^b)^c*a^(b-d)*a^d)", "(a^b)^(c+1)")
+ 
+                                                                   Type: Void
+
+testcase "error in has test"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+-- Used to produce system error: "The variable % is unbound."
+testTrue("not(SemiRng has AbelianGroup)")
+ 
+                                                                   Type: Void
+
+testcase "partial fractions"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+p1 := 1 + partialFraction(-3, 7)
+ 
+
+            3
+   (2)  1 - -
+            7
+                                               Type: PartialFraction(Integer)
+p2 := partialFraction(4, 7)
+ 
+
+        4
+   (3)  -
+        7
+                                               Type: PartialFraction(Integer)
+testTrue("(p1 = p2)@Boolean")
+ 
+                                                                   Type: Void
+
+testEquals("numberOfFractionalTerms(partialFraction(7, 7))", "0")
+ 
+                                                                   Type: Void
+testEquals("numberOfFractionalTerms(partialFraction(-7, 7))", "0")
+ 
+                                                                   Type: Void
+
+testcase "radical solve"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+p1 := 64*z^4 + 64*z^3 + 32*z^2 - 8*z + 1
+ 
+
+            4       3       2
+   (2)  64 z  + 64 z  + 32 z  - 8 z + 1
+                                                    Type: Polynomial(Integer)
+rl1 := radicalSolve(p1)
+ 
+
+   (3)
+          +---+      +-+      +---+              +---+      +-+      +---+
+        (\|- 1  - 1)\|2  - 2 \|- 1  + 2      (- \|- 1  - 1)\|2  + 2 \|- 1  + 2
+   [z = -------------------------------, z = ---------------------------------,
+                        +-+                                   +-+
+                     4 \|2                                 4 \|2
+            +---+      +-+      +---+            +---+      +-+      +---+
+        (- \|- 1  - 1)\|2  - 2 \|- 1  - 2      (\|- 1  - 1)\|2  + 2 \|- 1  - 2
+    z = ---------------------------------, z = -------------------------------]
+                         +-+                                   +-+
+                      4 \|2                                 4 \|2
+                                    Type: List(Equation(Expression(Integer)))
+testEquals("eval(p1, first(rl1))", "0")
+ 
+                                                                   Type: Void
+rr1 := [rhs(s1) for s1 in rl1]
+ 
+
+   (5)
+      +---+      +-+      +---+          +---+      +-+      +---+
+    (\|- 1  - 1)\|2  - 2 \|- 1  + 2  (- \|- 1  - 1)\|2  + 2 \|- 1  + 2
+   [-------------------------------, ---------------------------------,
+                    +-+                               +-+
+                 4 \|2                             4 \|2
+        +---+      +-+      +---+        +---+      +-+      +---+
+    (- \|- 1  - 1)\|2  - 2 \|- 1  - 2  (\|- 1  - 1)\|2  + 2 \|- 1  - 2
+    ---------------------------------, -------------------------------]
+                     +-+                               +-+
+                  4 \|2                             4 \|2
+                                              Type: List(Expression(Integer))
+testEquals("reduce(max, [height(k1) for k1 in kernels(rr1)])", "1")
+ 
+                                                                   Type: Void
+
+p2 := x^4 - 2729960418308000*x^3 - 395258439243352250000*x^2 - _
+        55499520947716391500000000*x - 345363656226658026765625000000
+ 
+
+   (7)
+      4                     3                          2
+     x  - 2729960418308000 x  - 395258439243352250000 x
+   + 
+     - 55499520947716391500000000 x - 345363656226658026765625000000
+                                                    Type: Polynomial(Integer)
+
+rl2 := radicalSolve(p2);
+ 
+
+                                    Type: List(Equation(Expression(Integer)))
+testEquals("eval(p2, first(rl2))", "0")
+ 
+                                                                   Type: Void
+rr2 := [rhs(s1) for s1 in rl2];
+ 
+
+                                              Type: List(Expression(Integer))
+testEquals("reduce(max, [height(k1) for k1 in kernels(rr2)])", "2")
+ 
+                                                                   Type: Void
+
+p3 := 8*x^3 + 12*x^2 + 6*x - 1
+ 
+
+            3       2
+   (12)  8 x  + 12 x  + 6 x - 1
+                                                    Type: Polynomial(Integer)
+rl3 := radicalSolve(p3)
+ 
+
+   (13)
+          3+-+    +---+ +-+            3+-+    +---+ +-+            3+-+
+        - \|4  - \|- 1 \|3  - 1      - \|4  + \|- 1 \|3  - 1      - \|4  + 2
+   [x = -----------------------, x = -----------------------, x = ----------]
+                   3+-+                         3+-+                  3+-+
+                 2 \|4                        2 \|4                 2 \|4
+                                    Type: List(Equation(Expression(Integer)))
+testEquals("eval(p3, first(rl3))", "0")
+ 
+                                                                   Type: Void
+
+testcase "riemannZeta"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testTrue("(r1 := riemannZeta(1.0e-5); true)")
+ 
+                                                                   Type: Void
+eps := real(r1) + 1/2 + (1/2)*log(2*%pi)*1.0e-5
+ 
+
+   (3)  - 0.1003188235_90623 E -9
+                                                      Type: Expression(Float)
+testTrue("eps < 0 and -eps < 2.0e-10")
+ 
+                                                                   Type: Void
+
+eps := riemannZeta(2.0) - %pi^2/6
+ 
+
+   (5)  0.16288 E -20
+                                                         Type: Complex(Float)
+testTrue("abs(imag(eps)) < 1.0e-20")
+ 
+                                                                   Type: Void
+testTrue("abs(real(eps)) < 1.0e-20")
+ 
+                                                                   Type: Void
+
+testcase "root manipulations"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testEquals("rootSimp(sqrt(9*x^3*y))", "3*x*sqrt(x*y)")
+ 
+                                                                   Type: Void
+testEquals("rootFactor(sqrt(9*x^3*y))", "3*x*sqrt(x)*sqrt(y)")
+ 
+                                                                   Type: Void
+testEquals("rootFactor(2*sqrt(%pi)/(sqrt(2)*sqrt(2*%pi)))", "1")
+ 
+                                                                   Type: Void
+testEquals("rootFactor(sqrt(%pi)*sqrt(2*%pi))", "%pi*sqrt(2)")
+ 
+                                                                   Type: Void
+testEquals("rootFactor(sqrt(sqrt(6) + 1))", "sqrt(sqrt(2)*sqrt(3) + 1)")
+ 
+                                                                   Type: Void
+testEquals("rootPower(rootFactor(sqrt(sqrt(6))))", "2^(1/4)*3^(1/4)")
+ 
+                                                                   Type: Void
+testEquals("rootPower(rootSplit(sqrt(sqrt(2)*sqrt(3/2))))", "3^(1/4)")
+ 
+                                                                   Type: Void
+
+testcase "missing signature"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+pT := Polynomial(Fraction(Integer))
+ 
+
+   (2)  Polynomial(Fraction(Integer))
+                                                                   Type: Type
+mi(p : pT, n : INT) : pT == p*n
+ 
+   Function declaration mi : (Polynomial(Fraction(Integer)), Integer)
+       -> Polynomial(Fraction(Integer)) has been added to workspace.
+                                                                   Type: Void
+testEquals("mi(((1/5)*x + 3), 5)", "x + 15")
+ 
+   Compiling function mi with type (Polynomial(Fraction(Integer)), 
+      Integer) -> Polynomial(Fraction(Integer)) 
+                                                                   Type: Void
+
+testcase "complex polygamma"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+v1 := polygamma(20, 1.0 + 10*%i)
+ 
+
+   (2)  - 7.485128367162608e-4 - 0.0012164509891871567 %i
+                                                   Type: Complex(DoubleFloat)
+testTrue("sqrt(norm((v1 - (-0.0007485128_3671625794_037553"
+                           " - 0.0012164509_8918715708_087851*%i))/v1))"
+               " < 1.0e-14")
+ 
+                                                                   Type: Void
+
+testcase "toString with floats"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testEquals("toString(3.7, 10)", "_"3.7000000000_"")
+ 
+                                                                   Type: Void
+testEquals("toString(4.3, 8)", "_"4.30000000_"")
+ 
+                                                                   Type: Void
+testEquals("toString(-3.7, 9)", "_"-3.700000000_"")
+ 
+                                                                   Type: Void
+testEquals("toString(2.7::DFLOAT, 8)", "_"2.70000000_"")
+ 
+                                                                   Type: Void
+
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+
+   =============================================================================
+   Testsuite: bugs2024
+     failed (total): 0 (10)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   bugs2024                    0    (10)               0    (32)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 32
+                                                                   Type: Void
+)quit
+ 

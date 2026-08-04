@@ -1,0 +1,214 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read jnball.input
+ 
+)set break resume
+ 
+)set mess type off
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+)expose testcase "NMComplexBall"
+ 
+   testcase is not a known constructor. You can make the constructor 
+      known to the system by loading it.
+   NMComplexBall is not a known constructor. You can make the 
+      constructor known to the system by loading it.
+)expose testcase "NMComplexField"
+ 
+   testcase is not a known constructor. You can make the constructor 
+      known to the system by loading it.
+   NMComplexField is not a known constructor. You can make the 
+      constructor known to the system by loading it.
+
+testsuite "JNBall"
+ 
+   All user variables and function definitions have been cleared.
+
+testcase "NMRealBall"
+ 
+   All user variables and function definitions have been cleared.
+rb1 := 1.0::NMRealBall
+ 
+
+   (2)
+  1.000000000000000000000000000000000000000000000000000000000000000000000000000
+  00
+rb2 := 2.0::NMRealBall
+ 
+
+   (3)
+  2.000000000000000000000000000000000000000000000000000000000000000000000000000
+  00
+rb3 := rb1 + rb2
+ 
+
+   (4)
+  3.000000000000000000000000000000000000000000000000000000000000000000000000000
+  00
+testTrue("contains?(rb3, 3.0::NMRealBall)")
+ 
+testTrue("overlaps?(rb1, rb1)")
+ 
+testTrue("exact?(rb1)") -- 1.0 should be exact if created from float? Maybe not.
+ 
+-- Actually 1.0 might not be exact, but integer 1 should be.
+rb_int := 1::NMRealBall
+ 
+
+   (8)
+  1.000000000000000000000000000000000000000000000000000000000000000000000000000
+  00
+testTrue("exact?(rb_int)")
+ 
+testTrue("contains?(exp(0::NMRealBall), 1::NMRealBall)")
+ 
+testTrue("contains?(log(exp(1::NMRealBall)), 1::NMRealBall)")
+ 
+
+testcase "NMComplexBall"
+ 
+   All user variables and function definitions have been cleared.
+cb1 := complex(1.0::NMRealBall, 2.0::NMRealBall)
+ 
+
+   (2)
+    1.0000000000000000000000000000000000000000000000000000000000000000000000000
+    0000
+   + 
+      2.00000000000000000000000000000000000000000000000000000000000000000000000
+      000000
+    *
+       %i
+cb2 := complex(3.0::NMRealBall, 4.0::NMRealBall)
+ 
+
+   (3)
+    3.0000000000000000000000000000000000000000000000000000000000000000000000000
+    0000
+   + 
+      4.00000000000000000000000000000000000000000000000000000000000000000000000
+      000000
+    *
+       %i
+cb3 := cb1 + cb2
+ 
+
+   (4)
+    4.0000000000000000000000000000000000000000000000000000000000000000000000000
+    0000
+   + 
+      6.00000000000000000000000000000000000000000000000000000000000000000000000
+      000000
+    *
+       %i
+testTrue("contains?(real(cb3), 4.0::NMRealBall)")
+ 
+testTrue("contains?(imag(cb3), 6.0::NMRealBall)")
+ 
+cb_int := complex(1::NMRealBall, 0::NMRealBall)
+ 
+
+   (7)
+  1.000000000000000000000000000000000000000000000000000000000000000000000000000
+  00
+testTrue("exact?(cb_int)")
+ 
+
+testcase "NMRealField"
+ 
+   All user variables and function definitions have been cleared.
+rf1 := 1.0::NMRealField
+ 
+
+   (2)  1.0000000000000000000
+rf2 := 2.0::NMRealField
+ 
+
+   (3)  2.0000000000000000000
+rf3 := rf1 + rf2
+ 
+
+   (4)  3.0000000000000000000
+testTrue("contains?(rf3, 3.0::NMRealField)")
+ 
+testTrue("overlaps?(rf1, rf1)")
+ 
+rf_int := 1::NMRealField
+ 
+
+   (7)  1.0000000000000000000
+testTrue("exact?(rf_int)")
+ 
+testTrue("contains?(exp(0::NMRealField), 1::NMRealField)")
+ 
+
+testcase "NMComplexField"
+ 
+   All user variables and function definitions have been cleared.
+cf1 := complex(1.0::NMRealField, 2.0::NMRealField)
+ 
+
+   (2)  1.0000000000000000000 + 2.0000000000000000000 %i
+cf2 := complex(3.0::NMRealField, 4.0::NMRealField)
+ 
+
+   (3)  3.0000000000000000000 + 4.0000000000000000000 %i
+cf3 := cf1 + cf2
+ 
+
+   (4)  4.0000000000000000000 + 6.0000000000000000000 %i
+testTrue("contains?(real(cf3), 4.0::NMRealField)")
+ 
+testTrue("contains?(imag(cf3), 6.0::NMRealField)")
+ 
+cf_int := complex(1::NMRealField, 0::NMRealField)
+ 
+
+   (7)  1.0000000000000000000
+testTrue("exact?(cf_int)")
+ 
+
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+
+   =============================================================================
+   Testsuite: JNBall
+     failed (total): 0 (4)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   JNBall                      0     (4)               0    (16)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 16
+)quit
+ 

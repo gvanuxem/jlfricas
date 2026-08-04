@@ -1,0 +1,538 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read bugs2009.input
+ 
+)set break resume
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+
+testsuite "bugs2009"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testcase "zero testing for constants (issue #290)"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testEquals("integrate((x^4*exp(2)*log(2*x)^2+(3*x^2+-2*x)*exp(x+2)*log(2*x)+(exp(2*x+2)+-1*x*exp(x+2)))/(x^4*log(2*x)^2+2*x^2*exp(x)*log(2*x)+exp(2*x)), x)", "(x^3*exp(2)^2*log(2*x)+(x+1)*exp(2)*exp(x+2))/(x^2*exp(2)*log(2*x)+exp(x+2))")
+ 
+                                                                   Type: Void
+
+testEquals("integrate(((x^2+-2*x)*exp(x+2)*log(2*x)+-1*x*exp(x+2))/(x^4*log(2*x)^2+2*x^2*exp(x)*log(2*x)+exp(2*x)), x)", "(exp(2)*exp(x+2))/(x^2*exp(2)*log(2*x)+exp(x+2))")
+ 
+                                                                   Type: Void
+
+testEquals("integrate(exp(x^2)*(exp(a)^2-exp(2*a)), x)", "0")
+ 
+                                                                   Type: Void
+testEquals("normalize(exp(4) - exp(2))", "exp(2)^2 - exp(2)")
+ 
+                                                                   Type: Void
+testEquals("normalize(exp(sqrt(5)) - exp(2)^sqrt(5))", "exp(sqrt(5)) - exp(sqrt(5))^2")
+ 
+                                                                   Type: Void
+testEquals("normalize(log(tan((1/2)*x+%pi/4))-asinh(tan(x)))", "0")
+ 
+                                                                   Type: Void
+testEquals("normalize(log((2*exp(3)+1)/sqrt(4*exp(6)+4*exp(3)+1)))", "0")
+ 
+                                                                   Type: Void
+testEquals("normalize(2*atan(exp(-3))-atan(-2*exp(-3)/(exp(-6)-1)))", "0")
+ 
+                                                                   Type: Void
+
+testEquals("normalize(log(4)^2-4*log(2)^2)", "0")
+ 
+                                                                   Type: Void
+ii := integrate(2^x/sqrt(1+4^x), x)
+ 
+
+                +-----------------+
+                |   x log(2) 2          x log(2)
+           log(\|(%e        )  + 1  - %e        )
+   (11)  - --------------------------------------
+                           log(2)
+                                         Type: Union(Expression(Integer),...)
+testEquals("normalize(ii - asinh(2^x)/log(2))", "0")
+ 
+                                                                   Type: Void
+
+testcase "asin complex(1.0,0) (issue #138)"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+testEquals("asin complex(1.0,0)", "pi()$Complex(Float)/2")
+ 
+                                                                   Type: Void
+
+testcase "atanh 1.0 (issue #437)"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+testLibraryError("atanh 1.0")
+ 
+                                                                   Type: Void
+
+testcase "defining recurrence and type of argument (#439)"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+first [1 for m in 1..2] - m
+ 
+ 
+Daly Bug
+   m is declared as being in PositiveInteger but has not been given a 
+      value.
+
+   Continuing to read the file...
+
+
+testcase "not a valid isolation interval in integral (#441)"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+testTrue("(integrate(log(z-1)*z/(z^2-1)^2, z= 1..%plusInfinity); true)")
+ 
+                                                                   Type: Void
+
+testcase "index out of range in gcdDecomposition"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+i1 := 189145300198486602596774595069726915694703755579
+ 
+
+   (2)  189145300198486602596774595069726915694703755579
+                                                        Type: PositiveInteger
+i2 := 119647849214981034640025582370842880808489196080633
+ 
+
+   (3)  119647849214981034640025582370842880808489196080633
+                                                        Type: PositiveInteger
+testTrue("(dc:=gcdDecomposition(vector([i1, i2]))$GcdBasis(Integer); true)")
+ 
+                                                                   Type: Void
+cb := dc.basis
+ 
+
+   (5)  [3560003, 1177589972286636486859, 28540424831674626080729]
+                                                        Type: Vector(Integer)
+ct := dc.transform
+ 
+
+        +4  1+
+        |    |
+   (6)  |1  1|
+        |    |
+        +0  1+
+                                                        Type: Matrix(Integer)
+testTrue("(#cb = 3)::Boolean")
+ 
+                                                                   Type: Void
+testEquals("[gcd(cb(1), cb(2)), gcd(cb(2), cb(3)), gcd(cb(1), cb(3))]", "[1, 1, 1]")
+ 
+                                                                   Type: Void
+testEquals("reduce('*, [cb(i)^(ct(i, 1)) for i in 1..3]) - i1", "0")
+ 
+                                                                   Type: Void
+testEquals("reduce('*, [cb(i)^(ct(i, 2)) for i in 1..3]) - i2", "0")
+ 
+                                                                   Type: Void
+
+testcase "mapping as target type"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+testTrue("(f1 := _*$Float@((NonNegativeInteger,Float) -> Float); true)")
+ 
+                                                                   Type: Void
+testTrue("abs(f1(5, 2.0) - 10.0) < 1.0e-15")
+ 
+                                                                   Type: Void
+
+testcase "equality of nested products is random (#443)"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+f := operator 'f
+ 
+
+   (2)  f
+                                                          Type: BasicOperator
+testTrue("every?(c+->c, [(product(product(f i, i=1..k), k=1..n) = product(product(f j, j=1..l), l=1..n)) for m in 0..30]::List Boolean)")
+ 
+                                                                   Type: Void
+
+testcase "factoring in SAE -- SF/2521387"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+F := SAE(Fraction Integer, SUP(Fraction Integer), x^2-2)
+ 
+
+   (2)
+   SimpleAlgebraicExtension
+      Fraction(Integer)
+  ,
+      SparseUnivariatePolynomial(Fraction(Integer))
+  ,
+       2
+      ?  - 2
+                                                                   Type: Type
+pol := x^2-9-4*generator()$F
+ 
+
+         2
+   (3)  x  - 4 ? - 9
+Type: Polynomial(SimpleAlgebraicExtension(Fraction(Integer),SparseUnivariatePolynomial(Fraction(Integer)),?^2+(-2)))
+testEquals("#factors(factor(pol))", "2")
+ 
+                                                                   Type: Void
+
+testcase "bad nested functions"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+Tr := Tree(Integer)
+ 
+
+   (2)  Tree(Integer)
+                                                                   Type: Type
+n3 := tree(3, [])$Tr
+ 
+
+   (3)  3
+                                                          Type: Tree(Integer)
+n2 := tree(2, [])$Tr
+ 
+
+   (4)  2
+                                                          Type: Tree(Integer)
+mytree := tree(1, [n2, n3])$Tr
+ 
+
+   (5)  1(2,3)
+                                                          Type: Tree(Integer)
+testTrue("not(node?(mytree, n2))")
+ 
+                                                                   Type: Void
+testTrue("node?(n2, mytree)")
+ 
+                                                                   Type: Void
+testTrue("member?(1, mytree)")
+ 
+                                                                   Type: Void
+testTrue("member?(3, mytree)")
+ 
+                                                                   Type: Void
+testTrue("not(member?(4, mytree))")
+ 
+                                                                   Type: Void
+
+Ss := Set Set Integer
+ 
+
+   (11)  Set(Set(Integer))
+                                                                   Type: Type
+s1 := [[1]]@Ss
+ 
+
+   (12)  {{1}}
+                                                      Type: Set(Set(Integer))
+testTrue("subset?(s1, [[1], [2]])")
+ 
+                                                                   Type: Void
+testTrue("not(subset?(s1, [[2], [3]]))")
+ 
+                                                                   Type: Void
+
+testcase "wrong results of comparison"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testLibraryError("%e > %pi")
+ 
+   There are 1 exposed and 2 unexposed library operations named > 
+      having 2 argument(s) but none was determined to be applicable. 
+      Use HyperDoc Browse, or issue
+                                )display op >
+      to learn more about the available operations. Perhaps 
+      package-calling the operation or using coercions on the arguments
+      will allow you to apply the operation.
+ 
+Daly Bug
+   Cannot find a definition or applicable library operation named > 
+      with argument type(s) 
+                             Expression(Integer)
+                                  PiDomain
+      
+      Perhaps you should use "@" to indicate the required return type, 
+      or "$" to specify which version of the function you need.
+
+                                                                   Type: Void
+testLibraryError("integrate(max(1, x), x=0..2)")
+ 
+   There are 2 exposed and 2 unexposed library operations named max 
+      having 2 argument(s) but none was determined to be applicable. 
+      Use HyperDoc Browse, or issue
+                               )display op max
+      to learn more about the available operations. Perhaps 
+      package-calling the operation or using coercions on the arguments
+      will allow you to apply the operation.
+ 
+Daly Bug
+   Cannot find a definition or applicable library operation named max 
+      with argument type(s) 
+                               PositiveInteger
+                                 Variable(x)
+      
+      Perhaps you should use "@" to indicate the required return type, 
+      or "$" to specify which version of the function you need.
+
+                                                                   Type: Void
+-- issue 193
+testLibraryError("4 - %pi < 0")
+ 
+   There are 3 exposed and 1 unexposed library operations named < 
+      having 2 argument(s) but none was determined to be applicable. 
+      Use HyperDoc Browse, or issue
+                                )display op <
+      to learn more about the available operations. Perhaps 
+      package-calling the operation or using coercions on the arguments
+      will allow you to apply the operation.
+ 
+Daly Bug
+   Cannot find a definition or applicable library operation named < 
+      with argument type(s) 
+                                  PiDomain
+                             NonNegativeInteger
+      
+      Perhaps you should use "@" to indicate the required return type, 
+      or "$" to specify which version of the function you need.
+
+                                                                   Type: Void
+testLibraryError("4 - %pi::Expression(Integer) < 0")
+ 
+   There are 3 exposed and 1 unexposed library operations named < 
+      having 2 argument(s) but none was determined to be applicable. 
+      Use HyperDoc Browse, or issue
+                                )display op <
+      to learn more about the available operations. Perhaps 
+      package-calling the operation or using coercions on the arguments
+      will allow you to apply the operation.
+ 
+Daly Bug
+   Cannot find a definition or applicable library operation named < 
+      with argument type(s) 
+                             Expression(Integer)
+                             NonNegativeInteger
+      
+      Perhaps you should use "@" to indicate the required return type, 
+      or "$" to specify which version of the function you need.
+
+                                                                   Type: Void
+testLibraryError("sqrt(2) < sqrt(3/2)")
+ 
+   There are 3 exposed and 1 unexposed library operations named < 
+      having 2 argument(s) but none was determined to be applicable. 
+      Use HyperDoc Browse, or issue
+                                )display op <
+      to learn more about the available operations. Perhaps 
+      package-calling the operation or using coercions on the arguments
+      will allow you to apply the operation.
+ 
+Daly Bug
+   Cannot find a definition or applicable library operation named < 
+      with argument type(s) 
+                               AlgebraicNumber
+                               AlgebraicNumber
+      
+      Perhaps you should use "@" to indicate the required return type, 
+      or "$" to specify which version of the function you need.
+
+                                                                   Type: Void
+--issue 334
+testLibraryError("coefficient(numer(12*sin(z)^3*z), sin(z), 3)")
+ 
+   There are 3 exposed and 2 unexposed library operations named 
+      coefficient having 3 argument(s) but none was determined to be 
+      applicable. Use HyperDoc Browse, or issue
+                           )display op coefficient
+      to learn more about the available operations. Perhaps 
+      package-calling the operation or using coercions on the arguments
+      will allow you to apply the operation.
+ 
+Daly Bug
+   Cannot find a definition or applicable library operation named 
+      coefficient with argument type(s) 
+      SparseMultivariatePolynomial(Integer,Kernel(Expression(Integer)))
+                             Expression(Integer)
+                               PositiveInteger
+      
+      Perhaps you should use "@" to indicate the required return type, 
+      or "$" to specify which version of the function you need.
+
+                                                                   Type: Void
+
+testcase "equality in Any"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+-- issue 348
+a : Any := [1, 2]
+ 
+
+   (2)  [1, 2]
+                                                  Type: List(PositiveInteger)
+b : Any := [1, 2]
+ 
+
+   (3)  [1, 2]
+                                                  Type: List(PositiveInteger)
+testTrue("(a = b)@Boolean")
+ 
+                                                                   Type: Void
+b := [1, 3]
+ 
+
+   (5)  [1, 3]
+                                                  Type: List(PositiveInteger)
+testTrue("not((a = b)@Boolean)")
+ 
+                                                                   Type: Void
+a := "A"
+ 
+
+   (7)  "A"
+                                                                 Type: String
+testTrue("not((a = b)@Boolean)")
+ 
+                                                                   Type: Void
+b := "A"
+ 
+
+   (9)  "A"
+                                                                 Type: String
+testTrue("(a = b)@Boolean")
+ 
+                                                                   Type: Void
+Sae := SAE(FRAC INT, UP(x, FRAC INT), x^2-3)
+ 
+
+   (11)
+   SimpleAlgebraicExtension
+      Fraction(Integer)
+  ,
+      UnivariatePolynomial(x,Fraction(Integer))
+  ,
+       2
+      x  - 3
+                                                                   Type: Type
+a := generator()$Sae
+ 
+
+   (12)  x
+Type: SimpleAlgebraicExtension(Fraction(Integer),UnivariatePolynomial(x,Fraction(Integer)),x^2+(-3))
+b := generator()$Sae
+ 
+
+   (13)  x
+Type: SimpleAlgebraicExtension(Fraction(Integer),UnivariatePolynomial(x,Fraction(Integer)),x^2+(-3))
+testTrue("(a = b)@Boolean")
+ 
+                                                                   Type: Void
+-- issue 279
+X : Set Any := ["x"]
+ 
+
+   (15)  {"x"}
+                                                               Type: Set(Any)
+Y : Set Any := ["x"]
+ 
+
+   (16)  {"x"}
+                                                               Type: Set(Any)
+testTrue("(X = Y)@Boolean")
+ 
+                                                                   Type: Void
+
+-- issue 352
+f5 := 5::Factored(Complex(Integer))
+ 
+
+   (18)  - %i(1 + 2 %i)(2 + %i)
+                                             Type: Factored(Complex(Integer))
+testTrue("(#factors(f5) = 2)@Boolean")
+ 
+                                                                   Type: Void
+testTrue("not(prime?(5::Complex(Integer)))")
+ 
+                                                                   Type: Void
+testTrue("prime?(7::Complex(Integer))")
+ 
+                                                                   Type: Void
+
+-- missing solution
+ex1 := log((7/3)^(2*x - 7)) + log((3/7)^(4*x - 5))
+ 
+
+              7 2 x - 7         3 4 x - 5
+   (22)  log((-)       ) + log((-)       )
+              3                 7
+                                                    Type: Expression(Integer)
+testEquals("solve(ex1)", "[x = -1]")
+ 
+                                                                   Type: Void
+
+)set output algebra on
+ 
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+
+   =============================================================================
+   Testsuite: bugs2009
+     failed (total): 0 (12)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   bugs2009                    0    (12)               0    (45)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 45
+                                                                   Type: Void
+)quit
+ 

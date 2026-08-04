@@ -1,0 +1,1458 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read bugs2016.input
+ 
+)set break resume
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+
+testsuite "bugs2016"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testcase "bug in unparse"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+x1 := sqrt(-1)::EXPR INT
+ 
+
+         +---+
+   (2)  \|- 1
+                                                    Type: Expression(Integer)
+xf1 := x1::InputForm
+ 
+
+   (3)  (^ - 1 (/ 1 2))
+                                                              Type: InputForm
+xf2 := parse(unparse(xf1))$INFORM
+ 
+
+   (4)  (^ (- 1) (/ 1 2))
+                                                              Type: InputForm
+xf3 := atType(xf2)$InputFormFunctions1(EXPR INT)
+ 
+
+   (5)  (@ (^ (- 1) (/ 1 2)) (Expression (Integer)))
+                                                              Type: InputForm
+testEquals("interpret(xf3)", "x1")
+ 
+                                                                   Type: Void
+
+testcase "unparse of segment"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testEquals("unparse((1..3)::INFORM)", "_"(1..3)$Segment(PositiveInteger())_"")
+ 
+                                                                   Type: Void
+
+testcase "symFunc"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+sF := SymmetricFunctions(Polynomial(Integer))
+ 
+
+   (2)  SymmetricFunctions(Polynomial(Integer))
+                                                                   Type: Type
+testEquals("symFunc(a, 3)$sF", "vector [3*a, 3*a^2, a^3]")
+ 
+                                                                   Type: Void
+
+testcase "qnew and matrix manipulation"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+m2 := matrix([[1, 2], [3, 4]])$U32Matrix
+ 
+
+        +1  2+
+   (2)  |    |
+        +3  4+
+                                                              Type: U32Matrix
+c1 := matrix([[1],[3]])$U32Matrix
+ 
+
+        +1+
+   (3)  | |
+        +3+
+                                                              Type: U32Matrix
+r1 := matrix([[3, 4]])$U32Matrix
+ 
+
+   (4)  [3  4]
+                                                              Type: U32Matrix
+)expose MatrixManipulation
+ 
+   MatrixManipulation is now explicitly exposed in frame initial 
+testEquals("columns(m2, [0])", "c1")
+ 
+                                                                   Type: Void
+testEquals("rows(m2, [1])", "r1")
+ 
+                                                                   Type: Void
+
+testcase "equality in AlgebraicNumber"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testTrue("not(sqrt(2)*sqrt(3)=sqrt(6) and sqrt(2)*sqrt(3)=-sqrt(6))")
+ 
+                                                                   Type: Void
+
+testcase "countRealRoots"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testEquals("countRealRoots(x^4-1)", "2")
+ 
+                                                                   Type: Void
+
+testcase "hidden constant"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+dd := D(Gamma((n+1)/2, -b*z^2), z)
+ 
+
+                            n - 1
+                   2        -----
+                b z       2   2
+   (2)  2 b z %e    (- b z )
+                                                    Type: Expression(Integer)
+nn := normalize(dd/(exp(n*log(z))*exp(b*z^2)))
+ 
+
+                                2
+                (n - 1)log(- b z )
+                ------------------
+                         2
+        2 b z %e
+   (3)  --------------------------
+                  n log(z)
+                %e
+                                                    Type: Expression(Integer)
+testEquals("D(nn, z)", "0")
+ 
+                                                                   Type: Void
+xftestTrue("not(member?('z, variables(nn)))")
+ 
+                                                                   Type: Void
+
+testcase "normalize of lambertW"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testEquals("exp(lambertW(x))", "x/lambertW(x)")
+ 
+                                                                   Type: Void
+testEquals("normalize(exp(-lambertW(x)))", "lambertW(x)/x")
+ 
+                                                                   Type: Void
+testEquals("normalize(log(x/lambertW(x)))", "lambertW(x)")
+ 
+                                                                   Type: Void
+testEquals("normalize(log(lambertW(x)/x))", "-lambertW(x)")
+ 
+                                                                   Type: Void
+
+testcase "Smith form of empty matrices"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+mI := Matrix(Integer)
+ 
+
+   (2)  Matrix(Integer)
+                                                                   Type: Type
+vI := Vector(Integer)
+ 
+
+   (3)  Vector(Integer)
+                                                                   Type: Type
+sP := SmithNormalForm(Integer, vI, vI, mI)
+ 
+
+   (4)
+   SmithNormalForm(Integer,Vector(Integer),Vector(Integer),Matrix(Integer))
+                                                                   Type: Type
+
+m0 := zero(0, 0)$mI
+ 
+
+   (5)  []
+                                                        Type: Matrix(Integer)
+m1 := zero(0, 1)$mI
+ 
+
+   (6)  []
+                                                        Type: Matrix(Integer)
+m3 := zero(0, 3)$mI
+ 
+
+   (7)  []
+                                                        Type: Matrix(Integer)
+vv := vector([])$vI
+ 
+
+   (8)  []
+                                                        Type: Vector(Integer)
+
+hr3 := completeHermite(m3)$sP
+ 
+
+   (9)  [Hermite = [], eqMat = []]
+                Type: Record(Hermite: Matrix(Integer),eqMat: Matrix(Integer))
+testEquals("hr3.Hermite", "m3")
+ 
+                                                                   Type: Void
+testEquals("hr3.eqMat", "m0")
+ 
+                                                                   Type: Void
+
+sr0 := completeSmith(m0)$sP
+ 
+
+   (12)  [Smith = [], leftEqMat = [], rightEqMat = []]
+Type: Record(Smith: Matrix(Integer),leftEqMat: Matrix(Integer),rightEqMat: Matrix(Integer))
+sr1 := completeSmith(m1)$sP
+ 
+
+   (13)  [Smith = [], leftEqMat = [], rightEqMat = [1]]
+Type: Record(Smith: Matrix(Integer),leftEqMat: Matrix(Integer),rightEqMat: Matrix(Integer))
+sr3 := completeSmith(m3)$sP
+ 
+
+                                                   +1  0  0+
+                                                   |       |
+   (14)  [Smith = [], leftEqMat = [], rightEqMat = |0  1  0|]
+                                                   |       |
+                                                   +0  0  1+
+Type: Record(Smith: Matrix(Integer),leftEqMat: Matrix(Integer),rightEqMat: Matrix(Integer))
+
+testEquals("sr0.Smith", "m0")
+ 
+                                                                   Type: Void
+testEquals("sr0.leftEqMat", "m0")
+ 
+                                                                   Type: Void
+testEquals("sr0.rightEqMat", "m0")
+ 
+                                                                   Type: Void
+
+testEquals("sr1.Smith", "m1")
+ 
+                                                                   Type: Void
+testEquals("sr1.leftEqMat", "m0")
+ 
+                                                                   Type: Void
+testEquals("sr1.rightEqMat", "matrix([[1]])$mI")
+ 
+                                                                   Type: Void
+
+testEquals("sr3.Smith", "m3")
+ 
+                                                                   Type: Void
+testEquals("sr3.leftEqMat", "m0")
+ 
+                                                                   Type: Void
+testEquals("sr3.rightEqMat", "scalarMatrix(3, 1)$mI")
+ 
+                                                                   Type: Void
+
+res0 := diophantineSystem(m0, vv)$sP
+ 
+
+   (24)  [particular = [], basis = []]
+Type: Record(particular: Union(Vector(Integer),"failed"),basis: List(Vector(Integer)))
+res1 := diophantineSystem(m1, vv)$sP
+ 
+
+   (25)  [particular = [0], basis = [[1]]]
+Type: Record(particular: Union(Vector(Integer),"failed"),basis: List(Vector(Integer)))
+res3 := diophantineSystem(m3, vv)$sP
+ 
+
+   (26)  [particular = [0, 0, 0], basis = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]]
+Type: Record(particular: Union(Vector(Integer),"failed"),basis: List(Vector(Integer)))
+
+testEquals("res0.particular", "vv")
+ 
+                                                                   Type: Void
+testTrue("empty?(res0.basis)")
+ 
+                                                                   Type: Void
+testEquals("res1.particular", "new(1, 0)$vI")
+ 
+                                                                   Type: Void
+testEquals("#(res1.basis)", "1")
+ 
+                                                                   Type: Void
+testEquals("first(res1.basis)", "vector([1])$vI")
+ 
+                                                                   Type: Void
+testEquals("res3.particular", "new(3, 0)$vI")
+ 
+                                                                   Type: Void
+testEquals("#(res3.basis)", "3")
+ 
+                                                                   Type: Void
+testEquals("determinant(matrix([parts(w) for w in res3.basis])$mI)", "1")
+ 
+                                                                   Type: Void
+
+testcase "plus and minus for Segment"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testEquals("1 + (3..6)", "4..7")
+ 
+                                                                   Type: Void
+testEquals("(-10 .. -3) + 10", "0..7")
+ 
+                                                                   Type: Void
+testEquals("(0..6) - 1", "-1..5")
+ 
+                                                                   Type: Void
+
+testcase "plus and minus for UniversalSegment"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testEquals("4 + (-6..)", "-2..")
+ 
+                                                                   Type: Void
+testEquals("(1..) + -3", "-2..")
+ 
+                                                                   Type: Void
+testEquals("(3..) - 5", "-2..")
+ 
+                                                                   Type: Void
+
+testcase "hashing Float"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+a := 1.0
+ 
+
+   (2)  1.0
+                                                                  Type: Float
+b := 2.0
+ 
+
+   (3)  2.0
+                                                                  Type: Float
+testEquals("hash(a)", "hash(a)")
+ 
+                                                                   Type: Void
+testTrue("not(hash(a) = hash(b))")
+ 
+                                                                   Type: Void
+
+testcase "hashing Fraction"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+a := 1/2
+ 
+
+        1
+   (2)  -
+        2
+                                                      Type: Fraction(Integer)
+b := 2/3
+ 
+
+        2
+   (3)  -
+        3
+                                                      Type: Fraction(Integer)
+testEquals("hash(a)", "hash(a)")
+ 
+                                                                   Type: Void
+testTrue("not(hash(a) = hash(b))")
+ 
+                                                                   Type: Void
+
+testcase "smith form"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+sP := SMITH(INT, Vector(INT), Vector(INT), Matrix(INT))
+ 
+
+   (2)
+   SmithNormalForm(Integer,Vector(Integer),Vector(Integer),Matrix(Integer))
+                                                                   Type: Type
+-- captures global mm
+test_smith() : Void ==
+    testTrue("(res := completeSmith(mm)$sP; true)")
+    testEquals("res.leftEqMat*mm*res.rightEqMat", "res.Smith")
+    testEquals("abs(determinant(res.leftEqMat))", "1")
+    testEquals("abs(determinant(res.rightEqMat))", "1")
+ 
+   Function declaration test_smith : () -> Void has been added to 
+      workspace.
+                                                                   Type: Void
+
+mm := matrix([[0, -1, 0, 0], [1, 2, 3, 4], [2, 3, 2, 0]])
+ 
+
+        +0  - 1  0  0+
+        |            |
+   (4)  |1   2   3  4|
+        |            |
+        +2   3   2  0+
+                                                        Type: Matrix(Integer)
+test_smith()
+ 
+   Compiling function test_smith with type () -> Void 
+                                                                   Type: Void
+
+mm := matrix([[0, -1, 0, 1, 0], [2, 1, 3, 4, 5], [1, 2, 1, 2, 1],
+              [1, 2, 4, 8, 16]])
+ 
+
+        +0  - 1  0  1  0 +
+        |                |
+        |2   1   3  4  5 |
+   (6)  |                |
+        |1   2   1  2  1 |
+        |                |
+        +1   2   4  8  16+
+                                                        Type: Matrix(Integer)
+test_smith()
+ 
+                                                                   Type: Void
+
+mm := matrix([[0,1,0,0,0,0,0,1],[0,0,0,0,0,0,0,0],[1,0,0,1,0,0,0,0],
+              [0,0,0,0,0,0,0,0],[1,1,0,0,0,0,0,0]])$Matrix(Integer)
+ 
+
+        +0  1  0  0  0  0  0  1+
+        |                      |
+        |0  0  0  0  0  0  0  0|
+        |                      |
+   (8)  |1  0  0  1  0  0  0  0|
+        |                      |
+        |0  0  0  0  0  0  0  0|
+        |                      |
+        +1  1  0  0  0  0  0  0+
+                                                        Type: Matrix(Integer)
+test_smith()
+ 
+                                                                   Type: Void
+
+mm := matrix([[1,1,0,0,0,0,1,0],[0,1,0,0,1,1,0,0],[1,0,0,-2,0,0,1,0],
+              [0,1,0,5,1,0,0,0],[0,0,0,0,1,0,0,0]])
+ 
+
+         +1  1  0   0   0  0  1  0+
+         |                        |
+         |0  1  0   0   1  1  0  0|
+         |                        |
+   (10)  |1  0  0  - 2  0  0  1  0|
+         |                        |
+         |0  1  0   5   1  0  0  0|
+         |                        |
+         +0  0  0   0   1  0  0  0+
+                                                        Type: Matrix(Integer)
+test_smith()
+ 
+                                                                   Type: Void
+
+testcase "homology"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+dC := DeltaComplex(Integer)
+ 
+
+   (2)  DeltaComplex(Integer)
+                                                                   Type: Type
+
+hz0 := homology0()$Homology()
+ 
+
+   (3)  0
+                                                               Type: Homology
+hz1 := homologyz()$Homology()
+ 
+
+   (4)  Z
+                                                               Type: Homology
+hz2 := homology([], [], [[1, 0],[0, 1]])$Homology()
+ 
+
+   (5)  Z*2
+                                                               Type: Homology
+hz3 := homology([], [], [[1, 0, 0], [0, 1, 0], [0, 1, 0]])$Homology()
+ 
+
+   (6)  Z*3
+                                                               Type: Homology
+hz3 := homology([], [], [[1, 0, 0], [0, 1, 0], [0, 1, 0]])$Homology()
+ 
+
+   (7)  Z*3
+                                                               Type: Homology
+hc2 := homology([[1]], [2], [])$Homology()
+ 
+
+   (8)  C2
+                                                               Type: Homology
+hc3 := homology([[1]], [3], [])$Homology()
+ 
+
+   (9)  C3
+                                                               Type: Homology
+
+-- circle
+sd1 := deltaComplex([],1, [[[1, -1]]])$dC
+ 
+
+   (10)
+          1D:[[1, - 1]]
+            0D:[[0]]
+                                                  Type: DeltaComplex(Integer)
+hsd1 := homology(sd1)
+ 
+
+   (11)  [Z, Z]
+                                                         Type: List(Homology)
+testEquals("hsd1(1)", "hz1")
+ 
+                                                                   Type: Void
+testEquals("hsd1(2)", "hz1")
+ 
+                                                                   Type: Void
+
+-- point + 2-cell with empty boundary
+-- not clear if we consider this to be valid complex...
+sd2 := deltaComplex([],1, [[[]],[]])$dC
+ 
+
+   (14)
+          2D:[[]]
+           1D:[]
+          0D:[[]]
+                                                  Type: DeltaComplex(Integer)
+hsd2 := homology(sd2)
+ 
+
+   (15)  [Z, 0, Z]
+                                                         Type: List(Homology)
+testEquals("hsd2(1)", "hz1")
+ 
+                                                                   Type: Void
+testEquals("hsd2(2)", "hz0")
+ 
+                                                                   Type: Void
+testEquals("hsd2(3)", "hz1")
+ 
+                                                                   Type: Void
+
+-- 2 and 3-dimensional torus
+td2 := deltaComplex([],1, [[[1, 2, -1, -2]], [[1, -1], [1, -1]]])$dC
+ 
+
+   (19)
+           2D:[[1, 2, - 1, - 2]]
+          1D:[[1, - 1], [1, - 1]]
+                 0D:[[0]]
+                                                  Type: DeltaComplex(Integer)
+htd2 := homology(td2)
+ 
+
+   (20)  [Z, Z*2, Z]
+                                                         Type: List(Homology)
+
+testEquals("htd2(1)", "hz1")
+ 
+                                                                   Type: Void
+testEquals("htd2(2)", "hz2")
+ 
+                                                                   Type: Void
+testEquals("htd2(3)", "hz1")
+ 
+                                                                   Type: Void
+
+td3 := deltaComplex([],1, [[[1, -2, -1, 2, 3, -3]],_
+       [[1, 2, -1, -2], [1, 3, -1, -3], [2, 3, -2, -3]],_
+       [[1, -1], [1, -1], [1, -1]]])$dC
+ 
+
+   (24)
+                        3D:[[1, - 2, - 1, 2, 3, - 3]]
+          2D:[[1, 2, - 1, - 2], [1, 3, - 1, - 3], [2, 3, - 2, - 3]]
+                      1D:[[1, - 1], [1, - 1], [1, - 1]]
+                                  0D:[[0]]
+                                                  Type: DeltaComplex(Integer)
+htd3 := homology(td3)
+ 
+
+   (25)  [Z, Z*3, Z*3, Z]
+                                                         Type: List(Homology)
+testEquals("htd3(1)", "hz1")
+ 
+                                                                   Type: Void
+testEquals("htd3(2)", "hz3")
+ 
+                                                                   Type: Void
+testEquals("htd3(3)", "hz3")
+ 
+                                                                   Type: Void
+testEquals("htd3(4)", "hz1")
+ 
+                                                                   Type: Void
+
+-- disc with boundary which winds around circle 3 times
+rd3 := deltaComplex([],1, [[[1, 1, 1]], [[1, -1]]])$dC
+ 
+
+   (30)
+          2D:[[1, 1, 1]]
+          1D:[[1, - 1]]
+             0D:[[0]]
+                                                  Type: DeltaComplex(Integer)
+hrd3 := homology(rd3)
+ 
+
+   (31)  [Z, C3, 0]
+                                                         Type: List(Homology)
+testEquals("hrd3(1)", "hz1")
+ 
+                                                                   Type: Void
+testEquals("hrd3(2)", "hc3")
+ 
+                                                                   Type: Void
+testEquals("hrd3(3)", "hz0")
+ 
+                                                                   Type: Void
+
+DELTAFACTORY := DeltaComplexFactory(Integer)
+ 
+
+   (35)  DeltaComplexFactory(Integer)
+                                                                   Type: Type
+SIMPFACTORY := SimplicialComplexFactory(Integer)
+ 
+
+   (36)  SimplicialComplexFactory(Integer)
+                                                                   Type: Type
+
+ps3 := projectiveSpace(3)$DELTAFACTORY
+ 
+
+   (37)
+          3D:[[1, - 1]]
+           2D:[[1, 1]]
+          1D:[[1, - 1]]
+            0D:[[0]]
+                                                  Type: DeltaComplex(Integer)
+hps3 := homology(ps3)
+ 
+
+   (38)  [Z, C2, 0, Z]
+                                                         Type: List(Homology)
+testEquals("hps3(1)", "hz1")
+ 
+                                                                   Type: Void
+testEquals("hps3(2)", "hc2")
+ 
+                                                                   Type: Void
+testEquals("hps3(3)", "hz0")
+ 
+                                                                   Type: Void
+testEquals("hps3(4)", "hz1")
+ 
+                                                                   Type: Void
+
+ps4 := projectiveSpace(4)$DELTAFACTORY
+ 
+
+   (43)
+           4D:[[1, 1]]
+          3D:[[1, - 1]]
+           2D:[[1, 1]]
+          1D:[[1, - 1]]
+            0D:[[0]]
+                                                  Type: DeltaComplex(Integer)
+hps4 := homology(ps4)
+ 
+
+   (44)  [Z, C2, 0, C2, 0]
+                                                         Type: List(Homology)
+testEquals("hps4(1)", "hz1")
+ 
+                                                                   Type: Void
+testEquals("hps4(2)", "hc2")
+ 
+                                                                   Type: Void
+testEquals("hps4(3)", "hz0")
+ 
+                                                                   Type: Void
+testEquals("hps4(4)", "hc2")
+ 
+                                                                   Type: Void
+testEquals("hps4(5)", "hz0")
+ 
+                                                                   Type: Void
+
+s3 := sphereSurface(4)$SIMPFACTORY
+ 
+
+   (50)  points 1..5
+         (1, 2, 3, 4)
+         -(1, 2, 3, 5)
+         (1, 2, 4, 5)
+         -(1, 3, 4, 5)
+         (2, 3, 4, 5)
+                                       Type: FiniteSimplicialComplex(Integer)
+hs3 := homology(s3)
+ 
+
+   (51)  [Z, 0, 0, Z]
+                                                         Type: List(Homology)
+testEquals("hs3(1)", "hz1")
+ 
+                                                                   Type: Void
+testEquals("hs3(2)", "hz0")
+ 
+                                                                   Type: Void
+testEquals("hs3(3)", "hz0")
+ 
+                                                                   Type: Void
+testEquals("hs3(4)", "hz1")
+ 
+                                                                   Type: Void
+
+p2 := projectiveSpace(2)$SIMPFACTORY
+ 
+
+   (56)  points 1..6
+          (1, 2, 3)
+          (1, 3, 4)
+          (1, 2, 6)
+          (1, 5, 6)
+          (1, 4, 5)
+          (2, 3, 5)
+          (2, 4, 5)
+          (2, 4, 6)
+          (3, 4, 6)
+          (3, 5, 6)
+                                       Type: FiniteSimplicialComplex(Integer)
+hp2 := homology(p2)
+ 
+
+   (57)  [Z, C2, 0]
+                                                         Type: List(Homology)
+
+testEquals("hp2(1)", "hz1")
+ 
+                                                                   Type: Void
+testEquals("hp2(2)", "hc2")
+ 
+                                                                   Type: Void
+testEquals("hp2(3)", "hz0")
+ 
+                                                                   Type: Void
+
+s1 := sphereSurface(2)$SIMPFACTORY
+ 
+
+   (61)  points 1..3
+           (1, 2)
+           -(1, 3)
+           (2, 3)
+                                       Type: FiniteSimplicialComplex(Integer)
+t2 := product(s1, s1)
+ 
+
+   (62)  points 1..9
+          (1, 2, 5)
+          (1, 4, 5)
+          (1, 3, 6)
+          (1, 4, 6)
+          (2, 3, 6)
+          (2, 5, 6)
+          (1, 2, 8)
+          (1, 7, 8)
+          (1, 3, 9)
+          (1, 7, 9)
+          (2, 3, 9)
+          (2, 8, 9)
+          (4, 5, 8)
+          (4, 7, 8)
+          (4, 6, 9)
+          (4, 7, 9)
+          (5, 6, 9)
+          (5, 8, 9)
+                                       Type: FiniteSimplicialComplex(Integer)
+ht2 := homology(t2)
+ 
+
+   (63)  [Z, Z*2, Z]
+                                                         Type: List(Homology)
+testEquals("ht2", "htd2")
+ 
+                                                                   Type: Void
+
+aS := FiniteSimplicialComplex(Integer)
+ 
+
+   (65)  FiniteSimplicialComplex(Integer)
+                                                                   Type: Type
+v2 := [[1,2],[3,1],[2,3],[1,2,3]]::List(List(NNI))
+ 
+
+   (66)  [[1, 2], [3, 1], [2, 3], [1, 2, 3]]
+                                         Type: List(List(NonNegativeInteger))
+si2 := simplicialComplex([],3,v2)$aS
+ 
+
+   (67)  points 1..3
+           (1, 2)
+           -(1, 3)
+           (2, 3)
+          (1, 2, 3)
+                                       Type: FiniteSimplicialComplex(Integer)
+hsi2 := homology(si2)
+ 
+
+   (68)  [Z, 0, 0]
+                                                         Type: List(Homology)
+
+testEquals("hsi2(1)", "hz1")
+ 
+                                                                   Type: Void
+testEquals("hsi2(2)", "hz0")
+ 
+                                                                   Type: Void
+testEquals("hsi2(3)", "hz0")
+ 
+                                                                   Type: Void
+
+testcase "hashing SAE"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+T ==> SAE(INT, UP(y, INT), y^2+5)
+ 
+                                                                   Type: Void
+y : T := y
+ 
+
+   (3)  y
+Type: SimpleAlgebraicExtension(Integer,UnivariatePolynomial(y,Integer),y^2+5)
+testEquals("hash(y)", "hash(y)")
+ 
+                                                                   Type: Void
+testTrue("not(hash(y) = hash(y^3))")
+ 
+                                                                   Type: Void
+testEquals("hash(y^3)", "hash(-5*y)")
+ 
+                                                                   Type: Void
+
+testcase "map! on Tree"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testEquals("map!(x+->x+1, tree [1,2,3])", "tree [2,3,4]")
+ 
+                                                                   Type: Void
+
+testcase "0^0"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testEquals("0.0^(0::NNI)", "1.0")
+ 
+                                                                   Type: Void
+testEquals("0.0^(0::INT)", "1.0")
+ 
+                                                                   Type: Void
+testEquals("0.0^(0::FRAC(INT))", "1.0")
+ 
+                                                                   Type: Void
+
+testEquals("(0.0::DFLOAT)^(0::NNI)", "1.0")
+ 
+                                                                   Type: Void
+testEquals("(0.0::DFLOAT)^(0::INT)", "1.0")
+ 
+                                                                   Type: Void
+testEquals("(0.0::DFLOAT)^(0::FRAC(INT))", "1.0")
+ 
+                                                                   Type: Void
+
+testcase "integrating regular derivatives"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+f := x*fresnelC(x)
+ 
+
+   (2)  x fresnelC(x)
+                                                    Type: Expression(Integer)
+testEquals("integrate(D(f, x), x=0..3)", "3*fresnelC(3)")
+ 
+                                                                   Type: Void
+
+testcase "LieSquareMatrix"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+lSM := LieSquareMatrix(2, Integer)
+ 
+
+   (2)  LieSquareMatrix(2,Integer)
+                                                                   Type: Type
+sM := SquareMatrix(2, Integer)
+ 
+
+   (3)  SquareMatrix(2,Integer)
+                                                                   Type: Type
+a := matrix([[0, 1$Integer], [0, 0]])::lSM
+ 
+
+        +0  1+
+   (4)  |    |
+        +0  0+
+                                             Type: LieSquareMatrix(2,Integer)
+b := matrix([[0, 0], [1$Integer, 0]])::lSM
+ 
+
+        +0  0+
+   (5)  |    |
+        +1  0+
+                                             Type: LieSquareMatrix(2,Integer)
+testEquals("(a*b)::sM", "matrix([[1, 0], [0, -1]])")
+ 
+                                                                   Type: Void
+testLibraryError("a^0")
+ 
+   Compiling function G544 with type NonNegativeInteger -> Boolean 
+   Compiling function G546 with type Integer -> Boolean 
+   There are 27 exposed and 23 unexposed library operations named ^ 
+      having 2 argument(s) but none was determined to be applicable. 
+      Use HyperDoc Browse, or issue
+                                )display op ^
+      to learn more about the available operations. Perhaps 
+      package-calling the operation or using coercions on the arguments
+      will allow you to apply the operation.
+ 
+Daly Bug
+   Cannot find a definition or applicable library operation named ^ 
+      with argument type(s) 
+                         LieSquareMatrix(2,Integer)
+                             NonNegativeInteger
+      
+      Perhaps you should use "@" to indicate the required return type, 
+      or "$" to specify which version of the function you need.
+
+                                                                   Type: Void
+
+testcase "polynomial decomposition"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testEquals("completeDecompose((x^2+x+1)(x^3 + 2*x))",
+           "[x^2+x+1, x^3 + 2*x]")
+ 
+                                                                   Type: Void
+
+pI := UP('x, INT)
+ 
+
+   (3)  UnivariatePolynomial(x,Integer)
+                                                                   Type: Type
+pF := UP('x, PF(11))
+ 
+
+   (4)  UnivariatePolynomial(x,PrimeField(11))
+                                                                   Type: Type
+p := (x^15 + 2*x^14 + x^11 + x^4 + 3*x^2 + x + 7)::pI
+ 
+
+         15      14    11    4      2
+   (5)  x   + 2 x   + x   + x  + 3 x  + x + 7
+                                        Type: UnivariatePolynomial(x,Integer)
+q := (x^13 + x^12 + 3*x^11 + 2*x^10 + 6*x^9 + 8*x^8 + x^7 + 8*x^4 + x)::pI
+ 
+
+         13    12      11      10      9      8    7      4
+   (6)  x   + x   + 3 x   + 2 x   + 6 x  + 8 x  + x  + 8 x  + x
+                                        Type: UnivariatePolynomial(x,Integer)
+
+testEquals("completeDecompose(p(q))", "[p, q]")
+ 
+                                                                   Type: Void
+testEquals("monicCompleteDecompose(p(q))", "[p, q]")
+ 
+                                                                   Type: Void
+testEquals("completeDecompose((p::pF)(q::pF))", "[p::pF, q::pF]")
+ 
+                                                                   Type: Void
+
+rF := UP('x, UP('y, PF(11)))
+ 
+
+   (10)  UnivariatePolynomial(x,UnivariatePolynomial(y,PrimeField(11)))
+                                                                   Type: Type
+q := q::rF + (x^13*y)::rF
+ 
+
+                 13    12      11      10      9      8    7      4
+   (11)  (y + 1)x   + x   + 3 x   + 2 x   + 6 x  + 8 x  + x  + 8 x  + x
+         Type: UnivariatePolynomial(x,UnivariatePolynomial(y,PrimeField(11)))
+testEquals("rightFactorIfCan((p::rF)(q), 13, (y+1))", "q")
+ 
+                                                                   Type: Void
+
+testcase "partial fraction"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+res1 := partialFraction(1/18)
+ 
+
+        1    4
+   (2)  - - --
+        2    2
+            3
+                                               Type: PartialFraction(Integer)
+x := monomial(1,1)$SUP FRAC INT
+ 
+
+   (3)  ?
+                          Type: SparseUnivariatePolynomial(Fraction(Integer))
+res2 := partialFraction(1/(x^3+x))
+ 
+
+        1      ?
+   (4)  - - ------
+        ?    2
+            ?  + 1
+         Type: PartialFraction(SparseUnivariatePolynomial(Fraction(Integer)))
+
+testEquals("numberOfFractionalTerms res1", "2")
+ 
+                                                                   Type: Void
+res1a := fractionalTerms(res1)
+ 
+
+   (6)  [[num = 1, d_fact = 2, d_exp = 1], [num = - 4, d_fact = 3, d_exp = 2]]
+   Type: List(Record(num: Integer,d_fact: Integer,d_exp: NonNegativeInteger))
+
+testTrue("(res1a.1.d_fact = 2)@Boolean")
+ 
+                                                                   Type: Void
+testTrue("(res1a.1.d_exp = 1)@Boolean")
+ 
+                                                                   Type: Void
+testEquals("res1a.1.num", "1")
+ 
+                                                                   Type: Void
+testTrue("(res1a.2.d_fact = 3)@Boolean")
+ 
+                                                                   Type: Void
+testTrue("(res1a.2.d_exp = 2)@Boolean")
+ 
+                                                                   Type: Void
+testEquals("res1a.2.num", "-4")
+ 
+                                                                   Type: Void
+
+testEquals("numberOfFractionalTerms res2", "2")
+ 
+                                                                   Type: Void
+res2a := fractionalTerms(res2)
+ 
+
+   (14)
+                                                            2
+   [[num = 1, d_fact = ?, d_exp = 1], [num = - ?, d_fact = ?  + 1, d_exp = 1]]
+Type: List(Record(num: SparseUnivariatePolynomial(Fraction(Integer)),d_fact: SparseUnivariatePolynomial(Fraction(Integer)),d_exp: NonNegativeInteger))
+testEquals("res2a.1.d_fact", "x")
+ 
+                                                                   Type: Void
+testEquals("res2a.1.d_exp", "1")
+ 
+                                                                   Type: Void
+testEquals("res2a.1.num", "1")
+ 
+                                                                   Type: Void
+
+testEquals("res2a.2.d_fact", "x^2 + 1")
+ 
+                                                                   Type: Void
+testEquals("res2a.2.d_exp", "1")
+ 
+                                                                   Type: Void
+testEquals("res2a.2.num", "-x")
+ 
+                                                                   Type: Void
+
+ff := nilFactor(21, 1)*primeFactor(5, 1)
+ 
+
+   (21)  5 21
+                                                      Type: Factored(Integer)
+res3 := partialFraction(1, ff)
+ 
+
+         1    4
+   (22)  - - --
+         5   21
+                                               Type: PartialFraction(Integer)
+Rec ==> List(Record(num : Integer, d_fact : Integer,
+                    d_exp : NonNegativeInteger))
+ 
+                                                                   Type: Void
+testEquals("fractionalTerms(res3)", "[[1, 5, 1], [-4, 21, 1]]::Rec")
+ 
+                                                                   Type: Void
+res3a := partialFraction(3, ff)
+ 
+
+         3   12
+   (25)  - - --
+         5   21
+                                               Type: PartialFraction(Integer)
+testEquals("fractionalTerms(res3a)", "[[3, 5, 1], [-12, 21, 1]]::Rec")
+ 
+                                                                   Type: Void
+
+testcase "partition product"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+f : UTS(INT,x,0) := 1 + x
+ 
+
+   (2)  1 + x
+                                    Type: UnivariateTaylorSeries(Integer,x,0)
+g := infiniteProduct(f);
+ 
+
+                                    Type: UnivariateTaylorSeries(Integer,x,0)
+
+j : Integer := 0
+ 
+
+   (4)  0
+                                                                Type: Integer
+for i in 1..20 repeat
+    j := i
+    testEquals("coefficient(g, j)", "distinct_partition(j)")
+ 
+                                                                   Type: Void
+
+f := 1 - x
+ 
+
+   (6)  1 - x
+                                    Type: UnivariateTaylorSeries(Integer,x,0)
+f := oddInfiniteProduct(recip(f));
+ 
+
+                                    Type: UnivariateTaylorSeries(Integer,x,0)
+
+for i in 1..20 repeat
+     j := i
+     testEquals("coefficient(f, j)", "coefficient(g, j)")
+ 
+                                                                   Type: Void
+
+testcase "odd and distinct partitions"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testEquals("entries(complete(odd_partitions(4)))", "[[3,1],[1,1,1,1]]")
+ 
+                                                                   Type: Void
+testEquals("entries(complete(distinct_partitions(5)))", "[[5],[4,1],[3,2]]")
+ 
+                                                                   Type: Void
+testEquals("#entries(complete(distinct_partitions(14)))",
+           "distinct_partition(14)")
+ 
+                                                                   Type: Void
+testEquals("#entries(complete(odd_partitions(23)))",
+           "distinct_partition(23)")
+ 
+                                                                   Type: Void
+
+)set output algebra on
+ 
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+   =============================================================================
+   WARNINGS:
+   Testsuite: bugs2016
+   Testcase: bug in unparse
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: qnew and matrix manipulation
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: qnew and matrix manipulation
+   test: 2
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: homology
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: homology
+   test: 2
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: homology
+   test: 3
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: homology
+   test: 4
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: homology
+   test: 5
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: homology
+   test: 6
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: homology
+   test: 7
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: homology
+   test: 8
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: homology
+   test: 9
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: homology
+   test: 10
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: homology
+   test: 11
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: homology
+   test: 12
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: homology
+   test: 13
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: homology
+   test: 14
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: homology
+   test: 15
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: homology
+   test: 16
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: homology
+   test: 17
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: homology
+   test: 18
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: homology
+   test: 19
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: homology
+   test: 20
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: homology
+   test: 21
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: homology
+   test: 22
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: homology
+   test: 23
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: homology
+   test: 24
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: homology
+   test: 25
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: homology
+   test: 26
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: homology
+   test: 27
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: homology
+   test: 28
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: homology
+   test: 29
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: homology
+   test: 30
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: homology
+   test: 31
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: homology
+   test: 32
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: homology
+   test: 33
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: homology
+   test: 34
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: homology
+   test: 35
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: map! on Tree
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: polynomial decomposition
+   test: 2
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: polynomial decomposition
+   test: 3
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: polynomial decomposition
+   test: 4
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: polynomial decomposition
+   test: 5
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: partial fraction
+   test: 9
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: partial fraction
+   test: 11
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: partial fraction
+   test: 12
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: partial fraction
+   test: 14
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: partial fraction
+   test: 15
+   testing in a domain without InputForm!
+   Testsuite: bugs2016
+   Testcase: partial fraction
+   test: 16
+   testing in a domain without InputForm!
+
+   =============================================================================
+   Testsuite: bugs2016
+     failed (total): 0 (24)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   bugs2016                    0    (24)               0   (171)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 1
+   unexpected passes: 0
+   total tests: 171
+                                                                   Type: Void
+)quit
+ 

@@ -1,0 +1,83 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read lll.input
+ 
+)set break resume
+ 
+)expose UnittestCount UnittestAux Unittest LLLReduction
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+   LLLReduction is now explicitly exposed in frame initial 
+
+testsuite "lll"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testcase "lll"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testEquals("LLL(matrix([[100372,16991],[2487,421]]))",
+            "matrix([[2, 1], [-1, 2]])")
+ 
+                                                                   Type: Void
+
+lf := [1.7865883372_377703659, 1.4723678633_273988989, _
+       1.2134116627_622296341, 1.0]
+ 
+
+   (3)
+   [1.7865883372_377703659, 1.4723678633_273988989, 1.2134116627_622296341, 1.0]
+                                                            Type: List(Float)
+testEquals("find_relation(lf, 20)", "[1, 0, 1, - 3]")
+ 
+                                                                   Type: Void
+
+)set output algebra on
+ 
+
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+
+   =============================================================================
+   Testsuite: lll
+     failed (total): 0 (1)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   lll                         0     (1)               0     (2)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 2
+                                                                   Type: Void
+)quit
+ 

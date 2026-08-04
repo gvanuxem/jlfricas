@@ -1,0 +1,174 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read charpol.input
+ 
+)set break resume
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+
+testsuite "characteristic polynomial"
+ 
+   All user variables and function definitions have been cleared.
+   WARNING: string for testsuite should have less than 15 characters!
+                                                                   Type: Void
+
+testcase "characteristic polynomial"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+)expose CHARPOL2
+ 
+   CharacteristicPolynomial2 is now explicitly exposed in frame initial
+      
+)expose CHARPOL3
+ 
+   CharacteristicPolynomial3 is now explicitly exposed in frame initial
+      
+
+m0 := new(0, 0, 0)$Matrix(Integer)
+ 
+
+   (2)  []
+                                                        Type: Matrix(Integer)
+m1 := matrix([[7]])$Matrix(Integer)
+ 
+
+   (3)  [7]
+                                                        Type: Matrix(Integer)
+m2 := matrix([[1, 2], [3, 5]])$Matrix(Integer)
+ 
+
+        +1  2+
+   (4)  |    |
+        +3  5+
+                                                        Type: Matrix(Integer)
+m3 := matrix([[random(1000) for i in 1..8] for j in 1..8])$Matrix(Integer);
+ 
+
+                                                        Type: Matrix(Integer)
+
+ml := [m0, m1, m2, m3];
+ 
+
+                                                  Type: List(Matrix(Integer))
+cll := [[1], [-1, 7], [1, -6, -1], []]
+ 
+
+   (7)  [[1], [- 1, 7], [1, - 6, - 1], []]
+                                                    Type: List(List(Integer))
+for m in ml for cl in cll repeat
+    p := characteristicPolynomial(m)
+    up := univariate(p)
+    cm := m
+    if not(empty?(cl)) and not(coefficients(p) = cl) then
+        print(coefficients(p))
+        print(cl)
+        testTrue("(_"coefficients(p) = cl_", false)")
+    testEquals("char_pol_via_interpolation(cm)", "up")
+    cm1 := map(c +-> c::Fraction(Integer), m)
+    p1 := characteristicPolynomial(cm1)
+    up1 := univariate(p1)
+    -- testEquals("up1", "map(c +-> c::Fraction(Integer), up)")
+    testEquals("det_via_common_denominator(cm1)", "coefficient(up1, 0)")
+    testEquals("char_pol(cm1)", "up1")
+    testEquals("char_pol_via_den_interpolation(cm1)", "up1")
+ 
+                                                                   Type: Void
+
+)set output algebra on
+ 
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+   =============================================================================
+   WARNINGS:
+   Testsuite: characteristic polynomial
+   Testcase: characteristic polynomial
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: characteristic polynomial
+   Testcase: characteristic polynomial
+   test: 3
+   testing in a domain without InputForm!
+   Testsuite: characteristic polynomial
+   Testcase: characteristic polynomial
+   test: 4
+   testing in a domain without InputForm!
+   Testsuite: characteristic polynomial
+   Testcase: characteristic polynomial
+   test: 5
+   testing in a domain without InputForm!
+   Testsuite: characteristic polynomial
+   Testcase: characteristic polynomial
+   test: 7
+   testing in a domain without InputForm!
+   Testsuite: characteristic polynomial
+   Testcase: characteristic polynomial
+   test: 8
+   testing in a domain without InputForm!
+   Testsuite: characteristic polynomial
+   Testcase: characteristic polynomial
+   test: 9
+   testing in a domain without InputForm!
+   Testsuite: characteristic polynomial
+   Testcase: characteristic polynomial
+   test: 11
+   testing in a domain without InputForm!
+   Testsuite: characteristic polynomial
+   Testcase: characteristic polynomial
+   test: 12
+   testing in a domain without InputForm!
+   Testsuite: characteristic polynomial
+   Testcase: characteristic polynomial
+   test: 13
+   testing in a domain without InputForm!
+   Testsuite: characteristic polynomial
+   Testcase: characteristic polynomial
+   test: 15
+   testing in a domain without InputForm!
+   Testsuite: characteristic polynomial
+   Testcase: characteristic polynomial
+   test: 16
+   testing in a domain without InputForm!
+
+   =============================================================================
+   Testsuite: characteristic polynomial
+     failed (total): 0 (1)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   characteristic polynomial    0     (1)               0    (16)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 16
+                                                                   Type: Void
+)quit
+ 

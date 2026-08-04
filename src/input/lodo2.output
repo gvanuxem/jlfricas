@@ -1,0 +1,210 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read lodo2.input
+ 
+)set break resume
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+
+testsuite "LODO"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testcase "basic"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+F := Fraction(Integer)
+ 
+
+   (2)  Fraction(Integer)
+                                                                   Type: Type
+uP := UnivariatePolynomial('x, F)
+ 
+
+   (3)  UnivariatePolynomial(x,Fraction(Integer))
+                                                                   Type: Type
+rF := Fraction(uP)
+ 
+
+   (4)  Fraction(UnivariatePolynomial(x,Fraction(Integer)))
+                                                                   Type: Type
+L1 := LinearOrdinaryDifferentialOperator1(rF)
+ 
+
+   (5)
+   LinearOrdinaryDifferentialOperator1
+      Fraction(UnivariatePolynomial(x,Fraction(Integer)))
+                                                                   Type: Type
+L3 := LinearOrdinaryDifferentialOperator3(F, uP, rF)
+ 
+
+   (6)
+   LinearOrdinaryDifferentialOperator3
+      Fraction(Integer)
+  ,
+      UnivariatePolynomial(x,Fraction(Integer))
+  ,
+      Fraction(UnivariatePolynomial(x,Fraction(Integer)))
+                                                                   Type: Type
+lC := LODOConvertions(F, uP, rF)
+ 
+
+   (7)
+   LODOConvertions
+      Fraction(Integer)
+  ,
+      UnivariatePolynomial(x,Fraction(Integer))
+  ,
+      Fraction(UnivariatePolynomial(x,Fraction(Integer)))
+                                                                   Type: Type
+
+d := D()$L1
+ 
+
+   (8)  D
+Type: LinearOrdinaryDifferentialOperator1(Fraction(UnivariatePolynomial(x,Fraction(Integer))))
+
+testEquals("d*x - x*d", "1")
+ 
+                                                                   Type: Void
+testEquals("D()$L3*x - x*D()$L3", "x")
+ 
+                                                                   Type: Void
+op1 := d*(x*d + x)
+ 
+
+            2
+   (11)  x D  + (x + 1)D + 1
+Type: LinearOrdinaryDifferentialOperator1(Fraction(UnivariatePolynomial(x,Fraction(Integer))))
+testEquals("x*d^2 + (x+1)*d + 1", "op1")
+ 
+                                                                   Type: Void
+
+testcaseNoClear "apply"
+ 
+                                                                   Type: Void
+
+testEquals("apply(D()$L3, 0, x)", "x")
+ 
+                                                                   Type: Void
+testEquals("apply(d, 0, x)", "1")
+ 
+                                                                   Type: Void
+
+testEquals("apply(op1, 0, x^3+x)", "4*x^3+9*x^2+2*x+1")
+ 
+                                                                   Type: Void
+
+testcaseNoClear "convert"
+ 
+                                                                   Type: Void
+
+testEquals("apply(convert(d)$lC, 0, x)", "1")
+ 
+                                                                   Type: Void
+testEquals("convert(D()$L3)$lC", "x*d")
+ 
+                                                                   Type: Void
+testEquals("apply(convert(d)$lC, 0, x)", "1")
+ 
+                                                                   Type: Void
+testEquals("convert(op1)$lC",
+           "convert(d)$lC*convert(x*d + x)$lC")
+ 
+                                                                   Type: Void
+op2 := x^3*d^2 + d + x
+ 
+
+          3 2
+   (22)  x D  + D + x
+Type: LinearOrdinaryDifferentialOperator1(Fraction(UnivariatePolynomial(x,Fraction(Integer))))
+testEquals("convert(convert(op2)$lC)$lC", "op2")
+ 
+                                                                   Type: Void
+
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+   =============================================================================
+   WARNINGS:
+   Testsuite: LODO
+   Testcase: basic
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: LODO
+   Testcase: basic
+   test: 2
+   testing in a domain without InputForm!
+   Testsuite: LODO
+   Testcase: basic
+   test: 3
+   testing in a domain without InputForm!
+   Testsuite: LODO
+   Testcase: apply
+   test: 2
+   testing in a domain without InputForm!
+   Testsuite: LODO
+   Testcase: convert
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: LODO
+   Testcase: convert
+   test: 2
+   testing in a domain without InputForm!
+   Testsuite: LODO
+   Testcase: convert
+   test: 3
+   testing in a domain without InputForm!
+   Testsuite: LODO
+   Testcase: convert
+   test: 4
+   testing in a domain without InputForm!
+   Testsuite: LODO
+   Testcase: convert
+   test: 5
+   testing in a domain without InputForm!
+
+   =============================================================================
+   Testsuite: LODO
+     failed (total): 0 (3)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   LODO                        0     (3)               0    (11)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 11
+                                                                   Type: Void
+)quit
+ 

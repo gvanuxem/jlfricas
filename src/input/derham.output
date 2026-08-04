@@ -1,0 +1,504 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read derham.input
+ 
+)set break resume
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+
+testsuite "DeRhamComplex"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testcase "derham"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+-----------
+-- Setup --
+-----------
+
+)clear all
+ 
+   All user variables and function definitions have been cleared.
+
+n:=3   -- dim of base space (n>=3 !!!)
+ 
+
+   (1)  3
+                                                        Type: PositiveInteger
+
+R ==> EXPR INT
+ 
+                                                                   Type: Void
+der := DERHAM(INT,[x[j] for j in 1..n])
+ 
+
+   (3)  DeRhamComplex(Integer,[x , x , x ])
+                                1   2   3
+                                                                   Type: Type
+dq:=[generator(j)$der for j in 1..n]
+ 
+
+   (4)  [dx , dx , dx ]
+           1    2    3
+                          Type: List(DeRhamComplex(Integer,[x[1],x[2],x[3]]))
+q:=[x[j] for j in 1..n]::List R
+ 
+
+   (5)  [x , x , x ]
+          1   2   3
+                                              Type: List(Expression(Integer))
+d ==> exteriorDifferential
+ 
+                                                                   Type: Void
+
+a:=map(operator,[a[j] for j in 1..n])
+ 
+
+   (7)  [a , a , a ]
+          1   2   3
+                                                    Type: List(BasicOperator)
+b:=map(operator,[b[j] for j in 1..n])
+ 
+
+   (8)  [b , b , b ]
+          1   2   3
+                                                    Type: List(BasicOperator)
+s:=operator 's
+ 
+
+   (9)  s
+                                                          Type: BasicOperator
+
+one : der := 1                         -- 0-form, unity
+ 
+
+   (10)  1
+                                Type: DeRhamComplex(Integer,[x[1],x[2],x[3]])
+alpha := reduce(_+,[(a.j)(q)*dq.j for j in 1..n])    -- general 1-form
+ 
+
+   (11)  a (x ,x ,x )dx  + a (x ,x ,x )dx  + a (x ,x ,x )dx
+          3  1  2  3   3    2  1  2  3   2    1  1  2  3   1
+                                Type: DeRhamComplex(Integer,[x[1],x[2],x[3]])
+beta  := d reduce(_+,[(b.j)(q)*dq.j for j in 1..n])  -- a 2-form
+ 
+
+   (12)
+     (b   (x ,x ,x ) - b   (x ,x ,x ))dx dx
+       3,2  1  2  3     2,3  1  2  3    2  3
+   + 
+     (b   (x ,x ,x ) - b   (x ,x ,x ))dx dx
+       3,1  1  2  3     1,3  1  2  3    1  3
+   + 
+     (b   (x ,x ,x ) - b   (x ,x ,x ))dx dx
+       2,1  1  2  3     1,2  1  2  3    1  2
+                                Type: DeRhamComplex(Integer,[x[1],x[2],x[3]])
+gamma := s(q)*reduce(_*,dq)                                  -- general n-form
+ 
+
+   (13)  s(x ,x ,x )dx dx dx
+            1  2  3   1  2  3
+                                Type: DeRhamComplex(Integer,[x[1],x[2],x[3]])
+
+----------
+-- Degrees
+----------
+
+testEquals("degree one", "0")
+ 
+                                                                   Type: Void
+testEquals("degree alpha", "1")
+ 
+                                                                   Type: Void
+testEquals("degree beta", "2")
+ 
+                                                                   Type: Void
+testEquals("degree gamma", "n")
+ 
+                                                                   Type: Void
+
+
+--------------
+-- Homogeneity
+--------------
+
+testTrue("reduce(_and, map(homogeneous?,[one,alpha,beta,gamma]))")
+ 
+                                                                   Type: Void
+testTrue("~homogeneous?(alpha+beta)")
+ 
+                                                                   Type: Void
+testTrue("~homogeneous?(one+gamma)")
+ 
+                                                                   Type: Void
+
+
+-------
+-- One?
+-------
+
+testTrue("one? one")
+ 
+                                                                   Type: Void
+testTrue("~one? gamma")
+ 
+                                                                   Type: Void
+
+
+--------------
+-- Annihilate?, i.e. a*b=0
+--------------
+
+testTrue("~annihilate?(alpha,beta)")
+ 
+                                                                   Type: Void
+testTrue("annihilate?(alpha,alpha)")
+ 
+                                                                   Type: Void
+testTrue("annihilate?(beta,gamma)")
+ 
+                                                                   Type: Void
+
+
+---------------
+-- Retractable?
+---------------
+
+testTrue("retractable? one")
+ 
+                                                                   Type: Void
+testTrue("~retractable? beta")
+ 
+                                                                   Type: Void
+
+
+--------
+-- Zero?
+--------
+
+testTrue("zero?(0*one)")
+ 
+                                                                   Type: Void
+testTrue("zero?(alpha*gamma)")
+ 
+                                                                   Type: Void
+testTrue("zero?(d gamma)")
+ 
+                                                                   Type: Void
+
+
+--------------
+-- Coefficient
+--------------
+
+testEquals("coefficient(alpha,dq.1)", "(a.1)(q)")
+ 
+                                                                   Type: Void
+testEquals("coefficient(beta,dq.1*dq.2)",
+           "(D((b.2)(q),q.1::Symbol)-D((b.1)(q),q.2::Symbol))")
+ 
+                                                                   Type: Void
+testEquals("coefficient(gamma,reduce(_*,dq))", "s(q)")
+ 
+                                                                   Type: Void
+testEquals("coefficient((a.1)(q)*one,one)", "(a.1)(q)")
+ 
+                                                                   Type: Void
+
+
+---------------------
+-- LeadingCoefficient
+---------------------
+
+testEquals("leadingCoefficient alpha", "(a.n)(q)")  -- notice order!
+ 
+                                                                   Type: Void
+testEquals("leadingCoefficient beta",
+           "(D((b.n)(q),q.(n-1)::Symbol)-D((b.(n-1))(q),q.n::Symbol))")
+ 
+                                                                   Type: Void
+testEquals("leadingCoefficient one", "1::R")
+ 
+                                                                   Type: Void
+
+
+------
+-- Map
+------
+
+testEquals("map((x:R):R+->x^2,alpha)",
+           "reduce(_+,[(a.j)(q::List R)^2*dq.j for j in 1..n])")
+ 
+                                                                   Type: Void
+testEquals("map((f:R):R+->D(f,x),gamma)", "D(s(q),x)*dx*dy*dz")
+ 
+                                                                   Type: Void
+
+
+--------------------
+-- TotalDifferential
+--------------------
+td ==> totalDifferential
+ 
+                                                                   Type: Void
+
+testEquals("td(s(q))$der",
+           "reduce(_+,[D(s(q),q.j::Symbol)*dq.j for j in 1..n])")
+ 
+                                                                   Type: Void
+testEquals("degree td(s(q))$der", "1")
+ 
+                                                                   Type: Void
+
+
+--------------------------
+-- Mult by PositiveInteger
+-- Negative
+--------------------------
+
+testEquals("2*beta", "beta + beta")
+ 
+                                                                   Type: Void
+testEquals("5*alpha", "3*alpha + 2*alpha")
+ 
+                                                                   Type: Void
+testEquals("7*gamma", "8*gamma+(-gamma)")
+ 
+                                                                   Type: Void
+
+
+-------------------
+-- LeadingBasisTerm
+-------------------
+
+testEquals("leadingBasisTerm alpha", "dq.n")
+ 
+                                                                   Type: Void
+testEquals("leadingBasisTerm beta", "dq.(n-1)*dq.n")
+ 
+                                                                   Type: Void
+testEquals("leadingBasisTerm gamma", "reduce(_*,dq)")
+ 
+                                                                   Type: Void
+testEquals("leadingBasisTerm (reductum alpha)", "dq.(n-1)")
+ 
+                                                                   Type: Void
+
+
+-----------
+-- Reductum (like rest in lists)
+-----------
+
+testEquals("reductum alpha",
+           "reduce(_+,[(a.j)(q::List R)*dq.j for j in 1..n-1])")
+ 
+                                                                   Type: Void
+testEquals("reductum beta",
+           "beta- leadingCoefficient(beta)*leadingBasisTerm(beta)")
+ 
+                                                                   Type: Void
+testEquals("reductum reductum(beta)",
+           "reductum(beta)-leadingCoefficient(reductum(beta))"
+             "*leadingBasisTerm((reductum(beta)))")
+ 
+                                                                   Type: Void
+testEquals("reductum(alpha+beta+gamma)",
+           "alpha+beta+gamma - (a.n)(q)*dq.n")
+ 
+                                                                   Type: Void
+
+
+-------------
+-- Arithmetic
+-------------
+
+testEquals("(alpha+beta)^2", "alpha^2 + alpha*beta + beta*alpha + beta^2")
+ 
+                                                                   Type: Void
+testEquals("dq.1+dq.2", "dq.2+dq.1")
+ 
+                                                                   Type: Void
+testEquals("dq.1*dq.2+dq.2*dq.1", "0")
+ 
+                                                                   Type: Void
+testEquals("dq.n*dq.n", "0")
+ 
+                                                                   Type: Void
+testEquals("dq.1*(dq.2*dq.3)", "(dq.1*dq.2)*dq.3")
+ 
+                                                                   Type: Void
+
+
+---------------------------
+-- Exterior differentiation
+---------------------------
+
+testEquals("d (d alpha)", "0")
+ 
+                                                                   Type: Void
+testEquals("coefficient(d alpha,dq.1*dq.2)",
+           "D((a.2)(q),q.1::Symbol)-D((a.1)(q),q.2::Symbol)")
+ 
+                                                                   Type: Void
+testEquals("d beta", "0")
+ 
+                                                                   Type: Void
+testEquals("td(s(q))$der", "d(s(q)*one)")
+ 
+                                                                   Type: Void
+testEquals("d(alpha+beta)", "d(alpha)+d(beta)")
+ 
+                                                                   Type: Void
+testEquals("d(s(q)*1$der)*alpha+s(q)*d(alpha)", "d(s(q)*alpha)")
+ 
+                                                                   Type: Void
+
+)set output algebra on
+ 
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+   =============================================================================
+   WARNINGS:
+   Testsuite: DeRhamComplex
+   Testcase: derham
+   test: 25
+   testing in a domain without InputForm!
+   Testsuite: DeRhamComplex
+   Testcase: derham
+   test: 26
+   testing in a domain without InputForm!
+   Testsuite: DeRhamComplex
+   Testcase: derham
+   test: 27
+   testing in a domain without InputForm!
+   Testsuite: DeRhamComplex
+   Testcase: derham
+   test: 29
+   testing in a domain without InputForm!
+   Testsuite: DeRhamComplex
+   Testcase: derham
+   test: 30
+   testing in a domain without InputForm!
+   Testsuite: DeRhamComplex
+   Testcase: derham
+   test: 31
+   testing in a domain without InputForm!
+   Testsuite: DeRhamComplex
+   Testcase: derham
+   test: 32
+   testing in a domain without InputForm!
+   Testsuite: DeRhamComplex
+   Testcase: derham
+   test: 33
+   testing in a domain without InputForm!
+   Testsuite: DeRhamComplex
+   Testcase: derham
+   test: 34
+   testing in a domain without InputForm!
+   Testsuite: DeRhamComplex
+   Testcase: derham
+   test: 35
+   testing in a domain without InputForm!
+   Testsuite: DeRhamComplex
+   Testcase: derham
+   test: 36
+   testing in a domain without InputForm!
+   Testsuite: DeRhamComplex
+   Testcase: derham
+   test: 37
+   testing in a domain without InputForm!
+   Testsuite: DeRhamComplex
+   Testcase: derham
+   test: 38
+   testing in a domain without InputForm!
+   Testsuite: DeRhamComplex
+   Testcase: derham
+   test: 39
+   testing in a domain without InputForm!
+   Testsuite: DeRhamComplex
+   Testcase: derham
+   test: 40
+   testing in a domain without InputForm!
+   Testsuite: DeRhamComplex
+   Testcase: derham
+   test: 41
+   testing in a domain without InputForm!
+   Testsuite: DeRhamComplex
+   Testcase: derham
+   test: 42
+   testing in a domain without InputForm!
+   Testsuite: DeRhamComplex
+   Testcase: derham
+   test: 43
+   testing in a domain without InputForm!
+   Testsuite: DeRhamComplex
+   Testcase: derham
+   test: 44
+   testing in a domain without InputForm!
+   Testsuite: DeRhamComplex
+   Testcase: derham
+   test: 45
+   testing in a domain without InputForm!
+   Testsuite: DeRhamComplex
+   Testcase: derham
+   test: 47
+   testing in a domain without InputForm!
+   Testsuite: DeRhamComplex
+   Testcase: derham
+   test: 48
+   testing in a domain without InputForm!
+   Testsuite: DeRhamComplex
+   Testcase: derham
+   test: 49
+   testing in a domain without InputForm!
+   Testsuite: DeRhamComplex
+   Testcase: derham
+   test: 50
+   testing in a domain without InputForm!
+
+   =============================================================================
+   Testsuite: DeRhamComplex
+     failed (total): 0 (1)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   DeRhamComplex               0     (1)               0    (50)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 50
+                                                                   Type: Void
+)quit
+ 

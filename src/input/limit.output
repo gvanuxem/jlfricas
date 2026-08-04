@@ -1,0 +1,424 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read limit.input
+ 
+)set break resume
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+
+testsuite "limit"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+test_limit(expr : String, val : String) : Void ==
+    testcaseNoClear(expr)
+    lim_expr := concat(["limit(", expr, ", x = %plusInfinity)"])
+    testEquals(lim_expr, val)
+ 
+   Function declaration test_limit : (String, String) -> Void has been 
+      added to workspace.
+                                                                   Type: Void
+
+test_limit("1/x", "0")
+ 
+   Compiling function test_limit with type (String, String) -> Void 
+                                                                   Type: Void
+test_limit("1/log(x)", "0")
+ 
+                                                                   Type: Void
+test_limit("1/(x + log(x))", "0")
+ 
+                                                                   Type: Void
+test_limit("x/(x + log(x))", "1")
+ 
+                                                                   Type: Void
+test_limit("x/(x - log(x))", "1")
+ 
+                                                                   Type: Void
+test_limit("x/(x + sqrt(x))", "1")
+ 
+                                                                   Type: Void
+test_limit("x/(x - sqrt(x))", "1")
+ 
+                                                                   Type: Void
+
+test_limit("1/exp(x)", "0")
+ 
+                                                                   Type: Void
+test_limit("1/2^x", "0")
+ 
+                                                                   Type: Void
+test_limit("1/(exp(x) - log(x))", "0")
+ 
+                                                                   Type: Void
+test_limit("x/exp(x)", "0")
+ 
+                                                                   Type: Void
+test_limit("x^667/exp(x)", "0")
+ 
+                                                                   Type: Void
+test_limit("x^a/exp(x)", "0")
+ 
+                                                                   Type: Void
+test_limit("sinh(x)/exp(x)", "1/2")
+ 
+                                                                   Type: Void
+test_limit("cosh(x)/exp(x)", "1/2")
+ 
+                                                                   Type: Void
+test_limit("tanh(x)", "1")
+ 
+                                                                   Type: Void
+test_limit("sin(x)/exp(x)", "0")
+ 
+                                                                   Type: Void
+test_limit("(x + sin(x))/exp(x)", "0")
+ 
+                                                                   Type: Void
+test_limit("log(x)/exp(x)", "0")
+ 
+                                                                   Type: Void
+test_limit("log(x)/exp(x-log(x))", "0")
+ 
+                                                                   Type: Void
+test_limit("log(x)/exp(x/log(x))", "0")
+ 
+                                                                   Type: Void
+test_limit("log(x)/exp(log(x+1)^2)", "0")
+ 
+                                                                   Type: Void
+test_limit("log(x)/exp(x*log(x))", "0")
+ 
+                                                                   Type: Void
+test_limit("log(x)/exp(exp(x))", "0")
+ 
+                                                                   Type: Void
+test_limit("log(x)/exp(exp(x)/log(x))", "0")
+ 
+                                                                   Type: Void
+test_limit("log(exp(x)+x)/log(exp(x + log(x)^2) + 1)", "1")
+ 
+                                                                   Type: Void
+test_limit("log(log(exp(x) + x))/log(exp(log(x)+1))", "1")
+ 
+                                                                   Type: Void
+test_limit("x*(exp(-exp(-x)) - 1)", "0")
+ 
+                                                                   Type: Void
+test_limit("x*(exp(-exp(-x)) - exp(-exp(-2*x)))", "0")
+ 
+                                                                   Type: Void
+test_limit("x*(exp(-exp(x)) - exp(-exp(2*x)))", "0")
+ 
+                                                                   Type: Void
+test_limit("x^log(1/x)", "0")
+ 
+                                                                   Type: Void
+test_limit("(x + 1)^(x + 1)/x^x - x^x/(x - 1)^(x - 1)", "%e")
+ 
+                                                                   Type: Void
+test_limit("(1 + k/x)^x", "exp(k)")
+ 
+                                                                   Type: Void
+
+test_limit("1/cosh(x)", "0")
+ 
+                                                                   Type: Void
+test_limit("1/(cosh(x) - log(x))", "0")
+ 
+                                                                   Type: Void
+test_limit("1/log(cosh(x))", "0")
+ 
+                                                                   Type: Void
+test_limit("log(x)/cosh(x)", "0")
+ 
+                                                                   Type: Void
+test_limit("log(x)/cosh(x*log(x))", "0")
+ 
+                                                                   Type: Void
+
+test_limit("log(x)*(1 - tanh(x))", "0")
+ 
+                                                                   Type: Void
+test_limit("log(x)*(1 - tanh(x*log(x)))", "0")
+ 
+                                                                   Type: Void
+test_limit("log(x)*(1 - tanh(x*log(log(x))))", "0")
+ 
+                                                                   Type: Void
+test_limit("log(log(x))*(1 - tanh(x))", "0")
+ 
+                                                                   Type: Void
+
+lg0 := (x - 1/2)*log(x) - x + log(2*%pi)/2
+ 
+
+         (2 x - 1)log(x) + log(2 %pi) - 2 x
+   (45)  ----------------------------------
+                          2
+                                                    Type: Expression(Integer)
+test_limit("log(Gamma(x))/lg0", "1")
+ 
+                                                                   Type: Void
+test_limit("log(Gamma(x)) - lg0", "0")
+ 
+                                                                   Type: Void
+lg1 := log(Gamma(x)) - lg0
+ 
+
+         2 log(Gamma(x)) + (- 2 x + 1)log(x) - log(2 %pi) + 2 x
+   (48)  ------------------------------------------------------
+                                    2
+                                                    Type: Expression(Integer)
+test_limit("x*lg1", "1/12")
+ 
+                                                                   Type: Void
+test_limit("x^2*(x*lg1 - 1/12)", "-1/360")
+ 
+                                                                   Type: Void
+test_limit("x^2*(x^2*(x*lg1 - 1/12) + 1/360)", "1/1260")
+ 
+                                                                   Type: Void
+
+test_limit("(log(Gamma(x+1)) - log(Gamma(x)))/log(x)", "1")
+ 
+                                                                   Type: Void
+lg2 := log(Gamma(x + 1 + 1/x)) - log(Gamma(x)) - log(x)
+ 
+
+                    2
+                   x  + x + 1
+   (53)  log(Gamma(----------)) - log(Gamma(x)) - log(x)
+                        x
+                                                    Type: Expression(Integer)
+test_limit("lg2", "0")
+ 
+                                                                   Type: Void
+test_limit("x*lg2/log(x)", "1")
+ 
+                                                                   Type: Void
+
+test_limit("x*(digamma(x) - log(x))", "-1/2")
+ 
+                                                                   Type: Void
+
+test_limit("Gamma(1 + x - t)*Gamma(1 + x + t)/Gamma(1 + x)^2", "1")
+ 
+                                                                   Type: Void
+
+f2 := (Gamma(x + exp(-x) + 1/Gamma(x)) - Gamma(x + exp(-x)) - digamma(x))
+ 
+
+                         - x
+               Gamma(x)%e    + x Gamma(x) + 1            - x
+   (58)  Gamma(------------------------------) - Gamma(%e    + x) - digamma(x)
+                          Gamma(x)
+                                                    Type: Expression(Integer)
+test_limit("f2/(exp(-x)*log(x)^2)", "1")
+ 
+                                                                   Type: Void
+
+test_limit("Ei(1/x) + log(x)", "-digamma(1)")
+ 
+                                                                   Type: Void
+test_limit("x*(Ei(1/x) + log(x) + digamma(1))", "1")
+ 
+                                                                   Type: Void
+test_limit("dilog(1/x)", "%pi^2/6")
+ 
+                                                                   Type: Void
+test_limit("x*(dilog(1/x) - %pi^2/6)/log(x)", "-1")
+ 
+                                                                   Type: Void
+test_limit("x*(dilog(1/x) - %pi^2/6) + log(x)", "-1")
+ 
+                                                                   Type: Void
+
+testEquals("mrv_limit(Ci(1/x) + log(x), x = %plusInfinity)$MrvLimitPackage",
+           "-digamma(1)")
+ 
+                                                                   Type: Void
+testEquals("mrv_limit(Chi(1/x) + log(x), x = %plusInfinity)$MrvLimitPackage",
+           "-digamma(1)")
+ 
+                                                                   Type: Void
+
+test_limit("log(x)*li(x)/x", "1")
+ 
+                                                                   Type: Void
+test_limit("log(x)*(log(x)*li(x)/x - 1)", "1")
+ 
+                                                                   Type: Void
+
+test_limit("exp(-x^2)*erfi(x)", "0")
+ 
+                                                                   Type: Void
+test_limit("x*exp(-x^2)*erfi(x)", "1/sqrt(%pi)")
+ 
+                                                                   Type: Void
+test_limit("x^2*(sqrt(%pi)*x*exp(-x^2)*erfi(x) - 1)", "1/2")
+ 
+                                                                   Type: Void
+
+testEquals("limit(x/exp(x),x = %minusInfinity)", "%minusInfinity")
+ 
+                                                                   Type: Void
+testEquals("limit(x^(10^20)/exp(x),x = %minusInfinity)", "%plusInfinity")
+ 
+                                                                   Type: Void
+testTrue("limit(x^h/exp(x),x = %minusInfinity) case _"failed_"")
+ 
+                                                                   Type: Void
+
+testEquals("limit(%e^(1/x^2)/(%e^(1/x^2) + %e^(1/x^4)), x = 0)", "0")
+ 
+                                                                   Type: Void
+testEquals("limit(erf(x), x = c)", "erf(c)")
+ 
+                                                                   Type: Void
+testEquals("limit((x^a - a^x)/(x^x - a^a), x = a)",
+           "(1 - log(a))/(1 + log(a))")
+ 
+                                                                   Type: Void
+testEquals("limit(sin(a*x)/tan(b*x), x=0)", "a/b")
+ 
+                                                                   Type: Void
+testEquals("limit(csc(a*x)/csch(b*x), x=0)", "b/a")
+ 
+                                                                   Type: Void
+
+testcase "zero division in limit"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+re := limit(1/x::Expression(Integer), x = 0)
+ 
+
+   (2)  [leftHandLimit = - infinity, rightHandLimit =  + infinity]
+Type: Union(Record(leftHandLimit: Union(OrderedCompletion(Expression(Integer)),"failed"),rightHandLimit: Union(OrderedCompletion(Expression(Integer)),"failed")),...)
+testEquals("limit(1/(exp(x+log(3)/2)^2 - 3), x=0)", "re")
+ 
+                                                                   Type: Void
+
+f := -(k^(k/(k-1))*(2*k-1)*2^(k/(k-1)))/
+        ((k-1)*(k*2^((2*k)/(k-1))-2^((2*k)/(k-1))-2*k+1))
+ 
+
+                             k     k
+                           ----- -----
+                           k - 1 k - 1
+               (- 2 k + 1)2     k
+   (4)  -------------------------------------
+                        2 k
+                       -----
+          2            k - 1      2
+        (k  - 2 k + 1)2      - 2 k  + 3 k - 1
+                                                    Type: Expression(Integer)
+testEquals("limit(f, k=1/3)", "re")
+ 
+                                                                   Type: Void
+
+testcase "variable in point"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testEquals("complexLimit(1/z, z = z)", "1/z")
+ 
+                                                                   Type: Void
+testEquals("complexLimit(z, z = sin(z))", "sin(z)")
+ 
+                                                                   Type: Void
+
+ls : String := "left"
+ 
+
+   (4)  "left"
+                                                                 Type: String
+testEquals("limit(1/z, z = z, _"right_")", "1/z")
+ 
+                                                                   Type: Void
+testEquals("limit(z, z = tan(z), ls)", "tan(z)")
+ 
+                                                                   Type: Void
+testEquals("limit(sin(z), z = cos(z), ls)", "sin(cos(z))")
+ 
+                                                                   Type: Void
+
+testEquals("limit(1/z, z = z)", "1/z")
+ 
+                                                                   Type: Void
+testEquals("limit(z, z = tan(z))", "tan(z)")
+ 
+                                                                   Type: Void
+testEquals("limit(sin(z), z = cos(z))", "sin(cos(z))")
+ 
+                                                                   Type: Void
+
+testEquals("mrv_limit(1/z, z = z)$MrvLimitPackage", "1/z")
+ 
+                                                                   Type: Void
+testEquals("mrv_limit(1/z, z = z, ls)$MrvLimitPackage", "1/z")
+ 
+                                                                   Type: Void
+
+
+)set output algebra on
+ 
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+   =============================================================================
+   WARNINGS:
+   Testsuite: limit
+   Testcase: zero division in limit
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: limit
+   Testcase: zero division in limit
+   test: 2
+   testing in a domain without InputForm!
+
+   =============================================================================
+   Testsuite: limit
+     failed (total): 0 (65)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   limit                       0    (65)               0    (85)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 85
+                                                                   Type: Void
+)quit
+ 

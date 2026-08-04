@@ -1,0 +1,75 @@
+123
+12.34
+(1 |x| (1 0 . 1) (0 0 . -1))
+((1
+  #S(SPAD_KERNEL :OP
+     #(|exp| 1
+       (((|%diff|
+          (WRITIFIED!! SPADCLOSURE
+           #((WRITIFIED!! SPADCLOSURE
+              #1=(WRITIFIED!! DEVALUATED
+                  (|ElementaryFunction| (|Integer|)
+                                        (|Expression| (|Integer|))))
+              |EF;exp;2F;13|)
+             #2=(WRITIFIED!! DEVALUATED
+                 (|BasicOperatorFunctions1| (|Expression| (|Integer|)))))
+           |BOP1;derivative;BoMBo;7!0|))
+         (|%eval| WRITIFIED!! SPADCLOSURE
+          #((WRITIFIED!! SPADCLOSURE #1# |EF;iiexp;2F;79|) #2#)
+          |BOP1;evaluate;BoMBo;1!0|)
+         (|%display| WRITIFIED!! SPADCLOSURE
+          #((WRITIFIED!! SPADCLOSURE
+             (WRITIFIED!! DEVALUATED (|CommonOperators|)) |COMMONOP;dexp|)
+            (WRITIFIED!! DEVALUATED (|BasicOperator|)))
+          |BOP;display;%M%;17!0|)
+         (|elem|))))
+     :ARG
+     (((1 #S(SPAD_KERNEL :OP #(|x| 0 (((|%symbol|)))) :ARG NIL :NEST 1)
+        (1 . #3=(0 . 1)))
+       . #3#))
+     :NEST 2)
+  (1 . #3#) (0 0 . -1))
+ . #3#)
+((|UnivariateTaylorSeries| (|Expression| (|Integer|)) |x|
+                           ((0 . 0) . #1=(0 . 1)))
+ . #2=(#3=((0 . 0) . #1#) (WRITIFIED!! NONNULLSTREAM) WRITIFIED!! SPADCLOSURE
+       #(1
+         #4=(WRITIFIED!! DEVALUATED
+             (|StreamTaylorSeriesOperations2| (|Expression| (|Integer|))
+                                              (|Expression| (|Integer|))))
+         ((WRITIFIED!! NONNULLSTREAM) WRITIFIED!! SPADCLOSURE
+          #(#5=((WRITIFIED!! NONNULLSTREAM) WRITIFIED!! SPADCLOSURE
+                #((#6=(#1# . #1#) (WRITIFIED!! NONNULLSTREAM) WRITIFIED!!
+                   SPADCLOSURE
+                   #(#7=(WRITIFIED!! DEVALUATED
+                         (|Stream| (|Expression| (|Integer|))))
+                     (WRITIFIED!! SPADCLOSURE #4# |STTAYLO2;int;RS;17!0|) #6#)
+                   |STREAM;gen!0|)
+                  #4#
+                  ((WRITIFIED!! NONNULLSTREAM) WRITIFIED!! SPADCLOSURE
+                   #(#4# NIL -1
+                     ((WRITIFIED!! NONNULLSTREAM) WRITIFIED!! SPADCLOSURE
+                      #((#6# (WRITIFIED!! NULLSTREAM)) #7#
+                        ((WRITIFIED!! NONNULLSTREAM) WRITIFIED!! SPADCLOSURE
+                         #(#3# #4# 0) |STTAYLO2;rpSt!0|))
+                      |STREAM;concat;3%;66!0|)
+                     (((0 . 1) . #1#) (WRITIFIED!! NULLSTREAM)))
+                   |STTAYLO2;stmult!0|))
+                |STTAYLO2;mapmult;S2S;18!0|)
+            #8=(WRITIFIED!! DEVALUATED
+                (|StreamTranscendentalFunctions| (|Expression| (|Integer|))))
+            #9=(#2#
+                (#6# (WRITIFIED!! NONNULLSTREAM) WRITIFIED!! SPADCLOSURE
+                 #(1 #4#
+                   ((WRITIFIED!! NONNULLSTREAM) WRITIFIED!! SPADCLOSURE
+                    #(#5# #8# #9# ((0 . -1) . #1#)) |STTF;sincosre!1|))
+                 |STTAYLO2;integre!0|)))
+          |STTF;sincosre!0|))
+       |STTAYLO2;integre!0|))
+(WRITIFIED!! TYARR U32 (3) #(2 1 137567))
+(WRITIFIED!! TYARR U16 (2) #(1 293))
+(WRITIFIED!! TYARR U8 (3) #(3 2 5))
+(WRITIFIED!! TYARR I16 (3) #(-2 1 -17))
+(WRITIFIED!! TYARR I32 (2 3) #(1 2 3 -1 124001 -19))
+(WRITIFIED!! TYARR DF (3) #(1.0 1.0 1.0))
+(WRITIFIED!! TYARR DF (2 2) #(0.0 1.0 -1.5 3.15))

@@ -1,0 +1,309 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read bugs2026.input
+ 
+)set break resume
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+
+testsuite "bugs2026"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testcase "missing categories"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+dMp := DistributedMultivariatePolynomial([x, y, z], INT)
+ 
+
+   (2)  DistributedMultivariatePolynomial([x, y, z],Integer)
+                                                                   Type: Type
+testTrue("dMp has FreeModuleCategory(INT, DirectProduct(3, NNI))")
+ 
+                                                                   Type: Void
+
+testcase "mergeDifference"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testEquals("mergeDifference([1], [1, 5])$MergeThing(INT)", "[]$List(INT)")
+ 
+                                                                   Type: Void
+testEquals("mergeDifference([1, 2], [1, 5])$MergeThing(INT)", "[2]")
+ 
+                                                                   Type: Void
+testEquals("mergeDifference([1, 2, 3], [0, 1, 2])$MergeThing(INT)", "[3]")
+ 
+                                                                   Type: Void
+
+
+testcase "creation of array from list of lists"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+a := array2([[1, 2], [3, 4], [5, 6]])
+ 
+
+        +1  2+
+        |    |
+   (2)  |3  4|
+        |    |
+        +5  6+
+                                                        Type: Matrix(Integer)
+testEquals("nrows(a)", "3")
+ 
+                                                                   Type: Void
+testEquals("ncols(a)", "2")
+ 
+                                                                   Type: Void
+
+testcase "sqrt in Complex"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+rC := RealClosure(Fraction(Integer))
+ 
+
+   (2)  RealClosure(Fraction(Integer))
+                                                                   Type: Type
+s1 := sqrt(complex(0, 1)$Complex(rC))
+ 
+
+         +-+    +-+
+         |1     |1
+   (3)   |-  +  |- %i
+        \|2    \|2
+                                Type: Complex(RealClosure(Fraction(Integer)))
+testEquals("typeOf(s1)::OutputForm",
+           "Complex(RealClosure(Fraction(Integer)))::OutputForm")
+ 
+                                                                   Type: Void
+testEquals("s1^2", "complex(0, 1)$Complex(rC)")
+ 
+                                                                   Type: Void
+
+v2 := sqrt(2)$rC
+ 
+
+         +-+
+   (6)  \|2
+                                         Type: RealClosure(Fraction(Integer))
+s2:= sqrt((-v2)::Complex(rC))
+ 
+
+         +----+
+         | +-+
+   (7)  \|\|2  %i
+                                Type: Complex(RealClosure(Fraction(Integer)))
+testEquals("s2^2", "(-v2)$Complex(rC)")
+ 
+                                                                   Type: Void
+
+testcase "Algebra(Fraction(Integer))"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testTrue("not(PF(3001) has Algebra(Fraction(Integer)))")
+ 
+                                                                   Type: Void
+
+testcase "qualified constants"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testLibraryError("0$List(?)")
+ 
+ 
+Daly Bug
+   The function 0 is not implemented in List(?) 
+
+                                                                   Type: Void
+testLibraryError("0$SUP(?)")
+ 
+ 
+Daly Bug
+   A fully specified type must follow $ when it qualifies a domain 
+      constant.
+
+                                                                   Type: Void
+testLibraryError("1$Boolean")
+ 
+ 
+Daly Bug
+   The function 1 is not implemented in Boolean 
+
+                                                                   Type: Void
+testLibraryError("1$_"failed_"")
+ 
+ 
+Daly Bug
+   The function 1 is not implemented in failed 
+
+                                                                   Type: Void
+testLibraryError("_"failed_"$_"failed_"")
+ 
+ 
+Daly Bug
+   There is no operation named "failed" in the domain or package failed
+      .
+
+                                                                   Type: Void
+
+testcase "singleton types"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+U := Union(INT, "failed")
+ 
+
+   (2)  Union(Integer,"failed")
+                                                                   Type: Type
+u := "failed"::U
+ 
+
+   (3)  "failed"
+                                                    Type: Union("failed",...)
+f(x : U) : INT == (x case INT => 0; 1)
+ 
+   Function declaration f : Union(Integer,"failed") -> Integer has been
+      added to workspace.
+                                                                   Type: Void
+testEquals("f(u)", "1")
+ 
+   Compiling function f with type Union(Integer,"failed") -> Integer 
+                                                                   Type: Void
+testEquals("_"failed_" has Ring", "false")
+ 
+                                                                   Type: Void
+
+testcase "diagonalMatrix"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+m1 := diagonalMatrix [matrix [[1,2]], matrix [[3],[4]]]
+ 
+
+        +1  2  0+
+        |       |
+   (2)  |0  0  3|
+        |       |
+        +0  0  4+
+                                                        Type: Matrix(Integer)
+m2 := matrix [[1,2,0],[0,0,3],[0,0,4]]
+ 
+
+        +1  2  0+
+        |       |
+   (3)  |0  0  3|
+        |       |
+        +0  0  4+
+                                             Type: Matrix(NonNegativeInteger)
+testEquals("m1", "m2")
+ 
+                                                                   Type: Void
+
+testcase "0 dim DirectProduct"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+DP := DirectProduct(0, ZMOD 3)
+ 
+
+   (2)  DirectProduct(0,IntegerMod(3))
+                                                                   Type: Type
+element := 0$DP
+ 
+
+   (3)  []
+                                         Type: DirectProduct(0,IntegerMod(3))
+testEquals("element", "index(1)$DP")
+ 
+                                                                   Type: Void
+testEquals("lookup(element)", "1")
+ 
+                                                                   Type: Void
+
+testcase "positiveRemainder in SingleInteger"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testEquals("positiveRemainder(-7, -3)$SINT", "2")
+ 
+                                                                   Type: Void
+
+testcase "iroot in POLYROOT"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testEquals("rootSimp((64*x^12)^(1/12))", "x*sqrt(2)")
+ 
+                                                                   Type: Void
+
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+   =============================================================================
+   WARNINGS:
+   Testsuite: bugs2026
+   Testcase: sqrt in Complex
+   test: 2
+   testing in a domain without InputForm!
+   Testsuite: bugs2026
+   Testcase: sqrt in Complex
+   test: 3
+   testing in a domain without InputForm!
+
+   =============================================================================
+   Testsuite: bugs2026
+     failed (total): 0 (11)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   bugs2026                    0    (11)               0    (22)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 22
+                                                                   Type: Void
+)quit
+ 

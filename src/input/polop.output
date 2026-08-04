@@ -1,0 +1,475 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read polop.input
+ 
+)set break resume
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+testsuite "Poly Ops"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+testcase "cyclotomic"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+)expose CyclotomicUtilities
+ 
+   CyclotomicUtilities is now explicitly exposed in frame initial 
+x1 := monomial(1, 1)$SUP(Integer)
+ 
+
+   (2)  ?
+                                    Type: SparseUnivariatePolynomial(Integer)
+t_lst := [2, 3, 2*3, 5, 25, 2*5, 50, 100, 8, 8*3^2*5, 3^4*5^2*7,
+            8*3*5^3*7, 5*7, 2*5*7, 3*5*7, 2*3*5*7,
+           3*5*7*11, 2*3*5*7*11, 3*5*43, 2*3*5*43, 3*5*7*51,
+          3*5*7*11*51]
+ 
+
+   (3)
+   [2, 3, 6, 5, 25, 10, 50, 100, 8, 360, 14175, 21000, 35, 70, 105, 210, 1155,
+    2310, 645, 1290, 5355, 58905]
+                                                  Type: List(PositiveInteger)
+
+
+for i in t_lst repeat
+    n := i
+    cn := cyclotomic(n);
+    icn := inverse_cyclotomic(n);
+    testTrue("cyclotomic?(cn) case Integer")
+    testEquals("gcd(cn, icn)", "1")
+    testEquals("cn*icn", "x1^n - 1")
+    i = 58905 => iterate
+    cd := cyclotomic_decomposition(n);
+    testEquals("reduce(*, cd)", "x1^n - 1")
+    icd := cocyclotomic_decomposition(n);
+    testEquals("reduce(*, icd)", "x1^n + 1")
+ 
+                                                                   Type: Void
+
+cn := cyclotomic(3*5*7);
+ 
+
+                                    Type: SparseUnivariatePolynomial(Integer)
+testTrue("not(cyclotomic?(cn + 1) case Integer)")
+ 
+                                                                   Type: Void
+testTrue("not(cyclotomic?(cn^2) case Integer)")
+ 
+                                                                   Type: Void
+testTrue("not(cyclotomic?(multiplyExponents(cn, 2)) case Integer)")
+ 
+                                                                   Type: Void
+testTrue("not(cyclotomic?(multiplyExponents(cn, 11)) case Integer)")
+ 
+                                                                   Type: Void
+testTrue("not(cyclotomic?(cn + x1^25 + x1^24) case Integer)")
+ 
+                                                                   Type: Void
+testTrue("not(cyclotomic?(cn - x1^46 - x1^2) case Integer)")
+ 
+                                                                   Type: Void
+
+testEquals("reduce(min, coefficients(cn))", "-2")
+ 
+                                                                   Type: Void
+for na in [[11305, 23], [26565, 59], [40755, 359], [4849845, 669606]] repeat
+    n := first(na)
+    cn := cyclotomic(n);
+    a := second(na)
+    testEquals("reduce(max, coefficients(cn))", "a")
+ 
+                                                                   Type: Void
+
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+   =============================================================================
+   WARNINGS:
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 2
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 3
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 4
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 5
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 7
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 8
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 9
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 10
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 12
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 13
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 14
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 15
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 17
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 18
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 19
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 20
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 22
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 23
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 24
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 25
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 27
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 28
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 29
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 30
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 32
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 33
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 34
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 35
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 37
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 38
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 39
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 40
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 42
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 43
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 44
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 45
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 47
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 48
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 49
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 50
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 52
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 53
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 54
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 55
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 57
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 58
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 59
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 60
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 62
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 63
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 64
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 65
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 67
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 68
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 69
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 70
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 72
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 73
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 74
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 75
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 77
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 78
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 79
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 80
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 82
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 83
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 84
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 85
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 87
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 88
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 89
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 90
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 92
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 93
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 94
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 95
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 97
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 98
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 99
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 100
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 102
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 103
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 104
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 105
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 107
+   testing in a domain without InputForm!
+   Testsuite: Poly Ops
+   Testcase: cyclotomic
+   test: 108
+   testing in a domain without InputForm!
+
+   =============================================================================
+   Testsuite: Poly Ops
+     failed (total): 0 (1)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   Poly Ops                    0     (1)               0   (119)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 119
+                                                                   Type: Void
+)quit
+ 

@@ -1,0 +1,524 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read jnseries2.input
+ 
+--Copyright G. Vanuxem 2025.
+
+--% Nemo Series Test (extended)
+-- Testing Nemo power series, Laurent series, and Puiseux series
+-- Author: G. Vanuxem
+-- Date Created: 2025-12-03
+-- Date Last Updated: 2025-12-03
+-- Keywords: Nemo series, power series, Laurent series, Puiseux series
+
+)set break resume
+ 
+)set mess type off
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+
+testsuite "Nemo Series Extended Tests"
+ 
+   All user variables and function definitions have been cleared.
+   WARNING: string for testsuite should have less than 15 characters!
+
+testcase "NMUnivariatePowerSeries - trigonometric"
+ 
+   All user variables and function definitions have been cleared.
+R := NUPS(NFRAC(NINT),'x,30,"capped_relative")
+ 
+
+   (2)  NMUnivariatePowerSeries(NMFraction(NMInteger),x,30,:capped_relative)
+x := x::R
+ 
+
+   (3)  x + O(x^31)
+s1 := sin(x)
+ 
+
+   (4)
+  x - 1/6*x^3 + 1/120*x^5 - 1/5040*x^7 + 1/362880*x^9 - 1/39916800*x^11 + 1/622
+  7020800*x^13 - 1/1307674368000*x^15 + 1/355687428096000*x^17 - 1/121645100408
+  832000*x^19 + 1/51090942171709440000*x^21 - 1/25852016738884976640000*x^23 + 
+  1/15511210043330985984000000*x^25 - 1/10888869450418352160768000000*x^27 + 1/
+  8841761993739701954543616000000*x^29 + O(x^31)
+c1 := cos(x)
+ 
+
+   (5)
+  1 - 1/2*x^2 + 1/24*x^4 - 1/720*x^6 + 1/40320*x^8 - 1/3628800*x^10 + 1/4790016
+  00*x^12 - 1/87178291200*x^14 + 1/20922789888000*x^16 - 1/6402373705728000*x^1
+  8 + 1/2432902008176640000*x^20 - 1/1124000727777607680000*x^22 + 1/6204484017
+  33239439360000*x^24 - 1/403291461126605635584000000*x^26 + 1/3048883446117138
+  60501504000000*x^28 - 1/265252859812191058636308480000000*x^30 + O(x^31)
+-- Test sin^2 + cos^2 = 1
+testEquals("1$R", "s1^2 + c1^2")
+ 
+
+testcase "NMUnivariatePowerSeries - exp/log roundtrip"
+ 
+   All user variables and function definitions have been cleared.
+R := NUPS(NFRAC(NINT),'x,30,"capped_relative")
+ 
+
+   (2)  NMUnivariatePowerSeries(NMFraction(NMInteger),x,30,:capped_relative)
+x := x::R
+ 
+
+   (3)  x + O(x^31)
+p1 := x^2 + 3*x^5
+ 
+
+   (4)  x^2 + 3*x^5 + O(x^32)
+e1 := exp(p1)
+ 
+
+   (5)
+  1 + x^2 + 1/2*x^4 + 3*x^5 + 1/6*x^6 + 3*x^7 + 1/24*x^8 + 3/2*x^9 + 541/120*x^
+  10 + 1/2*x^11 + 3241/720*x^12 + 1/8*x^13 + 11341/5040*x^14 + 181/40*x^15 + 30
+  241/40320*x^16 + 1081/240*x^17 + 68041/362880*x^18 + 3781/1680*x^19 + 1238328
+  1/3628800*x^20 + 10081/13440*x^21 + 134968681/39916800*x^22 + 22681/120960*x^
+  23 + 808742881/479001600*x^24 + 2494801/1209600*x^25 + 500484883/889574400*x^
+  26 + 27027001/13305600*x^27 + 12260528281/87178291200*x^28 + 161805601/159667
+  200*x^29 + 1360800260821/1307674368000*x^30 + 700771501/2075673600*x^31 + O(x
+  ^32)
+l1 := log(e1)
+ 
+
+   (6)  x^2 + 3*x^5 + O(x^32)
+testEquals("0$R", "p1 - l1")
+ 
+
+testcase "NMUnivariatePowerSeries - differentiation"
+ 
+   All user variables and function definitions have been cleared.
+R := NUPS(NFRAC(NINT),'x,30,"capped_relative")
+ 
+
+   (2)  NMUnivariatePowerSeries(NMFraction(NMInteger),x,30,:capped_relative)
+x := x::R
+ 
+
+   (3)  x + O(x^31)
+-- d/dx(x^2) = 2x
+d1 := differentiate(x^2)
+ 
+
+   (4)  2*x + O(x^31)
+testEquals("0$R", "d1 - 2*x")
+ 
+
+testcase "NMUnivariatePowerSeries - integration"
+ 
+   All user variables and function definitions have been cleared.
+R := NUPS(NFRAC(NINT),'x,30,"capped_relative")
+ 
+
+   (2)  NMUnivariatePowerSeries(NMFraction(NMInteger),x,30,:capped_relative)
+x := x::R
+ 
+
+   (3)  x + O(x^31)
+-- integral(x) = x^2/2
+i1 := integrate(x)
+ 
+
+   (4)  1/2*x^2 + O(x^32)
+testEquals("0$R", "i1 - x^2/2")
+ 
+
+testcase "NMUnivariateLaurentSeries - negative powers"
+ 
+   All user variables and function definitions have been cleared.
+R := NULS(NFRAC(NINT),'y,30)
+ 
+
+   (2)  NMUnivariateLaurentSeries(NMFraction(NMInteger),y,30)
+y := y::R
+ 
+
+   (3)  y + O(y^31)
+-- Test y^(-1) * y = 1
+l1 := y^(-1)
+ 
+
+   (4)  y^-1 + O(y^29)
+testEquals("1$R", "l1 * y")
+ 
+
+testcase "NMUnivariateLaurentSeries - exp/log"
+ 
+   All user variables and function definitions have been cleared.
+R := NULS(NFRAC(NINT),'y,30)
+ 
+
+   (2)  NMUnivariateLaurentSeries(NMFraction(NMInteger),y,30)
+y := y::R
+ 
+
+   (3)  y + O(y^31)
+p1 := y + y^2
+ 
+
+   (4)  y + y^2 + O(y^31)
+e1 := exp(p1)
+ 
+
+   (5)
+  1 + y + 3/2*y^2 + 7/6*y^3 + 25/24*y^4 + 27/40*y^5 + 331/720*y^6 + 1303/5040*y
+  ^7 + 1979/13440*y^8 + 5357/72576*y^9 + 19093/518400*y^10 + 223117/13305600*y^
+  11 + 3609673/479001600*y^12 + 19674097/6227020800*y^13 + 2522791/1937295360*y
+  ^14 + 664400311/1307674368000*y^15 + 4070168161/20922789888000*y^16 + 1723195
+  79/2419642368000*y^17 + 163716695587/6402373705728000*y^18 + 215126381531/243
+  29020081766400*y^19 + 221117161817/73724303278080000*y^20 + 50322142646161/51
+  090942171709440000*y^21 + 356790528924523/1124000727777607680000*y^22 + 28566
+  2756150623/2872446304320552960000*y^23 + 542380832453819/17727097192378269696
+  000*y^24 + 142389639792952801/15511210043330985984000000*y^25 + 3638520321957
+  12017/134430487042201878528000000*y^26 + 8495817365820681703/1088886945041835
+  2160768000000*y^27 + 67439846581526028457/304888344611713860501504000000*y^28
+   + 7242741587566456051/117890159916529359393914880000*y^29 + 2344587747787365
+  18649/13960676832220582033489920000000*y^30 + O(y^31)
+l1 := log(e1)
+ 
+
+   (6)  y + y^2 + O(y^31)
+testEquals("0$R", "p1 - l1")
+ 
+
+testcase "NMUnivariateLaurentSeries - differentiation with negative powers"
+ 
+   All user variables and function definitions have been cleared.
+R := NULS(NFRAC(NINT),'y,30)
+ 
+
+   (2)  NMUnivariateLaurentSeries(NMFraction(NMInteger),y,30)
+y := y::R
+ 
+
+   (3)  y + O(y^31)
+-- d/dy(y^(-1)) = -y^(-2)
+d1 := differentiate(y^(-1))
+ 
+
+   (4)  -y^-2 + O(y^28)
+testEquals("0$R", "d1 + y^(-2)")
+ 
+
+testcase "NMUnivariatePuiseuxSeries - fractional powers"
+ 
+   All user variables and function definitions have been cleared.
+R := NUPXS(NFRAC(NINT),'z,30)
+ 
+
+   (2)  NMUnivariatePuiseuxSeries(NMFraction(NMInteger),z,30)
+z := z::R
+ 
+
+   (3)  z + O(z^31)
+-- Test sqrt(z) = z^(1/2)
+s1 := sqrt(z)
+ 
+
+   (4)  z^(1/2) + O(z^(61/2))
+p1 := z^(1/2)
+ 
+
+   (5)  z^(1/2) + O(z^(31/2))
+testEquals("0$R", "s1 - p1")
+ 
+
+testcase "NMUnivariatePuiseuxSeries - exp/log roundtrip"
+ 
+   All user variables and function definitions have been cleared.
+R := NUPXS(NFRAC(NINT),'z,30)
+ 
+
+   (2)  NMUnivariatePuiseuxSeries(NMFraction(NMInteger),z,30)
+z := z::R
+ 
+
+   (3)  z + O(z^31)
+p1 := 23*z + 3*19*z^7 + z^(1/3)
+ 
+
+   (4)  z^(1/3) + 23*z + 57*z^7 + O(z^(31/3))
+e1 := exp(p1)
+ 
+
+   (5)
+  1 + z^(1/3) + 1/2*z^(2/3) + 139/6*z + 553/24*z^(4/3) + 1381/120*z^(5/3) + 193
+  201/720*z^2 + 1337911/5040*z^(7/3) + 5340049/40320*z^(8/3) + 751868713/362880
+  *z^3 + 7398610561/3628800*z^(10/3) + 5794330693/5702400*z^(11/3) + 5747243846
+  521/479001600*z^4 + 73133788836109/6227020800*z^(13/3) + 509725017892273/8717
+  8291200*z^(14/3) + 72683613242502991/1307674368000*z^5 + 1132392213477722401/
+  20922789888000*z^(16/3) + 9573438509773763281/355687428096000*z^(17/3) + 1962
+  42784549295699767/914624815104000*z^6 + 2298457153383063697553/11058645491712
+  000*z^(19/3) + 251197030640854966578121/2432902008176640000*z^(20/3) + 279019
+  3068501721164607177/3930072474746880000*z^7 + 769035837103754956845518641/112
+  4000727777607680000*z^(22/3) + 8777367494308504479619339879/25852016738884976
+  640000*z^(23/3) + 1275912667162184359958569570993/620448401733239439360000*z^
+  8 + 4369151734368879630944677401343/2215887149047283712000000*z^(25/3) + 3941
+  80750691125897787001355200001/403291461126605635584000000*z^(26/3) + 57748399
+  744243708662032118652636051/10888869450418352160768000000*z^9 + 1542639182035
+  890933247889359382801689/304888344611713860501504000000*z^(28/3) + 2215301863
+  4986771830709163556317253853/8841761993739701954543616000000*z^(29/3) + 29814
+  6273844039589467309613052342283571/24113896346562823512391680000000*z^10 + O(
+  z^(31/3))
+l1 := log(e1)
+ 
+
+   (6)  z^(1/3) + 23*z + 57*z^7 + O(z^(31/3))
+testEquals("0$R", "p1 - l1")
+ 
+
+testcase "NMUnivariatePuiseuxSeries - differentiation with fractional powers"
+ 
+   All user variables and function definitions have been cleared.
+R := NUPXS(NFRAC(NINT),'z,30)
+ 
+
+   (2)  NMUnivariatePuiseuxSeries(NMFraction(NMInteger),z,30)
+z := z::R
+ 
+
+   (3)  z + O(z^31)
+-- d/dz(z^(3/2)) works without error
+d1 := differentiate(z^(3/2))
+ 
+
+   (4)  3/2*z^(1/2) + O(z^(31/2))
+testTrue("(d1; true)")
+ 
+
+testcase "NMUnivariatePuiseuxSeries - integration with fractional powers"
+ 
+   All user variables and function definitions have been cleared.
+R := NUPXS(NFRAC(NINT),'z,30)
+ 
+
+   (2)  NMUnivariatePuiseuxSeries(NMFraction(NMInteger),z,30)
+z := z::R
+ 
+
+   (3)  z + O(z^31)
+-- integral(z^(1/2)) works without error
+i1 := integrate(z^(1/2))
+ 
+
+   (4)  2/3*z^(3/2) + O(z^(33/2))
+testTrue("(i1; true)")
+ 
+
+testcase "NMUnivariatePowerSeries - valuation"
+ 
+   All user variables and function definitions have been cleared.
+R := NUPS(NFRAC(NINT),'x,30,"capped_relative")
+ 
+
+   (2)  NMUnivariatePowerSeries(NMFraction(NMInteger),x,30,:capped_relative)
+x := x::R
+ 
+
+   (3)  x + O(x^31)
+testEquals("1", "valuation(x)")
+ 
+testEquals("2", "valuation(x^2)")
+ 
+testEquals("0", "valuation(1+x)")
+ 
+testEquals("3", "valuation(x^3 + x^4)")
+ 
+
+testcase "NMUnivariatePowerSeries - scalar arithmetic"
+ 
+   All user variables and function definitions have been cleared.
+R := NUPS(NFRAC(NINT),'x,30,"capped_relative")
+ 
+
+   (2)  NMUnivariatePowerSeries(NMFraction(NMInteger),x,30,:capped_relative)
+x := x::R
+ 
+
+   (3)  x + O(x^31)
+testEquals("2*x", "x*2")
+ 
+testEquals("3*x", "x + 2*x")
+ 
+testEquals("x", "(2*x)/2")
+ 
+testEquals("x + 1/2", "x + 1/2")
+ 
+
+testcase "NMUnivariatePowerSeries - inverse"
+ 
+   All user variables and function definitions have been cleared.
+R := NUPS(NFRAC(NINT),'x,30,"capped_relative")
+ 
+
+   (2)  NMUnivariatePowerSeries(NMFraction(NMInteger),x,30,:capped_relative)
+x := x::R
+ 
+
+   (3)  x + O(x^31)
+p := 1 + x
+ 
+
+   (4)  1 + x + O(x^30)
+inv_p := inverse(p)
+ 
+
+   (5)
+  1 - x + x^2 - x^3 + x^4 - x^5 + x^6 - x^7 + x^8 - x^9 + x^10 - x^11 + x^12 - 
+  x^13 + x^14 - x^15 + x^16 - x^17 + x^18 - x^19 + x^20 - x^21 + x^22 - x^23 + 
+  x^24 - x^25 + x^26 - x^27 + x^28 - x^29 + O(x^30)
+testEquals("1$R", "p * inv_p")
+ 
+
+testcase "NMUnivariatePowerSeries - extended trig/hyperbolic"
+ 
+   All user variables and function definitions have been cleared.
+R := NUPS(NFRAC(NINT),'x,30,"capped_relative")
+ 
+
+   (2)  NMUnivariatePowerSeries(NMFraction(NMInteger),x,30,:capped_relative)
+x := x::R
+ 
+
+   (3)  x + O(x^31)
+-- tan/atan
+testEquals("x", "tan(atan(x))")
+ 
+-- tanh/atanh
+testEquals("x", "tanh(atanh(x))")
+ 
+-- sec/asec and csc/acsc require Puiseux series or different ring, skipping for NUPS
+
+
+testcase "NMUnivariateLaurentSeries - valuation"
+ 
+   All user variables and function definitions have been cleared.
+R := NULS(NFRAC(NINT),'y,30)
+ 
+
+   (2)  NMUnivariateLaurentSeries(NMFraction(NMInteger),y,30)
+y := y::R
+ 
+
+   (3)  y + O(y^31)
+testEquals("-1", "valuation(y^(-1))")
+ 
+testEquals("-2", "valuation(y^(-2) + y)")
+ 
+testEquals("-1", "valuation(1 + y^(-1))")
+ 
+
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+   =============================================================================
+   WARNINGS:
+   Testsuite: Nemo Series Extended Tests
+   Testcase: NMUnivariatePowerSeries - trigonometric
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: Nemo Series Extended Tests
+   Testcase: NMUnivariatePowerSeries - exp/log roundtrip
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: Nemo Series Extended Tests
+   Testcase: NMUnivariatePowerSeries - differentiation
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: Nemo Series Extended Tests
+   Testcase: NMUnivariatePowerSeries - integration
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: Nemo Series Extended Tests
+   Testcase: NMUnivariateLaurentSeries - negative powers
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: Nemo Series Extended Tests
+   Testcase: NMUnivariateLaurentSeries - exp/log
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: Nemo Series Extended Tests
+   Testcase: NMUnivariateLaurentSeries - differentiation with negative powers
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: Nemo Series Extended Tests
+   Testcase: NMUnivariatePuiseuxSeries - fractional powers
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: Nemo Series Extended Tests
+   Testcase: NMUnivariatePuiseuxSeries - exp/log roundtrip
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: Nemo Series Extended Tests
+   Testcase: NMUnivariatePowerSeries - scalar arithmetic
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: Nemo Series Extended Tests
+   Testcase: NMUnivariatePowerSeries - scalar arithmetic
+   test: 2
+   testing in a domain without InputForm!
+   Testsuite: Nemo Series Extended Tests
+   Testcase: NMUnivariatePowerSeries - scalar arithmetic
+   test: 3
+   testing in a domain without InputForm!
+   Testsuite: Nemo Series Extended Tests
+   Testcase: NMUnivariatePowerSeries - scalar arithmetic
+   test: 4
+   testing in a domain without InputForm!
+   Testsuite: Nemo Series Extended Tests
+   Testcase: NMUnivariatePowerSeries - inverse
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: Nemo Series Extended Tests
+   Testcase: NMUnivariatePowerSeries - extended trig/hyperbolic
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: Nemo Series Extended Tests
+   Testcase: NMUnivariatePowerSeries - extended trig/hyperbolic
+   test: 2
+   testing in a domain without InputForm!
+
+   =============================================================================
+   Testsuite: Nemo Series Extended Tests
+     failed (total): 0 (16)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   Nemo Series Extended Tests    0    (16)               0    (25)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 25
+)quit
+ 

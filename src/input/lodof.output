@@ -1,0 +1,230 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read lodof.input
+ 
+--Copyright The Numerical Algorithms Group Limited 1991.
+--------------------------------- lodof.input -----------------------------
+)set break resume
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+testsuite "factor$LODOF"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+testcase "factor"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+P := UP(t, AN)
+ 
+
+   (2)  UnivariatePolynomial(t,AlgebraicNumber)
+                                                                   Type: Type
+Q := FRAC P
+ 
+
+   (3)  Fraction(UnivariatePolynomial(t,AlgebraicNumber))
+                                                                   Type: Type
+L := LODO1 Q
+ 
+
+   (4)
+   LinearOrdinaryDifferentialOperator1
+      Fraction(UnivariatePolynomial(t,AlgebraicNumber))
+                                                                   Type: Type
+)expose LODOF
+ 
+   LinearOrdinaryDifferentialOperatorFactorizer is now explicitly 
+      exposed in frame initial 
+testFactor(l: List L): Void ==
+    free l1
+    free l2
+    l1 := reduce(*, l)
+    l2 := l
+    testEquals("factor l1", "l2")
+ 
+   Function declaration testFactor : List(
+      LinearOrdinaryDifferentialOperator1(Fraction(UnivariatePolynomial
+      (t,AlgebraicNumber)))) -> Void has been added to workspace.
+                                                                   Type: Void
+
+xftestFactor(l: List L): Void ==
+    free l1
+    free l2
+    l1 := reduce(*, l)
+    l2 := l
+    xftestEquals("factor l1", "l2")
+ 
+   Function declaration xftestFactor : List(
+      LinearOrdinaryDifferentialOperator1(Fraction(UnivariatePolynomial
+      (t,AlgebraicNumber)))) -> Void has been added to workspace.
+                                                                   Type: Void
+
+
+d := D()$L
+ 
+
+   (7)  D
+Type: LinearOrdinaryDifferentialOperator1(Fraction(UnivariatePolynomial(t,AlgebraicNumber)))
+t := t::P::Q
+ 
+
+   (8)  t
+                      Type: Fraction(UnivariatePolynomial(t,AlgebraicNumber))
+
+-- reducible order 2 operator (1-1)
+testFactor [d, d+t]
+ 
+   Compiling function testFactor with type List(
+      LinearOrdinaryDifferentialOperator1(Fraction(UnivariatePolynomial
+      (t,AlgebraicNumber)))) -> Void 
+   Compiled code for testFactor has been cleared.
+                                                                   Type: Void
+
+-- irreducible order 2 operator
+testFactor [2*t^3 * d^2 + 3*t^2 * d - 2]
+ 
+   Compiling function testFactor with type List(
+      LinearOrdinaryDifferentialOperator1(Fraction(UnivariatePolynomial
+      (t,AlgebraicNumber)))) -> Void 
+                                                                   Type: Void
+
+-- Extremely slow
+-- op2 := (t^9+t^3)*d^2 + (13*t^8+t^2)*d - 55*t^7 - 91*t
+-- factor(op2)
+
+-- reducible order 3 operator (1-2)
+testFactor [t-d, -2*t^3*d^2 - 3*t^2*d + 2]
+ 
+                                                                   Type: Void
+
+testFactor [t-d, d^2 + t^2*d + 1]
+ 
+                                                                   Type: Void
+
+-- reducible order 3 operator (2-1)
+testFactor [-2*t^3*d^2 - 3*t^2*d + 2, d - t]
+ 
+                                                                   Type: Void
+
+testFactor [d^2 + t^2*d + 1, d - t]
+ 
+                                                                   Type: Void
+
+-- reducible order 3 operator (1-1-1)
+testFactor [(t^9 + t^3)*d +(-sqrt 91+7)*t^8+(-sqrt 91 + 1)*t^2, _
+            d + ((sqrt 91 + 6)*t^6 + sqrt 91)/(t^7+t), _
+            d + (5*t^6 - 1)/(t^7 + t)]
+ 
+                                                                   Type: Void
+
+-- irreducible order 3 operator
+testFactor [d^3 + 2 * d^2 + 5 / t * d + 7 / t^2]
+ 
+                                                                   Type: Void
+
+-- reducible order 6 operator (1-1-1-1-1-1)
+testFactor [t^6*d + (- sqrt(-1) + 5)*t^5, _
+            d + (sqrt(-1)+4)/t, _
+            d + 5/t, _
+            d + 4/t, _
+            d + 3*t^2/(t^3-1), _
+            d + (-t^3-2)/(t^4-t)]
+ 
+                                                                   Type: Void
+
+-- reducible order 4 operator (2-2)
+xftestFactor [2*t^3 * d^2 + 3*t^2 * d - 2, 2*t^3 * d^2 + 3*t^2 * d - 2]
+ 
+   Compiling function xftestFactor with type List(
+      LinearOrdinaryDifferentialOperator1(Fraction(UnivariatePolynomial
+      (t,AlgebraicNumber)))) -> Void 
+                                                                   Type: Void
+
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+   =============================================================================
+   WARNINGS:
+   Testsuite: factor$LODOF
+   Testcase: factor
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: factor$LODOF
+   Testcase: factor
+   test: 2
+   testing in a domain without InputForm!
+   Testsuite: factor$LODOF
+   Testcase: factor
+   test: 3
+   testing in a domain without InputForm!
+   Testsuite: factor$LODOF
+   Testcase: factor
+   test: 4
+   testing in a domain without InputForm!
+   Testsuite: factor$LODOF
+   Testcase: factor
+   test: 5
+   testing in a domain without InputForm!
+   Testsuite: factor$LODOF
+   Testcase: factor
+   test: 6
+   testing in a domain without InputForm!
+   Testsuite: factor$LODOF
+   Testcase: factor
+   test: 7
+   testing in a domain without InputForm!
+   Testsuite: factor$LODOF
+   Testcase: factor
+   test: 8
+   testing in a domain without InputForm!
+   Testsuite: factor$LODOF
+   Testcase: factor
+   test: 9
+   testing in a domain without InputForm!
+   Testsuite: factor$LODOF
+   Testcase: factor
+   test: 10
+   testing in a domain without InputForm!
+
+   =============================================================================
+   Testsuite: factor$LODOF
+     failed (total): 0 (1)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   factor$LODOF                0     (1)               0    (10)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 1
+   unexpected passes: 0
+   total tests: 10
+                                                                   Type: Void
+)quit
+ 

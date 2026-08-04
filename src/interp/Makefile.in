@@ -155,6 +155,10 @@ ${FRICASSYS}: ../etc/stamp-databases
 	   '#+:cmu (setq *compile-verbose* nil)' \
 	   '#+:cmu (setq *compile-print* nil)' \
 	   '#+:cmu (declaim (optimize (ext:inhibit-warnings 3)))' \
+<<<<<<< HEAD
+=======
+	   '${WEBSPAD_REQUIREMENTS}' \
+>>>>>>> 6e515954 (Simplify build system by removing redundant make targets, cleaning up variables, and deleting unused documentation files.)
 	   '#+:ecl(FRICAS-LISP::make-program "$@" nil)' \
 	   '#-:ecl(BOOT::spad-save "$@" t $(FRICAS_SAVE_EXEC))' \
              | DAASE="$(fricas_targetdir)" ${BOOTSYS}

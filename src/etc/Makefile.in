@@ -76,10 +76,21 @@ $(fricas_target_bindir)/fricas: $(srcdir)/fricas
 	cp $< $@
 	chmod +x $@
 
+<<<<<<< HEAD
 $(fricas_target_bindir)/fricas-readline: $(srcdir)/fricas-readline
 	cp $< $@
 	chmod +x $@
 
+=======
+$(fricas_target_bindir)/jlfricas: $(srcdir)/jlfricas
+	cp $< $@
+	chmod +x $@
+
+$(fricas_target_bindir)/fricas-readline: $(srcdir)/fricas-readline
+	cp $< $@
+	chmod +x $@
+
+>>>>>>> 6e515954 (Simplify build system by removing redundant make targets, cleaning up variables, and deleting unused documentation files.)
 clean-local:
 	-rm -f stamp stamp-databases stamp-do-databases
 	-rm -f $(fricas_target_libdir)/summary

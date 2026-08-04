@@ -1,0 +1,245 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read cyldec.input
+ 
+)set break resume
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+
+testsuite "cylindrical decomposition"
+ 
+   All user variables and function definitions have been cleared.
+   WARNING: string for testsuite should have less than 15 characters!
+                                                                   Type: Void
+
+testcase "positivity of quadratic trinomial"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+Ran := RECLOS(FRAC INT)
+ 
+
+   (2)  RealClosure(Fraction(Integer))
+                                                                   Type: Type
+Cad := CAD(Ran)
+ 
+
+   (3)
+   CylindricalAlgebraicDecompositionPackage(RealClosure(Fraction(Integer)))
+                                                                   Type: Type
+
+-- We prove below that p1(x) >= 0 for all x <=> p2 >= 0
+-- using CAD for quantifier elimination
+
+p1 : POLY(Ran) := x^2 + a*x + b
+ 
+
+         2
+   (4)  x  + a x + b
+                             Type: Polynomial(RealClosure(Fraction(Integer)))
+p2 : POLY(Ran) := a^2 - 4*b
+ 
+
+                 2
+   (5)  - 4 b + a
+                             Type: Polynomial(RealClosure(Fraction(Integer)))
+
+lvars := [x, a, b]
+ 
+
+   (6)  [x, a, b]
+                                     Type: List(OrderedVariableList([x,a,b]))
+cad := cylindricalDecomposition([p1, p2], lvars)$Cad
+ 
+
+   (7)
+   [({x = - 2, true}, {a = 0, true}, {b = - 1, true}),
+    ({x = %A3, false}, {a = 0, true}, {b = - 1, true}),
+    ({x = 0, true}, {a = 0, true}, {b = - 1, true}),
+    ({x = %A4, false}, {a = 0, true}, {b = - 1, true}),
+    ({x = 2, true}, {a = 0, true}, {b = - 1, true}),
+    ({x = - 2, true}, {a = - 1, true}, {b = 0, false}),
+    ({x = 0, false}, {a = - 1, true}, {b = 0, false}),
+          1
+    ({x = -, true}, {a = - 1, true}, {b = 0, false}),
+          2
+    ({x = 1, false}, {a = - 1, true}, {b = 0, false}),
+    ({x = 2, true}, {a = - 1, true}, {b = 0, false}),
+    ({x = - 1, true}, {a = 0, false}, {b = 0, false}),
+    ({x = 0, false}, {a = 0, false}, {b = 0, false}),
+    ({x = 1, true}, {a = 0, false}, {b = 0, false}),
+    ({x = - 2, true}, {a = 1, true}, {b = 0, false}),
+    ({x = - 1, false}, {a = 1, true}, {b = 0, false}),
+            1
+    ({x = - -, true}, {a = 1, true}, {b = 0, false}),
+            2
+    ({x = 0, false}, {a = 1, true}, {b = 0, false}),
+    ({x = 2, true}, {a = 1, true}, {b = 0, false}),
+    ({x = - 3, true}, {a = - 5, true}, {b = 1, true}),
+    ({x = %A5, false}, {a = - 5, true}, {b = 1, true}),
+    ({x = 3, true}, {a = - 5, true}, {b = 1, true}),
+    ({x = %A6, false}, {a = - 5, true}, {b = 1, true}),
+    ({x = 6, true}, {a = - 5, true}, {b = 1, true}),
+    ({x = %A1 - 1, true}, {a = %A1, false}, {b = 1, true}),
+            1
+    ({x = - - %A1, false}, {a = %A1, false}, {b = 1, true}),
+            2
+    ({x = - %A1 + 1, true}, {a = %A1, false}, {b = 1, true}),
+    ({x = 0, true}, {a = 0, true}, {b = 1, true}),
+    ({x = - %A2 - 1, true}, {a = %A2, false}, {b = 1, true}),
+            1
+    ({x = - - %A2, false}, {a = %A2, false}, {b = 1, true}),
+            2
+    ({x = %A2 + 1, true}, {a = %A2, false}, {b = 1, true}),
+    ({x = - 6, true}, {a = 5, true}, {b = 1, true}),
+    ({x = %A7, false}, {a = 5, true}, {b = 1, true}),
+    ({x = - 3, true}, {a = 5, true}, {b = 1, true}),
+    ({x = %A8, false}, {a = 5, true}, {b = 1, true}),
+    ({x = 0, true}, {a = 5, true}, {b = 1, true})]
+                             Type: List(Cell(RealClosure(Fraction(Integer))))
+
+Ct := Cell(Ran)
+ 
+
+   (8)  Cell(RealClosure(Fraction(Integer)))
+                                                                   Type: Type
+
+good_cell(c : Ct) : Boolean ==
+    sp1 := samplePoint(c)
+    pf := eval(p2, lvars, sp1)
+    rval := retract(pf)@Ran
+    rval > 0 => true
+    pf := eval(p1, lvars, sp1)
+    rval := retract(pf)@Ran
+    rval >= 0
+ 
+   Function declaration good_cell : Cell(RealClosure(Fraction(Integer))
+      ) -> Boolean has been added to workspace.
+                                                                   Type: Void
+
+-- first check implication p2 >= 0 => p1 >= 0
+testTrue("every?(good_cell, cad)")
+ 
+   Compiling function good_cell with type Cell(RealClosure(Fraction(
+      Integer))) -> Boolean 
+                                                                   Type: Void
+
+good_cell2a(c1 : Ct) : Boolean ==
+    sp1 := samplePoint(c1)
+    for c2 in cad repeat
+        cp := projection(c2)
+        samplePoint(cp) ~= sp1 => iterate
+        pf := eval(p1, lvars, samplePoint(c2))
+        rval := retract(pf)@Ran
+        rval < 0 => return false
+    return true
+ 
+   Function declaration good_cell2a : Cell(RealClosure(Fraction(Integer
+      ))) -> Boolean has been added to workspace.
+                                                                   Type: Void
+
+lvars1 := rest(lvars)
+ 
+
+   (12)  [a, b]
+                                     Type: List(OrderedVariableList([x,a,b]))
+
+good_cell2b(c1 : Ct) : Boolean ==
+    pf := eval(p2, lvars1, samplePoint(c1))
+    rval := retract(pf)@Ran
+    rval <= 0
+ 
+   Function declaration good_cell2b : Cell(RealClosure(Fraction(Integer
+      ))) -> Boolean has been added to workspace.
+                                                                   Type: Void
+
+good_cell2(c1 : Ct) : Boolean ==
+    r1 := good_cell2a(c1)
+    r2 := good_cell2b(c1)
+    r1 = r2
+ 
+   Function declaration good_cell2 : Cell(RealClosure(Fraction(Integer)
+      )) -> Boolean has been added to workspace.
+                                                                   Type: Void
+
+pcl := [projection(c)::Ct for c in cad]
+ 
+
+   (15)
+   [({a = 0, true}, {b = - 1, true}), ({a = 0, true}, {b = - 1, true}),
+    ({a = 0, true}, {b = - 1, true}), ({a = 0, true}, {b = - 1, true}),
+    ({a = 0, true}, {b = - 1, true}), ({a = - 1, true}, {b = 0, false}),
+    ({a = - 1, true}, {b = 0, false}), ({a = - 1, true}, {b = 0, false}),
+    ({a = - 1, true}, {b = 0, false}), ({a = - 1, true}, {b = 0, false}),
+    ({a = 0, false}, {b = 0, false}), ({a = 0, false}, {b = 0, false}),
+    ({a = 0, false}, {b = 0, false}), ({a = 1, true}, {b = 0, false}),
+    ({a = 1, true}, {b = 0, false}), ({a = 1, true}, {b = 0, false}),
+    ({a = 1, true}, {b = 0, false}), ({a = 1, true}, {b = 0, false}),
+    ({a = - 5, true}, {b = 1, true}), ({a = - 5, true}, {b = 1, true}),
+    ({a = - 5, true}, {b = 1, true}), ({a = - 5, true}, {b = 1, true}),
+    ({a = - 5, true}, {b = 1, true}), ({a = %A1, false}, {b = 1, true}),
+    ({a = %A1, false}, {b = 1, true}), ({a = %A1, false}, {b = 1, true}),
+    ({a = 0, true}, {b = 1, true}), ({a = %A2, false}, {b = 1, true}),
+    ({a = %A2, false}, {b = 1, true}), ({a = %A2, false}, {b = 1, true}),
+    ({a = 5, true}, {b = 1, true}), ({a = 5, true}, {b = 1, true}),
+    ({a = 5, true}, {b = 1, true}), ({a = 5, true}, {b = 1, true}),
+    ({a = 5, true}, {b = 1, true})]
+                             Type: List(Cell(RealClosure(Fraction(Integer))))
+testTrue("every?(good_cell2, pcl)")
+ 
+   Compiling function good_cell2a with type Cell(RealClosure(Fraction(
+      Integer))) -> Boolean 
+   Compiling function good_cell2b with type Cell(RealClosure(Fraction(
+      Integer))) -> Boolean 
+   Compiling function good_cell2 with type Cell(RealClosure(Fraction(
+      Integer))) -> Boolean 
+                                                                   Type: Void
+
+)set output algebra on
+ 
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+
+   =============================================================================
+   Testsuite: cylindrical decomposition
+     failed (total): 0 (1)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   cylindrical decomposition    0     (1)               0     (2)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 2
+                                                                   Type: Void
+)quit
+ 

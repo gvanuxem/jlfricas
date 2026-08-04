@@ -1,0 +1,153 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read bugs2022.input
+ 
+)set break resume
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+
+testsuite "bugs2022"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testcase "leastAffineMultiple"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+pF := PrimeField(7)
+ 
+
+   (2)  PrimeField(7)
+                                                                   Type: Type
+fP := FiniteFieldPolynomialPackage(pF)
+ 
+
+   (3)  FiniteFieldPolynomialPackage(PrimeField(7))
+                                                                   Type: Type
+p := (5*x^5+4*x^4+x^3+6*x^2+6*x+4)::Polynomial(pF)
+ 
+
+           5      4    3      2
+   (4)  5 x  + 4 x  + x  + 6 x  + 6 x + 4
+                                              Type: Polynomial(PrimeField(7))
+pr := x^2401+x^343+6*x^7+6*x
+ 
+
+         2401    343      7
+   (5)  x     + x    + 6 x  + 6 x
+                                                    Type: Polynomial(Integer)
+testEquals("leastAffineMultiple(p)$fP", "univariate(pr::Polynomial(pF))")
+ 
+                                                                   Type: Void
+
+testcase "parsing 2.. by 2"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testEquals("2.. by 2", "(2..) by 2")
+ 
+                                                                   Type: Void
+
+testcase "resolve with AlgebraicNumber"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testEquals("typeOf(x^2 + 1/2 - sqrt(-1))::OutputForm",
+           "Polynomial(AlgebraicNumber)::OutputForm")
+ 
+                                                                   Type: Void
+testEquals("typeOf((1/2)*1/(1+x)^2*sqrt(2))::OutputForm",
+           "Fraction(Polynomial(AlgebraicNumber))::OutputForm")
+ 
+                                                                   Type: Void
+testEquals("typeOf(x/(x^2 - 1/5 - 2*sqrt(-1)/5)/sqrt(x^3 - x))::OutputForm",
+           "Expression(Integer)::OutputForm")
+ 
+                                                                   Type: Void
+
+testcase "weierstrassPInverse"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testEquals("D(weierstrassPInverse(0,4, x)::Expression(Complex(Integer)), x)",
+           "1/sqrt(4*x^3 - 4)")
+ 
+                                                                   Type: Void
+
+testcase "missing trivial factor"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+pf := (x^4 + (6*z + 2)*x^3 + (2*z + 1)*x^2 + 3*x)::POLY(PF(7))
+ 
+
+            3      2      4      3    2
+   (2)  (6 x  + 2 x )z + x  + 2 x  + x  + 3 x
+                                              Type: Polynomial(PrimeField(7))
+testEquals("#factorList(factor(pf))", "3")
+ 
+                                                                   Type: Void
+testEquals("#factorList(factor(univariate(pf, x)))", "3")
+ 
+                                                                   Type: Void
+testEquals("#factorList(factor(univariate(pf, z)))", "3")
+ 
+                                                                   Type: Void
+
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+   =============================================================================
+   WARNINGS:
+   Testsuite: bugs2022
+   Testcase: leastAffineMultiple
+   test: 1
+   testing in a domain without InputForm!
+
+   =============================================================================
+   Testsuite: bugs2022
+     failed (total): 0 (5)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   bugs2022                    0     (5)               0     (9)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 9
+                                                                   Type: Void
+)quit
+ 

@@ -1,0 +1,320 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read bugs2011.input
+ 
+)set break resume
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+
+testsuite "bugs2011"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+testcase "leftRankPolynomial"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+QF := Fraction(Integer)
+ 
+
+   (2)  Fraction(Integer)
+                                                                   Type: Type
+lSM := LieSquareMatrix(2, QF)
+ 
+
+   (3)  LieSquareMatrix(2,Fraction(Integer))
+                                                                   Type: Type
+x2 := monomial(1,2)$SparseUnivariatePolynomial(Polynomial(QF))
+ 
+
+         2
+   (4)  ?
+              Type: SparseUnivariatePolynomial(Polynomial(Fraction(Integer)))
+testEquals("leftRankPolynomial()$lSM", "x2")
+ 
+                                                                   Type: Void
+
+testcase "wrong convert"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+ee1 := sin(cos(15)+4)
+ 
+
+   (2)  sin(cos(15) + 4)
+                                                    Type: Expression(Integer)
+testTrue("(map(convert, ee1)$ExpressionFunctions2(Integer, Float); true)")
+ 
+                                                                   Type: Void
+
+testcase "nested iteration"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+ll:=[[i for i in 1..k] for k in 1..]
+ 
+
+   (2)
+   [[1], [1, 2], [1, 2, 3], [1, 2, 3, 4], [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6],
+    [1, 2, 3, 4, 5, 6, 7], [1, 2, 3, 4, 5, 6, 7, 8],
+    [1, 2, 3, 4, 5, 6, 7, 8, 9], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], ...]
+                                          Type: Stream(List(PositiveInteger))
+testTrue("([reduce(+, [x for x in p]) for p in ll]; true)")
+ 
+                                                                   Type: Void
+
+testcase "errors in types"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testLibraryError(
+   "UTSSOL(POLY INT, UTS(POLY INT,t,0), UTS(SMPEXPR POLY INT, t, 0))")
+ 
+ 
+Daly Bug
+   TaylorSolve(Polynomial(Integer),UnivariateTaylorSeries(Polynomial(
+      Integer),t,0),UnivariateTaylorSeries(
+      SparseMultivariatePolynomialExpressions(Polynomial(Integer)),t,0)
+      ) is not a valid type.
+
+                                                                   Type: Void
+
+testLibraryError(
+   "SAE(SAE(FRAC INT, UP(x, FRAC INT), x^2+1), UP(y, FRAC INT), y^3-2)")
+ 
+ 
+Daly Bug
+   SimpleAlgebraicExtension(SimpleAlgebraicExtension(Fraction(Integer),
+      UnivariatePolynomial(x,Fraction(Integer)),x^2+1),
+      UnivariatePolynomial(y,Fraction(Integer)),y^3-2) is not a valid 
+      type.
+
+                                                                   Type: Void
+
+testcase "numberOfNormalPoly"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+pF := PrimeField(107)
+ 
+
+   (2)  PrimeField(107)
+                                                                   Type: Type
+fP := FiniteFieldPolynomialPackage(pF)
+ 
+
+   (3)  FiniteFieldPolynomialPackage(PrimeField(107))
+                                                                   Type: Type
+testEquals("numberOfNormalPoly(3)$fP", "404496")
+ 
+                                                                   Type: Void
+
+testcase "roots of imaginary values"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+a := -%i::Complex(Expression(Integer))
+ 
+
+   (2)  - %i
+                                           Type: Complex(Expression(Integer))
+a2 := sqrt(a)
+ 
+
+         +-+    +-+
+        \|2    \|2
+   (3)  ---- - ---- %i
+          2      2
+                                           Type: Complex(Expression(Integer))
+a3 := a^(1/3)
+ 
+
+         +-+
+        \|3    1
+   (4)  ---- - - %i
+          2    2
+                                           Type: Complex(Expression(Integer))
+testEquals("a2^2", "a")
+ 
+                                                                   Type: Void
+testEquals("a3^3", "a")
+ 
+                                                                   Type: Void
+
+testcase "retraction of rootOf"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+pol := x^4+3*x+7
+ 
+
+         4
+   (2)  x  + 3 x + 7
+                                                    Type: Polynomial(Integer)
+a := rootOf(pol)
+ 
+
+   (3)  x
+                                                        Type: AlgebraicNumber
+ae := a::Expression(Integer)
+ 
+
+   (4)  x
+                                                    Type: Expression(Integer)
+ar := retractIfCan(ae)@Union(AlgebraicNumber, "failed")
+ 
+
+   (5)  x
+                                             Type: Union(AlgebraicNumber,...)
+arb := ar case "failed"
+ 
+
+   (6)  false
+                                                                Type: Boolean
+testTrue("not(arb)")
+ 
+                                                                   Type: Void
+testEquals("ar::AlgebraicNumber", "a")
+ 
+                                                                   Type: Void
+
+testcase "series of elliptic integrals"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+su := series(ellipticF(jacobiSn(u, m), m), u=0)
+ 
+
+               12
+   (2)  u + O(u  )
+                       Type: UnivariatePuiseuxSeries(Expression(Integer),u,0)
+dsu := su - series(u, u=0)
+ 
+
+           21
+   (3)  O(u  )
+                       Type: UnivariatePuiseuxSeries(Expression(Integer),u,0)
+res1 := reduce(_and, [(coefficient(dsu, i) = 0)@Boolean for i in 1..20])
+ 
+
+   (4)  true
+                                                                Type: Boolean
+testTrue("res1")
+ 
+                                                                   Type: Void
+se1 := series(ellipticE(jacobiSn(u, m), m), u=0)
+ 
+
+   (6)
+                 2               3       2             4       3       2
+         m  3   m  + m  5   - 2 m  - 13 m  - 2 m  7   m  + 30 m  + 30 m  + m  9
+     u - - u  + ------ u  + -------------------- u  + ---------------------- u
+         3        15                 315                       2835
+   + 
+          5        4        3        2
+     - 2 m  - 251 m  - 876 m  - 251 m  - 2 m  11      12
+     --------------------------------------- u   + O(u  )
+                      155925
+                       Type: UnivariatePuiseuxSeries(Expression(Integer),u,0)
+se2 := integrate(series(jacobiDn(u, m)^2, u=0), u)
+ 
+
+   (7)
+                 2               3       2             4       3       2
+         m  3   m  + m  5   - 2 m  - 13 m  - 2 m  7   m  + 30 m  + 30 m  + m  9
+     u - - u  + ------ u  + -------------------- u  + ---------------------- u
+         3        15                 315                       2835
+   + 
+          5        4        3        2
+     - 2 m  - 251 m  - 876 m  - 251 m  - 2 m  11      12
+     --------------------------------------- u   + O(u  )
+                      155925
+                       Type: UnivariatePuiseuxSeries(Expression(Integer),u,0)
+ds2 := se1 - se2
+ 
+
+           21
+   (8)  O(u  )
+                       Type: UnivariatePuiseuxSeries(Expression(Integer),u,0)
+res2 := reduce(_and, [(coefficient(ds2, i) = 0)@Boolean for i in 1..20])
+ 
+
+   (9)  true
+                                                                Type: Boolean
+testTrue("res2")
+ 
+                                                                   Type: Void
+
+testcase "numeric lambertW at 0"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testEquals("lambertW(0.0)", "0.0")
+ 
+                                                                   Type: Void
+testEquals("lambertW(complex(0.0, 0.0))", "0.0")
+ 
+                                                                   Type: Void
+testEquals("lambertW(0.0::DoubleFloat)", "0.0")
+ 
+                                                                   Type: Void
+testEquals("lambertW(0.0::Complex(DoubleFloat))", "0.0")
+ 
+                                                                   Type: Void
+
+)set output algebra on
+ 
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+   =============================================================================
+   WARNINGS:
+   Testsuite: bugs2011
+   Testcase: leftRankPolynomial
+   test: 1
+   testing in a domain without InputForm!
+
+   =============================================================================
+   Testsuite: bugs2011
+     failed (total): 0 (9)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   bugs2011                    0     (9)               0    (16)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 16
+                                                                   Type: Void
+)quit
+ 

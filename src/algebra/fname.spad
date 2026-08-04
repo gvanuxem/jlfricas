@@ -91,7 +91,16 @@ FileName() : FileNameCategory == add
             n := file_directory(n)$Lisp
             if n = "" then
                 n := "."
+<<<<<<< HEAD
             r1 := writablep(n, 1)$Lisp
+=======
+            r1 : Integer := writeablep(n)$Lisp
+            r1 > 0 => true
+            n := file_directory(n)$Lisp
+            if n = "" then
+                n := "."
+            r1 := writeablep(n)$Lisp
+>>>>>>> 6e515954 (Simplify build system by removing redundant make targets, cleaning up variables, and deleting unused documentation files.)
             r1 > 0
 
         new(d, pref, e) ==

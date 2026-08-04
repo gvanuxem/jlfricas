@@ -1,0 +1,820 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read tensor.input
+ 
+)set break resume
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+
+testsuite "FreeModule"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testcase "FreeModuleCoefficientFunctions2"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+Z2:= IntegerMod 2
+ 
+
+   (2)  IntegerMod(2)
+                                                                   Type: Type
+A:= FreeModule(Integer, Symbol)
+ 
+
+   (3)  FreeModule(Integer,Symbol)
+                                                                   Type: Type
+B:= FreeModule(Z2, Symbol)
+ 
+
+   (4)  FreeModule(IntegerMod(2),Symbol)
+                                                                   Type: Type
+a:A := reduce(+, [monomial(k, t[k])$A for k in 1..10])
+ 
+
+   (5)  10 t   + 9 t  + 8 t  + 7 t  + 6 t  + 5 t  + 4 t  + 3 t  + 2 t  + t
+            10      9      8      7      6      5      4      3      2    1
+                                             Type: FreeModule(Integer,Symbol)
+b:B := reduce(+, [monomial(1$Z2, t[k])$B for k in 1..10 by 2])
+ 
+
+   (6)  t  + t  + t  + t  + t
+         9    7    5    3    1
+                                       Type: FreeModule(IntegerMod(2),Symbol)
+b1:= map( (c:Integer):Z2 +-> c::Z2, a)$FreeModuleCoefficientFunctions2(Integer, Z2, Symbol, A, B)
+ 
+
+   (7)  t  + t  + t  + t  + t
+         9    7    5    3    1
+                                       Type: FreeModule(IntegerMod(2),Symbol)
+
+testTrue("zero?(b-b1)")
+ 
+                                                                   Type: Void
+
+
+testcase "MonoidRing"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+F ==> FreeGroup Symbol
+ 
+                                                                   Type: Void
+C:= MonoidRing(Integer, F)
+ 
+
+   (3)  MonoidRing(Integer,FreeGroup(Symbol))
+                                                                   Type: Type
+x0:= x::F
+ 
+
+   (4)  x
+                                                      Type: FreeGroup(Symbol)
+y0:= y::F
+ 
+
+   (5)  y
+                                                      Type: FreeGroup(Symbol)
+
+T:= monomial(1, x0)$C + monomial(1, inv x0)$C + monomial(1, y0)$C + monomial(1, inv y0)$C
+ 
+
+             - 1        - 1
+   (6)  y + y    + x + x
+                                  Type: MonoidRing(Integer,FreeGroup(Symbol))
+T4:= T^4;
+ 
+
+                                  Type: MonoidRing(Integer,FreeGroup(Symbol))
+testEquals("coefficient(T4, 1::F)", "28")
+ 
+                                                                   Type: Void
+testEquals("#listOfTerms T4", "121")
+ 
+                                                                   Type: Void
+testEquals("leadingMonomial T4 + reductum T4", "T4")
+ 
+                                                                   Type: Void
+testTrue("zero?(map(c +-> 2*c, T) - 2*T)")
+ 
+                                                                   Type: Void
+
+
+
+testsuite "Tensor"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testcase "TensorProduct addition"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+M:=FreeModule(Integer,Symbol);
+ 
+
+                                                                   Type: Type
+N:=FreeModule(Integer,Symbol);
+ 
+
+                                                                   Type: Type
+MxN ==> TensorProduct(Integer,Symbol,Symbol,M,N);
+ 
+                                                                   Type: Void
+Term ==> Record(k:Product(Symbol,Symbol),c:Integer);
+ 
+                                                                   Type: Void
+
+a1:='a1::M;
+ 
+
+                                             Type: FreeModule(Integer,Symbol)
+a2:='a2::M;
+ 
+
+                                             Type: FreeModule(Integer,Symbol)
+b1:='b1::M;
+ 
+
+                                             Type: FreeModule(Integer,Symbol)
+b2:='b2::M;
+ 
+
+                                             Type: FreeModule(Integer,Symbol)
+
+)if false
+-- Omitting:First test:
+-- Omitting:$$
+-- Omitting:(a_1+a_2)\otimes(b_1+b_2)
+-- Omitting:= a_2\otimes b_2 + a_2\otimes b_1 + a_1\otimes b_2 + a_1\otimes b_1
+-- Omitting:= a_1\otimes b_1 + a_1\otimes b_2 + a_2\otimes b_1 + a_2\otimes b_2
+-- Omitting:$$
+)endif
+
+t:=tensor(a1+a2,b1+b2)$MxN;
+ 
+
+Type: TensorProduct(Integer,Symbol,Symbol,FreeModule(Integer,Symbol),FreeModule(Integer,Symbol))
+t1:=tensor(a2,b2)$MxN + tensor(a2,b1)$MxN + _
+    tensor(a1,b2)$MxN + tensor(a1,b1)$MxN;
+ 
+
+Type: TensorProduct(Integer,Symbol,Symbol,FreeModule(Integer,Symbol),FreeModule(Integer,Symbol))
+
+t2:=tensor(a1,b1)$MxN + tensor(a1,b2)$MxN + _
+    tensor(a2,b1)$MxN + tensor(a2,b2)$MxN;
+ 
+
+Type: TensorProduct(Integer,Symbol,Symbol,FreeModule(Integer,Symbol),FreeModule(Integer,Symbol))
+
+testEquals("t1","t");
+ 
+                                                                   Type: Void
+
+testEquals("t2","t");
+ 
+                                                                   Type: Void
+
+)if false
+-- Omitting:Second test:
+-- Omitting:$$
+-- Omitting:(a_1+a_2)\otimes(b_1+b_2) + a_1\otimes b_2
+-- Omitting:= a_1\otimes b_2 + (a_1+a_2)\otimes(b_1+b_2)
+-- Omitting:= a_2\otimes b_2 + a_2\otimes b_1 + 2a_1\otimes b_2 + a_1\otimes b_1
+-- Omitting:$$
+)endif
+
+-- $(a_1+a_2)\otimes(b_1+b_2)$
+t3l:List Term := [[['a2, 'b2]$Product(Symbol,Symbol),1], _
+    [['a2, 'b1]$Product(Symbol,Symbol),1], _
+    [['a1, 'b2]$Product(Symbol,Symbol),2], _
+    [['a1, 'b1]$Product(Symbol,Symbol),1]];
+ 
+
+                     Type: List(Record(k: Product(Symbol,Symbol),c: Integer))
+
+t3:= construct(t3l)$MxN;
+ 
+
+Type: TensorProduct(Integer,Symbol,Symbol,FreeModule(Integer,Symbol),FreeModule(Integer,Symbol))
+t3a := t+tensor(a1,b2)$MxN;
+ 
+
+Type: TensorProduct(Integer,Symbol,Symbol,FreeModule(Integer,Symbol),FreeModule(Integer,Symbol))
+t3b := tensor(a1,b2)$MxN + t;
+ 
+
+Type: TensorProduct(Integer,Symbol,Symbol,FreeModule(Integer,Symbol),FreeModule(Integer,Symbol))
+testEquals("t3","t3a");
+ 
+                                                                   Type: Void
+testEquals("t3","t3b");
+ 
+                                                                   Type: Void
+testcase "TensorProduct multiplication"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+)if false
+-- Omitting:We check that
+-- Omitting:$$
+-- Omitting:((a_1+a_2)\otimes b_1)\cdot(a_3\otimes(b_2+b_3))
+-- Omitting:= a_2 a_3\otimes b_1 b_3 + a_2 a_3\otimes b_1 b_2
+-- Omitting: + a_1 a_3\otimes b_1 b_3 + a_1 a_3\otimes b_1 b_2
+-- Omitting:$$
+)endif
+
+B := FreeMonoid Symbol;
+ 
+
+                                                                   Type: Type
+M:=XDistributedPolynomial(Symbol,Integer);
+ 
+
+                                                                   Type: Type
+N:=XDistributedPolynomial(Symbol,Integer);
+ 
+
+                                                                   Type: Type
+MxN:= TensorProduct(Integer,B,B,M,N);
+ 
+
+                                                                   Type: Type
+Term:= Record(k:Product(B,B),c:Integer);
+ 
+
+                                                                   Type: Type
+
+a1:='a1::M;
+ 
+
+                                 Type: XDistributedPolynomial(Symbol,Integer)
+a2:='a2::M;
+ 
+
+                                 Type: XDistributedPolynomial(Symbol,Integer)
+a3:='a3::M;
+ 
+
+                                 Type: XDistributedPolynomial(Symbol,Integer)
+b1:='b1::M;
+ 
+
+                                 Type: XDistributedPolynomial(Symbol,Integer)
+b2:='b2::M;
+ 
+
+                                 Type: XDistributedPolynomial(Symbol,Integer)
+b3:='b3::M;
+ 
+
+                                 Type: XDistributedPolynomial(Symbol,Integer)
+
+a1B:='a1::B;
+ 
+
+                                                     Type: FreeMonoid(Symbol)
+a2B:='a2::B;
+ 
+
+                                                     Type: FreeMonoid(Symbol)
+a3B:='a3::B;
+ 
+
+                                                     Type: FreeMonoid(Symbol)
+b1B:='b1::B;
+ 
+
+                                                     Type: FreeMonoid(Symbol)
+b2B:='b2::B;
+ 
+
+                                                     Type: FreeMonoid(Symbol)
+b3B:='b3::B;
+ 
+
+                                                     Type: FreeMonoid(Symbol)
+
+t1:=tensor(a1+a2,b1)$MxN;
+ 
+
+Type: TensorProduct(Integer,FreeMonoid(Symbol),FreeMonoid(Symbol),XDistributedPolynomial(Symbol,Integer),XDistributedPolynomial(Symbol,Integer))
+t2:=tensor(a3,b2+b3)$MxN;
+ 
+
+Type: TensorProduct(Integer,FreeMonoid(Symbol),FreeMonoid(Symbol),XDistributedPolynomial(Symbol,Integer),XDistributedPolynomial(Symbol,Integer))
+
+t1t2l:List Term :=  [[[a2B*a3B, b1B*b3B]$Product(B,B),1], _
+    [[a2B*a3B, b1B*b2B]$Product(B,B),1], _
+    [[a1B*a3B, b1B*b3B]$Product(B,B),1], _
+    [[a1B*a3B, b1B*b2B]$Product(B,B),1]];
+ 
+
+Type: List(Record(k: Product(FreeMonoid(Symbol),FreeMonoid(Symbol)),c: Integer))
+
+t1t2:=constructOrdered (t1t2l)$MxN;
+ 
+
+Type: TensorProduct(Integer,FreeMonoid(Symbol),FreeMonoid(Symbol),XDistributedPolynomial(Symbol,Integer),XDistributedPolynomial(Symbol,Integer))
+
+testEquals("t1*t2","t1t2")
+ 
+                                                                   Type: Void
+testcase "TensorPower - creation"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+-- $(a_1+a_2)\otimes(b_1+b_2)\otimes(c_1+c_2)$
+
+M:=FreeModule(Integer,Symbol);
+ 
+
+                                                                   Type: Type
+M3 ==> TensorPower(3,Integer,Symbol,M);
+ 
+                                                                   Type: Void
+Term ==> Record(k:Vector Symbol,c:Integer);
+ 
+                                                                   Type: Void
+
+a1:='a1::M;
+ 
+
+                                             Type: FreeModule(Integer,Symbol)
+a2:='a2::M;
+ 
+
+                                             Type: FreeModule(Integer,Symbol)
+a3:='a3::M;
+ 
+
+                                             Type: FreeModule(Integer,Symbol)
+b1:='b1::M;
+ 
+
+                                             Type: FreeModule(Integer,Symbol)
+b2:='b2::M;
+ 
+
+                                             Type: FreeModule(Integer,Symbol)
+b3:='b3::M;
+ 
+
+                                             Type: FreeModule(Integer,Symbol)
+c1:='c1::M;
+ 
+
+                                             Type: FreeModule(Integer,Symbol)
+c2:='c2::M;
+ 
+
+                                             Type: FreeModule(Integer,Symbol)
+c3:='c3::M;
+ 
+
+                                             Type: FreeModule(Integer,Symbol)
+
+
+t1:=tensor([a1,a2,a3])$M3;
+ 
+
+               Type: TensorPower(3,Integer,Symbol,FreeModule(Integer,Symbol))
+t2:=tensor([b1,b2,b3])$M3;
+ 
+
+               Type: TensorPower(3,Integer,Symbol,FreeModule(Integer,Symbol))
+t3:=tensor([c1,c2,c3])$M3;
+ 
+
+               Type: TensorPower(3,Integer,Symbol,FreeModule(Integer,Symbol))
+
+s1:=t1+t2+t3;
+ 
+
+               Type: TensorPower(3,Integer,Symbol,FreeModule(Integer,Symbol))
+s2:=t2+t3+t1;
+ 
+
+               Type: TensorPower(3,Integer,Symbol,FreeModule(Integer,Symbol))
+s3:=t2+t1+t3;
+ 
+
+               Type: TensorPower(3,Integer,Symbol,FreeModule(Integer,Symbol))
+
+testEquals("s1","s2");
+ 
+                                                                   Type: Void
+testEquals("s2","s3");
+ 
+                                                                   Type: Void
+
+
+t:=tensor([a1+a2,b1+b2,c1+c2])$M3;
+ 
+
+               Type: TensorPower(3,Integer,Symbol,FreeModule(Integer,Symbol))
+
+tl:List Term := _
+   [[vector [a2,b2,c2], 1], [vector [a2,b2,c1], 1], [vector [a2,b1,c2], 1],_
+    [vector [a2,b1,c1], 1], [vector [a1,b2,c2], 1], [vector [a1,b2,c1], 1],_
+    [vector [a1,b1,c2], 1], [vector [a1,b1,c1], 1]];
+ 
+
+                             Type: List(Record(k: Vector(Symbol),c: Integer))
+
+testEquals("t","constructOrdered(tl)$M3");
+ 
+                                                                   Type: Void
+testcase "TensorPower - multiplication"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+)if false
+-- Omitting:The product
+-- Omitting:
+-- Omitting:$$
+-- Omitting:(a_1+a_2)\otimes b_1\otimes c_1 \cdot a_3\otimes(b_2+b_3)\otimes(c_2+c_3)
+-- Omitting:$$
+-- Omitting:
+)endif
+
+B := FreeMonoid Symbol;
+ 
+
+                                                                   Type: Type
+M:=XDistributedPolynomial(Symbol,Integer);
+ 
+
+                                                                   Type: Type
+M3:= TensorPower(3,Integer,B,M);
+ 
+
+                                                                   Type: Type
+Term:= Record(k:Vector B,c:Integer);
+ 
+
+                                                                   Type: Type
+
+a1:='a1::M;
+ 
+
+                                 Type: XDistributedPolynomial(Symbol,Integer)
+a2:='a2::M;
+ 
+
+                                 Type: XDistributedPolynomial(Symbol,Integer)
+a3:='a3::M;
+ 
+
+                                 Type: XDistributedPolynomial(Symbol,Integer)
+b1:='b1::M;
+ 
+
+                                 Type: XDistributedPolynomial(Symbol,Integer)
+b2:='b2::M;
+ 
+
+                                 Type: XDistributedPolynomial(Symbol,Integer)
+b3:='b3::M;
+ 
+
+                                 Type: XDistributedPolynomial(Symbol,Integer)
+c1:='c1::M;
+ 
+
+                                 Type: XDistributedPolynomial(Symbol,Integer)
+c2:='c2::M;
+ 
+
+                                 Type: XDistributedPolynomial(Symbol,Integer)
+c3:='c3::M;
+ 
+
+                                 Type: XDistributedPolynomial(Symbol,Integer)
+
+a1B:='a1::B;
+ 
+
+                                                     Type: FreeMonoid(Symbol)
+a2B:='a2::B;
+ 
+
+                                                     Type: FreeMonoid(Symbol)
+a3B:='a3::B;
+ 
+
+                                                     Type: FreeMonoid(Symbol)
+b1B:='b1::B;
+ 
+
+                                                     Type: FreeMonoid(Symbol)
+b2B:='b2::B;
+ 
+
+                                                     Type: FreeMonoid(Symbol)
+b3B:='b3::B;
+ 
+
+                                                     Type: FreeMonoid(Symbol)
+c1B:='c1::B;
+ 
+
+                                                     Type: FreeMonoid(Symbol)
+c2B:='c2::B;
+ 
+
+                                                     Type: FreeMonoid(Symbol)
+c3B:='c3::B;
+ 
+
+                                                     Type: FreeMonoid(Symbol)
+
+t1:=tensor([a1+a2,b1,c1])$M3;
+ 
+
+Type: TensorPower(3,Integer,FreeMonoid(Symbol),XDistributedPolynomial(Symbol,Integer))
+t2:=tensor([a3,b2+b3,c2+c3])$M3;
+ 
+
+Type: TensorPower(3,Integer,FreeMonoid(Symbol),XDistributedPolynomial(Symbol,Integer))
+
+
+t1t2l:List Term:=   [[vector [a2B * a3B,b1B * b3B,c1B * c3B], 1], [vector [a2B * a3B,b1B * b3B,c1B * c2B], 1],_
+    [vector [a2B * a3B,b1B * b2B,c1B * c3B], 1], [vector [a2B * a3B,b1B * b2B,c1B * c2B], 1],_
+    [vector [a1B * a3B,b1B * b3B,c1B * c3B], 1], [vector [a1B * a3B,b1B * b3B,c1B * c2B], 1],_
+    [vector [a1B * a3B,b1B * b2B,c1B * c3B], 1], [vector [a1B * a3B,b1B * b2B,c1B * c2B], 1]];
+ 
+
+                 Type: List(Record(k: Vector(FreeMonoid(Symbol)),c: Integer))
+
+t1t2:=constructOrdered (t1t2l)$M3;
+ 
+
+Type: TensorPower(3,Integer,FreeMonoid(Symbol),XDistributedPolynomial(Symbol,Integer))
+
+testEquals("t1*t2","t1t2")
+ 
+                                                                   Type: Void
+testcase "Tensor - linear maps"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+-- The trace $\tau(x) = \delta_{x,1}$ on the free monoid.
+
+R:=Polynomial Integer;
+ 
+
+                                                                   Type: Type
+B := FreeMonoid Symbol;
+ 
+
+                                                                   Type: Type
+M:=XDistributedPolynomial(Symbol,R);
+ 
+
+                                                                   Type: Type
+M3:= TensorPower(3,R,B,M);
+ 
+
+                                                                   Type: Type
+Term:= Record(k:Vector B,c:R);
+ 
+
+                                                                   Type: Type
+
+trace:List B -> R
+ 
+                                                                   Type: Void
+trace(bb:List B):R ==
+    every?(one?, bb) => 1
+    0
+ 
+   Function declaration trace : List(FreeMonoid(Symbol)) -> Polynomial(
+      Integer) has been added to workspace.
+                                                                   Type: Void
+
+traceB:Vector B -> R
+ 
+                                                                   Type: Void
+traceB(bb:Vector B):R ==
+    every?(one?, parts bb) => 1
+    0
+ 
+   Function declaration traceB : Vector(FreeMonoid(Symbol)) -> 
+      Polynomial(Integer) has been added to workspace.
+                                                                   Type: Void
+
+
+
+e:=1::M
+ 
+
+   (11)  1
+                     Type: XDistributedPolynomial(Symbol,Polynomial(Integer))
+a1:=('a1::B)::M;
+ 
+
+                     Type: XDistributedPolynomial(Symbol,Polynomial(Integer))
+a2:=('a2::B)::M;
+ 
+
+                     Type: XDistributedPolynomial(Symbol,Polynomial(Integer))
+b1:=('b1::B)::M;
+ 
+
+                     Type: XDistributedPolynomial(Symbol,Polynomial(Integer))
+b2:=('b2::B)::M;
+ 
+
+                     Type: XDistributedPolynomial(Symbol,Polynomial(Integer))
+c1:=('c1::B)::M;
+ 
+
+                     Type: XDistributedPolynomial(Symbol,Polynomial(Integer))
+c2:=('c2::B)::M;
+ 
+
+                     Type: XDistributedPolynomial(Symbol,Polynomial(Integer))
+
+s0:=s0::R;
+ 
+
+                                                    Type: Polynomial(Integer)
+s1:=s1::R;
+ 
+
+                                                    Type: Polynomial(Integer)
+s2:=s2::R;
+ 
+
+                                                    Type: Polynomial(Integer)
+t0:=t0::R;
+ 
+
+                                                    Type: Polynomial(Integer)
+t1:=t1::R;
+ 
+
+                                                    Type: Polynomial(Integer)
+t2:=t2::R;
+ 
+
+                                                    Type: Polynomial(Integer)
+u0:=u0::R;
+ 
+
+                                                    Type: Polynomial(Integer)
+u1:=u1::R;
+ 
+
+                                                    Type: Polynomial(Integer)
+u2:=u2::R;
+ 
+
+                                                    Type: Polynomial(Integer)
+
+a:= s0*e + s1*a1 + s2*a2;
+ 
+
+                     Type: XDistributedPolynomial(Symbol,Polynomial(Integer))
+b:= t0*e + t1*b1 + t2*b2;
+ 
+
+                     Type: XDistributedPolynomial(Symbol,Polynomial(Integer))
+c:= u0*e + u1*c1 + u2*c2;
+ 
+
+                     Type: XDistributedPolynomial(Symbol,Polynomial(Integer))
+
+tt:=tensor([a,b,c])$M3;
+ 
+
+Type: TensorPower(3,Polynomial(Integer),FreeMonoid(Symbol),XDistributedPolynomial(Symbol,Polynomial(Integer)))
+
+-- from  TensorPowerFunctions2
+testEquals("linearExtend(trace,tt)","s0*t0*u0");
+ 
+   Compiling function trace with type List(FreeMonoid(Symbol)) -> 
+      Polynomial(Integer) 
+                                                                   Type: Void
+
+-- from FreeModule
+testEquals("linearExtend(traceB,tt)","s0*t0*u0");
+ 
+   Compiling function traceB with type Vector(FreeMonoid(Symbol)) -> 
+      Polynomial(Integer) 
+                                                                   Type: Void
+expected() ==
+    messagePrint("testsuite | testcases: failed (total) | tests: failed (total)")$OutputForm
+    messagePrint("FreeModule                  0     (2)               0     (5)")$OutputForm
+    messagePrint("Tensor                      0     (5)               0    (11)")$OutputForm
+ 
+                                                                   Type: Void
+
+
+
+
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+   =============================================================================
+   WARNINGS:
+   Testsuite: FreeModule
+   Testcase: MonoidRing
+   test: 3
+   testing in a domain without InputForm!
+   Testsuite: Tensor
+   Testcase: TensorProduct addition
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: Tensor
+   Testcase: TensorProduct addition
+   test: 2
+   testing in a domain without InputForm!
+   Testsuite: Tensor
+   Testcase: TensorProduct addition
+   test: 3
+   testing in a domain without InputForm!
+   Testsuite: Tensor
+   Testcase: TensorProduct addition
+   test: 4
+   testing in a domain without InputForm!
+   Testsuite: Tensor
+   Testcase: TensorProduct multiplication
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: Tensor
+   Testcase: TensorPower - creation
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: Tensor
+   Testcase: TensorPower - creation
+   test: 2
+   testing in a domain without InputForm!
+   Testsuite: Tensor
+   Testcase: TensorPower - creation
+   test: 3
+   testing in a domain without InputForm!
+   Testsuite: Tensor
+   Testcase: TensorPower - multiplication
+   test: 1
+   testing in a domain without InputForm!
+
+   =============================================================================
+   Testsuite: FreeModule
+     failed (total): 0 (2)
+   =============================================================================
+   Testsuite: Tensor
+     failed (total): 0 (5)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   FreeModule                  0     (2)               0     (5)
+   Tensor                      0     (5)               0    (11)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 16
+                                                                   Type: Void
+expected()
+ 
+   Compiling function expected with type () -> Void 
+   testsuite | testcases: failed (total) | tests: failed (total)
+   FreeModule                  0     (2)               0     (5)
+   Tensor                      0     (5)               0    (11)
+                                                                   Type: Void
+)quit
+ 

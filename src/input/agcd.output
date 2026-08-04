@@ -1,0 +1,795 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read agcd.input
+ 
+)set break resume
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+
+testsuite "algebraic gcd"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testcase "single extension"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+-- Setup gcd routines
+pA := U32Vector
+ 
+
+   (2)  U32Vector
+                                                                   Type: Type
+pPA := PrimitiveArray(pA)
+ 
+
+   (3)  PrimitiveArray(U32Vector)
+                                                                   Type: Type
+mD1 := Record(svz : Symbol, sm : pA, sp : Integer)
+ 
+
+   (4)  Record(svz:Symbol,sm:U32Vector,sp:Integer)
+                                                                   Type: Type
+mOP := ModularAlgebraicGcdTools2
+ 
+
+   (5)  ModularAlgebraicGcdTools2
+                                                                   Type: Type
+mGCD := ModularAlgebraicGcd(pPA, mD1, mOP)
+ 
+
+   (6)
+   ModularAlgebraicGcd
+      PrimitiveArray(U32Vector)
+  ,
+      Record(svz:Symbol,sm:U32Vector,sp:Integer)
+  ,
+      ModularAlgebraicGcdTools2
+                                                                   Type: Type
+
+-- helper to prepare data
+mreduction(x, z, m) == multivariate(pseudoRemainder(univariate(x, z), univariate(m, z)), z)
+ 
+                                                                   Type: Void
+
+-- case 1
+p1 := 3*t*x^2 + (-2*t^2 + 3*t)*z*x + 15*x + 15*z - 2*t^3
+ 
+
+               2                       2             3
+   (8)  ((- 2 t  + 3 t)x + 15)z + 3 t x  + 15 x - 2 t
+                                                    Type: Polynomial(Integer)
+q1 := 3*t*z*x^2 + 15*z*x + (-2*t^3 + 3*t)*x - 2*t^2*z + 15
+ 
+
+              2             2           3
+   (9)  (3 t x  + 15 x - 2 t )z + (- 2 t  + 3 t)x + 15
+                                                    Type: Polynomial(Integer)
+m := z^2 - t
+ 
+
+          2
+   (10)  z  - t
+                                                    Type: Polynomial(Integer)
+
+g1 := algebraicGcd(p1, q1, [m], [t], x, [z])$mGCD
+ 
+
+              2
+   (11)  - 2 t z + 3 t x + 15
+                                                    Type: Polynomial(Integer)
+testEquals("g1", "-2*t^2*z+(3*t*x+15)")
+ 
+                                                                   Type: Void
+
+p5 := mreduction(p1^5, z, m)
+ 
+   Compiling function mreduction with type (Polynomial(Integer), 
+      Variable(z), Polynomial(Integer)) -> Polynomial(Integer) 
+
+   (13)
+                 6         5  9             5          4  8
+         (- 810 t  + 1215 t )x  + (- 16200 t  + 30375 t )x
+       + 
+                 9         8         7         6           4           3  7
+         (- 720 t  + 5400 t  - 8100 t  + 2430 t  - 121500 t  + 303750 t )x
+       + 
+                       8          7           6          5           3
+               - 7200 t  + 81000 t  - 162000 t  + 60750 t  - 405000 t
+             + 
+                        2
+               1518750 t
+        *
+            6
+           x
+       + 
+                   12         11         10          9         8          7
+             - 32 t   + 1200 t   - 7200 t   + 10800 t  - 4050 t  - 17757 t
+           + 
+                     6            5           4           2
+             405000 t  - 1215000 t  + 607500 t  - 506250 t  + 3796875 t
+        *
+            5
+           x
+       + 
+                   10          9           8          7         6           5
+             6000 t   - 72000 t  + 162000 t  - 81000 t  + 6075 t  + 675000 t
+           + 
+                        4            3
+             - 4050000 t  + 3037500 t  + 3796875
+        *
+            4
+           x
+       + 
+                    13         12         11         10           8           7
+             - 320 t   + 2400 t   - 3600 t   + 1080 t   - 180000 t  + 810000 t
+           + 
+                       6          5            3            2
+             - 607500 t  + 60750 t  - 5062500 t  + 7593750 t
+        *
+            3
+           x
+       + 
+                    11          10          9            6            5
+             12000 t   - 36000 t   + 16200 t  + 1350000 t  - 2025000 t
+           + 
+                     4
+             303750 t  + 7593750 t
+        *
+            2
+           x
+       + 
+                 14        13          9          8            4           3
+         (- 160 t   + 240 t   - 90000 t  + 81000 t  - 2531250 t  + 759375 t )x
+       + 
+               12           7           2
+         1200 t   + 135000 t  + 759375 t
+    *
+       z
+   + 
+          5 10         4 9          8         7         6          3  8
+     243 t x   + 6075 t x  + (1080 t  - 4050 t  + 2430 t  + 60750 t )x
+   + 
+             7          6          5           2  7
+     (16200 t  - 81000 t  + 60750 t  + 303750 t )x
+   + 
+              11         10          9         8         7          6
+         240 t   - 3600 t   + 10800 t  - 8100 t  + 1215 t  + 81000 t
+       + 
+                   5           4
+         - 607500 t  + 607500 t  + 759375 t
+    *
+        6
+       x
+   + 
+               10          9           8           7          6           5
+         1200 t   - 36000 t  + 162000 t  - 162000 t  + 30375 t  + 135000 t
+       + 
+                    4            3
+         - 2025000 t  + 3037500 t  + 759375
+    *
+        5
+       x
+   + 
+                13         12         11         10        9          8
+         - 160 t   + 2400 t   - 7200 t   + 5400 t   - 810 t  - 90000 t
+       + 
+                 7            6           5            3            2
+         810000 t  - 1215000 t  + 303750 t  - 2531250 t  + 7593750 t
+    *
+        4
+       x
+   + 
+                11          10          9          8            6            5
+         12000 t   - 72000 t   + 81000 t  - 16200 t  + 1350000 t  - 4050000 t
+       + 
+                  4
+         1518750 t  + 7593750 t
+    *
+        3
+       x
+   + 
+                14         13        12           9           8           7
+         - 320 t   + 1200 t   - 720 t   - 180000 t  + 405000 t  - 121500 t
+       + 
+                    4            3
+         - 5062500 t  + 3796875 t
+    *
+        2
+       x
+   + 
+            12         11           7           6            2         15
+     (6000 t   - 7200 t   + 675000 t  - 405000 t  + 3796875 t )x - 32 t
+   + 
+              10           5
+     - 18000 t   - 506250 t
+                                                    Type: Polynomial(Integer)
+q4 := mreduction(q1^4, z, m)
+ 
+
+   (14)
+                 7        5  7            6         4  6
+         (- 216 t  + 324 t )x  + (- 3240 t  + 6480 t )x
+       + 
+                10        8         6          5        4          3  5
+         (- 96 t   + 864 t  - 1296 t  - 16200 t  + 324 t  + 48600 t )x
+       + 
+                 9         7          5          4         3           2  4
+         (- 480 t  + 8640 t  - 19440 t  - 27000 t  + 6480 t  + 162000 t )x
+       + 
+                 11        9        7          6        5          4          2
+             64 t   - 576 t  + 864 t  + 21600 t  - 216 t  - 97200 t  + 48600 t
+           + 
+             202500 t
+        *
+            3
+           x
+       + 
+                  8         6         4           3             2
+         (- 2880 t  + 8640 t  - 3240 t  - 162000 t  + 162000 t)x
+       + 
+              10       8          5          3                   7          2
+         (64 t   - 96 t  + 21600 t  - 16200 t  + 202500)x - 480 t  - 27000 t
+    *
+       z
+   + 
+         6 8         5 7         9        7        5          4  6
+     81 t x  + 1620 t x  + (216 t  - 864 t  + 486 t  + 12150 t )x
+   + 
+            8          6         4          3  5
+     (2160 t  - 12960 t  + 9720 t  + 40500 t )x
+   + 
+             12        10         8         7        6          5       4
+         16 t   - 384 t   + 1296 t  + 5400 t  - 864 t  - 64800 t  + 81 t
+       + 
+                3          2
+         72900 t  + 50625 t
+    *
+        4
+       x
+   + 
+              9          7          5           4         3           2  3
+     (- 1920 t  + 12960 t  - 12960 t  - 108000 t  + 1620 t  + 243000 t )x
+   + 
+          11        9        7          6          4          2             2
+     (96 t   - 384 t  + 216 t  + 32400 t  - 64800 t  + 12150 t  + 303750 t)x
+   + 
+              8         6           3                   10         5
+     (- 1920 t  + 2160 t  - 108000 t  + 40500 t)x + 16 t   + 5400 t  + 50625
+                                                    Type: Polynomial(Integer)
+g4 := algebraicGcd(p5, q4, [m], [t], x, [z])$mGCD
+ 
+
+   (15)
+             5 3         4 2          8          3          7          2
+     (- 216 t x  - 3240 t x  + (- 96 t  - 16200 t )x - 480 t  - 27000 t )z
+   + 
+         4 4         3 3         7          2  2          6                   10
+     81 t x  + 1620 t x  + (216 t  + 12150 t )x  + (2160 t  + 40500 t)x + 16 t
+   + 
+           5
+     5400 t  + 50625
+                                                    Type: Polynomial(Integer)
+testEquals("g4", "mreduction(g1^4, z, m)")
+ 
+                                                                   Type: Void
+
+-- from clicliclic on sci.math.symbolic
+pol := (8*b*e^2 - 4*c*d*e + d^3)*x^6 + 2*(16*a*e^2 + 2*b*d*e - _
+ 4*c^2*e + c*d^2)*x^5 + 5*(8*a*d*e - 4*b*c*e + b*d^2)*x^4 _
+ + 20*(a*d^2 - b^2*e)*x^3 - 5*(8*a*b*e - 4*a*c*d + b^2*d)*x^2 _
+ - 2*(16*a^2*e + 2*a*b*d - 4*a*c^2 + b^2*c)*x _
+ - 8*a^2*d + 4*a*b*c - b^3
+ 
+
+   (17)
+           2              3  6          2               2          2  5
+     (8 b e  - 4 c d e + d )x  + (32 a e  + (4 b d - 8 c )e + 2 c d )x
+   + 
+                                2  4          2          2  3
+     ((40 a d - 20 b c)e + 5 b d )x  + (- 20 b e + 20 a d )x
+   + 
+                                2    2          2                   2      2
+     (- 40 a b e + (20 a c - 5 b )d)x  + (- 32 a e - 4 a b d + 8 a c  - 2 b c)x
+   + 
+          2               3
+     - 8 a d + 4 a b c - b
+                                                    Type: Polynomial(Integer)
+
+cc := 64*a^3*e^3 - 48*a^2*b*d*e^2 - 64*a^2*c^2*e^2 + 48*a^2*c*d^2*e _
+ - 8*a^2*d^4 + 48*a*b^2*c*e^2 - 4*a*b^2*d^2*e - 16*a*b*c^2*d*e
+ + 4*a*b*c*d^3 - 8*b^4*e^2 + 4*b^3*c*d*e - b^3*d^3
+ 
+
+   (18)
+         3 3          2          2 2         2       4  2
+     64 a e  + (- 48 a b d - 64 a c  + 48 a b c - 8 b )e
+   + 
+         2         2  2              2      3           2 4               3  3
+   ((48 a c - 4 a b )d  + (- 16 a b c  + 4 b c)d)e - 8 a d  + (4 a b c - b )d
+                                                    Type: Polynomial(Integer)
+
+lc1 := leadingCoefficient(univariate(pol, c))
+ 
+
+                5
+   (19)  - 8 e x  + 8 a x
+                                                    Type: Polynomial(Integer)
+lc2 := leadingCoefficient(univariate(cc, c))
+ 
+
+               2 2
+   (20)  - 64 a e  - 16 a b d e
+                                                    Type: Polynomial(Integer)
+lcg := gcd(lc1, lc2)
+ 
+
+   (21)  8
+                                                    Type: Polynomial(Integer)
+lc1 := lc1 exquo lcg
+ 
+
+              5
+   (22)  - e x  + a x
+                                         Type: Union(Polynomial(Integer),...)
+lc2 := lc2 exquo lcg
+ 
+
+              2 2
+   (23)  - 8 a e  - 2 a b d e
+                                         Type: Union(Polynomial(Integer),...)
+pol := lc2*pol - lc1*cc
+ 
+
+   (24)
+               2   4        2          2    3         2 3            2  2
+         - 64 a b e  + (32 a c - 16 a b )d e  + (- 8 a d  + 8 a b c d )e
+       + 
+                  4
+         - 2 a b d e
+    *
+        6
+       x
+   + 
+                3 4           2            2       4  3
+         - 192 a e  + (- 144 a b d + 48 a b c - 8 b )e
+       + 
+               2          2  2      3     2         2 4    3 3
+         ((32 a c - 12 a b )d  + 4 b c d)e  + (- 8 a d  - b d )e
+    *
+        5
+       x
+   + 
+              3         2     3           2   2         2     2         2 3   4
+     ((- 320 a d + 160 a b c)e  + (- 120 a b d  + 40 a b c d)e  - 10 a b d e)x
+   + 
+           2 2 3           3 2         3   2       2   3   3
+     (160 a b e  + (- 160 a d  + 40 a b d)e  - 40 a b d e)x
+   + 
+           3   3           3         2 2    2          2            3  2   2
+     (320 a b e  + (- 160 a c + 120 a b )d e  + (- 40 a b c + 10 a b )d e)x
+   + 
+              4 3         3          2 2         4  2          3        2 2  2
+         192 a e  + (144 a b d - 32 a b c + 8 a b )e  + (- 48 a c + 12 a b )d e
+       + 
+            3 4         2         3  3
+         8 a d  + (- 4 a b c + a b )d
+    *
+       x
+   + 
+          4        3         2 3  2        3   2         2 2         4
+     (64 a d - 32 a b c + 8 a b )e  + (16 a b d  + (- 8 a b c + 2 a b )d)e
+                                                    Type: Polynomial(Integer)
+testEquals("degree(pol, c)", "1")
+ 
+                                                                   Type: Void
+
+npol := resultant(univariate(pol, c), univariate(cc, c));
+ 
+
+                                                    Type: Polynomial(Integer)
+nfac := factor(npol);
+ 
+
+                                          Type: Factored(Polynomial(Integer))
+nfac1 := factors(nfac).4.factor;
+ 
+
+                                                    Type: Polynomial(Integer)
+fac1 := algebraicGcd(pol, nfac1, [cc], [a, b, d, e], x, [c])$mGCD
+ 
+
+   (29)
+          2 2              2        2                  3
+     (16 a e  - 4 a b d e)x  + (16 a d - 16 a b c + 4 b )e x
+   + 
+            2         2        2 2                 3
+     (- 16 a c + 4 a b )e + 8 a d  + (- 4 a b c + b )d
+                                                    Type: Polynomial(Integer)
+testEquals("degree(fac1, x)", "2")
+ 
+                                                                   Type: Void
+
+-- Compute the other factor using division
+fF := Fraction(Polynomial(Integer))
+ 
+
+   (31)  Fraction(Polynomial(Integer))
+                                                                   Type: Type
+ccf := univariate(cc, c)::SUP(fF)
+ 
+
+   (32)
+            2 2               2          2 2        2 2      3             3
+     (- 64 a e  - 16 a b d e)?  + (48 a b e  + (48 a d  + 4 b d)e + 4 a b d )?
+   + 
+         3 3          2         4  2        2 2       2 4    3 3
+     64 a e  + (- 48 a b d - 8 b )e  - 4 a b d e - 8 a d  - b d
+              Type: SparseUnivariatePolynomial(Fraction(Polynomial(Integer)))
+aE := SAE(fF, SUP(fF), ccf)
+ 
+
+   (33)
+   SimpleAlgebraicExtension
+      Fraction(Polynomial(Integer))
+  ,
+      SparseUnivariatePolynomial(Fraction(Polynomial(Integer)))
+  ,
+               2 2               2
+        (- 64 a e  - 16 a b d e)?
+      + 
+               2 2        2 2      3             3         3 3
+        (48 a b e  + (48 a d  + 4 b d)e + 4 a b d )? + 64 a e
+      + 
+               2         4  2        2 2       2 4    3 3
+        (- 48 a b d - 8 b )e  - 4 a b d e - 8 a d  - b d
+                                                                   Type: Type
+avar := create()$SingletonAsOrderedSet
+ 
+
+   (34)  "?"
+                                                  Type: SingletonAsOrderedSet
+to_aE(t : fF) : aE == reduce(univariate(t, c)::SUP(fF))$aE
+ 
+   Function declaration to_aE : Fraction(Polynomial(Integer)) -> 
+      SimpleAlgebraicExtension(Fraction(Polynomial(Integer)),
+      SparseUnivariatePolynomial(Fraction(Polynomial(Integer))),((-64)*
+      a^2*e^2+(-16)*a*b*d*e)*?^2+(48*a*b^2*e^2+(48*a^2*d^2+4*b^3*d)*e+4
+      *a*b*d^3)*?+(64*a^3*e^3+((-48)*a^2*b*d+(-8)*b^4)*e^2+(-4)*a*b^2*d
+      ^2*e+((-8)*a^2*d^4+(-(b^3))*d^3))) has been added to workspace.
+                                                                   Type: Void
+polf := map(to_aE, univariate(pol, x)::SUP(fF));
+ 
+   Compiling function to_aE with type Fraction(Polynomial(Integer)) -> 
+      SimpleAlgebraicExtension(Fraction(Polynomial(Integer)),
+      SparseUnivariatePolynomial(Fraction(Polynomial(Integer))),((-64)*
+      a^2*e^2+(-16)*a*b*d*e)*?^2+(48*a*b^2*e^2+(48*a^2*d^2+4*b^3*d)*e+4
+      *a*b*d^3)*?+(64*a^3*e^3+((-48)*a^2*b*d+(-8)*b^4)*e^2+(-4)*a*b^2*d
+      ^2*e+((-8)*a^2*d^4+(-(b^3))*d^3))) 
+
+Type: SparseUnivariatePolynomial(SimpleAlgebraicExtension(Fraction(Polynomial(Integer)),SparseUnivariatePolynomial(Fraction(Polynomial(Integer))),((-64)*a^2*e^2+(-16)*a*b*d*e)*?^2+(48*a*b^2*e^2+(48*a^2*d^2+4*b^3*d)*e+4*a*b*d^3)*?+(64*a^3*e^3+((-48)*a^2*b*d+(-8)*b^4)*e^2+(-4)*a*b^2*d^2*e+((-8)*a^2*d^4+(-(b^3))*d^3))))
+facf1 := map(to_aE, univariate(fac1, x)::SUP(fF));
+ 
+
+Type: SparseUnivariatePolynomial(SimpleAlgebraicExtension(Fraction(Polynomial(Integer)),SparseUnivariatePolynomial(Fraction(Polynomial(Integer))),((-64)*a^2*e^2+(-16)*a*b*d*e)*?^2+(48*a*b^2*e^2+(48*a^2*d^2+4*b^3*d)*e+4*a*b*d^3)*?+(64*a^3*e^3+((-48)*a^2*b*d+(-8)*b^4)*e^2+(-4)*a*b^2*d^2*e+((-8)*a^2*d^4+(-(b^3))*d^3))))
+qr := divide(polf, facf1);
+ 
+
+Type: Record(quotient: SparseUnivariatePolynomial(SimpleAlgebraicExtension(Fraction(Polynomial(Integer)),SparseUnivariatePolynomial(Fraction(Polynomial(Integer))),((-64)*a^2*e^2+(-16)*a*b*d*e)*?^2+(48*a*b^2*e^2+(48*a^2*d^2+4*b^3*d)*e+4*a*b*d^3)*?+(64*a^3*e^3+((-48)*a^2*b*d+(-8)*b^4)*e^2+(-4)*a*b^2*d^2*e+((-8)*a^2*d^4+(-(b^3))*d^3)))),remainder: SparseUnivariatePolynomial(SimpleAlgebraicExtension(Fraction(Polynomial(Integer)),SparseUnivariatePolynomial(Fraction(Polynomial(Integer))),((-64)*a^2*e^2+(-16)*a*b*d*e)*?^2+(48*a*b^2*e^2+(48*a^2*d^2+4*b^3*d)*e+4*a*b*d^3)*?+(64*a^3*e^3+((-48)*a^2*b*d+(-8)*b^4)*e^2+(-4)*a*b^2*d^2*e+((-8)*a^2*d^4+(-(b^3))*d^3)))))
+testEquals("qr.remainder", "0")
+ 
+                                                                   Type: Void
+facf2 := qr.quotient;
+ 
+
+Type: SparseUnivariatePolynomial(SimpleAlgebraicExtension(Fraction(Polynomial(Integer)),SparseUnivariatePolynomial(Fraction(Polynomial(Integer))),((-64)*a^2*e^2+(-16)*a*b*d*e)*?^2+(48*a*b^2*e^2+(48*a^2*d^2+4*b^3*d)*e+4*a*b*d^3)*?+(64*a^3*e^3+((-48)*a^2*b*d+(-8)*b^4)*e^2+(-4)*a*b^2*d^2*e+((-8)*a^2*d^4+(-(b^3))*d^3))))
+from_aE(t : aE) : fF == eval(lift(t), avar, c)
+ 
+   Function declaration from_aE : SimpleAlgebraicExtension(Fraction(
+      Polynomial(Integer)),SparseUnivariatePolynomial(Fraction(
+      Polynomial(Integer))),((-64)*a^2*e^2+(-16)*a*b*d*e)*?^2+(48*a*b^2
+      *e^2+(48*a^2*d^2+4*b^3*d)*e+4*a*b*d^3)*?+(64*a^3*e^3+((-48)*a^2*b
+      *d+(-8)*b^4)*e^2+(-4)*a*b^2*d^2*e+((-8)*a^2*d^4+(-(b^3))*d^3)))
+       -> Fraction(Polynomial(Integer)) has been added to workspace.
+                                                                   Type: Void
+fac2fF := retract(eval(map(from_aE, facf2), avar, x))@fF;
+ 
+   Compiling function from_aE with type SimpleAlgebraicExtension(
+      Fraction(Polynomial(Integer)),SparseUnivariatePolynomial(Fraction
+      (Polynomial(Integer))),((-64)*a^2*e^2+(-16)*a*b*d*e)*?^2+(48*a*b^
+      2*e^2+(48*a^2*d^2+4*b^3*d)*e+4*a*b*d^3)*?+(64*a^3*e^3+((-48)*a^2*
+      b*d+(-8)*b^4)*e^2+(-4)*a*b^2*d^2*e+((-8)*a^2*d^4+(-(b^3))*d^3)))
+       -> Fraction(Polynomial(Integer)) 
+
+                                          Type: Fraction(Polynomial(Integer))
+fac2 := numer(fac2fF)
+ 
+
+   (43)
+                3   4        3     3          3 3         3 2  2        2   3
+         - 256 a b e  + 128 a c d e  + (- 32 a d  + 16 a b d )e  - 8 a b c d e
+       + 
+              2 5
+         2 a b d
+    *
+        4
+       x
+   + 
+                4 4          2 2          4  3
+         - 768 a e  + (- 64 a b c + 32 a b )e
+       + 
+              2 2 2            3       5    2         3 3      4   2      4 4
+         (64 a b d  + (- 32 a b c + 8 b )d)e  + (8 a b d  - 4 b c d )e + b d
+    *
+        3
+       x
+   + 
+                 4         3           2 3  3
+         (- 384 a d - 384 a b c + 192 a b )e
+       + 
+              3   2           2 2          4    2        2 2 3         3   2
+         (96 a b d  + (- 192 a b c + 48 a b )d)e  + (72 a b d  - 24 a b c d )e
+       + 
+              3 4
+         6 a b d
+    *
+        2
+       x
+   + 
+                 4         3 2  3         4 2           3          2 3    2
+         (- 768 a c + 384 a b )e  + (128 a d  + (- 384 a b c + 96 a b )d)e
+       + 
+              3   3       2 2   2         2 2 4
+         (96 a b d  - 48 a b c d )e + 16 a b d
+    *
+       x
+   + 
+          4   3           4        3 2    2
+     128 a b e  + (- 256 a c + 64 a b )d e
+   + 
+          4 3          3         2 3  2         3   4
+     (64 a d  + (- 64 a b c + 8 a b )d )e + 16 a b d
+                                                    Type: Polynomial(Integer)
+den := denom(fac2fF)
+ 
+
+             3 2       2             2 2
+   (44)  64 a e  - 32 a b d e + 4 a b d
+                                                    Type: Polynomial(Integer)
+testEquals("gcd(den*pol - fac1*fac2, cc)", "cc")
+ 
+                                                                   Type: Void
+
+testcase "multiple extensions"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+mP := Polynomial(Integer)
+ 
+
+   (2)  Polynomial(Integer)
+                                                                   Type: Type
+mPU := SparseUnivariatePolynomial(mP)
+ 
+
+   (3)  SparseUnivariatePolynomial(Polynomial(Integer))
+                                                                   Type: Type
+mD := Record(svz : List(Symbol), sm : List(mP), msizes : List(Integer), sp : Integer)
+ 
+
+   (4)
+   Record
+      svz:List(Symbol)
+  ,
+      sm:List(Polynomial(Integer))
+  ,
+      msizes:List(Integer)
+  ,
+      sp:Integer
+                                                                   Type: Type
+mOP := ModularAlgebraicGcdTools3
+ 
+
+   (5)  ModularAlgebraicGcdTools3
+                                                                   Type: Type
+mGCD := ModularAlgebraicGcd(mPU, mD, mOP)
+ 
+
+   (6)
+   ModularAlgebraicGcd
+      SparseUnivariatePolynomial(Polynomial(Integer))
+  ,
+      Record
+         svz:List(Symbol)
+     ,
+         sm:List(Polynomial(Integer))
+     ,
+         msizes:List(Integer)
+     ,
+         sp:Integer
+  ,
+      ModularAlgebraicGcdTools3
+                                                                   Type: Type
+
+m1 := (t + z2 + 1)*z1^2 - 3*z2 + t
+ 
+
+           2                   2
+   (7)  (z1  - 3)z2 + (t + 1)z1  + t
+                                                    Type: Polynomial(Integer)
+m2 := (t + 1)*z2^2 - 7*t
+ 
+
+                 2
+   (8)  (t + 1)z2  - 7 t
+                                                    Type: Polynomial(Integer)
+g := x - t - z1 - z2
+ 
+
+   (9)  - z2 - z1 + x - t
+                                                    Type: Polynomial(Integer)
+g2 := algebraicGcd(g*g, g*g, [m1, m2], [t], x, [z1, z2])$mGCD
+ 
+
+   (10)
+             4      3      2                      4      3      2
+         (2 t  + 8 t  - 2 t  - 6 t + 2)z1 + (- 2 t  - 8 t  + 2 t  + 6 t - 2)x
+       + 
+            5      4      3      2
+         2 t  + 8 t  + 2 t  + 5 t  + 12 t + 3
+    *
+       z2
+   + 
+            4      3      2                  5      4      3      2
+     ((- 2 t  - 8 t  + 2 t  + 6 t - 2)x + 2 t  + 8 t  - 2 t  - 6 t  + 2 t)z1
+   + 
+       4      3    2            2         5      4      3      2            6
+     (t  + 4 t  - t  - 3 t + 1)x  + (- 2 t  - 8 t  + 2 t  + 6 t  - 2 t)x + t
+   + 
+        5      4       3       2
+     4 t  + 5 t  + 15 t  - 51 t  - 15 t
+                                                    Type: Polynomial(Integer)
+
+testEquals("degree(g2, x)", "2")
+ 
+                                                                   Type: Void
+
+a := t*(x + z1) + z2
+ 
+
+   (12)  z2 + t z1 + t x
+                                                    Type: Polynomial(Integer)
+b := x + t*z1 - z2
+ 
+
+   (13)  - z2 + t z1 + x
+                                                    Type: Polynomial(Integer)
+
+f1 := a^2*g^2
+ 
+
+   (14)
+       4                                     3
+     z2  + ((2 t + 2)z1 + (2 t - 2)x + 2 t)z2
+   + 
+           2             2        2            2              2            2
+         (t  + 4 t + 1)z1  + ((2 t  - 2)x + 4 t  + 2 t)z1 + (t  - 4 t + 1)x
+       + 
+             2            2
+         (4 t  - 2 t)x + t
+    *
+         2
+       z2
+   + 
+             2         3        2              3      2   2
+         (2 t  + 2 t)z1  + ((2 t  - 2 t)x + 2 t  + 4 t )z1
+       + 
+                2        2      3       3            2        3
+         ((- 2 t  - 2 t)x  + 4 t x + 2 t )z1 + (- 2 t  + 2 t)x
+       + 
+             3      2  2      3
+         (2 t  - 4 t )x  + 2 t x
+    *
+       z2
+   + 
+      2  4      3  3         2 2      3     4   2         3 2      4        2 4
+     t z1  + 2 t z1  + (- 2 t x  + 2 t x + t )z1  + (- 2 t x  + 2 t x)z1 + t x
+   + 
+          3 3    4 2
+     - 2 t x  + t x
+                                                    Type: Polynomial(Integer)
+f2 := b^2*g^2
+ 
+
+   (15)
+       4                                3
+     z2  + ((- 2 t + 2)z1 - 4 x + 2 t)z2
+   + 
+        2             2                    2               2            2   2
+     ((t  - 4 t + 1)z1  + ((6 t - 6)x - 4 t  + 2 t)z1 + 6 x  - 6 t x + t )z2
+   + 
+             2         3          2                  3      2   2
+         (2 t  - 2 t)z1  + ((- 2 t  + 8 t - 2)x + 2 t  - 4 t )z1
+       + 
+                      2       2              3         3        2      2
+         ((- 6 t + 6)x  + (8 t  - 4 t)x - 2 t )z1 - 4 x  + 6 t x  - 2 t x
+    *
+       z2
+   + 
+      2  4          2              3   3
+     t z1  + ((- 2 t  + 2 t)x + 2 t )z1
+   + 
+        2            2         3      2      4   2
+     ((t  - 4 t + 1)x  + (- 2 t  + 4 t )x + t )z1
+   + 
+                3         2        2      3        4        3    2 2
+     ((2 t - 2)x  + (- 4 t  + 2 t)x  + 2 t x)z1 + x  - 2 t x  + t x
+                                                    Type: Polynomial(Integer)
+p1 := algebraicGcd(f1, f1, [m1, m2], [t], x, [z1, z2])$mGCD;
+ 
+
+                                                    Type: Polynomial(Integer)
+gg := algebraicGcd(p1, f2, [m1, m2], [t], x, [z1, z2])$mGCD;
+ 
+
+                                                    Type: Polynomial(Integer)
+
+testEquals("g2 - gg", "0")
+ 
+                                                                   Type: Void
+
+)set output algebra on
+ 
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+   =============================================================================
+   WARNINGS:
+   Testsuite: algebraic gcd
+   Testcase: single extension
+   test: 5
+   testing in a domain without InputForm!
+
+   =============================================================================
+   Testsuite: algebraic gcd
+     failed (total): 0 (2)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   algebraic gcd               0     (2)               0     (8)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 8
+                                                                   Type: Void
+)quit
+ 

@@ -1,0 +1,863 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read gpresent.input
+ 
+-- regression tests for code in gpresent.spad
+
+)set break resume
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+
+)expose GroupPresentation
+ 
+   GroupPresentation is now explicitly exposed in frame initial 
+
+testsuite "gpresent"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+-- first we try each simplification rule in its simplest
+-- form then we try combinations.
+
+testcase "simplification - remove one generator"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+triv := groupPresentation([],[])
+ 
+
+   (2)  <  |  >
+                                                      Type: GroupPresentation
+t1 := simplify(groupPresentation([1],[[1]]))
+ 
+
+   (3)  <  |  >
+                                                      Type: GroupPresentation
+testEquals("triv", "t1")
+ 
+                                                                   Type: Void
+
+testcase "simplification - repeated remove one generator"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+triv := groupPresentation([],[])
+ 
+
+   (2)  <  |  >
+                                                      Type: GroupPresentation
+t2 := simplify(groupPresentation([1,2],[[1],[2]]))
+ 
+
+   (3)  <  |  >
+                                                      Type: GroupPresentation
+testEquals("triv", "t2")
+ 
+                                                                   Type: Void
+
+testcase "simplification - cancel empty"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+triv := groupPresentation([],[])
+ 
+
+   (2)  <  |  >
+                                                      Type: GroupPresentation
+t3 := simplify(groupPresentation([0],[[0]]))
+ 
+
+   (3)  <  |  >
+                                                      Type: GroupPresentation
+testEquals("triv", "t3")
+ 
+                                                                   Type: Void
+
+testcase "simplification - cancel inverse"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+triv := groupPresentation([],[])
+ 
+
+   (2)  <  |  >
+                                                      Type: GroupPresentation
+t4 := simplify(groupPresentation([1],[[1],[-1]]))
+ 
+
+   (3)  <  |  >
+                                                      Type: GroupPresentation
+testEquals("triv", "t4")
+ 
+                                                                   Type: Void
+
+testcase "simplification - 2 element rule"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+free1 := groupPresentation([1],[])
+ 
+
+   (2)  <a |  >
+                                                      Type: GroupPresentation
+t5 := simplify(groupPresentation([1,2],[[1,2]]))
+ 
+
+   (3)  <b |  >
+                                                      Type: GroupPresentation
+testEquals("free1", "t5")
+ 
+                                                                   Type: Void
+
+testcase "simplification - minimise inverses"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+free3 := groupPresentation([1,2,3],[[1,2,3]])
+ 
+
+   (2)  <a b c |  a*b*c>
+                                                      Type: GroupPresentation
+t6 := simplify(groupPresentation([1,2,3],[[-3,-2,-1]]))
+ 
+
+   (3)  <a b c |  a*b*c>
+                                                      Type: GroupPresentation
+testEquals("free3", "t6")
+ 
+                                                                   Type: Void
+
+testcase "simplification - substitution"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+square := groupPresentation([1,2,3,4,5],[[1,3,5],[2,3,4]])
+ 
+
+   (2)  <a b c d f |  a*c*f,  b*c*d>
+                                                      Type: GroupPresentation
+t6 := simplify(square)
+ 
+
+   (3)  <a b d f |  b*-a*-f*d>
+                                                      Type: GroupPresentation
+expected := groupPresentation([1,2,4,5],[[2,-1,-5,4]])
+ 
+
+   (4)  <a b d f |  b*-a*-f*d>
+                                                      Type: GroupPresentation
+testEquals("expected", "t6")
+ 
+                                                                   Type: Void
+
+testcase "simplification - remove duplicate rule"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+x := groupPresentation([1,2,3],[[1,2,3],[1,2,3]])
+ 
+
+   (2)  <a b c |  a*b*c,  a*b*c>
+                                                      Type: GroupPresentation
+t6 := simplify(x)
+ 
+
+   (3)  <a b c |  a*b*c>
+                                                      Type: GroupPresentation
+expected := groupPresentation([1,2,3],[[1,2,3]])
+ 
+
+   (4)  <a b c |  a*b*c>
+                                                      Type: GroupPresentation
+testEquals("expected", "t6")
+ 
+                                                                   Type: Void
+y := groupPresentation([1,2,3],[[1,2,3],[-3,-2,-1]])
+ 
+
+   (6)  <a b c |  a*b*c,  -c*-b*-a>
+                                                      Type: GroupPresentation
+t7 := simplify(y)
+ 
+
+   (7)  <a b c |  a*b*c>
+                                                      Type: GroupPresentation
+testEquals("expected", "t7")
+ 
+                                                                   Type: Void
+z := groupPresentation([1,2,3],[[1,2,3],[2,3,1]])
+ 
+
+   (9)  <a b c |  a*b*c,  b*c*a>
+                                                      Type: GroupPresentation
+t8 := simplify(z)
+ 
+
+   (10)  <a b c |  a*b*c>
+                                                      Type: GroupPresentation
+testEquals("expected", "t8")
+ 
+                                                                   Type: Void
+a := groupPresentation([1,2,3],[[1,2,3],[2,3,1],[-3,-2,-1]])
+ 
+
+   (12)  <a b c |  a*b*c,  b*c*a,  -c*-b*-a>
+                                                      Type: GroupPresentation
+t9 := simplify(a)
+ 
+
+   (13)  <a b c |  a*b*c>
+                                                      Type: GroupPresentation
+testEquals("expected", "t9")
+ 
+                                                                   Type: Void
+b := groupPresentation([1,2,3,4,5,6],[[1,2,3],[4,5,6],[4,5,6]])
+ 
+
+   (15)  <a b c d f g |  a*b*c,  d*f*g,  d*f*g>
+                                                      Type: GroupPresentation
+t10 := simplify(b)
+ 
+
+   (16)  <a b c d f g |  a*b*c,  d*f*g>
+                                                      Type: GroupPresentation
+expected2 := groupPresentation([1,2,3,4,5,6],[[1,2,3],[4,5,6]])
+ 
+
+   (17)  <a b c d f g |  a*b*c,  d*f*g>
+                                                      Type: GroupPresentation
+testEquals("expected2", "t10")
+ 
+                                                                   Type: Void
+c := groupPresentation([1,2,3,4,5,6],[[4,5,6],[1,2,3],[4,5,6]])
+ 
+
+   (19)  <a b c d f g |  d*f*g,  a*b*c,  d*f*g>
+                                                      Type: GroupPresentation
+t11 := simplify(c)
+ 
+
+   (20)  <a b c d f g |  d*f*g,  a*b*c>
+                                                      Type: GroupPresentation
+testEquals("expected2", "t11")
+ 
+                                                                   Type: Void
+d := groupPresentation([1,2,3,4,5,6],[[4,5,6],[4,5,6],[1,2,3]])
+ 
+
+   (22)  <a b c d f g |  d*f*g,  d*f*g,  a*b*c>
+                                                      Type: GroupPresentation
+t12 := simplify(d)
+ 
+
+   (23)  <a b c d f g |  d*f*g,  a*b*c>
+                                                      Type: GroupPresentation
+testEquals("expected2", "t12")
+ 
+                                                                   Type: Void
+
+-- more complicated simplifications
+
+testcase "complicated simplification"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+c1 := groupPresentation([1,2,3,4,5,6,7],[[1],[0],_
+     [2,4,5],[2,4,7],[2,6],[2,6,7],[3,4,6],[3,5,6],[3,4,7],_
+     [3,7],[4,5],[4,6],[5,6,7],[5,7]])
+ 
+
+   (2)
+   <a b c d f g h |
+        a,  e,  b*d*f,  b*d*h,  b*g,  b*g*h,  c*d*g,  c*f*g,  c*d*h,  c*h,  d*f
+    ,
+        d*g,  f*g*h,  f*h
+     >
+                                                      Type: GroupPresentation
+t7 := simplify(c1)
+ 
+
+   (3)  <  |  >
+                                                      Type: GroupPresentation
+expected := groupPresentation([],[])
+ 
+
+   (4)  <  |  >
+                                                      Type: GroupPresentation
+testEquals("expected", "t7")
+ 
+                                                                   Type: Void
+
+-- direct product and quotient
+
+testcase "direct product"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+a := groupPresentation([1],[])
+ 
+
+   (2)  <a |  >
+                                                      Type: GroupPresentation
+t8 := directProduct(a,a)
+ 
+
+   (3)  <a b |  a*b*a*b>
+                                                      Type: GroupPresentation
+expected := groupPresentation([1,2],[[1,2,1,2]])
+ 
+
+   (4)  <a b |  a*b*a*b>
+                                                      Type: GroupPresentation
+testEquals("expected", "t8")
+ 
+                                                                   Type: Void
+expected2 := groupPresentation([2],[[2,2]])
+ 
+
+   (6)  <b |  b*b>
+                                                      Type: GroupPresentation
+t9 := quotient(t8,[1])
+ 
+
+   (7)  <b |  b*b>
+                                                      Type: GroupPresentation
+testEquals("expected2", "t9")
+ 
+                                                                   Type: Void
+t10 := quotient(t8,[[1]])
+ 
+
+   (9)  <b |  b*b>
+                                                      Type: GroupPresentation
+testEquals("expected2", "t10")
+ 
+                                                                   Type: Void
+
+-- conversions to PermutationGroup
+
+testcase "PermutationGroup conversions cyclic group"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+c5a := cyclicGroup(5)$PermutationGroupExamples
+ 
+
+   (2)  <(1 2 3 4 5)>
+                                              Type: PermutationGroup(Integer)
+c5b := cyclicGroup(5)$GroupPresentation
+ 
+
+   (3)  <a |  a*a*a*a*a>
+                                                      Type: GroupPresentation
+c5c := toPermutationIfCan(c5b) :: PermutationGroup(Integer)
+ 
+
+   (4)  <(1 2 3 4 5)>
+                                              Type: PermutationGroup(Integer)
+c5r := relationsInGenerators(c5a)
+ 
+
+   (5)  [[1, 1, 1, 1, 1], [1, 1, 1, 1, 1]]
+                                                    Type: List(List(Integer))
+c5d := groupPresentation([1], c5r)$GroupPresentation
+ 
+
+   (6)  <a |  a*a*a*a*a,  a*a*a*a*a>
+                                                      Type: GroupPresentation
+c5e := toPermutationIfCan(c5d)::PermutationGroup(Integer)
+ 
+
+   (7)  <(1 2 3 4 5)>
+                                              Type: PermutationGroup(Integer)
+
+testEquals("c5a", "c5c")
+ 
+                                                                   Type: Void
+testEquals("c5c", "c5e")
+ 
+                                                                   Type: Void
+
+testcase "PermutationGroup conversions dihedral group"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+d3a := dihedralGroup(3)$PermutationGroupExamples
+ 
+
+   (2)  <(1 2 3), (1 3)>
+                                              Type: PermutationGroup(Integer)
+d3b := dihedralGroup(3)$GroupPresentation
+ 
+
+   (3)  <a b |  a*a*a,  b*b,  a*b*a*b>
+                                                      Type: GroupPresentation
+d3c := toPermutationIfCan(d3b) :: PermutationGroup(Integer)
+ 
+
+   (4)  <(1 2 3)(4 5 6), (1 4)(2 6)(3 5)>
+                                              Type: PermutationGroup(Integer)
+d3r := relationsInGenerators(d3a)
+ 
+
+   (5)
+   [[2, 2], [1, 2, 1, 2], [1, 2, 1, 2], [1, 2, 1, 2, 2, - 2],
+    [2, 1, 2, 2, - 2, - 1, - 2, - 2, - 1], [2, 2]]
+                                                    Type: List(List(Integer))
+d3d := groupPresentation([1, 2], d3r)$GroupPresentation
+ 
+
+   (6)
+   <a b |
+      b*b,  a*b*a*b,  a*b*a*b,  a*b*a*b*b*-b,  b*a*b*b*-b*-a*-b*-b*-a,  b*b>
+                                                      Type: GroupPresentation
+d3d := simplify(d3d)
+ 
+
+   (7)  <a b |  b*b,  a*b*a*b,  a*b*b*a*-b*-a*-b>
+                                                      Type: GroupPresentation
+d3e := toPermutationIfCan(d3d)::PermutationGroup(Integer)
+ 
+
+   (8)  <(1 6 4)(2 3 5), (1 2)(3 4)(5 6)>
+                                              Type: PermutationGroup(Integer)
+
+testEquals("order(d3a)", "order(d3c)")
+ 
+                                                                   Type: Void
+testEquals("order(d3c)", "order(d3e)")
+ 
+                                                                   Type: Void
+
+testcase "symmetric group"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+s4a := symmetricGroup(4)$PermutationGroupExamples
+ 
+
+   (2)  <(1 2 3 4), (1 2)>
+                                              Type: PermutationGroup(Integer)
+s4b := symmetricGroup(4)$GroupPresentation
+ 
+
+   (3)  <a b c |  a*a,  a*b*a*b*a*b,  a*c*-a*-c,  b*b,  b*c*b*c*b*c,  c*c>
+                                                      Type: GroupPresentation
+s4c := toPermutationIfCan(s4b) :: PermutationGroup(Integer)
+ 
+
+   (4)
+   <
+       (1 2)(3 4)(5 6)(7 8)(9 19)(10 21)(11 15)(12 20)(13 23)(14 18)(16 22)
+         (17 24)
+    ,
+       (1 3)(2 6)(4 5)(7 9)(8 12)(10 11)(13 14)(15 16)(17 18)(19 20)(21 22)
+         (23 24)
+    ,
+     (1 7)(2 8)(3 11)(4 15)(5 18)(6 14)(9 10)(12 13)(16 17)(19 21)(20 23)(22 24)
+     >
+                                              Type: PermutationGroup(Integer)
+s4r := relationsInStrongGenerators(s4a)
+ 
+
+   (5)
+   [[3, 1, 2, 3, - 2, - 1, - 3, - 2, - 1], [2, 1, 2, 3, - 1, - 3],
+    [1, 1, 2, 3, - 3, - 2], [3, 2, 3, - 2, - 1, - 3, - 2],
+    [2, 2, 3, - 1, - 3, - 2, - 1], [3, 3], [1, 3, - 1, - 3], [2, 1, 2, - 1],
+    [1, 1, 2, - 2], [2, 2, - 1, - 2, - 1], [1, 1]]
+                                                    Type: List(List(Integer))
+s4d := groupPresentation([1, 2, 3], s4r)$GroupPresentation
+ 
+
+   (6)
+   <a b c |
+        c*a*b*c*-b*-a*-c*-b*-a,  b*a*b*c*-a*-c,  a*a*b*c*-c*-b
+    ,
+        c*b*c*-b*-a*-c*-b,  b*b*c*-a*-c*-b*-a,  c*c,  a*c*-a*-c,  b*a*b*-a
+    ,
+        a*a*b*-b,  b*b*-a*-b*-a,  a*a
+     >
+                                                      Type: GroupPresentation
+s4e := toPermutationIfCan(s4d)::PermutationGroup(Integer)
+ 
+
+   (7)
+   <
+       (1 2)(3 16)(4 5)(6 22)(7 19)(8 9)(10 11)(12 13)(14 23)(15 24)(17 21)
+         (18 20)
+    ,
+       (1 16 11)(2 10 3)(4 22 18)(5 20 6)(7 8 24)(9 19 15)(12 23 17)(13 21 14)
+    ,
+     (1 9)(2 8)(3 4)(5 16)(6 7)(10 13)(11 12)(14 15)(17 18)(19 22)(20 21)(23 24)
+     >
+                                              Type: PermutationGroup(Integer)
+s4f := toPermutationIfCan(s4b, [[2], [3]], false
+                         )::PermutationGroup(Integer)
+ 
+
+   (8)  <(1 2), (2 3), (3 4)>
+                                              Type: PermutationGroup(Integer)
+s4pers := [[1, 2], [2, 3], [3, 4]]::List(Permutation(Integer))
+ 
+
+   (9)  [(1 2), (2 3), (3 4)]
+                                             Type: List(Permutation(Integer))
+s4g := permutationGroup(s4pers)
+ 
+
+   (10)  <(1 2), (2 3), (3 4)>
+                                              Type: PermutationGroup(Integer)
+testEquals("order(s4c)", "24")
+ 
+                                                                   Type: Void
+testEquals("order(s4e)", "24")
+ 
+                                                                   Type: Void
+testEquals("s4g", "s4f")
+ 
+                                                                   Type: Void
+
+a5a := alternatingGroup(5)$PermutationGroupExamples
+ 
+
+   (14)  <(3 4 5), (1 2 3)>
+                                              Type: PermutationGroup(Integer)
+a5r := relationsInStrongGenerators(a5a)
+ 
+
+   (15)
+   [[3, 1, 1, 2, 3, - 2, - 1, - 1, - 3, - 2, - 1, - 1],
+    [2, 1, 1, 2, 3, - 1, - 2, - 1, - 3, - 2, - 1], [1, 1, 1, 2, 3, - 3, - 2],
+    [3, 1, 2, 3, - 2, - 1, - 3, - 2, - 1],
+    [2, 1, 2, 3, - 1, - 1, - 2, - 1, - 1, - 3, - 2, - 1, - 1], [3, 2, 3, - 2],
+    [2, 2, 3, - 3], [3, 3, - 2, - 3, - 2], [1, 3, - 1, - 2, - 1, - 3],
+    [2, 1, 1, 2, - 1, - 2, - 1], [1, 1, 1, 2, - 2],
+    [2, 1, 2, - 1, - 1, - 2, - 1, - 1], [2, 2], [1, 1, 1]]
+                                                    Type: List(List(Integer))
+a5c := groupPresentation([1, 2, 3], a5r)$GroupPresentation
+ 
+
+   (16)
+   <a b c |
+        c*a*a*b*c*-b*-a*-a*-c*-b*-a*-a,  b*a*a*b*c*-a*-b*-a*-c*-b*-a
+    ,
+        a*a*a*b*c*-c*-b,  c*a*b*c*-b*-a*-c*-b*-a
+    ,
+        b*a*b*c*-a*-a*-b*-a*-a*-c*-b*-a*-a,  c*b*c*-b,  b*b*c*-c,  c*c*-b*-c*-b
+    ,
+        a*c*-a*-b*-a*-c,  b*a*a*b*-a*-b*-a,  a*a*a*b*-b,  b*a*b*-a*-a*-b*-a*-a
+    ,
+        b*b,  a*a*a
+     >
+                                                      Type: GroupPresentation
+a5d := toPermutationIfCan(a5c)::PermutationGroup(Integer)
+ 
+
+   (17)
+   <
+       (1 3 2)(4 26 30)(5 7 6)(8 25 24)(9 43 38)(10 11 12)(13 37 18)(14 44 15)
+         (16 59 17)(19 20 21)(22 32 31)(23 34 29)(27 41 50)(28 57 56)(33 40 39)
+         (35 58 36)(42 60 53)(45 49 48)(46 52 47)(51 54 55)
+    ,
+       (1 21)(2 13)(3 4)(5 51)(6 35)(7 8)(9 10)(11 23)(12 27)(14 42)(15 16)
+         (17 60)(18 19)(20 26)(22 28)(24 58)(25 55)(29 41)(30 37)(31 46)(32 33)
+         (34 38)(36 54)(39 52)(40 56)(43 50)(44 45)(47 57)(48 59)(49 53)
+    ,
+       (1 28 12)(2 42 29)(3 51 43)(4 50 5)(6 45 34)(7 46 10)(8 9 31)(11 15 33)
+         (13 41 14)(16 23 32)(17 18 56)(19 60 40)(20 55 47)(21 27 22)(24 48 39)
+         (25 26 57)(30 53 36)(35 38 44)(37 54 49)(52 59 58)
+     >
+                                              Type: PermutationGroup(Integer)
+
+testEquals("order(a5d)", "60")
+ 
+                                                                   Type: Void
+
+j2 := janko2()$PermutationGroupExamples
+ 
+
+   (19)
+   <
+       (2 3 4 5 6 7 8)(9 10 11 12 13 14 15)(16 17 18 19 20 21 22)
+         (23 24 25 26 27 28 29)(30 31 32 33 34 35 36)(37 38 39 40 41 42 43)
+         (44 45 46 47 48 49 50)(51 52 53 54 55 56 57)(58 59 60 61 62 63 64)
+         (65 66 67 68 69 70 71)(72 73 74 75 76 77 78)(79 80 81 82 83 84 85)
+         (86 87 88 89 90 91 92)(93 94 95 96 97 98 99)
+    ,
+       (5 66 49 59 61)(10 78 88 29 12)
+         (1 74 83 21 36 77 44 80 64 2 34 75 48 17 100)
+         (3 15 31 52 19 11 73 79 26 56 41 99 39 84 90)
+         (4 57 86 63 85 95 82 97 98 81 8 69 38 43 58)
+         (6 68 89 94 92 20 13 54 24 51 87 27 76 23 67)
+         (7 72 22 35 30 70 47 62 45 46 40 28 65 93 42)
+         (9 71 37 91 18 55 96 60 16 53 50 25 32 14 33)
+     >
+                                              Type: PermutationGroup(Integer)
+j2r := relationsInStrongGenerators(j2);
+ 
+
+                                                    Type: List(List(Integer))
+j2p := groupPresentation([1, 2, 3, 4], j2r);
+ 
+
+                                                      Type: GroupPresentation
+j2per := toPermutationIfCan(j2p, [[1], [2], [3]], false
+                           )::PermutationGroup(Integer);
+ 
+
+                                              Type: PermutationGroup(Integer)
+testEquals("#movedPoints(j2per)", "100")
+ 
+                                                                   Type: Void
+testEquals("order(j2per)", "604800")
+ 
+                                                                   Type: Void
+
+s4r2 := relationsInGenerators(s4a)
+ 
+
+   (25)
+   [[2, 2], [1, 1, 1, 1, 2, 1, 1, 2, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 2],
+    [2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2],
+
+     [2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1,
+      1, 2, 1, 1, 2, 1, 1, - 1, - 1, - 2, - 1, - 1, - 2, - 1, - 1, - 1]
+     ,
+
+     [1, 1, 1, 2, 1, 1, 2, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2,
+      1, 1, 2, 1, 1, - 2, - 1, - 1, - 1, - 2, - 1, - 2, - 1, - 1, - 1, - 2,
+      - 1, - 1, - 2, - 1, - 1, - 2, - 1, - 1, - 1, - 2, - 1, - 1, - 1, - 2,
+      - 1, - 2, - 1, - 1, - 1, - 2]
+     ,
+    [1, 1, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1],
+
+     [2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 2, - 2, - 1, - 1, - 1, - 2, - 1, - 2,
+      - 1, - 1, - 1, - 2, - 2]
+     ,
+    [2, 2],
+
+     [2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1,
+      1, 2, 1, 1, 2, 1, 1, 2, - 2, - 1, - 1, - 2, - 1, - 1, - 2, - 1, - 1, - 1]
+     ,
+
+     [1, 1, 1, 2, 1, 1, 2, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2,
+      1, 1, 2, 1, 1, 2, - 2, - 1, - 1, - 1, - 2, - 1, - 2, - 1, - 1, - 1, - 2,
+      - 2, - 1, - 1, - 2, - 1, - 1, - 2, - 1, - 1, - 1, - 2, - 1, - 1, - 1,
+      - 2, - 1, - 2, - 1, - 1, - 1, - 2]
+     ,
+
+     [2, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 2, 1, 1, 2, - 1,
+      - 1, - 2, - 1, - 1, - 2, - 1, - 1, - 1, - 2, - 1, - 1, - 2, - 1, - 1,
+      - 2, - 1, - 1, - 1, - 2, - 1, - 1, - 1, - 2, - 1, - 2, - 1, - 1, - 1,
+      - 2]
+     ,
+    [1, 1, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1, 2, - 2],
+
+     [2, 1, 1, 1, 2, 1, 1, 2, 1, 1, 2, - 1, - 1, - 2, - 1, - 1, - 2, - 1, - 1,
+      - 1, - 2, - 1, - 1, - 2, - 1, - 1, - 2, - 1, - 1, - 1]
+     ]
+                                                    Type: List(List(Integer))
+s4gen := generators(s4a)
+ 
+
+   (26)  [(1 2 3 4), (1 2)]
+                                             Type: List(Permutation(Integer))
+ielt(a, i) == (i > 0 => elt(a, i); inv(elt(a, -i)))
+ 
+                                                                   Type: Void
+-- test that all relations are valid
+for rel in s4r2 repeat
+    prod := reduce(_*, [ielt(s4gen, i) for i in rel], 1$PERM(INT))
+    testEquals("prod", "1$PERM(INT)")
+ 
+   Compiling function ielt with type (List(Permutation(Integer)), 
+      Integer) -> Permutation(Integer) 
+                                                                   Type: Void
+
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+   =============================================================================
+   WARNINGS:
+   Testsuite: gpresent
+   Testcase: simplification - remove one generator
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: gpresent
+   Testcase: simplification - repeated remove one generator
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: gpresent
+   Testcase: simplification - cancel empty
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: gpresent
+   Testcase: simplification - cancel inverse
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: gpresent
+   Testcase: simplification - 2 element rule
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: gpresent
+   Testcase: simplification - minimise inverses
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: gpresent
+   Testcase: simplification - substitution
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: gpresent
+   Testcase: simplification - remove duplicate rule
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: gpresent
+   Testcase: simplification - remove duplicate rule
+   test: 2
+   testing in a domain without InputForm!
+   Testsuite: gpresent
+   Testcase: simplification - remove duplicate rule
+   test: 3
+   testing in a domain without InputForm!
+   Testsuite: gpresent
+   Testcase: simplification - remove duplicate rule
+   test: 4
+   testing in a domain without InputForm!
+   Testsuite: gpresent
+   Testcase: simplification - remove duplicate rule
+   test: 5
+   testing in a domain without InputForm!
+   Testsuite: gpresent
+   Testcase: simplification - remove duplicate rule
+   test: 6
+   testing in a domain without InputForm!
+   Testsuite: gpresent
+   Testcase: simplification - remove duplicate rule
+   test: 7
+   testing in a domain without InputForm!
+   Testsuite: gpresent
+   Testcase: complicated simplification
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: gpresent
+   Testcase: direct product
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: gpresent
+   Testcase: direct product
+   test: 2
+   testing in a domain without InputForm!
+   Testsuite: gpresent
+   Testcase: direct product
+   test: 3
+   testing in a domain without InputForm!
+   Testsuite: gpresent
+   Testcase: PermutationGroup conversions cyclic group
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: gpresent
+   Testcase: PermutationGroup conversions cyclic group
+   test: 2
+   testing in a domain without InputForm!
+   Testsuite: gpresent
+   Testcase: symmetric group
+   test: 3
+   testing in a domain without InputForm!
+   Testsuite: gpresent
+   Testcase: symmetric group
+   test: 7
+   testing in a domain without InputForm!
+   Testsuite: gpresent
+   Testcase: symmetric group
+   test: 8
+   testing in a domain without InputForm!
+   Testsuite: gpresent
+   Testcase: symmetric group
+   test: 9
+   testing in a domain without InputForm!
+   Testsuite: gpresent
+   Testcase: symmetric group
+   test: 10
+   testing in a domain without InputForm!
+   Testsuite: gpresent
+   Testcase: symmetric group
+   test: 11
+   testing in a domain without InputForm!
+   Testsuite: gpresent
+   Testcase: symmetric group
+   test: 12
+   testing in a domain without InputForm!
+   Testsuite: gpresent
+   Testcase: symmetric group
+   test: 13
+   testing in a domain without InputForm!
+   Testsuite: gpresent
+   Testcase: symmetric group
+   test: 14
+   testing in a domain without InputForm!
+   Testsuite: gpresent
+   Testcase: symmetric group
+   test: 15
+   testing in a domain without InputForm!
+   Testsuite: gpresent
+   Testcase: symmetric group
+   test: 16
+   testing in a domain without InputForm!
+   Testsuite: gpresent
+   Testcase: symmetric group
+   test: 17
+   testing in a domain without InputForm!
+   Testsuite: gpresent
+   Testcase: symmetric group
+   test: 18
+   testing in a domain without InputForm!
+   Testsuite: gpresent
+   Testcase: symmetric group
+   test: 19
+   testing in a domain without InputForm!
+
+   =============================================================================
+   Testsuite: gpresent
+     failed (total): 0 (13)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   gpresent                    0    (13)               0    (41)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 41
+                                                                   Type: Void
+)quit
+ 

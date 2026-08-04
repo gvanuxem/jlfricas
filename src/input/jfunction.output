@@ -1,0 +1,208 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read jfunction.input
+ 
+)set break resume
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+)expose JLObjFunction JLObject JLObjInt64 JLObjFloat64
+ 
+   JLObjFunction is now explicitly exposed in frame initial 
+   JLObject is now explicitly exposed in frame initial 
+   JLObjInt64 is now explicitly exposed in frame initial 
+   JLObjFloat64 is now explicitly exposed in frame initial 
+
+testsuite "JL Function"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testcase "Creation and basic application"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+-- From String
+f := jfunc("f(x)=x^2")$JLObjFunction('f)
+ 
+
+   (2)  f (generic function with 1 method)
+                                                       Type: JLObjFunction(f)
+res := elt(f, 3$Integer::JLObject)
+ 
+
+   (3)  9
+                                                               Type: JLObject
+testEquals("res", "jobject(_"9_")")
+ 
+                                                                   Type: Void
+
+-- From String
+h := jfunc("h(x, y) = x + y")$JLObjFunction('h)
+ 
+
+   (5)  h (generic function with 1 method)
+                                                       Type: JLObjFunction(h)
+res3 := elt(h, 5$Integer::JLObject, 7$Integer::JLObject)
+ 
+
+   (6)  12
+                                                               Type: JLObject
+testEquals("res3", "jobject(_"12_")")
+ 
+                                                                   Type: Void
+
+testcase "Function of 3 arguments"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+k3 := jfunc("k3(x,y,z) = x*y*z")$JLObjFunction('k3)
+ 
+
+   (2)  k3 (generic function with 1 method)
+                                                      Type: JLObjFunction(k3)
+resk3 := elt(k3, 2$Integer::JLObject, 3$Integer::JLObject, 4$Integer::JLObject)
+ 
+
+   (3)  24
+                                                               Type: JLObject
+testEquals("resk3", "jobject(_"24_")")
+ 
+                                                                   Type: Void
+
+testcase "From FriCAS function"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+f1(x) == x + 1
+ 
+                                                                   Type: Void
+jf1 := jfunc(f1)$JLObjFunction('f1)
+ 
+
+   (3)  f1 (generic function with 1 method)
+                                                      Type: JLObjFunction(f1)
+resf1 := elt(jf1, 10$Integer::JLObject)
+ 
+
+   (4)  11
+                                                               Type: JLObject
+testEquals("resf1", "jobject(_"11_")")
+ 
+                                                                   Type: Void
+
+testcase "FriCAS function with 2 arguments"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+-- Note: the domain needs a symbol, we use 'f2
+f2(x, y) == x * y + 1
+ 
+                                                                   Type: Void
+jf2 := jfunc(f2)$JLObjFunction('f2)
+ 
+
+   (3)  f2 (generic function with 1 method)
+                                                      Type: JLObjFunction(f2)
+resf2 := elt(jf2, 3$Integer::JLObject, 4$Integer::JLObject)
+ 
+
+   (4)  13
+                                                               Type: JLObject
+testEquals("resf2", "jobject(_"13_")")
+ 
+                                                                   Type: Void
+
+testcase "List of arguments"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+m := jfunc("m(x, y, z) = x + y + z")$JLObjFunction('m)
+ 
+
+   (2)  m (generic function with 1 method)
+                                                       Type: JLObjFunction(m)
+args : List JLObject := [1$Integer::JLObject, 2$Integer::JLObject, 3$Integer::JLObject]
+ 
+
+   (3)  [1, 2, 3]
+                                                         Type: List(JLObject)
+res5 := elt(m, args)
+ 
+
+   (4)  6
+                                                               Type: JLObject
+testEquals("res5", "jobject(_"6_")")
+ 
+                                                                   Type: Void
+
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+   =============================================================================
+   WARNINGS:
+   Testsuite: JL Function
+   Testcase: Creation and basic application
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: JL Function
+   Testcase: Creation and basic application
+   test: 2
+   testing in a domain without InputForm!
+   Testsuite: JL Function
+   Testcase: Function of 3 arguments
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: JL Function
+   Testcase: From FriCAS function
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: JL Function
+   Testcase: FriCAS function with 2 arguments
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: JL Function
+   Testcase: List of arguments
+   test: 1
+   testing in a domain without InputForm!
+
+   =============================================================================
+   Testsuite: JL Function
+     failed (total): 0 (5)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   JL Function                 0     (5)               0     (6)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 6
+                                                                   Type: Void
+)quit
+ 

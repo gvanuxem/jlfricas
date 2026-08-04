@@ -1,0 +1,272 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read jafunction.input
+ 
+)set break resume
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+)expose JLObjAnonymousFunction JLObject JLObjInt64 JLObjFloat64
+ 
+   JLObjAnonymousFunction is now explicitly exposed in frame initial 
+   JLObject is now explicitly exposed in frame initial 
+   JLObjInt64 is now explicitly exposed in frame initial 
+   JLObjFloat64 is now explicitly exposed in frame initial 
+
+testsuite "JL Anonymous Function"
+ 
+   All user variables and function definitions have been cleared.
+   WARNING: string for testsuite should have less than 15 characters!
+                                                                   Type: Void
+
+testcase "Creation and basic application"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+-- From String
+f := janf("x -> x^2")
+ 
+
+   (2)  #5 (generic function with 1 method)
+                                                 Type: JLObjAnonymousFunction
+res := elt(f, 3$Integer::JLObject)
+ 
+
+   (3)  9
+                                                               Type: JLObject
+testEquals("res", "jobject(_"9_")")
+ 
+                                                                   Type: Void
+
+-- From AnonymousFunction
+g := janf(x +-> x+1)
+ 
+
+   (5)  #8 (generic function with 1 method)
+                                                 Type: JLObjAnonymousFunction
+res2 := elt(g, 10$Integer::JLObject)
+ 
+
+   (6)  11
+                                                               Type: JLObject
+testEquals("res2", "jobject(_"11_")")
+ 
+                                                                   Type: Void
+
+-- Explicit coercion
+g2 := (x +-> x * 2)::JLObjAnonymousFunction
+ 
+
+   (8)  #11 (generic function with 1 method)
+                                                 Type: JLObjAnonymousFunction
+res2b := elt(g2, 21$Integer::JLObject)
+ 
+
+   (9)  42
+                                                               Type: JLObject
+testEquals("res2b", "jobject(_"42_")")
+ 
+                                                                   Type: Void
+
+testcase "Multiple arguments"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+h := janf("(x, y) -> x + y")
+ 
+
+   (2)  #14 (generic function with 1 method)
+                                                 Type: JLObjAnonymousFunction
+res3 := elt(h, 5$Integer::JLObject, 7$Integer::JLObject)
+ 
+
+   (3)  12
+                                                               Type: JLObject
+testEquals("res3", "jobject(_"12_")")
+ 
+                                                                   Type: Void
+
+k := janf("(x, y, z) -> x * y + z")
+ 
+
+   (5)  #17 (generic function with 1 method)
+                                                 Type: JLObjAnonymousFunction
+res4 := elt(k, 2$Integer::JLObject, 3$Integer::JLObject, 4$Integer::JLObject)
+ 
+
+   (6)  10
+                                                               Type: JLObject
+testEquals("res4", "jobject(_"10_")")
+ 
+                                                                   Type: Void
+
+testcase "Zero arguments"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+f0 := janf("() -> 42")
+ 
+
+   (2)  #20 (generic function with 1 method)
+                                                 Type: JLObjAnonymousFunction
+res0 := elt(f0, []$List(JLObject))
+ 
+
+   (3)  42
+                                                               Type: JLObject
+testEquals("res0", "jobject(_"42_")")
+ 
+                                                                   Type: Void
+
+testcase "Boolean and String returns"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+fb := janf("x -> x > 0")
+ 
+
+   (2)  #23 (generic function with 1 method)
+                                                 Type: JLObjAnonymousFunction
+resb := elt(fb, 1$Integer::JLObject)
+ 
+
+   (3)  true
+                                                               Type: JLObject
+testEquals("resb", "jobject(_"true_")")
+ 
+                                                                   Type: Void
+
+fs := janf("x -> _"abc_" * x")
+ 
+
+   (5)  #26 (generic function with 1 method)
+                                                 Type: JLObjAnonymousFunction
+ress := elt(fs, jstring("def") pretend JLObject)
+ 
+
+   (6)  "abcdef"
+                                                               Type: JLObject
+testTrue("test((jl_string_getindex(jlId(ress))$Lisp pretend String) = _"abcdef_")")
+ 
+                                                                   Type: Void
+
+testcase "4 arguments"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+h4 := janf("(a, b, c, d) -> a + b + c + d")
+ 
+
+   (2)  #29 (generic function with 1 method)
+                                                 Type: JLObjAnonymousFunction
+res4val := elt(h4, [1$Integer::JLObject, 2$Integer::JLObject, 3$Integer::JLObject, 4$Integer::JLObject])
+ 
+
+   (3)  10
+                                                               Type: JLObject
+testEquals("res4val", "jobject(_"10_")")
+ 
+                                                                   Type: Void
+
+testcase "Higher-order (using Julia objects)"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+-- Testing with Float64
+p := janf("x -> sin(x)")
+ 
+
+   (2)  #32 (generic function with 1 method)
+                                                 Type: JLObjAnonymousFunction
+x64 := jfloat64(3.141592653589793)
+ 
+
+   (3)  3.141592653589793
+                                                           Type: JLObjFloat64
+res6 := elt(p, x64 pretend JLObject)
+ 
+
+   (4)  1.2246467991473532e-16
+                                                               Type: JLObject
+testTrue("jlApprox?(res6 pretend JLObjFloat64, jfloat64(0.0), jfloat64(1.e-15))")
+ 
+                                                                   Type: Void
+
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+   =============================================================================
+   WARNINGS:
+   Testsuite: JL Anonymous Function
+   Testcase: Creation and basic application
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: JL Anonymous Function
+   Testcase: Creation and basic application
+   test: 2
+   testing in a domain without InputForm!
+   Testsuite: JL Anonymous Function
+   Testcase: Creation and basic application
+   test: 3
+   testing in a domain without InputForm!
+   Testsuite: JL Anonymous Function
+   Testcase: Multiple arguments
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: JL Anonymous Function
+   Testcase: Multiple arguments
+   test: 2
+   testing in a domain without InputForm!
+   Testsuite: JL Anonymous Function
+   Testcase: Zero arguments
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: JL Anonymous Function
+   Testcase: Boolean and String returns
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: JL Anonymous Function
+   Testcase: 4 arguments
+   test: 1
+   testing in a domain without InputForm!
+
+   =============================================================================
+   Testsuite: JL Anonymous Function
+     failed (total): 0 (6)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   JL Anonymous Function       0     (6)               0    (10)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 10
+                                                                   Type: Void
+)quit
+ 

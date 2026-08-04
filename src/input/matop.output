@@ -1,0 +1,271 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read matop.input
+ 
+)set break resume
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+testsuite "matop"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testcase "map with different minimal idices"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+mp := TwoDimensionalArrayFunctions(INT, U32Vector, U32Vector, U32Matrix, _
+                                   INT, Vector(INT), Vector(INT), Matrix(INT))
+ 
+
+   (2)
+   TwoDimensionalArrayFunctions
+      Integer
+  ,
+      U32Vector
+  ,
+      U32Vector
+  ,
+      U32Matrix
+  ,
+      Integer
+  ,
+      Vector(Integer)
+  ,
+      Vector(Integer)
+  ,
+      Matrix(Integer)
+                                                                   Type: Type
+m1 := matrix([[1, 2], [3, 4]])$U32Matrix
+ 
+
+        +1  2+
+   (3)  |    |
+        +3  4+
+                                                              Type: U32Matrix
+testTrue("(m2 := map(c +-> c, m1)$mp; true)")
+ 
+                                                                   Type: Void
+testEquals("members(m1)", "members(m2)")
+ 
+                                                                   Type: Void
+
+testcase "lup_decomposition"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+m1 := matrix([[1, 0], [17, 1]])$U32Matrix
+ 
+
+        +1   0+
+   (2)  |     |
+        +17  1+
+                                                              Type: U32Matrix
+r1 := lup_decomposition(m1, 30011)$ModularU32MatrixOperations
+ 
+
+                 +1   0+          +1  0+
+   (3)  [lpart = |     |, upart = |    |, udinv = [1, 1], ppart = [0, 1]]
+                 +17  1+          +0  1+
+Type: Record(lpart: U32Matrix,upart: U32Matrix,udinv: U32Vector,ppart: U32Vector)
+testEquals("r1.lpart", "m1")
+ 
+                                                                   Type: Void
+testEquals("r1.upart", "matrix([[1, 0], [0, 1]])$U32Matrix")
+ 
+                                                                   Type: Void
+testEquals("r1.udinv", "construct([1, 1])$U32Vector")
+ 
+                                                                   Type: Void
+testEquals("r1.ppart", "construct([0, 1])$U32Vector")
+ 
+                                                                   Type: Void
+
+m2 := matrix([[0, 1], [17, 1]])$U32Matrix
+ 
+
+        +0   1+
+   (8)  |     |
+        +17  1+
+                                                              Type: U32Matrix
+r2 := lup_decomposition(m2, 30011)$ModularU32MatrixOperations
+ 
+
+                 +1  0+          +17  0+
+   (9)  [lpart = |    |, upart = |     |, udinv = [24715, 1], ppart = [1, 0]]
+                 +0  1+          +1   1+
+Type: Record(lpart: U32Matrix,upart: U32Matrix,udinv: U32Vector,ppart: U32Vector)
+testEquals("r2.lpart*transpose(r2.upart)", "m2(entries(r2.ppart), [0, 1])")
+ 
+                                                                   Type: Void
+
+m3 := matrix([[1, 2, 3], [2, 4, 8]])$U32Matrix
+ 
+
+         +1  2  3+
+   (11)  |       |
+         +2  4  8+
+                                                              Type: U32Matrix
+r3 := lup_decomposition(m3, 30011)$ModularU32MatrixOperations
+ 
+
+                                  +1  0+
+                  +1  0+          |    |
+   (12)  [lpart = |    |, upart = |2  0|, udinv = [1, 0], ppart = [0, 1]]
+                  +2  1+          |    |
+                                  +3  2+
+Type: Record(lpart: U32Matrix,upart: U32Matrix,udinv: U32Vector,ppart: U32Vector)
+testEquals("r3.lpart*transpose(r3.upart)", "m3")
+ 
+                                                                   Type: Void
+
+m4 := matrix([[0, 0, 3], [2, 4, 8]])$U32Matrix
+ 
+
+         +0  0  3+
+   (14)  |       |
+         +2  4  8+
+                                                              Type: U32Matrix
+r4 := lup_decomposition(m4, 30011)$ModularU32MatrixOperations
+ 
+
+                                  +2  0+
+                  +1  0+          |    |
+   (15)  [lpart = |    |, upart = |4  0|, udinv = [15006, 0], ppart = [1, 0]]
+                  +0  1+          |    |
+                                  +8  3+
+Type: Record(lpart: U32Matrix,upart: U32Matrix,udinv: U32Vector,ppart: U32Vector)
+testEquals("r4.lpart*transpose(r4.upart)", "m4(entries(r4.ppart), [0, 1, 2])")
+ 
+                                                                   Type: Void
+testEquals("r4.udinv", "construct([15006, 0])$U32Vector")
+ 
+                                                                   Type: Void
+
+m5 := matrix([[1, 7, 1], [0, 0, 0], [0, 0, 5]])$U32Matrix
+ 
+
+         +1  7  1+
+         |       |
+   (18)  |0  0  0|
+         |       |
+         +0  0  5+
+                                                              Type: U32Matrix
+r5 := lup_decomposition(m5, 30011)$ModularU32MatrixOperations
+ 
+
+   (19)
+            +1  0  0+          +1  0  0+
+            |       |          |       |
+   [lpart = |0  1  0|, upart = |7  0  0|, udinv = [1, 0, 24009],
+            |       |          |       |
+            +0  0  1+          +1  0  5+
+    ppart = [0, 1, 2]]
+Type: Record(lpart: U32Matrix,upart: U32Matrix,udinv: U32Vector,ppart: U32Vector)
+testEquals("r5.lpart*transpose(r5.upart)", "m5")
+ 
+                                                                   Type: Void
+testEquals("r5.udinv", "construct([1, 0, 24009])$U32Vector")
+ 
+                                                                   Type: Void
+
+testcase "inverse"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+m1 := matrix([[860, 758], [750, 889]])$U32Matrix
+ 
+
+        +860  758+
+   (2)  |        |
+        +750  889+
+                                                              Type: U32Matrix
+minv := (inverse(m1, 30011)$ModularU32MatrixOperations)
+ 
+
+        +16610  11325+
+   (3)  |            |
+        +28151  8135 +
+                                                   Type: Union(U32Matrix,...)
+testEquals("mmul(m1, transpose(minv), 2, 30011)$ModularU32MatrixOperations",
+           "matrix([[1, 0], [0, 1]])$U32Matrix")
+ 
+                                                                   Type: Void
+
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+   =============================================================================
+   WARNINGS:
+   Testsuite: matop
+   Testcase: lup_decomposition
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: matop
+   Testcase: lup_decomposition
+   test: 2
+   testing in a domain without InputForm!
+   Testsuite: matop
+   Testcase: lup_decomposition
+   test: 5
+   testing in a domain without InputForm!
+   Testsuite: matop
+   Testcase: lup_decomposition
+   test: 6
+   testing in a domain without InputForm!
+   Testsuite: matop
+   Testcase: lup_decomposition
+   test: 7
+   testing in a domain without InputForm!
+   Testsuite: matop
+   Testcase: lup_decomposition
+   test: 9
+   testing in a domain without InputForm!
+   Testsuite: matop
+   Testcase: inverse
+   test: 1
+   testing in a domain without InputForm!
+
+   =============================================================================
+   Testsuite: matop
+     failed (total): 0 (3)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   matop                       0     (3)               0    (13)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 13
+                                                                   Type: Void
+)quit
+ 

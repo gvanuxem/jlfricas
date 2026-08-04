@@ -1,0 +1,1306 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read ncalg.input
+ 
+)set break resume
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+
+testsuite "ncalg"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testcase "fractions"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+ALPHABET := ['x, 'y, 'z];
+ 
+
+                                     Type: List(OrderedVariableList([x,y,z]))
+OVL := OrderedVariableList(ALPHABET)
+ 
+
+   (3)  OrderedVariableList([x, y, z])
+                                                                   Type: Type
+F := Fraction(Integer)
+ 
+
+   (4)  Fraction(Integer)
+                                                                   Type: Type
+OFM := FreeMonoid(OVL)
+ 
+
+   (5)  FreeMonoid(OrderedVariableList([x, y, z]))
+                                                                   Type: Type
+FDA := FDALG(OVL, F)
+ 
+
+   (6)  FreeDivisionAlgebra(OrderedVariableList([x, y, z]),Fraction(Integer))
+                                                                   Type: Type
+
+x := 'x::OFM::FDA;
+ 
+
+    Type: FreeDivisionAlgebra(OrderedVariableList([x,y,z]),Fraction(Integer))
+y := 'y::OFM::FDA;
+ 
+
+    Type: FreeDivisionAlgebra(OrderedVariableList([x,y,z]),Fraction(Integer))
+z := 'z::OFM::FDA;
+ 
+
+    Type: FreeDivisionAlgebra(OrderedVariableList([x,y,z]),Fraction(Integer))
+
+testEquals("(x^-1 + y^-1)^-1 - y*(x + y)^-1*x", "0")
+ 
+                                                                   Type: Void
+testEquals("x - (x^-1 + (y^-1 - x)^-1)^-1 - x*y*x", "0")
+ 
+                                                                   Type: Void
+
+f1 := x + y
+ 
+
+         +1  - y - x+    +0+
+   (12)  |          |s = | |; MR; y + x
+         +      1   +    +1+
+    Type: FreeDivisionAlgebra(OrderedVariableList([x,y,z]),Fraction(Integer))
+f2 := x + 3*y
+ 
+
+         +         1  +
+         |1  - y - - x|    +0+
+   (13)  |         3  |s = | |; MR; 3 y + x
+         |            |    +3+
+         +       1    +
+    Type: FreeDivisionAlgebra(OrderedVariableList([x,y,z]),Fraction(Integer))
+f3 := x - y
+ 
+
+         +1  - y + x+    + 0 +
+   (14)  |          |s = |   |; MR; - y + x
+         +      1   +    +- 1+
+    Type: FreeDivisionAlgebra(OrderedVariableList([x,y,z]),Fraction(Integer))
+
+testEquals("((f1 + f2) + f3) - (f1 + (f2 + f3))", "0")
+ 
+                                                                   Type: Void
+testEquals("((f1 + f2^-1) + f3) - (f1 + (f2^-1 + f3))", "0")
+ 
+                                                                   Type: Void
+testEquals("(f1*f2)*f3 - f1*(f2*f3)", "0")
+ 
+                                                                   Type: Void
+testEquals("(f1*f2^-2)*f3 - f1*(f2^-2*f3)", "0")
+ 
+                                                                   Type: Void
+testEquals("(f1 + f2)*f3 - f1*f3 - f2*f3", "0")
+ 
+                                                                   Type: Void
+testEquals("(f1 + f2^-1)*f3 - f1*f3 - f2^-1*f3", "0")
+ 
+                                                                   Type: Void
+
+testcaseNoClear "admissible linear systems"
+ 
+                                                                   Type: Void
+
+als ==> admissibleLinearSystem
+ 
+                                                                   Type: Void
+
+-- preparing some admissible linear systems representing zero
+f_0 := 0$FDA;
+ 
+
+    Type: FreeDivisionAlgebra(OrderedVariableList([x,y,z]),Fraction(Integer))
+f_1 : FDA := qnew(2);
+ 
+
+    Type: FreeDivisionAlgebra(OrderedVariableList([x,y,z]),Fraction(Integer))
+f_2 : FDA := qnew(3);
+ 
+
+    Type: FreeDivisionAlgebra(OrderedVariableList([x,y,z]),Fraction(Integer))
+for k in 2 .. 3 repeat _
+  qsetelt!(pencil(f_1), k, k, 1, 1$F)
+ 
+                                                                   Type: Void
+for k in 2 .. 4 repeat _
+  qsetelt!(pencil(f_2), k, k, 1, 1$F)
+ 
+                                                                   Type: Void
+f_3 := copy(f_2);
+ 
+
+    Type: FreeDivisionAlgebra(OrderedVariableList([x,y,z]),Fraction(Integer))
+addRows!(f_3, 2, 3, 2);
+ 
+
+    Type: FreeDivisionAlgebra(OrderedVariableList([x,y,z]),Fraction(Integer))
+f_4 : FDA := x*y*z;
+ 
+
+    Type: FreeDivisionAlgebra(OrderedVariableList([x,y,z]),Fraction(Integer))
+f_4(4) := 0;
+ 
+
+                                                      Type: Fraction(Integer)
+
+-- preparing some admissible linear systems
+f_5 : FDA := x*y*z;
+ 
+
+    Type: FreeDivisionAlgebra(OrderedVariableList([x,y,z]),Fraction(Integer))
+f_6 := copy(f_5);
+ 
+
+    Type: FreeDivisionAlgebra(OrderedVariableList([x,y,z]),Fraction(Integer))
+f_6 := addRows!(f_6, 3, 4, 2);
+ 
+
+    Type: FreeDivisionAlgebra(OrderedVariableList([x,y,z]),Fraction(Integer))
+f_7 := insertRowsColumns(f_5, [1], [2]);
+ 
+
+    Type: FreeDivisionAlgebra(OrderedVariableList([x,y,z]),Fraction(Integer))
+f_8 : FDA := x*z*y;
+ 
+
+    Type: FreeDivisionAlgebra(OrderedVariableList([x,y,z]),Fraction(Integer))
+
+-- preparing some big admissible linear systems
+f_11 : FDA := x*y*x*y*x*y*x*y + z
+ 
+
+   (37)
+   +1  - x   0    0    0    0    0    0   - z+    +0+
+   |                                         |    | |
+   |    1   - y   0    0    0    0    0    0 |    |0|
+   |                                         |    | |
+   |         1   - x   0    0    0    0    0 |    |0|
+   |                                         |    | |
+   |              1   - y   0    0    0    0 |    |0|
+   |                                         |    | |
+   |                   1   - x   0    0    0 |s = |0|; MR; z + x y x y x y x y
+   |                                         |    | |
+   |                        1   - y   0    0 |    |0|
+   |                                         |    | |
+   |                             1   - x   0 |    |0|
+   |                                         |    | |
+   |                                  1   - y|    |0|
+   |                                         |    | |
+   +                                       1 +    +1+
+    Type: FreeDivisionAlgebra(OrderedVariableList([x,y,z]),Fraction(Integer))
+f_12 : FDA := x*y*x*y*x*y*x*y + x
+ 
+
+   (38)
+   +1  - x   0    0    0    0    0    0   - x+    +0+
+   |                                         |    | |
+   |    1   - y   0    0    0    0    0    0 |    |0|
+   |                                         |    | |
+   |         1   - x   0    0    0    0    0 |    |0|
+   |                                         |    | |
+   |              1   - y   0    0    0    0 |    |0|
+   |                                         |    | |
+   |                   1   - x   0    0    0 |s = |0|; MR; x + x y x y x y x y
+   |                                         |    | |
+   |                        1   - y   0    0 |    |0|
+   |                                         |    | |
+   |                             1   - x   0 |    |0|
+   |                                         |    | |
+   |                                  1   - y|    |0|
+   |                                         |    | |
+   +                                       1 +    +1+
+    Type: FreeDivisionAlgebra(OrderedVariableList([x,y,z]),Fraction(Integer))
+f_13 := invertMIN(f_11)
+ 
+
+   (39)
+   +y  - 1   0    0    0    0    0    0 +    +0+
+   |                                    |    | |
+   |0   x   - 1   0    0    0    0    0 |    |0|
+   |                                    |    | |
+   |0   0    y   - 1   0    0    0    0 |    |0|
+   |                                    |    | |
+   |0   0    0    x   - 1   0    0    0 |    |0|                           - 1
+   |                                    |s = | |; M?; (z + x y x y x y x y)
+   |0   0    0    0    y   - 1   0    0 |    |0|
+   |                                    |    | |
+   |0   0    0    0    0    x   - 1   0 |    |0|
+   |                                    |    | |
+   |0   0    0    0    0    0    y   - 1|    |0|
+   |                                    |    | |
+   +z   0    0    0    0    0    0    x +    +1+
+    Type: FreeDivisionAlgebra(OrderedVariableList([x,y,z]),Fraction(Integer))
+f_14 := invertMIN(f_12)
+ 
+
+   (40)
+   +y  - 1   0    0    0    0    0    0 +    +0+
+   |                                    |    | |
+   |0   x   - 1   0    0    0    0    0 |    |0|
+   |                                    |    | |
+   |0   0    y   - 1   0    0    0    0 |    |0|
+   |                                    |    | |
+   |0   0    0    x   - 1   0    0    0 |    |0|                         - 1 - 1
+   |                                    |s = | |; M?; (1 + y x y x y x y)   x
+   |0   0    0    0    y   - 1   0    0 |    |0|
+   |                                    |    | |
+   |0   0    0    0    0    x   - 1   0 |    |0|
+   |                                    |    | |
+   |1   0    0    0    0    0    y   - 1|    |0|
+   |                                    |    | |
+   +                                  x +    +1+
+    Type: FreeDivisionAlgebra(OrderedVariableList([x,y,z]),Fraction(Integer))
+
+-- prepare some tiny admissible linear systems
+f_15 : FDA := z^-1;
+ 
+
+    Type: FreeDivisionAlgebra(OrderedVariableList([x,y,z]),Fraction(Integer))
+f_16 := insertRowsColumns(f_15, [0,1], [0,1]);
+ 
+
+    Type: FreeDivisionAlgebra(OrderedVariableList([x,y,z]),Fraction(Integer))
+qsetelt!(pencil(f_16), 2, 3, 1, -2);
+ 
+
+                                                      Type: Fraction(Integer)
+qsetelt!(pencil(f_16), 2, 4, 1, -1/2);
+ 
+
+                                                      Type: Fraction(Integer)
+f_16(1) := 1;
+ 
+
+                                                      Type: Fraction(Integer)
+f_16(2) := 0;
+ 
+
+                                                      Type: Fraction(Integer)
+f_16(3) := -2;
+ 
+
+                                                      Type: Fraction(Integer)
+
+-- check minimization
+als(minimize(f_1))
+ 
+
+   (48)  [1]s = [0]
+                                                             Type: OutputForm
+als(minimize(f_2))
+ 
+
+   (49)  [1]s = [0]
+                                                             Type: OutputForm
+als(minimize(f_3))
+ 
+
+   (50)  [1]s = [0]
+                                                             Type: OutputForm
+als(minimize(f_4))
+ 
+
+         +1  - x   0    0 +    +0+
+         |                |    | |
+         |    1   - y   0 |    |0|
+   (51)  |                |s = | |
+         |         1   - z|    |0|
+         |                |    | |
+         +              1 +    +0+
+                                                             Type: OutputForm
+als(minimize(f_16))
+ 
+
+   (52)  [1]s = [0]
+                                                             Type: OutputForm
+
+-- simple tests (zero)
+testTrue("zero?(f_0)")
+ 
+                                                                   Type: Void
+testTrue("zero?(f_1)")
+ 
+                                                                   Type: Void
+testTrue("zero?(f_2)")
+ 
+                                                                   Type: Void
+testTrue("zero?(f_3)")
+ 
+                                                                   Type: Void
+testTrue("zero?(f_4)")
+ 
+                                                                   Type: Void
+
+-- simple tests (true)
+testEquals("f_0", "f_0")
+ 
+                                                                   Type: Void
+testEquals("f_1", "f_0")
+ 
+                                                                   Type: Void
+testEquals("f_0", "f_2")
+ 
+                                                                   Type: Void
+testEquals("f_1", "f_4")
+ 
+                                                                   Type: Void
+testEquals("f_5", "f_6")
+ 
+                                                                   Type: Void
+testEquals("f_5", "f_7")
+ 
+                                                                   Type: Void
+testEquals("f_7", "f_6")
+ 
+                                                                   Type: Void
+
+-- simple tests (false)
+testTrue("not(f_5 = f_8)")
+ 
+                                                                   Type: Void
+testTrue("not(f_8 = f_6)")
+ 
+                                                                   Type: Void
+testTrue("not(f_8 = f_7)")
+ 
+                                                                   Type: Void
+
+-- tests which depend on linear word problem (false)
+testTrue("not(f_13 = f_14)")
+ 
+                                                                   Type: Void
+
+testcaseNoClear "factoring"
+ 
+                                                                   Type: Void
+
+XDP ==> XDPOLY(OVL, F)
+ 
+                                                                   Type: Void
+XPF ==> XPolynomialFactor(OVL, F)
+ 
+                                                                   Type: Void
+lS ==> List(Symbol)
+ 
+                                                                   Type: Void
+
+x := 'x::OFM::XDP;
+ 
+
+ Type: XDistributedPolynomial(OrderedVariableList([x,y,z]),Fraction(Integer))
+y := 'y::OFM::XDP;
+ 
+
+ Type: XDistributedPolynomial(OrderedVariableList([x,y,z]),Fraction(Integer))
+z := 'z::OFM::XDP;
+ 
+
+ Type: XDistributedPolynomial(OrderedVariableList([x,y,z]),Fraction(Integer))
+
+XDP_to_FDA(p) ==
+    lt := listOfTerms(p)
+    res : FDA := 0
+    for t in lt repeat
+        res := res + (t.c)::FDA*(t.k)::FDA
+    res
+ 
+                                                                   Type: Void
+
+e1 := ['mult1, 'mult3]$lS
+ 
+
+   (77)  [mult1, mult3]
+                                                           Type: List(Symbol)
+e1p3 := ['mult1, 'prop3]$lS
+ 
+
+   (78)  [mult1, prop3]
+                                                           Type: List(Symbol)
+e1o3 := ['mult1, 'ord3]$lS
+ 
+
+   (79)  [mult1, ord3]
+                                                           Type: List(Symbol)
+e2 := ['mult1, 'mult2, 'mult3]$lS
+ 
+
+   (80)  [mult1, mult2, mult3]
+                                                           Type: List(Symbol)
+p2 := ['mult1, 'prop2, mult3]$lS
+ 
+
+   (81)  [mult1, prop2, mult3]
+                                                           Type: List(Symbol)
+p23 := ['mult1, 'prop2, 'prop3]$lS
+ 
+
+   (82)  [mult1, prop2, prop3]
+                                                           Type: List(Symbol)
+p3 := ['mult1, 'mult2, 'prop3]$lS
+ 
+
+   (83)  [mult1, mult2, prop3]
+                                                           Type: List(Symbol)
+e3 := ['mult3]$lS
+ 
+
+   (84)  [mult3]
+                                                           Type: List(Symbol)
+
+check_factor_prop(nl1, nl) ==
+    nl2 : List(FDA) := factor(nl1)
+    for fi2 in nl2 for fi in nl repeat
+        if not(scalar?(fi2/fi)) then return false
+    true
+ 
+                                                                   Type: Void
+
+check_factor_prop3(x1, lx) ==
+    lx2 := factor(x1)$XPF
+    for fi2 in lx2 for fi1 in lx repeat
+        lc2 := leadingCoefficient(fi2)
+        lc1 := leadingCoefficient(fi1)
+        if not(lc2*fi1 = lc1*fi2) then
+            print fi1::OutputForm
+            print fi2::OutputForm
+            return false
+    true
+ 
+                                                                   Type: Void
+
+check_factor_ord3(x1, lx) ==
+    lx2 := factor(x1)$XPF
+    for fi2 in lx2 repeat
+        res := false
+        for fi1 in lx for k in 1.. repeat
+            lc2 := leadingCoefficient(fi2)
+            lc1 := leadingCoefficient(fi1)
+            not(lc2*fi1 = lc1*fi2) => "iterate"
+            res := true
+            break
+        not res =>
+            print fi2::OutputForm
+            print lx::OutputForm
+            return res
+        lx := delete(lx, k)
+    true
+ 
+                                                                   Type: Void
+
+test_factor(l: List XDP, ol : lS): Void ==
+    free lx
+    free l1
+    free nl
+    free nl1
+    lx := l
+    nl := [XDP_to_FDA(p) for p in l]
+    l1 := reduce(*, l)
+    nl1 := reduce(*, nl)
+    if member?('mult1, ol) then
+        testEquals("factor nl1", "nl")
+    if member?('mult2, ol) then
+        nl1 := XDP_to_FDA(l1)
+        testEquals("factor nl1", "nl")
+    if member?('prop2, ol) then
+        nl1 := XDP_to_FDA(l1)
+        testTrue("check_factor_prop(nl1, nl)")
+    if member?('mult3, ol) then
+        testEquals("factor(l1)$XPF", "lx")
+    if member?('prop3, ol) then
+        testTrue("check_factor_prop3(l1, lx)")
+    if member?('ord3, ol) then
+        testTrue("check_factor_ord3(l1, lx)")
+ 
+   Function declaration test_factor : (List(XDistributedPolynomial(
+      OrderedVariableList([x,y,z]),Fraction(Integer))), List(Symbol))
+       -> Void has been added to workspace.
+                                                                   Type: Void
+
+a2 := x*y - y*x
+ 
+
+   (89)  - y x + x y
+ Type: XDistributedPolynomial(OrderedVariableList([x,y,z]),Fraction(Integer))
+a3 := x*y*z - x*z*y + z*x*y - z*y*x + y*z*x - y*x*z
+ 
+
+   (90)  - z y x + z x y + y z x - y x z - x z y + x y z
+ Type: XDistributedPolynomial(OrderedVariableList([x,y,z]),Fraction(Integer))
+
+test_factor([x, y], e2)
+ 
+   Compiling function XDP_to_FDA with type XDistributedPolynomial(
+      OrderedVariableList([x,y,z]),Fraction(Integer)) -> 
+      FreeDivisionAlgebra(OrderedVariableList([x,y,z]),Fraction(Integer
+      )) 
+   Compiling function test_factor with type (List(
+      XDistributedPolynomial(OrderedVariableList([x,y,z]),Fraction(
+      Integer))), List(Symbol)) -> Void 
+   Compiled code for test_factor has been cleared.
+                                                                   Type: Void
+test_factor([x, 1+y*x], e2)
+ 
+   Compiling function test_factor with type (List(
+      XDistributedPolynomial(OrderedVariableList([x,y,z]),Fraction(
+      Integer))), List(Symbol)) -> Void 
+                                                                   Type: Void
+test_factor([1 - x*y, 1 - y*x], p3)
+ 
+   Compiling function check_factor_prop3 with type (
+      XDistributedPolynomial(OrderedVariableList([x,y,z]),Fraction(
+      Integer)), List(XDistributedPolynomial(OrderedVariableList([x,y,z
+      ]),Fraction(Integer)))) -> Boolean 
+                                                                   Type: Void
+test_factor([1 - x*y], e2)
+ 
+                                                                   Type: Void
+test_factor([x*y-y*x], e2)
+ 
+                                                                   Type: Void
+test_factor([x*y+y*x], e2)
+ 
+                                                                   Type: Void
+test_factor([1 - x*y*z*y*x*z], e2)
+ 
+                                                                   Type: Void
+test_factor([x - 3, x - 3], p2)
+ 
+   Compiling function check_factor_prop with type (FreeDivisionAlgebra(
+      OrderedVariableList([x,y,z]),Fraction(Integer)), List(
+      FreeDivisionAlgebra(OrderedVariableList([x,y,z]),Fraction(Integer
+      )))) -> Boolean 
+                                                                   Type: Void
+test_factor([2*x - 3, 2*x - 3], p23)
+ 
+                                                                   Type: Void
+test_factor([x*x-2], e2)
+ 
+                                                                   Type: Void
+test_factor([x+y, x-y], e2)
+ 
+                                                                   Type: Void
+test_factor([x, 1 + y*x, 1+z*y, x*y*z-z*x*y], e2)
+ 
+                                                                   Type: Void
+test_factor([1-x*y, 2+y*x, 3-y*z, 2-z*y, 1-x*z], e1p3)
+ 
+                                                                   Type: Void
+test_factor([3*x*y+5*y*x, 3*x*y+5*y*x], p23)
+ 
+                                                                   Type: Void
+test_factor([3*x*y+5*y*x, 3*x*y+5*y*x, 3*x*y+5*y*x], p23)
+ 
+                                                                   Type: Void
+test_factor([2 + x, (1/2)*(1 + y), -6 + 2*z], p3)
+ 
+   There are 113 exposed and 63 unexposed library operations named * 
+      having 2 argument(s) but none was determined to be applicable. 
+      Use HyperDoc Browse, or issue
+                                )display op *
+      to learn more about the available operations. Perhaps 
+      package-calling the operation or using coercions on the arguments
+      will allow you to apply the operation.
+ 
+Daly Bug
+   Cannot find a definition or applicable library operation named * 
+      with argument type(s) 
+                                   JLFloat
+   XDistributedPolynomial(OrderedVariableList([x,y,z]),Fraction(Integer))
+      
+      Perhaps you should use "@" to indicate the required return type, 
+      or "$" to specify which version of the function you need.
+
+   Continuing to read the file...
+
+test_factor([1-x*y, 2+y*x, 3-y*z, 2-z*y, x], p23)
+ 
+                                                                   Type: Void
+test_factor([(1/12)*(x^2 + 5), 12*(x^2 + x + 7)], p23)
+ 
+   There are 113 exposed and 63 unexposed library operations named * 
+      having 2 argument(s) but none was determined to be applicable. 
+      Use HyperDoc Browse, or issue
+                                )display op *
+      to learn more about the available operations. Perhaps 
+      package-calling the operation or using coercions on the arguments
+      will allow you to apply the operation.
+ 
+Daly Bug
+   Cannot find a definition or applicable library operation named * 
+      with argument type(s) 
+                                   JLFloat
+   XDistributedPolynomial(OrderedVariableList([x,y,z]),Fraction(Integer))
+      
+      Perhaps you should use "@" to indicate the required return type, 
+      or "$" to specify which version of the function you need.
+
+   Continuing to read the file...
+
+test_factor([-(29/3)*(3*x^2 - x - 7), -(3/29)*(2*x^2 +3*x - 4)], e1p3)
+ 
+   There are 113 exposed and 63 unexposed library operations named * 
+      having 2 argument(s) but none was determined to be applicable. 
+      Use HyperDoc Browse, or issue
+                                )display op *
+      to learn more about the available operations. Perhaps 
+      package-calling the operation or using coercions on the arguments
+      will allow you to apply the operation.
+ 
+Daly Bug
+   Cannot find a definition or applicable library operation named * 
+      with argument type(s) 
+                                   JLFloat
+   XDistributedPolynomial(OrderedVariableList([x,y,z]),Fraction(Integer))
+      
+      Perhaps you should use "@" to indicate the required return type, 
+      or "$" to specify which version of the function you need.
+
+   Continuing to read the file...
+
+test_factor([(1/5)*(x^2 + 5), 5*(x^3 + x + 7)], e1p3)
+ 
+   There are 113 exposed and 63 unexposed library operations named * 
+      having 2 argument(s) but none was determined to be applicable. 
+      Use HyperDoc Browse, or issue
+                                )display op *
+      to learn more about the available operations. Perhaps 
+      package-calling the operation or using coercions on the arguments
+      will allow you to apply the operation.
+ 
+Daly Bug
+   Cannot find a definition or applicable library operation named * 
+      with argument type(s) 
+                                   JLFloat
+   XDistributedPolynomial(OrderedVariableList([x,y,z]),Fraction(Integer))
+      
+      Perhaps you should use "@" to indicate the required return type, 
+      or "$" to specify which version of the function you need.
+
+   Continuing to read the file...
+
+test_factor([x^3 + 5, x^3 + x + 7], e1)
+ 
+                                                                   Type: Void
+test_factor([(1/7)*(x^3 + x + 7), 7*a3, a2], e1p3)
+ 
+   There are 113 exposed and 63 unexposed library operations named * 
+      having 2 argument(s) but none was determined to be applicable. 
+      Use HyperDoc Browse, or issue
+                                )display op *
+      to learn more about the available operations. Perhaps 
+      package-calling the operation or using coercions on the arguments
+      will allow you to apply the operation.
+ 
+Daly Bug
+   Cannot find a definition or applicable library operation named * 
+      with argument type(s) 
+                                   JLFloat
+   XDistributedPolynomial(OrderedVariableList([x,y,z]),Fraction(Integer))
+      
+      Perhaps you should use "@" to indicate the required return type, 
+      or "$" to specify which version of the function you need.
+
+   Continuing to read the file...
+
+test_factor([a2^2 - 2, a2^2 - 3], e1o3)
+ 
+   Compiling function check_factor_ord3 with type (
+      XDistributedPolynomial(OrderedVariableList([x,y,z]),Fraction(
+      Integer)), List(XDistributedPolynomial(OrderedVariableList([x,y,z
+      ]),Fraction(Integer)))) -> Boolean 
+                                                                   Type: Void
+test_factor([a3, 1 + y], e2)
+ 
+                                                                   Type: Void
+test_factor([x^4 + 5, x^4 + x + 7], e3)
+ 
+                                                                   Type: Void
+test_factor([a2^2 - 5, a2^2 - 3, a2^2 - 2], e3)
+ 
+                                                                   Type: Void
+test_factor([(x^2+y)^4 + 5, (x^2+y)^4 + (x^2+y) + 7], e3)
+ 
+                                                                   Type: Void
+
+q1 := rdivide(3*y*x - 3*z*x, 3*x)$XPF
+ 
+
+   (113)  [quotient = - z + y, remainder = 0]
+Type: Record(quotient: XDistributedPolynomial(OrderedVariableList([x,y,z]),Fraction(Integer)),remainder: XDistributedPolynomial(OrderedVariableList([x,y,z]),Fraction(Integer)))
+testEquals("q1.quotient", "-z + y")
+ 
+                                                                   Type: Void
+testEquals("q1.remainder", "0")
+ 
+                                                                   Type: Void
+
+q2 := rdivide(3*y*x - 3*z*x + x*z, 3*x)$XPF
+ 
+
+   (116)  [quotient = - z + y, remainder = x z]
+Type: Record(quotient: XDistributedPolynomial(OrderedVariableList([x,y,z]),Fraction(Integer)),remainder: XDistributedPolynomial(OrderedVariableList([x,y,z]),Fraction(Integer)))
+testEquals("q2.quotient", "-z + y")
+ 
+                                                                   Type: Void
+testEquals("q2.remainder", "x*z")
+ 
+                                                                   Type: Void
+
+testcase "xpoly"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+xD := XDPOLY(OVAR([r, s, t]), INT)
+ 
+
+   (2)  XDistributedPolynomial(OrderedVariableList([r, s, t]),Integer)
+                                                                   Type: Type
+fM := FreeMonoid(OVAR([r, s, t]))
+ 
+
+   (3)  FreeMonoid(OrderedVariableList([r, s, t]))
+                                                                   Type: Type
+rd := monomial(1, r::fM)$xD
+ 
+
+   (4)  r
+           Type: XDistributedPolynomial(OrderedVariableList([r,s,t]),Integer)
+sd := monomial(1, s::fM)$xD
+ 
+
+   (5)  s
+           Type: XDistributedPolynomial(OrderedVariableList([r,s,t]),Integer)
+td := monomial(1, t::fM)$xD
+ 
+
+   (6)  t
+           Type: XDistributedPolynomial(OrderedVariableList([r,s,t]),Integer)
+
+pd1 := sd*td*sd
+ 
+
+   (7)  s t s
+           Type: XDistributedPolynomial(OrderedVariableList([r,s,t]),Integer)
+-- used to fail
+testTrue("(w1 := retract(pd1)@fM; true)")
+ 
+                                                                   Type: Void
+testEquals("pd1", "monomial(1, w1)$xD")
+ 
+                                                                   Type: Void
+uFM := Union(fM, "failed")
+ 
+
+   (10)  Union(FreeMonoid(OrderedVariableList([r, s, t])),"failed")
+                                                                   Type: Type
+testEquals("retract(pd1*pd1)@fM", "w1*w1")
+ 
+                                                                   Type: Void
+testTrue("not(retractIfCan(2*pd1)@uFM case fM)")
+ 
+                                                                   Type: Void
+testTrue("not(retractIfCan(pd1 + 1)@uFM case fM)")
+ 
+                                                                   Type: Void
+testLibraryError("retract(pd1 + rd)@fM")
+ 
+                                                                   Type: Void
+
+xR := XRPOLY(OVAR([r, s, t]), INT)
+ 
+
+   (15)  XRecursivePolynomial(OrderedVariableList([r, s, t]),Integer)
+                                                                   Type: Type
+rr := monomial(1, r::fM)$xR
+ 
+
+   (16)  1 r
+             Type: XRecursivePolynomial(OrderedVariableList([r,s,t]),Integer)
+sr := monomial(1, s::fM)$xR
+ 
+
+   (17)  1 s
+             Type: XRecursivePolynomial(OrderedVariableList([r,s,t]),Integer)
+tr := monomial(1, t::fM)$xR
+ 
+
+   (18)  1 t
+             Type: XRecursivePolynomial(OrderedVariableList([r,s,t]),Integer)
+
+pr1 := monomial(1, w1)$xR
+ 
+
+   (19)  1 s t s
+             Type: XRecursivePolynomial(OrderedVariableList([r,s,t]),Integer)
+testEquals("pr1", "unexpand(pd1)$xR")
+ 
+                                                                   Type: Void
+testEquals("retract(pr1)@fM", "w1")
+ 
+                                                                   Type: Void
+
+pr2 := rr*(sr+tr + 1)*(tr + rr)
+ 
+
+   (22)  (1 r t + 1 r s + 1 r)t + (1 r t + 1 r s + 1 r)r
+             Type: XRecursivePolynomial(OrderedVariableList([r,s,t]),Integer)
+pd2 := expand(pr2)
+ 
+
+                2      2
+   (23)  r t + r  + r t  + r t r + r s t + r s r
+           Type: XDistributedPolynomial(OrderedVariableList([r,s,t]),Integer)
+testEquals("pr2", "unexpand(pd2)$xR")
+ 
+                                                                   Type: Void
+pr3 := (sr+1)*(tr -1)*(rr + 3)
+ 
+
+   (25)  - 3 + (3 + 3 s)t - 3 s + (- 1 + (1 + 1 s)t - s)r
+             Type: XRecursivePolynomial(OrderedVariableList([r,s,t]),Integer)
+testEquals("numberOfMonomials(pr3)", "8")
+ 
+                                                                   Type: Void
+pd3 := expand(pr3)
+ 
+
+   (27)  - 3 + 3 t - 3 s - r + t r + 3 s t - s r + s t r
+           Type: XDistributedPolynomial(OrderedVariableList([r,s,t]),Integer)
+testEquals("pr3", "unexpand(pd3)$xR")
+ 
+                                                                   Type: Void
+testEquals("leadingCoefficient(pr3)", "1")
+ 
+                                                                   Type: Void
+testEquals("leadingSupport(pr3)", "s::fM * t::fM * r::fM")
+ 
+                                                                   Type: Void
+testEquals("expand(pr2*pr3)", "pd2*pd3")
+ 
+                                                                   Type: Void
+testEquals("sh(pr2, pr3)", "unexpand(sh(pd2, pd3))$xR")
+ 
+                                                                   Type: Void
+testEquals("sh(pr1, pr3)", "sh(pr3, pr1)")
+ 
+                                                                   Type: Void
+testEquals("expand(mirror(pr3))", "mirror(expand(pr3))")
+ 
+                                                                   Type: Void
+testEquals("mirror(pr3)*pr3", "mirror(mirror(pr3)*pr3)")
+ 
+                                                                   Type: Void
+
+xDR := XRPOLY(OVAR([x, y]), xD)
+ 
+
+   (36)
+   XRecursivePolynomial
+      OrderedVariableList([x, y])
+  ,
+      XDistributedPolynomial(OrderedVariableList([r, s, t]),Integer)
+                                                                   Type: Type
+xx := monomial(1, x::FreeMonoid(OVAR([x, y])))$xDR
+ 
+
+   (37)  1 x
+Type: XRecursivePolynomial(OrderedVariableList([x,y]),XDistributedPolynomial(OrderedVariableList([r,s,t]),Integer))
+yx := monomial(1, y::FreeMonoid(OVAR([x, y])))$xDR
+ 
+
+   (38)  1 y
+Type: XRecursivePolynomial(OrderedVariableList([x,y]),XDistributedPolynomial(OrderedVariableList([r,s,t]),Integer))
+-- used to fail
+testEquals("(xx*sx)*tx", "xx*(sx*tx)")
+ 
+                                                                   Type: Void
+testEquals("(xx*sx)*tx", "sx*tx*xx")
+ 
+                                                                   Type: Void
+
+xRf := XRPOLY(OVAR([x, y]), PF(5))
+ 
+
+   (41)  XRecursivePolynomial(OrderedVariableList([x, y]),PrimeField(5))
+                                                                   Type: Type
+xr := monomial(1, x::FreeMonoid(OVAR([x, y])))$xRf
+ 
+
+   (42)  1 x
+         Type: XRecursivePolynomial(OrderedVariableList([x,y]),PrimeField(5))
+-- used to fail
+testEquals("sh(xr*xr*xr, xr*xr*xr)", "0")
+ 
+                                                                   Type: Void
+
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+   =============================================================================
+   WARNINGS:
+   Testsuite: ncalg
+   Testcase: fractions
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: fractions
+   test: 2
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: fractions
+   test: 3
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: fractions
+   test: 4
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: fractions
+   test: 5
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: fractions
+   test: 6
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: fractions
+   test: 7
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: fractions
+   test: 8
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: admissible linear systems
+   test: 6
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: admissible linear systems
+   test: 7
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: admissible linear systems
+   test: 8
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: admissible linear systems
+   test: 9
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: admissible linear systems
+   test: 10
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: admissible linear systems
+   test: 11
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: admissible linear systems
+   test: 12
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 2
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 3
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 4
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 5
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 6
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 7
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 8
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 10
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 11
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 12
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 13
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 14
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 15
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 16
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 17
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 18
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 19
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 20
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 21
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 22
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 24
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 25
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 28
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 29
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 30
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 31
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 32
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 33
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 34
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 35
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 36
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 37
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 39
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 42
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 45
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 48
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 49
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 50
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 52
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 53
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 54
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 55
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 56
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 57
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 58
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 59
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 60
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: factoring
+   test: 61
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: xpoly
+   test: 2
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: xpoly
+   test: 3
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: xpoly
+   test: 7
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: xpoly
+   test: 8
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: xpoly
+   test: 9
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: xpoly
+   test: 11
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: xpoly
+   test: 13
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: xpoly
+   test: 14
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: xpoly
+   test: 15
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: xpoly
+   test: 16
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: xpoly
+   test: 17
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: xpoly
+   test: 18
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: xpoly
+   test: 19
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: xpoly
+   test: 20
+   testing in a domain without InputForm!
+   Testsuite: ncalg
+   Testcase: xpoly
+   test: 21
+   testing in a domain without InputForm!
+
+   =============================================================================
+   Testsuite: ncalg
+     failed (total): 0 (4)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   ncalg                       0     (4)               0   (106)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 106
+                                                                   Type: Void
+)quit
+ 

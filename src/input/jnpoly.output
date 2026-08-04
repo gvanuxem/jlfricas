@@ -1,0 +1,1015 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read jnpoly.input
+ 
+)set break resume
+ 
+)set mess type off
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+
+testsuite "Nemo Polynomials"
+ 
+   All user variables and function definitions have been cleared.
+   WARNING: string for testsuite should have less than 15 characters!
+
+testcase "NMUnivariatePolynomial basic construction"
+ 
+   All user variables and function definitions have been cleared.
+x := x::NUP(NINT,'x)
+ 
+
+   (2)  x
+p1 := x^2 + 2*x + 1
+ 
+
+         2
+   (3)  x  + 2 x + 1
+p2 := x + 1
+ 
+
+   (4)  x + 1
+testEquals("degree(p1)", "2")
+ 
+testEquals("degree(p2)", "1")
+ 
+testEquals("leadingCoefficient(p1)", "1$NINT")
+ 
+testEquals("constantCoefficient(p1)", "1$NINT")
+ 
+
+testcase "NMUnivariatePolynomial arithmetic"
+ 
+   All user variables and function definitions have been cleared.
+x := x::NUP(NINT,'x)
+ 
+
+   (2)  x
+p := x^2 + 2*x + 1
+ 
+
+         2
+   (3)  x  + 2 x + 1
+q := x + 1
+ 
+
+   (4)  x + 1
+testEquals("p+q", "x^2+3*x+2")
+ 
+testEquals("p-q", "x^2+x")
+ 
+testEquals("p*q", "x^3+3*x^2+3*x+1")
+ 
+testEquals("degree(p*q)", "3")
+ 
+
+testcase "NMUnivariatePolynomial evaluation"
+ 
+   All user variables and function definitions have been cleared.
+x := x::NUP(NINT,'x)
+ 
+
+   (2)  x
+p := x^2 + 2*x + 1
+ 
+
+         2
+   (3)  x  + 2 x + 1
+a := jnint(3)
+ 
+
+   (4)  3
+result := elt(p, a)
+ 
+
+   (5)  16
+testEquals("result", "16$NINT")
+ 
+
+testcase "NMUnivariatePolynomial differentiation"
+ 
+   All user variables and function definitions have been cleared.
+x := x::NUP(NINT,'x)
+ 
+
+   (2)  x
+p := x^3 + 2*x^2 + 3*x + 1
+ 
+
+         3      2
+   (3)  x  + 2 x  + 3 x + 1
+dp := differentiate(p)
+ 
+
+           2
+   (4)  3 x  + 4 x + 3
+testEquals("degree(dp)", "2")
+ 
+testEquals("leadingCoefficient(dp)", "3$NINT")
+ 
+testEquals("coefficient(dp, 1)", "4$NINT")
+ 
+testEquals("constantCoefficient(dp)", "3$NINT")
+ 
+
+testcase "NMUnivariatePolynomial integration"
+ 
+   All user variables and function definitions have been cleared.
+x := x::NUP(NMFraction(NMInteger),'x)
+ 
+
+   (2)  x
+p := (3::NMFraction(NMInteger))*x^2 + (2::NMFraction(NMInteger))*x + (1::NMFraction(NMInteger))
+ 
+
+           2
+   (3)  3 x  + 2 x + 1
+ip := integrate(p)
+ 
+
+         3    2
+   (4)  x  + x  + x
+testEquals("degree(ip)", "3")
+ 
+
+testcase "NMUnivariatePolynomial gcd and lcm"
+ 
+   All user variables and function definitions have been cleared.
+x := x::NUP(NINT,'x)
+ 
+
+   (2)  x
+p := (x + 1) * (x + 2)
+ 
+
+         2
+   (3)  x  + 3 x + 2
+q := (x + 1) * (x + 3)
+ 
+
+         2
+   (4)  x  + 4 x + 3
+g := gcd(p, q)
+ 
+
+   (5)  x + 1
+testEquals("degree(g)", "1")
+ 
+l := lcm(p, q)
+ 
+
+         3      2
+   (7)  x  + 6 x  + 11 x + 6
+testEquals("degree(l)", "3")
+ 
+
+--testcase "NMUnivariatePolynomial division"
+--x := x::NUP(NINT,'x)
+--p := x^3 + 2*x^2 + 3*x + 4
+--q := x + 1
+--d := divide(p, q)
+--testEquals("degree(d.quotient)", "2")
+--testTrue("degree(d.remainder) < degree(q)")
+
+testcase "NMUnivariatePolynomial with rationals"
+ 
+   All user variables and function definitions have been cleared.
+x := x::NUP(NMFraction(NMInteger),'x)
+ 
+
+   (2)  x
+p := (1/2::NMFraction(NMInteger))*x^2 + (1/3::NMFraction(NMInteger))*x + (1/4::NMFraction(NMInteger))
+ 
+
+        1  2   1     1
+   (3)  - x  + - x + -
+        2      3     4
+q := (1/2::NMFraction(NMInteger))*x + (1/2::NMFraction(NMInteger))
+ 
+
+        1     1
+   (4)  - x + -
+        2     2
+r := p + q
+ 
+
+        1  2   5     3
+   (5)  - x  + - x + -
+        2      6     4
+testEquals("degree(r)", "2")
+ 
+
+testcase "NMUnivariateLaurentPolynomial basic operations"
+ 
+   All user variables and function definitions have been cleared.
+x := x::NULP(NINT,'x)
+ 
+
+   (2)  x
+p := x^2 + 2*x + 1
+ 
+
+   (3)  x^2 + 2*x + 1
+q := x + 1
+ 
+
+   (4)  x + 1
+testEquals("p+q", "x^2+3*x+2")
+ 
+
+
+testcase "NMUnivariatePolynomial reductum"
+ 
+   All user variables and function definitions have been cleared.
+x := x::NUP(NINT,'x)
+ 
+
+   (2)  x
+p := x^3 + 2*x^2 + 3*x + 4
+ 
+
+         3      2
+   (3)  x  + 2 x  + 3 x + 4
+r := reductum(p)
+ 
+
+           2
+   (4)  2 x  + 3 x + 4
+testEquals("leadingCoefficient(r)", "2$NINT")
+ 
+
+testcase "NMUnivariatePolynomial content and primitive part"
+ 
+   All user variables and function definitions have been cleared.
+x := x::NUP(NINT,'x)
+ 
+
+   (2)  x
+p := 6*x^2 + 9*x + 12
+ 
+
+           2
+   (3)  6 x  + 9 x + 12
+c := content(p)
+ 
+
+   (4)  3
+testEquals("c", "3$NINT")
+ 
+pp := primitivePart(p)
+ 
+
+           2
+   (6)  2 x  + 3 x + 4
+testEquals("content(pp)", "1$NINT")
+ 
+
+testcase "NMMultivariatePolynomial basic construction"
+ 
+   All user variables and function definitions have been cleared.
+VarSet : List Symbol := [x,y,z]
+ 
+
+   (2)  [x, y, z]
+V := OrderedVariableList(VarSet)
+ 
+
+   (3)  OrderedVariableList([x, y, z])
+PRing := NMP(NINT, VarSet)
+ 
+
+   (4)  NMMultivariatePolynomial(NMInteger,[x, y, z])
+x := x::V::PRing
+ 
+
+   (5)  x
+y := y::V::PRing
+ 
+
+   (6)  y
+z := z::V::PRing
+ 
+
+   (7)  z
+p := x + 2*y + 3*z
+ 
+
+   (8)  3 z + 2 y + x
+testEquals("degree(p,1)", "1")
+ 
+testEquals("degree(p,2)", "1")
+ 
+testEquals("degree(p,3)", "1")
+ 
+
+testcase "NMMultivariatePolynomial arithmetic"
+ 
+   All user variables and function definitions have been cleared.
+VarSet : List Symbol := [x,y,z]
+ 
+
+   (2)  [x, y, z]
+V := OrderedVariableList(VarSet)
+ 
+
+   (3)  OrderedVariableList([x, y, z])
+PRing := NMP(NINT, VarSet)
+ 
+
+   (4)  NMMultivariatePolynomial(NMInteger,[x, y, z])
+x := x::V::PRing
+ 
+
+   (5)  x
+y := y::V::PRing
+ 
+
+   (6)  y
+z := z::V::PRing
+ 
+
+   (7)  z
+p := x^2 + y^2
+ 
+
+         2    2
+   (8)  y  + x
+q := x + y
+ 
+
+   (9)  y + x
+r := p + q
+ 
+
+          2        2
+   (10)  y  + y + x  + x
+testEquals("degree(r,1)", "2")
+ 
+testEquals("degree(r,2)", "2")
+ 
+s := p * q
+ 
+
+          3      2    2     3
+   (13)  y  + x y  + x y + x
+testEquals("degree(s,1)", "3")
+ 
+testEquals("degree(s,2)", "3")
+ 
+
+testcase "NMMultivariatePolynomial coefficients and monomials"
+ 
+   All user variables and function definitions have been cleared.
+VarSet : List Symbol := [x,y]
+ 
+
+   (2)  [x, y]
+V := OrderedVariableList(VarSet)
+ 
+
+   (3)  OrderedVariableList([x, y])
+PRing := NMP(NINT, VarSet)
+ 
+
+   (4)  NMMultivariatePolynomial(NMInteger,[x, y])
+x := x::V::PRing
+ 
+
+   (5)  x
+y := y::V::PRing
+ 
+
+   (6)  y
+p := 2*x^2*y + 3*x*y^2 + 5
+ 
+
+             2      2
+   (7)  3 x y  + 2 x y + 5
+testEquals("constantCoefficient(p)", "5$NINT")
+ 
+testEquals("leadingCoefficient(p)", "2$NINT")
+ 
+testEquals("length(p)", "3")
+ 
+
+testcase "NMMultivariatePolynomial predicates"
+ 
+   All user variables and function definitions have been cleared.
+VarSet : List Symbol := [x,y]
+ 
+
+   (2)  [x, y]
+V := OrderedVariableList(VarSet)
+ 
+
+   (3)  OrderedVariableList([x, y])
+PRing := NMP(NINT, VarSet)
+ 
+
+   (4)  NMMultivariatePolynomial(NMInteger,[x, y])
+x := x::V::PRing
+ 
+
+   (5)  x
+y := y::V::PRing
+ 
+
+   (6)  y
+p := 5::PRing
+ 
+
+   (7)  5
+testTrue("constant?(p)")
+ 
+m := x*y
+ 
+
+   (9)  x y
+testTrue("monomial?(m)")
+ 
+t := 3*x*y
+ 
+
+   (11)  3 x y
+testTrue("term?(t)")
+ 
+
+testcase "NMMultivariatePolynomial gcd and lcm"
+ 
+   All user variables and function definitions have been cleared.
+VarSet : List Symbol := [x,y]
+ 
+
+   (2)  [x, y]
+V := OrderedVariableList(VarSet)
+ 
+
+   (3)  OrderedVariableList([x, y])
+PRing := NMP(NINT, VarSet)
+ 
+
+   (4)  NMMultivariatePolynomial(NMInteger,[x, y])
+x := x::V::PRing
+ 
+
+   (5)  x
+y := y::V::PRing
+ 
+
+   (6)  y
+p := (x + y) * (x + 2*y)
+ 
+
+           2            2
+   (7)  2 y  + 3 x y + x
+q := (x + y) * (x + 3*y)
+ 
+
+           2            2
+   (8)  3 y  + 4 x y + x
+g := gcd(p, q)
+ 
+
+   (9)  y + x
+testEquals("degree(g,1)", "1")
+ 
+testEquals("degree(g,2)", "1")
+ 
+
+testcase "NMMultivariatePolynomial with rationals"
+ 
+   All user variables and function definitions have been cleared.
+VarSet : List Symbol := [x,y]
+ 
+
+   (2)  [x, y]
+V := OrderedVariableList(VarSet)
+ 
+
+   (3)  OrderedVariableList([x, y])
+PRing := NMP(NMFraction(NMInteger), VarSet)
+ 
+
+   (4)  NMMultivariatePolynomial(NMFraction(NMInteger),[x, y])
+x := x::V::PRing
+ 
+
+   (5)  x
+y := y::V::PRing
+ 
+
+   (6)  y
+p := (1/2::NMFraction(NMInteger))*x^2 + (1/3::NMFraction(NMInteger))*y
+ 
+
+        1     1  2
+   (7)  - y + - x
+        3     2
+testEquals("degree(p,1)", "2")
+ 
+testEquals("degree(p,2)", "1")
+ 
+
+testcase "NMMultivariatePolynomial variables"
+ 
+   All user variables and function definitions have been cleared.
+VarSet : List Symbol := [x,y,z]
+ 
+
+   (2)  [x, y, z]
+V := OrderedVariableList(VarSet)
+ 
+
+   (3)  OrderedVariableList([x, y, z])
+PRing := NMP(NINT, VarSet)
+ 
+
+   (4)  NMMultivariatePolynomial(NMInteger,[x, y, z])
+x := x::V::PRing
+ 
+
+   (5)  x
+y := y::V::PRing
+ 
+
+   (6)  y
+p := x^2 + y^3
+ 
+
+         3    2
+   (7)  y  + x
+testTrue("univariate?(x^2)")
+ 
+testTrue("not univariate?(p)")
+ 
+
+testcase "NMPolynomial basic construction"
+ 
+   All user variables and function definitions have been cleared.
+PRing := NPOLY(NINT)
+ 
+
+   (2)  NMPolynomial(NMInteger)
+x := x::Symbol::PRing
+ 
+
+   (3)  x
+y := y::Symbol::PRing
+ 
+
+   (4)  y
+p := x^2 + 2*x*y + y^2
+ 
+
+         2            2
+   (5)  y  + 2 x y + x
+testEquals("length(p)", "3")
+ 
+testTrue("not constant?(p)")
+ 
+
+testcase "NMPolynomial arithmetic"
+ 
+   All user variables and function definitions have been cleared.
+PRing := NPOLY(NINT)
+ 
+
+   (2)  NMPolynomial(NMInteger)
+x := x::Symbol::PRing
+ 
+
+   (3)  x
+y := y::Symbol::PRing
+ 
+
+   (4)  y
+p := x + y
+ 
+
+   (5)  y + x
+q := x - y
+ 
+
+   (6)  - y + x
+r := p * q
+ 
+
+           2    2
+   (7)  - y  + x
+testEquals("length(r)", "2")
+ 
+
+testcase "NMPolynomial with rationals"
+ 
+   All user variables and function definitions have been cleared.
+PRing := NPOLY(NMFraction(NMInteger))
+ 
+
+   (2)  NMPolynomial(NMFraction(NMInteger))
+x := x::Symbol::PRing
+ 
+
+   (3)  x
+y := y::Symbol::PRing
+ 
+
+   (4)  y
+p := (1/2::NMFraction(NMInteger))*x + (1/3::NMFraction(NMInteger))*y
+ 
+
+        1     1
+   (5)  - y + - x
+        3     2
+q := 2*p
+ 
+
+        2
+   (6)  - y + x
+        3
+testEquals("length(q)", "2")
+ 
+
+testcase "NMMultivariateLaurentPolynomial basic construction"
+ 
+   All user variables and function definitions have been cleared.
+VarSet : List Symbol := [x,y]
+ 
+
+   (2)  [x, y]
+V := OrderedVariableList(VarSet)
+ 
+
+   (3)  OrderedVariableList([x, y])
+LPRing := NMLP(NINT, VarSet)
+ 
+
+   (4)  NMMultivariateLaurentPolynomial(NMInteger,[x, y])
+x := x::V::LPRing
+ 
+
+   (5)  x
+y := y::V::LPRing
+ 
+
+   (6)  y
+p := x^(-1) + y^(-2)
+ 
+
+   (7)  y^-2 + x^-1
+testEquals("length(p)", "2")
+ 
+
+testcase "NMMultivariateLaurentPolynomial arithmetic"
+ 
+   All user variables and function definitions have been cleared.
+VarSet : List Symbol := [x,y]
+ 
+
+   (2)  [x, y]
+V := OrderedVariableList(VarSet)
+ 
+
+   (3)  OrderedVariableList([x, y])
+LPRing := NMLP(NINT, VarSet)
+ 
+
+   (4)  NMMultivariateLaurentPolynomial(NMInteger,[x, y])
+x := x::V::LPRing
+ 
+
+   (5)  x
+y := y::V::LPRing
+ 
+
+   (6)  y
+p := x^2 + x^(-1)
+ 
+
+   (7)  x^2 + x^-1
+q := y + y^(-1)
+ 
+
+   (8)  y + y^-1
+r := p + q
+ 
+
+   (9)  x^2 + y + y^-1 + x^-1
+testEquals("length(r)", "4")
+ 
+s := p * q
+ 
+
+   (11)  x^2*y + x^2*y^-1 + x^-1*y + x^-1*y^-1
+testEquals("length(s)", "4")
+ 
+
+testcase "NMMultivariateLaurentPolynomial with rationals"
+ 
+   All user variables and function definitions have been cleared.
+VarSet : List Symbol := [x,y]
+ 
+
+   (2)  [x, y]
+V := OrderedVariableList(VarSet)
+ 
+
+   (3)  OrderedVariableList([x, y])
+LPRing := NMLP(NMFraction(NMInteger), VarSet)
+ 
+
+   (4)  NMMultivariateLaurentPolynomial(NMFraction(NMInteger),[x, y])
+x := x::V::LPRing
+ 
+
+   (5)  x
+y := y::V::LPRing
+ 
+
+   (6)  y
+p := (1/2::NMFraction(NMInteger))*x^(-1) + (1/3::NMFraction(NMInteger))*y^2
+ 
+
+   (7)  1/3*y^2 + 1/2*x^-1
+testEquals("constantCoefficient(p)", "0$NMFraction(NMInteger)")
+ 
+
+testcase "NMUnivariatePolynomial nested (Fateman's benchmark)"
+ 
+   All user variables and function definitions have been cleared.
+R := NUP(NINT, 'x)
+ 
+
+   (2)  NMUnivariatePolynomial(NMInteger,x)
+x := x::R
+ 
+
+   (3)  x
+RR := NUP(R, 'y)
+ 
+
+   (4)  NMUnivariatePolynomial(NMUnivariatePolynomial(NMInteger,x),y)
+y := y::RR
+ 
+
+   (5)  y
+RRR := NUP(RR, 'z)
+ 
+
+   (6)
+   NMUnivariatePolynomial
+      NMUnivariatePolynomial(NMUnivariatePolynomial(NMInteger,x),y)
+  ,
+      z
+z := z::RRR
+ 
+
+   (7)  z
+T := NUP(RRR, 't)
+ 
+
+   (8)
+   NMUnivariatePolynomial
+      NMUnivariatePolynomial
+         NMUnivariatePolynomial(NMUnivariatePolynomial(NMInteger,x),y)
+     ,
+         z
+  ,
+      t
+t := t::T
+ 
+
+   (9)  t
+p := (1 + x + y + z + t)^2
+ 
+
+   (10)
+      2                             2                       2                 2
+     z  + (2 y + 2 x + 2 t + 2)z + y  + (2 x + 2 t + 2)y + x  + (2 t + 2)x + t
+   + 
+     2 t + 1
+testEquals("degree(p)", "2")
+ 
+q := p * (p + 1)
+ 
+
+   (12)
+      4                         3
+     z  + (4 y + 4 x + 4 t + 4)z
+   + 
+         2                            2                     2             2
+     (6 y  + (12 x + 12 t + 12)y + 6 x  + (12 t + 12)x + 6 t  + 12 t + 7)z
+   + 
+            3                      2
+         4 y  + (12 x + 12 t + 12)y
+       + 
+              2                      2                    3               2
+         (12 x  + (24 t + 24)x + 12 t  + 24 t + 14)y + 4 x  + (12 t + 12)x
+       + 
+              2                    3       2
+         (12 t  + 24 t + 14)x + 4 t  + 12 t  + 14 t + 6
+    *
+       z
+   + 
+      4                   3       2                     2             2
+     y  + (4 x + 4 t + 4)y  + (6 x  + (12 t + 12)x + 6 t  + 12 t + 7)y
+   + 
+         3               2        2                    3       2
+     (4 x  + (12 t + 12)x  + (12 t  + 24 t + 14)x + 4 t  + 12 t  + 14 t + 6)y
+   + 
+      4             3       2             2       3       2                 4
+     x  + (4 t + 4)x  + (6 t  + 12 t + 7)x  + (4 t  + 12 t  + 14 t + 6)x + t
+   + 
+        3      2
+     4 t  + 7 t  + 6 t + 2
+testEquals("degree(q)", "4")
+ 
+
+testcase "NMMultivariatePolynomial nested"
+ 
+   All user variables and function definitions have been cleared.
+VarSet1 : List Symbol := [x,y]
+ 
+
+   (2)  [x, y]
+V1 := OrderedVariableList(VarSet1)
+ 
+
+   (3)  OrderedVariableList([x, y])
+R1 := NMP(NINT, VarSet1)
+ 
+
+   (4)  NMMultivariatePolynomial(NMInteger,[x, y])
+x1 := x::V1::R1
+ 
+
+   (5)  x
+y1 := y::V1::R1
+ 
+
+   (6)  y
+VarSet2 : List Symbol := [z,t]
+ 
+
+   (7)  [z, t]
+V2 := OrderedVariableList(VarSet2)
+ 
+
+   (8)  OrderedVariableList([z, t])
+R2 := NMP(R1, VarSet2)
+ 
+
+   (9)
+   NMMultivariatePolynomial(NMMultivariatePolynomial(NMInteger,[x, y]),[z, t])
+z2 := z::V2::R2
+ 
+
+   (10)  z
+t2 := t::V2::R2
+ 
+
+   (11)  t
+p := x1::R2 + y1::R2 + z2 + t2
+ 
+
+   (12)  z + y + x + t
+testEquals("degree(p,1)", "1")
+ 
+testEquals("degree(p,2)", "1")
+ 
+q := p^2
+ 
+
+          2                         2                   2            2
+   (15)  z  + (2 y + 2 x + 2 t)z + y  + (2 x + 2 t)y + x  + 2 t x + t
+testEquals("degree(q,1)", "2")
+ 
+
+testcase "NMPolynomial nested"
+ 
+   All user variables and function definitions have been cleared.
+R1 := NPOLY(NINT)
+ 
+
+   (2)  NMPolynomial(NMInteger)
+x1 := x::Symbol::R1
+ 
+
+   (3)  x
+testEquals("length(x1)", "1")
+ 
+R2 := NPOLY(R1)
+ 
+
+   (5)  NMPolynomial(NMPolynomial(NMInteger))
+y2 := y::Symbol::R2
+ 
+
+   (6)  y
+x1R2 := x1::R2
+ 
+
+   (7)  x
+p1 := x1R2 + x1R2
+ 
+
+   (8)  2 x
+p2 := y2 + y2
+ 
+
+   (9)  2 y
+-- Check constructOrdered
+terms := [[x::Symbol, 1$R1]$Record(k: Symbol, c: R1)]$List(Record(k: Symbol, c: R1))
+ 
+
+   (10)  [[k = x, c = 1]]
+-- constructOrdered(terms)$R2 -- This might fail if not exposed or signature mismatch
+-- Test monomial
+E := IndexedExponents(Symbol)
+ 
+
+   (11)  IndexedExponents(Symbol)
+k0 := 0$E
+ 
+
+   (12)  1
+m := monomial(1$R1, k0)$R2
+ 
+
+   (13)  1
+
+p_nested : R2 := x1::R2 + y2
+ 
+
+   (14)  y + x
+testEquals("length(p_nested)", "2")
+ 
+q_nested := p_nested^2
+ 
+
+          2            2
+   (16)  y  + 2 x y + x
+testEquals("length(q_nested)", "3")
+ 
+
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+   =============================================================================
+   WARNINGS:
+   Testsuite: Nemo Polynomials
+   Testcase: NMUnivariatePolynomial arithmetic
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: Nemo Polynomials
+   Testcase: NMUnivariatePolynomial arithmetic
+   test: 2
+   testing in a domain without InputForm!
+   Testsuite: Nemo Polynomials
+   Testcase: NMUnivariatePolynomial arithmetic
+   test: 3
+   testing in a domain without InputForm!
+   Testsuite: Nemo Polynomials
+   Testcase: NMUnivariateLaurentPolynomial basic operations
+   test: 1
+   testing in a domain without InputForm!
+
+   =============================================================================
+   Testsuite: Nemo Polynomials
+     failed (total): 0 (26)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   Nemo Polynomials            0    (26)               0    (56)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 56
+)quit
+ 

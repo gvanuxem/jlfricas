@@ -1,0 +1,381 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read bugs2010.input
+ 
+)set break resume
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+
+testsuite "bugs2010"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+testcase "reverting of power series"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+Uts := UnivariateTaylorSeries(Expression(Integer),x,0)
+ 
+
+   (2)  UnivariateTaylorSeries(Expression(Integer),x,0)
+                                                                   Type: Type
+a := operator('a,1)
+ 
+
+   (3)  a
+                                                          Type: BasicOperator
+P := series(n +-> a(n), x=0, 1..)::Uts;
+ 
+
+                        Type: UnivariateTaylorSeries(Expression(Integer),x,0)
+iP := revert(P);
+ 
+
+                        Type: UnivariateTaylorSeries(Expression(Integer),x,0)
+testEquals("polynomial(elt(iP, P), 10)", "x")
+ 
+                                                                   Type: Void
+
+testcase "coercion and types"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+Combinations(n:PI): List List INT == [elements e for e in enumerate()$SetOfMIntegersInOneToN(2, n)]
+ 
+   Function declaration Combinations : PositiveInteger -> List(List(
+      Integer)) has been added to workspace.
+                                                                   Type: Void
+User1(m: PI, k: PI): List List INT == (n:=m*k; Combinations n)
+ 
+   Function declaration User1 : (PositiveInteger, PositiveInteger) -> 
+      List(List(Integer)) has been added to workspace.
+                                                                   Type: Void
+User2(m: PI, k: PI): List List INT == Combinations(m*k)
+ 
+   Function declaration User2 : (PositiveInteger, PositiveInteger) -> 
+      List(List(Integer)) has been added to workspace.
+                                                                   Type: Void
+testEquals("User1(2,2)", "[[1,2],[1,3],[2,3],[1,4],[2,4],[3,4]]")
+ 
+   Cannot compile a $-expression involving a local variable.
+   FriCAS will attempt to step through and interpret the code.
+   Compiling function Combinations with type PositiveInteger -> List(
+      List(Integer)) 
+   Compiling function User1 with type (PositiveInteger, PositiveInteger
+      ) -> List(List(Integer)) 
+                                                                   Type: Void
+testEquals("User2(2,2)", "[[1,2],[1,3],[2,3],[1,4],[2,4],[3,4]]")
+ 
+   Compiling function User2 with type (PositiveInteger, PositiveInteger
+      ) -> List(List(Integer)) 
+                                                                   Type: Void
+
+testcase "normalizing constant trigonometric functions"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+di1 := -cos(1)*sin(2^x + 1) + sin(2^x) + sin(1)*cos(2^x+1)
+ 
+
+                     x             x               x
+   (2)  - cos(1)sin(2  + 1) + sin(2 ) + sin(1)cos(2  + 1)
+                                                    Type: Expression(Integer)
+testEquals("normalize(di1)", "0")
+ 
+                                                                   Type: Void
+testEquals("complexNormalize(di1)", "0")
+ 
+                                                                   Type: Void
+
+-- SF 2536411
+testcase "integrating multiple Liouvillian functions"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+f1 := 1/(Ei(x)-Ei(x-1))
+ 
+
+                1
+   (2)  -----------------
+        Ei(x) - Ei(x - 1)
+                                                    Type: Expression(Integer)
+df1 := D(f1, x);
+ 
+
+                                                    Type: Expression(Integer)
+f2 := 1/(Si(x+1)+Ci(x-1))
+ 
+
+                  1
+   (4)  ---------------------
+        Si(x + 1) + Ci(x - 1)
+                                                    Type: Expression(Integer)
+df2 := D(f2, x);
+ 
+
+                                                    Type: Expression(Integer)
+f3 := 1/(Si(Ci(x)^2+1)+Ci(Ci(x)^2-1))
+ 
+
+                       1
+   (6)  -------------------------------
+                2                2
+        Si(Ci(x)  + 1) + Ci(Ci(x)  - 1)
+                                                    Type: Expression(Integer)
+df3 := D(f3, x);
+ 
+
+                                                    Type: Expression(Integer)
+testEquals("integrate(df1, x)", "f1")
+ 
+                                                                   Type: Void
+testEquals("integrate(df2, x)", "f2")
+ 
+                                                                   Type: Void
+testEquals("integrate(df3, x)", "f3")
+ 
+                                                                   Type: Void
+
+testcase "Weierstrass preparation"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+mT := TaylorSeries(Fraction(Integer))
+ 
+
+   (2)  TaylorSeries(Fraction(Integer))
+                                                                   Type: Type
+pFI := Polynomial(Fraction(Integer))
+ 
+
+   (3)  Polynomial(Fraction(Integer))
+                                                                   Type: Type
+cmpl(lt : List mT, lp : List pFI, n : Integer) : Integer ==
+    res := n + 1
+    for t1 in lt for p in lp repeat
+        t2 := p::mT
+        t := t1 - t2
+        for i in 0..(n::NonNegativeInteger) repeat
+            if coefficient(t, i) ~= 0 then res := min(res, i)
+    res
+ 
+   Function declaration cmpl : (List(TaylorSeries(Fraction(Integer))), 
+      List(Polynomial(Fraction(Integer))), Integer) -> Integer has been
+      added to workspace.
+                                                                   Type: Void
+
+ts0 := (x+y)::pFI::mT
+ 
+
+   (5)  (y + x)
+                                        Type: TaylorSeries(Fraction(Integer))
+wP := WeierstrassPreparation(Fraction(Integer))
+ 
+
+   (6)  WeierstrassPreparation(Fraction(Integer))
+                                                                   Type: Type
+r1 := weierstrass(y, ts0)$wP
+ 
+
+   (7)  [x + O(11)]
+                                  Type: List(TaylorSeries(Fraction(Integer)))
+testEquals("cmpl(r1, [x], 5)", "6")
+ 
+   Compiling function cmpl with type (List(TaylorSeries(Fraction(
+      Integer))), List(Polynomial(Fraction(Integer))), Integer) -> 
+      Integer 
+   Compiling function G120 with type Integer -> Boolean 
+                                                                   Type: Void
+ts := (x+y^3)::pFI::mT
+ 
+
+             3
+   (9)  x + y
+                                        Type: TaylorSeries(Fraction(Integer))
+r2 := weierstrass(y, ts)$wP
+ 
+
+   (10)  [x + O(11), O(11), O(11)]
+                                  Type: List(TaylorSeries(Fraction(Integer)))
+testEquals("cmpl(r2, [x, 0, 0], 5)", "6")
+ 
+                                                                   Type: Void
+r3 := weierstrass(x, ts)$wP
+ 
+
+           3
+   (12)  [y  + O(11)]
+                                  Type: List(TaylorSeries(Fraction(Integer)))
+testEquals("cmpl(r3, [y^3], 5)", "6")
+ 
+                                                                   Type: Void
+r4 := weierstrass(y, sin(ts))$wP
+ 
+
+   (14)  [x + O(11), O(11), O(11)]
+                                  Type: List(TaylorSeries(Fraction(Integer)))
+testEquals("cmpl(r4, [x, 0, 0], 5)", "6")
+ 
+                                                                   Type: Void
+r5 := weierstrass(x, sin(ts))$wP
+ 
+
+           3
+   (16)  [y  + O(11)]
+                                  Type: List(TaylorSeries(Fraction(Integer)))
+testEquals("cmpl(r5, [y^3], 5)", "6")
+ 
+                                                                   Type: Void
+r6 := weierstrass(y, cos(ts) - 1)$wP
+ 
+
+           2
+   (18)  [x  + O(11), O(11), O(11), 2 x + O(11), O(11), O(11)]
+                                  Type: List(TaylorSeries(Fraction(Integer)))
+testEquals("cmpl(r6, [x^2, 0, 0,2*x, 0, 0], 10)", "11")
+ 
+                                                                   Type: Void
+r7 := weierstrass(x, cos(ts) - 1)$wP
+ 
+
+           6             3
+   (20)  [y  + O(11), 2 y  + O(11)]
+                                  Type: List(TaylorSeries(Fraction(Integer)))
+testEquals("cmpl(r7, [y^6, 2*y^3], 10)", "11")
+ 
+                                                                   Type: Void
+r8 := weierstrass(y, ts + cos(ts0) - 1)$wP;
+ 
+
+                                  Type: List(TaylorSeries(Fraction(Integer)))
+testEquals("cmpl(r8, [-2*x -22*x^2/3 - 5884*x^3/45 -59719*x^4/21, _
+            -2*x -24*x^2 - 2348*x^3/5 - 10333166*x^4/945], 4)", "5")
+ 
+                                                                   Type: Void
+
+testcase "wrong root simplification"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+f0 := sqrt(x)/((a-b*x)*sqrt(a-b*x))
+ 
+
+                    +-+
+                   \|x
+   (2)  - ---------------------
+                    +---------+
+          (b x - a)\|- b x + a
+                                                    Type: Expression(Integer)
+lf := integrate(sqrt(x)/((a-b*x)*sqrt(a-b*x)), x)
+ 
+
+   (3)
+     +---------+ +-+        +---------+ +-+                 +---+        +---+
+    \|- b x + a \|x log(2 b\|- b x + a \|x  + (- 2 b x + a)\|- b ) + 2 x\|- b
+   [--------------------------------------------------------------------------,
+                                +---------+ +---+ +-+
+                              b\|- b x + a \|- b \|x
+         +---------+ +-+              b x                +-+
+    - 2 \|- b x + a \|x atan(--------------------) + 2 x\|b
+                              +---------+ +-+ +-+
+                             \|- b x + a \|b \|x
+    --------------------------------------------------------]
+                        +---------+ +-+ +-+
+                      b\|- b x + a \|b \|x
+                                   Type: Union(List(Expression(Integer)),...)
+testEquals("normalize(D(lf(1), x) - f0)", "0")
+ 
+                                                                   Type: Void
+testEquals("normalize(D(lf(2), x) - f0)", "0")
+ 
+                                                                   Type: Void
+
+testcase "failed extended integration"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+f := log(sqrt(x+1) + sqrt(x))
+ 
+
+             +-----+    +-+
+   (2)  log(\|x + 1  + \|x )
+                                                    Type: Expression(Integer)
+testEquals("(res := integrate(f, x); 0)", "0")
+ 
+                                                                   Type: Void
+
+testcase "wrong log simplification"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+f := (log(3*x)^2 - 1)/(x*(log(3*x)^2+ log(3*x) + 1))
+ 
+
+                        2
+                log(3 x)  - 1
+   (2)  ----------------------------
+                  2
+        x log(3 x)  + x log(3 x) + x
+                                                    Type: Expression(Integer)
+res := integrate(f, x)
+ 
+
+   (3)
+                 2                      +-+     2 log(3 x) + 1
+   - log(log(3 x)  + log(3 x) + 1) - 2 \|3 atan(--------------) + 2 log(3 x)
+                                                      +-+
+                                                     \|3
+   -------------------------------------------------------------------------
+                                       2
+                                         Type: Union(Expression(Integer),...)
+testEquals("normalize(D(res, x) - f)", "0")
+ 
+                                                                   Type: Void
+
+)set output algebra on
+ 
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+
+   =============================================================================
+   Testsuite: bugs2010
+     failed (total): 0 (8)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   bugs2010                    0     (8)               0    (20)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 20
+                                                                   Type: Void
+)quit
+ 

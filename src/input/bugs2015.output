@@ -1,0 +1,313 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read bugs2015.input
+ 
+)set break resume
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+
+testsuite "bugs2015"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testcase "bug in lifting"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+r := (4*x^3+2*y^2+1)*(12*x^5-x^3*y+12)*(y^2+3);
+ 
+
+                                                    Type: Polynomial(Integer)
+testTrue("(res := factor(r); true)")
+ 
+                                                                   Type: Void
+fl := factors(res);
+ 
+
+ Type: List(Record(factor: Polynomial(Integer),exponent: NonNegativeInteger))
+testEquals("#fl", "3")
+ 
+                                                                   Type: Void
+testEquals("fl(1).factor", "x^3*y - 12*x^5 - 12")
+ 
+                                                                   Type: Void
+testEquals("unit(res)*fl(1).factor*fl(2).factor*fl(3).factor", "r")
+ 
+                                                                   Type: Void
+
+testcase "bug in PFBRU"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+P := UnivariatePolynomial('x, Integer)
+ 
+
+   (2)  UnivariatePolynomial(x,Integer)
+                                                                   Type: Type
+R := UnivariatePolynomial('y, P)
+ 
+
+   (3)  UnivariatePolynomial(y,UnivariatePolynomial(x,Integer))
+                                                                   Type: Type
+r: R := (4*x^3+2*y^2+1)*(12*x^5-x^3*y+12)*(y^2+3);
+ 
+
+                Type: UnivariatePolynomial(y,UnivariatePolynomial(x,Integer))
+testTrue("(res := factorPolynomial r; true)")
+ 
+                                                                   Type: Void
+fl := factors(res);
+ 
+
+Type: List(Record(factor: SparseUnivariatePolynomial(UnivariatePolynomial(y,UnivariatePolynomial(x,Integer))),exponent: NonNegativeInteger))
+testEquals("#fl", "3")
+ 
+                                                                   Type: Void
+testEquals("fl(1).factor", "x^3*y - 12*x^5 - 12")
+ 
+                                                                   Type: Void
+testEquals("unit(res)*fl(1).factor*fl(2).factor*fl(3).factor", "r")
+ 
+                                                                   Type: Void
+
+testcase "recip in SQMATRIX"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+m := matrix([[1, 3], [0, 1]])::Matrix(Integer)
+ 
+
+        +1  3+
+   (2)  |    |
+        +0  1+
+                                                        Type: Matrix(Integer)
+testEquals("recip(m)", "matrix([[1, -3], [0, 1]])")
+ 
+                                                                   Type: Void
+
+testcase "messed Fresnel integrals"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testEquals("fresnelS(x)::Expression(Complex(Integer))", "fresnelS(x)")
+ 
+                                                                   Type: Void
+
+testcase "rootSum and univariate modulo linear polynomial"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+R := Integer
+ 
+
+   (2)  Integer
+                                                                   Type: Type
+F := Expression(R)
+ 
+
+   (3)  Expression(Integer)
+                                                                   Type: Type
+K := Kernel(F)
+ 
+
+   (4)  Kernel(Expression(Integer))
+                                                                   Type: Type
+iE := IndexedExponents(K)
+ 
+
+   (5)  IndexedExponents(Kernel(Expression(Integer)))
+                                                                   Type: Type
+P := SparseMultivariatePolynomial(R, K)
+ 
+
+   (6)  SparseMultivariatePolynomial(Integer,Kernel(Expression(Integer)))
+                                                                   Type: Type
+pQ := PolynomialCategoryQuotientFunctions(iE, K, R, P, F)
+ 
+
+   (7)
+   PolynomialCategoryQuotientFunctions
+      IndexedExponents(Kernel(Expression(Integer)))
+  ,
+      Kernel(Expression(Integer))
+  ,
+      Integer
+  ,
+      SparseMultivariatePolynomial(Integer,Kernel(Expression(Integer)))
+  ,
+      Expression(Integer)
+                                                                   Type: Type
+kx := kernels(x).1
+ 
+
+   (8)  x
+                                            Type: Kernel(Expression(Integer))
+testEquals("univariate(x*exp(z), kx, univariate(x + 1))$pQ", "-exp(z)")
+ 
+                                                                   Type: Void
+
+testEquals("rootSum(x*exp(z), univariate(x - 1), x)", "exp(z)")
+ 
+                                                                   Type: Void
+testEquals("rootSum(x*exp(x), univariate(x - 1), x)", "exp(1)")
+ 
+                                                                   Type: Void
+
+testcase "division by zero in derivative"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testEquals("D(ellipticPi(z, 1, 1), z)", "1/(z^4 - 2*z^2 + 1)")
+ 
+                                                                   Type: Void
+testEquals("D(ellipticPi(z, n, 1), z)", "1/(n*z^4 - (n + 1)*z^2 + 1)")
+ 
+                                                                   Type: Void
+
+testcase "coercion of matrices"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+m1 := matrix([[s, 1, 0], [0, s, 1], [0, 0, s]])
+ 
+
+        +s  1  0+
+        |       |
+   (2)  |0  s  1|
+        |       |
+        +0  0  s+
+                                            Type: Matrix(Polynomial(Integer))
+testEquals("m1::UP(s, SquareMatrix(3, Fraction(Integer)))",
+           "s + matrix([[0, 1, 0], [0, 0, 1], [0, 0, 0]])")
+ 
+                                                                   Type: Void
+
+testcase "differentiating sum"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+ss := sum(sin(n^3*x), n=m..(m+k))
+ 
+
+        m + k
+         --+        3
+   (2)   >     sin(n x)
+         --+
+        n = m
+                                                    Type: Expression(Integer)
+testEquals("D(ss, n)", "0")
+ 
+                                                                   Type: Void
+-- check for no errors
+testTrue("(D(ss, m); true)")
+ 
+                                                                   Type: Void
+testTrue("(D(ss, k); true)")
+ 
+                                                                   Type: Void
+
+testcase "integral of acos"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+f := acos(x^2 - sqrt(1 - x^2))
+ 
+
+                +--------+
+                |   2         2
+   (2)  acos(- \|- x  + 1  + x )
+                                                    Type: Expression(Integer)
+testEquals("D(integrate(f, x), x)", "f")
+ 
+                                                                   Type: Void
+
+testcase "simplifying root products"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+t := sqrt(x)*x^(2/3)*x^(3/4)*x^(1/12)
+ 
+
+         +-+3+-+2 4+-+3 12+-+
+   (2)  \|x \|x   \|x    \|x
+                                                    Type: Expression(Integer)
+testEquals("simplify(t)", "x^2")
+ 
+                                                                   Type: Void
+
+)set output algebra on
+ 
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+   =============================================================================
+   WARNINGS:
+   Testsuite: bugs2015
+   Testcase: bug in PFBRU
+   test: 3
+   testing in a domain without InputForm!
+   Testsuite: bugs2015
+   Testcase: bug in PFBRU
+   test: 4
+   testing in a domain without InputForm!
+   Testsuite: bugs2015
+   Testcase: rootSum and univariate modulo linear polynomial
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: bugs2015
+   Testcase: coercion of matrices
+   test: 1
+   testing in a domain without InputForm!
+
+   =============================================================================
+   Testsuite: bugs2015
+     failed (total): 0 (10)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   bugs2015                    0    (10)               0    (21)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 21
+                                                                   Type: Void
+)quit
+ 

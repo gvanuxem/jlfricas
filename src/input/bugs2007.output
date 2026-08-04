@@ -1,0 +1,679 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read bugs2007.input
+ 
+)set break resume
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+
+)unexpose NMExactCalciumField WSExpression
+ 
+   NMExactCalciumField is now explicitly hidden in frame initial 
+   WSExpression is now explicitly hidden in frame initial 
+
+testsuite "bugs2007"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testcase "derivative of besselK (issue 355)"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+testEquals("D(besselK(a,x),x)", "-1/2*(besselK(a+1,x)+besselK(a-1,x))")
+ 
+                                                                   Type: Void
+testEquals("integrate(D(besselK(a,x),a),a)", "besselK(a,x)")
+ 
+                                                                   Type: Void
+-- limit(D(besselK(a,x),a),a=1/2)
+
+testcase "bug in map$Set (issue 347)"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+A:Set Integer:=set [-2,-1,0]
+ 
+
+   (2)  {- 2, - 1, 0}
+                                                           Type: Set(Integer)
+B:Set Integer:=set [0,1,4]
+ 
+
+   (3)  {0, 1, 4}
+                                                           Type: Set(Integer)
+C:=map(x +-> x^2,A)
+ 
+
+   (4)  {0, 1, 4}
+                                                           Type: Set(Integer)
+testTrue "test(C=B)"
+ 
+                                                                   Type: Void
+
+testcase "Bug in sqrt() for UnivariateTaylorSeries (issue 312)"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+UTSx := UTS(FRAC INT,x,0)
+ 
+
+   (2)  UnivariateTaylorSeries(Fraction(Integer),x,0)
+                                                                   Type: Type
+monx2 := monomial(1,2)$UTSx
+ 
+
+         2
+   (3)  x
+                          Type: UnivariateTaylorSeries(Fraction(Integer),x,0)
+testEquals("sqrt(monx2)", "monomial(1,1)$UTSx")
+ 
+                                                                   Type: Void
+
+testcase "issue 340 'divisors$IntegerNumberTheoryFunctions' incorrect for units"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+-- i.e., 1, -1
+testEquals("divisors 1", "[1]")
+ 
+                                                                   Type: Void
+testEquals("divisors(-1)", "[1]")
+ 
+                                                                   Type: Void
+
+testcase "issue 15"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+testTrue("abs(integrate(1/(1+z^4), z=0..1)::Complex Float-0.866972) < 0.00001")
+ 
+                                                                   Type: Void
+
+testcase "issue 293"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+testEquals("integrate(1/(1+x^4),x = %minusInfinity..%plusInfinity)", _
+           "sqrt(2)/2*%pi")
+ 
+                                                                   Type: Void
+
+strNoPole := "noPole"
+ 
+
+   (3)  "noPole"
+                                                                 Type: String
+xftestEquals("eval(integrate(1/(a+x^4),x=0..%plusInfinity, strNoPole), a=1)", _
+           "integrate(1/(1+x^4),x=0..%plusInfinity)")
+ 
+                                                                   Type: Void
+
+testEquals("D(integrate((x^4+2*a*x^2+1)^-1, x=0..z, strNoPole), z)",
+           "(z^4+2*a*z^2+1)^-1")
+ 
+                                                                   Type: Void
+
+testcase "issue 314"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+testEquals("integrate(2*atan(x)/(1+x^2),x)", "atan(x)^2")
+ 
+                                                                   Type: Void
+
+testcase "issue 47"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+testEquals("complexForm(log(%i) - log(-%i))", "complexForm(%pi*%i)")
+ 
+                                                                   Type: Void
+
+testcase "integrate((z^a+1)^b, z) crashes (issue 100)"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+testEquals("D(integrate((z^a+1)^b, z), z)", "(z^a+1)^b")
+ 
+                                                                   Type: Void
+
+testcase "issue 184"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+testEquals("argument(-%i)", "-%pi/2")
+ 
+                                                                   Type: Void
+
+testcase "issue 308"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+testEquals("D(integrate(x^a*(x^b+1)^p, x), x)", "x^a*(x^b+1)^p")
+ 
+                                                                   Type: Void
+
+testcase "laplace(log(z), z,w) crashes (issue 101)"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+testEquals("laplace(log(z), z, w)", "(digamma 1 - log w)/w")
+ 
+                                                                   Type: Void
+testTrue "(laplace(1/sqrt(z), z, w); true)"
+ 
+                                                                   Type: Void
+testTrue "(laplace(sqrt(z), z, w); true)"
+ 
+                                                                   Type: Void
+
+testcase "issue 103"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+testEquals("solve(z=z, z)", "[0=0]")
+ 
+                                                                   Type: Void
+
+testcase "issue 114"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+dom:=(INT->INT)
+ 
+
+   (2)  (Integer->Integer)
+                                                                   Type: Type
+g(f:dom):dom== x+->(f(x))^2
+ 
+   Function declaration g : (Integer -> Integer) -> (Integer -> Integer
+      ) has been added to workspace.
+                                                                   Type: Void
+p(x:INT):INT == x-1
+ 
+   Function declaration p : Integer -> Integer has been added to 
+      workspace.
+                                                                   Type: Void
+q := g p
+ 
+   Compiling function p with type Integer -> Integer 
+   Compiling function g with type (Integer -> Integer) -> (Integer -> 
+      Integer) 
+
+   (5)
+   theMap
+      #<FUNCTION (LAMBDA (#:G249 |envArg|) :IN |*1;g;1;initial|) {B8018B66FB}>
+  ,
+      1
+                                                   Type: (Integer -> Integer)
+testEquals("q 3", "4")
+ 
+                                                                   Type: Void
+
+testcase "issue 176"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+p := -x*y^2+x*y+x^3-x^2
+ 
+
+             2          3    2
+   (2)  - x y  + x y + x  - x
+                                                    Type: Polynomial(Integer)
+testEquals("D(factor(p),x)::POLY INT", "D(p, x)")
+ 
+                                                                   Type: Void
+
+testcase "issue 182"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+testEquals("round(3.77623)::INT", "4")
+ 
+                                                                   Type: Void
+testEquals("round(-3.77623)::INT", "-4")
+ 
+                                                                   Type: Void
+
+testcase "issue 186"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+E := Expression Integer
+ 
+
+   (2)  Expression(Integer)
+                                                                   Type: Type
+F := E -> E
+ 
+
+   (3)  ((Expression(Integer))->Expression(Integer))
+                                                                   Type: Type
+compose(f:F, g:F):F == (e:E):E +-> f(g(e))
+ 
+   Function declaration compose : ((Expression(Integer) -> Expression(
+      Integer)), (Expression(Integer) -> Expression(Integer))) -> (
+      Expression(Integer) -> Expression(Integer)) has been added to 
+      workspace.
+                                                                   Type: Void
+p(e:E):E == 2*e+1
+ 
+   Function declaration p : Expression(Integer) -> Expression(Integer) 
+      has been added to workspace.
+                                                                   Type: Void
+q(e:E):E == 3*e+1
+ 
+   Function declaration q : Expression(Integer) -> Expression(Integer) 
+      has been added to workspace.
+                                                                   Type: Void
+testEquals("compose(p,q)(sin x)", "6*sin(x) + 3")
+ 
+   Compiling function p with type Expression(Integer) -> Expression(
+      Integer) 
+   Compiling function q with type Expression(Integer) -> Expression(
+      Integer) 
+   Compiling function compose with type ((Expression(Integer) -> 
+      Expression(Integer)), (Expression(Integer) -> Expression(Integer)
+      )) -> (Expression(Integer) -> Expression(Integer)) 
+                                                                   Type: Void
+
+testcase "issue 199"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+testEquals("D(integrate(exp(-x^2)+exp(x)/x,x),x)", "exp(-x^2)+exp(x)/x")
+ 
+                                                                   Type: Void
+
+testcase "issue 19"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+testEquals("D(0^z, z)", "0$EXPR INT")
+ 
+                                                                   Type: Void
+
+testcase "issue 211"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+testEquals("eval(D(product((1-q^(n-i))/(1-q^(m-i)), i=0..m-1), q),[n=3,m=2])",_
+           "(2*q+1)::EXPR INT")
+ 
+                                                                   Type: Void
+f:=operator `f;
+ 
+
+                                                          Type: BasicOperator
+
+testEquals("D(product(f(i,q),i=0..m),q)", _
+           "product(f(j, q),j=0..m)*sum(D(f(i, q), q)/f(i, q), i=0..m)")
+ 
+                                                                   Type: Void
+
+testcase "issue 278"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+testEquals("simplifyLog(2*sqrt(2)*log(2))", "log 4 * sqrt 2")
+ 
+                                                                   Type: Void
+
+testcase "issue 83"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+testEquals("1::DMP([x],FRAC INT)::POLY FRAC INT", "1")
+ 
+                                                                   Type: Void
+testEquals("1::DMP([x],INT)::POLY INT", "1")
+ 
+                                                                   Type: Void
+vv := 1::DMP([x],FRAC INT)
+ 
+
+   (4)  1
+               Type: DistributedMultivariatePolynomial([x],Fraction(Integer))
+uu := vv ::POLY FRAC INT
+ 
+
+   (5)  1
+                                          Type: Polynomial(Fraction(Integer))
+testEquals("1 * uu", "1")
+ 
+                                                                   Type: Void
+
+testcase "issue 102"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+testEquals("solve(sinh(z)=cosh(z), z)", "[]$List EQ EXPR INT")
+ 
+                                                                   Type: Void
+
+testcase "missing exports"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+MyFD := DirectProduct(3, PrimeField(100000000000000006579))
+ 
+
+   (2)  DirectProduct(3,PrimeField(100000000000000006579))
+                                                                   Type: Type
+myv := [3, 2, 1]::MyFD
+ 
+
+   (3)  [3, 2, 1]
+                     Type: DirectProduct(3,PrimeField(100000000000000006579))
+ii := lookup(myv)
+ 
+
+   (4)  20000000000000002631700000000000086573062
+                                                        Type: PositiveInteger
+testEquals("index(ii)$MyFD", "[3,2,1]::MyFD")
+ 
+                                                                   Type: Void
+ii := lookup([1, 1, 1]::MyFD)
+ 
+
+   (6)  1
+                                                        Type: PositiveInteger
+testEquals("index(ii)$MyFD", "[1,1,1]::MyFD")
+ 
+                                                                   Type: Void
+ii := lookup([1, 1, 0]::MyFD)
+ 
+
+   (8)  100000000000000006579
+                                                        Type: PositiveInteger
+testEquals("index(ii)$MyFD", "[1,1,0]::MyFD")
+ 
+                                                                   Type: Void
+ii := lookup([1, 2, 3]::MyFD)
+ 
+
+   (10)  100000000000000006582
+                                                        Type: PositiveInteger
+testEquals("index(ii)$MyFD", "[1,2,3]::MyFD")
+ 
+                                                                   Type: Void
+testTrue "(hash([3, 2, 1]::MyFD); true)"
+ 
+                                                                   Type: Void
+
+MyFD:= Product(PrimeField(100000000000000006579), PrimeField(257))
+ 
+
+   (13)  Product(PrimeField(100000000000000006579),PrimeField(257))
+                                                                   Type: Type
+myv := [1, 1]$MyFD
+ 
+
+   (14)  [1, 1]
+             Type: Product(PrimeField(100000000000000006579),PrimeField(257))
+ii := lookup(myv)
+ 
+
+   (15)  1
+                                                        Type: PositiveInteger
+testEquals("index(ii)$MyFD", "[1, 1]$MyFD")
+ 
+                                                                   Type: Void
+ii := lookup([2, 1]$MyFD)
+ 
+
+   (17)  258
+                                                        Type: PositiveInteger
+testEquals("index(ii)$MyFD", "[2, 1]$MyFD")
+ 
+                                                                   Type: Void
+ii := lookup([1, 2]$MyFD)
+ 
+
+   (19)  2
+                                                        Type: PositiveInteger
+testEquals("index(ii)$MyFD", "[1, 2]$MyFD")
+ 
+                                                                   Type: Void
+ii := lookup([2, 128]$MyFD)
+ 
+
+   (21)  385
+                                                        Type: PositiveInteger
+testEquals("index(ii)$MyFD", "[2, 128]$MyFD")
+ 
+                                                                   Type: Void
+testTrue "(hash(myv); true)"
+ 
+                                                                   Type: Void
+
+testcase "issue 221"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+testTrue "PI has OASGP"
+ 
+                                                                   Type: Void
+
+testcase "issue 258"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+R==>RectangularMatrix(2,4, PF 2)
+ 
+                                                                   Type: Void
+testTrue "every?(zero?, [lookup(index(i)$R)$R - i for i in 1..2^8])"
+ 
+                                                                   Type: Void
+
+testcase "issue 198"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+cc := sqrt(2*log(e)/%pi)
+ 
+
+         +--------+
+         |2 log(e)
+   (2)   |--------
+        \|   %pi
+                                                    Type: Expression(Integer)
+testEquals("complexIntegrate(%i/2*e^(-%i*x^2),x)", _
+      "(fresnelS(cc*x) + %i*fresnelC(cc*x))/(2*cc)")
+ 
+                                                                   Type: Void
+
+testEquals("complexIntegrate(-%i/2*e^(%i*x^2),x)", _
+      "(fresnelS(cc*x) - %i*fresnelC(cc*x))/(2*cc)")
+ 
+                                                                   Type: Void
+
+testEquals("complexIntegrate(log(x)/(x-1),x)", "-dilog x")
+ 
+                                                                   Type: Void
+
+testEquals("complexIntegrate(2*log(x)/(x-1),x)", "-2*dilog x")
+ 
+                                                                   Type: Void
+
+testcase "issue 408"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+testTrue "abs(Gamma(1/5::EXPR INT)::EXPR DFLOAT - 4.5908437119988030532047582759) < 10.0^(-13)"
+ 
+                                                                   Type: Void
+testTrue "abs(digamma(1/5::EXPR INT)::EXPR DFLOAT + 5.2890398965921882955472079624) < 10.0^(-13)"
+ 
+                                                                   Type: Void
+testTrue "abs(besselJ(1,1::EXPR INT)::EXPR DFLOAT - 0.44005058574493351595968220371) < 10.0^(-13)"
+ 
+                                                                   Type: Void
+-- failed, because airyAi used complex formula invalid for positive reals
+testTrue "abs(airyAi(1/5::EXPR INT)::EXPR DFLOAT - 0.303703154286381994892596723) < 10.0^(-13)"
+ 
+                                                                   Type: Void
+
+testcase "issue 183"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+bt l ==
+    if empty? l
+    then empty()$BTREE INT
+    else binaryTree(bt rest(l, #l quo 2 + 1), first l, _
+                    bt first(rest l, #l quo 2))
+ 
+                                                                   Type: Void
+
+tree := bt primes(1, 20);
+ 
+   Compiling function bt with type List(Integer) -> BinaryTree(Integer)
+      
+
+                                                    Type: BinaryTree(Integer)
+testTrue "any?(even?, tree)"
+ 
+                                                                   Type: Void
+testTrue "not any?(x +-> x > 19, tree)"
+ 
+                                                                   Type: Void
+testTrue "every?(prime?, tree)"
+ 
+                                                                   Type: Void
+testTrue "not every?(x +-> x > 2, tree)"
+ 
+                                                                   Type: Void
+testTrue "member?(17, tree)"
+ 
+                                                                   Type: Void
+testTrue "not member?(4, tree)"
+ 
+                                                                   Type: Void
+
+testTrue "any?(i+->(i=1)::Boolean,[1,2,3])"
+ 
+                                                                   Type: Void
+testTrue "not every?(odd?, [1,2,3])"
+ 
+                                                                   Type: Void
+testTrue "member?(2, [1,2,3])"
+ 
+                                                                   Type: Void
+testTrue "not ([1,2,3] = [1,3,2])::Boolean"
+ 
+                                                                   Type: Void
+
+testcase "bug 9057"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+f==n+->product(sum(1/i,i=1..j),j=1..n)
+ 
+                                                                   Type: Void
+testEquals("f(1)", "1")
+ 
+   Compiling function f with type PositiveInteger -> Expression(Integer
+      ) 
+                                                                   Type: Void
+f==n+->product(product(1/i,i=1..j),j=1..n)
+ 
+   Compiled code for f has been cleared.
+   1 old definition(s) deleted for function or rule f 
+                                                                   Type: Void
+testEquals("f(1)", "1")
+ 
+   Compiling function f with type PositiveInteger -> Expression(Integer
+      ) 
+                                                                   Type: Void
+f==n+->sum(sum(1/i,i=1..j),j=1..n)
+ 
+   Compiled code for f has been cleared.
+   1 old definition(s) deleted for function or rule f 
+                                                                   Type: Void
+testEquals("f(1)", "1")
+ 
+   There are 6 exposed and 4 unexposed library operations named sum 
+      having 2 argument(s) but none was determined to be applicable. 
+      Use HyperDoc Browse, or issue
+                               )display op sum
+      to learn more about the available operations. Perhaps 
+      package-calling the operation or using coercions on the arguments
+      will allow you to apply the operation.
+   Cannot find a definition or applicable library operation named sum 
+      with argument type(s) 
+          Union(Fraction(Polynomial(Integer)),Expression(Integer))
+                       SegmentBinding(PositiveInteger)
+      
+      Perhaps you should use "@" to indicate the required return type, 
+      or "$" to specify which version of the function you need.
+   FriCAS will attempt to step through and interpret the code.
+                                                                   Type: Void
+g:=operator 'g
+ 
+
+   (8)  g
+                                                          Type: BasicOperator
+f==n+->sum(g(j),j=1..n)
+ 
+   Compiled code for f has been cleared.
+   1 old definition(s) deleted for function or rule f 
+                                                                   Type: Void
+testEquals("f(1)", "g(1)")
+ 
+   Compiling function f with type PositiveInteger -> Expression(Integer
+      ) 
+                                                                   Type: Void
+
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+   =============================================================================
+   WARNINGS:
+   Testsuite: bugs2007
+   Testcase: Bug in sqrt() for UnivariateTaylorSeries (issue 312)
+   test: 1
+   testing in a domain without InputForm!
+
+   =============================================================================
+   Testsuite: bugs2007
+     failed (total): 0 (30)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   bugs2007                    0    (30)               0    (67)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 1
+   unexpected passes: 0
+   total tests: 67
+                                                                   Type: Void
+)quit
+ 

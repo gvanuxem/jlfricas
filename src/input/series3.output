@@ -1,0 +1,898 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read series3.input
+ 
+)set break resume
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+
+testsuite "series"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testcase "bernoulli numbers"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+s1 := series(n +-> bernoulli(n)/factorial(n), t=0)
+ 
+
+   (2)
+       1      1  2    1   4     1    6      1     8       1     10      11
+   1 - - t + -- t  - --- t  + ----- t  - ------- t  + -------- t   + O(t  )
+       2     12      720      30240      1209600      47900160
+                       Type: UnivariatePuiseuxSeries(Expression(Integer),t,0)
+s2 := series(t/(exp(t) - 1), t=0)
+ 
+
+   (3)
+       1      1  2    1   4     1    6      1     8       1     10      11
+   1 - - t + -- t  - --- t  + ----- t  - ------- t  + -------- t   + O(t  )
+       2     12      720      30240      1209600      47900160
+                       Type: UnivariatePuiseuxSeries(Expression(Integer),t,0)
+testEquals("entries(complete(first(terms(s1), 20)))",
+           "entries(complete(first(terms(s2), 20)))")
+ 
+                                                                   Type: Void
+
+testcase "series over finite field"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+pF := PrimeField(2)
+ 
+
+   (2)  PrimeField(2)
+                                                                   Type: Type
+cf1(n : Integer) : pF == n::pF
+ 
+   Function declaration cf1 : Integer -> PrimeField(2) has been added 
+      to workspace.
+                                                                   Type: Void
+cf2(n : Integer) : Polynomial(pF) == n::pF
+ 
+   Function declaration cf2 : Integer -> Polynomial(PrimeField(2)) has 
+      been added to workspace.
+                                                                   Type: Void
+s1 := taylor(n +-> cf1(n), z, 0)$GENUPS1(pF);
+ 
+   Compiling function cf1 with type Integer -> PrimeField(2) 
+
+                              Type: UnivariateTaylorSeries(PrimeField(2),z,0)
+s2 := series(n +-> cf2(n), z = 0)$GENUPS2(Polynomial(pF));
+ 
+   Compiling function cf2 with type Integer -> Polynomial(PrimeField(2)
+      ) 
+
+                 Type: UnivariatePuiseuxSeries(Polynomial(PrimeField(2)),z,0)
+p : Polynomial(pF) := (z + z^3 + z^5)*(1 + z^6);
+ 
+
+                                              Type: Polynomial(PrimeField(2))
+testEquals("polynomial(s1, 12)", "p")
+ 
+                                                                   Type: Void
+testEquals("polynomial(s2::UTS(Polynomial(pF), z, 0), 12)", "p")
+ 
+                                                                   Type: Void
+
+testcase "formal derivatives"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+f := operator 'f
+ 
+
+   (2)  f
+                                                          Type: BasicOperator
+g := operator 'g
+ 
+
+   (3)  g
+                                                          Type: BasicOperator
+h := operator 'h
+ 
+
+   (4)  h
+                                                          Type: BasicOperator
+e1 := f(x)*g(x)
+ 
+
+   (5)  f(x)g(x)
+                                                    Type: Expression(Integer)
+ss := series(e1, x = a);
+ 
+
+                       Type: UnivariatePuiseuxSeries(Expression(Integer),x,a)
+c1_3 := (f(a)*D(g(a),a, 3)+g(a)*D(f(a),a, 3)+3*D(f(a),a)*D(g(a),a,2) _
+  +3*D(g(a),a)*D(f(a),a, 2))/6
+ 
+
+             ,,,           ,,,         ,    ,,         ,    ,,
+        f(a)g   (a) + g(a)f   (a) + 3 f (a)g  (a) + 3 g (a)f  (a)
+
+   (7)  ---------------------------------------------------------
+                                    6
+                                                    Type: Expression(Integer)
+testEquals("coefficient(ss, 3)", "c1_3")
+ 
+                                                                   Type: Void
+
+e2 := f(g(x))
+ 
+
+   (9)  f(g(x))
+                                                    Type: Expression(Integer)
+ss := series(e2, x = a);
+ 
+
+                       Type: UnivariatePuiseuxSeries(Expression(Integer),x,a)
+c2_3 := (eval(D(f(x), x), x = g(a))*D(g(a),a, 3) + _
+   D(g(a),a)^3*eval(D(f(x), x, 3), x = g(a)) + _
+   3*D(g(a),a)*eval(D(f(x), x, 2), x = g(a))*D(g(a),a,2))/6
+ 
+
+          ,       ,,,       ,   3 ,,,            ,    ,,       ,,
+         f (g(a))g   (a) + g (a) f   (g(a)) + 3 g (a)f  (g(a))g  (a)
+
+   (11)  -----------------------------------------------------------
+                                      6
+                                                    Type: Expression(Integer)
+testEquals("coefficient(ss, 3) - c2_3", "0")
+ 
+                                                                   Type: Void
+
+e3 := h(x, x^2)
+ 
+
+              2
+   (13)  h(x,x )
+                                                    Type: Expression(Integer)
+ss := series(e3, x = a);
+ 
+
+                       Type: UnivariatePuiseuxSeries(Expression(Integer),x,a)
+hyy := eval(D(h(a, y), y, 2), y = a^2)
+ 
+
+                  2
+   (15)  h    (a,a )
+          ,2,2
+                                                    Type: Expression(Integer)
+hy  := eval(D(h(a, y), y), y = a^2)
+ 
+
+                2
+   (16)  h  (a,a )
+          ,2
+                                                    Type: Expression(Integer)
+hxx := eval(D(h(x, a^2), x, 2), x = a)
+ 
+
+                  2
+   (17)  h    (a,a )
+          ,1,1
+                                                    Type: Expression(Integer)
+hxy := eval(D(h(x, y), [x, y]), [x = a, y = a^2])
+ 
+
+                  2
+   (18)  h    (a,a )
+          ,1,2
+                                                    Type: Expression(Integer)
+c3_2 := (4*a^2*hyy + 4*a*hxy + hxx + 2*hy)/2
+ 
+
+            2         2                 2             2             2
+         4 a h    (a,a ) + 4 a h    (a,a ) + h    (a,a ) + 2 h  (a,a )
+              ,2,2              ,1,2          ,1,1            ,2
+   (19)  -------------------------------------------------------------
+                                       2
+                                                    Type: Expression(Integer)
+testEquals("coefficient(ss, 2) - c3_2", "0")
+ 
+                                                                   Type: Void
+
+testcase "prodiag"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+l1 := [1, 1, 1, 2, 2, 3, 4, 5, 6, 8, 10];
+ 
+
+                                                  Type: List(PositiveInteger)
+sI := Stream(Integer)
+ 
+
+   (3)  Stream(Integer)
+                                                                   Type: Type
+sT := StreamTaylorSeriesOperations(Integer)
+ 
+
+   (4)  StreamTaylorSeriesOperations(Integer)
+                                                                   Type: Type
+s1 : sI := concat(1, empty()$sI);
+ 
+
+                                                        Type: Stream(Integer)
+ss1 := repeating([s1]);
+ 
+
+                                                Type: Stream(Stream(Integer))
+testEquals("entries(complete(first(prodiag(ss1)$sT, 11)))", "l1")
+ 
+                                                                   Type: Void
+
+l2 := [1, -1, 0, -2, -1, -4, -2, -5, -1, -4, 3];
+ 
+
+                                                          Type: List(Integer)
+s2 := repeating([1])$sI
+ 
+
+         _
+   (9)  [1]
+                                                        Type: Stream(Integer)
+ms2 := repeating([-1])$sI
+ 
+
+          ___
+   (10)  [- 1]
+                                                        Type: Stream(Integer)
+ss2 := repeating([ms2, s2]);
+ 
+
+                                                Type: Stream(Stream(Integer))
+testEquals("entries(complete(first(prodiag(ss2)$sT, 11)))", "l2")
+ 
+                                                                   Type: Void
+
+testcase "inverse"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+p:=(1/2+n)::UTS(FRAC INT, 'n, 0)
+ 
+
+        1
+   (2)  - + n
+        2
+                          Type: UnivariateTaylorSeries(Fraction(Integer),n,0)
+testEquals("[coefficient((p^(-1))$UTS(FRAC INT, 'n, 0), i) for i in 0..5]",
+           "[2, -4, 8, -16, 32, -64]")
+ 
+   Compiling function G214 with type Integer -> Boolean 
+                                                                   Type: Void
+
+testcase "branch points"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+app_eq?(xs1, xs2) == (order(xs1 - xs2, 20) = 20)@Boolean
+ 
+                                                                   Type: Void
+
+xx := puiseux('x)
+ 
+
+   (3)  x
+                       Type: UnivariatePuiseuxSeries(Expression(Integer),x,0)
+testTrue("(ss := asin(1 - xx); true)")
+ 
+                                                                   Type: Void
+testTrue("app_eq?(1 - xx, sin(ss))")
+ 
+   Compiling function app_eq? with type (UnivariatePuiseuxSeries(
+      Expression(Integer),x,0), UnivariatePuiseuxSeries(Expression(
+      Integer),x,0)) -> Boolean 
+                                                                   Type: Void
+
+testTrue("(ss := acos(1 - xx); true)")
+ 
+                                                                   Type: Void
+testTrue("app_eq?(1 - xx, cos(ss))")
+ 
+                                                                   Type: Void
+
+testTrue("(ss := asec(1 + xx); true)")
+ 
+                                                                   Type: Void
+testTrue("app_eq?(1 + xx, sec(ss))")
+ 
+                                                                   Type: Void
+
+testTrue("(ss := acsc(1 + xx); true)")
+ 
+                                                                   Type: Void
+testTrue("app_eq?(1 + xx, csc(ss))")
+ 
+                                                                   Type: Void
+
+testTrue("(ss := acosh(1 + xx); true)")
+ 
+                                                                   Type: Void
+testTrue("app_eq?(1 + xx, cosh(ss))")
+ 
+                                                                   Type: Void
+
+testTrue("(ss := asech(1 - xx); true)")
+ 
+                                                                   Type: Void
+testTrue("app_eq?(1 - xx, sech(ss))")
+ 
+                                                                   Type: Void
+
+xi := puiseux(x, x = %i)
+ 
+
+   (16)  %i + (x - %i)
+             Type: UnivariatePuiseuxSeries(Expression(Complex(Integer)),x,%i)
+testTrue("(ss := asinh(xi); true)")
+ 
+                                                                   Type: Void
+
+testTrue("(ss := acsch(xi); true)")
+ 
+                                                                   Type: Void
+
+
+testcase "crashes coercing power series (#122, #136)"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+a := series(sin(x))
+ 
+
+            1  3    1   5     1   7      1    9       1     11      12
+   (2)  x - - x  + --- x  - ---- x  + ------ x  - -------- x   + O(x  )
+            6      120      5040      362880      39916800
+                       Type: UnivariatePuiseuxSeries(Expression(Integer),x,0)
+-- testTrue("(a + 1.0; true)")
+-- testTrue("(1.0 + a; true)")
+testTrue("(a*1.0; true)")
+ 
+                                                                   Type: Void
+testTrue("(1.0*a; true)")
+ 
+                                                                   Type: Void
+
+b := 1.0::UnivariatePuiseuxSeries(Expression Float,x,0.0)
+ 
+
+   (5)  1.0
+                       Type: UnivariatePuiseuxSeries(Expression(Float),x,0.0)
+testTrue("(b + 1.0; true)")
+ 
+                                                                   Type: Void
+testTrue("(1.0 + b; true)")
+ 
+                                                                   Type: Void
+testTrue("(a + b; true)")
+ 
+                                                                   Type: Void
+testTrue("(b + a; true)")
+ 
+                                                                   Type: Void
+testTrue("(a*b; true)")
+ 
+                                                                   Type: Void
+testTrue("(b*a; true)")
+ 
+                                                                   Type: Void
+
+b:= a::UnivariatePuiseuxSeries(Expression Float,x,0.0)
+ 
+
+   (12)
+                                  3                               5
+     x - 0.1666666666_6666666667 x  + 0.0083333333_3333333333_34 x
+   + 
+                                   7                                  9
+     - 0.0001984126_9841269841_27 x  + 0.0000027557_3192239858_90653 x
+   + 
+                                     11      12
+     - 0.2505210838_5441718775 E -7 x   + O(x  )
+                       Type: UnivariatePuiseuxSeries(Expression(Float),x,0.0)
+testTrue("(a + b; true)")
+ 
+                                                                   Type: Void
+testTrue("(b + a; true)")
+ 
+                                                                   Type: Void
+testTrue("(a*b; true)")
+ 
+                                                                   Type: Void
+testTrue("(b*a; true)")
+ 
+                                                                   Type: Void
+
+testcase "crash in seriesSolve"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+f := operator f
+ 
+
+   (2)  f
+                                                          Type: BasicOperator
+de := x^2*f(x)^3*D(f(x), x, 4) - 16*f(x)^2*D(f(x), x)^2
+ 
+
+         2    3 (iv)             2 ,   2
+   (3)  x f(x) f    (x) - 16 f(x) f (x)
+
+                                                    Type: Expression(Integer)
+testLibraryError("seriesSolve(de, f, x = 0, [1, 0, 0, 0])")
+ 
+   Compiling function %DU with type List(UnivariateTaylorSeries(
+      Expression(Integer),x,0)) -> UnivariateTaylorSeries(Expression(
+      Integer),x,0) 
+                                                                   Type: Void
+
+testcase "odes"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+y := operator 'y
+ 
+
+   (2)  y
+                                                          Type: BasicOperator
+
+eq := D(y(x), x) - 1/((x+1)*y(x))
+ 
+
+                    ,
+        (x + 1)y(x)y (x) - 1
+
+   (3)  --------------------
+             (x + 1)y(x)
+                                                    Type: Expression(Integer)
+-- need to explicitly take 1 from EXPR(INT), otherwise interpreter
+-- would coerce 1 to equation
+res := seriesSolve(eq, y, x = 0, 1$EXPR(INT))
+ 
+   Compiling function %DX with type UnivariateTaylorSeries(Expression(
+      Integer),x,0) -> UnivariateTaylorSeries(Expression(Integer),x,0) 
+
+   (4)
+              2   4  3   25  4   217  5   304  6   1861  7   91277  8
+     1 + x - x  + - x  - -- x  + --- x  - --- x  + ---- x  - ----- x
+                  3      12       60       45       140       3360
+   + 
+     1727063  9   18554609  10      11
+     ------- x  - -------- x   + O(x  )
+      30240        151200
+                        Type: UnivariateTaylorSeries(Expression(Integer),x,0)
+es0 := [1, 1, -1, 4/3, -25/12, 217/60, -304/45]
+ 
+
+                    4    25  217    304
+   (5)  [1, 1, - 1, -, - --, ---, - ---]
+                    3    12   60     45
+                                                Type: List(Fraction(Integer))
+testEquals("[coefficient(res, i) for i in 0..6]", "es0")
+ 
+   There are 6 exposed and 6 unexposed library operations named 
+      coefficient having 2 argument(s) but none was determined to be 
+      applicable. Use HyperDoc Browse, or issue
+                           )display op coefficient
+      to learn more about the available operations. Perhaps 
+      package-calling the operation or using coercions on the arguments
+      will allow you to apply the operation.
+   Cannot find a definition or applicable library operation named 
+      coefficient with argument type(s) 
+                                     Any
+                             NonNegativeInteger
+      
+      Perhaps you should use "@" to indicate the required return type, 
+      or "$" to specify which version of the function you need.
+   FriCAS will attempt to step through and interpret the code.
+                                                                   Type: Void
+
+
+eq := D(y(x), x) - 1/(x*y(x))
+ 
+
+               ,
+        x y(x)y (x) - 1
+
+   (7)  ---------------
+             x y(x)
+                                                    Type: Expression(Integer)
+res := seriesSolve(eq, y, x = 1, [1])
+ 
+   Compiling function %EB with type List(UnivariateTaylorSeries(
+      Expression(Integer),x,1)) -> UnivariateTaylorSeries(Expression(
+      Integer),x,1) 
+
+   (8)
+                          2   4        3   25        4   217        5
+     1 + (x - 1) - (x - 1)  + - (x - 1)  - -- (x - 1)  + --- (x - 1)
+                              3            12             60
+   + 
+       304        6   1861        7   91277        8   1727063        9
+     - --- (x - 1)  + ---- (x - 1)  - ----- (x - 1)  + ------- (x - 1)
+        45             140             3360             30240
+   + 
+       18554609        10            11
+     - -------- (x - 1)   + O((x - 1)  )
+        151200
+                        Type: UnivariateTaylorSeries(Expression(Integer),x,1)
+testEquals("[coefficient(res, i) for i in 0..6]", "es0")
+ 
+   There are 6 exposed and 6 unexposed library operations named 
+      coefficient having 2 argument(s) but none was determined to be 
+      applicable. Use HyperDoc Browse, or issue
+                           )display op coefficient
+      to learn more about the available operations. Perhaps 
+      package-calling the operation or using coercions on the arguments
+      will allow you to apply the operation.
+   Cannot find a definition or applicable library operation named 
+      coefficient with argument type(s) 
+                                     Any
+                             NonNegativeInteger
+      
+      Perhaps you should use "@" to indicate the required return type, 
+      or "$" to specify which version of the function you need.
+   FriCAS will attempt to step through and interpret the code.
+                                                                   Type: Void
+
+-- We will solve  y''' = sin(y'') * exp(y) + cos(x)
+-- subject to y(0) = 1, y'(0) = 0, y''(0) = 0
+
+eq := differentiate(y x, x, 3) - sin differentiate(y x, x, 2) * exp y x
+           = cos x
+ 
+
+          ,,,        y(x)     ,,
+   (10)  y   (x) - %e    sin(y  (x)) = cos(x)
+
+                                          Type: Equation(Expression(Integer))
+
+res := seriesSolve(eq, y, x = 0, [1, 0, 0]);
+ 
+   Compiling function %EG with type List(UnivariateTaylorSeries(
+      Expression(Integer),x,0)) -> UnivariateTaylorSeries(Expression(
+      Integer),x,0) 
+
+                        Type: UnivariateTaylorSeries(Expression(Integer),x,0)
+es1 := [1, 0, 0, 1/6, %e/24, (%e^2 - 1)/120, (%e^3 - 2*%e)/720,
+        (%e^4 - 8*%e^2 + 4*%e + 1)/5040]
+ 
+
+                            2        3           4       2
+                   1  %e  %e  - 1  %e  - 2 %e  %e  - 8 %e  + 4 %e + 1
+   (12)  [1, 0, 0, -, --, -------, ----------, ----------------------]
+                   6  24    120        720              5040
+                                              Type: List(Expression(Integer))
+testEquals("[coefficient(res, i) for i in 0..7]", "es1")
+ 
+   There are 6 exposed and 6 unexposed library operations named 
+      coefficient having 2 argument(s) but none was determined to be 
+      applicable. Use HyperDoc Browse, or issue
+                           )display op coefficient
+      to learn more about the available operations. Perhaps 
+      package-calling the operation or using coercions on the arguments
+      will allow you to apply the operation.
+   Cannot find a definition or applicable library operation named 
+      coefficient with argument type(s) 
+                                     Any
+                             NonNegativeInteger
+      
+      Perhaps you should use "@" to indicate the required return type, 
+      or "$" to specify which version of the function you need.
+   FriCAS will attempt to step through and interpret the code.
+                                                                   Type: Void
+
+eq2 := D(y x,x) - x*cos(y x) - exp(x)
+ 
+
+          ,                      x
+   (14)  y (x) - x cos(y(x)) - %e
+
+                                                    Type: Expression(Integer)
+res := seriesSolve(eq2, y, x=0, y(0) = 0);
+ 
+   Compiling function %EJ with type UnivariateTaylorSeries(Expression(
+      Integer),x,0) -> UnivariateTaylorSeries(Expression(Integer),x,0) 
+
+                        Type: UnivariateTaylorSeries(Expression(Integer),x,0)
+p1 := univariate(polynomial(res, 15));
+ 
+
+                        Type: SparseUnivariatePolynomial(Expression(Integer))
+p2 := univariate(polynomial(cos(res), 15));
+ 
+
+                        Type: SparseUnivariatePolynomial(Expression(Integer))
+p3 := univariate(polynomial(taylor(exp(x), x = 0), 15));
+ 
+
+                        Type: SparseUnivariatePolynomial(Expression(Integer))
+testEquals("minimumDegree(D(p1, x) - monomial(1, 1)$SUP(EXPR(INT))*p2 - p3)",
+           "15")
+ 
+                                                                   Type: Void
+
+R := EXPR INT
+ 
+
+   (20)  Expression(Integer)
+                                                                   Type: Type
+uts := UTS(R,'x,0)
+ 
+
+   (21)  UnivariateTaylorSeries(Expression(Integer),x,0)
+                                                                   Type: Type
+foo: uts -> uts
+ 
+                                                                   Type: Void
+foo y ==
+  xx := monomial(1,1)$uts
+  xx * cos(y) + exp(xx)
+ 
+                                                                   Type: Void
+res2 := ode1(foo,0)$UTSODE(R,uts);
+ 
+   Compiling function foo with type UnivariateTaylorSeries(Expression(
+      Integer),x,0) -> UnivariateTaylorSeries(Expression(Integer),x,0) 
+
+                        Type: UnivariateTaylorSeries(Expression(Integer),x,0)
+xs : uts := x
+ 
+
+   (25)  x
+                        Type: UnivariateTaylorSeries(Expression(Integer),x,0)
+cc := differentiate(res2, x) - (xs*cos(res2) + exp(xs));
+ 
+
+                        Type: UnivariateTaylorSeries(Expression(Integer),x,0)
+testEquals("polynomial(cc, 20)", "0")
+ 
+                                                                   Type: Void
+testEquals("polynomial(res2 - res, 20)", "0")
+ 
+                                                                   Type: Void
+
+--
+airy := differentiate(y x, x, 2) - x * y x
+ 
+
+          ,,
+   (29)  y  (x) - x y(x)
+
+                                                    Type: Expression(Integer)
+
+res := seriesSolve(airy, y, x = 0, [a0, a1]);
+ 
+   Compiling function %EN with type List(UnivariateTaylorSeries(
+      Expression(Integer),x,0)) -> UnivariateTaylorSeries(Expression(
+      Integer),x,0) 
+
+                        Type: UnivariateTaylorSeries(Expression(Integer),x,0)
+es2 := [a0, a1, 0, a0/6, a1/12, 0, a0/180, a1/504]
+ 
+
+                     1      1         1       1
+   (31)  [a0, a1, 0, - a0, -- a1, 0, --- a0, --- a1]
+                     6     12        180     504
+                                    Type: List(Polynomial(Fraction(Integer)))
+testEquals("[coefficient(res, i) for i in 0..7]", "es2")
+ 
+   There are 6 exposed and 6 unexposed library operations named 
+      coefficient having 2 argument(s) but none was determined to be 
+      applicable. Use HyperDoc Browse, or issue
+                           )display op coefficient
+      to learn more about the available operations. Perhaps 
+      package-calling the operation or using coercions on the arguments
+      will allow you to apply the operation.
+   Cannot find a definition or applicable library operation named 
+      coefficient with argument type(s) 
+                                     Any
+                             NonNegativeInteger
+      
+      Perhaps you should use "@" to indicate the required return type, 
+      or "$" to specify which version of the function you need.
+   FriCAS will attempt to step through and interpret the code.
+                                                                   Type: Void
+
+-- We can solve around other points than x = 0
+res := seriesSolve(airy, y, x = 1, [a0, a1]);
+ 
+   Compiling function %EQ with type List(UnivariateTaylorSeries(
+      Expression(Integer),x,1)) -> UnivariateTaylorSeries(Expression(
+      Integer),x,1) 
+
+                        Type: UnivariateTaylorSeries(Expression(Integer),x,1)
+es3 := [a0,a1,a0/2,(a1+a0)/6,(2*a1+a0)/24,(a1+4*a0)/120,
+          (6*a1+5*a0)/720,(11*a1+9*a0)/5040];
+ 
+
+                                    Type: List(Polynomial(Fraction(Integer)))
+testEquals("[coefficient(res, i) for i in 0..7]", "es3")
+ 
+   There are 6 exposed and 6 unexposed library operations named 
+      coefficient having 2 argument(s) but none was determined to be 
+      applicable. Use HyperDoc Browse, or issue
+                           )display op coefficient
+      to learn more about the available operations. Perhaps 
+      package-calling the operation or using coercions on the arguments
+      will allow you to apply the operation.
+   Cannot find a definition or applicable library operation named 
+      coefficient with argument type(s) 
+                                     Any
+                             NonNegativeInteger
+      
+      Perhaps you should use "@" to indicate the required return type, 
+      or "$" to specify which version of the function you need.
+   FriCAS will attempt to step through and interpret the code.
+                                                                   Type: Void
+
+-- System of equations for tan(t) and sec(t)
+z := operator 'z
+ 
+
+   (36)  z
+                                                          Type: BasicOperator
+eq1 := differentiate(z t, t) = 1 + z(t)^2
+ 
+
+          ,          2
+   (37)  z (t) = z(t)  + 1
+
+                                          Type: Equation(Expression(Integer))
+eq2 := differentiate(y t, t) = z(t) * y(t)
+ 
+
+          ,
+   (38)  y (t) = y(t)z(t)
+
+                                          Type: Equation(Expression(Integer))
+res := seriesSolve([eq2, eq1], [z, y], t = 0, [y 0 = 1, z 0 = 0]);
+ 
+   Compiling function %EW with type List(UnivariateTaylorSeries(
+      Expression(Integer),t,0)) -> UnivariateTaylorSeries(Expression(
+      Integer),t,0) 
+   Compiling function %EX with type List(UnivariateTaylorSeries(
+      Expression(Integer),t,0)) -> UnivariateTaylorSeries(Expression(
+      Integer),t,0) 
+
+                  Type: List(UnivariateTaylorSeries(Expression(Integer),t,0))
+ts := taylor(tan(t), t = 0);
+ 
+
+                        Type: UnivariateTaylorSeries(Expression(Integer),t,0)
+ss := taylor(sec(t), t = 0);
+ 
+
+                        Type: UnivariateTaylorSeries(Expression(Integer),t,0)
+
+testEquals("polynomial(res(1), 15)", "polynomial(ts, 15)")
+ 
+                                                                   Type: Void
+testEquals("polynomial(res(2), 15)", "polynomial(ss, 15)")
+ 
+                                                                   Type: Void
+
+-- System of equations for a damped pendulum of mass and length 1:
+eq1 := differentiate(z t, t) = y t
+ 
+
+          ,
+   (44)  z (t) = y(t)
+
+                                          Type: Equation(Expression(Integer))
+eq2 := differentiate(y t, t) = - g * sin(z t) - c * y t
+ 
+
+          ,
+   (45)  y (t) = - g sin(z(t)) - c y(t)
+
+                                          Type: Equation(Expression(Integer))
+res := seriesSolve([eq1, eq2], [z, y], t = 0, [y 0 = a, z 0 = b]);
+ 
+   Compiling function %FD with type List(UnivariateTaylorSeries(
+      Expression(Integer),t,0)) -> UnivariateTaylorSeries(Expression(
+      Integer),t,0) 
+   Compiling function %FE with type List(UnivariateTaylorSeries(
+      Expression(Integer),t,0)) -> UnivariateTaylorSeries(Expression(
+      Integer),t,0) 
+
+                  Type: List(UnivariateTaylorSeries(Expression(Integer),t,0))
+p1 := polynomial(res(1), 15);
+ 
+
+                                        Type: Polynomial(Expression(Integer))
+p2 := polynomial(res(2), 15);
+ 
+
+                                        Type: Polynomial(Expression(Integer))
+p3 := polynomial(sin(res(1)), 15);
+ 
+
+                                        Type: Polynomial(Expression(Integer))
+t15 := minimumDegree(t^15)
+ 
+
+          15
+   (50)  t
+                                               Type: IndexedExponents(Symbol)
+testEquals("minimumDegree(D(p1, t) - p2)", "t15")
+ 
+                                                                   Type: Void
+testEquals("minimumDegree(D(p2, t) + g*p3 + c * p2)", "t15")
+ 
+                                                                   Type: Void
+
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+   =============================================================================
+   WARNINGS:
+   Testsuite: series
+   Testcase: bernoulli numbers
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: series
+   Testcase: series over finite field
+   test: 2
+   testing in a domain without InputForm!
+   Testsuite: series
+   Testcase: odes
+   test: 11
+   testing in a domain without InputForm!
+   Testsuite: series
+   Testcase: odes
+   test: 12
+   testing in a domain without InputForm!
+
+   =============================================================================
+   Testsuite: series
+     failed (total): 0 (9)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   series                      0     (9)               0    (48)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 48
+                                                                   Type: Void
+)quit
+ 

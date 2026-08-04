@@ -1,0 +1,444 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read intlocp.input
+ 
+)clear completely
+ 
+   All user variables and function definitions have been cleared.
+   All )browse facility databases have been cleared.
+   Internally cached functions and constructors have been cleared.
+   )clear completely is finished.
+)set break resume
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+
+testsuite "IntegerLocalizedAtPrime"
+ 
+   All user variables and function definitions have been cleared.
+   WARNING: string for testsuite should have less than 15 characters!
+                                                                   Type: Void
+
+-------------------------------------------------------------------
+testcase "RetractableFrom Q"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+-------------------------------------------------------------------
+Z ==> Integer
+ 
+                                                                   Type: Void
+Q ==>  Fraction Z
+ 
+                                                                   Type: Void
+C ==>IntegerLocalizedAtPrime(7)
+ 
+                                                                   Type: Void
+
+testEquals("0$Q", "(0$C)::Q")
+ 
+                                                                   Type: Void
+testEquals("exponent(retract(11/5)@C)", "0")
+ 
+                                                                   Type: Void
+testEquals("unitPart(retract(11/5)@C)", "11/5")
+ 
+                                                                   Type: Void
+
+t: C := retract(7^3/12)@C
+ 
+
+         3  1
+   (8)  7  --
+           12
+                                             Type: IntegerLocalizedAtPrime(7)
+testEquals("exponent t", "3")
+ 
+                                                                   Type: Void
+testEquals("unitPart t", "1/12")
+ 
+                                                                   Type: Void
+
+-------------------------------------------------------------------
+testcase "RetractableTo Z"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+-------------------------------------------------------------------
+Z ==> Integer
+ 
+                                                                   Type: Void
+C ==>IntegerLocalizedAtPrime(7)
+ 
+                                                                   Type: Void
+
+testEquals("0$C", "(0$Z)::C")
+ 
+                                                                   Type: Void
+testEquals("exponent(49::C)", "2")
+ 
+                                                                   Type: Void
+testEquals("unitPart(49::C)", "1")
+ 
+                                                                   Type: Void
+testEquals("exponent(-98::C)", "2")
+ 
+                                                                   Type: Void
+testEquals("unitPart(-98::C)", "-2")
+ 
+                                                                   Type: Void
+e: C := 1$C
+ 
+
+   (9)  1
+                                             Type: IntegerLocalizedAtPrime(7)
+testEquals("retract(e+e)@Z", "2")
+ 
+                                                                   Type: Void
+testEquals("(retractIfCan(e)$C)::Z", "1")
+ 
+                                                                   Type: Void
+
+t: C := retract(2/5)@C
+ 
+
+         2
+   (12)  -
+         5
+                                             Type: IntegerLocalizedAtPrime(7)
+testEquals("retractIfCan(t)$C case Z", "false")
+ 
+                                                                   Type: Void
+
+-------------------------------------------------------------------
+testcase "EuclideanDomain"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+-------------------------------------------------------------------
+Z ==> Integer
+ 
+                                                                   Type: Void
+Q ==>  Fraction Z
+ 
+                                                                   Type: Void
+C ==>IntegerLocalizedAtPrime(7)
+ 
+                                                                   Type: Void
+
+c: C := retract(8/9)@C
+ 
+
+        8
+   (5)  -
+        9
+                                             Type: IntegerLocalizedAtPrime(7)
+t: C := retract(1/5)@C
+ 
+
+        1
+   (6)  -
+        5
+                                             Type: IntegerLocalizedAtPrime(7)
+z: C := c+t
+ 
+
+         2  1
+   (7)  7  --
+           45
+                                             Type: IntegerLocalizedAtPrime(7)
+testEquals("exponent z", "2")
+ 
+                                                                   Type: Void
+testEquals("unitPart z", "1/45")
+ 
+                                                                   Type: Void
+
+h: C := z*c
+ 
+
+          2  8
+   (10)  7  ---
+            405
+                                             Type: IntegerLocalizedAtPrime(7)
+testEquals("exponent h", "2")
+ 
+                                                                   Type: Void
+testEquals("unitPart h", "8/405")
+ 
+                                                                   Type: Void
+
+h := -c
+ 
+
+           8
+   (13)  - -
+           9
+                                             Type: IntegerLocalizedAtPrime(7)
+testEquals("exponent h", "0")
+ 
+                                                                   Type: Void
+testEquals("unitPart h", "-8/9")
+ 
+                                                                   Type: Void
+
+h := z^3
+ 
+
+          6   1
+   (16)  7  -----
+            91125
+                                             Type: IntegerLocalizedAtPrime(7)
+testEquals("exponent h", "6")
+ 
+                                                                   Type: Void
+testEquals("unitPart h", "1/91125")
+ 
+                                                                   Type: Void
+testEquals("euclideanSize h", "6")
+ 
+                                                                   Type: Void
+
+s := retract(7/3000)@C
+ 
+
+             1
+   (20)  7 ----
+           3000
+                                             Type: IntegerLocalizedAtPrime(7)
+r := divide(s, h)
+ 
+
+                                        1
+   (21)  [quotient = 0, remainder = 7 ----]
+                                      3000
+Type: Record(quotient: IntegerLocalizedAtPrime(7),remainder: IntegerLocalizedAtPrime(7))
+testEquals("r.quotient", "0$C")
+ 
+                                                                   Type: Void
+testEquals("r.remainder", "s")
+ 
+                                                                   Type: Void
+
+r := divide(h, s)
+ 
+
+                      5  8
+   (24)  [quotient = 7  ---, remainder = 0]
+                        243
+Type: Record(quotient: IntegerLocalizedAtPrime(7),remainder: IntegerLocalizedAtPrime(7))
+x: C := retract(8/243)@C
+ 
+
+          8
+   (25)  ---
+         243
+                                             Type: IntegerLocalizedAtPrime(7)
+testEquals("r.quotient", "7^5*x")
+ 
+                                                                   Type: Void
+testEquals("r.remainder", "0$C")
+ 
+                                                                   Type: Void
+
+testEquals("opposite?(c, -c)", "true")
+ 
+                                                                   Type: Void
+
+testEquals("unit?(c)", "true")
+ 
+                                                                   Type: Void
+testEquals("unit?(s)", "false")
+ 
+                                                                   Type: Void
+
+testEquals("gcd(h,s)", "7::C")
+ 
+                                                                   Type: Void
+l: C := retract(7^6/273375000)@C
+ 
+
+          6     1
+   (32)  7  ---------
+            273375000
+                                             Type: IntegerLocalizedAtPrime(7)
+testEquals("lcm(h,s)", "l")
+ 
+                                                                   Type: Void
+lcc := lcmCoef(h,s)
+ 
+
+                      6     1                 1             5   1
+   (34)  [llcm_res = 7  ---------, coeff1 = ----, coeff2 = 7  -----]
+                        273375000           3000              91125
+Type: Record(llcm_res: IntegerLocalizedAtPrime(7),coeff1: IntegerLocalizedAtPrime(7),coeff2: IntegerLocalizedAtPrime(7))
+testEquals("lcc.llcm_res", "l")
+ 
+                                                                   Type: Void
+testEquals("lcc.coeff1", "retract(1/3000)@C")
+ 
+                                                                   Type: Void
+testEquals("lcc.coeff2", "retract(7^5/91125)@C")
+ 
+                                                                   Type: Void
+
+testEquals("recip(c)::C", "retract(9/8)@C")
+ 
+                                                                   Type: Void
+testEquals("recip(z) case C", "false")
+ 
+                                                                   Type: Void
+
+-------------------------------------------------------------------
+testcase "canonicalUnitNormal"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+-------------------------------------------------------------------
+Z ==> Integer
+ 
+                                                                   Type: Void
+Q ==>  Fraction Z
+ 
+                                                                   Type: Void
+C ==>IntegerLocalizedAtPrime(7)
+ 
+                                                                   Type: Void
+
+c: C := retract(49*3/5)@C
+ 
+
+         2 3
+   (5)  7  -
+           5
+                                             Type: IntegerLocalizedAtPrime(7)
+uca := unitNormal c
+ 
+
+                3               2              5
+   (6)  [unit = -, canonical = 7 , associate = -]
+                5                              3
+Type: Record(unit: IntegerLocalizedAtPrime(7),canonical: IntegerLocalizedAtPrime(7),associate: IntegerLocalizedAtPrime(7))
+testEquals("uca.unit", "retract(3/5)@C")
+ 
+                                                                   Type: Void
+testEquals("uca.canonical", "49::C")
+ 
+                                                                   Type: Void
+testEquals("uca.associate", "retract(5/3)@C")
+ 
+                                                                   Type: Void
+
+d: C := retract(49*4/13)@C
+ 
+
+          2  4
+   (10)  7  --
+            13
+                                             Type: IntegerLocalizedAtPrime(7)
+testEquals("associates?(c,d)", "true")
+ 
+                                                                   Type: Void
+
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+   =============================================================================
+   WARNINGS:
+   Testsuite: IntegerLocalizedAtPrime
+   Testcase: RetractableTo Z
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: IntegerLocalizedAtPrime
+   Testcase: EuclideanDomain
+   test: 10
+   testing in a domain without InputForm!
+   Testsuite: IntegerLocalizedAtPrime
+   Testcase: EuclideanDomain
+   test: 11
+   testing in a domain without InputForm!
+   Testsuite: IntegerLocalizedAtPrime
+   Testcase: EuclideanDomain
+   test: 12
+   testing in a domain without InputForm!
+   Testsuite: IntegerLocalizedAtPrime
+   Testcase: EuclideanDomain
+   test: 13
+   testing in a domain without InputForm!
+   Testsuite: IntegerLocalizedAtPrime
+   Testcase: EuclideanDomain
+   test: 17
+   testing in a domain without InputForm!
+   Testsuite: IntegerLocalizedAtPrime
+   Testcase: EuclideanDomain
+   test: 18
+   testing in a domain without InputForm!
+   Testsuite: IntegerLocalizedAtPrime
+   Testcase: EuclideanDomain
+   test: 19
+   testing in a domain without InputForm!
+   Testsuite: IntegerLocalizedAtPrime
+   Testcase: EuclideanDomain
+   test: 20
+   testing in a domain without InputForm!
+   Testsuite: IntegerLocalizedAtPrime
+   Testcase: EuclideanDomain
+   test: 21
+   testing in a domain without InputForm!
+   Testsuite: IntegerLocalizedAtPrime
+   Testcase: EuclideanDomain
+   test: 22
+   testing in a domain without InputForm!
+   Testsuite: IntegerLocalizedAtPrime
+   Testcase: canonicalUnitNormal
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: IntegerLocalizedAtPrime
+   Testcase: canonicalUnitNormal
+   test: 2
+   testing in a domain without InputForm!
+   Testsuite: IntegerLocalizedAtPrime
+   Testcase: canonicalUnitNormal
+   test: 3
+   testing in a domain without InputForm!
+
+   =============================================================================
+   Testsuite: IntegerLocalizedAtPrime
+     failed (total): 0 (4)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   IntegerLocalizedAtPrime     0     (4)               0    (40)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 40
+                                                                   Type: Void
+)quit
+ 

@@ -1,0 +1,216 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read fun.input
+ 
+)set break resume
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+
+testsuite "functional values"
+ 
+   All user variables and function definitions have been cleared.
+   WARNING: string for testsuite should have less than 15 characters!
+                                                                   Type: Void
+
+testcase "add1"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+testTrue("(add1 := (x : INT) : INT -> INT -> INT +-> y +-> z +-> x + y + z"
+          "; true)")
+ 
+                                                                   Type: Void
+testTrue("(f1 := add1(5); true)")
+ 
+                                                                   Type: Void
+testTrue("(f2 := f1(7); true)")
+ 
+                                                                   Type: Void
+testEquals("f2(8)", "20")
+ 
+                                                                   Type: Void
+testEquals("add1(3)(9)(4)", "16")
+ 
+                                                                   Type: Void
+
+testcase "add2"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+add2 == (x : INT) : INT -> INT -> INT +-> y +-> z +-> x + y + z
+ 
+   Function declaration add2 : Integer -> (Integer -> (Integer -> 
+      Integer)) has been added to workspace.
+                                                                   Type: Void
+testTrue("(f1 := add2(15); true)")
+ 
+   Compiling function add2 with type Integer -> (Integer -> (Integer
+       -> Integer)) 
+                                                                   Type: Void
+testEquals("f1(7)(8)", "30")
+ 
+                                                                   Type: Void
+testEquals("add2(2)(7)(4)", "13")
+ 
+                                                                   Type: Void
+
+testcase "add3"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+add3(x : INT) : INT -> INT -> INT == y +-> z +-> x + y + z
+ 
+   Function declaration add3 : Integer -> (Integer -> (Integer -> 
+      Integer)) has been added to workspace.
+                                                                   Type: Void
+testTrue("(f1 := add3(25); true)")
+ 
+   Compiling function add3 with type Integer -> (Integer -> (Integer
+       -> Integer)) 
+                                                                   Type: Void
+testEquals("f1(7)(8)", "40")
+ 
+                                                                   Type: Void
+testEquals("add3(6)(11)(4)", "21")
+ 
+                                                                   Type: Void
+
+testcase "add4"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+testTrue("(add4 := x +-> (y : INT) : INT -> INT +-> z +-> x + y + z"
+         "; true)")
+ 
+                                                                   Type: Void
+testTrue("(g1 := add4(7); true)")
+ 
+                                                                   Type: Void
+testEquals("g1(3)(19)", "29")
+ 
+                                                                   Type: Void
+testEquals("add4(11)(-1)(5)", "15")
+ 
+                                                                   Type: Void
+
+testcase "list of closures"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+l1 := [1, 7, 17]
+ 
+
+   (2)  [1, 7, 17]
+                                                  Type: List(PositiveInteger)
+l2 := [((x : INT) : INT +-> x + y) for y in l1]
+ 
+
+   (3)
+   [theMap(#<INTERPRETED-FUNCTION NIL {120242141B}>,1),
+    theMap(#<INTERPRETED-FUNCTION NIL {120242148B}>,1),
+    theMap(#<INTERPRETED-FUNCTION NIL {12024214FB}>,1)]
+                                             Type: List((Integer -> Integer))
+testEquals("l2(1)(3)", "4")
+ 
+                                                                   Type: Void
+testEquals("l2(2)(2)", "9")
+ 
+                                                                   Type: Void
+testEquals("l2(3)(-7)", "10")
+ 
+                                                                   Type: Void
+
+testcase "shadowing"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+h := (a : INT) : INT->INT +-> x +-> (a := 3 ; x+a)
+ 
+
+   (2)  theMap(*1;anonymousFunction;14;initial;internal)
+                                      Type: (Integer -> (Integer -> Integer))
+testEquals("h(1)(5)", "8")
+ 
+                                                                   Type: Void
+testEquals("h(5)(3)", "6")
+ 
+                                                                   Type: Void
+
+testcase "local scope"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+testEquals("((): Void +-> {local y; y := 1; ()})(); y", "y")
+ 
+                                                                   Type: Void
+y := sin(x)
+ 
+
+   (3)  sin(x)
+                                                    Type: Expression(Integer)
+testEquals("((): Void +-> {local y; y := 1; ()})(); y", "sin(x)")
+ 
+                                                                   Type: Void
+p(y) ==
+    ((): Void +-> (local y; y := 1;()))()
+    y
+ 
+                                                                   Type: Void
+-- Does not work yet
+xftestEquals("p(3)", "3")
+ 
+   Compiling function p with type PositiveInteger -> PositiveInteger 
+                                                                   Type: Void
+-- testEquals("p(sin(x))", "sin(x)")
+
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+   =============================================================================
+   WARNINGS:
+   Testsuite: functional values
+   Testcase: local scope
+   test: 1
+   testing in a domain without InputForm!
+
+   =============================================================================
+   Testsuite: functional values
+     failed (total): 0 (7)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   functional values           0     (7)               0    (23)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 1
+   unexpected passes: 0
+   total tests: 23
+                                                                   Type: Void
+)quit
+ 

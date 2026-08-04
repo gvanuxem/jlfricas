@@ -1,0 +1,115 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read mts.input
+ 
+)set break resume
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+testsuite "MTS"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+testcase "coefficient"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+)se str cal 2
+ 
+X := x::TS FRAC INT;
+ 
+
+                                        Type: TaylorSeries(Fraction(Integer))
+Y := y::TS FRAC INT;
+ 
+
+                                        Type: TaylorSeries(Fraction(Integer))
+Z := z::TS FRAC INT;
+ 
+
+                                        Type: TaylorSeries(Fraction(Integer))
+s := sin(X+Y);
+ 
+
+                                        Type: TaylorSeries(Fraction(Integer))
+testEquals("coefficient(s, 3)", "-1/6*(x+y)^3")
+ 
+                                                                   Type: Void
+
+IS ==> IndexedExponents Symbol
+ 
+                                                                   Type: Void
+testEquals("coefficient(s, monomial(3,x)$IS)", "-1/6")
+ 
+                                                                   Type: Void
+
+s := (1/(1-X-Y-Z))::TS FRAC INT;
+ 
+
+                                        Type: TaylorSeries(Fraction(Integer))
+t := coefficient(s, [x, z], [3, 2]);
+ 
+
+                                        Type: TaylorSeries(Fraction(Integer))
+testEquals("degree(polynomial(t, 5), y)", "5")
+ 
+                                                                   Type: Void
+
+s := (1/(1-X-Y))::TS FRAC INT;
+ 
+
+                                        Type: TaylorSeries(Fraction(Integer))
+t := coefficient(s, x, 1)
+ 
+
+                      2
+   (13)  1 + 2 y + 3 y  + O(3)
+                                        Type: TaylorSeries(Fraction(Integer))
+testEquals("polynomial(t, 5)", "1+2*y+3*y^2+4*y^3+5*y^4+6*y^5")
+ 
+                                                                   Type: Void
+
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+
+   =============================================================================
+   Testsuite: MTS
+     failed (total): 0 (1)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   MTS                         0     (1)               0     (4)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 4
+                                                                   Type: Void
+)quit
+ 

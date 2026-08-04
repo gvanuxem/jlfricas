@@ -1,0 +1,74 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read table.input
+ 
+)set break resume
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+testsuite "HASHTBL"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+testcase "equality"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+l := [[1, 1], [2, 2], [3, 3]]$List Record(key : INT, entry : INT);
+ 
+
+                              Type: List(Record(key: Integer,entry: Integer))
+testEquals("construct(l)$TABLE(INT, INT)", "construct(reverse l)$TABLE(INT, INT)")
+ 
+                                                                   Type: Void
+
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+   =============================================================================
+   WARNINGS:
+   Testsuite: HASHTBL
+   Testcase: equality
+   test: 1
+   testing in a domain without InputForm!
+
+   =============================================================================
+   Testsuite: HASHTBL
+     failed (total): 0 (1)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   HASHTBL                     0     (1)               0     (1)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 1
+                                                                   Type: Void
+)quit
+ 

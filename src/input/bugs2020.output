@@ -1,0 +1,512 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read bugs2020.input
+ 
+)set break resume
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+
+testsuite "bugs2020"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testcase "operations on SingleInteger"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testTrue("(factor(max()$SingleInteger); true)")
+ 
+                                                                   Type: Void
+testTrue("(squareFree(max()$SingleInteger); true)")
+ 
+                                                                   Type: Void
+
+i : Integer
+ 
+                                                                   Type: Void
+j : Integer
+ 
+                                                                   Type: Void
+
+i := prevPrime((max()$SingleInteger)::Integer)
+ 
+
+   (6)  4611686018427387847
+                                                                Type: Integer
+testTrue("prime?(i::SingleInteger)")
+ 
+                                                                   Type: Void
+
+do_sint_tst() ==
+    free i, j
+    if max()$SingleInteger > 2^128 then
+        print(message("max()$SingleInteger is surprisingly big")$OutputForm)
+    else
+        i := 8
+        j := 31
+        binomial(j, i) > max()$SingleInteger =>
+            testTrue("binomial(j, i) <= max()$SingleInteger")
+        repeat
+            p := binomial(j, i)
+            i*p > max()$SingleInteger => break
+            j := j + 1
+            j < 3*i => "iterate"
+            i := i + 1
+        testTrue("(binomial(j::SingleInteger, i::SingleInteger); true)")
+ 
+                                                                   Type: Void
+
+do_sint_tst()
+ 
+   Compiling function do_sint_tst with type () -> Void 
+                                                                   Type: Void
+
+testcase "singularities in realElementary"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testEquals("realElementary(acot(x*acosh(1)))", "%pi/2")
+ 
+                                                                   Type: Void
+testEquals("realElementary(asin(1 + x*acosh(1)))", "%pi/2")
+ 
+                                                                   Type: Void
+testEquals("realElementary(asin(-1 + x*acosh(1)))", "-%pi/2")
+ 
+                                                                   Type: Void
+testEquals("realElementary(acsc(1 + x*acosh(1)))", "%pi/2")
+ 
+                                                                   Type: Void
+testEquals("realElementary(acsc(-1 + x*acosh(1)))", "-%pi/2")
+ 
+                                                                   Type: Void
+
+testcase "input form of derivative"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+f := operator 'f
+ 
+
+   (2)  f
+                                                          Type: BasicOperator
+fe := D(f(a, b), b)
+ 
+
+   (3)  f  (a,b)
+         ,2
+                                                    Type: Expression(Integer)
+fe2 := eval(fe, a = b)
+ 
+
+   (4)  f  (b,b)
+         ,2
+                                                    Type: Expression(Integer)
+i_form := fe2::InputForm
+ 
+
+   (5)  (eval (D (f b %D) (:: %D Symbol)) (:: %D Symbol) b)
+                                                              Type: InputForm
+testTrue("(fe2 = interpret(i_form))@Boolean")
+ 
+                                                                   Type: Void
+
+testcase "CoercibleFrom"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testTrue("Polynomial(Integer) has CoercibleFrom(Integer)")
+ 
+                                                                   Type: Void
+
+testcase "bad reduction"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+p := a^4*b^2*d^4*x^4 + (-2*a^2*b^2 + a^4)*d^2*x^2 + b^2 - a^2
+ 
+
+         4 2 4 4         2 2    4  2 2    2    2
+   (2)  a b d x  + (- 2 a b  + a )d x  + b  - a
+                                                    Type: Polynomial(Integer)
+pu := univariate(p, x)
+ 
+
+         4 2 4 4         2 2    4  2 2    2    2
+   (3)  a b d ?  + (- 2 a b  + a )d ?  + b  - a
+                        Type: SparseUnivariatePolynomial(Polynomial(Integer))
+-- used to crash
+testTrue("(ll := [factorPolynomial(pu) for i in 1..5000]; true)")
+ 
+                                                                   Type: Void
+
+testcase "factor for SUP(EXPR(INT))"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+pE := SUP(EXPR(INT))
+ 
+
+   (2)  SparseUnivariatePolynomial(Expression(Integer))
+                                                                   Type: Type
+
+test_fac1(p, fp) ==
+    fl1 := factorList(fp)
+    free tp1, tp2
+    pr1 := 1$pE
+    free fac1
+    for fac in fl1 repeat
+        pr1 := pr1*fac.factor^fac.exponent
+        fac1 := fac
+        testEquals("fac1.flag", "_"prime_"")
+    pr1 := unit(fp)*pr1
+    tp1 := pr1
+    tp2 := p
+    testEquals("tp1", "tp2")
+ 
+                                                                   Type: Void
+
+test_fac(p) ==
+    f1 := factor(p)
+    test_fac1(p, f1)
+    f2 := factorPolynomial(p)$ExpressionFactorPolynomial(INT, EXPR(INT))
+    test_fac1(p, f2)
+ 
+                                                                   Type: Void
+
+c0 := exp(x)/(exp(x) - 1)
+ 
+
+            x
+          %e
+   (5)  -------
+          x
+        %e  - 1
+                                                    Type: Expression(Integer)
+c1 := exp(x)/(exp(x) - 2)
+ 
+
+            x
+          %e
+   (6)  -------
+          x
+        %e  - 2
+                                                    Type: Expression(Integer)
+
+p1 := monomial(c1, 1)$pE + c0
+ 
+
+            x           x
+          %e          %e
+   (7)  ------- ? + -------
+          x           x
+        %e  - 2     %e  - 1
+                        Type: SparseUnivariatePolynomial(Expression(Integer))
+test_fac(p1)
+ 
+   Compiling function test_fac1 with type (SparseUnivariatePolynomial(
+      Expression(Integer)), Factored(SparseUnivariatePolynomial(
+      Expression(Integer)))) -> Void 
+   Compiling function test_fac with type SparseUnivariatePolynomial(
+      Expression(Integer)) -> Void 
+   Compiled code for test_fac1 has been cleared.
+   Compiled code for test_fac has been cleared.
+                                                                   Type: Void
+
+p2 := monomial(c1, 2)$pE + c0
+ 
+
+            x            x
+          %e     2     %e
+   (9)  ------- ?  + -------
+          x            x
+        %e  - 2      %e  - 1
+                        Type: SparseUnivariatePolynomial(Expression(Integer))
+test_fac(p2)
+ 
+   Compiling function test_fac1 with type (SparseUnivariatePolynomial(
+      Expression(Integer)), Factored(SparseUnivariatePolynomial(
+      Expression(Integer)))) -> Void 
+   Compiling function test_fac with type SparseUnivariatePolynomial(
+      Expression(Integer)) -> Void 
+                                                                   Type: Void
+
+test_fac(p1*p1)
+ 
+                                                                   Type: Void
+test_fac(p1*p2)
+ 
+                                                                   Type: Void
+test_fac(p1*p1*p2)
+ 
+                                                                   Type: Void
+
+c2 := sqrt(exp(x) - 1)
+ 
+
+          +-------+
+          |  x
+   (14)  \|%e  - 1
+                                                    Type: Expression(Integer)
+p3 := monomial(c2, 1)$pE + c0
+ 
+
+          +-------+        x
+          |  x           %e
+   (15)  \|%e  - 1 ? + -------
+                         x
+                       %e  - 1
+                        Type: SparseUnivariatePolynomial(Expression(Integer))
+test_fac(p3)
+ 
+                                                                   Type: Void
+
+p4 := monomial(c2, 3)$pE + c0
+ 
+
+          +-------+         x
+          |  x      3     %e
+   (17)  \|%e  - 1 ?  + -------
+                          x
+                        %e  - 1
+                        Type: SparseUnivariatePolynomial(Expression(Integer))
+test_fac(p4)
+ 
+                                                                   Type: Void
+
+test_fac(p1*p3)
+ 
+                                                                   Type: Void
+test_fac(p3*p4)
+ 
+                                                                   Type: Void
+test_fac(p1*p4)
+ 
+                                                                   Type: Void
+test_fac(p3^2)
+ 
+                                                                   Type: Void
+test_fac(p3*p4^2)
+ 
+                                                                   Type: Void
+
+testcase "diophantineSystem"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+vI := Vector(INT)
+ 
+
+   (2)  Vector(Integer)
+                                                                   Type: Type
+mI := Matrix(INT)
+ 
+
+   (3)  Matrix(Integer)
+                                                                   Type: Type
+sF := SmithNormalForm(INT, vI, vI, mI)
+ 
+
+   (4)
+   SmithNormalForm(Integer,Vector(Integer),Vector(Integer),Matrix(Integer))
+                                                                   Type: Type
+
+m := matrix([[1, 0, 0], [-1, 0, 0], [3, 0, 100], [-2, 6, 0], [0, -4, 0]])
+ 
+
+        + 1    0    0 +
+        |             |
+        |- 1   0    0 |
+        |             |
+   (5)  | 3    0   100|
+        |             |
+        |- 2   6    0 |
+        |             |
+        + 0   - 4   0 +
+                                                        Type: Matrix(Integer)
+v1 := vector([0, 0, 0, 0, 0])
+ 
+
+   (6)  [0, 0, 0, 0, 0]
+                                             Type: Vector(NonNegativeInteger)
+v2 := vector([1, -1, 303, 10, -8])
+ 
+
+   (7)  [1, - 1, 303, 10, - 8]
+                                                        Type: Vector(Integer)
+
+testEquals("(diophantineSystem(m, v1)$sF).particular", "vector([0, 0, 0])")
+ 
+                                                                   Type: Void
+testEquals("(diophantineSystem(m, v2)$sF).particular", "vector([1, 2, 3])")
+ 
+                                                                   Type: Void
+
+testcase "interp construct"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testTrue("(v1 := [[2.0^(i*j) for j in 0..1] for i in 0..1"
+             "]@SquareMatrix(2, Float); true)")
+ 
+                                                                   Type: Void
+testTrue("(v2 : SquareMatrix(2, Float) := [[2.0^(i*j) for j in 0..1]"
+             " for i in 0..1]; true)")
+ 
+                                                                   Type: Void
+testEquals("v1", "v2")
+ 
+                                                                   Type: Void
+
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+   =============================================================================
+   WARNINGS:
+   Testsuite: bugs2020
+   Testcase: factor for SUP(EXPR(INT))
+   test: 2
+   testing in a domain without InputForm!
+   Testsuite: bugs2020
+   Testcase: factor for SUP(EXPR(INT))
+   test: 4
+   testing in a domain without InputForm!
+   Testsuite: bugs2020
+   Testcase: factor for SUP(EXPR(INT))
+   test: 6
+   testing in a domain without InputForm!
+   Testsuite: bugs2020
+   Testcase: factor for SUP(EXPR(INT))
+   test: 8
+   testing in a domain without InputForm!
+   Testsuite: bugs2020
+   Testcase: factor for SUP(EXPR(INT))
+   test: 10
+   testing in a domain without InputForm!
+   Testsuite: bugs2020
+   Testcase: factor for SUP(EXPR(INT))
+   test: 12
+   testing in a domain without InputForm!
+   Testsuite: bugs2020
+   Testcase: factor for SUP(EXPR(INT))
+   test: 15
+   testing in a domain without InputForm!
+   Testsuite: bugs2020
+   Testcase: factor for SUP(EXPR(INT))
+   test: 18
+   testing in a domain without InputForm!
+   Testsuite: bugs2020
+   Testcase: factor for SUP(EXPR(INT))
+   test: 21
+   testing in a domain without InputForm!
+   Testsuite: bugs2020
+   Testcase: factor for SUP(EXPR(INT))
+   test: 24
+   testing in a domain without InputForm!
+   Testsuite: bugs2020
+   Testcase: factor for SUP(EXPR(INT))
+   test: 26
+   testing in a domain without InputForm!
+   Testsuite: bugs2020
+   Testcase: factor for SUP(EXPR(INT))
+   test: 28
+   testing in a domain without InputForm!
+   Testsuite: bugs2020
+   Testcase: factor for SUP(EXPR(INT))
+   test: 30
+   testing in a domain without InputForm!
+   Testsuite: bugs2020
+   Testcase: factor for SUP(EXPR(INT))
+   test: 32
+   testing in a domain without InputForm!
+   Testsuite: bugs2020
+   Testcase: factor for SUP(EXPR(INT))
+   test: 35
+   testing in a domain without InputForm!
+   Testsuite: bugs2020
+   Testcase: factor for SUP(EXPR(INT))
+   test: 38
+   testing in a domain without InputForm!
+   Testsuite: bugs2020
+   Testcase: factor for SUP(EXPR(INT))
+   test: 41
+   testing in a domain without InputForm!
+   Testsuite: bugs2020
+   Testcase: factor for SUP(EXPR(INT))
+   test: 44
+   testing in a domain without InputForm!
+   Testsuite: bugs2020
+   Testcase: factor for SUP(EXPR(INT))
+   test: 47
+   testing in a domain without InputForm!
+   Testsuite: bugs2020
+   Testcase: factor for SUP(EXPR(INT))
+   test: 50
+   testing in a domain without InputForm!
+   Testsuite: bugs2020
+   Testcase: factor for SUP(EXPR(INT))
+   test: 52
+   testing in a domain without InputForm!
+   Testsuite: bugs2020
+   Testcase: factor for SUP(EXPR(INT))
+   test: 54
+   testing in a domain without InputForm!
+   Testsuite: bugs2020
+   Testcase: factor for SUP(EXPR(INT))
+   test: 57
+   testing in a domain without InputForm!
+   Testsuite: bugs2020
+   Testcase: factor for SUP(EXPR(INT))
+   test: 60
+   testing in a domain without InputForm!
+
+   =============================================================================
+   Testsuite: bugs2020
+     failed (total): 0 (8)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   bugs2020                    0     (8)               0    (77)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 77
+                                                                   Type: Void
+)quit
+ 

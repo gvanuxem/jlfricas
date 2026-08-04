@@ -1,0 +1,335 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read discrgrp.input
+ 
+)set break resume
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+testsuite "Groups"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testcase "CyclicGroup"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+C42 := CyclicGroup(42, 'a)
+ 
+
+   (2)  CyclicGroup(42,a)
+                                                                   Type: Type
+e := 1$C42
+ 
+
+   (3)  1
+                                                      Type: CyclicGroup(42,a)
+testTrue("one? e")
+ 
+                                                                   Type: Void
+a := generator()$C42
+ 
+
+   (5)  a
+                                                      Type: CyclicGroup(42,a)
+testTrue("one? exponent a")
+ 
+                                                                   Type: Void
+testTrue("one? (a^42)")
+ 
+                                                                   Type: Void
+a17 := a^17
+ 
+
+         17
+   (8)  a
+                                                      Type: CyclicGroup(42,a)
+a4 := a^4
+ 
+
+         4
+   (9)  a
+                                                      Type: CyclicGroup(42,a)
+testEquals("a17*a4", "a^21")
+ 
+                                                                   Type: Void
+testEquals("inv a17", "a^25")
+ 
+                                                                   Type: Void
+testTrue("smaller?(a4,a17)")
+ 
+                                                                   Type: Void
+testEquals("size()$C42", "42")
+ 
+                                                                   Type: Void
+testEquals("lookup (index(1)$C42)", "1")
+ 
+                                                                   Type: Void
+testEquals("lookup (index(20)$C42)", "20")
+ 
+                                                                   Type: Void
+testEquals("index(20)$C42", "(enumerate()$C42).20")
+ 
+                                                                   Type: Void
+testEquals("#enumerate()$C42","42")
+ 
+                                                                   Type: Void
+locorder x ==
+        k:Integer := 1
+        y := x
+        while not one? y repeat
+            k := k+1
+            y := y*x
+        k
+ 
+                                                                   Type: Void
+
+testEquals("order a4", "locorder a4")
+ 
+   Compiling function locorder with type CyclicGroup(42,a) -> Integer 
+                                                                   Type: Void
+
+testcase "Monoid Ring"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+C := CyclicGroup(4, d)
+ 
+
+   (2)  CyclicGroup(4,d)
+                                                                   Type: Type
+testTrue("C has CommutativeStar")
+ 
+                                                                   Type: Void
+RC := MonoidRing(Integer, C)
+ 
+
+   (4)  MonoidRing(Integer,CyclicGroup(4,d))
+                                                                   Type: Type
+testTrue("RC has CommutativeRing")
+ 
+                                                                   Type: Void
+a : RC := reduce(+, [monomial(c,m)$RC for c in [-3,0,1,-1]
+                                      for m in enumerate()$C])
+ 
+
+           3    2
+   (6)  - d  + d  - 3
+                                   Type: MonoidRing(Integer,CyclicGroup(4,d))
+
+m : Matrix RC := matrix [[1,a],[a^2,a-1]]
+ 
+
+        +                           3    2    +
+        |          1             - d  + d  - 3|
+   (7)  |                                     |
+        |   3      2                3    2    |
+        +6 d  - 5 d  - 2 d + 10  - d  + d  - 4+
+                           Type: Matrix(MonoidRing(Integer,CyclicGroup(4,d)))
+testEquals("- a^3  + a - 1", "determinant(m)")
+ 
+                                                                   Type: Void
+
+testcase "InfiniteCyclicGroup"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+M := InfiniteCyclicGroup 'a
+ 
+
+   (2)  InfiniteCyclicGroup(a)
+                                                                   Type: Type
+testTrue("M has CommutativeStar")
+ 
+                                                                   Type: Void
+a := generator()$M
+ 
+
+   (4)  a
+                                                 Type: InfiniteCyclicGroup(a)
+e := 1$M
+ 
+
+   (5)  1
+                                                 Type: InfiniteCyclicGroup(a)
+
+testTrue("one? e")
+ 
+                                                                   Type: Void
+
+a := generator()$M
+ 
+
+   (7)  a
+                                                 Type: InfiniteCyclicGroup(a)
+testTrue("one? exponent a")
+ 
+                                                                   Type: Void
+
+a17 := a^17
+ 
+
+         17
+   (9)  a
+                                                 Type: InfiniteCyclicGroup(a)
+a4 := a^4
+ 
+
+          4
+   (10)  a
+                                                 Type: InfiniteCyclicGroup(a)
+testEquals("a17*a4", "a^21")
+ 
+                                                                   Type: Void
+testEquals("inv a17", "inv(a)^17")
+ 
+                                                                   Type: Void
+testEquals("exponent a17", "17")
+ 
+                                                                   Type: Void
+testTrue("a4 < a17")
+ 
+                                                                   Type: Void
+testcase "DihedralGroup"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+D7 := DihedralGroup(7,'a,'b);
+ 
+
+                                                                   Type: Type
+D7gen := generators()$D7;
+ 
+
+                                             Type: List(DihedralGroup(7,a,b))
+a := first D7gen;
+ 
+
+                                                   Type: DihedralGroup(7,a,b)
+b := second D7gen;
+ 
+
+                                                   Type: DihedralGroup(7,a,b)
+
+testTrue("one?(a^7)")
+ 
+                                                                   Type: Void
+testTrue("one?(a*b*a*b)")
+ 
+                                                                   Type: Void
+
+testEquals("expa (b*a^5)", "2")
+ 
+                                                                   Type: Void
+testTrue("smaller?(a^4, a^6)")
+ 
+                                                                   Type: Void
+
+locorder x ==
+        k:Integer := 1
+        y := x
+        while not one? y repeat
+            k := k+1
+            y := y*x
+        k
+ 
+                                                                   Type: Void
+
+a2 := a^2
+ 
+
+          2
+   (11)  a
+                                                   Type: DihedralGroup(7,a,b)
+testEquals("order a2", "locorder a2")
+ 
+   Compiling function locorder with type DihedralGroup(7,a,b) -> 
+      Integer 
+                                                                   Type: Void
+
+
+
+D7enum := enumerate()$D7;
+ 
+
+                                             Type: List(DihedralGroup(7,a,b))
+testEquals("#D7enum", "14")
+ 
+                                                                   Type: Void
+testEquals("removeDuplicates [smaller?(x, y) for x in D7enum for y in rest D7enum]","[true]")
+ 
+                                                                   Type: Void
+
+expected() ==
+    messagePrint("testsuite | testcases: failed (total) | tests: failed (total)")$OutputForm
+    messagePrint("Groups                      0     (3)               0    (25)")$OutputForm
+ 
+                                                                   Type: Void
+
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+   =============================================================================
+   WARNINGS:
+   Testsuite: Groups
+   Testcase: Monoid Ring
+   test: 3
+   testing in a domain without InputForm!
+   Testsuite: Groups
+   Testcase: InfiniteCyclicGroup
+   test: 4
+   testing in a domain without InputForm!
+   Testsuite: Groups
+   Testcase: InfiniteCyclicGroup
+   test: 5
+   testing in a domain without InputForm!
+
+   =============================================================================
+   Testsuite: Groups
+     failed (total): 0 (4)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   Groups                      0     (4)               0    (29)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 29
+                                                                   Type: Void
+expected()
+ 
+   Compiling function expected with type () -> Void 
+   testsuite | testcases: failed (total) | tests: failed (total)
+   Groups                      0     (3)               0    (25)
+                                                                   Type: Void
+)quit
+ 

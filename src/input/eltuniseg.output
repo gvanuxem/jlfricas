@@ -1,0 +1,826 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read eltuniseg.input
+ 
+-- The discussion and design decisions concerning the implementation
+-- of x(u) for an open or closed segment u and a list, vector or stream x
+-- started with the following thread at the fricas-devel mailing list.
+-- https://groups.google.com/g/fricas-devel/c/kNnvUTqxE7A
+-- https://www.mail-archive.com/fricas-devel@googlegroups.com/msg14540.html
+-- They are encoded in this testsuite (together with eltunisegtests.input).
+
+-- The short version is:
+-- * x(a..b by c) gives the same as [x(i) for i in a..b by c] where
+--   the square brackets are here an abbreviation for constructing an
+--   element of the same type as x.
+-- * c=0 always leads to an immediate error.
+-- * If b is missing and c<0, then we assume b=minIndex(x).
+-- * If b is missing and c>0, then we assume b=maxIndex(x) where
+--   (if x is a stream) maxindex(x) should be interpreted as
+--   the last index, if x is a finite stream, or
+--   infinity, if x is an infinite stream.
+-- * If the segment has no element, an empty structure is returned.
+-- * "index out of range" errors occur immediately for "eager" structures
+--   like List or Vector, etc. that is, if x=[1,2], then x(1..0 by -1)
+--   gives an error.
+--   For lazy structures like Stream, errors are postponed until an
+--   index of x that does not exist is actually accessed. In particular,
+--   if x is the stream [1,2], then z:=x(1..0 by -1) is OK. z(1) and
+--   rest(z) are also OK. z(2) and empty?(rest z) give an error.
+
+
+)clear complete
+ 
+   All user variables and function definitions have been cleared.
+   All )browse facility databases have been cleared.
+   Internally cached functions and constructors have been cleared.
+   )clear completely is finished.
+)set break resume
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+)unexpose WSExpression
+ 
+   WSExpression is now explicitly hidden in frame initial 
+
+-------------------------------------------------------------------
+testsuiteNoClear "elt-UniversalSegment"
+ 
+   WARNING: string for testsuite should have less than 15 characters!
+                                                                   Type: Void
+-------------------------------------------------------------------
+
+-- Expand to a list, but at most n elements and no entries below 1 or
+-- above b.
+EX(u,n,b) ==> "entries complete([v for v in [k for k in " u " while (k > 0 and k <= " string(b) ")] for m in 1.." string(n) "]::Stream(Integer))"
+ 
+                                                                   Type: Void
+
+-- Stepsize=0 is a special case and not allowed, i.e. leads to
+-- an immediate error even in the lazy case.
+TESTBY0 u ==> testLibraryError("x(" u " by 0);") -- do not print the result
+ 
+                                                                   Type: Void
+
+-------------------------------------------------------------------
+-------------------------------------------------------------------
+
+testcaseNoClear "List"
+ 
+                                                                   Type: Void
+
+x: List Integer := [i for i in 1..29]
+ 
+
+   (5)
+   [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+    22, 23, 24, 25, 26, 27, 28, 29]
+                                                          Type: List(Integer)
+TESTFIN u ==> testEquals("x(" u ")", EX(u, 29, 29))
+ 
+                                                                   Type: Void
+TESTEMPTY u ==> testEquals("x(" u ")", "[]")
+ 
+                                                                   Type: Void
+TESTEMPTYINF u ==> TESTEMPTY u
+ 
+                                                                   Type: Void
+TESTSTREAM u ==> TESTFIN u
+ 
+                                                                   Type: Void
+TESTMIN(u, i) ==> testLibraryError("x(" u ")")
+ 
+                                                                   Type: Void
+TESTMAX(u, i) ==> testLibraryError("x(" u ")")
+ 
+                                                                   Type: Void
+)read eltunisegtests
+ 
+-- This file is meant to be read by the unittest file eltuniseg.input.
+-- -----------------------------------------------------------------
+-- Collect common tests for different structures. There are, in fact,
+-- four different cases, namely, (1) lists, (2) arrays/vectors, (3)
+-- finite streams, (4) infinite streams.
+--
+-- The tests are described by macros that expand differently for those
+-- different cases.
+--
+-- We do not currently allow cyclic lists or streams.
+-- -----------------------------------------------------------------
+TESTFIN("4..17")
+ 
+                                                                   Type: Void
+TESTFIN("4..27 by 3")
+ 
+                                                                   Type: Void
+TESTFIN("4..27 by 13")
+ 
+                                                                   Type: Void
+TESTFIN("4..30 by 5") -- we never need x(30)
+ 
+                                                                   Type: Void
+
+TESTFIN("27..4 by -3")
+ 
+                                                                   Type: Void
+TESTFIN("27..3 by -3")
+ 
+                                                                   Type: Void
+TESTFIN("27..4 by -13")
+ 
+                                                                   Type: Void
+TESTFIN("27..0 by -4") -- we never access x(0)
+ 
+                                                                   Type: Void
+
+TESTFIN("4.. by -3")
+ 
+                                                                   Type: Void
+TESTFIN("4.. by -73")
+ 
+                                                                   Type: Void
+TESTFIN("29.. by -3")
+ 
+                                                                   Type: Void
+
+-- possibly infinite result in infinite stream case
+TESTSTREAM("4..")
+ 
+                                                                   Type: Void
+TESTSTREAM("4.. by 3")
+ 
+                                                                   Type: Void
+TESTSTREAM("4.. by 73")
+ 
+                                                                   Type: Void
+
+-- empty segment
+TESTEMPTY("27..14")
+ 
+                                                                   Type: Void
+TESTEMPTY("3..14 by -4")
+ 
+                                                                   Type: Void
+TESTEMPTY("0..30 by -3")
+ 
+                                                                   Type: Void
+TESTEMPTY("14..3 by 3")
+ 
+                                                                   Type: Void
+TESTEMPTY("30..0")
+ 
+                                                                   Type: Void
+TESTEMPTY("30..0 by 3")
+ 
+                                                                   Type: Void
+-- The following is equivalent to x(0..minIndex(x) by -3) = empty
+TESTEMPTY("0.. by -3") -- we never need to access x(0)
+ 
+                                                                   Type: Void
+
+-- In the list and vector case the segment should be equivalent to
+-- 40..29, i.e. the empty structure should be returned.
+-- In the finite stream case, an explicitly empty stream is returned.
+-- In the infinite stream case, both are OK and give an infinite stream.
+TESTEMPTYINF("40..")
+ 
+                                                                   Type: Void
+TESTEMPTYINF("40.. by 3")
+ 
+                                                                   Type: Void
+
+-- For TESTMIN(u,i) and TESTMAX(u,i) an error may occur (depending
+-- on the underlying structure, if index i of the result is accessed.
+
+-- "index out of range" below minIndex (delayed error in stream case)
+TESTMIN("0..27",       "1")
+ 
+                                                                   Type: Void
+TESTMIN("0..27 by 3",  "1")
+ 
+                                                                   Type: Void
+TESTMIN("0..30 by 29", "1")
+ 
+                                                                   Type: Void
+TESTMIN("0..",         "1")
+ 
+                                                                   Type: Void
+TESTMIN("0.. by 3",    "1")
+ 
+                                                                   Type: Void
+TESTMIN("-4.. by 3",   "1")
+ 
+                                                                   Type: Void
+-- "index out of range" below minIndex (delayed error in stream case)
+TESTMIN("28..0 by -4", "8")
+ 
+                                                                   Type: Void
+
+-- "index out of range" above maxIndex (delayed error in finite stream case)
+-- No problem for infinite streams.
+TESTMAX("23..30",       "8")
+ 
+                                                                   Type: Void
+TESTMAX("11..50 by 3",  "8")
+ 
+                                                                   Type: Void
+TESTMAX("30..40 by 30", "1")
+ 
+                                                                   Type: Void
+TESTMAX("30..4 by -3",  "1")
+ 
+                                                                   Type: Void
+TESTMAX("30.. by -3",   "1")
+ 
+                                                                   Type: Void
+
+-- "zero step size" -- immediate error in all cases
+TESTBY0("4..27")
+ 
+                                                                   Type: Void
+TESTBY0("4..")
+ 
+                                                                   Type: Void
+TESTBY0("27..4")
+ 
+                                                                   Type: Void
+
+-------------------------------------------------------------------
+
+testcaseNoClear "Vector"
+ 
+                                                                   Type: Void
+
+)clear prop x TESTFIN
+ 
+x: Vector Integer := vector [i for i in 1..29]
+ 
+
+   (51)
+   [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+    22, 23, 24, 25, 26, 27, 28, 29]
+                                                        Type: Vector(Integer)
+TESTFIN u ==> testEquals("x(" u ")", "vector " EX(u, 29, 29))
+ 
+                                                                   Type: Void
+)read eltunisegtests
+ 
+-- This file is meant to be read by the unittest file eltuniseg.input.
+-- -----------------------------------------------------------------
+-- Collect common tests for different structures. There are, in fact,
+-- four different cases, namely, (1) lists, (2) arrays/vectors, (3)
+-- finite streams, (4) infinite streams.
+--
+-- The tests are described by macros that expand differently for those
+-- different cases.
+--
+-- We do not currently allow cyclic lists or streams.
+-- -----------------------------------------------------------------
+TESTFIN("4..17")
+ 
+                                                                   Type: Void
+TESTFIN("4..27 by 3")
+ 
+                                                                   Type: Void
+TESTFIN("4..27 by 13")
+ 
+                                                                   Type: Void
+TESTFIN("4..30 by 5") -- we never need x(30)
+ 
+                                                                   Type: Void
+
+TESTFIN("27..4 by -3")
+ 
+                                                                   Type: Void
+TESTFIN("27..3 by -3")
+ 
+                                                                   Type: Void
+TESTFIN("27..4 by -13")
+ 
+                                                                   Type: Void
+TESTFIN("27..0 by -4") -- we never access x(0)
+ 
+                                                                   Type: Void
+
+TESTFIN("4.. by -3")
+ 
+                                                                   Type: Void
+TESTFIN("4.. by -73")
+ 
+                                                                   Type: Void
+TESTFIN("29.. by -3")
+ 
+                                                                   Type: Void
+
+-- possibly infinite result in infinite stream case
+TESTSTREAM("4..")
+ 
+                                                                   Type: Void
+TESTSTREAM("4.. by 3")
+ 
+                                                                   Type: Void
+TESTSTREAM("4.. by 73")
+ 
+                                                                   Type: Void
+
+-- empty segment
+TESTEMPTY("27..14")
+ 
+                                                                   Type: Void
+TESTEMPTY("3..14 by -4")
+ 
+                                                                   Type: Void
+TESTEMPTY("0..30 by -3")
+ 
+                                                                   Type: Void
+TESTEMPTY("14..3 by 3")
+ 
+                                                                   Type: Void
+TESTEMPTY("30..0")
+ 
+                                                                   Type: Void
+TESTEMPTY("30..0 by 3")
+ 
+                                                                   Type: Void
+-- The following is equivalent to x(0..minIndex(x) by -3) = empty
+TESTEMPTY("0.. by -3") -- we never need to access x(0)
+ 
+                                                                   Type: Void
+
+-- In the list and vector case the segment should be equivalent to
+-- 40..29, i.e. the empty structure should be returned.
+-- In the finite stream case, an explicitly empty stream is returned.
+-- In the infinite stream case, both are OK and give an infinite stream.
+TESTEMPTYINF("40..")
+ 
+                                                                   Type: Void
+TESTEMPTYINF("40.. by 3")
+ 
+                                                                   Type: Void
+
+-- For TESTMIN(u,i) and TESTMAX(u,i) an error may occur (depending
+-- on the underlying structure, if index i of the result is accessed.
+
+-- "index out of range" below minIndex (delayed error in stream case)
+TESTMIN("0..27",       "1")
+ 
+                                                                   Type: Void
+TESTMIN("0..27 by 3",  "1")
+ 
+                                                                   Type: Void
+TESTMIN("0..30 by 29", "1")
+ 
+                                                                   Type: Void
+TESTMIN("0..",         "1")
+ 
+                                                                   Type: Void
+TESTMIN("0.. by 3",    "1")
+ 
+                                                                   Type: Void
+TESTMIN("-4.. by 3",   "1")
+ 
+                                                                   Type: Void
+-- "index out of range" below minIndex (delayed error in stream case)
+TESTMIN("28..0 by -4", "8")
+ 
+                                                                   Type: Void
+
+-- "index out of range" above maxIndex (delayed error in finite stream case)
+-- No problem for infinite streams.
+TESTMAX("23..30",       "8")
+ 
+                                                                   Type: Void
+TESTMAX("11..50 by 3",  "8")
+ 
+                                                                   Type: Void
+TESTMAX("30..40 by 30", "1")
+ 
+                                                                   Type: Void
+TESTMAX("30..4 by -3",  "1")
+ 
+                                                                   Type: Void
+TESTMAX("30.. by -3",   "1")
+ 
+                                                                   Type: Void
+
+-- "zero step size" -- immediate error in all cases
+TESTBY0("4..27")
+ 
+                                                                   Type: Void
+TESTBY0("4..")
+ 
+                                                                   Type: Void
+TESTBY0("27..4")
+ 
+                                                                   Type: Void
+
+-------------------------------------------------------------------
+
+testcaseNoClear "Stream-finite"
+ 
+                                                                   Type: Void
+
+)clear prop x TESTFIN TESTEMPTY TESTMIN TESTMAX
+ 
+x: Stream Integer := [i for i in 1..29]
+ 
+
+   (92)  [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, ...]
+                                                        Type: Stream(Integer)
+TESTFIN u ==> testEquals("entries complete x(" u ")", EX(u,29, 29))
+ 
+                                                                   Type: Void
+-- Check that creation of structure gives no error, but access does.
+TESTEMPTY u ==> testEquals("entries complete x(" u ")", "[]")
+ 
+                                                                   Type: Void
+TESTMIN(u, i) ==>
+  testTrue("x(" u "); true") -- no error
+  -- test access to all indices before the bad index
+  testTrue("t := x(" u "); (#[t.n for n in 1..(" i "-1)]=" i "-1)@Boolean")
+  -- first index that raises error
+  testLibraryError("t := x(" u "); t." i)
+ 
+                                                                   Type: Void
+TESTMAX(u, i) ==> TESTMIN(u, i)
+ 
+                                                                   Type: Void
+)read eltunisegtests
+ 
+-- This file is meant to be read by the unittest file eltuniseg.input.
+-- -----------------------------------------------------------------
+-- Collect common tests for different structures. There are, in fact,
+-- four different cases, namely, (1) lists, (2) arrays/vectors, (3)
+-- finite streams, (4) infinite streams.
+--
+-- The tests are described by macros that expand differently for those
+-- different cases.
+--
+-- We do not currently allow cyclic lists or streams.
+-- -----------------------------------------------------------------
+TESTFIN("4..17")
+ 
+                                                                   Type: Void
+TESTFIN("4..27 by 3")
+ 
+                                                                   Type: Void
+TESTFIN("4..27 by 13")
+ 
+                                                                   Type: Void
+TESTFIN("4..30 by 5") -- we never need x(30)
+ 
+                                                                   Type: Void
+
+TESTFIN("27..4 by -3")
+ 
+                                                                   Type: Void
+TESTFIN("27..3 by -3")
+ 
+                                                                   Type: Void
+TESTFIN("27..4 by -13")
+ 
+                                                                   Type: Void
+TESTFIN("27..0 by -4") -- we never access x(0)
+ 
+                                                                   Type: Void
+
+TESTFIN("4.. by -3")
+ 
+                                                                   Type: Void
+TESTFIN("4.. by -73")
+ 
+                                                                   Type: Void
+TESTFIN("29.. by -3")
+ 
+                                                                   Type: Void
+
+-- possibly infinite result in infinite stream case
+TESTSTREAM("4..")
+ 
+                                                                   Type: Void
+TESTSTREAM("4.. by 3")
+ 
+                                                                   Type: Void
+TESTSTREAM("4.. by 73")
+ 
+                                                                   Type: Void
+
+-- empty segment
+TESTEMPTY("27..14")
+ 
+                                                                   Type: Void
+TESTEMPTY("3..14 by -4")
+ 
+                                                                   Type: Void
+TESTEMPTY("0..30 by -3")
+ 
+                                                                   Type: Void
+TESTEMPTY("14..3 by 3")
+ 
+                                                                   Type: Void
+TESTEMPTY("30..0")
+ 
+                                                                   Type: Void
+TESTEMPTY("30..0 by 3")
+ 
+                                                                   Type: Void
+-- The following is equivalent to x(0..minIndex(x) by -3) = empty
+TESTEMPTY("0.. by -3") -- we never need to access x(0)
+ 
+                                                                   Type: Void
+
+-- In the list and vector case the segment should be equivalent to
+-- 40..29, i.e. the empty structure should be returned.
+-- In the finite stream case, an explicitly empty stream is returned.
+-- In the infinite stream case, both are OK and give an infinite stream.
+TESTEMPTYINF("40..")
+ 
+                                                                   Type: Void
+TESTEMPTYINF("40.. by 3")
+ 
+                                                                   Type: Void
+
+-- For TESTMIN(u,i) and TESTMAX(u,i) an error may occur (depending
+-- on the underlying structure, if index i of the result is accessed.
+
+-- "index out of range" below minIndex (delayed error in stream case)
+TESTMIN("0..27",       "1")
+ 
+                                                                   Type: Void
+TESTMIN("0..27 by 3",  "1")
+ 
+                                                                   Type: Void
+TESTMIN("0..30 by 29", "1")
+ 
+                                                                   Type: Void
+TESTMIN("0..",         "1")
+ 
+                                                                   Type: Void
+TESTMIN("0.. by 3",    "1")
+ 
+                                                                   Type: Void
+TESTMIN("-4.. by 3",   "1")
+ 
+                                                                   Type: Void
+-- "index out of range" below minIndex (delayed error in stream case)
+TESTMIN("28..0 by -4", "8")
+ 
+                                                                   Type: Void
+
+-- "index out of range" above maxIndex (delayed error in finite stream case)
+-- No problem for infinite streams.
+TESTMAX("23..30",       "8")
+ 
+                                                                   Type: Void
+TESTMAX("11..50 by 3",  "8")
+ 
+                                                                   Type: Void
+TESTMAX("30..40 by 30", "1")
+ 
+                                                                   Type: Void
+TESTMAX("30..4 by -3",  "1")
+ 
+                                                                   Type: Void
+TESTMAX("30.. by -3",   "1")
+ 
+                                                                   Type: Void
+
+-- "zero step size" -- immediate error in all cases
+TESTBY0("4..27")
+ 
+                                                                   Type: Void
+TESTBY0("4..")
+ 
+                                                                   Type: Void
+TESTBY0("27..4")
+ 
+                                                                   Type: Void
+
+-------------------------------------------------------------------
+
+testcaseNoClear "Stream-infinite"
+ 
+                                                                   Type: Void
+
+)clear prop x TESTSTREAM TESTEMPTYINF TESTMAX
+ 
+x: Stream Integer := [i for i in 1..]
+ 
+
+   (136)  [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, ...]
+                                                        Type: Stream(Integer)
+TESTSTREAM u ==> testEquals("t:=x(" u "); [t.n for n in 1..99]",
+                    "entries complete [k for k in " u " for m in 1..99]")
+ 
+                                                                   Type: Void
+TESTEMPTYINF u ==> TESTSTREAM u
+ 
+                                                                   Type: Void
+-- There is no maximal index for an infinite stream, i.e. no error.
+-- We check at most 99 coefficients and can ignore the i argument.
+TESTMAX(u, i) ==> _
+  testEquals("t:=x(" u ");"_
+             "l:=empty()$List(Integer);"_
+             "for n in 1..99 while not empty? t repeat"_
+             "  (l := cons(first t, l); t := rest t);"_
+             "reverse! l",_
+             EX(u, 99, 99))
+ 
+                                                                   Type: Void
+)read eltunisegtests
+ 
+-- This file is meant to be read by the unittest file eltuniseg.input.
+-- -----------------------------------------------------------------
+-- Collect common tests for different structures. There are, in fact,
+-- four different cases, namely, (1) lists, (2) arrays/vectors, (3)
+-- finite streams, (4) infinite streams.
+--
+-- The tests are described by macros that expand differently for those
+-- different cases.
+--
+-- We do not currently allow cyclic lists or streams.
+-- -----------------------------------------------------------------
+TESTFIN("4..17")
+ 
+                                                                   Type: Void
+TESTFIN("4..27 by 3")
+ 
+                                                                   Type: Void
+TESTFIN("4..27 by 13")
+ 
+                                                                   Type: Void
+TESTFIN("4..30 by 5") -- we never need x(30)
+ 
+                                                                   Type: Void
+
+TESTFIN("27..4 by -3")
+ 
+                                                                   Type: Void
+TESTFIN("27..3 by -3")
+ 
+                                                                   Type: Void
+TESTFIN("27..4 by -13")
+ 
+                                                                   Type: Void
+TESTFIN("27..0 by -4") -- we never access x(0)
+ 
+                                                                   Type: Void
+
+TESTFIN("4.. by -3")
+ 
+                                                                   Type: Void
+TESTFIN("4.. by -73")
+ 
+                                                                   Type: Void
+TESTFIN("29.. by -3")
+ 
+                                                                   Type: Void
+
+-- possibly infinite result in infinite stream case
+TESTSTREAM("4..")
+ 
+                                                                   Type: Void
+TESTSTREAM("4.. by 3")
+ 
+                                                                   Type: Void
+TESTSTREAM("4.. by 73")
+ 
+                                                                   Type: Void
+
+-- empty segment
+TESTEMPTY("27..14")
+ 
+                                                                   Type: Void
+TESTEMPTY("3..14 by -4")
+ 
+                                                                   Type: Void
+TESTEMPTY("0..30 by -3")
+ 
+                                                                   Type: Void
+TESTEMPTY("14..3 by 3")
+ 
+                                                                   Type: Void
+TESTEMPTY("30..0")
+ 
+                                                                   Type: Void
+TESTEMPTY("30..0 by 3")
+ 
+                                                                   Type: Void
+-- The following is equivalent to x(0..minIndex(x) by -3) = empty
+TESTEMPTY("0.. by -3") -- we never need to access x(0)
+ 
+                                                                   Type: Void
+
+-- In the list and vector case the segment should be equivalent to
+-- 40..29, i.e. the empty structure should be returned.
+-- In the finite stream case, an explicitly empty stream is returned.
+-- In the infinite stream case, both are OK and give an infinite stream.
+TESTEMPTYINF("40..")
+ 
+                                                                   Type: Void
+TESTEMPTYINF("40.. by 3")
+ 
+                                                                   Type: Void
+
+-- For TESTMIN(u,i) and TESTMAX(u,i) an error may occur (depending
+-- on the underlying structure, if index i of the result is accessed.
+
+-- "index out of range" below minIndex (delayed error in stream case)
+TESTMIN("0..27",       "1")
+ 
+                                                                   Type: Void
+TESTMIN("0..27 by 3",  "1")
+ 
+                                                                   Type: Void
+TESTMIN("0..30 by 29", "1")
+ 
+                                                                   Type: Void
+TESTMIN("0..",         "1")
+ 
+                                                                   Type: Void
+TESTMIN("0.. by 3",    "1")
+ 
+                                                                   Type: Void
+TESTMIN("-4.. by 3",   "1")
+ 
+                                                                   Type: Void
+-- "index out of range" below minIndex (delayed error in stream case)
+TESTMIN("28..0 by -4", "8")
+ 
+                                                                   Type: Void
+
+-- "index out of range" above maxIndex (delayed error in finite stream case)
+-- No problem for infinite streams.
+TESTMAX("23..30",       "8")
+ 
+                                                                   Type: Void
+TESTMAX("11..50 by 3",  "8")
+ 
+                                                                   Type: Void
+TESTMAX("30..40 by 30", "1")
+ 
+                                                                   Type: Void
+TESTMAX("30..4 by -3",  "1")
+ 
+                                                                   Type: Void
+TESTMAX("30.. by -3",   "1")
+ 
+                                                                   Type: Void
+
+-- "zero step size" -- immediate error in all cases
+TESTBY0("4..27")
+ 
+                                                                   Type: Void
+TESTBY0("4..")
+ 
+                                                                   Type: Void
+TESTBY0("27..4")
+ 
+                                                                   Type: Void
+
+-------------------------------------------------------------------
+
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+
+   =============================================================================
+   Testsuite: elt-UniversalSegment
+     failed (total): 0 (4)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   elt-UniversalSegment        0     (4)               0   (190)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 190
+                                                                   Type: Void
+)quit
+ 

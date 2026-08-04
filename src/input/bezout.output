@@ -1,0 +1,184 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read bezout.input
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+
+testsuite "bezout.spad"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testcase "subSylvesterMatrix related functions"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+T ==> BezoutMatrixWrapper(INT, UP(x, INT))
+ 
+                                                                   Type: Void
+
+p := x^2+1
+ 
+
+         2
+   (3)  x  + 1
+                                                    Type: Polynomial(Integer)
+q := x^2-1
+ 
+
+         2
+   (4)  x  - 1
+                                                    Type: Polynomial(Integer)
+mat := sylvesterMatrix(p,q)$T
+ 
+
+        +1  0   1    0 +
+        |              |
+        |0  1   0    1 |
+   (5)  |              |
+        |1  0  - 1   0 |
+        |              |
+        +0  1   0   - 1+
+                                                        Type: Matrix(Integer)
+testEquals("mat", "matrix[[1,0,1,0],[0,1,0,1],[1,0,-1,0],[0,1,0,-1]]")
+ 
+                                                                   Type: Void
+
+testEquals("subSylvesterMatrix(mat,1)$T", "matrix [[1,0,1,0],[1,0,-1,0]]")
+ 
+                                                                   Type: Void
+
+testEquals("subSylvesterMatrix(mat,1,1)$T", "matrix [[1,0],[1,0]]")
+ 
+                                                                   Type: Void
+
+testEquals("parts(subresultants(p, q)$T)", "[4, -2]")
+ 
+                                                                   Type: Void
+
+
+testcase "subresultants"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+T1 ==> UP(x, POLY INT)
+ 
+                                                                   Type: Void
+iM := IndexedMatrix(POLY INT, 7, -3)
+ 
+
+   (3)  IndexedMatrix(Polynomial(Integer),7,- 3)
+                                                                   Type: Type
+vR := IndexedVector(POLY INT, -3)
+ 
+
+   (4)  IndexedVector(Polynomial(Integer),- 3)
+                                                                   Type: Type
+vC := IndexedVector(POLY INT, 7)
+ 
+
+   (5)  IndexedVector(Polynomial(Integer),7)
+                                                                   Type: Type
+T2 := BezoutMatrix(POLY INT, T1, iM, vR, vC)
+ 
+
+   (6)
+   BezoutMatrix
+      Polynomial(Integer)
+  ,
+      UnivariatePolynomial(x,Polynomial(Integer))
+  ,
+      IndexedMatrix(Polynomial(Integer),7,- 3)
+  ,
+      IndexedVector(Polynomial(Integer),- 3)
+  ,
+      IndexedVector(Polynomial(Integer),7)
+                                                                   Type: Type
+
+A : T1 := 3*t*x^2 - t^3-4
+ 
+
+             2    3
+   (7)  3 t x  - t  - 4
+                            Type: UnivariatePolynomial(x,Polynomial(Integer))
+B : T1 := x^2 + t^3*x - 9
+ 
+
+         2    3
+   (8)  x  + t x - 9
+                            Type: UnivariatePolynomial(x,Polynomial(Integer))
+res : T1 := -3*t^10-12*t^7+t^6-54*t^4+8*t^3+729*t^2-216*t+16
+ 
+
+             10       7    6       4      3        2
+   (9)  - 3 t   - 12 t  + t  - 54 t  + 8 t  + 729 t  - 216 t + 16
+                            Type: UnivariatePolynomial(x,Polynomial(Integer))
+
+testEquals("resultant(A, B)", "res")
+ 
+                                                                   Type: Void
+testEquals("parts(subresultants(A,B)$T2)", "[res, 3*t^4*x+t^3-27*t+4]")
+ 
+                                                                   Type: Void
+
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+   =============================================================================
+   WARNINGS:
+   Testsuite: bezout.spad
+   Testcase: subSylvesterMatrix related functions
+   test: 4
+   testing in a domain without InputForm!
+   Testsuite: bezout.spad
+   Testcase: subresultants
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: bezout.spad
+   Testcase: subresultants
+   test: 2
+   testing in a domain without InputForm!
+
+   =============================================================================
+   Testsuite: bezout.spad
+     failed (total): 0 (2)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   bezout.spad                 0     (2)               0     (6)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 6
+                                                                   Type: Void
+)quit
+ 

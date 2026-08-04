@@ -20,7 +20,11 @@ bugs2008.output: ExportType.spad
 regress: regression-tests
 
 clean-local:
+<<<<<<< HEAD
 	-rm -f *.output foo.out ts_file.dat
+=======
+	-rm -f *.output ts_file.dat
+>>>>>>> 6e515954 (Simplify build system by removing redundant make targets, cleaning up variables, and deleting unused documentation files.)
 	-rm -rf *.NRLIB ts_kaf
 	-rm -f redo.input
 	-rm -f sieve.asy sieve.lsp simple.asy simple.lsp

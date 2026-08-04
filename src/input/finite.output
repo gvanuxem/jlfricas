@@ -1,0 +1,216 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read finite.input
+ 
+
+)if false
+-- Omitting:
+-- Omitting:The following yields a list of all domains that may (possibly conditionally)
+-- Omitting:export the Category [[Finite]]:
+-- Omitting:
+-- Omitting:\begin{verbatim}
+-- Omitting:getDomains(cat: Symbol): Set Symbol ==
+-- Omitting:    set map(d +-> symbol first destruct first destruct d, _
+-- Omitting:            destruct domainsOf(cat, nil)$Lisp)
+-- Omitting:\end{verbatim}
+-- Omitting:
+-- Omitting:namely - as of revision 798
+-- Omitting:
+-- Omitting:\begin{verbatim}
+-- Omitting:   {AlgebraicFunctionField, Boolean, Character, CharacterClass, Complex,
+-- Omitting:    DirectProduct, DirectProductMatrixModule, DirectProductModule, FiniteField,
+-- Omitting:    FiniteFieldCyclicGroup, FiniteFieldCyclicGroupExtension,
+-- Omitting:    FiniteFieldCyclicGroupExtensionByPolynomial, FiniteFieldExtension,
+-- Omitting:    FiniteFieldExtensionByPolynomial, FiniteFieldNormalBasis,
+-- Omitting:    FiniteFieldNormalBasisExtension,
+-- Omitting:    FiniteFieldNormalBasisExtensionByPolynomial, HomogeneousDirectProduct,
+-- Omitting:    InnerFiniteField, InnerPrimeField, IntegerMod, LieSquareMatrix,
+-- Omitting:    MachineComplex, ModMonic, MonoidRing, Octonion, OrderedDirectProduct,
+-- Omitting:    OrderedVariableList, PrimeField, Product, RadicalFunctionField,
+-- Omitting:    RectangularMatrix, Set, SetOfMIntegersInOneToN, SimpleAlgebraicExtension,
+-- Omitting:    SplitHomogeneousDirectProduct, SquareMatrix}
+-- Omitting:\end{verbatim}
+-- Omitting:
+-- Omitting:Actually, there is a bug: [[AlgebraicFunctionField]] and
+-- Omitting:[[RadicalFunctionField]] do not export [[Finite]].  [[MachineComplex]] only
+-- Omitting:exports [[Finite]] when [[MachineFloat]] does, but it doesn't.
+-- Omitting:
+-- Omitting:For the others, we test whether [[lookup]] is the inverse of [[index]].
+-- Omitting:
+-- Omitting:For some we hit an internal error, thus we commented them out.  For others, we
+-- Omitting:did not find an example domain -- namely because we have no
+-- Omitting:[[OrderedAbelianMonoidSup]] with [[Finite]] currently.
+-- Omitting:
+)endif
+
+)set break resume
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+)set function compile off
+ 
+testsuite "Finite"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testLookupIndex(A: Type): Boolean ==
+    reduce(_and, [lookup(index(i)$A)$A = i for i in 1..min(size()$A, 200)])
+ 
+   Function declaration testLookupIndex : Type -> Boolean has been 
+      added to workspace.
+                                                                   Type: Void
+
+testcaseNoClear "lookup index"
+ 
+                                                                   Type: Void
+
+-- AlgebraicFunctionField
+testTrue "testLookupIndex(Boolean)"
+ 
+   Cannot compile a $-expression involving a local variable.
+   FriCAS will attempt to step through and interpret the code.
+   Compiling function testLookupIndex with type Type -> Boolean 
+                                                                   Type: Void
+testTrue "testLookupIndex(Character)"
+ 
+                                                                   Type: Void
+testTrue "testLookupIndex(CharacterClass)"
+ 
+                                                                   Type: Void
+testTrue "testLookupIndex(Complex ZMOD 6)"
+ 
+                                                                   Type: Void
+testTrue "testLookupIndex(DirectProduct(4, Boolean))"
+ 
+                                                                   Type: Void
+testTrue "testLookupIndex(DirectProductMatrixModule(3, ZMOD 6, SquareMatrix(3, ZMOD 6), ZMOD 6))"
+ 
+                                                                   Type: Void
+testTrue "testLookupIndex(DirectProductModule(3, ZMOD 6,  ZMOD 6))"
+ 
+                                                                   Type: Void
+testTrue "testLookupIndex(FiniteField(7,2))"
+ 
+                                                                   Type: Void
+testTrue "testLookupIndex(FiniteFieldCyclicGroup(7,2))"
+ 
+                                                                   Type: Void
+testTrue "testLookupIndex(FiniteFieldCyclicGroupExtension(PF 7,2))"
+ 
+                                                                   Type: Void
+testTrue "testLookupIndex(FiniteFieldCyclicGroupExtensionByPolynomial(PF 7,x^2+1))"
+ 
+                                                                   Type: Void
+testTrue "testLookupIndex(FiniteFieldExtension(PF 7,2))"
+ 
+                                                                   Type: Void
+testTrue "testLookupIndex(FiniteFieldExtensionByPolynomial(PF 7,x^2+1))"
+ 
+                                                                   Type: Void
+testTrue "testLookupIndex(FiniteFieldNormalBasis(7,2))"
+ 
+                                                                   Type: Void
+testTrue "testLookupIndex(FiniteFieldNormalBasisExtension(PF 7,2))"
+ 
+                                                                   Type: Void
+testTrue "testLookupIndex(FiniteFieldNormalBasisExtensionByPolynomial(PF 7,x^2+1))"
+ 
+                                                                   Type: Void
+-- HomogeneousDirectProduct
+-- InnerFiniteField
+-- InnerPrimeField
+testTrue "testLookupIndex(IntegerMod 6)"
+ 
+                                                                   Type: Void
+testTrue "testLookupIndex(LieSquareMatrix(4, ZMOD 6))"
+ 
+                                                                   Type: Void
+-- MachineComplex
+testTrue "testLookupIndex(ModMonic(ZMOD 12,  SUP ZMOD 12))"
+ 
+                                                                   Type: Void
+testTrue "testLookupIndex(MonoidRing(ZMOD 6, PF 7))"
+ 
+                                                                   Type: Void
+testTrue "testLookupIndex(Octonion ZMOD 6)"
+ 
+                                                                   Type: Void
+-- OrderedDirectProduct
+testTrue "testLookupIndex(OrderedVariableList ['a, 'b, 'c])"
+ 
+                                                                   Type: Void
+testTrue "testLookupIndex(PrimeField 7)"
+ 
+                                                                   Type: Void
+testTrue "testLookupIndex(Product(Boolean, Character))"
+ 
+                                                                   Type: Void
+-- RadicalFunctionField
+testTrue "testLookupIndex(RectangularMatrix(3,2, ZMOD 6))"
+ 
+                                                                   Type: Void
+testTrue "testLookupIndex(Set Boolean)"
+ 
+                                                                   Type: Void
+testTrue "testLookupIndex(SetOfMIntegersInOneToN(2,5))"
+ 
+                                                                   Type: Void
+testTrue "testLookupIndex(SimpleAlgebraicExtension(ZMOD 6, SUP ZMOD 6, x^2+1))"
+ 
+                                                                   Type: Void
+-- SplitHomogeneousDirectProduct
+testTrue "testLookupIndex(SquareMatrix(3, ZMOD 6))"
+ 
+                                                                   Type: Void
+-- FiniteGroup
+testTrue "testLookupIndex(CyclicGroup(15,'a))"
+ 
+                                                                   Type: Void
+testTrue "testLookupIndex(DihedralGroup(15,'a,'b))"
+ 
+                                                                   Type: Void
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+
+   =============================================================================
+   Testsuite: Finite
+     failed (total): 0 (1)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   Finite                      0     (1)               0    (31)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 31
+                                                                   Type: Void
+)quit
+ 

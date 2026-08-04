@@ -1,0 +1,265 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read ord.input
+ 
+
+)set break resume
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+
+testsuite "ordinals"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+testcase "ordinals"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+om := omega()$SORD
+ 
+
+   (2)  omega
+                                                           Type: SmallOrdinal
+o1 := om*om + 2*om + 4
+ 
+
+             2
+   (3)  omega  + 2 omega + 4
+                                                           Type: SmallOrdinal
+o2 := om*om + 2*om + 5
+ 
+
+             2
+   (4)  omega  + 2 omega + 5
+                                                           Type: SmallOrdinal
+testTrue("o1 < o2")
+ 
+                                                                   Type: Void
+testEquals("o1 + 1", "o2")
+ 
+                                                                   Type: Void
+testTrue("not(o1 = o2)")
+ 
+                                                                   Type: Void
+testEquals("ordinalAdd(o1, o2)", "ordinalAdd(o2, o1) + 1")
+ 
+                                                                   Type: Void
+o3 := ordinalPower(om + 7, o2)
+ 
+
+                  2                             2
+             omega  + 2 omega + 5          omega  + 2 omega + 4
+   (9)  omega                     + 7 omega
+                                                           Type: SmallOrdinal
+testEquals("omegapower(o2) + 7*omegapower(o1)", "o3")
+ 
+                                                                   Type: Void
+o4 := o1^o2
+ 
+
+   (11)
+               2                               2
+          omega  + 2 omega + 10           omega  + 2 omega + 9
+     omega                      + 10 omega
+   + 
+                  2                               2
+             omega  + 2 omega + 8            omega  + 2 omega + 7
+     60 omega                     + 240 omega
+   + 
+                   2                                2
+              omega  + 2 omega + 6             omega  + 2 omega + 5
+     720 omega                     + 1632 omega
+   + 
+                    2                                2
+               omega  + 2 omega + 4             omega  + 2 omega + 3
+     2880 omega                     + 3840 omega
+   + 
+                    2                                2
+               omega  + 2 omega + 2             omega  + 2 omega + 1
+     3840 omega                     + 2560 omega
+   + 
+                    2
+               omega  + 2 omega
+     1024 omega
+                                                           Type: SmallOrdinal
+o5 := o2^o1
+ 
+
+   (12)
+               2                             2
+          omega  + 2 omega + 8          omega  + 2 omega + 7
+     omega                     + 8 omega
+   + 
+                  2                               2
+             omega  + 2 omega + 6            omega  + 2 omega + 5
+     44 omega                     + 152 omega
+   + 
+                   2                               2
+              omega  + 2 omega + 4            omega  + 2 omega + 3
+     406 omega                     + 760 omega
+   + 
+                    2                                2
+               omega  + 2 omega + 2             omega  + 2 omega + 1
+     1100 omega                     + 1000 omega
+   + 
+                   2
+              omega  + 2 omega
+     625 omega
+                                                           Type: SmallOrdinal
+testTrue("o5 < o4")
+ 
+                                                                   Type: Void
+o6 := ordinalAdd(o4, o5)
+ 
+
+   (14)
+               2                               2
+          omega  + 2 omega + 10           omega  + 2 omega + 9
+     omega                      + 10 omega
+   + 
+                  2                             2
+             omega  + 2 omega + 8          omega  + 2 omega + 7
+     61 omega                     + 8 omega
+   + 
+                  2                               2
+             omega  + 2 omega + 6            omega  + 2 omega + 5
+     44 omega                     + 152 omega
+   + 
+                   2                               2
+              omega  + 2 omega + 4            omega  + 2 omega + 3
+     406 omega                     + 760 omega
+   + 
+                    2                                2
+               omega  + 2 omega + 2             omega  + 2 omega + 1
+     1100 omega                     + 1000 omega
+   + 
+                   2
+              omega  + 2 omega
+     625 omega
+                                                           Type: SmallOrdinal
+testTrue("ordinalAdd(o5, o4) < o6")
+ 
+                                                                   Type: Void
+o7 := ordinalMul(o4, o5)
+ 
+
+   (16)
+                 2                               2
+          2 omega  + 2 omega + 8          2 omega  + 2 omega + 7
+     omega                       + 8 omega
+   + 
+                    2                                 2
+             2 omega  + 2 omega + 6            2 omega  + 2 omega + 5
+     44 omega                       + 152 omega
+   + 
+                     2                                 2
+              2 omega  + 2 omega + 4            2 omega  + 2 omega + 3
+     406 omega                       + 760 omega
+   + 
+                      2                                  2
+               2 omega  + 2 omega + 2             2 omega  + 2 omega + 1
+     1100 omega                       + 1000 omega
+   + 
+                     2
+              2 omega  + 2 omega
+     625 omega
+                                                           Type: SmallOrdinal
+testEquals("subtractIfCan(o2, o1)", "1")
+ 
+                                                                   Type: Void
+rr12 := subtractIfCan(o1, o2) case "failed"
+ 
+
+   (18)  true
+                                                                Type: Boolean
+testTrue("rr12")
+ 
+                                                                   Type: Void
+rr41 := subtractIfCan(o4, o1) case "failed"
+ 
+
+   (20)  true
+                                                                Type: Boolean
+testTrue("rr41")
+ 
+                                                                   Type: Void
+testEquals("subtractIfCan(o4, o5) + o5", "o4")
+ 
+                                                                   Type: Void
+testEquals("subtractIfCan(o1 + o7, o7)", "o1")
+ 
+                                                                   Type: Void
+testEquals("hash(o3)", "hash(ordinalPower(om + 7, o2))")
+ 
+                                                                   Type: Void
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+   =============================================================================
+   WARNINGS:
+   Testsuite: ordinals
+   Testcase: ordinals
+   test: 2
+   testing in a domain without InputForm!
+   Testsuite: ordinals
+   Testcase: ordinals
+   test: 4
+   testing in a domain without InputForm!
+   Testsuite: ordinals
+   Testcase: ordinals
+   test: 5
+   testing in a domain without InputForm!
+   Testsuite: ordinals
+   Testcase: ordinals
+   test: 8
+   testing in a domain without InputForm!
+   Testsuite: ordinals
+   Testcase: ordinals
+   test: 11
+   testing in a domain without InputForm!
+   Testsuite: ordinals
+   Testcase: ordinals
+   test: 12
+   testing in a domain without InputForm!
+
+   =============================================================================
+   Testsuite: ordinals
+     failed (total): 0 (1)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   ordinals                    0     (1)               0    (13)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 13
+                                                                   Type: Void
+)quit
+ 

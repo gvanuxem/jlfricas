@@ -1,0 +1,560 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read bugs2014.input
+ 
+)set break resume
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+
+testsuite "bugs2014"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testcase "bad exposure of dummy %A into result"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+-- https://groups.google.com/forum/#!topic/fricas-devel/eHZCyaXmJVY
+f:=operator 'f
+ 
+
+   (2)  f
+                                                          Type: BasicOperator
+y:=operator 'y
+ 
+
+   (3)  y
+                                                          Type: BasicOperator
+r1:=eval(D(f(x,z),[x,z]),z=y(x))
+ 
+
+   (4)  f    (x,y(x))
+         ,1,2
+                                                    Type: Expression(Integer)
+f1:=D(f(x,y(x)),x)
+ 
+
+                                  ,
+   (5)  f  (x,y(x)) + f  (x,y(x))y (x)
+         ,1            ,2
+                                                    Type: Expression(Integer)
+f2:=D(f1,x)
+ 
+
+   (6)
+                                 ,,       ,   2
+     f    (x,y(x)) + f  (x,y(x))y  (x) + y (x) f    (x,y(x))
+      ,1,1            ,2                        ,2,2
+   + 
+        ,
+     2 y (x)f    (x,y(x))
+             ,1,2
+                                                    Type: Expression(Integer)
+f3:=D(f2,x)
+ 
+
+   (7)
+                                   ,,,       ,   3
+     f      (x,y(x)) + f  (x,y(x))y   (x) + y (x) f      (x,y(x))
+      ,1,1,1            ,2                         ,2,2,2
+   + 
+        ,   2                     ,
+     3 y (x) f      (x,y(x)) + 3 y (x)f      (x,y(x))
+              ,1,2,2                   ,1,1,2
+   + 
+         ,                                    ,,
+     (3 y (x)f    (x,y(x)) + 3 f    (x,y(x)))y  (x)
+              ,2,2              ,1,2
+                                                    Type: Expression(Integer)
+r2:=eval(D(f(x,z),[x,z]),z=y(x))
+ 
+
+   (8)  f    (x,y(x))
+         ,1,2
+                                                    Type: Expression(Integer)
+-- wrongly resulted in
+--  f    (%A,y(x))
+--   ,1,2
+-- in revision r1674
+testEquals("r1 - r2", "0")
+ 
+                                                                   Type: Void
+testEquals("r1::OutputForm", "r2::OutputForm")
+ 
+                                                                   Type: Void
+
+testcase "commutativity of formal diffs"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+f:=operator 'f
+ 
+
+   (2)  f
+                                                          Type: BasicOperator
+testEquals("D(f(x,z), [x, z]) - D(f(x,z), [z, x])", "0")
+ 
+                                                                   Type: Void
+y:=operator 'y
+ 
+
+   (4)  y
+                                                          Type: BasicOperator
+kxy := eval(D(f(x,z),[x,z]),z=y(x))
+ 
+
+   (5)  f    (x,y(x))
+         ,1,2
+                                                    Type: Expression(Integer)
+kyx := eval(D(f(x,z),[z,x]),z=y(x))
+ 
+
+   (6)  f    (x,y(x))
+         ,1,2
+                                                    Type: Expression(Integer)
+testEquals("kxy - kyx", "0")
+ 
+                                                                   Type: Void
+
+testcase "weighted polynomials"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+wP := OWP(Integer, [x, y, z], [1, 3, 2], 9)
+ 
+
+   (2)  OrdinaryWeightedPolynomials(Integer,[x, y, z],[1, 3, 2],9)
+                                                                   Type: Type
+wx := (x::Polynomial(Integer))::wP
+ 
+
+   (3)  (x)
+                 Type: OrdinaryWeightedPolynomials(Integer,[x,y,z],[1,3,2],9)
+wy := (y::Polynomial(Integer))::wP
+ 
+
+   (4)  (y)
+                 Type: OrdinaryWeightedPolynomials(Integer,[x,y,z],[1,3,2],9)
+wz := (z::Polynomial(Integer))::wP
+ 
+
+   (5)  (z)
+                 Type: OrdinaryWeightedPolynomials(Integer,[x,y,z],[1,3,2],9)
+testEquals("wy^4", "0")
+ 
+                                                                   Type: Void
+testEquals("wz^5", "0")
+ 
+                                                                   Type: Void
+testEquals("(wy^3 + wy)*wx", "wy*wx")
+ 
+                                                                   Type: Void
+
+testcase "complex pattern matching"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+mR := PATRES(Integer, Complex(Integer))
+ 
+
+   (2)  PatternMatchResult(Integer,Complex(Integer))
+                                                                   Type: Type
+pati := convert(%i)@Pattern(Integer)
+ 
+
+   (3)  %i
+                                                       Type: Pattern(Integer)
+testTrue("not(failed?(patternMatch(%i, pati, new()$mR)))")
+ 
+                                                                   Type: Void
+testTrue("not(failed?(patternMatch(3 + %i, 3 + pati, new()$mR)))")
+ 
+                                                                   Type: Void
+
+mR := PATRES(Integer, Complex(Expression(Integer)))
+ 
+
+   (6)  PatternMatchResult(Integer,Complex(Expression(Integer)))
+                                                                   Type: Type
+testTrue("not(failed?(patternMatch(3 + %i, 3 + pati, new()$mR)))")
+ 
+                                                                   Type: Void
+ff : Complex(Expression(Integer)) := exp(x) + %i*x
+ 
+
+          x
+   (8)  %e  + x %i
+                                           Type: Complex(Expression(Integer))
+patf := convert(ff)@Pattern(Integer)
+ 
+
+          x
+   (9)  %e  + %i x
+                                                       Type: Pattern(Integer)
+testTrue("not(failed?(patternMatch(ff, patf, new()$mR)))")
+ 
+                                                                   Type: Void
+
+irule := rule %i == 42
+ 
+
+   (11)  %i == 42
+     Type: RewriteRule(Integer,Complex(Integer),Expression(Complex(Integer)))
+testEquals("irule(besselJ(v, %i))", "besselJ(v, 42)")
+ 
+                                                                   Type: Void
+
+testcase "map with ::Boolean"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+gl := [x + y = 1, x - y = 1]
+ 
+
+   (2)  [y + x = 1, - y + x = 1]
+                                    Type: List(Equation(Polynomial(Integer)))
+sol := solve(gl, [x, y])
+ 
+
+   (3)  [[x = 1, y = 0]]
+                    Type: List(List(Equation(Fraction(Polynomial(Integer)))))
+testEquals("[map(g +-> eval(g,s)::Boolean,gl) for s in sol]",
+           "[[true, true]]")
+ 
+                                                                   Type: Void
+
+testEquals("[eval(x=1,[x=1]::List EQ FRAC POLY INT)::Boolean for i in 1..1]",
+            "[true]")
+ 
+                                                                   Type: Void
+testEquals("[eval(x=1,[x=1])::Boolean for i in 1..1]", "[true]")
+ 
+                                                                   Type: Void
+
+q:EQ POLY INT:=(1=1)
+ 
+
+   (7)  1 = 1
+                                          Type: Equation(Polynomial(Integer))
+testEquals("[q for i in 1..1]", "[true]")
+ 
+                                                                   Type: Void
+
+testcase "assignment to aggregates"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+ll := [[1, 2, 3], [4, 5, 6]]
+ 
+
+   (2)  [[1, 2, 3], [4, 5, 6]]
+                                            Type: List(List(PositiveInteger))
+testTrue("(ll.1.1 := 7; true)")
+ 
+                                                                   Type: Void
+testEquals("ll.1.1", "7")
+ 
+                                                                   Type: Void
+testTrue("((elt(ll, 2)).1 := 9; true)")
+ 
+                                                                   Type: Void
+testEquals("ll.2.1", "9")
+ 
+                                                                   Type: Void
+testTrue("(elt(ll.1, 2) := 8; true)")
+ 
+                                                                   Type: Void
+testEquals("ll.1.2", "8")
+ 
+                                                                   Type: Void
+
+mkr(i) == [i, string(i)]$Record(k : Integer, s : String)
+ 
+                                                                   Type: Void
+lr := [mkr(i) for i in 1..3]
+ 
+   Compiling function mkr with type PositiveInteger -> Record(k: 
+      Integer,s: String) 
+
+   (10)  [[k = 1, s = "1"], [k = 2, s = "2"], [k = 3, s = "3"]]
+                                     Type: List(Record(k: Integer,s: String))
+vr := vector(lr)
+ 
+
+   (11)  [[k = 1, s = "1"], [k = 2, s = "2"], [k = 3, s = "3"]]
+                                   Type: Vector(Record(k: Integer,s: String))
+
+testTrue("(lr.1.k := 5; true)")
+ 
+                                                                   Type: Void
+testEquals("lr.1.k", "5")
+ 
+                                                                   Type: Void
+testTrue("((elt(lr, 2)).k := 11; true)")
+ 
+                                                                   Type: Void
+testEquals("lr.2.k", "11")
+ 
+                                                                   Type: Void
+testTrue("(elt(lr.3, k) := 13; true)")
+ 
+                                                                   Type: Void
+testEquals("lr.3.k", "13")
+ 
+                                                                   Type: Void
+
+testTrue("(vr.1.k := 15; true)")
+ 
+                                                                   Type: Void
+testEquals("vr.1.k", "15")
+ 
+                                                                   Type: Void
+testTrue("((elt(vr, 2)).k := 4; true)")
+ 
+                                                                   Type: Void
+testEquals("vr.2.k", "4")
+ 
+                                                                   Type: Void
+testTrue("(elt(vr.3, k) := 17; true)")
+ 
+                                                                   Type: Void
+testEquals("vr.3.k", "17")
+ 
+                                                                   Type: Void
+
+testcase "0^0 in CARD"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+testEquals("0::CARD ^ 0::CARD", "1")
+ 
+                                                                   Type: Void
+
+testcase "0 to complex power"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+testEquals("complex(0, 0)^complex(2, 0.0)", "0")
+ 
+                                                                   Type: Void
+testLibraryError("complex(0, 0)^complex(0.0, 0)")
+ 
+                                                                   Type: Void
+
+testcase "dummy vars in CLINDEP"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+xder(xx : Expression(Integer)): Expression(Integer) == D(xx, x)
+ 
+   Function declaration xder : Expression(Integer) -> Expression(
+      Integer) has been added to workspace.
+                                                                   Type: Void
+Cd := CLINDEP(Integer, Expression(Integer))
+ 
+
+   (3)  ConstantLinearDependence(Integer,Expression(Integer))
+                                                                   Type: Type
+ff := operator 'f
+ 
+
+   (4)  f
+                                                          Type: BasicOperator
+testEquals("reducedSystem(matrix([[D(ff(x), x)/(ff(x) + 1)]]), [xder])$Cd",
+           "matrix([[1]])")
+ 
+   Compiling function xder with type Expression(Integer) -> Expression(
+      Integer) 
+                                                                   Type: Void
+
+testcase "degree in DeRhamComplex"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+Dr := DeRhamComplex(Integer, [x, y, z])
+ 
+
+   (2)  DeRhamComplex(Integer,[x, y, z])
+                                                                   Type: Type
+dx := generator(1)$Dr
+ 
+
+   (3)  dx
+                                         Type: DeRhamComplex(Integer,[x,y,z])
+testEquals("degree(dx)", "1")
+ 
+                                                                   Type: Void
+
+testcase "general map for aggregates"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+fAf := FiniteLinearAggregateFunctions2(Integer, List(Integer),
+          Integer, U32Vector)
+ 
+
+   (2)
+   FiniteLinearAggregateFunctions2(Integer,List(Integer),Integer,U32Vector)
+                                                                   Type: Type
+testTrue("(uv := map(x +-> x, [1, 2])$fAf; true)")
+ 
+                                                                   Type: Void
+testEquals("uv(0)", "1")
+ 
+                                                                   Type: Void
+testEquals("uv(1)", "2")
+ 
+                                                                   Type: Void
+
+fAf2 := FiniteLinearAggregateFunctions2(Integer, U32Vector, Integer, U32Vector)
+ 
+
+   (6)  FiniteLinearAggregateFunctions2(Integer,U32Vector,Integer,U32Vector)
+                                                                   Type: Type
+testTrue("(uv2 := map(x +-> x + 7, uv)$fAf2; true)")
+ 
+                                                                   Type: Void
+testEquals("uv2(0)", "8")
+ 
+                                                                   Type: Void
+testEquals("uv2(1)", "9")
+ 
+                                                                   Type: Void
+
+testTrue("(uv := scan((x, y) +-> x*y, [3, 4], 2)$fAf; true)")
+ 
+                                                                   Type: Void
+testEquals("uv(0)", "6")
+ 
+                                                                   Type: Void
+testEquals("uv(1)", "24")
+ 
+                                                                   Type: Void
+testTrue("(uv2 := scan((x, y) +-> x + y, uv, 1)$fAf2; true)")
+ 
+                                                                   Type: Void
+testEquals("uv2(0)", "7")
+ 
+                                                                   Type: Void
+testEquals("uv2(1)", "31")
+ 
+                                                                   Type: Void
+
+testcase "overwritten loop limit"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+g(x1:Integer):Integer ==
+    x0:Integer := x1
+    for k0 in 1 .. x0 repeat x0:=x0+1
+    x0
+ 
+   Function declaration g : Integer -> Integer has been added to 
+      workspace.
+                                                                   Type: Void
+testEquals("g(3)", "6")
+ 
+   Compiling function g with type Integer -> Integer 
+                                                                   Type: Void
+
+testcase "error in order"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+L := SparseUnivariateLaurentSeries(Fraction Integer, 'z, 0)
+ 
+
+   (2)  SparseUnivariateLaurentSeries(Fraction(Integer),z,0)
+                                                                   Type: Type
+l : L := 0
+ 
+
+   (3)  0
+                   Type: SparseUnivariateLaurentSeries(Fraction(Integer),z,0)
+-- used to fail
+testEquals("order(l, 0)", "0")
+ 
+                                                                   Type: Void
+testEquals("rationalFunction(l, 0)", "0")
+ 
+                                                                   Type: Void
+
+testcase "wrong totalDegree"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+testEquals("totalDegree(u*m^2, [m])", "2")
+ 
+                                                                   Type: Void
+testEquals("totalDegree(u*m, [v, m])", "1")
+ 
+                                                                   Type: Void
+
+)set output algebra on
+ 
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+   =============================================================================
+   WARNINGS:
+   Testsuite: bugs2014
+   Testcase: weighted polynomials
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: bugs2014
+   Testcase: weighted polynomials
+   test: 2
+   testing in a domain without InputForm!
+   Testsuite: bugs2014
+   Testcase: weighted polynomials
+   test: 3
+   testing in a domain without InputForm!
+   Testsuite: bugs2014
+   Testcase: 0^0 in CARD
+   test: 1
+   testing in a domain without InputForm!
+
+   =============================================================================
+   Testsuite: bugs2014
+     failed (total): 0 (14)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   bugs2014                    0    (14)               0    (56)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 56
+                                                                   Type: Void
+)quit
+ 

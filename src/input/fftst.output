@@ -1,0 +1,360 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read fftst.input
+ 
+)set break resume
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+
+testsuite "poly ops over Galois fields"
+ 
+   All user variables and function definitions have been cleared.
+   WARNING: string for testsuite should have less than 15 characters!
+                                                                   Type: Void
+
+testcase "ffpoly"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+P := PrimeField(7)
+ 
+
+   (2)  PrimeField(7)
+                                                                   Type: Type
+
+list_pols(f, inc_f, n_max) ==
+    l : List SUP(P) := []
+    i := 1
+    for i in 1..n_max while (fu := inc_f(f)) case SUP(P) repeat
+        f := fu::SUP(P)
+        l := cons(f, l)
+    reverse!(l)
+ 
+                                                                   Type: Void
+
+check_ops1(f1, lp, cf, cd) ==
+    for f2 in lp repeat
+        not(cf(f1, f2)) =>
+            print(message("f1 not " cd "smaller than f2")$OutputForm);
+            print(f1::OutputForm)
+            print(f2::OutputForm)
+            return false
+        f1 := f2
+    true
+ 
+                                                                   Type: Void
+
+check_ops(k, n_max) ==
+    free lp
+    free n
+    f1 := (x^k)::SUP(P)
+    lp := list_pols(f1, nextIrreduciblePoly$FFPOLY(P), n_max)
+    n := numberOfIrreduciblePoly(k)$FFPOLY(P)
+    if n <= n_max then
+        testEquals("(_"i_"; #lp)", "n")
+    res1 := check_ops1(f1, lp, lexSmaller?$FFPOLY(P), "lex")
+    lp := list_pols(f1, nextPrimitivePoly$FFPOLY(P), n_max)
+    n := numberOfPrimitivePoly(k)$FFPOLY(P)
+    if n <= n_max then
+        testEquals("(_"p_"; #lp)", "n")
+    res1 := res1 and check_ops1(f1, lp, clexSmaller?$FFPOLY(P), "clex")
+    lp := list_pols(f1, nextNormalPoly$FFPOLY(P), n_max)
+    n := numberOfNormalPoly(k)$FFPOLY(P)
+    if n <= n_max then
+        testEquals("(_"n_"; #lp)", "n")
+    res1 := res1 and check_ops1(f1, lp, nlexSmaller?$FFPOLY(P), "nlex")
+    lp := list_pols(f1, nextNormalPrimitivePoly$FFPOLY(P), n_max)
+    res1 and check_ops1(f1, lp, cnlexSmaller?$FFPOLY(P), "cnlex")
+ 
+                                                                   Type: Void
+
+testTrue("check_ops(3, 2000)")
+ 
+   Compiling function list_pols with type (SparseUnivariatePolynomial(
+      PrimeField(7)), (SparseUnivariatePolynomial(PrimeField(7)) -> 
+      Union(SparseUnivariatePolynomial(PrimeField(7)),"failed")), 
+      PositiveInteger) -> List(SparseUnivariatePolynomial(PrimeField(7)
+      )) 
+   Compiling function check_ops1 with type (SparseUnivariatePolynomial(
+      PrimeField(7)), List(SparseUnivariatePolynomial(PrimeField(7))), 
+      ((SparseUnivariatePolynomial(PrimeField(7)), 
+      SparseUnivariatePolynomial(PrimeField(7))) -> Boolean), String)
+       -> Boolean 
+   Compiling function check_ops with type (PositiveInteger, 
+      PositiveInteger) -> Boolean 
+   Compiled code for check_ops has been cleared.
+                                                                   Type: Void
+testTrue("check_ops(4, 2000)")
+ 
+   Compiling function check_ops with type (PositiveInteger, 
+      PositiveInteger) -> Boolean 
+                                                                   Type: Void
+testTrue("check_ops(8, 100)")
+ 
+                                                                   Type: Void
+p := 3
+ 
+
+   (9)  3
+                                                        Type: PositiveInteger
+P := PrimeField(p)
+ 
+
+   (10)  PrimeField(3)
+                                                                   Type: Type
+
+testTrue("check_ops(3, 2000)")
+ 
+                                                                   Type: Void
+testTrue("check_ops(4, 2000)")
+ 
+                                                                   Type: Void
+testTrue("check_ops(7, 100)")
+ 
+                                                                   Type: Void
+testTrue("check_ops(9, 100)")
+ 
+                                                                   Type: Void
+
+-- get two small extension degrees
+d1:=2
+ 
+
+   (15)  2
+                                                        Type: PositiveInteger
+d2:=3
+ 
+
+   (16)  3
+                                                        Type: PositiveInteger
+
+F1 := P
+ 
+
+   (17)  PrimeField(3)
+                                                                   Type: Type
+f1 := createNormalPoly(d1)$FFPOLY(F1)
+ 
+
+          2
+   (18)  ?  + 2 ? + 2
+                              Type: SparseUnivariatePolynomial(PrimeField(3))
+P := FFNBP(F1, f1)
+ 
+
+   (19)
+                                                              2
+   FiniteFieldNormalBasisExtensionByPolynomial(PrimeField(3),?  + 2 ? + 2)
+                                                                   Type: Type
+
+testTrue("check_ops(3, 200)")
+ 
+                                                                   Type: Void
+testTrue("check_ops(4, 100)")
+ 
+                                                                   Type: Void
+testTrue("check_ops(11, 20)")
+ 
+                                                                   Type: Void
+-- get irreducible polynomial of degree d2 over P
+f2 := createIrreduciblePoly(d2)$FFPOLY(P)
+ 
+
+          3
+   (23)  ?  + ? + %A
+Type: SparseUnivariatePolynomial(FiniteFieldNormalBasisExtensionByPolynomial(PrimeField(3),?^2+2*?+2))
+P := FFP(P, f2)
+ 
+
+   (24)
+   FiniteFieldExtensionByPolynomial
+                                                                 2
+      FiniteFieldNormalBasisExtensionByPolynomial(PrimeField(3),?  + 2 ? + 2)
+  ,
+       3
+      ?  + ? + %A
+                                                                   Type: Type
+
+testTrue("check_ops(3, 20)")
+ 
+                                                                   Type: Void
+testTrue("check_ops(4, 20)")
+ 
+                                                                   Type: Void
+testTrue("check_ops(9, 20)")
+ 
+                                                                   Type: Void
+testTrue("check_ops(10, 20)")
+ 
+                                                                   Type: Void
+
+f1 := createPrimitivePoly(3)$FFPOLY(F1)
+ 
+
+          3
+   (29)  ?  + 2 ? + 1
+                              Type: SparseUnivariatePolynomial(PrimeField(3))
+P := FFCGP(F1, f1)
+ 
+
+   (30)
+                                                              3
+   FiniteFieldCyclicGroupExtensionByPolynomial(PrimeField(3),?  + 2 ? + 1)
+                                                                   Type: Type
+
+testTrue("check_ops(3, 20)")
+ 
+                                                                   Type: Void
+testTrue("check_ops(4, 20)")
+ 
+                                                                   Type: Void
+testTrue("check_ops(9, 20)")
+ 
+                                                                   Type: Void
+testTrue("check_ops(10, 20)")
+ 
+                                                                   Type: Void
+
+P := PrimeField(2)
+ 
+
+   (35)  PrimeField(2)
+                                                                   Type: Type
+testTrue("check_ops(3, 20)")
+ 
+                                                                   Type: Void
+testTrue("check_ops(4, 20)")
+ 
+                                                                   Type: Void
+-- in full range would be expensive
+testTrue("check_ops(9, 50)")
+ 
+                                                                   Type: Void
+-- following are expensive
+-- testTrue("check_ops(10, 1000)")
+-- testTrue("check_ops(20, 20)")
+-- testTrue("check_ops(30, 20)")
+
+F1 := P
+ 
+
+   (39)  PrimeField(2)
+                                                                   Type: Type
+f1 := createNormalPoly(4)$FFPOLY(F1)
+ 
+
+          4    3
+   (40)  ?  + ?  + 1
+                              Type: SparseUnivariatePolynomial(PrimeField(2))
+P := FFNBP(F1, f1)
+ 
+
+   (41)
+                                                              4    3
+   FiniteFieldNormalBasisExtensionByPolynomial(PrimeField(2),?  + ?  + 1)
+                                                                   Type: Type
+
+testTrue("check_ops(3, 20)")
+ 
+                                                                   Type: Void
+testTrue("check_ops(4, 20)")
+ 
+                                                                   Type: Void
+testTrue("check_ops(5, 20)")
+ 
+                                                                   Type: Void
+testTrue("check_ops(9, 20)")
+ 
+                                                                   Type: Void
+testTrue("check_ops(10, 20)")
+ 
+                                                                   Type: Void
+testTrue("check_ops(15, 20)")
+ 
+                                                                   Type: Void
+testTrue("check_ops(17, 20)")
+ 
+                                                                   Type: Void
+
+f1 := createPrimitivePoly(5)$FFPOLY(F1)
+ 
+
+          5    2
+   (49)  ?  + ?  + 1
+                              Type: SparseUnivariatePolynomial(PrimeField(2))
+P := FFCGP(F1, f1)
+ 
+
+   (50)
+                                                              5    2
+   FiniteFieldCyclicGroupExtensionByPolynomial(PrimeField(2),?  + ?  + 1)
+                                                                   Type: Type
+
+testTrue("check_ops(3, 20)")
+ 
+                                                                   Type: Void
+testTrue("check_ops(4, 20)")
+ 
+                                                                   Type: Void
+testTrue("check_ops(5, 20)")
+ 
+                                                                   Type: Void
+testTrue("check_ops(9, 20)")
+ 
+                                                                   Type: Void
+testTrue("check_ops(10, 20)")
+ 
+                                                                   Type: Void
+testTrue("check_ops(15, 20)")
+ 
+                                                                   Type: Void
+testTrue("check_ops(17, 20)")
+ 
+                                                                   Type: Void
+
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+
+   =============================================================================
+   Testsuite: poly ops over Galois fields
+     failed (total): 0 (1)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   poly ops over Galois fields    0     (1)               0    (50)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 50
+                                                                   Type: Void
+)quit
+ 

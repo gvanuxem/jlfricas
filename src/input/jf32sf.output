@@ -1,0 +1,259 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read jf32sf.input
+ 
+)set break resume
+ 
+)set mess type off
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+
+testsuite "JLFloat32 Special Functions"
+ 
+   All user variables and function definitions have been cleared.
+   WARNING: string for testsuite should have less than 15 characters!
+testcase "SpecialFunctions availability"
+ 
+   All user variables and function definitions have been cleared.
+testTrue("jlUsing(_"SpecialFunctions_")")
+ 
+
+
+testcase "Special functions"
+ 
+   All user variables and function definitions have been cleared.
+)expose JLFloat32
+ 
+   JLFloat32 is now explicitly exposed in frame initial 
+)expose JLFloat32SpecialFunctions JLFloat32SpecialFunctions2
+ 
+   JLFloat32SpecialFunctions is now explicitly exposed in frame initial
+      
+   JLFloat32SpecialFunctions2 is now explicitly exposed in frame 
+      initial 
+
+a:=jf32(0.7);b:= jf32(0.5);
+ 
+
+
+testTrue("jlApprox?(acosd(a), jf32(45.5729959991943))")
+ 
+testTrue("jlApprox?(acotd(a), jf32(55.00797980144134))")
+ 
+testTrue("jlApprox?(acscd(a*100), jf32(0.8185389789730952))")
+ 
+testTrue("jlApprox?(asecd(a*100), jf32(89.1814610210269))")
+ 
+testTrue("jlApprox?(asind(a), jf32(44.4270040008057))")
+ 
+testTrue("jlApprox?(atand(a), jf32(34.99202019855866))")
+ 
+testTrue("jlApprox?(atand(a,b), jf32(54.46232220802562))")
+ 
+testTrue("jlApprox?(cosc(a), jf32(-1.3652403755203533))")
+ 
+testTrue("jlApprox?(cosd(a), jf32(0.999925369660452))")
+ 
+testTrue("jlApprox?(cospi(a), jf32(-0.587785252292473))")
+ 
+testTrue("jlApprox?(cotd(a), jf32(81.84704111467158))")
+ 
+testTrue("jlApprox?(cscd(a), jf32(81.85314984303743))")
+ 
+testTrue("jlApprox?(deg2rad(a), jf32(0.012217304763960306))")
+ 
+testTrue("jlApprox?(exp10(a), jf32(5.011872336272722))")
+ 
+testTrue("jlApprox?(exp2(a), jf32(1.624504792712471))")
+ 
+testTrue("jlApprox?(hypot(a,b), jf32(0.8602325267042626))")
+ 
+testTrue("jlApprox?(ldexp(a, 3), jf32(5.6))")
+ 
+testTrue("jlApprox?(log1p(a), jf32(0.5306282510621704))")
+ 
+testTrue("jlApprox?(rad2deg(a), jf32(40.10704565915762))")
+ 
+testTrue("jlApprox?(secd(a), jf32(1.0000746359096513))")
+ 
+testTrue("jlApprox?(sinc(a), jf32(0.36788301057177425))")
+ 
+testTrue("jlApprox?(sind(a), jf32(0.012217000835247169))")
+ 
+testTrue("jlApprox?(sinpi(a), jf32(0.8090169943749476))")
+ 
+testTrue("jlApprox?(tand(a), jf32(0.012217912662217717))")
+ 
+testTrue("jlApprox?(tanpi(a), jf32(-1.376381920471174))")
+ 
+
+)expose JF64SF2
+ 
+   JLFloat64SpecialFunctions2 is now explicitly exposed in frame 
+      initial 
+
+testTrue("jlApprox?(Ei(a), jf32(1.0649071946242903))")
+ 
+testTrue("jlApprox?(erf(a), jf32(0.6778011938374184))")
+ 
+testTrue("jlApprox?(eta(a), jf32(0.6422089672918029))")
+ 
+testTrue("jlApprox?(Gamma(a,b), jf32(0.574369633695758))")
+ 
+testTrue("jlApprox?(airyAi(a), jf32(0.18916240039815))")
+ 
+testTrue("jlApprox?(airyAiPrime(a), jf32(-0.19985119158228049))")
+ 
+testTrue("jlApprox?(airyAiPrimex(a), jf32(-0.2953066751809787))")
+ 
+testTrue("jlApprox?(airyAix(a), jf32(0.279512566768121))")
+ 
+testTrue("jlApprox?(airyBi(a), jf32(0.9733286558781657))")
+ 
+testTrue("jlApprox?(airyBiPrime(a), jf32(0.65440591917214))")
+ 
+testTrue("jlApprox?(airyBiPrimex(a), jf32(0.44287452237542163))")
+ 
+testTrue("jlApprox?(airyBix(a), jf32(0.6587080754582292))")
+ 
+testTrue("jlApprox?(besselI(a,b), jf32(0.43253990582478347))")
+ 
+testTrue("jlApprox?(besselIx(a,b), jf32(0.26234871443194624))")
+ 
+testTrue("jlApprox?(besselJ(a,b), jf32(0.4018739748374123))")
+ 
+testTrue("jlApprox?(besselJ0(a), jf32(0.8812008886074053))")
+ 
+testTrue("jlApprox?(besselJ1(a), jf32(0.32899574154005895))")
+ 
+testTrue("jlApprox?(besselJx(a,b), jf32(0.4018739748374123))")
+ 
+testTrue("jlApprox?(besselK(a,b), jf32(1.2384579270729803))")
+ 
+testTrue("jlApprox?(besselKx(a,b), jf32(2.041871927232411))")
+ 
+testTrue("jlApprox?(besselY(a,b), jf32(-1.1606223425608166))")
+ 
+testTrue("jlApprox?(besselY0(a), jf32(-0.19066492933739512))")
+ 
+testTrue("jlApprox?(besselY1(a), jf32(-1.1032498719076336))")
+ 
+testTrue("jlApprox?(besselYx(a,b), jf32(-1.1606223425608169))")
+ 
+testTrue("jlApprox?(Beta(a,b), jf32(2.505795576340679))")
+ 
+testTrue("jlApprox?(Ci(a), jf32(0.10051470700889764))")
+ 
+testTrue("jlApprox?(dawson(a), jf32(0.5105040575592318))")
+ 
+testTrue("jlApprox?(digamma(a), jf32(-1.220023553697934))")
+ 
+testTrue("jlApprox?(ellipticE(a), jf32(1.2416705679458224))")
+ 
+testTrue("jlApprox?(ellipticK(a), jf32(2.075363135292469))")
+ 
+testTrue("jlApprox?(erf(a,b), jf32(-0.15730131602437192))")
+ 
+testTrue("jlApprox?(erfc(a), jf32(0.32219880616258156))")
+ 
+testTrue("jlApprox?(inverseErfc(a), jf32(0.2724627147267544))")
+ 
+testTrue("jlApprox?(erfcx(a), jf32(0.525930337349441))")
+ 
+testTrue("jlApprox?(erfi(a), jf32(0.9402829338335074))")
+ 
+testTrue("jlApprox?(inverseErf(a), jf32(0.7328690779592167))")
+ 
+testTrue("jlApprox?(expint(a,b), jf32(0.685741074459473))")
+ 
+testTrue("jlApprox?(expintx(a), jf32(0.7526780200295873))")
+ 
+testTrue("jlApprox?(Gamma(a), jf32(1.298055332647558))")
+ 
+testTrue("jlApprox?(Gamma(a,b), jf32(0.574369633695758))")
+ 
+testTrue("jlApprox?(gamma_inc_inv(3,a,1-a), jf32(3.6155676658659903))")
+ 
+testTrue("jlApprox?(hankelH1(a,b), jf32(0.4018739748374123))")
+ 
+testTrue("jlApprox?(hankelH1x(a,b), jf32(-0.20375439930340755))")
+ 
+testTrue("jlApprox?(hankelH2(a,b), jf32(0.4018739748374123))")
+ 
+testTrue("jlApprox?(hankelH2x(a,b), jf32(-0.20375439930340755))")
+ 
+testTrue("jlApprox?(invdigamma(a), jf32(2.4935725465232905))")
+ 
+testTrue("jlApprox?(jinc(a), jf32(0.5057388420654454))")
+ 
+testTrue("jlApprox?(logabsbeta(a,b), jf32(0.9186062794596825))")
+ 
+testTrue("jlApprox?(logabsgamma(a), jf32(0.2608672465316666))")
+ 
+testTrue("jlApprox?(logBeta(a,b), jf32(0.9186062794596825))")
+ 
+testTrue("jlApprox?(logerfc(a), jf32(-1.1325865135143414))")
+ 
+testTrue("jlApprox?(logerfcx(a), jf32(-0.6425865135143414))")
+ 
+testTrue("jlApprox?(logGamma(a), jf32(0.2608672465316666))")
+ 
+testTrue("jlApprox?(logGamma(a,b), jf32(-0.5544821287741406))")
+ 
+testTrue("jlApprox?(polygamma(3,b), jf32(97.40909103400247))")
+ 
+testTrue("jlApprox?(Si(a), jf32(0.6812222391166112))")
+ 
+testTrue("jlApprox?(sphericalBesselJ(a,b), jf32(0.29621429895328044))")
+ 
+testTrue("jlApprox?(sphericalBesselY(a,b), jf32(-3.14785340150274))")
+ 
+testTrue("jlApprox?(trigamma(a), jf32(2.834049156694611))")
+ 
+testTrue("jlApprox?(riemannZeta(a), jf32(-2.7783884455536954))")
+ 
+
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+
+   =============================================================================
+   Testsuite: JLFloat32 Special Functions
+     failed (total): 0 (2)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   JLFloat32 Special Functions    0     (2)               0    (86)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 86
+)quit
+ 

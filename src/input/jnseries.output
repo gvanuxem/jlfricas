@@ -1,0 +1,216 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read jnseries.input
+ 
+)set break resume
+ 
+)set mess type off
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+
+testsuite "Julia Nemo Series"
+ 
+   All user variables and function definitions have been cleared.
+   WARNING: string for testsuite should have less than 15 characters!
+testcase "NMUnivariatePuiseuxSeries"
+ 
+   All user variables and function definitions have been cleared.
+R := NUPXS(NFRAC(NINT),'x,30)
+ 
+
+   (2)  NMUnivariatePuiseuxSeries(NMFraction(NMInteger),x,30)
+x := x::R
+ 
+
+   (3)  x + O(x^31)
+p1 := 23*x+3*19*x^7+x^(1/7)
+ 
+
+   (4)  x^(1/7) + 23*x + O(x^(31/7))
+p2 := exp(p1)
+ 
+
+   (5)
+  1 + x^(1/7) + 1/2*x^(2/7) + 1/6*x^(3/7) + 1/24*x^(4/7) + 1/120*x^(5/7) + 1/72
+  0*x^(6/7) + 115921/5040*x + 927361/40320*x^(8/7) + 4173121/362880*x^(9/7) + 1
+  3910401/3628800*x^(10/7) + 38253601/39916800*x^(11/7) + 91808641/479001600*x^
+  (12/7) + 198918721/6227020800*x^(13/7) + 23059055859841/87178291200*x^2 + 345
+  880616281201/1307674368000*x^(15/7) + 2767040288812801/20922789888000*x^(16/7
+  ) + 15679889709644161/355687428096000*x^(17/7) + 70559497237582081/6402373705
+  728000*x^(18/7) + 268126081325444161/121645100408832000*x^(19/7) + 6875027645
+  6487877/187146308321280000*x^(20/7) + 103606596827966449929601/51090942171709
+  440000*x^3 + 2279293515945454366068481/1124000727777607680000*x^(22/7) + 2621
+  1809481805903641895441/25852016738884976640000*x^(23/7) + 2096943703319404456
+  86430081/620448401733239439360000*x^(24/7) + 1310589634706718619680504001/155
+  11210043330985984000000*x^(25/7) + 6815065788703894392727056001/4032914611266
+  05635584000000*x^(26/7) + 30667795509563797614587157601/108888694504183521607
+  68000000*x^(27/7) + 3555133473034722321754819964956801/3048883446117138605015
+  04000000*x^4 + 103095757936784634516751194507441601/8841761993739701954543616
+  000000*x^(29/7) + 1546431181083083919653801337239856001/265252859812191058636
+  308480000000*x^(30/7) + O(x^(31/7))
+p3 := log(p2)
+ 
+
+   (6)  x^(1/7) + 23*x + O(x^(31/7))
+
+-- Check if log(exp(p)) = p up to precision
+testEquals("0$R","p1 - p3")
+ 
+
+testcase "NMUnivariatePowerSeries"
+ 
+   All user variables and function definitions have been cleared.
+R2 := NUPS(NFRAC(NINT),'x,30,"capped_relative")
+ 
+
+   (2)  NMUnivariatePowerSeries(NMFraction(NMInteger),x,30,:capped_relative)
+x2 := x::R2
+ 
+
+   (3)  x + O(x^31)
+s1 := 23*x2+3*19*x2^7+x2^2
+ 
+
+   (4)  23*x + x^2 + 57*x^7 + O(x^31)
+s2 := exp(s1)
+ 
+
+   (5)
+  1 + 23*x + 531/2*x^2 + 12305/6*x^3 + 286201/24*x^4 + 2227021/40*x^5 + 1565264
+  59/720*x^6 + 3680568593/5040*x^7 + 5792713343/2688*x^8 + 2061646479863/362880
+  *x^9 + 49278839993059/3628800*x^10 + 132434712480713/4435200*x^11 + 293848530
+  93086569/479001600*x^12 + 29840278166863583/249080832*x^13 + 6578861717822710
+  553/29059430400*x^14 + 549790420140551303057/1307674368000*x^15 + 16201587570
+  515612333281/20922789888000*x^16 + 167865887797743429813149/118562476032000*x
+  ^17 + 3274259709195432484408919/1280474741145600*x^18 + 551380741034577594870
+  474257/121645100408832000*x^19 + 54468955523818986807209671/6931344752640000*
+  x^20 + 681549446433925255979206519463/51090942171709440000*x^21 + 25049280533
+  864275702195587506971/1124000727777607680000*x^22 + 2763477634731599119212922
+  909561/74933381851840512000*x^23 + 1638470497800266237580520841440727/2697601
+  7466662584320000*x^24 + 5169026116960932223781967354798757/518769566666588160
+  00000*x^25 + 949049136783771874329545361399752231/5844803784443559936000000*x
+  ^26 + 123957499832479709894268384740295592471/473429106539928354816000000*x^2
+  7 + 1104931372537939808603968239012476765011/2651202996623598786969600000*x^2
+  8 + 27986864955472272087797723942217160245449/42713826056713536012288000000*x
+  ^29 + 11770428777578302863951125407793732107885133/11532733035312654723317760
+  000000*x^30 + O(x^31)
+s3 := log(s2)
+ 
+
+   (6)  23*x + x^2 + 57*x^7 + O(x^31)
+testEquals("0$R2", "s1 - s3")
+ 
+
+testcase "NMUnivariateLaurentSeries"
+ 
+   All user variables and function definitions have been cleared.
+R3 := NULS(NFRAC(NINT),'x,30)
+ 
+
+   (2)  NMUnivariateLaurentSeries(NMFraction(NMInteger),x,30)
+x3 := x::R3
+ 
+
+   (3)  x + O(x^31)
+l1 := 23*x3+3*19*x3^7
+ 
+
+   (4)  23*x + 57*x^7 + O(x^31)
+l2 := exp(l1)
+ 
+
+   (5)
+  1 + 23*x + 529/2*x^2 + 12167/6*x^3 + 279841/24*x^4 + 6436343/120*x^5 + 148035
+  889/720*x^6 + 3405112727/5040*x^7 + 78363844801/40320*x^8 + 1806623621783/362
+  880*x^9 + 41845951504849/3628800*x^10 + 979339356332327/39916800*x^11 + 23379
+  058264716001/479001600*x^12 + 577013981265802103/6227020800*x^13 + 1494994843
+  4822201329/87178291200*x^14 + 411453447100207764407/1307674368000*x^15 + 1206
+  1058487804208882561/20922789888000*x^16 + 373672556845587474224663/3556874280
+  96000*x^17 + 12076389704362291452497809/6402373705728000*x^18 + 3658536564305
+  3086074475957/11058645491712000*x^19 + 13753621998322521967803876001/24329020
+  08176640000*x^20 + 482800575144565789894027999223/51090942171709440000*x^21 +
+   17518545347022886430991698363569/1124000727777607680000*x^22 + 2875883445731
+  6356885044203754049/1124000727777607680000*x^23 + 113260642671948123050961803
+  4506087/26976017466662584320000*x^24 + 46352322045491421367468549766471041/67
+  4400436666564608000000*x^25 + 1956321060458306502516947507542345943/175344113
+  53330679808000000*x^26 + 84546301072598771608105874624122429489/4734291065399
+  28354816000000*x^27 + 3729620401228093916740569516102818751047/13256014983117
+  993934848000000*x^28 + 168217349073701156336638032704779187275681/38442443451
+  0421824110592000000*x^29 + 41676670041876256579797622556454700605749/61672369
+  172794945044480000000*x^30 + O(x^31)
+l3 := log(l2)
+ 
+
+   (6)  23*x + 57*x^7 + O(x^31)
+testEquals("0$R3", "l1 - l3")
+ 
+
+l4 := x3^(-1)
+ 
+
+   (8)  x^-1 + O(x^29)
+testEquals("1$R3", "l4 * x3")
+ 
+
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+   =============================================================================
+   WARNINGS:
+   Testsuite: Julia Nemo Series
+   Testcase: NMUnivariatePuiseuxSeries
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: Julia Nemo Series
+   Testcase: NMUnivariatePowerSeries
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: Julia Nemo Series
+   Testcase: NMUnivariateLaurentSeries
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: Julia Nemo Series
+   Testcase: NMUnivariateLaurentSeries
+   test: 2
+   testing in a domain without InputForm!
+
+   =============================================================================
+   Testsuite: Julia Nemo Series
+     failed (total): 0 (3)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   Julia Nemo Series           0     (3)               0     (4)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 4
+)quit
+ 

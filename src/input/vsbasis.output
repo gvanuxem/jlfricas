@@ -1,0 +1,544 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read vsbasis.input
+ 
+)set break resume
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+
+---
+--- april 2008
+---
+
+)expose VSBASIS
+ 
+   VectorSpaceBasis is now explicitly exposed in frame initial 
+
+testsuite "vsbasis"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+testcase "basic properties"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+VFI ==> Vector Fraction Integer
+ 
+                                                                   Type: Void
+MFI ==> Matrix Fraction Integer
+ 
+                                                                   Type: Void
+VSB ==> VectorSpaceBasis Fraction Integer
+ 
+                                                                   Type: Void
+
+bc3 := canonicalBasis 3 :: List VFI
+ 
+
+   (5)  [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
+                                        Type: List(Vector(Fraction(Integer)))
+u : VFI := vector [1,0,-1]
+ 
+
+   (6)  [1, 0, - 1]
+                                              Type: Vector(Fraction(Integer))
+v : VFI := vector [2,1,2]
+ 
+
+   (7)  [2, 1, 2]
+                                              Type: Vector(Fraction(Integer))
+w : VFI := vector [1,2,1]
+ 
+
+   (8)  [1, 2, 1]
+                                              Type: Vector(Fraction(Integer))
+v0 := vector([4, 2, 4])$VFI
+ 
+
+   (9)  [4, 2, 4]
+                                              Type: Vector(Fraction(Integer))
+v1 := vector([6, 3, 6])$VFI
+ 
+
+   (10)  [6, 3, 6]
+                                              Type: Vector(Fraction(Integer))
+
+testTrue("not(isBasis?([v0, v1]))")
+ 
+                                                                   Type: Void
+testEquals("rank(complementSpace([v0, v1], 3))", "2")
+ 
+                                                                   Type: Void
+
+-- F = {(x,y,z)|x+y+z=x-y+z=0}
+MF : MFI := matrix [[1,1,1],[1,-1,1]]
+ 
+
+         +1   1   1+
+   (13)  |         |
+         +1  - 1  1+
+                                              Type: Matrix(Fraction(Integer))
+F := (nullSpace MF)$VSB                            -- a basis is (-1,0,1)
+ 
+
+   (14)  VectorSpace [[- 1, 0, 1]]
+                                    Type: VectorSpaceBasis(Fraction(Integer))
+solve (matrix [[2,1,2],[1,2,1]]$MFI, vector [0,0,0])
+ 
+
+   (15)  [particular = [0, 0, 0], basis = [[- 1, 0, 1]]]
+Type: Record(particular: Union(Vector(Fraction(Integer)),"failed"),basis: List(Vector(Fraction(Integer))))
+-- G = vect(v,w)
+G := basis [v, w]                               -- this family is a basis
+ 
+
+   (16)  VectorSpace [[2, 1, 2], [1, 2, 1]]
+                                    Type: VectorSpaceBasis(Fraction(Integer))
+testTrue("isBasis?([v,w])")
+ 
+                                                                   Type: Void
+
+-- search (a,b,c) | F = R(a,b,c)
+-- (a,b,c) matches for v and w,
+-- so (a,b,c) in the nullSpace of the matrix of lines (2,1,2) and (1,2,1)
+RES := nullSpace (transpose horizConcat (v::MFI,w::MFI)) $ VSB
+ 
+
+   (18)  VectorSpace [[- 1, 0, 1]]
+                                    Type: VectorSpaceBasis(Fraction(Integer))
+testTrue("(F = RES)$VSB")
+ 
+                                                                   Type: Void
+
+
+-- H = {(x,y,z)|x+2y+z=0}
+MH : MFI := matrix [[1,2,1]]
+ 
+
+   (20)  [1  2  1]
+                                              Type: Matrix(Fraction(Integer))
+
+-- a basis of the intersection of G and H
+GH := intBasis ([v,w], nullSpace MH)              -- a basis is (-1,1,-1)
+ 
+
+   (21)  VectorSpace [[- 1, 1, - 1]]
+                                    Type: VectorSpaceBasis(Fraction(Integer))
+GH := intBasis ([[v,w], nullSpace MH])
+ 
+
+   (22)  VectorSpace [[- 1, 1, - 1]]
+                                    Type: VectorSpaceBasis(Fraction(Integer))
+GH := basis[v,w] * (nullSpace MH)$VSB
+ 
+
+   (23)  VectorSpace [[- 1, 1, - 1]]
+                                    Type: VectorSpaceBasis(Fraction(Integer))
+
+-- is u in F
+-- transforms the canonical basis in linear expression of vectors u, v and w.
+-- this is a decomposition over F+G : F = Ru and G = Rv+Rw
+testTrue("member?(u, F)")
+ 
+                                                                   Type: Void
+testTrue("(F = basis [u])$VSB")
+ 
+                                                                   Type: Void
+
+BE := basis [u,v,w]
+ 
+
+   (26)  VectorSpace [[1, 0, - 1], [2, 1, 2], [1, 2, 1]]
+                                    Type: VectorSpaceBasis(Fraction(Integer))
+coordinates (bc3.1, BE)
+ 
+
+          1  1    1
+   (27)  [-, -, - -]
+          2  3    6
+                                              Type: Vector(Fraction(Integer))
+coordinates (bc3.2, BE)
+ 
+
+               1  2
+   (28)  [0, - -, -]
+               3  3
+                                              Type: Vector(Fraction(Integer))
+coordinates (bc3.3, BE)
+ 
+
+            1  1    1
+   (29)  [- -, -, - -]
+            2  3    6
+                                              Type: Vector(Fraction(Integer))
+
+-- are F and G complement space :
+-- F intersect G = {(0,0,0)} and F + G = R^3
+intBasis (F, G)
+ 
+
+   (30)  VectorSpace []
+                                    Type: VectorSpaceBasis(Fraction(Integer))
+intBasis [F, G]
+ 
+
+   (31)  VectorSpace []
+                                    Type: VectorSpaceBasis(Fraction(Integer))
+F * G
+ 
+
+   (32)  VectorSpace []
+                                    Type: VectorSpaceBasis(Fraction(Integer))
+testTrue("((basis [])$VSB = F*G)$VSB")
+ 
+                                                                   Type: Void
+sumBasis (F, G)
+ 
+
+   (34)  VectorSpace [[- 1, 0, 1], [2, 1, 2], [1, 2, 1]]
+                                    Type: VectorSpaceBasis(Fraction(Integer))
+sumBasis ([F, G])
+ 
+
+   (35)  VectorSpace [[- 1, 0, 1], [2, 1, 2], [1, 2, 1]]
+                                    Type: VectorSpaceBasis(Fraction(Integer))
+F + G
+ 
+
+   (36)  VectorSpace [[- 1, 0, 1], [2, 1, 2], [1, 2, 1]]
+                                    Type: VectorSpaceBasis(Fraction(Integer))
+testTrue("(basis bc3 = BE)$VSB")
+ 
+                                                                   Type: Void
+
+-- f(u)=v, f(v)=w and f(w)=u. The matrix of f in basis (u,v,w) is obvious.
+-- Changing the basis in order to find the canonical basis of f.
+
+MfBE : MFI := matrix [[0,0,1],[1,0,0],[0,1,0]]
+ 
+
+         +0  0  1+
+         |       |
+   (38)  |1  0  0|
+         |       |
+         +0  1  0+
+                                              Type: Matrix(Fraction(Integer))
+PbcBE := reduce (horizConcat, [u,v,w]::List MFI)
+ 
+
+         + 1   2  1+
+         |         |
+   (39)  | 0   1  2|
+         |         |
+         +- 1  2  1+
+                                              Type: Matrix(Fraction(Integer))
+PBEbc := PbcBE^-1
+ 
+
+         + 1          1+
+         | -    0   - -|
+         | 2          2|
+         |             |
+         | 1     1   1 |
+   (40)  | -   - -   - |
+         | 3     3   3 |
+         |             |
+         |  1   2     1|
+         |- -   -   - -|
+         +  6   3     6+
+                                              Type: Matrix(Fraction(Integer))
+Mfbc := PbcBE * MfBE * PBEbc
+ 
+
+         +7   1     5+
+         |-   -   - -|
+         |6   3     6|
+         |           |
+         |7    2   1 |
+   (41)  |-  - -   - |
+         |6    3   6 |
+         |           |
+         |3         1|
+         |-  - 1  - -|
+         +2         2+
+                                              Type: Matrix(Fraction(Integer))
+
+-- these 3 matrices are equal.
+
+reduce (horizConcat, map (v +-> (coordinates(v,BE))::MFI, bc3))
+ 
+
+         + 1          1+
+         | -    0   - -|
+         | 2          2|
+         |             |
+         | 1     1   1 |
+   (42)  | -   - -   - |
+         | 3     3   3 |
+         |             |
+         |  1   2     1|
+         |- -   -   - -|
+         +  6   3     6+
+                                              Type: Matrix(Fraction(Integer))
+PBEbc
+ 
+
+         + 1          1+
+         | -    0   - -|
+         | 2          2|
+         |             |
+         | 1     1   1 |
+   (43)  | -   - -   - |
+         | 3     3   3 |
+         |             |
+         |  1   2     1|
+         |- -   -   - -|
+         +  6   3     6+
+                                              Type: Matrix(Fraction(Integer))
+LRES := map (s +-> s.particular::MFI, solve (PbcBE, diagonalMatrix [1,1,1]))
+ 
+
+          + 1 +         +  1+
+          | - |  + 0 +  |- -|
+          | 2 |  |   |  |  2|
+          |   |  |  1|  |   |
+          | 1 |  |- -|  | 1 |
+   (44)  [| - |, |  3|, | - |]
+          | 3 |  |   |  | 3 |
+          |   |  | 2 |  |   |
+          |  1|  | - |  |  1|
+          |- -|  + 3 +  |- -|
+          +  6+         +  6+
+                                        Type: List(Matrix(Fraction(Integer)))
+reduce (horizConcat, LRES)
+ 
+
+         + 1          1+
+         | -    0   - -|
+         | 2          2|
+         |             |
+         | 1     1   1 |
+   (45)  | -   - -   - |
+         | 3     3   3 |
+         |             |
+         |  1   2     1|
+         |- -   -   - -|
+         +  6   3     6+
+                                              Type: Matrix(Fraction(Integer))
+
+-- f o f o f = id and f^(-1)=f^2
+
+Mfbc^2
+ 
+
+         + 1        1+
+         | -   1  - -|
+         | 2        2|
+         |           |
+         | 5   2    7|
+   (46)  | -   -  - -|
+         | 6   3    6|
+         |           |
+         |  1  5    7|
+         |- -  -  - -|
+         +  6  3    6+
+                                              Type: Matrix(Fraction(Integer))
+Mfbc^3
+ 
+
+         +1  0  0+
+         |       |
+   (47)  |0  1  0|
+         |       |
+         +0  0  1+
+                                              Type: Matrix(Fraction(Integer))
+Mfbc^-1
+ 
+
+         + 1        1+
+         | -   1  - -|
+         | 2        2|
+         |           |
+         | 5   2    7|
+   (48)  | -   -  - -|
+         | 6   3    6|
+         |           |
+         |  1  5    7|
+         |- -  -  - -|
+         +  6  3    6+
+                                              Type: Matrix(Fraction(Integer))
+testTrue("(Mfbc^-1 = Mfbc^2)@Boolean")
+ 
+                                                                   Type: Void
+
+testTrue("(Mfbc * u = v)@Boolean")
+ 
+                                                                   Type: Void
+testTrue("(Mfbc * v = w)@Boolean")
+ 
+                                                                   Type: Void
+testTrue("(Mfbc * w = u)@Boolean")
+ 
+                                                                   Type: Void
+
+--
+-- verify some subspaces
+--
+
+testcaseNoClear "subspaces"
+ 
+                                                                   Type: Void
+
+H := nullSpace MH
+ 
+
+   (54)  [[- 2, 1, 0], [- 1, 0, 1]]
+                                        Type: List(Vector(Fraction(Integer)))
+
+lb1 := [subspace?(BE, F), subspace?(basis bc3, F), subspace?(GH, 0$VSB),
+   subspace?(GH, F), subspace?(GH, G), subspace?(GH, basis H),
+     subspace?(0$VSB, GH), subspace?(F, basis bc3)]
+ 
+
+   (55)  [false, false, false, false, true, true, true, true]
+                                                          Type: List(Boolean)
+
+testEquals("lb1", "[false, false, false, false, true, true, true, true]")
+ 
+                                                                   Type: Void
+
+--
+-- find some complement spaces.
+--
+
+testcaseNoClear "complement spaces"
+ 
+                                                                   Type: Void
+
+C0 := complementSpace (0$VSB, 3)
+ 
+
+   (58)  VectorSpace [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
+                                    Type: VectorSpaceBasis(Fraction(Integer))
+CGH := complementSpace GH
+ 
+
+   (59)  VectorSpace [[1, 0, 0], [0, 1, 0]]
+                                    Type: VectorSpaceBasis(Fraction(Integer))
+CF:= complementSpace F
+ 
+
+   (60)  VectorSpace [[1, 0, 0], [0, 1, 0]]
+                                    Type: VectorSpaceBasis(Fraction(Integer))
+CG := complementSpace G
+ 
+
+   (61)  VectorSpace [[1, 0, 0]]
+                                    Type: VectorSpaceBasis(Fraction(Integer))
+CH := complementSpace H
+ 
+
+   (62)  VectorSpace [[1, 0, 0]]
+                                    Type: VectorSpaceBasis(Fraction(Integer))
+CE1 := complementSpace BE
+ 
+
+   (63)  VectorSpace []
+                                    Type: VectorSpaceBasis(Fraction(Integer))
+CE2 := complementSpace concat ([u,v,w], bc3)
+ 
+
+   (64)  VectorSpace []
+                                    Type: VectorSpaceBasis(Fraction(Integer))
+
+complementSpace? (B1, B2) ==
+  rank intBasis (B1, B2) = 0
+    and rank sumBasis (B1, B2) = #concat (B1::List VFI, B2::List VFI).1
+ 
+                                                                   Type: Void
+
+-- all the responses are true.
+
+testTrue("complementSpace?(C0, 0$VSB)")
+ 
+   Compiling function complementSpace? with type (VectorSpaceBasis(
+      Fraction(Integer)), VectorSpaceBasis(Fraction(Integer))) -> 
+      Boolean 
+                                                                   Type: Void
+testTrue("complementSpace?(0$VSB, C0)")
+ 
+                                                                   Type: Void
+testTrue("complementSpace?(CGH, GH)")
+ 
+                                                                   Type: Void
+testTrue("complementSpace?(GH, CGH)")
+ 
+                                                                   Type: Void
+testTrue("complementSpace?(CF, F)")
+ 
+                                                                   Type: Void
+testTrue("complementSpace?(F, G)")
+ 
+                                                                   Type: Void
+testTrue("complementSpace?(CG, G)")
+ 
+                                                                   Type: Void
+testTrue("complementSpace?(CH, basis H)")
+ 
+                                                                   Type: Void
+testTrue("complementSpace?(CE1, BE)")
+ 
+                                                                   Type: Void
+testTrue("complementSpace?(CE2, BE)")
+ 
+                                                                   Type: Void
+testTrue("not complementSpace?(F, basis H)")
+ 
+                                                                   Type: Void
+
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+
+   =============================================================================
+   Testsuite: vsbasis
+     failed (total): 0 (3)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   vsbasis                     0     (3)               0    (24)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 24
+                                                                   Type: Void
+)quit
+ 

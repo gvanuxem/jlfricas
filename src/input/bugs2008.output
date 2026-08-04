@@ -1,0 +1,591 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read bugs2008.input
+ 
+-- )compile files needed for testing here
+)compile ExportType.spad
+ 
+   Compiling FriCAS source code from file 
+      /home/greg/Git/jlfricas/src/input/ExportType.spad using system 
+      compiler.
+   EXPORT abbreviates package ExportType 
+------------------------------------------------------------------------
+   initializing NRLIB EXPORT for ExportType 
+   compiling into NRLIB EXPORT 
+   compiling exported baseRing : () -> Ring
+Time: 0.01 SEC.
+
+(time taken in buildFunctor:  134)
+Time: 0 SEC.
+
+
+   Cumulative Statistics for Constructor ExportType
+      Time: 0.01 seconds
+ 
+   finalizing NRLIB EXPORT 
+   Processing ExportType for Browser database:
+--->-->ExportType(constructor): Not documented!!!!
+--->-->ExportType((baseRing ((Ring)))): Not documented!!!!
+--->-->ExportType(): Missing Description
+; compiling file "/home/greg/Git/jlfricas/src/input/EXPORT.NRLIB/EXPORT.lsp" (written 04 AUG 2026 04:43:56 AM):
+
+; wrote /home/greg/Git/jlfricas/src/input/EXPORT.NRLIB/EXPORT.fasl
+; compilation finished in 0:00:00.028
+------------------------------------------------------------------------
+   ExportType is now explicitly exposed in frame initial 
+   ExportType will be automatically loaded when needed from 
+      /home/greg/Git/jlfricas/src/input/EXPORT.NRLIB/EXPORT
+
+
+)set break resume
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+
+testsuite "bugs2008"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+testcase "equality in TBAGG (issue #412)"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+R ==> Record(key: Symbol, entry: String)
+ 
+                                                                   Type: Void
+T ==> AssociationList(Symbol, String)
+ 
+                                                                   Type: Void
+t1 := construct([[x, "ix"]$R])$T
+ 
+
+   (4)  table(x = "ix")
+                                         Type: AssociationList(Symbol,String)
+t2 := construct([[y, "iy"]$R])$T
+ 
+
+   (5)  table(y = "iy")
+                                         Type: AssociationList(Symbol,String)
+testNotEquals("t1", "t2")
+ 
+                                                                   Type: Void
+
+
+testcase "expose PartialFractionPackage (issue #309)"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+-- note that we cannot easily test for equality of the result of
+-- partialFraction itself: the result of partialFraction is of type Any, thus
+-- we would have to provide type information when creating the other side of
+-- the equation.  But then, the bug won't manifest.
+
+f := (x+a)/(x*(x^3+(b+c)*x^2+b*c*x))
+ 
+
+                 x + a
+   (2)  -----------------------
+         4           3        2
+        x  + (c + b)x  + b c x
+                                          Type: Fraction(Polynomial(Integer))
+testEquals("numberOfFractionalTerms partialFraction(f, x)", "3")
+ 
+                                                                   Type: Void
+f := 2*x/(x^2-1)
+ 
+
+          2 x
+   (4)  ------
+         2
+        x  - 1
+                                          Type: Fraction(Polynomial(Integer))
+testEquals("numberOfFractionalTerms partialFraction(f, x)", "2")
+ 
+                                                                   Type: Void
+
+testcase "resultants for finite integraldomains (issue #413)"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+P ==> UP(x, PF 5)
+ 
+                                                                   Type: Void
+R ==> Record(coef1: P,coef2: P,resultant: PF 5)
+ 
+                                                                   Type: Void
+testEquals("resultantEuclidean(x, x)$PRS(PF 5, P)", "[0,0,0]$R")
+ 
+                                                                   Type: Void
+
+testcase "ListMultiDictionary for non-ordered SetCategories (issue #414)"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+b := empty()$LMDICT(PF 13)
+ 
+
+   (2)  dictionary()
+                                    Type: ListMultiDictionary(PrimeField(13))
+testEquals("(insert!(0, b); insert!(0, b); #b)", "2")
+ 
+                                                                   Type: Void
+
+testcase "from open-axiom: Stack missing exports (issue #415)"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+s := stack [1,2,3,1]
+ 
+
+   (2)  [1, 2, 3, 1]
+                                                 Type: Stack(PositiveInteger)
+testEquals("parts s", "[1,2,3,1]")
+ 
+                                                                   Type: Void
+testEquals("map(i +-> i^2, s)", "stack [1,4,9,1]")
+ 
+                                                                   Type: Void
+t := s; r := map!(i +-> i^2, s);
+ 
+
+                                                 Type: Stack(PositiveInteger)
+testTrue "eq?(t, r)"
+ 
+                                                                   Type: Void
+
+testcase "functions +-> and blocks of instructions (issue #272)"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+g := x +-> (x+2 ; x+a)
+ 
+
+   (2)
+     x
+   +-> 
+     x + 2
+     x + a
+                                                      Type: AnonymousFunction
+testEquals("g 3", "a+3")
+ 
+                                                                   Type: Void
+h := x +-> (a := 3 ; x+a)
+ 
+
+   (4)
+     x
+   +-> 
+     a := 3
+     x + a
+                                                      Type: AnonymousFunction
+testEquals("h 3", "6")
+ 
+                                                                   Type: Void
+
+testcase "integrate(sin(x)^2) problem (issue 292)"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+testEquals("integrate(sin(x)^2, x=0..1)", "(1 - cos(1)*sin(1))/2")
+ 
+                                                                   Type: Void
+
+testcase "HeuGcd"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+testEquals("gcd([67108859*67108859*x^2-1, 67108859*67108859*x^2+2*67108859*x +1])", "67108859*x+1")
+ 
+                                                                   Type: Void
+testEquals("gcd([0, 0, x^2-1, x^2+2*x+1])$HeuGcd(SparseUnivariatePolynomial Integer)", "(x+1)::(SparseUnivariatePolynomial Integer)")
+ 
+                                                                   Type: Void
+
+testcase "Integral of asech(x)/x"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+i1 := integrate(asech(x)/x, x)
+ 
+
+           x
+         ++  asech(%A)
+   (2)   |   --------- d%A
+        ++       %A
+                                         Type: Union(Expression(Integer),...)
+isym := "integral"::Symbol
+ 
+
+   (3)  integral
+                                                                 Type: Symbol
+testTrue "is?(operator(kernels(i1).1), isym)"
+ 
+                                                                   Type: Void
+i2 := integrate(log((sqrt(1-x^2)+1)/x)/x, x)
+ 
+
+                  +---------+
+                  |    2
+                 \|- %A  + 1  + 1
+           x log(----------------)
+         ++             %A
+   (5)   |   --------------------- d%A
+        ++             %A
+                                         Type: Union(Expression(Integer),...)
+testTrue "is?(operator(kernels(i2).1), isym)"
+ 
+                                                                   Type: Void
+
+testEquals("integrate(log(sqrt(1-x^2)/x)/(x^2), x)", "(-log(sqrt(1-x^2)/x) -x*log(x+1)/2 +  x*log(x-1)/2 + 1)/x")
+ 
+                                                                   Type: Void
+
+testcase "Skew exponentiation (issue #431)"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+h: EXPR INT -> EXPR INT := f+->D(f,x)
+ 
+
+   (2)  theMap(*1;anonymousFunction;4;initial;internal)
+                           Type: (Expression(Integer) -> Expression(Integer))
+DoD := LODO(EXPR INT, h)
+ 
+
+   (3)
+   LinearOrdinaryDifferentialOperator
+      Expression(Integer)
+  ,
+      theMap(*1;anonymousFunction;4;initial;internal)
+                                                                   Type: Type
+Dx: DoD := D()
+ 
+
+   (4)  D
+Type: LinearOrdinaryDifferentialOperator(Expression(Integer),theMap(*1;anonymousFunction;4;initial;internal))
+u := operator 'u
+ 
+
+   (5)  u
+                                                          Type: BasicOperator
+L := Dx + u(x)
+ 
+
+   (6)  D + u(x)
+Type: LinearOrdinaryDifferentialOperator(Expression(Integer),theMap(*1;anonymousFunction;4;initial;internal))
+testEquals("L^2", "L*L")
+ 
+                                                                   Type: Void
+lodoPower(x: DoD, n: NonNegativeInteger): DoD == x^n
+ 
+   Function declaration lodoPower : (LinearOrdinaryDifferentialOperator
+      (Expression(Integer),theMap(
+      *1;anonymousFunction;4;initial;internal)), NonNegativeInteger)
+       -> LinearOrdinaryDifferentialOperator(Expression(Integer),theMap
+      (*1;anonymousFunction;4;initial;internal)) has been added to 
+      workspace.
+                                                                   Type: Void
+testEquals("lodoPower(L, 3)", "L*L*L")
+ 
+   Compiling function lodoPower with type (
+      LinearOrdinaryDifferentialOperator(Expression(Integer),theMap(
+      *1;anonymousFunction;4;initial;internal)), NonNegativeInteger)
+       -> LinearOrdinaryDifferentialOperator(Expression(Integer),theMap
+      (*1;anonymousFunction;4;initial;internal)) 
+                                                                   Type: Void
+
+f: UP(n, INT) -> UP(n, INT) := p +-> p.(n+1)
+ 
+
+   (10)  theMap(*1;anonymousFunction;5;initial;internal)
+   Type: (UnivariatePolynomial(n,Integer) -> UnivariatePolynomial(n,Integer))
+g: UP(n, INT) -> UP(n, INT) := p +-> 0
+ 
+
+   (11)  theMap(*1;anonymousFunction;6;initial;internal)
+   Type: (UnivariatePolynomial(n,Integer) -> UnivariatePolynomial(n,Integer))
+K := OREUP(E, UP(n, INT), morphism f, g)
+ 
+
+   (12)
+   UnivariateSkewPolynomial
+      E
+  ,
+      UnivariatePolynomial(n,Integer)
+  ,
+      R -> R
+  ,
+      theMap(*1;anonymousFunction;6;initial;internal)
+                                                                   Type: Type
+M := E::K+n
+ 
+
+   (13)  E + n
+Type: UnivariateSkewPolynomial(E,UnivariatePolynomial(n,Integer),R -> R,theMap(*1;anonymousFunction;6;initial;internal))
+testEquals("M^2", "M*M")
+ 
+                                                                   Type: Void
+testEquals("M^3", "M*M*M")
+ 
+                                                                   Type: Void
+
+testcase "Functions returning type"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+-- warning: the file must not be )compiled, nor )lib'd here, because this would
+-- make UNITCNT forget all counters.
+I := baseRing()$ExportType(Integer)
+ 
+
+   (2)  Integer
+                                                                   Type: Ring
+testEquals("1$I", "1")
+ 
+                                                                   Type: Void
+
+testcase "Coercion to InputForm"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+str := "Integer()"
+ 
+
+   (2)  "Integer()"
+                                                                 Type: String
+testEquals("Integer::InputForm", "parse(str)$InputForm")
+ 
+                                                                   Type: Void
+
+iP := InputFormFunctions1(Float)
+ 
+
+   (4)  InputFormFunctions1(Float)
+                                                                   Type: Type
+str := "sin(2)$Float()"
+ 
+
+   (5)  "sin(2)$Float()"
+                                                                 Type: String
+testEquals("parse(str)$InputForm", _
+           "convert([packageCall(sin)$iP, 2::InputForm])@InputForm")
+ 
+                                                                   Type: Void
+str := "Float()"
+ 
+
+   (7)  "Float()"
+                                                                 Type: String
+testEquals("parse(str)$InputForm", "getType()$iP")
+ 
+                                                                   Type: Void
+str := "sin(2)@Float()"
+ 
+
+   (9)  "sin(2)@Float()"
+                                                                 Type: String
+if1 := parse("sin(2)")$InputForm
+ 
+
+   (10)  (sin 2)
+                                                              Type: InputForm
+testEquals("parse(str)$InputForm", "atType(if1)$iP")
+ 
+                                                                   Type: Void
+str := "sin(2)::Float()"
+ 
+
+   (12)  "sin(2)::Float()"
+                                                                 Type: String
+testEquals("parse(str)$InputForm", "coerceToType(if1)$iP")
+ 
+                                                                   Type: Void
+str := "sin(2) pretend Float()"
+ 
+
+   (14)  "sin(2) pretend Float()"
+                                                                 Type: String
+testEquals("parse(str)$InputForm", "pretendOfType(if1)$iP")
+ 
+                                                                   Type: Void
+
+testcase "exp^log(x) (issue #23)"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+testEquals("exp^(2*log(x)) - (exp^log(x))^2", "0")
+ 
+                                                                   Type: Void
+
+testcase "MAP is undefined"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+R:= UP('t, INT)
+ 
+
+   (2)  UnivariatePolynomial(t,Integer)
+                                                                   Type: Type
+delta(x:R):R == D(x)
+ 
+   Function declaration delta : UnivariatePolynomial(t,Integer) -> 
+      UnivariatePolynomial(t,Integer) has been added to workspace.
+                                                                   Type: Void
+W:= OREUP('x, R, 1, delta)
+ 
+   Compiling function delta with type UnivariatePolynomial(t,Integer)
+       -> UnivariatePolynomial(t,Integer) 
+
+   (4)
+   UnivariateSkewPolynomial
+      x
+  ,
+      UnivariatePolynomial(t,Integer)
+  ,
+      R -> R
+  ,
+      theMap(*1;delta;1;initial)
+                                                                   Type: Type
+x: W := 'x
+ 
+
+   (5)  x
+Type: UnivariateSkewPolynomial(x,UnivariatePolynomial(t,Integer),R -> R,theMap(*1;delta;1;initial))
+t: W:= 't
+ 
+
+   (6)  t
+Type: UnivariateSkewPolynomial(x,UnivariatePolynomial(t,Integer),R -> R,theMap(*1;delta;1;initial))
+testEquals("x*t", "t*x+1")
+ 
+                                                                   Type: Void
+
+
+testcase "Bad fixedPointExquo (issue #301)"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+a := operator 'a
+ 
+
+   (2)  a
+                                                          Type: BasicOperator
+sol := seriesSolve((2*x-2)*D(a(x),x)+4*a(x),a,x=0,[1])::UTS(EXPR INT, x, 0)
+ 
+   Compiling function %BA with type List(UnivariateTaylorSeries(
+      Expression(Integer),x,0)) -> UnivariateTaylorSeries(Expression(
+      Integer),x,0) 
+
+   (3)
+                  2      3      4      5      6      7      8       9       10
+     1 + 2 x + 3 x  + 4 x  + 5 x  + 6 x  + 7 x  + 8 x  + 9 x  + 10 x  + 11 x
+   + 
+        11
+     O(x  )
+                        Type: UnivariateTaylorSeries(Expression(Integer),x,0)
+testEquals("[coefficient(sol, i) for i in 0..7]", "[1,2,3,4,5,6,7,8]")
+ 
+                                                                   Type: Void
+
+testcase "has with signature"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+testTrue("Float has exp : Float -> Float")
+ 
+                                                                   Type: Void
+testTrue("not(Float has foobar: Float -> Float)")
+ 
+                                                                   Type: Void
+
+expected() ==
+    messagePrint("testsuite | testcases: failed (total) | tests: failed (total)")$OutputForm;
+    messagePrint("bugs2008                    0    (17)               0    (34)")$OutputForm
+ 
+                                                                   Type: Void
+
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+   =============================================================================
+   WARNINGS:
+   Testsuite: bugs2008
+   Testcase: equality in TBAGG (issue #412)
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: bugs2008
+   Testcase: resultants for finite integraldomains (issue #413)
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: bugs2008
+   Testcase: HeuGcd
+   test: 2
+   testing in a domain without InputForm!
+   Testsuite: bugs2008
+   Testcase: Skew exponentiation (issue #431)
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: bugs2008
+   Testcase: Skew exponentiation (issue #431)
+   test: 2
+   testing in a domain without InputForm!
+   Testsuite: bugs2008
+   Testcase: Skew exponentiation (issue #431)
+   test: 3
+   testing in a domain without InputForm!
+   Testsuite: bugs2008
+   Testcase: Skew exponentiation (issue #431)
+   test: 4
+   testing in a domain without InputForm!
+   Testsuite: bugs2008
+   Testcase: MAP is undefined
+   test: 1
+   testing in a domain without InputForm!
+
+   =============================================================================
+   Testsuite: bugs2008
+     failed (total): 0 (16)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   bugs2008                    0    (16)               0    (32)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 32
+                                                                   Type: Void
+expected()
+ 
+   Compiling function expected with type () -> Void 
+   testsuite | testcases: failed (total) | tests: failed (total)
+   bugs2008                    0    (17)               0    (34)
+                                                                   Type: Void
+)quit
+ 

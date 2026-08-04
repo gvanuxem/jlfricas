@@ -1,0 +1,161 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read finstruc.input
+ 
+)set break resume
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+
+testsuite "finstruc"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testcase "simple Poset"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+fP := FinitePoset(Symbol)
+ 
+
+   (2)  FinitePoset(Symbol)
+                                                                   Type: Type
+i1 := initial()$fP
+ 
+
+   (3)  []
+                                                    Type: FinitePoset(Symbol)
+testTrue("empty?(getVert(i1)$fP)")
+ 
+                                                                   Type: Void
+g1 := addObject(i1, a)$fP
+ 
+
+   (5)  [true]
+                                                    Type: FinitePoset(Symbol)
+testEquals("getVert(g1)$fP", "[a]")
+ 
+                                                                   Type: Void
+testEquals("getArr(g1)$fP", "[[true]]")
+ 
+                                                                   Type: Void
+testTrue("empty?(getVert(i1)$fP)")
+ 
+                                                                   Type: Void
+
+g2 := addObject(g1, b)$fP
+ 
+
+        +true   false+
+   (9)  |            |
+        +false  true +
+                                                    Type: FinitePoset(Symbol)
+testTrue("not(le(g2, a, b)$fP)")
+ 
+                                                                   Type: Void
+t2 := addArrow(g2, a, b)
+ 
+
+         +true   true+
+   (11)  |           |
+         +false  true+
+                                                    Type: FinitePoset(Symbol)
+testTrue("le(t2, a, b)")
+ 
+                                                                   Type: Void
+g3 := addObject(t2, c)$fP
+ 
+
+         +true   true   false+
+         |                   |
+   (13)  |false  true   false|
+         |                   |
+         +false  false  true +
+                                                    Type: FinitePoset(Symbol)
+t3 := addArrow(g3, b, c)$fP
+ 
+
+         +true   true   true+
+         |                  |
+   (14)  |false  true   true|
+         |                  |
+         +false  false  true+
+                                                    Type: FinitePoset(Symbol)
+testTrue("le(t3, a, c)")
+ 
+                                                                   Type: Void
+s3 := addArrow(g3, a, c)$fP
+ 
+
+         +true   true   true +
+         |                   |
+   (16)  |false  true   false|
+         |                   |
+         +false  false  true +
+                                                    Type: FinitePoset(Symbol)
+testTrue("not(le(s3, b, c))")
+ 
+                                                                   Type: Void
+s3a := addObject(s3, b)$fP
+ 
+
+         +true   true   true +
+         |                   |
+   (18)  |false  true   false|
+         |                   |
+         +false  false  true +
+                                                    Type: FinitePoset(Symbol)
+
+testEquals("getVert(s3)", "getVert(s3a)")
+ 
+                                                                   Type: Void
+testEquals("getArr(s3)", "getArr(s3a)")
+ 
+                                                                   Type: Void
+
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+
+   =============================================================================
+   Testsuite: finstruc
+     failed (total): 0 (1)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   finstruc                    0     (1)               0    (10)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 10
+                                                                   Type: Void
+)quit
+ 

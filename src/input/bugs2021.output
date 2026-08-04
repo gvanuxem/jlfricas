@@ -1,0 +1,229 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read bugs2021.input
+ 
+)set break resume
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+
+testsuite "bugs2021"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testcase "smaller? for arrays"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+aT := Vector(Complex(Integer))
+ 
+
+   (2)  Vector(Complex(Integer))
+                                                                   Type: Type
+v1 := vector([0, 1])$aT
+ 
+
+   (3)  [0, 1]
+                                               Type: Vector(Complex(Integer))
+v2 := vector([1, 0])$aT
+ 
+
+   (4)  [1, 0]
+                                               Type: Vector(Complex(Integer))
+testTrue("smaller?(v1, v2)")
+ 
+                                                                   Type: Void
+
+testcase "complex to fractional power"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testEquals("(-1 :: Complex(Float))^(1/2)", "%i")
+ 
+                                                                   Type: Void
+testEquals("(-1 :: Complex(Float))^(3/2)", "-%i")
+ 
+                                                                   Type: Void
+testEquals("(-1 :: Complex(DoubleFloat))^(1/2)", "%i")
+ 
+                                                                   Type: Void
+testEquals("(-1 :: Complex(DoubleFloat))^(3/2)", "-%i")
+ 
+                                                                   Type: Void
+
+testcase "predicates in rules"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+p1 := suchThat(x, (x : EXPR(INT)) : Boolean +-> even?(x))
+ 
+
+   (2)  x
+                                                    Type: Expression(Integer)
+p2 := suchThat(x, (x : EXPR(INT)) : Boolean +-> odd?(x))
+ 
+
+   (3)  x
+                                                    Type: Expression(Integer)
+
+op1 := operator(kernels(p1).1)
+ 
+
+   (4)  x
+                                                          Type: BasicOperator
+op2 := operator(kernels(p2).1)
+ 
+
+   (5)  x
+                                                          Type: BasicOperator
+
+testTrue("not(op1 = op2)")
+ 
+                                                                   Type: Void
+
+rl := rule
+  cos(y)^(x | even?(x)) == 1
+  cos(y)^(x | odd?(x)) == 0
+ 
+
+               x             x
+   (7)  {cos(y)  == 1, cos(y)  == 0}
+                           Type: Ruleset(Integer,Integer,Expression(Integer))
+
+testEquals("rl(cos(x)^2)", "1")
+ 
+                                                                   Type: Void
+testEquals("rl(cos(x)^3)", "0")
+ 
+                                                                   Type: Void
+
+testcase "hash in List"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+a := [1]
+ 
+
+   (2)  [1]
+                                                  Type: List(PositiveInteger)
+b := [2]
+ 
+
+   (3)  [2]
+                                                  Type: List(PositiveInteger)
+testEquals("hash(a)", "hash(a)")
+ 
+                                                                   Type: Void
+testTrue("not(hash(a) = hash(b))")
+ 
+                                                                   Type: Void
+
+testcase "changing result of solve"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+eq1 := %pi/2 - asin(n/2) = asin(n)
+ 
+
+                 n
+        - 2 asin(-) + %pi
+                 2
+   (2)  ----------------- = asin(n)
+                2
+                                          Type: Equation(Expression(Integer))
+s1 := solve(eq1, n)
+ 
+
+                 2         2
+   (3)  [n = - ----, n = ----]
+                +-+       +-+
+               \|5       \|5
+                                    Type: List(Equation(Expression(Integer)))
+testEquals("(s2 := solve(eq1, n))", "s1")
+ 
+                                                                   Type: Void
+subst(eq1,s2.1)::Equation Expression Float
+ 
+
+   (5)  2.0344439357_957027354 = - 1.1071487177_94090503
+                                            Type: Equation(Expression(Float))
+subst(eq1,s2.2)::Equation Expression Float
+ 
+
+   (6)  1.1071487177_94090503 = 1.1071487177_94090503
+                                            Type: Equation(Expression(Float))
+-- clearing caused trouble
+)clear all
+ 
+   All user variables and function definitions have been cleared.
+eq1 := %pi/2 - asin(n/2) = asin(n)
+ 
+
+                 n
+        - 2 asin(-) + %pi
+                 2
+   (1)  ----------------- = asin(n)
+                2
+                                          Type: Equation(Expression(Integer))
+s1 := solve(eq1, n)
+ 
+
+                 2         2
+   (2)  [n = - ----, n = ----]
+                +-+       +-+
+               \|5       \|5
+                                    Type: List(Equation(Expression(Integer)))
+testEquals("(s2 := solve(eq1, n))", "s1")
+ 
+                                                                   Type: Void
+
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+
+   =============================================================================
+   Testsuite: bugs2021
+     failed (total): 0 (5)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   bugs2021                    0     (5)               0    (12)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 12
+                                                                   Type: Void
+)quit
+ 

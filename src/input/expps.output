@@ -1,0 +1,618 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read expps.input
+ 
+)set break resume
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+testsuite "expps"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+testcase "STEXS"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+StrInt:= Stream Integer
+ 
+
+   (2)  Stream(Integer)
+                                                                   Type: Type
+STEXSINT:= StreamExponentialSeriesOperations Integer
+ 
+
+   (3)  StreamExponentialSeriesOperations(Integer)
+                                                                   Type: Type
+-- exponential function exp(x)
+serexp1:StrInt:= repeating [1]
+ 
+
+         _
+   (4)  [1]
+                                                        Type: Stream(Integer)
+-- exponential function exp(2x)
+serexp2:StrInt:= [2^k for k in 0..]
+ 
+
+   (5)  [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, ...]
+                                                        Type: Stream(Integer)
+-- exponential function 2*exp(2x)
+ser2exp2:StrInt:= [2^k for k in 1..]
+ 
+
+   (6)  [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, ...]
+                                                        Type: Stream(Integer)
+-- exponential function exp(3x)
+serexp3:StrInt:= [3^k for k in 0..]
+ 
+
+   (7)  [1, 3, 9, 27, 81, 243, 729, 2187, 6561, 19683, ...]
+                                                        Type: Stream(Integer)
+
+-- multiplication
+-- exp(x)*exp(2x) = exp(3x)
+serexp1exp2:= (serexp1*serexp2)$STEXSINT
+ 
+
+   (8)  [1, 3, 9, 27, 81, 243, 729, 2187, 6561, 19683, ...]
+                                                        Type: Stream(Integer)
+serexp1exp2trunc:= entries complete first(serexp1exp2,10)
+ 
+
+   (9)  [1, 3, 9, 27, 81, 243, 729, 2187, 6561, 19683]
+                                                          Type: List(Integer)
+serexp3trunc:= entries complete first(serexp3,10)
+ 
+
+   (10)  [1, 3, 9, 27, 81, 243, 729, 2187, 6561, 19683]
+                                                          Type: List(Integer)
+testEquals("serexp1exp2trunc",
+           "serexp3trunc")
+ 
+                                                                   Type: Void
+
+-- derivative
+-- d/dx exp(2x) = 2*exp(2x)
+dserexp2:= deriv(serexp2)$STEXSINT
+ 
+
+   (12)  [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, ...]
+                                                        Type: Stream(Integer)
+dserexp2trunc:= entries complete first(dserexp2,10)
+ 
+
+   (13)  [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]
+                                                          Type: List(Integer)
+ser2exp2trunc:= entries complete first(ser2exp2,10)
+ 
+
+   (14)  [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]
+                                                          Type: List(Integer)
+testEquals("dserexp2trunc",
+           "ser2exp2trunc")
+ 
+                                                                   Type: Void
+
+-- integration
+-- \int 2*exp(2x) = exp(2x)
+iserexp1:= integrate(1,ser2exp2)$STEXSINT
+ 
+
+   (16)  [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, ...]
+                                                        Type: Stream(Integer)
+iserexp1trunc:= entries complete first(iserexp1,10)
+ 
+
+   (17)  [1, 2, 4, 8, 16, 32, 64, 128, 256, 512]
+                                                          Type: List(Integer)
+serexp2trunc:= entries complete first(serexp2,10)
+ 
+
+   (18)  [1, 2, 4, 8, 16, 32, 64, 128, 256, 512]
+                                                          Type: List(Integer)
+testEquals("iserexp1trunc",
+           "serexp2trunc")
+ 
+                                                                   Type: Void
+
+-- exponentiation
+-- exp x
+serexpx:= exp0(cons(1,repeating [0]))$STEXSINT
+ 
+
+   (20)  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...]
+                                                        Type: Stream(Integer)
+serexpx1:= repeating [1]
+ 
+
+          _
+   (21)  [1]
+                                                Type: Stream(PositiveInteger)
+testEquals("entries complete first(serexpx,10)",
+           "entries complete first(serexpx1,10)")
+ 
+                                                                   Type: Void
+
+-- log exp x^2
+serx2:= cons(0,cons(1,repeating [0]))
+ 
+
+                _
+   (23)  [0, 1, 0]
+                                             Type: Stream(NonNegativeInteger)
+serlog1expx2:= log1(rest exp0(cons(0,cons(1,repeating [0])))$STEXSINT)$STEXSINT
+ 
+
+   (24)  [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, ...]
+                                                        Type: Stream(Integer)
+testEquals("entries complete first(serx2,10)",
+           "entries complete first(rest serlog1expx2,10)")
+ 
+                                                                   Type: Void
+testcase "STEXST"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+StrInt:= Stream Integer
+ 
+
+   (2)  Stream(Integer)
+                                                                   Type: Type
+STEXSTEXPR:= StreamExponentialSeriesTranscendentalFunctions Expression Integer
+ 
+
+   (3)  StreamExponentialSeriesTranscendentalFunctions(Expression(Integer))
+                                                                   Type: Type
+
+-- exp(1)
+serx3:= exp(cons(1,repeating [0]))$STEXSTEXPR
+ 
+
+   (4)  [%e, 0, 0, 0, 0, 0, 0, 0, 0, 0, ...]
+                                            Type: Stream(Expression(Integer))
+serexp1:= cons(%e,repeating([0])$Stream Expression Integer)
+ 
+
+             _
+   (5)  [%e, 0]
+                                            Type: Stream(Expression(Integer))
+testEquals("entries complete first(serx3,10)",
+           "entries complete first(serexp1,10)")
+ 
+                                                                   Type: Void
+
+-- log e = 1
+serexp1:= cons(%e, repeating([0])$Stream Expression Integer)
+ 
+
+             _
+   (7)  [%e, 0]
+                                            Type: Stream(Expression(Integer))
+loge := log(serexp1)$STEXSTEXPR
+ 
+
+   (8)  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, ...]
+                                            Type: Stream(Expression(Integer))
+zeros:Stream Expression Integer := cons(1, repeating [0])
+ 
+
+            _
+   (9)  [1, 0]
+                                            Type: Stream(Expression(Integer))
+testEquals("entries complete first(loge,10)",
+           "entries complete first(zeros,10)")
+ 
+                                                                   Type: Void
+
+
+-- transcendental manipulations with EXPR INT
+EEE:= StreamExponentialSeriesOperations EXPR INT
+ 
+
+   (11)  StreamExponentialSeriesOperations(Expression(Integer))
+                                                                   Type: Type
+EET:= StreamExponentialSeriesTranscendentalFunctions EXPR INT
+ 
+
+   (12)  StreamExponentialSeriesTranscendentalFunctions(Expression(Integer))
+                                                                   Type: Type
+aa:Stream EXPR INT:= [a[k] for k in 1..]
+ 
+
+   (13)  [a , a , a , a , a , a , a , a , a , a  , ...]
+           1   2   3   4   5   6   7   8   9   10
+                                            Type: Stream(Expression(Integer))
+
+e0:= exp0(aa)$EEE
+ 
+
+   (14)
+                  2                  3                    2       2       4
+   [1, a , a  + a  , a  + 3 a a  + a  , a  + 4 a a  + 3 a   + 6 a  a  + a  ,
+        1   2    1    3      1 2    1    4      1 3      2       1  2    1
+                                2             2        3       5
+    a  + 5 a a  + (10 a  + 10 a  )a  + 15 a a   + 10 a  a  + a  ,
+     5      1 4        2       1   3       1 2        1  2    1
+
+                                   2           2                   3           3
+       a  + 6 a a  + (15 a  + 15 a  )a  + 10 a   + (60 a a  + 20 a  )a  + 15 a
+        6      1 5        2       1   4       3         1 2       1   3       2
+     + 
+            2  2        4       6
+       45 a  a   + 15 a  a  + a
+           1  2        1  2    1
+     ,
+
+                                   2                               3
+       a  + 7 a a  + (21 a  + 21 a  )a  + (35 a  + 105 a a  + 35 a  )a
+        7      1 6        2       1   5        3        1 2       1   4
+     + 
+              2          2         2          4              3         3  2
+       70 a a   + (105 a   + 210 a  a  + 35 a  )a  + 105 a a   + 105 a  a
+           1 3          2         1  2       1   3        1 2         1  2
+     + 
+            5       7
+       21 a  a  + a
+           1  2    1
+     ,
+
+                                   2                               3           2
+       a  + 8 a a  + (28 a  + 28 a  )a  + (56 a  + 168 a a  + 56 a  )a  + 35 a
+        8      1 7        2       1   6        3        1 2       1   5       4
+     + 
+                         2         2          4                      2   2
+       (280 a a  + 210 a   + 420 a  a  + 70 a  )a  + (280 a  + 280 a  )a
+             1 3        2         1  2       1   4         2        1   3
+     + 
+                2         3          5            4         2  3         4  2
+       (840 a a   + 560 a  a  + 56 a  )a  + 105 a   + 420 a  a   + 210 a  a
+             1 2         1  2       1   3        2         1  2         1  2
+     + 
+            6       8
+       28 a  a  + a
+           1  2    1
+     ,
+
+                                   2                               3
+       a  + 9 a a  + (36 a  + 36 a  )a  + (84 a  + 252 a a  + 84 a  )a
+        9      1 8        2       1   7        3        1 2       1   6
+     + 
+                                  2         2           4              2
+       (126 a  + 504 a a  + 378 a   + 756 a  a  + 126 a  )a  + 315 a a
+             4        1 3        2         1  2        1   5        1 4
+     + 
+                          2               2          3           5            3
+       ((1260 a  + 1260 a  )a  + 1890 a a   + 1260 a  a  + 126 a  )a  + 280 a
+               2         1   3         1 2          1  2        1   4        3
+     + 
+                          3   2
+       (2520 a a  + 840 a  )a
+              1 2        1   3
+     + 
+               3          2  2          4          6              4
+       (1260 a   + 3780 a  a   + 1260 a  a  + 84 a  )a  + 945 a a
+              2          1  2          1  2       1   3        1 2
+     + 
+              3  3         5  2        7       9
+       1260 a  a   + 378 a  a   + 36 a  a  + a
+             1  2         1  2        1  2    1
+     ,
+    ...]
+                                            Type: Stream(Expression(Integer))
+e1:= exp (cons(0, aa ))$EET
+ 
+
+   (15)
+                  2                  3                    2       2       4
+   [1, a , a  + a  , a  + 3 a a  + a  , a  + 4 a a  + 3 a   + 6 a  a  + a  ,
+        1   2    1    3      1 2    1    4      1 3      2       1  2    1
+                                2             2        3       5
+    a  + 5 a a  + (10 a  + 10 a  )a  + 15 a a   + 10 a  a  + a  ,
+     5      1 4        2       1   3       1 2        1  2    1
+
+                                   2           2                   3           3
+       a  + 6 a a  + (15 a  + 15 a  )a  + 10 a   + (60 a a  + 20 a  )a  + 15 a
+        6      1 5        2       1   4       3         1 2       1   3       2
+     + 
+            2  2        4       6
+       45 a  a   + 15 a  a  + a
+           1  2        1  2    1
+     ,
+
+                                   2                               3
+       a  + 7 a a  + (21 a  + 21 a  )a  + (35 a  + 105 a a  + 35 a  )a
+        7      1 6        2       1   5        3        1 2       1   4
+     + 
+              2          2         2          4              3         3  2
+       70 a a   + (105 a   + 210 a  a  + 35 a  )a  + 105 a a   + 105 a  a
+           1 3          2         1  2       1   3        1 2         1  2
+     + 
+            5       7
+       21 a  a  + a
+           1  2    1
+     ,
+
+                                   2                               3           2
+       a  + 8 a a  + (28 a  + 28 a  )a  + (56 a  + 168 a a  + 56 a  )a  + 35 a
+        8      1 7        2       1   6        3        1 2       1   5       4
+     + 
+                         2         2          4                      2   2
+       (280 a a  + 210 a   + 420 a  a  + 70 a  )a  + (280 a  + 280 a  )a
+             1 3        2         1  2       1   4         2        1   3
+     + 
+                2         3          5            4         2  3         4  2
+       (840 a a   + 560 a  a  + 56 a  )a  + 105 a   + 420 a  a   + 210 a  a
+             1 2         1  2       1   3        2         1  2         1  2
+     + 
+            6       8
+       28 a  a  + a
+           1  2    1
+     ,
+
+                                   2                               3
+       a  + 9 a a  + (36 a  + 36 a  )a  + (84 a  + 252 a a  + 84 a  )a
+        9      1 8        2       1   7        3        1 2       1   6
+     + 
+                                  2         2           4              2
+       (126 a  + 504 a a  + 378 a   + 756 a  a  + 126 a  )a  + 315 a a
+             4        1 3        2         1  2        1   5        1 4
+     + 
+                          2               2          3           5            3
+       ((1260 a  + 1260 a  )a  + 1890 a a   + 1260 a  a  + 126 a  )a  + 280 a
+               2         1   3         1 2          1  2        1   4        3
+     + 
+                          3   2
+       (2520 a a  + 840 a  )a
+              1 2        1   3
+     + 
+               3          2  2          4          6              4
+       (1260 a   + 3780 a  a   + 1260 a  a  + 84 a  )a  + 945 a a
+              2          1  2          1  2       1   3        1 2
+     + 
+              3  3         5  2        7       9
+       1260 a  a   + 378 a  a   + 36 a  a  + a
+             1  2         1  2        1  2    1
+     ,
+    ...]
+                                            Type: Stream(Expression(Integer))
+xy:= [x-y for x in e0 for y in e1]
+ 
+
+   (16)  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ...]
+                                            Type: Stream(Expression(Integer))
+xy10:=entries complete first(xy,10)
+ 
+
+   (17)  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                                              Type: List(Expression(Integer))
+--testTrue("every?(zero?, first(xy,10))")
+testTrue("every?(zero?, xy10)")
+ 
+                                                                   Type: Void
+--xy10t:=every?(zero?, xy10)
+--testEquals("removeDuplicates xy10", "[0]")
+
+l0:= log1(aa)$EEE
+ 
+
+   (19)
+                  2                    3
+   [0, a , a  - a  , a  - 3 a a  + 2 a  ,
+        1   2    1    3      1 2      1
+                      2        2         4
+    a  - 4 a a  - 3 a   + 12 a  a  - 6 a  ,
+     4      1 3      2        1  2      1
+                                  2             2        3          5
+    a  - 5 a a  + (- 10 a  + 20 a  )a  + 30 a a   - 60 a  a  + 24 a  ,
+     5      1 4          2       1   3       1 2        1  2       1
+
+                                     2           2                     3
+       a  - 6 a a  + (- 15 a  + 30 a  )a  - 10 a   + (120 a a  - 120 a  )a
+        6      1 5          2       1   4       3          1 2        1   3
+     + 
+            3         2  2         4           6
+       30 a   - 270 a  a   + 360 a  a  - 120 a
+           2         1  2         1  2        1
+     ,
+
+                                     2                                  3
+       a  - 7 a a  + (- 21 a  + 42 a  )a  + (- 35 a  + 210 a a  - 210 a  )a
+        7      1 6          2       1   5          3        1 2        1   4
+     + 
+               2          2          2           4              3          3  2
+       140 a a   + (210 a   - 1260 a  a  + 840 a  )a  - 630 a a   + 2520 a  a
+            1 3          2          1  2        1   3        1 2          1  2
+     + 
+                5           7
+       - 2520 a  a  + 720 a
+               1  2        1
+     ,
+
+                                     2                                  3
+       a  - 8 a a  + (- 28 a  + 56 a  )a  + (- 56 a  + 336 a a  - 336 a  )a
+        8      1 7          2       1   6          3        1 2        1   5
+     + 
+              2                     2          2            4
+       - 35 a   + (560 a a  + 420 a   - 2520 a  a  + 1680 a  )a
+             4          1 3        2          1  2         1   4
+     + 
+                        2   2               2           3            5
+       (560 a  - 1680 a  )a   + (- 5040 a a   + 13440 a  a  - 6720 a  )a
+             2         1   3             1 2           1  2         1   3
+     + 
+               4           2  3           4  2           6            8
+       - 630 a   + 10080 a  a   - 25200 a  a   + 20160 a  a  - 5040 a
+              2           1  2           1  2           1  2         1
+     ,
+
+                                     2                                  3
+       a  - 9 a a  + (- 36 a  + 72 a  )a  + (- 84 a  + 504 a a  - 504 a  )a
+        9      1 8          2       1   7          3        1 2        1   6
+     + 
+                                     2          2            4              2
+       (- 126 a  + 1008 a a  + 756 a   - 4536 a  a  + 3024 a  )a  + 630 a a
+               4         1 3        2          1  2         1   5        1 4
+     + 
+                          2                2           3             5
+       ((2520 a  - 7560 a  )a  - 11340 a a   + 30240 a  a  - 15120 a  )a
+               2         1   3          1 2           1  2          1   4
+     + 
+             3                           3   2
+       560 a   + (- 15120 a a  + 20160 a  )a
+            3              1 2          1   3
+     + 
+                 3           2  2            4             6                4
+       (- 7560 a   + 90720 a  a   - 151200 a  a  + 60480 a  )a  + 22680 a a
+                2           1  2            1  2          1   3          1 2
+     + 
+                  3  3            5  2            7             9
+       - 151200 a  a   + 272160 a  a   - 181440 a  a  + 40320 a
+                 1  2            1  2            1  2          1
+     ,
+    ...]
+                                            Type: Stream(Expression(Integer))
+l1:= log (cons(1, aa ))$EET
+ 
+
+   (20)
+                  2                    3
+   [0, a , a  - a  , a  - 3 a a  + 2 a  ,
+        1   2    1    3      1 2      1
+                      2        2         4
+    a  - 4 a a  - 3 a   + 12 a  a  - 6 a  ,
+     4      1 3      2        1  2      1
+                                  2             2        3          5
+    a  - 5 a a  + (- 10 a  + 20 a  )a  + 30 a a   - 60 a  a  + 24 a  ,
+     5      1 4          2       1   3       1 2        1  2       1
+
+                                     2           2                     3
+       a  - 6 a a  + (- 15 a  + 30 a  )a  - 10 a   + (120 a a  - 120 a  )a
+        6      1 5          2       1   4       3          1 2        1   3
+     + 
+            3         2  2         4           6
+       30 a   - 270 a  a   + 360 a  a  - 120 a
+           2         1  2         1  2        1
+     ,
+
+                                     2                                  3
+       a  - 7 a a  + (- 21 a  + 42 a  )a  + (- 35 a  + 210 a a  - 210 a  )a
+        7      1 6          2       1   5          3        1 2        1   4
+     + 
+               2          2          2           4              3          3  2
+       140 a a   + (210 a   - 1260 a  a  + 840 a  )a  - 630 a a   + 2520 a  a
+            1 3          2          1  2        1   3        1 2          1  2
+     + 
+                5           7
+       - 2520 a  a  + 720 a
+               1  2        1
+     ,
+
+                                     2                                  3
+       a  - 8 a a  + (- 28 a  + 56 a  )a  + (- 56 a  + 336 a a  - 336 a  )a
+        8      1 7          2       1   6          3        1 2        1   5
+     + 
+              2                     2          2            4
+       - 35 a   + (560 a a  + 420 a   - 2520 a  a  + 1680 a  )a
+             4          1 3        2          1  2         1   4
+     + 
+                        2   2               2           3            5
+       (560 a  - 1680 a  )a   + (- 5040 a a   + 13440 a  a  - 6720 a  )a
+             2         1   3             1 2           1  2         1   3
+     + 
+               4           2  3           4  2           6            8
+       - 630 a   + 10080 a  a   - 25200 a  a   + 20160 a  a  - 5040 a
+              2           1  2           1  2           1  2         1
+     ,
+
+                                     2                                  3
+       a  - 9 a a  + (- 36 a  + 72 a  )a  + (- 84 a  + 504 a a  - 504 a  )a
+        9      1 8          2       1   7          3        1 2        1   6
+     + 
+                                     2          2            4              2
+       (- 126 a  + 1008 a a  + 756 a   - 4536 a  a  + 3024 a  )a  + 630 a a
+               4         1 3        2          1  2         1   5        1 4
+     + 
+                          2                2           3             5
+       ((2520 a  - 7560 a  )a  - 11340 a a   + 30240 a  a  - 15120 a  )a
+               2         1   3          1 2           1  2          1   4
+     + 
+             3                           3   2
+       560 a   + (- 15120 a a  + 20160 a  )a
+            3              1 2          1   3
+     + 
+                 3           2  2            4             6                4
+       (- 7560 a   + 90720 a  a   - 151200 a  a  + 60480 a  )a  + 22680 a a
+                2           1  2            1  2          1   3          1 2
+     + 
+                  3  3            5  2            7             9
+       - 151200 a  a   + 272160 a  a   - 181440 a  a  + 40320 a
+                 1  2            1  2            1  2          1
+     ,
+    ...]
+                                            Type: Stream(Expression(Integer))
+xy:= [x-y for x in l0 for y in l1]
+ 
+
+   (21)  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ...]
+                                            Type: Stream(Expression(Integer))
+testTrue("every?(zero?, entries complete first(xy,10))")
+ 
+                                                                   Type: Void
+
+expected() ==
+    messagePrint("testsuite | testcases: failed (total) | tests: failed (total)")$OutputForm
+    messagePrint("expps                       0    (2)                0     (9)")$OutputForm
+ 
+                                                                   Type: Void
+
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+
+   =============================================================================
+   Testsuite: expps
+     failed (total): 0 (2)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   expps                       0     (2)               0     (9)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 9
+                                                                   Type: Void
+expected()
+ 
+   Compiling function expected with type () -> Void 
+   testsuite | testcases: failed (total) | tests: failed (total)
+   expps                       0    (2)                0     (9)
+                                                                   Type: Void
+)quit
+ 

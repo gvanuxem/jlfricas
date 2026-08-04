@@ -1,0 +1,270 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read ellip.input
+ 
+)set break resume
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+
+)unexpose WSExpression
+ 
+   WSExpression is now explicitly hidden in frame initial 
+
+-- This input file checks basic properties of elliptic functions
+-- and of elliptic integrals.  In fact, assuming that derivatives
+-- with respect to z are correct it proves that we use correct
+-- formulas for derivatives with respect to g2 and g3 or m.
+
+testsuite "Elliptic functions"
+ 
+   All user variables and function definitions have been cleared.
+   WARNING: string for testsuite should have less than 15 characters!
+                                                                   Type: Void
+testcase "defining identities"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+eI := Expression(Integer)
+ 
+
+   (2)  Expression(Integer)
+                                                                   Type: Type
+
+-- Weierstrass functions
+
+pp := 4*weierstrassP(g2,g3,z)^3 -g2*weierstrassP(g2,g3,z) -g3
+ 
+
+                               3
+   (3)  4 weierstrassP(g2,g3,z)  - g2 weierstrassP(g2,g3,z) - g3
+                                                    Type: Expression(Integer)
+
+weval(e) ==
+   eval(e, [weierstrassPPrime(g2,g3,z) = sqrt(pp)])
+ 
+                                                                   Type: Void
+
+gg := weierstrassPPrime(g2,g3,z)^2 - pp
+ 
+
+   (5)
+                               2                          3
+     weierstrassPPrime(g2,g3,z)  - 4 weierstrassP(g2,g3,z)
+   + 
+     g2 weierstrassP(g2,g3,z) + g3
+                                                    Type: Expression(Integer)
+
+-- check that gg generate differential ideal
+
+testEquals("weval(D(gg, g2))", "0")
+ 
+   Compiling function weval with type Expression(Integer) -> Expression
+      (Integer) 
+                                                                   Type: Void
+testEquals("weval(D(gg, g3))", "0")
+ 
+                                                                   Type: Void
+testEquals("weval(D(gg, z))", "0")
+ 
+                                                                   Type: Void
+
+-- check that derivatives commute
+
+wcross1(f : (eI, eI, eI) -> eI, v1 : Symbol, v2 : Symbol) : eI ==
+    e := f(g2::eI, g3::eI, z::eI)
+    weval(D(D(e, v1), v2) - D(D(e, v2), v1))
+ 
+   Function declaration wcross1 : (((Expression(Integer), Expression(
+      Integer), Expression(Integer)) -> Expression(Integer)), Symbol, 
+      Symbol) -> Expression(Integer) has been added to workspace.
+                                                                   Type: Void
+
+wcross(f : (eI, eI, eI) -> eI) : List(eI) ==
+    [wcross1(f, 'g2, 'g3), wcross1(f, 'g2, 'z),
+      wcross1(f, 'g3, 'z)]
+ 
+   Function declaration wcross : ((Expression(Integer), Expression(
+      Integer), Expression(Integer)) -> Expression(Integer)) -> List(
+      Expression(Integer)) has been added to workspace.
+                                                                   Type: Void
+
+testEquals("wcross(weierstrassP)", "[0, 0, 0]")
+ 
+   Compiling function wcross1 with type (((Expression(Integer), 
+      Expression(Integer), Expression(Integer)) -> Expression(Integer))
+      , Symbol, Symbol) -> Expression(Integer) 
+   Compiling function wcross with type ((Expression(Integer), 
+      Expression(Integer), Expression(Integer)) -> Expression(Integer))
+       -> List(Expression(Integer)) 
+                                                                   Type: Void
+testEquals("wcross(weierstrassPPrime)", "[0, 0, 0]")
+ 
+                                                                   Type: Void
+testEquals("wcross(weierstrassZeta)", "[0, 0, 0]")
+ 
+                                                                   Type: Void
+testEquals("wcross(weierstrassSigma)", "[0, 0, 0]")
+ 
+                                                                   Type: Void
+
+-- Jacobi functions
+
+jeval(e) ==
+   eval(e, [jacobiCn(z, m), jacobiDn(z,m)], [sqrt(1 - jacobiSn(z,m)^2),
+                sqrt(1 - m* jacobiSn(z,m)^2)])
+ 
+                                                                   Type: Void
+
+jcross(f : (eI, eI) -> eI) : eI ==
+   cc := D(D(f(z, m), m), z) - D(D(f(z, m), z), m)
+   jeval(cc)
+ 
+   Function declaration jcross : ((Expression(Integer), Expression(
+      Integer)) -> Expression(Integer)) -> Expression(Integer) has been
+      added to workspace.
+                                                                   Type: Void
+
+-- check that jacobiSn(z,m)^2 + jacobiCn(z, m)^2 - 1 and
+-- m* jacobiSn(z,m)^2 + jacobiDn(z,m)^2 - 1 generate
+-- differential ideal
+
+testEquals("jeval(D(jacobiSn(z,m)^2 + jacobiCn(z, m)^2 - 1, z))", "0")
+ 
+   Compiling function jeval with type Expression(Integer) -> Expression
+      (Integer) 
+                                                                   Type: Void
+testEquals("jeval(D(jacobiSn(z,m)^2 + jacobiCn(z, m)^2 - 1, m))", "0")
+ 
+                                                                   Type: Void
+testEquals("jeval(D(m* jacobiSn(z,m)^2 + jacobiDn(z,m)^2 - 1, z))", "0")
+ 
+                                                                   Type: Void
+testEquals("jeval(D(m* jacobiSn(z,m)^2 + jacobiDn(z,m)^2 - 1, m))", "0")
+ 
+                                                                   Type: Void
+
+-- Check that derivatives commute
+
+testEquals("jcross(jacobiSn)", "0")
+ 
+   Compiling function jcross with type ((Expression(Integer), 
+      Expression(Integer)) -> Expression(Integer)) -> Expression(
+      Integer) 
+                                                                   Type: Void
+
+testEquals("jcross(jacobiCn)", "0")
+ 
+                                                                   Type: Void
+
+testEquals("jcross(jacobiDn)", "0")
+ 
+                                                                   Type: Void
+
+-- Elliptic integrals
+
+-- Check that derivatives commute
+
+testEquals("D(D(ellipticE(z, m), m), z) - D(D(ellipticE(z, m), z), m)", "0")
+ 
+                                                                   Type: Void
+
+testEquals("D(D(ellipticF(z, m), m), z) - D(D(ellipticF(z, m), z), m)", "0")
+ 
+                                                                   Type: Void
+
+testEquals("D(D(ellipticPi(z, n, m), z), m) - D(D(ellipticPi(z, n, m), m), z)", "0")
+ 
+                                                                   Type: Void
+
+testEquals("D(D(ellipticPi(z, n, m), z), n) - D(D(ellipticPi(z, n, m), n), z)", "0")
+ 
+                                                                   Type: Void
+
+testEquals("D(D(ellipticPi(z, n, m), m), n) - D(D(ellipticPi(z, n, m), n), m)", "0")
+ 
+                                                                   Type: Void
+
+-- Check agreement
+testEquals("D(ellipticK(m), m) - eval(D(ellipticF(z, m), m), [z = 1])", "0")
+ 
+                                                                   Type: Void
+
+testEquals("D(ellipticE(m), m) - eval(D(ellipticE(z, m), m), [z = 1])", "0")
+ 
+                                                                   Type: Void
+
+-- Inverse relation
+testEquals("jacobiSn(ellipticF(z, m), m) -z", "0")
+ 
+                                                                   Type: Void
+testEquals("weierstrassP(g2, g3, weierstrassPInverse(g2, g3, z))", "z")
+ 
+                                                                   Type: Void
+
+-- Cross derivatives of weierstrassPInverse
+
+ieval(e) ==
+    eval(e, weierstrassPPrime(g2, g3, weierstrassPInverse(g2, g3, z)),
+            sqrt(4*z^3 - g2*z - g3))
+ 
+                                                                   Type: Void
+
+testEquals("ieval(D(D(weierstrassPInverse(g2, g3, z), z), g2) -"
+           "D(D(weierstrassPInverse(g2, g3, z), g2), z))", "0")
+ 
+   Compiling function ieval with type Expression(Integer) -> Expression
+      (Integer) 
+                                                                   Type: Void
+testEquals("ieval(D(D(weierstrassPInverse(g2, g3, z), z), g3) -"
+           "D(D(weierstrassPInverse(g2, g3, z), g3), z))", "0")
+ 
+                                                                   Type: Void
+
+)set output algebra on
+ 
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+
+   =============================================================================
+   Testsuite: Elliptic functions
+     failed (total): 0 (1)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   Elliptic functions          0     (1)               0    (25)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 25
+                                                                   Type: Void
+)quit
+ 

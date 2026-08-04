@@ -1,0 +1,284 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read free_mod.input
+ 
+)set break resume
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+
+testsuite "free module"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testcase "order in FreeAbelianGroup (issue 343)"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+Z0 := FreeModule(Integer, Symbol)
+ 
+
+   (2)  FreeModule(Integer,Symbol)
+                                                                   Type: Type
+a:= 'a::Z0
+ 
+
+   (3)  a
+                                             Type: FreeModule(Integer,Symbol)
+b:= 'b::Z0
+ 
+
+   (4)  b
+                                             Type: FreeModule(Integer,Symbol)
+z:= 0$Z0
+ 
+
+   (5)  0
+                                             Type: FreeModule(Integer,Symbol)
+
+testTrue "a > -b"
+ 
+                                                                   Type: Void
+testTrue "-b < z"
+ 
+                                                                   Type: Void
+testTrue "z < a"
+ 
+                                                                   Type: Void
+
+testcase "Integer coefficients"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+Z1 := FreeModule(Integer, Reference(Symbol))
+ 
+
+   (2)  FreeModule(Integer,Reference(Symbol))
+                                                                   Type: Type
+a := ref('a)$Reference(Symbol)::Z1
+ 
+
+   (3)  ref(a)
+                                  Type: FreeModule(Integer,Reference(Symbol))
+b := ref('b)$Reference(Symbol)::Z1
+ 
+
+   (4)  ref(b)
+                                  Type: FreeModule(Integer,Reference(Symbol))
+c := ref('c)$Reference(Symbol)::Z1
+ 
+
+   (5)  ref(c)
+                                  Type: FreeModule(Integer,Reference(Symbol))
+
+z := 0$Z1
+ 
+
+   (6)  0
+                                  Type: FreeModule(Integer,Reference(Symbol))
+
+testTrue("not(a = b)")
+ 
+                                                                   Type: Void
+testTrue("not(a + b = b)")
+ 
+                                                                   Type: Void
+testTrue("not(a + c = a + b)")
+ 
+                                                                   Type: Void
+
+testEquals("a + b", "b + a")
+ 
+                                                                   Type: Void
+testEquals("(a + c) + (a + b)", "a + a + b + c")
+ 
+                                                                   Type: Void
+testEquals("(a + b) + (b + c)", "a + (b + b) + c")
+ 
+                                                                   Type: Void
+testEquals("(a + b) + a", "(a + a) + b")
+ 
+                                                                   Type: Void
+testEquals("(a + b + c) - a", "b + c")
+ 
+                                                                   Type: Void
+testEquals("(a + b + c) - b", "a + c")
+ 
+                                                                   Type: Void
+testEquals("(a + b + c) - c", "a + b")
+ 
+                                                                   Type: Void
+testEquals("(a + a + b) - a", "a + b")
+ 
+                                                                   Type: Void
+testEquals("(a + b + b) - b", "a + b")
+ 
+                                                                   Type: Void
+testEquals("a - b", "subtractIfCan(a, b)")
+ 
+                                                                   Type: Void
+
+testcase "NonNegativeInteger coefficients"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+Z2 := FreeModule(NonNegativeInteger, Reference(Symbol))
+ 
+
+   (2)  FreeModule(NonNegativeInteger,Reference(Symbol))
+                                                                   Type: Type
+a := ref('a)$Reference(Symbol)::Z2
+ 
+
+   (3)  ref(a)
+                       Type: FreeModule(NonNegativeInteger,Reference(Symbol))
+b := ref('b)$Reference(Symbol)::Z2
+ 
+
+   (4)  ref(b)
+                       Type: FreeModule(NonNegativeInteger,Reference(Symbol))
+c := ref('c)$Reference(Symbol)::Z2
+ 
+
+   (5)  ref(c)
+                       Type: FreeModule(NonNegativeInteger,Reference(Symbol))
+
+z := 0$Z2
+ 
+
+   (6)  0
+                       Type: FreeModule(NonNegativeInteger,Reference(Symbol))
+
+testEquals("subtractIfCan(a + b + c, a)", "b + c")
+ 
+                                                                   Type: Void
+testEquals("subtractIfCan(a + b + c, b)", "a + c")
+ 
+                                                                   Type: Void
+testEquals("subtractIfCan(a + b + c, c)", "a + b")
+ 
+                                                                   Type: Void
+testEquals("subtractIfCan(a + a + b, a)", "a + b")
+ 
+                                                                   Type: Void
+testEquals("subtractIfCan(a + b + b, b)", "a + b")
+ 
+                                                                   Type: Void
+
+testTrue("subtractIfCan(a, b) case _"failed_"")
+ 
+                                                                   Type: Void
+testTrue("subtractIfCan(a, a + a) case _"failed_"")
+ 
+                                                                   Type: Void
+
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+   =============================================================================
+   WARNINGS:
+   Testsuite: free module
+   Testcase: Integer coefficients
+   test: 4
+   testing in a domain without InputForm!
+   Testsuite: free module
+   Testcase: Integer coefficients
+   test: 5
+   testing in a domain without InputForm!
+   Testsuite: free module
+   Testcase: Integer coefficients
+   test: 6
+   testing in a domain without InputForm!
+   Testsuite: free module
+   Testcase: Integer coefficients
+   test: 7
+   testing in a domain without InputForm!
+   Testsuite: free module
+   Testcase: Integer coefficients
+   test: 8
+   testing in a domain without InputForm!
+   Testsuite: free module
+   Testcase: Integer coefficients
+   test: 9
+   testing in a domain without InputForm!
+   Testsuite: free module
+   Testcase: Integer coefficients
+   test: 10
+   testing in a domain without InputForm!
+   Testsuite: free module
+   Testcase: Integer coefficients
+   test: 11
+   testing in a domain without InputForm!
+   Testsuite: free module
+   Testcase: Integer coefficients
+   test: 12
+   testing in a domain without InputForm!
+   Testsuite: free module
+   Testcase: Integer coefficients
+   test: 13
+   testing in a domain without InputForm!
+   Testsuite: free module
+   Testcase: NonNegativeInteger coefficients
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: free module
+   Testcase: NonNegativeInteger coefficients
+   test: 2
+   testing in a domain without InputForm!
+   Testsuite: free module
+   Testcase: NonNegativeInteger coefficients
+   test: 3
+   testing in a domain without InputForm!
+   Testsuite: free module
+   Testcase: NonNegativeInteger coefficients
+   test: 4
+   testing in a domain without InputForm!
+   Testsuite: free module
+   Testcase: NonNegativeInteger coefficients
+   test: 5
+   testing in a domain without InputForm!
+
+   =============================================================================
+   Testsuite: free module
+     failed (total): 0 (3)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   free module                 0     (3)               0    (23)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 23
+                                                                   Type: Void
+)quit
+ 

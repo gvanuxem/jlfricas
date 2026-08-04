@@ -1,0 +1,567 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read jnemo.input
+ 
+)set break resume
+ 
+)set mess type off
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+
+testsuite "Julia Nemo"
+ 
+   All user variables and function definitions have been cleared.
+
+testcase "NMInteger arithmetic"
+ 
+   All user variables and function definitions have been cleared.
+a := jnint 2;
+ 
+
+b := jnint 4;
+ 
+
+testEquals("a+a", "b")
+ 
+testEquals("a-a", "0$NMInteger")
+ 
+testEquals("a*a", "b")
+ 
+testEquals("2*a", "b")
+ 
+testEquals("a^2", "b")
+ 
+
+testcase "NM Rational arithmetic"
+ 
+   All user variables and function definitions have been cleared.
+a := coerce(2)@NMFraction(NMInteger);
+ 
+
+b := coerce(4)@NMFraction(NMInteger);
+ 
+
+c := coerce(1/2)@NMFraction(NMInteger);
+ 
+
+testEquals("a+a", "b")
+ 
+testEquals("a-a", "0$NMFraction(NMInteger)")
+ 
+testEquals("a*a", "b")
+ 
+testEquals("2*a", "b")
+ 
+testEquals("a^2", "b")
+ 
+testEquals("b/a", "a")
+ 
+testEquals("a/b", "c")
+ 
+
+testcase "NMAlgebraicNumber Extensions"
+ 
+   All user variables and function definitions have been cleared.
+-- norm
+-- Create an algebraic number. sqrt(2)
+a := sqrt(jnan(2))
+ 
+
+   (2)  {a2: 1.41421}
+-- minimal polynomial is x^2 - 2. Roots are sqrt(2), -sqrt(2).
+-- norm is product of roots = -2.
+testEquals("norm(a)$NMAlgebraicNumber", "jnan(-2)")
+ 
+
+-- Another one: 1 + sqrt(2).
+-- conjugates: 1+sqrt(2), 1-sqrt(2).
+-- product: 1 - 2 = -1.
+b := 1 + a
+ 
+
+   (4)  {a2: 2.41421}
+testEquals("norm(b)$NMAlgebraicNumber", "jnan(-1)")
+ 
+
+testcase "NMAlgebraicNumber Arithmetic"
+ 
+   All user variables and function definitions have been cleared.
+a := coerce(2)@NMAlgebraicNumber;
+ 
+
+b := coerce(4)@NMAlgebraicNumber;
+ 
+
+c := coerce(1/2)@NMAlgebraicNumber;
+ 
+
+testEquals("a+a", "b")
+ 
+testEquals("a-a", "0$NMAlgebraicNumber")
+ 
+testEquals("a*a", "b")
+ 
+testEquals("2*a", "b")
+ 
+testEquals("a^2", "b")
+ 
+testEquals("b/a", "a")
+ 
+testEquals("a/b", "c")
+ 
+
+testcase "NMAlgebraicNumber minimal polynomial"
+ 
+   All user variables and function definitions have been cleared.
+a:=sqrt(jnan(7))+3/sqrt jnan(-3)
+ 
+
+   (2)  {a4: 2.64575 - 1.73205*im}
+v1:=conjugates(a);
+ 
+
+v2 := roots(minimalPolynomial(a)@NUP(NINT,'x))
+ 
+
+   (4)
+
+   4-element Vector{QQBarFieldElem}:
+    {a4: 2.64575 + 1.73205*im}
+    {a4: 2.64575 - 1.73205*im}
+    {a4: -2.64575 + 1.73205*im}
+    {a4: -2.64575 - 1.73205*im}
+testEquals("v1", "v2")
+ 
+
+testcase "rootOfUnity"
+ 
+   All user variables and function definitions have been cleared.
+zeta := rootOfUnity(4)$NMAlgebraicNumber
+ 
+
+   (2)  {a2: 1.00000*im}
+testTrue("equal?(zeta^2, -1$NMAlgebraicNumber)")
+ 
+zeta2 := rootOfUnity(8, 2)$NMAlgebraicNumber
+ 
+
+   (4)  {a2: 1.00000*im}
+testTrue("equal?(zeta, zeta2)")
+ 
+
+testcase "rootsOf simple"
+ 
+   All user variables and function definitions have been cleared.
+p_sup : SparseUnivariatePolynomial(NMAlgebraicNumber) := monomial(1$NMAlgebraicNumber, 2)$SparseUnivariatePolynomial(NMAlgebraicNumber) + monomial(1$NMAlgebraicNumber, 0)$SparseUnivariatePolynomial(NMAlgebraicNumber)
+ 
+
+         2
+   (2)  ?  + {a1: 1.00000}
+roots_list : List(NMAlgebraicNumber) := (rootsOf(p_sup)$NMAlgebraicNumber)@List(NMAlgebraicNumber)
+ 
+
+   (3)  [{a2: 1.00000*im}, {a2: -1.00000*im}]
+testEquals("#roots_list", "2")
+ 
+r1 := roots_list.1
+ 
+
+   (5)  {a2: 1.00000*im}
+testTrue("equal?(r1^2, -1$NMAlgebraicNumber)")
+ 
+
+testcase "rootsOf higher"
+ 
+   All user variables and function definitions have been cleared.
+p_sup : SparseUnivariatePolynomial(NMAlgebraicNumber) := monomial(1$NMAlgebraicNumber, 3)$SparseUnivariatePolynomial(NMAlgebraicNumber) - monomial(1$NMAlgebraicNumber, 0)$SparseUnivariatePolynomial(NMAlgebraicNumber)
+ 
+
+         3
+   (2)  ?  + {a1: -1.00000}
+roots_list : List(NMAlgebraicNumber) := (rootsOf(p_sup)$NMAlgebraicNumber)@List(NMAlgebraicNumber)
+ 
+
+   (3)
+   [{a1: 1.00000}, {a2: -0.500000 + 0.866025*im}, {a2: -0.500000 - 0.866025*im}]
+testEquals("#roots_list", "3")
+ 
+r1 := roots_list.1
+ 
+
+   (5)  {a1: 1.00000}
+testTrue("equal?(r1^3, 1$NMAlgebraicNumber)")
+ 
+
+testcase "rootOf single"
+ 
+   All user variables and function definitions have been cleared.
+p_sup : SparseUnivariatePolynomial(NMAlgebraicNumber) := monomial(1$NMAlgebraicNumber, 4)$SparseUnivariatePolynomial(NMAlgebraicNumber) - jnan(2)$NMAlgebraicNumber::SparseUnivariatePolynomial(NMAlgebraicNumber)
+ 
+
+         4
+   (2)  ?  + {a1: -2.00000}
+r : NMAlgebraicNumber := (rootOf(p_sup)$NMAlgebraicNumber)@NMAlgebraicNumber
+ 
+
+   (3)  {a4: 1.18921}
+testTrue("equal?(r^4, 2$NMAlgebraicNumber)")
+ 
+
+testcase "Optimized norm"
+ 
+   All user variables and function definitions have been cleared.
+a1 := jnan(2)$NMAlgebraicNumber
+ 
+
+   (2)  {a1: 2.00000}
+testEquals("norm(a1)$NMAlgebraicNumber", "a1")
+ 
+
+i_p : SparseUnivariatePolynomial(NMAlgebraicNumber) := monomial(1$NMAlgebraicNumber, 2)$SparseUnivariatePolynomial(NMAlgebraicNumber) + monomial(1$NMAlgebraicNumber, 0)$SparseUnivariatePolynomial(NMAlgebraicNumber)
+ 
+
+         2
+   (4)  ?  + {a1: 1.00000}
+i_root : NMAlgebraicNumber := (rootOf(i_p)$NMAlgebraicNumber)@NMAlgebraicNumber
+ 
+
+   (5)  {a2: 1.00000*im}
+n1 : NMAlgebraicNumber := (norm(i_root)$NMAlgebraicNumber)@NMAlgebraicNumber
+ 
+
+   (6)  {a1: 1.00000}
+testEquals("n1", "1$NMAlgebraicNumber")
+ 
+
+one_plus_i : NMAlgebraicNumber := 1$NMAlgebraicNumber + i_root
+ 
+
+   (8)  {a2: 1.00000 + 1.00000*im}
+n2 : NMAlgebraicNumber := (norm(one_plus_i)$NMAlgebraicNumber)@NMAlgebraicNumber
+ 
+
+   (9)  {a1: 2.00000}
+testEquals("n2", "2$NMAlgebraicNumber")
+ 
+
+
+testcase "NMIntegerMod arithmetic"
+ 
+   All user variables and function definitions have been cleared.
+a := jnzmod(2)$NZMOD(5);
+ 
+
+b := jnzmod(4)$NZMOD(5);
+ 
+
+testEquals("a+a", "b")
+ 
+testEquals("a-a", "0$NMIntegerMod(5)")
+ 
+testEquals("a*a", "b")
+ 
+testEquals("2*a", "b")
+ 
+testEquals("a^2", "b")
+ 
+testEquals("b+1", "0$NMIntegerMod(5)")
+ 
+
+testcase "NMPrimeField Extensions"
+ 
+   All user variables and function definitions have been cleared.
+p := 5
+ 
+
+   (2)  5
+F := NMPrimeField(p)
+ 
+
+   (3)  NMPrimeField(5)
+a := jnpf(2)$F
+ 
+
+   (4)  2
+-- trace(a, 1) should be a
+testEquals("trace(a, 1)", "a")
+ 
+-- norm(a, 1) should be a
+testEquals("norm(a, 1)", "a")
+ 
+
+-- quadraticNonResidue
+q := quadraticNonResidue()$F
+ 
+
+   (7)  2
+-- In field of size 5, squares are 0, 1, 4. Non-squares are 2, 3.
+-- q should be 2 (smallest non-negative)
+testEquals("convert(q)@Integer", "2")
+ 
+
+testcase "NMPrimeField arithmetic"
+ 
+   All user variables and function definitions have been cleared.
+a := jnpf(2)$NPF(5);
+ 
+
+b := jnpf(4)$NPF(5);
+ 
+
+testEquals("a+a", "b")
+ 
+testEquals("a-a", "0$NMPrimeField(5)")
+ 
+testEquals("a*a", "b")
+ 
+testEquals("2*a", "b")
+ 
+testEquals("a^2", "b")
+ 
+testEquals("b/a", "a")
+ 
+testEquals("b+1", "0$NMPrimeField(5)")
+ 
+
+testcase "NMFiniteField arithmetic"
+ 
+   All user variables and function definitions have been cleared.
+a := jnff(2)$NFF(5,3);
+ 
+
+b := jnff(4)$NFF(5,3);
+ 
+
+testTrue("equal?(a+a, b)")
+ 
+testTrue("equal?(a-a, 0$NMFiniteField(5,3))")
+ 
+testTrue("equal?(a*a, b)")
+ 
+testTrue("equal?(2*a, b)")
+ 
+testTrue("equal?(a^2, b)")
+ 
+testTrue("equal?(b/a, a)")
+ 
+testTrue("equal?(b+1, 0$NMFiniteField(5,3))")
+ 
+testEquals("rank()$NMFiniteField(5,3)", "3")
+ 
+
+testcase "NMExactCalciumField arithmetic"
+ 
+   All user variables and function definitions have been cleared.
+a := jnecf(2);
+ 
+
+b := jnecf(4);
+ 
+
+c := jnecf(1/2);
+ 
+
+testEquals("a+a", "b")
+ 
+testEquals("a-a", "0$NECF")
+ 
+testEquals("a*a", "b")
+ 
+testEquals("2*a", "b")
+ 
+testEquals("a^2", "b")
+ 
+testEquals("b/a", "a")
+ 
+testEquals("a/b", "c")
+ 
+
+testcase "NMExactCalciumField trigonometric functions"
+ 
+   All user variables and function definitions have been cleared.
+a := jnecf(1/2)
+ 
+
+   (2)  0.500000 {1/2}
+testEquals("asin sin(a)", "a")
+ 
+testEquals("cos acos(a)", "a")
+ 
+testEquals("tan atan(a)", "a")
+ 
+
+testcase "NMFraction(NMInteger) retraction"
+ 
+   All user variables and function definitions have been cleared.
+nf1 := coerce(3/4)@NMFraction(NMInteger)
+ 
+
+        3
+   (2)  -
+        4
+res1 := retractIfCan(nf1)@Union(Fraction(Integer), "failed")
+ 
+
+        3
+   (3)  -
+        4
+testTrue("not (res1 case _"failed_")")
+ 
+testEquals("res1::Fraction(Integer)", "3/4")
+ 
+testEquals("retract(nf1)@Fraction(Integer)", "3/4")
+ 
+
+nf2 := coerce(5)@NMFraction(NMInteger)
+ 
+
+   (7)  5
+res2 := retractIfCan(nf2)@Union(Fraction(Integer), "failed")
+ 
+
+   (8)  5
+testTrue("not (res2 case _"failed_")")
+ 
+testEquals("res2::Fraction(Integer)", "5/1")
+ 
+testEquals("retract(nf2)@Fraction(Integer)", "5/1")
+ 
+
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+   =============================================================================
+   WARNINGS:
+   Testsuite: Julia Nemo
+   Testcase: NMAlgebraicNumber Extensions
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: Julia Nemo
+   Testcase: NMAlgebraicNumber Extensions
+   test: 2
+   testing in a domain without InputForm!
+   Testsuite: Julia Nemo
+   Testcase: NMAlgebraicNumber Arithmetic
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: Julia Nemo
+   Testcase: NMAlgebraicNumber Arithmetic
+   test: 2
+   testing in a domain without InputForm!
+   Testsuite: Julia Nemo
+   Testcase: NMAlgebraicNumber Arithmetic
+   test: 3
+   testing in a domain without InputForm!
+   Testsuite: Julia Nemo
+   Testcase: NMAlgebraicNumber Arithmetic
+   test: 4
+   testing in a domain without InputForm!
+   Testsuite: Julia Nemo
+   Testcase: NMAlgebraicNumber Arithmetic
+   test: 5
+   testing in a domain without InputForm!
+   Testsuite: Julia Nemo
+   Testcase: NMAlgebraicNumber Arithmetic
+   test: 6
+   testing in a domain without InputForm!
+   Testsuite: Julia Nemo
+   Testcase: NMAlgebraicNumber Arithmetic
+   test: 7
+   testing in a domain without InputForm!
+   Testsuite: Julia Nemo
+   Testcase: NMAlgebraicNumber minimal polynomial
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: Julia Nemo
+   Testcase: Optimized norm
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: Julia Nemo
+   Testcase: Optimized norm
+   test: 2
+   testing in a domain without InputForm!
+   Testsuite: Julia Nemo
+   Testcase: Optimized norm
+   test: 3
+   testing in a domain without InputForm!
+   Testsuite: Julia Nemo
+   Testcase: NMExactCalciumField arithmetic
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: Julia Nemo
+   Testcase: NMExactCalciumField arithmetic
+   test: 2
+   testing in a domain without InputForm!
+   Testsuite: Julia Nemo
+   Testcase: NMExactCalciumField arithmetic
+   test: 3
+   testing in a domain without InputForm!
+   Testsuite: Julia Nemo
+   Testcase: NMExactCalciumField arithmetic
+   test: 4
+   testing in a domain without InputForm!
+   Testsuite: Julia Nemo
+   Testcase: NMExactCalciumField arithmetic
+   test: 5
+   testing in a domain without InputForm!
+   Testsuite: Julia Nemo
+   Testcase: NMExactCalciumField arithmetic
+   test: 6
+   testing in a domain without InputForm!
+   Testsuite: Julia Nemo
+   Testcase: NMExactCalciumField arithmetic
+   test: 7
+   testing in a domain without InputForm!
+   Testsuite: Julia Nemo
+   Testcase: NMExactCalciumField trigonometric functions
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: Julia Nemo
+   Testcase: NMExactCalciumField trigonometric functions
+   test: 2
+   testing in a domain without InputForm!
+   Testsuite: Julia Nemo
+   Testcase: NMExactCalciumField trigonometric functions
+   test: 3
+   testing in a domain without InputForm!
+
+   =============================================================================
+   Testsuite: Julia Nemo
+     failed (total): 0 (17)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   Julia Nemo                  0    (17)               0    (72)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 72
+)quit
+ 

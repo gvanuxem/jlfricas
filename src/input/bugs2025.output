@@ -1,0 +1,392 @@
+Checking for foreign routines
+FRICAS="/home/greg/Git/jlfricas/target/x86_64-linux-gnu"
+spad-lib="/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/libspad.so"
+foreign routines found
+openServer result -2
+                       FriCAS Computer Algebra System 
+       Version: jlFriCAS 1.3.14-julia-dev built with SBCL 2.6.4.debian
+                 Timestamp: mar. 04 août 2026 04:37:41 CEST
+-----------------------------------------------------------------------------
+   Issue )copyright to view copyright notices.
+   Issue )summary for a summary of useful system commands.
+   Issue )quit to leave FriCAS and return to shell.
+-----------------------------------------------------------------------------
+ 
+(1) -> )set message test on
+ 
+)set message auto off
+ 
+)read bugs2025.input
+ 
+)set break resume
+ 
+)expose UnittestCount UnittestAux Unittest
+ 
+   UnittestCount is now explicitly exposed in frame initial 
+   UnittestAux is now explicitly exposed in frame initial 
+   Unittest is now explicitly exposed in frame initial 
+
+testsuite "bugs2025"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testcase "coercion to AN"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+p4 := legendre(4)$PolynomialNumberTheoryFunctions
+ 
+
+        35  4   15  2   3
+   (2)  -- ?  - -- ?  + -
+         8       4      8
+                          Type: SparseUnivariatePolynomial(Fraction(Integer))
+a4 := rootOf(p4)$EXPR(INT)
+ 
+
+   (3)  %A
+                                                    Type: Expression(Integer)
+-- coercion used to fail
+testEquals("a4::AN", "rootOf(p4)")
+ 
+                                                                   Type: Void
+
+testcase "FourierSeries"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+fS := FourierSeries(Fraction(Integer), Integer)
+ 
+
+   (2)  FourierSeries(Fraction(Integer),Integer)
+                                                                   Type: Type
+
+one := 1$fS
+ 
+
+   (3)  cos[0]
+                               Type: FourierSeries(Fraction(Integer),Integer)
+testEquals("one*one", "one")
+ 
+                                                                   Type: Void
+
+s := makeSin(1, 2)$fS
+ 
+
+   (5)  2 sin[1]
+                               Type: FourierSeries(Fraction(Integer),Integer)
+c := makeCos(1, 2)$fS
+ 
+
+   (6)  2 cos[1]
+                               Type: FourierSeries(Fraction(Integer),Integer)
+
+testEquals("s^2 + c^2", "4*one")
+ 
+                                                                   Type: Void
+testEquals("(2*one - s)*(2*one + s)", "c^2")
+ 
+                                                                   Type: Void
+
+c3 := makeCos(3, 1)$fS
+ 
+
+   (9)  cos[3]
+                               Type: FourierSeries(Fraction(Integer),Integer)
+
+testEquals("2*c3 + 3*c", "c^3")
+ 
+                                                                   Type: Void
+testEquals("s*c3", "c3*s")
+ 
+                                                                   Type: Void
+testEquals("(c*s)*c3", "c*(s*c3)")
+ 
+                                                                   Type: Void
+
+testcase "interpreter where"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testEquals("t where (macro s == 1; macro t == 2)", "2")
+ 
+                                                                   Type: Void
+testEquals("s where s ==> 1", "1")
+ 
+                                                                   Type: Void
+
+testcase "multiple assignment"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+cnt := 0$Integer
+ 
+
+   (2)  0
+                                                                Type: Integer
+get_list(t) == (free cnt; cnt := cnt + t; [1, 2, 3])
+ 
+                                                                   Type: Void
+use_list(t) == ([a, b, c] := get_list(t); b)
+ 
+                                                                   Type: Void
+
+res := use_list(3)
+ 
+   Compiling function get_list with type PositiveInteger -> List(
+      PositiveInteger) 
+   Compiling function use_list with type PositiveInteger -> 
+      PositiveInteger 
+
+   (5)  2
+                                                        Type: PositiveInteger
+testEquals("res", "2")
+ 
+                                                                   Type: Void
+testEquals("cnt", "3")
+ 
+                                                                   Type: Void
+res := use_list(3)
+ 
+
+   (8)  2
+                                                        Type: PositiveInteger
+testEquals("cnt", "6")
+ 
+                                                                   Type: Void
+
+testcase "macros in parse"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+ii := parse("xx==>5;yy:=xx+3")$InputForm
+ 
+
+   (2)  (SEQ /throwAway (LET yy (+ 5 3)))
+                                                              Type: InputForm
+s := devaluate(Polynomial(Integer))$Lisp
+ 
+
+   (3)  (Polynomial (Integer))
+                                                            Type: SExpression
+testEquals("devaluate(typeOf(2*xx))$Lisp", "s")
+ 
+                                                                   Type: Void
+testEquals("interpret_in_new_env(ii)$InputForm", "8")
+ 
+                                                                   Type: Void
+testEquals("devaluate(typeOf(2*yy))$Lisp", "s")
+ 
+                                                                   Type: Void
+
+testcase "record and union tags"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+r := [1, 2]$Record(a : Integer, b : Integer)
+ 
+
+   (2)  [a = 1, b = 2]
+                                          Type: Record(a: Integer,b: Integer)
+a := b
+ 
+
+   (3)  b
+                                                            Type: Variable(b)
+testEquals("r.a", "1")
+ 
+                                                                   Type: Void
+a := c
+ 
+
+   (5)  c
+                                                            Type: Variable(c)
+testEquals("r.a", "1")
+ 
+                                                                   Type: Void
+
+uT := Union(i : Integer, s : String)
+ 
+
+   (7)  Union(i:Integer,s:String)
+                                                                   Type: Type
+u := 7::uT
+ 
+
+   (8)  7
+                                                  Type: Union(i: Integer,...)
+i := s
+ 
+
+   (9)  s
+                                                            Type: Variable(s)
+testEquals("u.i", "7")
+ 
+                                                                   Type: Void
+i := j
+ 
+
+   (11)  j
+                                                            Type: Variable(j)
+testEquals("u.i", "7")
+ 
+                                                                   Type: Void
+
+testcase "recursion in typeOf()"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+testLibraryError("typeOf()")
+ 
+                                                                   Type: Void
+
+testcase "strange types"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+eci := Expression(Complex(Integer))::OutputForm
+ 
+
+   (2)  Expression(Complex(Integer))
+                                                             Type: OutputForm
+ex := ((%i*t - 1)*z*(z^2 - 3))/(sqrt(2)*(%i*t + 1))
+ 
+
+                 3
+        (t + %i)z  + (- 3 t - 3 %i)z
+   (3)  ----------------------------
+                         +-+
+                (t - %i)\|2
+                                           Type: Expression(Complex(Integer))
+testEquals("typeOf(ex)::OutputForm", "eci")
+ 
+                                                                   Type: Void
+
+ex := (t + sqrt(2))*(%i*t + 1)
+ 
+
+                   +-+       2
+   (5)  (%i t + 1)\|2  + %i t  + t
+                                           Type: Expression(Complex(Integer))
+testEquals("typeOf(ex)::OutputForm", "eci")
+ 
+                                                                   Type: Void
+
+ex := (t + sqrt(2))/(%i*t + 1)
+ 
+
+             +-+
+        - %i\|2  - %i t
+   (7)  ---------------
+             t - %i
+                                           Type: Expression(Complex(Integer))
+testEquals("typeOf(ex)::OutputForm", "eci")
+ 
+                                                                   Type: Void
+
+ex := sqrt(2)*((t - 1)/(%i*t + 1))
+ 
+
+                      +-+
+        (- %i t + %i)\|2
+   (9)  -----------------
+              t - %i
+                                           Type: Expression(Complex(Integer))
+testEquals("typeOf(ex)::OutputForm", "eci")
+ 
+                                                                   Type: Void
+
+testcase "Pade C-fraction"
+ 
+   All user variables and function definitions have been cleared.
+                                                                   Type: Void
+
+st1 := coefficients(taylor(exp(x), x = 0))::Stream(FRAC(INT));
+ 
+
+                                              Type: Stream(Fraction(Integer))
+pCF := PadeContinuousFraction(FRAC(INT), 'x)
+ 
+
+   (3)  PadeContinuousFraction(Fraction(Integer),x)
+                                                                   Type: Type
+cs := pade_stream(st1, monomial(1, 1))$pCF;
+ 
+
+                      Type: Stream(UnivariatePolynomial(x,Fraction(Integer)))
+testEquals("entries(complete(first(cs, 5)))", _
+          "[1, -x, (1/2)*x, -(1/6)*x, (1/6)*x]")
+ 
+                                                                   Type: Void
+
+statistics()
+ 
+   =============================================================================
+   General WARNINGS:
+   * do not use ')clear completely' before having used 'statistics()'
+     It clears the statistics without warning!
+   * do not forget to pass the arguments of the testXxxx functions as Strings!
+     Otherwise, the test will fail and statistics() will not notice!
+   =============================================================================
+   WARNINGS:
+   Testsuite: bugs2025
+   Testcase: FourierSeries
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: bugs2025
+   Testcase: FourierSeries
+   test: 2
+   testing in a domain without InputForm!
+   Testsuite: bugs2025
+   Testcase: FourierSeries
+   test: 3
+   testing in a domain without InputForm!
+   Testsuite: bugs2025
+   Testcase: FourierSeries
+   test: 4
+   testing in a domain without InputForm!
+   Testsuite: bugs2025
+   Testcase: FourierSeries
+   test: 5
+   testing in a domain without InputForm!
+   Testsuite: bugs2025
+   Testcase: FourierSeries
+   test: 6
+   testing in a domain without InputForm!
+   Testsuite: bugs2025
+   Testcase: macros in parse
+   test: 1
+   testing in a domain without InputForm!
+   Testsuite: bugs2025
+   Testcase: macros in parse
+   test: 2
+   testing in a domain without InputForm!
+   Testsuite: bugs2025
+   Testcase: macros in parse
+   test: 3
+   testing in a domain without InputForm!
+
+   =============================================================================
+   Testsuite: bugs2025
+     failed (total): 0 (9)
+
+   =============================================================================
+   testsuite | testcases: failed (total) | tests: failed (total)
+   bugs2025                    0     (9)               0    (25)
+   =============================================================================
+   File summary.
+   unexpected failures: 0
+   expected failures: 0
+   unexpected passes: 0
+   total tests: 25
+                                                                   Type: Void
+)quit
+ 
