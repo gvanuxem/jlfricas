@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FriCAS — Julia Integration</title>
+  <meta name="description"
+    content="Documentation for the Julia integration in FriCAS: integrated Julia runtime for high-performance numerical computing, Nemo/FLINT, and WS MathLink." />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
+    rel="stylesheet">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+          },
+          colors: {
+            slate: {
+              850: '#111c30',
+              900: '#0f172a',
+              925: '#0b1120',
+              950: '#020617',
+            },
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              400: '#60a5fa',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Markdown, Math & Syntax Highlighting -->
+  <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+
+  <!-- Prism.js Syntax Highlighting -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-julia.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-lisp.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+  <!-- Mermaid Diagrams -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+
+  <style>
+    /* Custom Sleek Scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.6);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(51, 65, 85, 0.7);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(71, 85, 105, 1);
+    }
+
+    /* Markdown Typography & Code Styling */
+    .prose {
+      color: #cbd5e1;
+      max-width: 100%;
+      line-height: 1.65;
+    }
+
+    .prose h1 {
+      color: #f8fafc;
+      font-weight: 600;
+      font-size: 2.25rem;
+      letter-spacing: -0.025em;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(51, 65, 85, 0.4);
+      padding-bottom: 0.75rem;
+    }
+
+    .prose h2 {
+      color: #f1f5f9;
+      font-weight: 700;
+      font-size: 1.5rem;
+      letter-spacing: -0.02em;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid rgba(51, 65, 85, 0.3);
+      padding-bottom: 0.5rem;
+      scroll-margin-top: 5.5rem;
+    }
+
+    .prose h3 {
+      color: #e2e8f0;
+      font-weight: 600;
+      font-size: 1.2rem;
+      margin-top: 1.5rem;
+      margin-bottom: 0.75rem;
+      scroll-margin-top: 5.5rem;
+    }
+
+    .prose h4 {
+      color: #cbd5e1;
+      font-weight: 600;
+      font-size: 1.05rem;
+      margin-top: 1.25rem;
+      margin-bottom: 0.5rem;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .prose h5 {
+      color: #94a3b8;
+      font-weight: 500;
+      font-size: 0.9rem;
+      margin-top: 0.75rem;
+      margin-bottom: 0.35rem;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Documentation Body & Docstrings (Smaller font size) */
+    .prose p {
+      font-size: 0.875rem;
+      line-height: 1.6;
+      margin-bottom: 0.9rem;
+    }
+
+    .prose strong {
+      color: #f8fafc;
+      font-weight: 600;
+    }
+
+    .prose a {
+      color: #60a5fa;
+      text-decoration: none;
+      border-bottom: 1px dashed rgba(96, 165, 250, 0.5);
+      transition: all 0.15s ease;
+    }
+
+    .prose a:hover {
+      color: #93c5fd;
+      border-bottom-style: solid;
+    }
+
+    .prose ul,
+    .prose ol {
+      font-size: 0.875rem;
+      margin-bottom: 1.25rem;
+      padding-left: 1.5rem;
+    }
+
+    .prose ul {
+      list-style-type: disc;
+    }
+
+    .prose ol {
+      list-style-type: decimal;
+    }
+
+    .prose li {
+      margin-bottom: 0.35rem;
+      line-height: 1.6;
+    }
+
+    .prose blockquote {
+      border-left: 4px solid #3b82f6;
+      background: rgba(30, 41, 59, 0.4);
+      padding: 0.75rem 1.25rem;
+      border-radius: 0 0.5rem 0.5rem 0;
+      margin: 1.5rem 0;
+      color: #94a3b8;
+      font-size: 0.875rem;
+    }
+
+    .prose hr {
+      border: 0;
+      border-top: 1px solid rgba(51, 65, 85, 0.6);
+      margin: 2.5rem 0;
+    }
+
+    /* Table Styling */
+    .prose table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+      background: rgba(15, 23, 42, 0.5);
+      border-radius: 0.5rem;
+      overflow: hidden;
+      border: 1px solid rgba(51, 65, 85, 0.5);
+    }
+
+    .prose th {
+      background: rgba(30, 41, 59, 0.8);
+      color: #f1f5f9;
+      font-weight: 600;
+      text-align: left;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid rgba(51, 65, 85, 0.7);
+    }
+
+    .prose td {
+      padding: 0.65rem 1rem;
+      border-bottom: 1px solid rgba(51, 65, 85, 0.3);
+    }
+
+    .prose tr:last-child td {
+      border-bottom: none;
+    }
+
+    .prose tr:hover td {
+      background: rgba(30, 41, 59, 0.4);
+    }
+
+    /* Inline Code */
+    .prose :not(pre)>code {
+      background: rgba(30, 41, 59, 0.8);
+      color: #93c5fd;
+      padding: 0.15rem 0.4rem;
+      border-radius: 0.3rem;
+      font-size: 0.875em;
+      font-family: 'JetBrains Mono', monospace;
+      border: 1px solid rgba(51, 65, 85, 0.5);
+    }
+
+    /* Code Blocks Container */
+    .code-block-wrapper {
+      position: relative;
+      margin: 1.25rem 0;
+      border-radius: 0.6rem;
+      overflow: hidden;
+      border: 1px solid rgba(51, 65, 85, 0.6);
+      background: #090d16;
+    }
+
+    .code-block-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.4rem 0.85rem;
+      background: rgba(15, 23, 42, 0.95);
+      border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+      font-size: 0.75rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: #94a3b8;
+    }
+
+    .code-block-wrapper pre {
+      margin: 0 !important;
+      padding: 1rem !important;
+      background: transparent !important;
+      overflow-x: auto;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Copy Button */
+    .copy-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.375rem;
+      background: rgba(30, 41, 59, 0.7);
+      color: #cbd5e1;
+      font-size: 0.75rem;
+      border: 1px solid rgba(51, 65, 85, 0.6);
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+
+    .copy-btn:hover {
+      background: rgba(51, 65, 85, 0.9);
+      color: #ffffff;
+      border-color: rgba(96, 165, 250, 0.6);
+    }
+
+    /* Command Palette Modal animation */
+    @keyframes modalFadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.97);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .modal-animate {
+      animation: modalFadeIn 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+  </style>
+</head>
+
+<body
+  class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col antialiased selection:bg-blue-600 selection:text-white">
+
+  <!-- Top Glassmorphism Navigation Bar -->
+  <header class="border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-md sticky top-0 z-40 transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+
+      <!-- Brand & Version -->
+      <div class="flex items-center space-x-3">
+        <!-- Mobile Sidebar Toggle -->
+        <button id="mobile-toggle" onclick="toggleMobileSidebar()"
+          class="md:hidden p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition"
+          aria-label="Toggle navigation">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+
+        <a href="#index.md" onclick="navigate('index.md')" class="flex items-center space-x-2.5 group">
+          <span
+            class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-2.5 py-0.5 rounded-lg text-sm font-bold shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform duration-200">jl</span>
+          <span
+            class="text-xl font-semibold tracking-tight text-white group-hover:text-blue-400 transition-colors">FriCAS</span>
+          <span
+            class="hidden sm:inline-block text-xs font-medium text-slate-400 px-2 py-0.5 rounded bg-slate-900 border border-slate-800">Julia Integration</span>
+        </a>
+        <span
+          class="hidden md:inline-flex items-center text-xs px-2.5 py-0.5 rounded-full bg-slate-900 text-blue-400 border border-slate-800 font-mono">v1.3.14</span>
+      </div>
+
+      <!-- Center / Search Command Palette trigger -->
+      <div class="flex-1 max-w-md hidden sm:block">
+        <button onclick="openSearchModal()"
+          class="w-full flex items-center justify-between px-3.5 py-1.5 bg-slate-900/90 border border-slate-800 hover:border-slate-700 rounded-lg text-sm text-slate-400 transition shadow-inner group">
+          <div class="flex items-center space-x-2">
+            <svg class="w-4 h-4 text-slate-500 group-hover:text-blue-400 transition-colors" fill="none"
+              stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <span class="text-slate-400 group-hover:text-slate-200">Search constructors, operations...</span>
+          </div>
+          <kbd
+            class="hidden md:inline-block text-[11px] font-mono bg-slate-800 text-slate-400 border border-slate-700 px-1.5 py-0.5 rounded">Ctrl
+            K</kbd>
+        </button>
+      </div>
+
+      <!-- Right Action Links -->
+      <div class="flex items-center space-x-3">
+        <!-- Quick search mobile icon -->
+        <button onclick="openSearchModal()"
+          class="sm:hidden p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition"
+          aria-label="Search">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </button>
+
+        <a href="https://fricas.github.io" target="_blank" rel="noopener"
+          class="hidden lg:inline-flex items-center space-x-1.5 text-xs text-slate-400 hover:text-white px-2.5 py-1 rounded-md hover:bg-slate-800/60 transition">
+          <span>FriCAS Home</span>
+          <svg class="w-3.5 h-3.5 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+          </svg>
+        </a>
+
+        <a href="https://github.com/gvanuxem/jlfricas" target="_blank" rel="noopener"
+          class="flex items-center space-x-1.5 text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800 transition"
+          title="GitHub Repository">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <path fill-rule="evenodd" clip-rule="evenodd"
+              d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Sidebar Backdrop Overlay -->
+  <div id="mobile-backdrop" onclick="toggleMobileSidebar()"
+    class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-40 hidden md:hidden transition-opacity"></div>
+
+  <!-- Main Grid Layout -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-1 flex w-full gap-8 py-6">
+
+    <!-- Left Sidebar -->
+    <aside id="sidebar"
+      class="fixed md:sticky top-0 md:top-20 left-0 h-full md:h-[calc(100vh-6rem)] w-72 md:w-64 shrink-0 bg-slate-950 md:bg-transparent z-50 md:z-auto p-4 md:p-0 -translate-x-full md:translate-x-0 transition-transform duration-200 ease-in-out overflow-y-auto flex flex-col space-y-4 border-r border-slate-800 md:border-r-0">
+
+      <!-- Mobile Close Header -->
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800 md:hidden">
+        <div class="flex items-center space-x-2">
+          <span class="bg-blue-600 text-white px-2 py-0.5 rounded text-xs font-bold">jl</span>
+          <span class="font-bold text-slate-200">Documentation</span>
+        </div>
+        <button onclick="toggleMobileSidebar()"
+          class="p-1 rounded-md text-slate-400 hover:text-white hover:bg-slate-800">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Subsystem Filter Pills -->
+      <div class="flex p-1 bg-slate-900/90 rounded-lg border border-slate-800 text-xs font-medium text-slate-400">
+        <button onclick="setSubsystemFilter('ALL')" id="filter-btn-ALL"
+          class="flex-1 py-1 px-1.5 rounded-md text-center transition bg-blue-600 text-white font-semibold shadow-sm">All</button>
+        <button onclick="setSubsystemFilter('JL')" id="filter-btn-JL"
+          class="flex-1 py-1 px-1.5 rounded-md text-center transition hover:text-slate-200">Julia</button>
+        <button onclick="setSubsystemFilter('NM')" id="filter-btn-NM"
+          class="flex-1 py-1 px-1.5 rounded-md text-center transition hover:text-slate-200">Nemo</button>
+        <button onclick="setSubsystemFilter('WS')" id="filter-btn-WS"
+          class="flex-1 py-1 px-1.5 rounded-md text-center transition hover:text-slate-200">MathLink</button>
+      </div>
+
+      <!-- Quick in-sidebar search input -->
+      <div class="relative">
+        <input type="text" id="sidebar-filter-input" placeholder="Filter constructors..."
+          oninput="handleSidebarFilter(this.value)"
+          class="w-full bg-slate-900 border border-slate-800 text-slate-200 text-xs rounded-lg pl-8 pr-7 py-1.5 focus:outline-none focus:border-blue-500 transition placeholder-slate-500" />
+        <svg class="w-3.5 h-3.5 text-slate-500 absolute left-2.5 top-2.5" fill="none" stroke="currentColor"
+          viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+        <button id="sidebar-filter-clear" onclick="clearSidebarFilter()"
+          class="hidden absolute right-2.5 top-2 text-slate-500 hover:text-slate-300">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Nav Tree Container -->
+      <div class="flex-1 space-y-4 pr-1 overflow-y-auto" id="sidebar-nav-tree">
+        <!-- Overview Link -->
+        <div>
+          <h3 class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 px-2">Overview</h3>
+          <a href="#index.md" onclick="navigate('index.md')" id="nav-item-index"
+            class="flex items-center space-x-2 px-2.5 py-1.5 rounded-md text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition">
+            <svg class="w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+            <span>Home & Architecture</span>
+          </a>
+        </div>
+
+        <!-- Dynamic Group Sections (Categories, Domains, Packages) -->
+        <div id="constructors-section" class="space-y-4">
+          <!-- Populated by JavaScript -->
+          <div class="text-xs text-slate-500 px-2 py-4">Loading constructors catalog...</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Reader Container -->
+    <main class="flex-1 min-w-0">
+
+      <!-- Breadcrumb & Metadata Bar -->
+      <div id="content-header" class="mb-6 hidden">
+        <div class="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-800">
+          <!-- Breadcrumb -->
+          <nav class="flex items-center space-x-2 text-xs text-slate-400">
+            <a href="#index.md" onclick="navigate('index.md')" class="hover:text-slate-200">Docs</a>
+            <span>/</span>
+            <span id="header-group-label" class="text-slate-300">Native Julia</span>
+            <span>/</span>
+            <span id="header-title-label" class="text-blue-400 font-mono font-medium">WSExpression</span>
+          </nav>
+
+          <!-- Badges & Source button -->
+          <div class="flex items-center space-x-2.5" id="header-badges">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Rendered Article Body -->
+      <article id="content" class="prose max-w-none">
+        <div class="flex flex-col items-center justify-center py-24 space-y-4">
+          <div class="animate-spin rounded-full h-9 w-9 border-b-2 border-blue-500"></div>
+          <p class="text-sm text-slate-400">Loading documentation...</p>
+        </div>
+      </article>
+
+      <!-- Bottom Page Navigation Footer -->
+      <div id="content-footer"
+        class="mt-12 pt-6 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400 hidden">
+        <button id="prev-page-btn" onclick="navigatePrev()"
+          class="flex items-center space-x-2 px-3 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+          <div class="text-left">
+            <div class="text-[10px] text-slate-500">PREVIOUS</div>
+            <div id="prev-page-name" class="font-mono">...</div>
+          </div>
+        </button>
+
+        <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
+          class="p-2 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-400 hover:text-white transition"
+          title="Back to top">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+          </svg>
+        </button>
+
+        <button id="next-page-btn" onclick="navigateNext()"
+          class="flex items-center space-x-2 px-3 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white transition">
+          <div class="text-right">
+            <div class="text-[10px] text-slate-500">NEXT</div>
+            <div id="next-page-name" class="font-mono">...</div>
+          </div>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
+    </main>
+
+    <!-- Right Rail: On this Page Table of Contents -->
+    <aside id="toc-rail" class="w-56 shrink-0 hidden lg:block">
+      <div class="sticky top-20 space-y-3">
+        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center space-x-1.5">
+          <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
+          </svg>
+          <span>On this page</span>
+        </h4>
+        <nav id="toc-links" class="space-y-1 text-xs border-l border-slate-800 pl-3">
+          <div class="text-slate-500 text-[11px]">No sections</div>
+        </nav>
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- Global Command Palette / Search Modal -->
+  <div id="search-modal"
+    class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-start justify-center pt-20 px-4">
+    <div onclick="event.stopPropagation()"
+      class="bg-slate-900 border border-slate-800 rounded-xl max-w-xl w-full shadow-2xl overflow-hidden modal-animate flex flex-col max-h-[75vh]">
+
+      <!-- Search Input Header -->
+      <div class="p-3.5 border-b border-slate-800 flex items-center space-x-3 bg-slate-900/90">
+        <svg class="w-5 h-5 text-blue-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+        <input type="text" id="modal-search-input" placeholder="Search constructors, operations, docstrings..."
+          class="w-full bg-transparent border-0 text-slate-100 placeholder-slate-500 text-sm focus:outline-none"
+          oninput="handleModalSearch(this.value)" onkeydown="handleModalKeydown(event)" />
+        <kbd
+          class="text-[10px] font-mono bg-slate-800 text-slate-400 border border-slate-700 px-1.5 py-0.5 rounded">ESC</kbd>
+      </div>
+
+      <!-- Search Results List -->
+      <div id="modal-results-list" class="flex-1 overflow-y-auto p-2 space-y-1 text-sm divide-y divide-slate-800/40">
+        <div class="text-xs text-slate-500 p-4 text-center">Type a query to search constructors...</div>
+      </div>
+
+      <!-- Search Footer -->
+      <div
+        class="px-4 py-2 bg-slate-950 border-t border-slate-800 text-[11px] text-slate-500 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <span><kbd class="bg-slate-800 px-1 rounded text-slate-400">↑</kbd> <kbd
+              class="bg-slate-800 px-1 rounded text-slate-400">↓</kbd> navigate</span>
+          <span><kbd class="bg-slate-800 px-1 rounded text-slate-400">↵</kbd> select</span>
+        </div>
+        <span><span id="search-results-count">0</span> items</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Constructor Catalog Data & SPA Application Logic -->
+  <script>
+    // Embedded Catalog of all Julia-related FriCAS Constructors
+    const GITHUB_BASE = "https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/";
+
+    const CONSTRUCTORS = [
+      // Julia Core & Interop
+      { name: "JLType", abbrev: "JTYPE", kind: "Category", group: "JL", group_name: "Native Julia", file: "julia.spad", line: 1, doc: "Root category for Julia types." },
+      { name: "JLMachineType", abbrev: "JMTYPE", kind: "Category", group: "JL", group_name: "Native Julia", file: "julia.spad", line: 12, doc: "Category for Julia machine-level types." },
+      { name: "JLRing", abbrev: "JRING", kind: "Category", group: "JL", group_name: "Native Julia", file: "julia.spad", line: 22, doc: "Category for Julia ring elements." },
+      { name: "JLCommutativeRing", abbrev: "JCRING", kind: "Category", group: "JL", group_name: "Native Julia", file: "julia.spad", line: 30, doc: "Category for Julia commutative ring elements." },
+      { name: "JLMachineFloat", abbrev: "JMFLOAT", kind: "Category", group: "JL", group_name: "Native Julia", file: "julia.spad", line: 38, doc: "Category for IEEE floating-point types." },
+      { name: "JLArbitraryPrecision", abbrev: "JLARB", kind: "Category", group: "JL", group_name: "Native Julia", file: "jobject.spad", line: 1, doc: "Category for arbitrary precision Julia numbers." },
+      { name: "JLMatrixCategory", abbrev: "JMATCAT", kind: "Category", group: "JL", group_name: "Native Julia", file: "jarray64.spad", line: 1, doc: "Category for 2D matrices backed by Julia arrays." },
+      { name: "JLVectorCategory", abbrev: "JVECCAT", kind: "Category", group: "JL", group_name: "Native Julia", file: "jarray64.spad", line: 8, doc: "Category for 1D vectors backed by Julia arrays." },
+      { name: "JLObjectType", abbrev: "JOBTYPE", kind: "Category", group: "JL", group_name: "Native Julia", file: "jobject.spad", line: 3, doc: "Category for arbitrary Julia objects used within Julia." },
+      { name: "JLObjectAggregate", abbrev: "JOBAGG", kind: "Category", group: "JL", group_name: "Native Julia", file: "jobject.spad", line: 1, doc: "Category for aggregates of Julia objects." },
+      { name: "JLObjectRing", abbrev: "JOBRING", kind: "Category", group: "JL", group_name: "Native Julia", file: "jobject.spad", line: 1, doc: "Ring structures over Julia objects." },
+
+      { name: "JLInt64", abbrev: "JI64", kind: "Domain", group: "JL", group_name: "Native Julia", file: "julia.spad", line: 140, doc: "64-bit signed machine integer mapped to Julia Int64." },
+      { name: "JLFloat32", abbrev: "JF32", kind: "Domain", group: "JL", group_name: "Native Julia", file: "julia.spad", line: 188, doc: "32-bit single precision floating-point number." },
+      { name: "JLFloat64", abbrev: "JF64", kind: "Domain", group: "JL", group_name: "Native Julia", file: "julia.spad", line: 415, doc: "64-bit double precision floating-point number." },
+      { name: "JLComplexF32", abbrev: "JCF32", kind: "Domain", group: "JL", group_name: "Native Julia", file: "julia.spad", line: 388, doc: "32-bit complex floating-point number." },
+      { name: "JLComplexF64", abbrev: "JCF64", kind: "Domain", group: "JL", group_name: "Native Julia", file: "julia.spad", line: 613, doc: "64-bit complex floating-point number." },
+      { name: "JLFloat", abbrev: "JFLOAT", kind: "Domain", group: "JL", group_name: "Native Julia", file: "jobject.spad", line: 100, doc: "Parametric Julia floating-point domain." },
+      { name: "JLComplexFloat", abbrev: "JCFLOAT", kind: "Domain", group: "JL", group_name: "Native Julia", file: "jobject.spad", line: 150, doc: "Parametric Julia complex float domain." },
+      { name: "JLSymbol", abbrev: "JSYM", kind: "Domain", group: "JL", group_name: "Native Julia", file: "julia.spad", line: 108, doc: "Native Julia Symbol handle." },
+      { name: "JLFloat32Vector", abbrev: "JF32VEC", kind: "Domain", group: "JL", group_name: "Native Julia", file: "jarray32.spad", line: 1, doc: "1D vector of Float32 elements." },
+      { name: "JLFloat64Vector", abbrev: "JF64VEC", kind: "Domain", group: "JL", group_name: "Native Julia", file: "jarray64.spad", line: 71, doc: "1D vector of Float64 elements." },
+      { name: "JLInt64Vector", abbrev: "JI64VEC", kind: "Domain", group: "JL", group_name: "Native Julia", file: "jarray64.spad", line: 12, doc: "1D vector of Int64 elements." },
+      { name: "JLComplexF32Vector", abbrev: "JCF32VEC", kind: "Domain", group: "JL", group_name: "Native Julia", file: "jarray32.spad", line: 545, doc: "1D vector of Complex Float32 elements." },
+      { name: "JLComplexF64Vector", abbrev: "JCF64VEC", kind: "Domain", group: "JL", group_name: "Native Julia", file: "jarray64.spad", line: 619, doc: "1D vector of Complex Float64 elements." },
+      { name: "JLFloat32Matrix", abbrev: "JF32MAT", kind: "Domain", group: "JL", group_name: "Native Julia", file: "jarray32.spad", line: 223, doc: "2D matrix of Float32 elements." },
+      { name: "JLFloat64Matrix", abbrev: "JF64MAT", kind: "Domain", group: "JL", group_name: "Native Julia", file: "jarray64.spad", line: 293, doc: "2D matrix of Float64 elements." },
+      { name: "JLF32SquareMatrix", abbrev: "JF32SMAT", kind: "Domain", group: "JL", group_name: "Native Julia", file: "jarray32.spad", line: 505, doc: "Square matrix of Float32 elements." },
+      { name: "JLF64SquareMatrix", abbrev: "JF64SMAT", kind: "Domain", group: "JL", group_name: "Native Julia", file: "jarray64.spad", line: 583, doc: "Square matrix of Float64 elements." },
+      { name: "JLComplexF32Matrix", abbrev: "JCF32MAT", kind: "Domain", group: "JL", group_name: "Native Julia", file: "jarray32.spad", line: 681, doc: "2D matrix of Complex Float32 elements." },
+      { name: "JLComplexF64Matrix", abbrev: "JCF64MAT", kind: "Domain", group: "JL", group_name: "Native Julia", file: "jarray64.spad", line: 751, doc: "2D matrix of Complex Float64 elements." },
+      { name: "JLComplexF32SquareMatrix", abbrev: "JCF32SMA", kind: "Domain", group: "JL", group_name: "Native Julia", file: "jarray32.spad", line: 950, doc: "Square matrix of Complex Float32 elements." },
+      { name: "JLComplexF64SquareMatrix", abbrev: "JCF64SMA", kind: "Domain", group: "JL", group_name: "Native Julia", file: "jarray64.spad", line: 1039, doc: "Square matrix of Complex Float64 elements." },
+      { name: "JLObject", abbrev: "JLOBJ", kind: "Domain", group: "JL", group_name: "Native Julia", file: "jobject.spad", line: 200, doc: "Generic Julia objects used within Julia, and not directly by FriCAS Lisp." },
+      { name: "JLDataFrame", abbrev: "JLDFRAME", kind: "Domain", group: "JL", group_name: "Native Julia", file: "jobject.spad", line: 1200, doc: "Tabular data structure via DataFrames.jl." },
+      { name: "JLObjDict", abbrev: "JLOBDICT", kind: "Domain", group: "JL", group_name: "Native Julia", file: "jobject.spad", line: 1300, doc: "Julia dictionary wrapper." },
+      { name: "JLObjTuple", abbrev: "JLOBTUP", kind: "Domain", group: "JL", group_name: "Native Julia", file: "jobject.spad", line: 1400, doc: "Julia tuple wrapper." },
+      { name: "JLObjNamedTuple", abbrev: "JLOBNTUP", kind: "Domain", group: "JL", group_name: "Native Julia", file: "jobject.spad", line: 1450, doc: "Julia named tuple wrapper." },
+      { name: "JLObjPair", abbrev: "JLOBPAIR", kind: "Domain", group: "JL", group_name: "Native Julia", file: "jobject.spad", line: 1500, doc: "Julia pair wrapper." },
+      { name: "JLObjBigInt", abbrev: "JLOBINT", kind: "Domain", group: "JL", group_name: "Native Julia", file: "jobject.spad", line: 600, doc: "Julia arbitrary precision BigInt wrapper." },
+      { name: "JLObjRational", abbrev: "JLOBRAT", kind: "Domain", group: "JL", group_name: "Native Julia", file: "jobject.spad", line: 700, doc: "Julia rational number wrapper." },
+      { name: "JLObjFunction", abbrev: "JLOBFUNC", kind: "Domain", group: "JL", group_name: "Native Julia", file: "jobject.spad", line: 1600, doc: "Julia callable function object." },
+      { name: "JLObjAnonymousFunction", abbrev: "JLOBAFUNC", kind: "Domain", group: "JL", group_name: "Native Julia", file: "jobject.spad", line: 1650, doc: "Julia lambda / anonymous function handle." },
+      { name: "JLObjPy", abbrev: "JLOBPY", kind: "Domain", group: "JL", group_name: "Native Julia", file: "jobject.spad", line: 1800, doc: "Python object proxy via Julia PyCall." },
+      { name: "JLObjR", abbrev: "JLOBR", kind: "Domain", group: "JL", group_name: "Native Julia", file: "jobject.spad", line: 1900, doc: "R object proxy via Julia RCall." },
+      { name: "JLObjBool", abbrev: "JOBBOOL", kind: "Domain", group: "JL", group_name: "Native Julia", file: "jimobject.spad", line: 2, doc: "Julia Bool wrapper for immutable boolean values." },
+      { name: "JLObjFloat32", abbrev: "JOBF32", kind: "Domain", group: "JL", group_name: "Native Julia", file: "jimobject.spad", line: 31, doc: "Julia Float32 immutable object wrapper." },
+      { name: "JLObjFloat64", abbrev: "JOBF64", kind: "Domain", group: "JL", group_name: "Native Julia", file: "jimobject.spad", line: 164, doc: "Julia Float64 immutable object wrapper." },
+      { name: "JLObjComplexF32", abbrev: "JOBCF32", kind: "Domain", group: "JL", group_name: "Native Julia", file: "jimobject.spad", line: 302, doc: "Julia ComplexF32 immutable object wrapper." },
+      { name: "JLObjComplexF64", abbrev: "JOBCF64", kind: "Domain", group: "JL", group_name: "Native Julia", file: "jimobject.spad", line: 366, doc: "Julia ComplexF64 immutable object wrapper." },
+      { name: "JLObjUInt64", abbrev: "JOBUI64", kind: "Domain", group: "JL", group_name: "Native Julia", file: "jimobject.spad", line: 430, doc: "Julia UInt64 immutable object wrapper." },
+      { name: "JLObjInt64", abbrev: "JOBI64", kind: "Domain", group: "JL", group_name: "Native Julia", file: "jimobject.spad", line: 520, doc: "Julia Int64 immutable object wrapper." },
+      { name: "JLVector", abbrev: "JVECTOR", kind: "Domain", group: "JL", group_name: "Native Julia", file: "jobject.spad", line: 1483, doc: "1D vector of Julia object ring elements." },
+      { name: "JLMatrix", abbrev: "JMATRIX", kind: "Domain", group: "JL", group_name: "Native Julia", file: "jobject.spad", line: 1659, doc: "2D matrix of Julia object ring elements." },
+      { name: "JLObjDynamicLinker", abbrev: "JOBDLINK", kind: "Domain", group: "JL", group_name: "Native Julia", file: "jutils.spad", line: 328, doc: "Dynamic library linking helper." },
+
+      { name: "JLUtilityFunctions", abbrev: "JUF", kind: "Package", group: "JL", group_name: "Native Julia", file: "jutils.spad", line: 1, doc: "Core Lisp-Julia memory bridge and evaluation routines." },
+      { name: "JLStringUtilities", abbrev: "JSTRU", kind: "Package", group: "JL", group_name: "Native Julia", file: "jutils.spad", line: 164, doc: "Fast string operations via Julia." },
+      { name: "JLF32ArrayFunctions", abbrev: "JF32AF", kind: "Package", group: "JL", group_name: "Native Julia", file: "jafunctions.spad", line: 1, doc: "Utility package for Julia functions applied to 32-bit arrays." },
+      { name: "JLF64ArrayFunctions", abbrev: "JF64AF", kind: "Package", group: "JL", group_name: "Native Julia", file: "jafunctions.spad", line: 147, doc: "Utility package for Julia functions applied to 64-bit arrays." },
+      { name: "JLF32LinearAlgebra", abbrev: "JF32LA", kind: "Package", group: "JL", group_name: "Native Julia", file: "jla32.spad", line: 1, doc: "LAPACK and BLAS linear algebra for Float32." },
+      { name: "JLF64LinearAlgebra", abbrev: "JF64LA", kind: "Package", group: "JL", group_name: "Native Julia", file: "jla64.spad", line: 1, doc: "LAPACK and BLAS linear algebra for Float64." },
+      { name: "JLCF32LinearAlgebra", abbrev: "JCF32LA", kind: "Package", group: "JL", group_name: "Native Julia", file: "jla32.spad", line: 399, doc: "LAPACK and BLAS linear algebra for Complex Float32." },
+      { name: "JLCF64LinearAlgebra", abbrev: "JCF64LA", kind: "Package", group: "JL", group_name: "Native Julia", file: "jla64.spad", line: 399, doc: "LAPACK and BLAS linear algebra for Complex Float64." },
+      { name: "JLF64MatrixTranscendentalFunctions", abbrev: "JF64MTF", kind: "Package", group: "JL", group_name: "Native Julia", file: "jla64.spad", line: 676, doc: "Matrix exp, log, sin, cos for Float64." },
+      { name: "JLF32MatrixTranscendentalFunctions", abbrev: "JF32MTF", kind: "Package", group: "JL", group_name: "Native Julia", file: "jla32.spad", line: 670, doc: "Matrix exp, log, sin, cos for Float32." },
+      { name: "JLComplexF32MatrixTranscendentalFunctions", abbrev: "JCF32MTF", kind: "Package", group: "JL", group_name: "Native Julia", file: "jla32.spad", line: 992, doc: "Matrix transcendental functions for Complex Float32." },
+      { name: "JLComplexF64MatrixTranscendentalFunctions", abbrev: "JCF64MTF", kind: "Package", group: "JL", group_name: "Native Julia", file: "jla64.spad", line: 998, doc: "Matrix transcendental functions for Complex Float64." },
+      { name: "JLFloatSpecialFunctions", abbrev: "JFSF", kind: "Package", group: "JL", group_name: "Native Julia", file: "jfsf.spad", line: 1, doc: "High-precision numerical special functions via Julia." },
+      { name: "JLFloatSpecialFunctions2", abbrev: "JFSF2", kind: "Package", group: "JL", group_name: "Native Julia", file: "jfsf2.spad", line: 1, doc: "Extended special functions bindings." },
+      { name: "JLFloat32SpecialFunctions", abbrev: "JF32SF", kind: "Package", group: "JL", group_name: "Native Julia", file: "jf32sf.spad", line: 1, doc: "Float32 special functions." },
+      { name: "JLFloat32SpecialFunctions2", abbrev: "JF32SF2", kind: "Package", group: "JL", group_name: "Native Julia", file: "jf32sf2.spad", line: 1, doc: "Single precision special functions." },
+      { name: "JLFloat64SpecialFunctions", abbrev: "JF64SF", kind: "Package", group: "JL", group_name: "Native Julia", file: "jf64sf.spad", line: 1, doc: "Float64 special functions." },
+      { name: "JLFloat64SpecialFunctions2", abbrev: "JF64SF2", kind: "Package", group: "JL", group_name: "Native Julia", file: "jf64sf2.spad", line: 1, doc: "Double precision special functions." },
+      { name: "JLComplexFloatSpecialFunctions", abbrev: "JCFSF", kind: "Package", group: "JL", group_name: "Native Julia", file: "jcfsf.spad", line: 1, doc: "Complex special functions." },
+      { name: "JLFloat32VectorFunctions2", abbrev: "JF32VEC2", kind: "Package", group: "JL", group_name: "Native Julia", file: "jarray32.spad", line: 170, doc: "Utility functions for Float32 vectors." },
+      { name: "JLFloat64VectorFunctions2", abbrev: "JF64VEC2", kind: "Package", group: "JL", group_name: "Native Julia", file: "jarray64.spad", line: 242, doc: "Utility functions for Float64 vectors." },
+      { name: "JLVectorFunctions2", abbrev: "JVECTOR2", kind: "Package", group: "JL", group_name: "Native Julia", file: "jobject.spad", line: 1612, doc: "Utility functions for JLVector." },
+      { name: "JLPlotFunctions", abbrev: "JPLOT", kind: "Package", group: "JL", group_name: "Native Julia", file: "jplot.spad", line: 1, doc: "2D and 3D data visualization routines via Julia." },
+      { name: "JLDrawFunctions", abbrev: "JDRAW", kind: "Package", group: "JL", group_name: "Native Julia", file: "jplot.spad", line: 410, doc: "Parametric curve and surface drawing routines." },
+
+      // Nemo / FLINT Subsystem
+      { name: "NMType", abbrev: "NMTYPE", kind: "Category", group: "NM", group_name: "Nemo / FLINT", file: "jnemo.spad", line: 1, doc: "Root category for all Nemo / FLINT types." },
+      { name: "NMRing", abbrev: "NMRING", kind: "Category", group: "NM", group_name: "Nemo / FLINT", file: "jnemo.spad", line: 50, doc: "Category for Nemo ring structures." },
+      { name: "NMCommutativeRing", abbrev: "NMCRING", kind: "Category", group: "NM", group_name: "Nemo / FLINT", file: "jnemo.spad", line: 100, doc: "Category for Nemo commutative rings." },
+      { name: "NMField", abbrev: "NMFIELD", kind: "Category", group: "NM", group_name: "Nemo / FLINT", file: "jnemo.spad", line: 150, doc: "Category for Nemo field structures." },
+      { name: "NMPolynomialCategory", abbrev: "NPC", kind: "Category", group: "NM", group_name: "Nemo / FLINT", file: "jnpoly.spad", line: 1, doc: "Category for polynomials over Nemo coefficients." },
+      { name: "NMUnivariatePolynomialCategory", abbrev: "NUPC", kind: "Category", group: "NM", group_name: "Nemo / FLINT", file: "jnpoly.spad", line: 9, doc: "Category for univariate polynomials over Nemo." },
+      { name: "NMPadicNumberCategory", abbrev: "NMPADICCAT", kind: "Category", group: "NM", group_name: "Nemo / FLINT", file: "jnpadic.spad", line: 1, doc: "Category for p-adic number representations." },
+
+      { name: "NMInteger", abbrev: "NMINT", kind: "Domain", group: "NM", group_name: "Nemo / FLINT", file: "jnemo.spad", line: 200, doc: "Nemo integers via FLINT fmpz." },
+      { name: "NMFraction", abbrev: "NMFRAC", kind: "Domain", group: "NM", group_name: "Nemo / FLINT", file: "jnemo.spad", line: 300, doc: "Nemo rationals via FLINT fmpq." },
+      { name: "NMRealField", abbrev: "NRF", kind: "Domain", group: "NM", group_name: "Nemo / FLINT", file: "jnball.spad", line: 941, doc: "Real field backed by Arb real numbers." },
+      { name: "NMComplexField", abbrev: "NCF", kind: "Domain", group: "NM", group_name: "Nemo / FLINT", file: "jnball.spad", line: 1385, doc: "Complex field backed by Acb complex numbers." },
+      { name: "NMRealBall", abbrev: "NRB", kind: "Domain", group: "NM", group_name: "Nemo / FLINT", file: "jnball.spad", line: 458, doc: "Real interval ball arithmetic with certified error radius." },
+      { name: "NMComplexBall", abbrev: "NCB", kind: "Domain", group: "NM", group_name: "Nemo / FLINT", file: "jnball.spad", line: 936, doc: "Complex interval ball arithmetic with certified error radius." },
+      { name: "NMArbField", abbrev: "NARB", kind: "Domain", group: "NM", group_name: "Nemo / FLINT", file: "jnball.spad", line: 1, doc: "Arbitrary-precision real Arb field." },
+      { name: "NMAcbField", abbrev: "NACB", kind: "Domain", group: "NM", group_name: "Nemo / FLINT", file: "jnball.spad", line: 463, doc: "Arbitrary-precision complex Acb field." },
+      { name: "NMAlgebraicNumber", abbrev: "NMAN", kind: "Domain", group: "NM", group_name: "Nemo / FLINT", file: "jnemo.spad", line: 400, doc: "Exact algebraic numbers via Antic / FLINT." },
+      { name: "NMExactCalciumField", abbrev: "NMECALCF", kind: "Domain", group: "NM", group_name: "Nemo / FLINT", file: "jnemo.spad", line: 500, doc: "Exact real and complex numbers via Calcium." },
+      { name: "NMPrimeField", abbrev: "NMPF", kind: "Domain", group: "NM", group_name: "Nemo / FLINT", file: "jnemo.spad", line: 600, doc: "Finite field Fp with prime characteristic." },
+      { name: "NMFiniteField", abbrev: "NMFF", kind: "Domain", group: "NM", group_name: "Nemo / FLINT", file: "jnemo.spad", line: 700, doc: "Finite field Fq via FLINT fq_nmod." },
+      { name: "NMIntegerMod", abbrev: "NMZMOD", kind: "Domain", group: "NM", group_name: "Nemo / FLINT", file: "jnemo.spad", line: 800, doc: "Modular integer ring Z/nZ." },
+      { name: "NMResidueRing", abbrev: "NMRESRING", kind: "Domain", group: "NM", group_name: "Nemo / FLINT", file: "jnemo.spad", line: 900, doc: "Quotient residue ring over Nemo elements." },
+      { name: "NMResidueField", abbrev: "NMRESFIELD", kind: "Domain", group: "NM", group_name: "Nemo / FLINT", file: "jnemo.spad", line: 1000, doc: "Quotient residue field over Nemo elements." },
+      { name: "NMUnivariatePolynomial", abbrev: "NUP", kind: "Domain", group: "NM", group_name: "Nemo / FLINT", file: "jnpoly.spad", line: 18, doc: "Fast univariate polynomials via FLINT." },
+      { name: "NMMultivariatePolynomial", abbrev: "NMP", kind: "Domain", group: "NM", group_name: "Nemo / FLINT", file: "jnpoly.spad", line: 1480, doc: "Fast multivariate polynomials via FLINT." },
+      { name: "NMUnivariateLaurentPolynomial", abbrev: "NULP", kind: "Domain", group: "NM", group_name: "Nemo / FLINT", file: "jnpoly.spad", line: 398, doc: "Univariate Laurent polynomials." },
+      { name: "NMMultivariateLaurentPolynomial", abbrev: "NMLP", kind: "Domain", group: "NM", group_name: "Nemo / FLINT", file: "jnpoly.spad", line: 1513, doc: "Multivariate Laurent polynomials." },
+      { name: "NMUnivariatePowerSeries", abbrev: "NUPS", kind: "Domain", group: "NM", group_name: "Nemo / FLINT", file: "jnseries.spad", line: 1, doc: "Truncated power series over Nemo rings." },
+      { name: "NMUnivariateLaurentSeries", abbrev: "NULS", kind: "Domain", group: "NM", group_name: "Nemo / FLINT", file: "jnseries.spad", line: 195, doc: "Laurent series expansions over Nemo rings." },
+      { name: "NMUnivariatePuiseuxSeries", abbrev: "NUPXS", kind: "Domain", group: "NM", group_name: "Nemo / FLINT", file: "jnseries.spad", line: 355, doc: "Fractional-exponent Puiseux series." },
+      { name: "NMPadicInteger", abbrev: "NMPADICINT", kind: "Domain", group: "NM", group_name: "Nemo / FLINT", file: "jnpadic.spad", line: 50, doc: "p-adic integers Z_p via FLINT." },
+      { name: "NMPadicRational", abbrev: "NMPADICRAT", kind: "Domain", group: "NM", group_name: "Nemo / FLINT", file: "jnpadic.spad", line: 150, doc: "p-adic rationals Q_p via FLINT." },
+      { name: "NMExtendedPadicInteger", abbrev: "NMEXPADICINT", kind: "Domain", group: "NM", group_name: "Nemo / FLINT", file: "jnpadic.spad", line: 250, doc: "Extended p-adic integers." },
+      { name: "NMExtendedPadicRational", abbrev: "NMEXPADICRAT", kind: "Domain", group: "NM", group_name: "Nemo / FLINT", file: "jnpadic.spad", line: 350, doc: "Extended p-adic rationals." },
+      { name: "NMFactored", abbrev: "NMFACT", kind: "Domain", group: "NM", group_name: "Nemo / FLINT", file: "jnemo.spad", line: 1100, doc: "Factored algebraic structures over Nemo." },
+      { name: "NMPadic2", abbrev: "NPADIC2", kind: "Domain", group: "NM", group_name: "Nemo / FLINT", file: "jnpadic.spad", line: 239, doc: "2-adic numbers via FLINT." },
+      { name: "NMPolynomial", abbrev: "NPOLY", kind: "Domain", group: "NM", group_name: "Nemo / FLINT", file: "jnpoly.spad", line: 1053, doc: "Polynomial domain over Nemo coefficients." },
+
+      // MathLink Subsystem
+      { name: "WSObject", abbrev: "WSO", kind: "Category", group: "WS", group_name: "MathLink", file: "jws.spad", line: 1, doc: "Root category for all WS object types using WSTP." },
+      { name: "WSNumber", abbrev: "WSNUM", kind: "Category", group: "WS", group_name: "MathLink", file: "jws.spad", line: 100, doc: "Category for WS numeric objects." },
+      { name: "WSRing", abbrev: "WSRING", kind: "Category", group: "WS", group_name: "MathLink", file: "jws.spad", line: 200, doc: "Category for WS algebraic ring elements." },
+      { name: "WSAggregate", abbrev: "WSAGG", kind: "Category", group: "WS", group_name: "MathLink", file: "jwsagg.spad", line: 1, doc: "Category for WS aggregate structures (lists, vectors, matrices)." },
+
+      { name: "WSExpression", abbrev: "WSEXPR", kind: "Domain", group: "WS", group_name: "MathLink", file: "jwsexpr.spad", line: 1, doc: "Generic symbolic WS expression." },
+      { name: "WSSymbol", abbrev: "WSSYM", kind: "Domain", group: "WS", group_name: "MathLink", file: "jws.spad", line: 300, doc: "WS Symbol handle." },
+      { name: "WSString", abbrev: "WSSTR", kind: "Domain", group: "WS", group_name: "MathLink", file: "jws.spad", line: 400, doc: "WS String handle." },
+      { name: "WSInteger", abbrev: "WSINT", kind: "Domain", group: "WS", group_name: "MathLink", file: "jws.spad", line: 500, doc: "Arbitrary-precision WS Integer." },
+      { name: "WSRational", abbrev: "WSRAT", kind: "Domain", group: "WS", group_name: "MathLink", file: "jws.spad", line: 600, doc: "Exact WS Rational." },
+      { name: "WSReal", abbrev: "WSREAL", kind: "Domain", group: "WS", group_name: "MathLink", file: "jws.spad", line: 700, doc: "Machine-precision WS Real." },
+      { name: "WSAPReal", abbrev: "WSAPREAL", kind: "Domain", group: "WS", group_name: "MathLink", file: "jws.spad", line: 800, doc: "Arbitrary-precision WS Real." },
+      { name: "WSComplex", abbrev: "WSCMPLX", kind: "Domain", group: "WS", group_name: "MathLink", file: "jws.spad", line: 900, doc: "Machine-precision WS Complex." },
+      { name: "WSAPComplex", abbrev: "WSAPCMPLX", kind: "Domain", group: "WS", group_name: "MathLink", file: "jws.spad", line: 1000, doc: "Arbitrary-precision WS Complex." },
+      { name: "WSGaussianInteger", abbrev: "WSGAUSS", kind: "Domain", group: "WS", group_name: "MathLink", file: "jws.spad", line: 1100, doc: "WS Gaussian integer Z[i]." },
+      { name: "WSList", abbrev: "WSLIST", kind: "Domain", group: "WS", group_name: "MathLink", file: "jwsagg.spad", line: 50, doc: "WS List aggregate." },
+      { name: "WSVector", abbrev: "WSVEC", kind: "Domain", group: "WS", group_name: "MathLink", file: "jwsagg.spad", line: 200, doc: "WS 1D vector aggregate." },
+      { name: "WSMatrix", abbrev: "WSMAT", kind: "Domain", group: "WS", group_name: "MathLink", file: "jwsagg.spad", line: 400, doc: "WS 2D matrix aggregate." },
+
+      { name: "WSNumericalSpecialFunctions", abbrev: "WSNSF", kind: "Package", group: "WS", group_name: "MathLink", file: "jwsnsf.spad", line: 1, doc: "High-precision numerical evaluation of special functions." },
+      { name: "WSUtilityFunctions", abbrev: "WSUF", kind: "Package", group: "WS", group_name: "MathLink", file: "jwsutils.spad", line: 1, doc: "Utility routines for MathLink kernel communication." }
+    ];
+
+    // State Variables
+    let currentSubsystem = 'ALL';
+    let currentSearchFilter = '';
+    let currentPage = '';
+    let activeModalIndex = 0;
+    let modalResults = [];
+
+    // Initialize Marked Markdown Renderer
+    marked.setOptions({
+      gfm: true,
+      breaks: false,
+      highlight: function (code, lang) {
+        if (Prism.languages[lang]) {
+          return Prism.highlight(code, Prism.languages[lang], lang);
+        } else if (lang === 'fricas' || lang === 'spad') {
+          return Prism.highlight(code, Prism.languages.lisp || Prism.languages.clike, lang);
+        }
+        return code;
+      }
+    });
+
+    // Subsystem Filtering
+    function setSubsystemFilter(subsystem) {
+      currentSubsystem = subsystem;
+      ['ALL', 'JL', 'NM', 'WS'].forEach(s => {
+        const btn = document.getElementById(`filter-btn-${s}`);
+        if (s === subsystem) {
+          btn.className = "flex-1 py-1 px-1.5 rounded-md text-center transition bg-blue-600 text-white font-semibold shadow-sm";
+        } else {
+          btn.className = "flex-1 py-1 px-1.5 rounded-md text-center transition text-slate-400 hover:text-slate-200";
+        }
+      });
+      renderSidebar();
+    }
+
+    function handleSidebarFilter(val) {
+      currentSearchFilter = val.trim().toLowerCase();
+      const clearBtn = document.getElementById('sidebar-filter-clear');
+      if (currentSearchFilter) {
+        clearBtn.classList.remove('hidden');
+      } else {
+        clearBtn.classList.add('hidden');
+      }
+      renderSidebar();
+    }
+
+    function clearSidebarFilter() {
+      const input = document.getElementById('sidebar-filter-input');
+      input.value = '';
+      currentSearchFilter = '';
+      document.getElementById('sidebar-filter-clear').classList.add('hidden');
+      renderSidebar();
+    }
+
+    // Render Left Sidebar Navigation
+    function renderSidebar() {
+      const container = document.getElementById('constructors-section');
+
+      const filtered = CONSTRUCTORS.filter(c => {
+        const matchSub = currentSubsystem === 'ALL' || c.group === currentSubsystem;
+        const matchSearch = !currentSearchFilter ||
+          c.name.toLowerCase().includes(currentSearchFilter) ||
+          c.abbrev.toLowerCase().includes(currentSearchFilter) ||
+          c.doc.toLowerCase().includes(currentSearchFilter);
+        return matchSub && matchSearch;
+      });
+
+      const kinds = ['Category', 'Domain', 'Package'];
+      let html = '';
+
+      kinds.forEach(kind => {
+        const items = filtered.filter(c => c.kind === kind);
+        if (items.length === 0) return;
+
+        const badgeColor = kind === 'Category' ? 'bg-purple-950 text-purple-300 border-purple-800' :
+          kind === 'Domain' ? 'bg-amber-950 text-amber-300 border-amber-800' :
+            'bg-emerald-950 text-emerald-300 border-emerald-800';
+
+        html += `
+          <div class="space-y-1">
+            <div class="flex items-center justify-between px-2 py-1">
+              <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">${kind}s</span>
+              <span class="text-[10px] px-1.5 py-0.2 rounded border ${badgeColor} font-mono">${items.length}</span>
+            </div>
+            <div class="space-y-0.5 max-h-72 overflow-y-auto pr-1">
+              ${items.map(item => {
+          const isActive = currentPage === item.name || currentPage === `${item.name}.md`;
+          const activeClass = isActive
+            ? 'bg-blue-600/20 text-blue-300 border-l-2 border-blue-500 font-semibold pl-2'
+            : 'text-slate-400 hover:text-slate-100 hover:bg-slate-900/60 pl-2.5';
+
+          return `
+                  <a href="#${item.name}" onclick="navigate('${item.name}')" id="nav-item-${item.name}"
+                    class="block py-1 pr-2 rounded-md text-xs font-mono truncate transition ${activeClass}"
+                    title="${item.name} (${item.abbrev}): ${item.doc}">
+                    ${item.name}
+                  </a>
+                `;
+        }).join('')}
+            </div>
+          </div>
+        `;
+      });
+
+      if (filtered.length === 0) {
+        html = '<div class="text-xs text-slate-500 px-2 py-4 text-center">No constructors found</div>';
+      }
+
+      container.innerHTML = html;
+    }
+
+    // Navigation & Page Loading
+    async function navigate(pageTarget, anchorTarget = '') {
+      if (!pageTarget) pageTarget = 'index.md';
+      currentPage = pageTarget.replace('constructors/', '').replace('.md', '');
+
+      // Close mobile sidebar if open
+      closeMobileSidebar();
+
+      // Update sidebar active highlights
+      renderSidebar();
+      const overviewLink = document.getElementById('nav-item-index');
+      if (overviewLink) {
+        if (currentPage === 'index' || pageTarget === 'index.md') {
+          overviewLink.className = "flex items-center space-x-2 px-2.5 py-1.5 rounded-md text-xs font-semibold text-blue-300 bg-blue-600/20 border-l-2 border-blue-500";
+        } else {
+          overviewLink.className = "flex items-center space-x-2 px-2.5 py-1.5 rounded-md text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition";
+        }
+      }
+
+      const contentEl = document.getElementById('content');
+      const headerEl = document.getElementById('content-header');
+      const footerEl = document.getElementById('content-footer');
+
+      contentEl.innerHTML = `
+        <div class="flex flex-col items-center justify-center py-24 space-y-4">
+          <div class="animate-spin rounded-full h-9 w-9 border-b-2 border-blue-500"></div>
+          <p class="text-sm text-slate-400">Loading ${currentPage}...</p>
+        </div>
+      `;
+
+      try {
+        let markdownText = '';
+        const isIndex = (currentPage === 'index' || pageTarget === 'index.md');
+        const cMeta = CONSTRUCTORS.find(c => c.name === currentPage);
+
+        if (isIndex) {
+          headerEl.classList.add('hidden');
+          const res = await fetch('index.md');
+          if (!res.ok) throw new Error(`Could not load index.md (HTTP ${res.status})`);
+          markdownText = await res.text();
+        } else {
+          // Attempt to fetch from constructors/${currentPage}.md
+          let loaded = false;
+          try {
+            const res = await fetch(`constructors/${currentPage}.md`);
+            if (res.ok) {
+              markdownText = await res.text();
+              loaded = true;
+            }
+          } catch (e) {
+            loaded = false;
+          }
+
+          // If no markdown file on disk, render from embedded catalog fallback
+          if (!loaded) {
+            if (cMeta) {
+              markdownText = generateCatalogDoc(cMeta);
+            } else {
+              throw new Error(`Constructor '${currentPage}' not found in registry.`);
+            }
+          }
+
+          // Show Header Bar
+          renderHeaderBar(cMeta || { name: currentPage, kind: 'Constructor', group_name: 'jlFriCAS', abbrev: '' });
+          headerEl.classList.remove('hidden');
+        }
+
+        // Post-process Markdown Links to anchor tags
+        markdownText = markdownText.replace(/\[([^\]]+)\]\((?:\.\.\/|\.\/)?(?:constructors\/)?([^)#]+\.md)(#[^)]*)?\)/g, (m, text, fileName, anchor) => {
+          const targetName = fileName.replace(/\.md$/, '');
+          const anchorPart = anchor || '';
+          return `[${text}](#${targetName}${anchorPart})`;
+        });
+
+        // Parse Markdown with marked
+        const rawHtml = marked.parse(markdownText);
+        contentEl.innerHTML = rawHtml;
+
+        // Render KaTeX Math Expressions
+        if (typeof renderMathInElement !== 'undefined') {
+          renderMathInElement(contentEl, {
+            delimiters: [
+              { left: '$$', right: '$$', display: true },
+              { left: '$', right: '$', display: false },
+              { left: '\\[', right: '\\]', display: true },
+              { left: '\\(', right: '\\)', display: false }
+            ],
+            throwOnError: false
+          });
+        }
+
+        // Render Mermaid Diagrams
+        if (typeof mermaid !== 'undefined') {
+          try {
+            mermaid.initialize({ startOnLoad: false, theme: 'dark', themeVariables: { darkMode: true, background: '#0f172a', primaryColor: '#1e293b', primaryBorderColor: '#3b82f6', primaryTextColor: '#f8fafc' } });
+            const mermaidNodes = contentEl.querySelectorAll('code.language-mermaid, pre code.language-mermaid');
+            mermaidNodes.forEach((node) => {
+              const pre = node.closest('pre');
+              const container = document.createElement('div');
+              container.className = 'mermaid my-6 flex justify-center bg-slate-900/80 p-6 rounded-xl border border-slate-800 text-sm overflow-x-auto';
+              container.textContent = node.textContent;
+              if (pre) {
+                pre.parentNode.replaceChild(container, pre);
+              } else {
+                node.parentNode.replaceChild(container, node);
+              }
+            });
+            mermaid.run({ nodes: contentEl.querySelectorAll('.mermaid') });
+          } catch (e) {
+            console.error('Mermaid render error:', e);
+          }
+        }
+
+        // Wrap code blocks and add Copy buttons
+        enhanceCodeBlocks();
+
+        // Build Right-side Table of Contents
+        buildTableOfContents();
+
+        // Update Previous / Next Footer Links
+        updateFooterNav(currentPage);
+        footerEl.classList.remove('hidden');
+
+        // Scroll to target anchor if specified, otherwise top
+        if (anchorTarget) {
+          setTimeout(() => {
+            const targetEl = document.getElementById(anchorTarget) || document.querySelector(`[name="${anchorTarget}"]`) || document.querySelector(`a[id="${anchorTarget}"]`);
+            if (targetEl) {
+              targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+          }, 100);
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+      } catch (err) {
+        headerEl.classList.add('hidden');
+        footerEl.classList.add('hidden');
+        contentEl.innerHTML = `
+          <div class="bg-red-950/30 border border-red-800/60 rounded-xl p-8 text-red-200">
+            <div class="flex items-center space-x-3 mb-3">
+              <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+              <h2 class="text-xl font-bold text-red-300">Document Unavailable</h2>
+            </div>
+            <p class="text-sm font-mono mb-4 text-red-300/80">${err.message}</p>
+            <a href="#index.md" onclick="navigate('index.md')" class="inline-flex items-center space-x-2 px-4 py-2 rounded-lg bg-red-900/60 hover:bg-red-900 border border-red-700 text-white text-xs font-semibold transition">
+              <span>Return to Overview</span>
+            </a>
+          </div>
+        `;
+      }
+    }
+
+    // Dynamic Header Metadata Bar
+    function renderHeaderBar(meta) {
+      document.getElementById('header-group-label').textContent = meta.group_name || 'jlFriCAS';
+      document.getElementById('header-title-label').textContent = meta.name;
+
+      const badgeContainer = document.getElementById('header-badges');
+      const kindBadge = meta.kind === 'Category' ? 'bg-purple-950 text-purple-300 border-purple-800' :
+        meta.kind === 'Domain' ? 'bg-amber-950 text-amber-300 border-amber-800' :
+          'bg-emerald-950 text-emerald-300 border-emerald-800';
+
+      const groupBadge = meta.group === 'JL' ? 'bg-blue-950 text-blue-300 border-blue-800' :
+        meta.group === 'NM' ? 'bg-teal-950 text-teal-300 border-teal-800' :
+          'bg-indigo-950 text-indigo-300 border-indigo-800';
+
+      let sourceLink = '';
+      if (meta.file) {
+        const url = `${GITHUB_BASE}${meta.file}#L${meta.line || 1}`;
+        sourceLink = `
+          <a href="${url}" target="_blank" rel="noopener" class="inline-flex items-center space-x-1.5 text-xs px-2.5 py-1 rounded-md bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 transition" title="View Source in GitHub">
+            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            <span>Source</span>
+          </a>
+        `;
+      }
+
+      badgeContainer.innerHTML = `
+        <span class="text-xs px-2.5 py-0.5 rounded-full border ${kindBadge} font-medium">${meta.kind}</span>
+        <span class="text-xs px-2.5 py-0.5 rounded-full border ${groupBadge} font-medium">${meta.group_name}</span>
+        ${meta.abbrev ? `<span class="text-xs px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-400 font-mono">Abbrev: ${meta.abbrev}</span>` : ''}
+        ${sourceLink}
+      `;
+    }
+
+    // Dynamic Catalog Fallback Document Generator
+    function generateCatalogDoc(meta) {
+      const sourceUrl = `${GITHUB_BASE}${meta.file}#L${meta.line || 1}`;
+      return `
+# ${meta.name}
+
+> **Kind**: ${meta.kind} &nbsp;|&nbsp; \\[[Source](${sourceUrl})\\] &nbsp;|&nbsp; **Group**: ${meta.group_name}
+
+## Description
+
+${meta.doc || "FriCAS constructor provided by the Julia integration."}
+
+**${meta.name} is a ${meta.kind.toLowerCase()} constructor**  
+**Abbreviation**: \`${meta.abbrev}\`  
+**Defined in**: \`${meta.file}\`
+
+## Source Definition
+
+View the full SPAD implementation in [${meta.file}](${sourceUrl}).
+
+---
+[Back to Index](#index.md)
+      `;
+    }
+
+    // Enhance Code Blocks with Copy Buttons & Language Badges
+    function enhanceCodeBlocks() {
+      const pres = document.querySelectorAll('#content pre');
+      pres.forEach(pre => {
+        const code = pre.querySelector('code');
+        if (!code) return;
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'code-block-wrapper';
+
+        let lang = 'fricas';
+        const classes = code.className.split(' ');
+        classes.forEach(c => {
+          if (c.startsWith('language-')) lang = c.replace('language-', '');
+        });
+
+        const header = document.createElement('div');
+        header.className = 'code-block-header';
+        header.innerHTML = `
+          <span>${lang.toUpperCase()}</span>
+          <button class="copy-btn" onclick="copySnippet(this)">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+            <span>Copy</span>
+          </button>
+        `;
+
+        pre.parentNode.insertBefore(wrapper, pre);
+        wrapper.appendChild(header);
+        wrapper.appendChild(pre);
+      });
+    }
+
+    // Copy Code Snippet Helper
+    function copySnippet(button) {
+      const pre = button.closest('.code-block-wrapper').querySelector('pre');
+      const text = pre.innerText;
+
+      navigator.clipboard.writeText(text).then(() => {
+        const originalHtml = button.innerHTML;
+        button.innerHTML = `
+          <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          <span class="text-emerald-400 font-semibold">Copied!</span>
+        `;
+        button.style.borderColor = 'rgba(52, 211, 153, 0.7)';
+        setTimeout(() => {
+          button.innerHTML = originalHtml;
+          button.style.borderColor = '';
+        }, 2000);
+      });
+    }
+
+    // Dynamic Table of Contents (On this page)
+    function buildTableOfContents() {
+      const linksContainer = document.getElementById('toc-links');
+      const headings = document.querySelectorAll('#content h2, #content h3');
+
+      if (headings.length === 0) {
+        linksContainer.innerHTML = '<div class="text-slate-500 text-[11px]">No sections</div>';
+        return;
+      }
+
+      linksContainer.innerHTML = Array.from(headings).map((h, i) => {
+        if (!h.id) {
+          h.id = 'heading-' + i + '-' + h.textContent.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+        }
+        const isH3 = h.tagName === 'H3';
+        const indent = isH3 ? 'pl-3 text-slate-400 text-xs' : 'text-slate-300 font-medium text-sm';
+        return `
+          <a href="javascript:void(0)" onclick="scrollToHeading('${h.id}')" class="block py-1 hover:text-blue-400 transition truncate ${indent}">
+            ${h.textContent}
+          </a>
+        `;
+      }).join('');
+    }
+
+    // Scroll to a heading from the ToC without triggering the hash-based page router
+    function scrollToHeading(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        history.replaceState(null, '', window.location.pathname + window.location.search + '#' + currentPage + '#' + id);
+      }
+    }
+
+    // Previous / Next Navigation Helpers
+    function updateFooterNav(name) {
+      const currentIndex = CONSTRUCTORS.findIndex(c => c.name === name);
+      const prevBtn = document.getElementById('prev-page-btn');
+      const nextBtn = document.getElementById('next-page-btn');
+
+      if (name === 'index' || currentIndex === -1) {
+        prevBtn.classList.add('invisible');
+        if (CONSTRUCTORS.length > 0) {
+          document.getElementById('next-page-name').textContent = CONSTRUCTORS[0].name;
+          nextBtn.classList.remove('invisible');
+        }
+      } else {
+        if (currentIndex > 0) {
+          document.getElementById('prev-page-name').textContent = CONSTRUCTORS[currentIndex - 1].name;
+          prevBtn.classList.remove('invisible');
+        } else {
+          document.getElementById('prev-page-name').textContent = 'Overview';
+          prevBtn.classList.remove('invisible');
+        }
+
+        if (currentIndex < CONSTRUCTORS.length - 1) {
+          document.getElementById('next-page-name').textContent = CONSTRUCTORS[currentIndex + 1].name;
+          nextBtn.classList.remove('invisible');
+        } else {
+          nextBtn.classList.add('invisible');
+        }
+      }
+    }
+
+    function navigatePrev() {
+      const currentIndex = CONSTRUCTORS.findIndex(c => c.name === currentPage);
+      if (currentIndex > 0) {
+        window.location.hash = '#' + CONSTRUCTORS[currentIndex - 1].name;
+      } else {
+        window.location.hash = '#index.md';
+      }
+    }
+
+    function navigateNext() {
+      const currentIndex = CONSTRUCTORS.findIndex(c => c.name === currentPage);
+      if (currentPage === 'index' && CONSTRUCTORS.length > 0) {
+        window.location.hash = '#' + CONSTRUCTORS[0].name;
+      } else if (currentIndex >= 0 && currentIndex < CONSTRUCTORS.length - 1) {
+        window.location.hash = '#' + CONSTRUCTORS[currentIndex + 1].name;
+      }
+    }
+
+    // Global Search Index & Wildcard Engine
+    let SEARCH_INDEX = [];
+
+    async function loadSearchIndex() {
+      try {
+        const res = await fetch('search_index.json');
+        if (res.ok) {
+          SEARCH_INDEX = await res.json();
+        }
+      } catch (e) {
+        console.warn('Could not load search_index.json, using CONSTRUCTORS fallback', e);
+      }
+      if (!SEARCH_INDEX || SEARCH_INDEX.length === 0) {
+        SEARCH_INDEX = CONSTRUCTORS.map(c => ({
+          type: 'constructor',
+          name: c.name,
+          kind: c.kind,
+          group: c.group_name || c.group,
+          group_code: c.group,
+          abbrev: c.abbrev,
+          doc: c.doc
+        }));
+      }
+    }
+
+    function makeWildcardMatcher(pattern) {
+      const p = String(pattern || '').trim();
+      if (!p) return () => true;
+
+      let hasWildcard = false;
+      let regexStr = '^';
+      let i = 0;
+      while (i < p.length) {
+        const ch = p[i];
+        if (ch === '\\' && i + 1 < p.length) {
+          // Escaped character: match literally (e.g. \*, \?, \!)
+          const nextCh = p[i + 1];
+          regexStr += nextCh.replace(/[-[\]{}()+.,^$|#\s\\]/g, '\\$&');
+          hasWildcard = true;
+          i += 2;
+        } else if (ch === '*') {
+          regexStr += '.*';
+          hasWildcard = true;
+          i++;
+        } else if (ch === '?') {
+          // Unescaped '?' matches single character (including '?')
+          regexStr += '.';
+          hasWildcard = true;
+          i++;
+        } else {
+          regexStr += ch.replace(/[-[\]{}()+.,^$|#\s\\]/g, '\\$&');
+          i++;
+        }
+      }
+      regexStr += '$';
+
+      if (hasWildcard) {
+        try {
+          const re = new RegExp(regexStr, 'i');
+          return (text) => text != null ? re.test(String(text)) : false;
+        } catch (e) {}
+      }
+
+      // Plain substring match if no wildcards or escapes are used
+      const lower = p.toLowerCase();
+      return (text) => text != null ? String(text).toLowerCase().includes(lower) : false;
+    }
+
+    // Command Palette / Quick Search Modal
+    function openSearchModal() {
+      const modal = document.getElementById('search-modal');
+      const input = document.getElementById('modal-search-input');
+      modal.classList.remove('hidden');
+      input.value = '';
+      input.focus();
+      handleModalSearch('');
+    }
+
+    function closeSearchModal() {
+      document.getElementById('search-modal').classList.add('hidden');
+    }
+
+    function handleModalSearch(query) {
+      const q = query.trim();
+      const resultsContainer = document.getElementById('modal-results-list');
+      const countEl = document.getElementById('search-results-count');
+
+      const pool = (SEARCH_INDEX && SEARCH_INDEX.length > 0) ? SEARCH_INDEX : CONSTRUCTORS;
+
+      if (!q) {
+        modalResults = pool.filter(c => c.type === 'constructor' || !c.type).slice(0, 15);
+      } else {
+        const matcher = makeWildcardMatcher(q);
+        const lowerQ = q.toLowerCase();
+
+        const matches = [];
+        for (const item of pool) {
+          const isOp = item.type === 'operation';
+          const name = item.name || '';
+          const parent = item.constructor || '';
+          const sig = item.signature || '';
+          const abbrev = item.abbrev || '';
+          const group = item.group || item.group_name || '';
+          const doc = item.doc || '';
+
+          let score = 0;
+          if (name.toLowerCase() === lowerQ) {
+            score = 100;
+          } else if (matcher(name)) {
+            score = isOp ? 85 : 90;
+          } else if (abbrev && matcher(abbrev)) {
+            score = 80;
+          } else if (isOp && matcher(parent)) {
+            score = 70;
+          } else if (isOp && matcher(sig)) {
+            score = 60;
+          } else if (matcher(group)) {
+            score = 40;
+          } else if (matcher(doc)) {
+            score = 30;
+          }
+
+          if (score > 0) {
+            matches.push({ item, score });
+          }
+        }
+
+        matches.sort((a, b) => {
+          if (b.score !== a.score) return b.score - a.score;
+          if (a.item.type !== b.item.type) return a.item.type === 'constructor' ? -1 : 1;
+          return a.item.name.length - b.item.name.length;
+        });
+
+        modalResults = matches.slice(0, 40).map(m => m.item);
+      }
+
+      countEl.textContent = modalResults.length;
+      activeModalIndex = 0;
+
+      if (modalResults.length === 0) {
+        resultsContainer.innerHTML = '<div class="text-xs text-slate-500 p-6 text-center">No matching constructors or operations found</div>';
+        return;
+      }
+
+      renderModalItems();
+    }
+
+    function renderModalItems() {
+      const resultsContainer = document.getElementById('modal-results-list');
+      resultsContainer.innerHTML = modalResults.map((item, idx) => {
+        const isSelected = idx === activeModalIndex;
+        const selectedClass = isSelected ? 'bg-blue-600/20 text-white border-l-2 border-blue-500' : 'text-slate-300 hover:bg-slate-800/60';
+        
+        if (item.type === 'operation') {
+          return `
+            <div onclick="selectModalItem(${idx})" class="p-2.5 rounded-lg cursor-pointer transition flex items-center justify-between gap-3 ${selectedClass}">
+              <div class="flex items-center space-x-2.5 min-w-0">
+                <span class="text-xs font-mono font-bold text-cyan-300">${item.name}</span>
+                <span class="text-[10px] px-1.5 py-0.2 rounded border text-cyan-400 bg-cyan-950/80 border-cyan-800/80">Op</span>
+                <span class="text-[11px] font-mono text-slate-400 truncate">in <span class="text-blue-400 font-semibold">${item.constructor}</span>${item.signature ? ': ' + item.signature : ''}</span>
+              </div>
+              <div class="flex items-center space-x-2 shrink-0">
+                <span class="text-[10px] font-mono text-slate-500">${item.group || ''}</span>
+              </div>
+            </div>
+          `;
+        } else {
+          const kindBadge = item.kind === 'Category' ? 'text-purple-400 bg-purple-950/80 border-purple-800/80' :
+            item.kind === 'Domain' ? 'text-amber-400 bg-amber-950/80 border-amber-800/80' :
+              'text-emerald-400 bg-emerald-950/80 border-emerald-800/80';
+
+          return `
+            <div onclick="selectModalItem(${idx})" class="p-2.5 rounded-lg cursor-pointer transition flex items-center justify-between gap-3 ${selectedClass}">
+              <div class="flex items-center space-x-2.5 min-w-0">
+                <span class="text-xs font-mono font-bold text-slate-100">${item.name}</span>
+                <span class="text-[10px] px-1.5 py-0.2 rounded border ${kindBadge}">${item.kind}</span>
+                <span class="text-[11px] text-slate-400 truncate hidden sm:inline">${item.doc || ''}</span>
+              </div>
+              <div class="flex items-center space-x-2 shrink-0">
+                <span class="text-[10px] font-mono text-slate-500">${item.group || item.group_name || ''}</span>
+              </div>
+            </div>
+          `;
+        }
+      }).join('');
+    }
+
+    function handleModalKeydown(e) {
+      if (e.key === 'Escape') {
+        closeSearchModal();
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        activeModalIndex = (activeModalIndex + 1) % modalResults.length;
+        renderModalItems();
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        activeModalIndex = (activeModalIndex - 1 + modalResults.length) % modalResults.length;
+        renderModalItems();
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        if (modalResults[activeModalIndex]) {
+          selectModalItem(activeModalIndex);
+        }
+      }
+    }
+
+    function selectModalItem(idx) {
+      const item = modalResults[idx];
+      if (item) {
+        closeSearchModal();
+        if (item.type === 'operation') {
+          const anchor = item.anchor || item.name.toLowerCase().replace(/[^a-z0-9_-]+/g, '-');
+          window.location.hash = '#' + item.constructor + '#' + anchor;
+        } else {
+          window.location.hash = '#' + item.name;
+        }
+      }
+    }
+
+    // Global Keydown Listeners (Ctrl+K, '/', Escape)
+    window.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        openSearchModal();
+      } else if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+        e.preventDefault();
+        openSearchModal();
+      } else if (e.key === 'Escape') {
+        closeSearchModal();
+      }
+    });
+
+    // Mobile Sidebar Drawer Toggle
+    function toggleMobileSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const backdrop = document.getElementById('mobile-backdrop');
+      const isOpen = !sidebar.classList.contains('-translate-x-full');
+
+      if (isOpen) {
+        sidebar.classList.add('-translate-x-full');
+        backdrop.classList.add('hidden');
+      } else {
+        sidebar.classList.remove('-translate-x-full');
+        backdrop.classList.remove('hidden');
+      }
+    }
+
+    function closeMobileSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const backdrop = document.getElementById('mobile-backdrop');
+      sidebar.classList.add('-translate-x-full');
+      backdrop.classList.add('hidden');
+    }
+
+    // Smooth In-Page Anchor Navigation Listener
+    document.getElementById('content').addEventListener('click', (e) => {
+      const a = e.target.closest('a[href^="#"]');
+      if (!a) return;
+      const href = a.getAttribute('href');
+      if (href.startsWith('#') && href.length > 1 && !href.endsWith('.md')) {
+        const targetId = href.slice(1);
+        const targetEl = document.getElementById(targetId) || document.querySelector(`[name="${targetId}"]`) || document.querySelector(`a[id="${targetId}"]`);
+        if (targetEl) {
+          e.preventDefault();
+          targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          history.replaceState(null, '', window.location.pathname + window.location.search + '#' + currentPage + '#' + targetId);
+        }
+      }
+    });
+
+    // Listen for URL Hash Changes
+    window.addEventListener('hashchange', () => {
+      const fullHash = window.location.hash.slice(1);
+      if (!fullHash) {
+        navigate('index.md');
+        return;
+      }
+      const parts = fullHash.split('#');
+      const targetPage = parts[0];
+      const targetAnchor = parts[1] || '';
+
+      // Check if targetPage is a known page (constructor name or index)
+      const isKnownPage = targetPage === 'index' || targetPage === 'index.md' ||
+        CONSTRUCTORS.some(c => c.name === targetPage);
+
+      if (isKnownPage && targetPage !== currentPage) {
+        navigate(targetPage, targetAnchor);
+      } else if (isKnownPage && targetAnchor) {
+        // Same page, scroll to anchor
+        const targetEl = document.getElementById(targetAnchor) || document.querySelector(`[id="${targetAnchor}"]`);
+        if (targetEl) {
+          targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      } else if (!isKnownPage) {
+        // Not a known page — treat the whole hash as an in-page anchor ID
+        const targetEl = document.getElementById(targetPage) || document.querySelector(`[id="${targetPage}"]`);
+        if (targetEl) {
+          targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+    });
+
+    // Initial Application Load
+    window.addEventListener('DOMContentLoaded', () => {
+      renderSidebar();
+      loadSearchIndex();
+      const initialHash = window.location.hash.slice(1) || 'index.md';
+      const parts = initialHash.split('#');
+      navigate(parts[0], parts[1] || '');
+    });
+  </script>
+</body>
+
+</html>
