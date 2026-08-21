@@ -1,4 +1,4 @@
-# Julia Integration for FriCAS
+# Julia Integration into FriCAS
 
 [FriCAS](https://fricas.github.io) is a general purpose computer algebra system with a powerful, strongly typed algebra library written in Spad. This integration incorporates the [Julia](https://julialang.org) runtime directly into FriCAS's Common Lisp process, giving FriCAS in-memory access to Julia's high-performance numerical ecosystem — including [Nemo](https://nemocas.github.io/Nemo.jl/stable/) / [FLINT](https://flintlib.org/) algebraic routines, certified [Arb](https://arblib.org/) interval ball arithmetic, and optional [Wolfram®](https://www.wolfram.com/) symbolic/numeric
 capabilities using [MathLink](https://github.com/JuliaInterop/MathLink.jl) via the [WSTP](https://www.wolfram.com/wstp/) protocol.
@@ -102,7 +102,7 @@ Through the integrated Julia runtime, FriCAS gains access to three families of c
 ### 1. Direct Julia Evaluation
 ```fricas
 -- Direct evaluation of Julia code in the REPL
-)julia rand(3, 3)
+)juliad rand(3, 3)
 
 -- Evaluate Julia expressions and return a typed result in FriCAS
 jlEvalString("sin(pi / 4)")@JLFloat64

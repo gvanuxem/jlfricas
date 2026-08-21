@@ -24,13 +24,13 @@ jobs:
       - name: install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install sbcl libgmp-dev libxpm-dev cl-hunchentoot cl-yason python3-sphinx
+          sudo apt-get install sbcl libgmp-dev libxpm-dev cl-yason
       - name: install Julia libraries
         run: |
           julia -e "import Pkg;Pkg.add([\"Nemo\", \"Suppressor\", \"SpecialFunctions\", \"DataFrames\", \"Latexify\", \"LaTeXStrings\", \"Statistics\"])"
 
       - name: configure
-        run: ./configure --with-lisp=sbcl --with-gmp --enable-julia --enable-mcp --enable-hunchentoot --enable-mathlink --with-x || cat config.log
+        run: ./configure --with-lisp=sbcl --with-gmp --enable-julia --enable-mcp --enable-mathlink  || cat config.log
 
       - name: make
         run: make -j4 --output-sync
