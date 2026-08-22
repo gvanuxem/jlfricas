@@ -24,7 +24,7 @@ jobs:
       - name: install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install sbcl libgmp-dev libxpm-dev cl-yason cl-alexandria
+          sudo apt-get install sbcl libgmp-dev libxpm-dev cl-yason cl-hunchentoot
       - name: install Julia libraries
         run: |
           julia -e "import Pkg;Pkg.add([\"Nemo\", \"Suppressor\", \"SpecialFunctions\", \"DataFrames\", \"Latexify\", \"LaTeXStrings\", \"Statistics\"])"
