@@ -169,7 +169,7 @@ jlRApply("rnorm", 5::JLObjR)
 | [JLRing](constructors/JLRing.md) | `JRING` | Category for Julia ring structures |
 | [JLCommutativeRing](constructors/JLCommutativeRing.md) | `JCRING` | Category for Julia commutative rings |
 | [JLMachineFloat](constructors/JLMachineFloat.md) | `JMFLOAT` | Category for IEEE floating-point types |
-| [JLArbitraryPrecision](constructors/JLArbitraryPrecision.md) | `JLARB` | Category for arbitrary-precision Julia numbers |
+| [JLArbitraryPrecision](constructors/JLArbitraryPrecision.md) | `JARBPR` | Category for arbitrary-precision Julia numbers |
 | [JLMatrixCategory](constructors/JLMatrixCategory.md) | `JMATCAT` | Category for 2D matrices backed by Julia arrays |
 | [JLVectorCategory](constructors/JLVectorCategory.md) | `JVECCAT` | Category for 1D vectors backed by Julia arrays |
 | [JLObjectType](constructors/JLObjectType.md) | `JOBTYPE` | Category for arbitrary Julia object handles |
@@ -200,18 +200,18 @@ jlRApply("rnorm", 5::JLObjR)
 | [JLComplexF64Matrix](constructors/JLComplexF64Matrix.md) | `JCF64MAT` | 2D matrix of ComplexF64 elements |
 | [JLComplexF32SquareMatrix](constructors/JLComplexF32SquareMatrix.md) | `JCF32SMA` | Square matrix of ComplexF32 elements |
 | [JLComplexF64SquareMatrix](constructors/JLComplexF64SquareMatrix.md) | `JCF64SMA` | Square matrix of ComplexF64 elements |
-| [JLObject](constructors/JLObject.md) | `JLOBJ` | Generic mutable Julia object proxy handle |
-| [JLDataFrame](constructors/JLDataFrame.md) | `JLDFRAME` | Tabular data structure via DataFrames.jl |
-| [JLObjDict](constructors/JLObjDict.md) | `JLOBDICT` | Julia dictionary wrapper |
-| [JLObjTuple](constructors/JLObjTuple.md) | `JLOBTUP` | Julia tuple wrapper |
-| [JLObjNamedTuple](constructors/JLObjNamedTuple.md) | `JLOBNTUP` | Julia named tuple wrapper |
-| [JLObjPair](constructors/JLObjPair.md) | `JLOBPAIR` | Julia pair wrapper |
-| [JLObjBigInt](constructors/JLObjBigInt.md) | `JLOBINT` | Julia arbitrary-precision BigInt wrapper |
-| [JLObjRational](constructors/JLObjRational.md) | `JLOBRAT` | Julia rational wrapper |
-| [JLObjFunction](constructors/JLObjFunction.md) | `JLOBFUNC` | Julia callable function object |
-| [JLObjAnonymousFunction](constructors/JLObjAnonymousFunction.md) | `JLOBAFUNC` | Julia anonymous / lambda function handle |
-| [JLObjPy](constructors/JLObjPy.md) | `JLOBPY` | Python object proxy via Julia PyCall |
-| [JLObjR](constructors/JLObjR.md) | `JLOBR` | R object proxy via Julia RCall |
+| [JLObject](constructors/JLObject.md) | `JOBJECT` | Generic mutable Julia object proxy handle |
+| [JLDataFrame](constructors/JLDataFrame.md) | `JDFRAME` | Tabular data structure via DataFrames.jl |
+| [JLObjDict](constructors/JLObjDict.md) | `JOBDICT` | Julia dictionary wrapper |
+| [JLObjTuple](constructors/JLObjTuple.md) | `JOBTPLE` | Julia tuple wrapper |
+| [JLObjNamedTuple](constructors/JLObjNamedTuple.md) | `JOBNTPL` | Julia named tuple wrapper |
+| [JLObjPair](constructors/JLObjPair.md) | `JOBPAIR` | Julia pair wrapper |
+| [JLObjBigInt](constructors/JLObjBigInt.md) | `JOBBINT` | Julia arbitrary-precision BigInt wrapper |
+| [JLObjRational](constructors/JLObjRational.md) | `JOBRAT` | Julia rational wrapper |
+| [JLObjFunction](constructors/JLObjFunction.md) | `JOBFUNC` | Julia callable function object |
+| [JLObjAnonymousFunction](constructors/JLObjAnonymousFunction.md) | `JOBANFUN` | Julia anonymous / lambda function handle |
+| [JLObjPy](constructors/JLObjPy.md) | `JOBPY` | Python object proxy via Julia PyCall |
+| [JLObjR](constructors/JLObjR.md) | `JOBR` | R object proxy via Julia RCall |
 | [JLObjBool](constructors/JLObjBool.md) | `JOBBOOL` | Julia Bool immutable wrapper |
 | [JLObjFloat32](constructors/JLObjFloat32.md) | `JOBF32` | Julia Float32 immutable object wrapper |
 | [JLObjFloat64](constructors/JLObjFloat64.md) | `JOBF64` | Julia Float64 immutable object wrapper |
@@ -256,32 +256,32 @@ jlRApply("rnorm", 5::JLObjR)
 #### Categories
 | Constructor | Abbreviation | Description |
 |-------------|--------------|-------------|
-| [NMType](constructors/NMType.md) | `NMTYPE` | Root category for all Nemo / FLINT types |
-| [NMRing](constructors/NMRing.md) | `NMRING` | Category for Nemo ring structures |
-| [NMCommutativeRing](constructors/NMCommutativeRing.md) | `NMCRING` | Category for Nemo commutative rings |
-| [NMField](constructors/NMField.md) | `NMFIELD` | Category for Nemo field structures |
+| [NMType](constructors/NMType.md) | `NTYPE` | Root category for all Nemo / FLINT types |
+| [NMRing](constructors/NMRing.md) | `NRING` | Category for Nemo ring structures |
+| [NMCommutativeRing](constructors/NMCommutativeRing.md) | `NCRING` | Category for Nemo commutative rings |
+| [NMField](constructors/NMField.md) | `NFIELD` | Category for Nemo field structures |
 | [NMPolynomialCategory](constructors/NMPolynomialCategory.md) | `NPC` | Category for polynomials over Nemo coefficients |
 | [NMUnivariatePolynomialCategory](constructors/NMUnivariatePolynomialCategory.md) | `NUPC` | Category for univariate polynomials over Nemo |
-| [NMPadicNumberCategory](constructors/NMPadicNumberCategory.md) | `NMPADICCAT` | Category for p-adic number representations |
+| [NMPadicNumberCategory](constructors/NMPadicNumberCategory.md) | `NPADICC` | Category for p-adic number representations |
 
 #### Domains
 | Constructor | Abbreviation | Description |
 |-------------|--------------|-------------|
-| [NMInteger](constructors/NMInteger.md) | `NMINT` | Nemo $\mathbb{Z}$ integers via FLINT `fmpz` |
-| [NMFraction](constructors/NMFraction.md) | `NMFRAC` | Nemo $\mathbb{Q}$ rationals via FLINT `fmpq` |
+| [NMInteger](constructors/NMInteger.md) | `NINT` | Nemo $\mathbb{Z}$ integers via FLINT `fmpz` |
+| [NMFraction](constructors/NMFraction.md) | `NFRAC` | Nemo $\mathbb{Q}$ rationals via FLINT `fmpq` |
 | [NMRealField](constructors/NMRealField.md) | `NRF` | Real field backed by Arb real numbers |
 | [NMComplexField](constructors/NMComplexField.md) | `NCF` | Complex field backed by Acb complex numbers |
 | [NMRealBall](constructors/NMRealBall.md) | `NRB` | Real interval ball arithmetic with certified error radius |
 | [NMComplexBall](constructors/NMComplexBall.md) | `NCB` | Complex interval ball arithmetic with certified error radius |
 | [NMArbField](constructors/NMArbField.md) | `NARB` | Arbitrary-precision real Arb field |
 | [NMAcbField](constructors/NMAcbField.md) | `NACB` | Arbitrary-precision complex Acb field |
-| [NMAlgebraicNumber](constructors/NMAlgebraicNumber.md) | `NMAN` | Exact algebraic numbers $\overline{\mathbb{Q}}$ via Antic / FLINT |
-| [NMExactCalciumField](constructors/NMExactCalciumField.md) | `NMECALCF` | Exact real and complex numbers via Calcium |
-| [NMPrimeField](constructors/NMPrimeField.md) | `NMPF` | Finite field $\mathbb{F}_p$ with prime characteristic |
-| [NMFiniteField](constructors/NMFiniteField.md) | `NMFF` | Finite field $\mathbb{F}_q$ via FLINT `fq_nmod` |
-| [NMIntegerMod](constructors/NMIntegerMod.md) | `NMZMOD` | Modular integer ring $\mathbb{Z}/n\mathbb{Z}$ |
-| [NMResidueRing](constructors/NMResidueRing.md) | `NMRESRING` | Quotient residue ring over Nemo elements |
-| [NMResidueField](constructors/NMResidueField.md) | `NMRESFIELD` | Quotient residue field over Nemo elements |
+| [NMAlgebraicNumber](constructors/NMAlgebraicNumber.md) | `NAN` | Exact algebraic numbers $\overline{\mathbb{Q}}$ via Antic / FLINT |
+| [NMExactCalciumField](constructors/NMExactCalciumField.md) | `NECF` | Exact real and complex numbers via Calcium |
+| [NMPrimeField](constructors/NMPrimeField.md) | `NPF` | Finite field $\mathbb{F}_p$ with prime characteristic |
+| [NMFiniteField](constructors/NMFiniteField.md) | `NFF` | Finite field $\mathbb{F}_q$ via FLINT `fq_nmod` |
+| [NMIntegerMod](constructors/NMIntegerMod.md) | `NZMOD` | Modular integer ring $\mathbb{Z}/n\mathbb{Z}$ |
+| [NMResidueRing](constructors/NMResidueRing.md) | `NRESRING` | Quotient residue ring over Nemo elements |
+| [NMResidueField](constructors/NMResidueField.md) | `NRESFLD` | Quotient residue field over Nemo elements |
 | [NMUnivariatePolynomial](constructors/NMUnivariatePolynomial.md) | `NUP` | Fast univariate polynomials via FLINT |
 | [NMMultivariatePolynomial](constructors/NMMultivariatePolynomial.md) | `NMP` | Fast multivariate polynomials via FLINT |
 | [NMUnivariateLaurentPolynomial](constructors/NMUnivariateLaurentPolynomial.md) | `NULP` | Univariate Laurent polynomials |
@@ -289,11 +289,11 @@ jlRApply("rnorm", 5::JLObjR)
 | [NMUnivariatePowerSeries](constructors/NMUnivariatePowerSeries.md) | `NUPS` | Truncated power series over Nemo rings |
 | [NMUnivariateLaurentSeries](constructors/NMUnivariateLaurentSeries.md) | `NULS` | Laurent series expansions over Nemo rings |
 | [NMUnivariatePuiseuxSeries](constructors/NMUnivariatePuiseuxSeries.md) | `NUPXS` | Fractional-exponent Puiseux series |
-| [NMPadicInteger](constructors/NMPadicInteger.md) | `NMPADICINT` | $p$-adic integers $\mathbb{Z}_p$ via FLINT |
-| [NMPadicRational](constructors/NMPadicRational.md) | `NMPADICRAT` | $p$-adic rationals $\mathbb{Q}_p$ via FLINT |
-| [NMExtendedPadicInteger](constructors/NMExtendedPadicInteger.md) | `NMEXPADICINT` | Extended $p$-adic integers |
-| [NMExtendedPadicRational](constructors/NMExtendedPadicRational.md) | `NMEXPADICRAT` | Extended $p$-adic rationals |
-| [NMFactored](constructors/NMFactored.md) | `NMFACT` | Factored algebraic structures over Nemo |
+| [NMPadicInteger](constructors/NMPadicInteger.md) | `NPADICZ` | $p$-adic integers $\mathbb{Z}_p$ via FLINT |
+| [NMPadicRational](constructors/NMPadicRational.md) | `NPADICR` | $p$-adic rationals $\mathbb{Q}_p$ via FLINT |
+| [NMExtendedPadicInteger](constructors/NMExtendedPadicInteger.md) | `NXPADICZ` | Extended $p$-adic integers |
+| [NMExtendedPadicRational](constructors/NMExtendedPadicRational.md) | `NXPADICR` | Extended $p$-adic rationals |
+| [NMFactored](constructors/NMFactored.md) | `NFR` | Factored algebraic structures over Nemo |
 | [NMPadic2](constructors/NMPadic2.md) | `NPADIC2` | 2-adic numbers via FLINT |
 | [NMPolynomial](constructors/NMPolynomial.md) | `NPOLY` | Polynomial domain over Nemo coefficients |
 
@@ -318,10 +318,10 @@ jlRApply("rnorm", 5::JLObjR)
 | [WSInteger](constructors/WSInteger.md) | `WSINT` | Arbitrary-precision Wolfram WS `Integer` |
 | [WSRational](constructors/WSRational.md) | `WSRAT` | Exact Wolfram WS `Rational` |
 | [WSReal](constructors/WSReal.md) | `WSREAL` | Machine-precision Wolfram WS `Real` |
-| [WSAPReal](constructors/WSAPReal.md) | `WSAPREAL` | Arbitrary-precision Wolfram WS `Real` |
-| [WSComplex](constructors/WSComplex.md) | `WSCMPLX` | Machine-precision Wolfram WS `Complex` |
-| [WSAPComplex](constructors/WSAPComplex.md) | `WSAPCMPLX` | Arbitrary-precision Wolfram WS `Complex` |
-| [WSGaussianInteger](constructors/WSGaussianInteger.md) | `WSGAUSS` | Wolfram WS Gaussian integer $\mathbb{Z}[i]$ |
+| [WSAPReal](constructors/WSAPReal.md) | `WSAPR` | Arbitrary-precision Wolfram WS `Real` |
+| [WSComplex](constructors/WSComplex.md) | `WSCPLX` | Machine-precision Wolfram WS `Complex` |
+| [WSAPComplex](constructors/WSAPComplex.md) | `WSAPCPX` | Arbitrary-precision Wolfram WS `Complex` |
+| [WSGaussianInteger](constructors/WSGaussianInteger.md) | `WSGINT` | Wolfram WS Gaussian integer $\mathbb{Z}[i]$ |
 | [WSList](constructors/WSList.md) | `WSLIST` | Wolfram WS `List` aggregate |
 | [WSVector](constructors/WSVector.md) | `WSVEC` | Wolfram WS 1D vector aggregate |
 | [WSMatrix](constructors/WSMatrix.md) | `WSMAT` | Wolfram WS 2D matrix aggregate |
