@@ -36,7 +36,7 @@
 
 (defun patch-fricas-database-read ()
   "Patch FriCAS database read function to be thread-safe."
-  (let ((get-data-sym (find-symbol "|get_data_from_file|" "BOOT"))
+  (let ((get-data-sym (find-symbol "get_data_from_file" "BOOT"))
         (db-lock *fricas-db-lock*))
     (when (and get-data-sym (fboundp get-data-sym) (not (get get-data-sym :patched-by-mcp)))
       (let ((old-get-data (symbol-function get-data-sym)))
@@ -184,7 +184,10 @@
       (setf (gethash "resources" caps) (make-hash-table))
       (setf (gethash "capabilities" result) caps))
     (let ((info (make-hash-table :test 'equal)))
-      (setf (gethash "name" info) "jlFriCAS MCP Server")
+      (setf (gethash "name" info)
+            (if (member :fricas_has_julia *features*)
+                "jlFriCAS MCP Server"
+                "FriCAS MCP Server"))
       (setf (gethash "version" info) "0.1.0")
       (setf (gethash "serverInfo" result) info))
     (send-result id result)))
@@ -691,9 +694,9 @@
     (flet ((do-eval ()
              (ensure-fricas-databases-shared)
              (handler-case
-                 (let* ((symbols '("|$sayBrightlyStream|" "|$errorStream|" "|$InteractiveMode|" "|$QuietCommand|"))
+                 (let* ((symbols '("|$sayBrightlyStream|" "|$errorStream|" "|$InteractiveMode|" "$QuietCommand"))
                         (found-syms (mapcar (lambda (s) (find-symbol s boot-pkg)) symbols))
-                        (int-frame-sym (find-symbol "|$InteractiveFrame|" boot-pkg))
+                        (int-frame-sym (find-symbol "$InteractiveFrame" boot-pkg))
                         (int-frame (if (and int-frame-sym (boundp int-frame-sym))
                                        (symbol-value int-frame-sym)
                                        nil)))
@@ -883,11 +886,11 @@
       (setf *debug-io* *error-output*)
 
       (handler-case
-          (let ((msgs-sym (find-symbol "|$displayStartMsgs|" boot-pkg))
-                (quiet-sym (find-symbol "|$QuietCommand|" boot-pkg))
+          (let ((msgs-sym (find-symbol "$displayStartMsgs" boot-pkg))
+                (quiet-sym (find-symbol "$QuietCommand" boot-pkg))
                 (init-sym (find-symbol "fricas_init" boot-pkg))
                 (curout-sym (find-symbol "CUROUTSTREAM" boot-pkg))
-                (int-frame-sym (find-symbol "|$InteractiveFrame|" boot-pkg))
+                (int-frame-sym (find-symbol "$InteractiveFrame" boot-pkg))
                 (jl-init-sym (find-symbol "init_julia_env" boot-pkg)))
 
             (when msgs-sym (set msgs-sym nil))
@@ -919,8 +922,24 @@
               (when cat-db-sym (funcall cat-db-sym nil))
               (when browse-db-sym (funcall browse-db-sym nil)))
 
+            ;; Ensure foreign libraries (libspad.so, julia_wrap.so) are loaded
+            (let ((quiet-load-sym (find-symbol "quiet_load_alien" boot-pkg))
+                  (make-abs-sym (find-symbol "make_absolute_filename" boot-pkg))
+                  (probe-sym (find-symbol "fricas_probe_file" boot-pkg)))
+              (when (and quiet-load-sym make-abs-sym probe-sym)
+                (let ((spad-lib (funcall make-abs-sym "/lib/libspad.so")))
+                  (when (funcall probe-sym spad-lib)
+                    (funcall quiet-load-sym spad-lib)))
+                (when (member :fricas_has_julia *features*)
+                  (let ((jl-wrap (funcall make-abs-sym "/lib/julia_wrap.so")))
+                    (when (funcall probe-sym jl-wrap)
+                      (funcall quiet-load-sym jl-wrap))))))
+
             ;; Initialize Julia if available
-            (when jl-init-sym (funcall jl-init-sym))
+            (when (and (member :fricas_has_julia *features*)
+                       jl-init-sym
+                       (fboundp jl-init-sym))
+              (funcall jl-init-sym))
 
             (setf *fricas-mcp-initialized* t)
             (ensure-fricas-databases-shared)
@@ -933,8 +952,9 @@
   #+sbcl
   (if *mcp-socket*
       (format *error-output* "MCP socket server already running.~%")
-      (let ((is-local (stringp port)))
-        (format *error-output* "Starting jlFriCAS MCP server on ~A ~A...~%" (if is-local "Unix socket" "port") port)
+      (let ((is-local (stringp port))
+            (srv-name (if (member :fricas_has_julia *features*) "jlFriCAS" "FriCAS")))
+        (format *error-output* "Starting ~A MCP server on ~A ~A...~%" srv-name (if is-local "Unix socket" "port") port)
         (initialize-fricas-for-mcp)
         (setf *mcp-running* t)
         (setf *mcp-use-content-length* t)
@@ -983,9 +1003,10 @@
   #+openmcl
   (if *mcp-socket*
       (format *error-output* "MCP socket server already running.~%")
-      (let ((is-local (stringp port)))
-        (format *error-output* "Starting jlFriCAS MCP server on ~A ~A...~%"
-                (if is-local "Unix socket" "port") port)
+      (let ((is-local (stringp port))
+            (srv-name (if (member :fricas_has_julia *features*) "jlFriCAS" "FriCAS")))
+        (format *error-output* "Starting ~A MCP server on ~A ~A...~%"
+                srv-name (if is-local "Unix socket" "port") port)
         (initialize-fricas-for-mcp)
         (setf *mcp-running* t)
         (setf *mcp-use-content-length* t)
@@ -1088,8 +1109,8 @@
 (defun start-mcp-server ()
   (if (or *mcp-thread* *mcp-socket*)
       (format *error-output* "MCP server already running.~%")
-      (progn
-        (format *error-output* "Starting jlFriCAS MCP server on stdio...~%")
+      (let ((srv-name (if (member :fricas_has_julia *features*) "jlFriCAS" "FriCAS")))
+        (format *error-output* "Starting ~A MCP server on stdio...~%" srv-name)
         (initialize-fricas-for-mcp)
         (setf *mcp-running* t)
         (setf *mcp-use-content-length* nil) ;; stdio mode uses newline-delimited JSON

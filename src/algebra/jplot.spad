@@ -193,7 +193,11 @@ JLPlotFunctions() : Exports == Implementation where
     -- jlEvalString("plotlyjs()")
 
     -- local
-    display() : Void == jlEvalString("gui()")
+    display() : Void ==
+      if sendCurrentPlot()$Lisp then
+        void()
+      else
+        jlEvalString("gui()")
 
     jlClosePlots() == jlEvalString("closeall()")
     jlSetPlotsBackend!(backend) == jlEvalString(concat([backend, "()"]))

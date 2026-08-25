@@ -243,7 +243,7 @@
 
 (defun |make_jlref_wcall5| (func var1 var2 var3 var4 var5)
     (let* ((index (or (make-jlindex)
-        (error "Amount of Julia references excedeed"))))
+        (error "Amount of Julia references excedeed")))
             (id (|jl_call5_wrapped_index| func index
                 (jlrefId var1) (jlrefId var2) (jlrefId var3)
                 (jlrefId var4) (jlrefId var5))))
@@ -252,18 +252,18 @@
                     #+:sbcl (sb-ext:finalize ret (lambda ()
                         (sb-concurrency:enqueue index *jqueue*)))
                 ret)
-            (error "Invalid command given to Julia")))
+            (error "Invalid command given to Julia"))))
 
 (defun |make_jlref_from_fvec| (cplx vec)
     (let* ((index (or (make-jlindex)
                 (error "Amount of Julia references excedeed")))
-            (id (|jl_wrap_1dfarray| cplx index vec))))
+            (id (|jl_wrap_1dfarray| cplx index vec)))
         (if (not (zerop id))
             (let ((ret (make-instance 'jlref :id id)))
                     #+:sbcl (sb-ext:finalize ret (lambda ()
                         (sb-concurrency:enqueue index *jqueue*)))
                 ret)
-            (error "Invalid vector given to Julia")))
+            (error "Invalid vector given to Julia"))))
 
 (defun |make_jlref_from_vec| (cplx vec)
     (let* ((index (or (make-jlindex)
@@ -632,3 +632,26 @@
                 (* (the fixnum ,j) 2))))
             (cdr ,s))
         ,s)))
+
+
+(defun boot::|sendCurrentPlot| ()
+  "Send current Julia plot (SVG, Plotly JSON, HTML, or PNG) to MCP/VS Code client if running."
+  (let ((send-display-fn (find-symbol "sendDisplay" :boot))
+        (mcp-running-sym (and (find-package :fricas-mcp)
+                              (find-symbol "*MCP-RUNNING*" :fricas-mcp))))
+    (when (and send-display-fn
+               (fboundp send-display-fn)
+               mcp-running-sym
+               (boundp mcp-running-sym)
+               (symbol-value mcp-running-sym))
+      (handler-case
+          (let ((res (boot::|jl_string_eval_string|
+                      "try; let p = Plots.current(), out = \"\"; if showable(MIME(\"application/vnd.plotly.v1+json\"), p); io=IOBuffer(); show(io, MIME(\"application/vnd.plotly.v1+json\"), p); out = \"application/vnd.plotly.v1+json\\n\" * String(take!(io)); elseif showable(MIME(\"image/svg+xml\"), p); io=IOBuffer(); show(io, MIME(\"image/svg+xml\"), p); out = \"image/svg+xml\\n\" * String(take!(io)); elseif showable(MIME(\"text/html\"), p); io=IOBuffer(); show(io, MIME(\"text/html\"), p); out = \"text/html\\n\" * String(take!(io)); elseif showable(MIME(\"image/png\"), p); io=IOBuffer(); show(io, MIME(\"image/png\"), p); out = \"image/png\\n\" * Base.base64encode(take!(io)); end; out; end; catch; \"\"; end")))
+            (when (and (stringp res) (> (length res) 0))
+              (let ((newline-pos (position #\Newline res)))
+                (when newline-pos
+                  (let ((kind (subseq res 0 newline-pos))
+                        (data (subseq res (1+ newline-pos))))
+                    (funcall send-display-fn kind data)
+                    t)))))
+        (error () nil)))))

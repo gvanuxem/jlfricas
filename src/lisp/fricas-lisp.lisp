@@ -1109,6 +1109,7 @@ with this hack and will try to convince the GCL crowd to fix this.
 (progn
 (defun jgc () nil)
 (defun |clear_julia_env| () nil)
+(defun |init_julia_env| () nil)
 )
 
 ;;; Macros used in Boot code
