@@ -41,6 +41,18 @@ The server follows a three-layer bridge architecture and supports multiple trans
 *   **Input**: `pattern` (String).
 *   **Behavior**: Searches for Categories, Domains, and Packages matching the pattern.
 
+### 4. `compile-spad`
+*   **Input**: `path` (String), `args` (Optional String).
+*   **Behavior**: Compiles a SPAD (`.spad`) source file using the system command `)compile`.
+
+### 5. `compile-lisp`
+*   **Input**: `path` (String), `args` (Optional String).
+*   **Behavior**: Compiles and loads a Common Lisp (`.lisp` or `.lsp`) file using the system command `)read`.
+
+### 6. `compile-boot`
+*   **Input**: `path` (String), `args` (Optional String).
+*   **Behavior**: Compiles and loads a Boot (`.boot`) file using the system command `)read`.
+
 ## 🖥️ REPL Custom Methods
 The server extends the standard MCP with custom methods for IDE integration (specifically VS Code):
 *   `repl/runcode`: Directly executes code from the IDE editor.

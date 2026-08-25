@@ -341,7 +341,8 @@
           <span
             class="text-xl font-semibold tracking-tight text-white group-hover:text-blue-400 transition-colors">FriCAS</span>
           <span
-            class="hidden sm:inline-block text-xs font-medium text-slate-400 px-2 py-0.5 rounded bg-slate-900 border border-slate-800">Julia Integration</span>
+            class="hidden sm:inline-block text-xs font-medium text-slate-400 px-2 py-0.5 rounded bg-slate-900 border border-slate-800">Julia
+            Integration</span>
         </a>
         <span
           class="hidden md:inline-flex items-center text-xs px-2.5 py-0.5 rounded-full bg-slate-900 text-blue-400 border border-slate-800 font-mono">v1.3.14</span>
@@ -1260,7 +1261,7 @@ View the full SPAD implementation in [${meta.file}](${sourceUrl}).
         try {
           const re = new RegExp(regexStr, 'i');
           return (text) => text != null ? re.test(String(text)) : false;
-        } catch (e) {}
+        } catch (e) { }
       }
 
       // Plain substring match if no wildcards or escapes are used
@@ -1352,7 +1353,7 @@ View the full SPAD implementation in [${meta.file}](${sourceUrl}).
       resultsContainer.innerHTML = modalResults.map((item, idx) => {
         const isSelected = idx === activeModalIndex;
         const selectedClass = isSelected ? 'bg-blue-600/20 text-white border-l-2 border-blue-500' : 'text-slate-300 hover:bg-slate-800/60';
-        
+
         if (item.type === 'operation') {
           return `
             <div onclick="selectModalItem(${idx})" class="p-2.5 rounded-lg cursor-pointer transition flex items-center justify-between gap-3 ${selectedClass}">
