@@ -681,7 +681,8 @@ JLObjRational() : Exports == Implementation where
       s : String := jlRegexReplace(str, jlRegex "//", jlString "/")
       jlref(concat ["Rational{BigInt}(", jlRegexReplace(s, jlRegex "/", jlString "//"), ")"])
     coerce(p : %) : OutputForm ==
-      message jlRegexReplace(string(p), jlString("//"),jlString("/"))
+      ret : Fraction(Integer) := numerator(p)/denominator(p)
+      coerce(ret)
 
 )abbrev domain JOBPAIR JLObjPair
 ++ Convenience domain for Julia Pair.

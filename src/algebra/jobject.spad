@@ -40,8 +40,8 @@ JLObjectType() : Category == JLType() with
     jlText : (%, String) -> List(String)
     ++ jlText(obj, mimest) returns the text representation of obj
     ++ as a list of String lines with mime subtype mimest, for example
-    ++ "plain" for "text/plain" or "html" for "text/html" if implemented
-    ++ at Julia level. Use internally the 'show' method.
+    ++ "plain" for "text/plain" or "html" for "text/html" if is
+    ++ implemented at Julia level. Use internally the 'show' method.
     ++ For example:
     ++ \example{df:=jdframe nrand(6,3)}
     ++ \example{jlText(df, "plain")}

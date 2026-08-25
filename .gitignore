@@ -14,6 +14,7 @@
 *.KAF
 *.fas
 *.build
+*.out
 
 build/
 
