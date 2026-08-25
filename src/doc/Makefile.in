@@ -691,7 +691,7 @@ stamp-book-pics: stamp-book-viewports
 # Here lives the official git repository of the package.
 # It should be possible to say "git clone ${PACKAGE_SOURCE}".
 # Do not use ".git" extension explicitly for PACKAGE_SOURCE.
-PACKAGE_SOURCE=https://github.com/fricas/fricas
+PACKAGE_SOURCE=https://github.com/gvanuxem/jlfricas
 
 tmp/info.tex:
 	${MKDIR_P} tmp
@@ -814,5 +814,6 @@ clean-local: clean-book clean-html
 	-rm -rf tmp
 	-rm -f examples.* stamp* ht.db
 	-rm -rf *.VIEW viewports test*.svg *.sfort
+	-if [ -d $(top_srcdir)/docs/constructors ]; then find $(top_srcdir)/docs/constructors -type f ! -name 'WS*' -exec rm -f {} +; fi
 
 distclean-local: clean-local

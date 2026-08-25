@@ -15,16 +15,18 @@ binary distribution.
 Quick installation from binary release tarball
 ----------------------------------------------
 
-Quick installation (Linux)
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+Quick installation (Linux and macOS)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-FriCAS offers release binaries for Linux on Intel/AMD processors.
+jlFriCAS offers release binaries for Linux on Intel/AMD or ARM processors.
 Get the respective binary tarball (replace `x.y.z` by |PACKAGE_VERSION|).
+Replace amd64 by arm if necessary in the following.
 
 ::
 
    V=x.y.z
-   wget https://github.com/fricas/fricas/releases/download/$V/fricas-$V.amd64.tar.bz2
+   wget https://github.com/gvanuxem/jlfricas/releases/download/$V/jlfricas-$V.amd64.tar.bz2
+
 
 Binaries have only few dependencies: libc, libm, libutil, libXpm,
 libSM, libICE, libX11 which should be present in all desktop Linux
@@ -39,7 +41,7 @@ On a 64-bit OS do the following to install FriCAS into the directories
 ``/usr/local/bin/`` and ``/usr/local/lib/fricas/``.
 ::
 
-   sudo tar xjf fricas-$V.amd64.tar.bz2 -C /
+   sudo tar xjf jlfricas-$V.amd64.tar.bz2 -C /
 
 
 Installation into ``$HOME``
@@ -52,7 +54,7 @@ follows.
    F=$HOME/software
    L=$F/usr/local
    mkdir -p $L
-   tar xjf fricas-$V.amd64.tar.bz2 -C $F
+   tar xjf jlfricas-$V.amd64.tar.bz2 -C $F
    sed -i "s|^exec_prefix=|FRICAS_PREFIX=\"$L\"\nexport FRICAS_PREFIX\nexec_prefix=|" $L/bin/fricas
    sed -i "s|^exec_prefix=|FRICAS_PREFIX=\"$L\"\nexport FRICAS_PREFIX\nexec_prefix=|;s|/usr/local/|$L/|" $L/bin/efricas
 
@@ -75,19 +77,6 @@ in HyperDoc still does not look pretty.
 
 
 
-Quick installation (macOS)
-^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-The provided tarball from the `Nightly Builds
-<https://github.com/fricas/fricas-nightly-builds/releases/tag/nightly>`_
-contains unsigned macOS application bundle.
-
-FriCAS is also available via
-`MacPorts <https://ports.macports.org/port/fricas/>`_
-and
-`Homebrew <https://formulae.brew.sh/formula/fricas>`_,
-those are the preferred way to do installation.
-
 
 Quick installation (Windows)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -105,11 +94,11 @@ support and no HyperDoc).
 Quick installation from source (Linux)
 --------------------------------------
 
-FriCAS now tries to support standard GNU build/installation
+jlFriCAS now tries to support standard GNU build/installation
 conventions.  So if you have sources and all prerequisites, then
 ::
 
-   ./configure && make && sudo make install
+   ./configure --enable-julia && make && sudo make install
 
 should work.  The above will install FriCAS files into
 ``/usr/local/lib/fricas/``  and put the ``fricas`` command into
@@ -171,12 +160,21 @@ newest ECL versions are progressively slower.
 Some computation work much faster on 64-bit machines, especially
 when using SBCL.
 
+Julia for FriCAS (jlFriCAS)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Julia is a high-level, high-performance, dynamic language for technical computing.
+The main homepage for Julia can be found at https://julialang.org. You can download Julia
+for your system at https://julialang.org/install/. Do at configure time.
+::
+
+    ./configure --enable-julia
+
 
 jFriCAS (optional)
 ^^^^^^^^^^^^^^^^^^
 
-jFriCAS is an interface for running FriCAS_ in a Jupyter_ notebook.
-It should be installed **after** FriCAS_ has been installed.
+jFriCAS_ is an interface for running jlFriCAS_ in a Jupyter_ notebook.
+It should be installed **after** jlFriCAS_ has been installed.
 
 **Note:** It currently only works with an SBCL_ image that has the
 Hunchentoot_ webserver included.  See next section.
@@ -185,38 +183,26 @@ Hunchentoot_ webserver included.  See next section.
 Hunchentoot (optional)
 ^^^^^^^^^^^^^^^^^^^^^^
 
-The jFriCAS interface needs a web server built into FRICASsys binary.
+
+The jFriCAS_ interface needs a web server built into FRICASsys binary.
 This can be done by using Lisp (currently only SBCL_) containing
-the Hunchentoot_ web server.  You can provide your own Lisp with
-preloaded Hunchentoot_.  Or you can fetch the ``hsbcl-1.3.9.tar``
-tarball from FriCAS distribution area at
+the Hunchentoot_ web server. If SBCL_ does not include the Hunchentoot_
+web server, you can install the hunchentoot packages of your distribution
+or look at https://github.com/gvanuxem/jlfricas to use quicklisp.
+On a Debian based system it can be installed with
+`sudo apt-install cl-hunchentoot` and do at configure time.
 ::
 
-  https://sourceforge.net/projects/fricas/files/fricas/1.3.9/hsbcl-1.3.9.tar
+    ./configure --enable-julia --enable-hunchentoot
 
-Then do
-::
-
-    tar -xf hsbcl-1.3.9.tar
-    cd hsbcl
-    ./build_hsbcl > build_hsbcl.log 2>&1
-
-This assumes that the base Lisp to use is SBCL_ and it creates an executable
-binary ``hsbcl`` which contains Hunchentoot_.  If your SBCL_ is started
-in different way (say via full pathname), then edit ``build_hsbcl`` to
-match.  After creating ``hsbcl`` one can then configure FriCAS like
-::
-
-    ../fricas/configure --with-lisp=/path/to/hsbcl --enable-gmp
-
-FriCAS built in this way will contain Hunchentoot_ and can be used
-by jFriCAS.
+jlFriCAS built in this way will contain Hunchentoot_ and can be used
+by jFriCAS_.
 
 
 X libraries (optional, but needed for graphics and HyperDoc)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-On Debian (or Ubuntu) install the following packages.
+On a Debian based system install the following packages.
 ::
 
    sudo apt install libx11-dev libxt-dev libice-dev \
@@ -306,8 +292,8 @@ Aldor (optional)
 ^^^^^^^^^^^^^^^^
 
 Aldor_ was originally invented to be the next generation compiler for
-Axiom_ (the system that FriCAS_ forked from).  If you want to use
-Aldor_ to extend the FriCAS_ library, you must, of course, have Aldor_
+Axiom_ (the system that jlFriCAS_ forked from).  If you want to use
+Aldor_ to extend the jlFriCAS_ library, you must, of course, have Aldor_
 installed, and add ``--enable-aldor`` to your configure options when
 you compile FriCAS.
 
@@ -355,7 +341,7 @@ We assume that you have installed all necessary prerequisites.
 1. Fetch sources.
    ::
 
-      git clone --depth 1 https://github.com/fricas/fricas
+      git clone --depth 1 https://github.com/gvanuxem/jlfricas
 
    Remove the ``--depth 1`` option for access to the change history.
 
@@ -369,14 +355,13 @@ We assume that you have installed all necessary prerequisites.
    ``/tmp/usr``.
    ::
 
-      ../fricas/configure --with-lisp=/path/to/your/lisp --prefix=/tmp/usr
+      ../jlfricas/configure --with-lisp=/path/to/your/lisp --prefix=/tmp/usr
 
    where ``/path/to/your/lisp`` is name of your Lisp.  For example,
    type
    ::
 
-      ../fricas/configure --with-lisp="sbcl --dynamic-space-size 4096" \
-                          --prefix=/tmp/usr --enable-gmp --enable-aldor
+      ../jlfricas/configure --with-lisp="sbcl --dynamic-space-size 4096" --prefix=/tmp/usr --enable-gmp --enable-aldor
 
    to build with SBCL_ and 4 GiB dynamic space, use GMP_, and enable the
    build of the Aldor_ library ``libfricas.al``.
@@ -387,12 +372,12 @@ We assume that you have installed all necessary prerequisites.
       --with-lisp="/path/to/hsbcl"
 
    to include the Hunchentoot_ webserver if you later want to install
-   jFriCAS.
+   jFriCAS_.
 
    Type
    ::
 
-      ../fricas/configure --help
+      ../jlfricas/configure --help
 
    to see all possible options.
 
@@ -412,23 +397,23 @@ We assume that you have installed all necessary prerequisites.
 Extra information
 ^^^^^^^^^^^^^^^^^
 
-The preferred way to build FriCAS is to use an already installed Lisp.
+The preferred way to build jlFriCAS is to use an already installed Lisp.
 Also, it is preferable to use a separate build directory.  Assuming
-that the source tree is in ``$HOME/fricas``, you build in
-``$HOME/fr-build`` subdirectory and your Lisp is called
+that the source tree is in ``$HOME/jlfricas``, you build in
+``$HOME/jlfricas-build`` subdirectory and your Lisp is called
 ``sbcl`` the following should just work.
 ::
 
-   cd $HOME/fr-build
-   $HOME/fricas/configure --with-lisp=sbcl && make && sudo make install
+   cd $HOME/jlfricas-build
+   $HOME/jlfricas/configure --with-lisp=sbcl --enable-julia && make && sudo make install
 
 Currently ``--with-lisp`` option accepts all supported lisp variants,
 namely SBCL, CLISP, ECL, GCL and Clozure CL (openmcl).  Note: the
 argument is just a command to invoke the respective Lisp variant.
-The build machinery will automatically detect which Lisp is in use
-and adjust as needed.
+The build machinery will automatically detect which Lisp is in use and
+adjust as needed.
 
-Note that jFriCAS has currently only been tested to work with SBCL_.
+Note that jFriCAS_ has currently only been tested to work with SBCL_.
 
 
 HyperDoc and graphics
@@ -560,7 +545,7 @@ Guide) do
 
    make book
 
-This builds |PACKAGE_BOOK| into ``src/doc/book.pdf``.
+This build |PACKAGE_BOOK| into ``src/doc/book.pdf``.
 
 The |home page| can be built via
 ::
@@ -698,59 +683,72 @@ The program ``sieve.as`` is
 Install jFriCAS
 ^^^^^^^^^^^^^^^
 
-You must have Python 3 and Pip installed. Since below we present an
-installation of jFriCAS into a virtual environment, you should also
-have the Python venv module.
+There are a couple of things to install.
 
-Install the prerequisites if not yet available (needs root access, but
-it may already be installed on your system).
+#. Jupyter_
+#. jFriCAS_
+
+The simplest way to install jFriCAS_ is via `pip` as follows
 ::
 
-   sudo apt install python3-pip python3-venv
+   sudo apt install python3-pip
+   pip3 install jupyter
+   pip3 install jfricas
+
+You can also install jFriCAS_ into a python virtual environment from
+`jfricas at PyPI <https://pypi.org/project/jfricas/>`_ or from the
+git repository.
+
+Below, we describe the installation from the git repository.
 
 Except for the file ``$HOME/.jupyter/jupyter_notebook_config.py`` that
 maybe necessary to create, the following description will put most of
-the things under the directory ``$FDIR``.
-We assume that FriCAS is installed into ``$FRICASINSTALL``.
+the things (in particular the git repositories) under the directory
+``$FDIR``.
+We assume that FriCAS will be installed into ``$FRICASINSTALL``.
 jFriCAS and Jupyter_ will go into ``$JFRICASINSTALL``
 You can change any of these paths.
 ::
 
    FDIR=$HOME/fricas
+   GITREPOS=$FDIR
    FRICASINSTALL=$FDIR/install
    export PATH=$FRICASINSTALL/bin:$PATH
    VENV=$FDIR/venv
    JFRICASINSTALL=$VENV/jfricas
-   mkdir -p $FDIR $JFRICASINSTALL
+   mkdir -p $FDIR $GITREPOS $FRICASINSTALL $JFRICASINSTALL
 
 
 jFriCAS installation
 """"""""""""""""""""
 
-jFriCAS is the Jupyter_ notebook interface to FriCAS_.  Of course,
-jFriCAS needs Jupyter_ in a reasonably recent version (at least 4).
+jFriCAS_ is the Jupyter_ notebook interface to jlFriCAS_.  Of course,
+jFriCAS_ needs Jupyter_ in a reasonably recent version (at least 4).
 
-Create a virtual environment and install Jupyter_.
+Install prerequisites if not yet available (needs root access, but it
+may already be installed on your system).
+::
+
+   sudo apt install python3-pip python3-venv
+
+Prepare directories and download jFriCAS_.
+::
+
+   cd $GITREPOS
+   git clone https://github.com/fricas/jfricas
+
+Install prerequisites, Jupyter_ and jFriCAS_.
+
+**WARNING**: Do not install jfricas 1.0.0 from PyPI, as that will
+not work.  If you have it installed, then uninstall it first.
 ::
 
    python3 -m venv $JFRICASINSTALL
    source $JFRICASINSTALL/bin/activate
    pip3 install jupyter
-
-Now we put a file ``fricaskernel.py`` into a place where python can
-find it and install ``kernel.json`` so that Jupyter_ can find the
-FriCAS_ kernel.
-::
-
-   PYSITE=$(python3 -c "import site; print(site.getsitepackages()[0])")
-   JF=$PYSITE/jfricas
-   mkdir -p $JF
-   cd $JF
-   ( echo 'kernel()$JFriCAS'; echo 'fricaskernel()$JFriCAS' ) \
-   | fricas -nosman; \
-   jupyter kernelspec install ./ --name='jfricas' --sys-prefix
+   cd $GITREPOS/jfricas
+   pip3 install .
    jupyter kernelspec list
-
 
 The output of the last command should show something similar to the
 following.
@@ -771,7 +769,7 @@ Create the script ``jfricas``.
 
 Start a new terminal or set the ``PATH`` on the command line or inside
 your ``.bashrc`` file and start ``jfricas`` from any directory (after
-you have installed FriCAS_).
+you have installed jlFriCAS_).
 ::
 
    export PATH=$FRICASINSTALL/bin:$PATH
@@ -795,6 +793,7 @@ You can go back to standard 2D ASCII output as follows.
    )set output algebra on
 
 
+
 (optional) Install JupyText
 """""""""""""""""""""""""""
 
@@ -806,7 +805,7 @@ FriCAS ``.input`` files.  You can even synchronize between the
 
 There are two types of cells in Jupyter_: Markdown documentation
 cells and execution cells.  With the help of JupyText_, Markdown
-cells will appear inside an ``.input`` file as FriCAS_
+cells will appear inside an ``.input`` file as jlFriCAS_
 comments and execution cells appear without the ``"-- "``
 comment prefix.
 ::
@@ -842,7 +841,7 @@ Make Jupytext available
 
 In Ubuntu 22.04 you do not need to run the commands from this section.
 It seemingly works without having to change something in the
-configuration file.  There were even reports that jFriCAS stopped
+configuration file.  There were even reports that jFriCAS_ stopped
 working if ``c.NotebookApp.contents_manager_class`` was set.  However,
 for older versions of JupyText_ and/or Jupyter_, the following had to be
 configured.
@@ -853,6 +852,7 @@ generate it.
 ::
 
    jupyter notebook --generate-config
+
 
 For the following see
 https://jupyter-notebook.readthedocs.io/en/stable/config.html .
@@ -894,7 +894,8 @@ If something does not work then look at the end of ``fricaskernel.py``
 and experiment with different versions of how to start FriCAS.
 ::
 
-   emacs $PYSITE/jfricas/fricaskernel.py
+   FRICASKERNEL=$(find $JFRICASINSTALL -type f | grep 'fricaskernel\.py$')
+   emacs $FRICASKERNEL
 
 You can also download or clone the demo notebooks from
 https://github.com/fricas/fricas-notebooks/ and compare them with what
@@ -944,9 +945,9 @@ do
    cd fr-build
    $SRC/src/scripts/mkdist.sh --copy_lisp --copy_phts \
      --copy_help=/full/path/to/help/files
-   mv dist ../fricas-x.y.z
+   mv dist ../jlfricas-X.Y.Z
    cd ..
-   tar -cjf fricas-x.y.z.tar.bz2 fricas-x.y.z
+   tar -cjf jlfricas-X.Y.Z.tar.bz2 jlfricas-X.Y.Z
 
 Note: FriCAS source distributions are created from a branch which
 differs from trunk, namely release branch has version number, trunk
@@ -958,12 +959,11 @@ unpack source tarball into the work directory.  Then in the work directory
 ::
 
    mkdir fr-build
-   cd fr-build
-   ../fricas-x.y.z/configure --enable--gmp --with-lisp=/path/to/hsbcl
+   ../jlfricas-X.Y.Z/configure --enable--gmp --enable-julia --enable-hunchentoot
    make -j 7 > makelog 2>&1
    make DESTDIR=/full/path/to/auxiliary/dir install
    cd /full/path/to/auxiliary/dir
-   tar -cjf fricas-x.y.z.amd64.tar.bz2 usr
+   tar -cjf jlfricas-x.y.z.amd64.tar.bz2 usr
 
 
 
@@ -1005,8 +1005,6 @@ Known problems
   to decrease use of virtual memory.
 
 - CLISP built with threads support may fail to compile FriCAS.
-
-- CLISP 2.49 is incompatible with Windows 11.
 
 - On new Linux kernel build using Clisp may take very long time.  This
   is caused by frequent calls to ``fsync`` performed without need by
@@ -1086,7 +1084,7 @@ Known problems
   Also, Clozure CL earlier than release 1.2 has bug in complex cosine
   function.  Those bugs are fixed in release 1.2.  If you want to use
   earlier version you can work around the bugs applying the
-  ``contrib/omcl.diff`` patch and recompiling the compiler (see the
+  ``contib/omcl.diff`` patch and recompiling the compiler (see the
   patch or Clozure CL documentation for instructions).
 
 - Older versions of Clisp may fail to build FriCAS complaining about
@@ -1097,16 +1095,17 @@ Known problems
 
 .. _Aldor: https://github.com/aldorlang/aldor
 .. _Axiom: https://www.nongnu.org/axiom/
-.. _CLISP: https://clisp.sourceforge.io/
-.. _Clozure CL: https://ccl.clozure.com/
-.. _CMUCL: https://cmucl.org
+.. _CLISP: http://clisp.cons.org
+.. _Clozure CL: http://ccl.clozure.com/manual/chapter2.2.html
+.. _CMUCL: https://www.cons.org/cmucl/
 .. _CTAN: https://www.ctan.org/
-.. _ECL: https://ecl.common-lisp.dev/main.html
+.. _ECL: http://ecls.sourceforge.net
 .. _Emacs: https://www.gnu.org/software/emacs/
 .. _frimacs: https://github.com/pdo/frimacs
 .. _GCL: https://www.gnu.org/software/gcl
 .. _GMP: https://gmplib.org
 .. _Hunchentoot: https://edicl.github.io/hunchentoot/
+.. _jFriCAS: https://jfricas.readthedocs.io
 .. _Jupyter: https://jupyter.org
 .. _JupyText: https://jupytext.readthedocs.io
 .. _SBCL: http://sbcl.sourceforge.net/platform-table.html
