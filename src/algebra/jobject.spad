@@ -15,7 +15,7 @@ JLObjectType() : Category == JLType() with
     ++ jlimref(str) evaluates the Julia command str and returns
     ++ the corresponding FriCAS Julia immutable object
     ++ wrapped in a Julia RefValue{Any}
-    jlId : % -> JLInt64
+    jlId : % -> Integer
     ++ jlId(obj) returns the Julia indexed dictionary index referencing
     ++ the object obj.
     jlType : % -> Symbol
@@ -94,8 +94,8 @@ JLObjectType() : Category == JLType() with
     ++ Convenience function.
   add
     import from JLUtilityFunctions
-    import from JLStringUtilities
     import from JLSymbol
+    import from NonNegativeInteger
 
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)),")"])
     junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
@@ -161,14 +161,14 @@ JLObjectType() : Category == JLType() with
     coerce(obj : %) : OutputForm ==
       ret : List String := jl_stringify_wrapped_index("show",
         "_"text/plain_"", jlId(obj))$Lisp
-      if #ret ~= 0 then
-        for i in 1..#ret repeat
-          if not jlRegexMatch?(string(jlType(obj)), jlRegex "String") then
-            -- Direct call to replace since $ has to be escaped in Nemo
-            -- residue field
-            ret.i := jlEvalString(concat(["replace(raw_"",
-              ret.i, "_",", jlString("//"),"=>" ,jlString("/"), ")"]))
-            --jlRegexReplace(concat(["raw_"",ret.i,"_""]), jlString("//"), jlString("/"))
+      --if #ret ~= 0 then
+      --  for i in 1..#ret repeat
+      --    if not jlRegexMatch?(string(jlType(obj)), jlRegex "String") then
+      --      -- Direct call to replace since $ has to be escaped in Nemo
+      --      -- residue field
+      --      ret.i := jlEvalString(concat(["replace(raw_"",
+      --        ret.i, "_",", jlString("//"),"=>" ,jlString("/"), ")"]))
+      --      --jlRegexReplace(concat(["raw_"",ret.i,"_""]), jlString("//"), jlString("/"))
       -- first line length only
       #ret ~= 1 or more?(elt(ret,1), _$LINELENGTH$Lisp)
         => pile(append(["" pretend OutputForm], ret pretend List OutputForm))
@@ -197,13 +197,12 @@ JLObjectAggregate() : Category == Join(JLObjectType, Aggregate, finiteAggregate)
     ++ It can be used, for example, with a Tuple or a Vector.
   add
     import from JLUtilityFunctions
-    import from JLStringUtilities
-    import from String
+    import from JLSymbol
 
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     #obj == jlEvalString(concat(["length(", getind(obj), ")"]))
     elt(obj : %, jsy : JLSymbol) ==
-      defined := concat(["hasproperty(", getind(obj), ",",
+      defined : String := concat(["hasproperty(", getind(obj), ",",
         str := string(jsy), ")"])
       not jlEvalString(defined)@Boolean =>
         error concat("elt: undefined symbol ", str)
@@ -230,7 +229,7 @@ JLObjectRing() : Category == Join(JLObjectType, JLRing) with
     ++ i*x is the integer multiplication. The type of the
     ++ result depends on the type of x. Check it using jlType.
   add
-    import JLUtilityFunctions
+    import from JLUtilityFunctions
 
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
@@ -308,6 +307,7 @@ JLObject() : Exports == Implementation where
     ++ during parsing/evaluation.
   Implementation ==> add
     import from JLUtilityFunctions
+    import from JLStringUtilities
 
     jlInitialize(true)
 
@@ -333,6 +333,15 @@ JLObject() : Exports == Implementation where
       jl_call2_bool_wrapped_index("isa", jlId(x), jlId(y))$Lisp
     jobject(i: Integer) : % == jlref(string i)
     jobject(str: String) : % == jlref(str)
+    coerce(obj) : OutputForm ==
+      ret : List String := jl_stringify_wrapped_index("show",
+        "_"text/plain_"", jlId(obj))$Lisp
+      if #ret = 1 then
+        setelt!(ret, 1, jlRegexReplace(elt(ret,1), jlString("//"), jlString("/")))
+      #ret ~= 1 or more?(elt(ret,1), _$LINELENGTH$Lisp)
+        => pile(append(["" pretend OutputForm], ret pretend List OutputForm))
+      vconcat(ret pretend List OutputForm)
+
 )abbrev domain JOBBINT JLObjBigInt
 ++ Convenience domain for Julia BigInt
 ++ Author: G.Vanuxem
@@ -1479,6 +1488,7 @@ JLDataFrame() : Exports == Implementation where
       tls := first lines formatExpression(lnames::OutputForm)$Format1D
       jlref(concat(["DataFrame(",
         getind(coerce(array)$JLMatrix(JLObjFloat64)),",", tls, ")"]))
+    coerce(obj : %) : OutputForm == coerce(obj pretend JLObject)
 
 )abbrev domain JVECTOR JLVector
 ++ Description: This domain provides a JLVector type

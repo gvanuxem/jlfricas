@@ -147,3 +147,4 @@ src/input/tmp*.input
 
 target/
 .vscode/
+src/algebra/oboo3.mak

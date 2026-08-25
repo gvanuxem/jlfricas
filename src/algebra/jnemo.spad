@@ -562,7 +562,6 @@ NMAlgebraicNumber() : Exports == Implementation where
 ++ Description:
 ++  This domain allows the manipulation of Nemo residue ring
 ++  elements using the AbstractAlgebra and Nemo Julia packages.
-++  Note: this is only implemented for univariate polynomial rings.
 NMResidueRing(R, P, poly) : Exports == Implementation where
   R : NMCommutativeRing
   P : Join(NMUnivariatePolynomialCategory(R), GcdDomain)

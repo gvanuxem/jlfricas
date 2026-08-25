@@ -680,6 +680,8 @@ JLObjRational() : Exports == Implementation where
     jrational(str : String) : % ==
       s : String := jlRegexReplace(str, jlRegex "//", jlString "/")
       jlref(concat ["Rational{BigInt}(", jlRegexReplace(s, jlRegex "/", jlString "//"), ")"])
+    coerce(p : %) : OutputForm ==
+      message jlRegexReplace(string(p), jlString("//"),jlString("/"))
 
 )abbrev domain JOBPAIR JLObjPair
 ++ Convenience domain for Julia Pair.
@@ -713,6 +715,7 @@ JLObjPair(F : JLObjectType, L : JLObjectType)
     first(pair) : F == jlref(concat [getind(pair), "[1]" ])$F
     last(pair) : L == jlref(concat [getind(pair), "[2]" ])$L
     jpair(str : String) == jlref str
+    coerce(p : %) : OutputForm == coerce(p pretend JLObject)
 
 )abbrev domain JOBTPLE JLObjTuple
 ++ Convenience domain for Julia Tuple.
@@ -750,6 +753,7 @@ JLObjTuple() : Exports == Implementation where
       not (jlEvalString(concat ["isa(", getind(res), ", Tuple)"])) =>
         error "jtuple: not a Julia Tuple"
       res
+    coerce(t : %) : OutputForm == coerce(t pretend JLObject)
 
 )abbrev domain JOBNTPL JLObjNamedTuple
 ++ Convenience domain for Julia Named Tuple.
@@ -789,6 +793,7 @@ JLObjNamedTuple() : Exports == Implementation where
       not (jlEvalString(concat ["isa(", getind(res), ", NamedTuple)"]))
         => error "jnamedtuple: not a Julia NamedTuple"
       res
+    coerce(nt : %) : OutputForm == coerce(nt pretend JLObject)
 
 )abbrev domain JOBANFUN JLObjAnonymousFunction
 ++ Convenience domain for Julia Anonymous Function.
