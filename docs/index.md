@@ -157,6 +157,22 @@ jlRApply("rnorm", 5::JLObjR)
 
 ---
 
+## 🤖 Model Context Protocol (MCP) Server
+
+`jlFriCAS` includes an integrated [Model Context Protocol (MCP)](https://modelcontextprotocol.io) server running natively within the Common Lisp host environment. This allows modern AI coding assistants, LLM tools, and IDEs (such as the [fricas-vscode](https://github.com/gvanuxem/fricas-vscode) extension) to interact directly with the FriCAS algebra engine and embedded Julia runtime.
+
+### Key Capabilities
+- **Symbolic & Numerical Evaluation (`evaluate`)**: Direct execution of SPAD expressions, Julia numerical computations, and batch scripts.
+- **Dynamic Documentation Introspection (`get-documentation`, `list-constructors`)**: Live lookup of categories, domains, packages, and operations directly from the internal SpadDoc system.
+- **Source Compilation (`compile-spad`, `compile-lisp`, `compile-boot`)**: On-the-fly compilation of SPAD, Common Lisp, and Boot source files.
+- **Interactive REPL Integration**: Support for editor-based code evaluation, cursor-contextual documentation (`repl/runcode`, `repl/getDocAt`), and execution progress notifications.
+- **Streaming Plot Display & MCP Resources**: Real-time streaming of generated 2D/3D visualizations (SVG/PNG) via `display` notifications and exposure of session plots as MCP resources (`plot://<index>`).
+- **Flexible Standalone Support**: Auto-detects runtime capabilities to operate seamlessly in both full `jlFriCAS` and standalone `FriCAS` installations.
+
+For architectural details, transport modes (StdIO and TCP/Unix sockets), and protocol specifications, see the [MCP Server Design Specification](MCP_SERVER_DESIGN.md).
+
+---
+
 ## Constructor Reference
 
 ### 1. Native Julia Subsystem (`JL*`)
@@ -340,3 +356,4 @@ jlRApply("rnorm", 5::JLObjR)
 - **FriCAS Official Project**: [fricas.github.io](https://fricas.github.io)
 - **Julia Programming Language**: [julialang.org](https://julialang.org)
 - **Nemo Computer Algebra**: [nemocas.github.io/Nemo.jl](https://nemocas.github.io/Nemo.jl/stable/)
+
