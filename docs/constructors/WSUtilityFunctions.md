@@ -92,7 +92,7 @@ hilbertMatrix(n) returns the square Hilbert matrix.
 
 identityMatrix(n) returns the identity matrix of size n.
 
-- **Signature**: `PositiveInteger ->  WSMatrix(WSInteger)`
+- **Signature**: `PositiveInteger -> WSMatrix(WSInteger)`
 
 #### `jWSDateObject` <a id="jwsdateobject"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L63)\]
 
@@ -121,6 +121,10 @@ jWSRange(n,m) returns a WSList that ranges from n to m.
 ##### `jWSRange` : `(WSInteger, WSInteger, WSInteger) ->`
 
 jWSRange(n,m) returns a WSList that ranges from n to m.
+
+##### `jWSRange` : `(WSInteger, WSInteger, WSInteger) -> WSList(WSInteger)`
+
+jWSRange(n,m,d) returns a WSList that ranges from n to m with step d.
 
 #### `jlWSDateString` <a id="jlwsdatestring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L72)\]
 
@@ -202,6 +206,10 @@ urand01Complex(n) returns a Julia WS vector with uniformly distributed random co
 
 urand01Complex(n) returns a Julia WS vector with uniformly distributed random complex elements in the unit square. Convenience function.
 
+##### `urand01Complex` : `(PositiveInteger, PositiveInteger) -> WSMatrix(WSComplex)`
+
+urand01Complex(rows,cols) returns a Julia WS matrix with uniformly distributed random complex elements in the unit squar e. Convenience function.
+
 #### `urand01Real` <a id="urand01real"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L16)\]
 
 ##### `urand01Real` : `PositiveInteger -> WSVector(WSReal)`
@@ -222,10 +230,18 @@ vandermondeMatrix(lvars) returns a Vandermonde matrix with nodes from lvars.
 
 vandermondeMatrix(lvars) returns a Vandermonde matrix with nodes from lvars.
 
+##### `vandermondeMatrix` : `(WSList(WSExpression), WSInteger) -> WSMatrix(WSExpression)`
+
+vandermondeMatrix(lvars, m) returns a Vandermonde matrix with nodes from lvars and m columns.
+
 #### `zeroMatrix` <a id="zeromatrix"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L51)\]
+
+##### `zeroMatrix` : `(PositiveInteger, PositiveInteger) ->`
 
 identityMatrix(n) returns the identity matrix of size n.
 
-- **Signature**: `(PositiveInteger, PositiveInteger) ->`
+##### `zeroMatrix` : `(PositiveInteger, PositiveInteger) -> WSMatrix(WSInteger)`
+
+zeroMatrix(m, n) returns an m-by-n zero matrix.
 ---
 [Back to Index](../index.md)

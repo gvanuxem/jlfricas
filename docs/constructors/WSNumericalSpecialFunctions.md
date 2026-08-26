@@ -93,8 +93,6 @@ Julia WS numerical special functions using the MathLink Julia package.
 
 | Operation | Summary |
 | :--- | :--- |
-| [`--meixnerM`](#meixnerm) | charlierC(n, a, z) is the Charlier polynomial |
-| [`--siegelTheta`](#siegeltheta) | ellipticThetaPrime(a, u, q) computes the derivative of the theta function, a ranges from 1... |
 | [`Beta`](#beta) | Beta(x, y) is \spad{Gamma(x) * Gamma(y)/Gamma(x+y)}. |
 | [`EiEn`](#eien) | EiEn(n,z) returns the exponential integral En of z. |
 | [`Gamma`](#gamma) | Gamma(z) is the Euler Gamma function. |
@@ -224,20 +222,6 @@ Julia WS numerical special functions using the MathLink Julia package.
 
 ### Detailed Documentation
 
-#### `--meixnerM` <a id="meixnerm"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsnsf.spad#L159)\]
-
-charlierC(n, a, z) is the Charlier polynomial
-
-- **Signature**: `(R, R, R, R) -> R`
-
-#### `--siegelTheta` <a id="siegeltheta"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsnsf.spad#L360)\]
-
-##### `--siegelTheta` : `(R, R) -> R`
-
-ellipticThetaPrime(a, u, q) computes the derivative of the theta function, a ranges from 1 to 4.
-
-##### `--siegelTheta` : `(R, R, R) -> R`
-
 #### `Beta` <a id="beta"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsnsf.spad#L18)\]
 
 ##### `Beta` : `(R, R) ->R`
@@ -247,6 +231,12 @@ Beta(x, y) is \spad{Gamma(x) * Gamma(y)/Gamma(x+y)}.
 ##### `Beta` : `(R, R, R) -> R`
 
 Beta(z, a, b) is the incomplete Beta function.
+
+##### `Beta` : `(R, R) -> R`
+
+Beta(x, y) is Gamma(x) * Gamma(y)/Gamma(x+y).
+
+- **From**: [`WSNumericalSpecialFunctions(R)`](WSNumericalSpecialFunctions.md)
 
 #### `EiEn` <a id="eien"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsnsf.spad#L168)\]
 
@@ -444,7 +434,7 @@ digamma(n,z) is the n-th derivative of the digamma function.
 
 diracDelta(x) returns the Dirac delta function of x.
 
-- **Signature**: `R-> WSExpression`
+- **Signature**: `R -> WSExpression`
 
 #### `dirichletEta` <a id="dirichleteta"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsnsf.spad#L383)\]
 
@@ -456,7 +446,7 @@ dirichletEta(z) computes the Dirichlet eta function of z.
 
 dirichletL(k,j,s) returns Dirichlet L-function of s, modulus k, index j.
 
-- **Signature**: `(R, R, R) ->  R`
+- **Signature**: `(R, R, R) -> R`
 
 #### `ellipticE` <a id="elliptice"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsnsf.spad#L369)\]
 
@@ -978,25 +968,25 @@ sign(x) is 1 if x is positive, -1 if x is negative, 0 if x equals 0.
 
 sphericalBesselJ(n,z) returns the spherical Bessel of the first kind of z.
 
-- **Signature**: `(R , R)-> R`
+- **Signature**: `(R, R) -> R`
 
 #### `sphericalBesselY` <a id="sphericalbessely"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsnsf.spad#L185)\]
 
 sphericalBesselY(n,z) returns the spherical Bessel of the second kind of z.
 
-- **Signature**: `(R , R)-> R`
+- **Signature**: `(R, R) -> R`
 
 #### `sphericalHankelH1` <a id="sphericalhankelh1"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsnsf.spad#L188)\]
 
 sphericalHankelH1(n,z) returns the spherical Hankel of the first kind of z.
 
-- **Signature**: `(R , R)-> R`
+- **Signature**: `(R, R) -> R`
 
 #### `sphericalHankelH2` <a id="sphericalhankelh2"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsnsf.spad#L191)\]
 
 sphericalHankelH2(n,z) computes the spherical Hankel of the second kind of z.
 
-- **Signature**: `(R , R)-> R`
+- **Signature**: `(R, R) -> R`
 
 #### `sphericalHarmonicY` <a id="sphericalharmonicy"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsnsf.spad#L263)\]
 

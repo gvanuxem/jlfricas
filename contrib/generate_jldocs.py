@@ -24,6 +24,7 @@ import re
 import shutil
 import subprocess
 import sys
+import tempfile
 
 # ── Command Line Arguments ───────────────────────────────────────────────────
 
@@ -38,7 +39,7 @@ parser.add_argument("--spad-dir", type=str, default="src/algebra", help="Directo
 parser.add_argument("--fricas-cmd", type=str, default=os.environ.get("FRICAS_CMD", "jlfricas"), help="FriCAS executable command (default: jlfricas or fricas)")
 parser.add_argument("--clean", action="store_true", help="Clean output directory (preserves WS*.md unless --ws or --ws-only is set)")
 
-args = parser.parse_args()
+args, unknown = parser.parse_known_args()
 
 OUT_DIR = args.out_dir
 SPAD_DIR = args.spad_dir
@@ -133,7 +134,7 @@ ALL_JLFRICAS = set(c[0] for c in ALL_DISCOVERED)
 
 # Filter constructors according to CLI flags
 if args.constructor:
-    TARGET_CONSTRUCTORS = [c for c in ALL_DISCOVERED if c[0] == args.constructor]
+    TARGET_CONSTRUCTORS = [c for c in ALL_DISCOVERED if c[0] == args.constructor or c[4] == args.constructor]
     if not TARGET_CONSTRUCTORS:
         TARGET_CONSTRUCTORS = [(args.constructor, "Domain", "jlFriCAS", "JL", "", "", 1, "")]
 elif args.ws_only:
@@ -151,7 +152,7 @@ else:
 # ── FriCAS Execution & Parsing ───────────────────────────────────────────────
 
 BANNER_END_RE = re.compile(r"^-+$")
-FROM_RE = re.compile(r"From:\s*([A-Za-z0-9_]+)")
+FROM_RE = re.compile(r"From:\s*(.+)")
 
 def check_fricas_available():
     """Check if FriCAS executable is available in PATH or specified location."""
@@ -159,14 +160,18 @@ def check_fricas_available():
 
 HAS_FRICAS = check_fricas_available()
 
-def run_fricas_evals(evals: list[str], timeout: int = 40) -> str:
-    """Run FriCAS in batch mode with -eval statements and capture output."""
+def run_fricas_evals(evals: list[str], timeout: int = 60) -> str:
+    """Run FriCAS in batch mode using a temporary input file and capture output."""
     if not HAS_FRICAS:
         return "<<FRICAS_UNAVAILABLE>>"
-    cmd_args = [args.fricas_cmd, "-nosman"]
-    evals = [')lisp (progn (setf (symbol-value (find-symbol "$LINELENGTH" "BOOT")) 120) (values))'] + evals + [')quit']
-    for e in evals:
-        cmd_args += ["-eval", e]
+    all_evals = [')lisp (progn (setf (symbol-value (find-symbol "$LINELENGTH" "BOOT")) 120) (values))'] + evals + [')quit']
+
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".input", delete=False) as tf:
+        for e in all_evals:
+            tf.write(e + "\n")
+        tmp_name = tf.name
+
+    cmd_args = [args.fricas_cmd, "-nosman", "-eval", f")read {tmp_name} )quiet"]
     try:
         r = subprocess.run(
             cmd_args,
@@ -178,6 +183,12 @@ def run_fricas_evals(evals: list[str], timeout: int = 40) -> str:
         return "<<TIMEOUT>>"
     except Exception as exc:
         return f"<<ERROR: {exc}>>"
+    finally:
+        if os.path.exists(tmp_name):
+            try:
+                os.remove(tmp_name)
+            except Exception:
+                pass
 
 def strip_banner(text: str) -> str:
     lines = text.splitlines()
@@ -229,9 +240,9 @@ def split_show_block(show_text: str) -> tuple[str, str]:
         else:
             in_ops = True
             # Collapse multiple spaces between columns to 4 spaces
-            cleaned = re.sub(r"[ \t]{4,}", "    ", ln).rstrip()
-            if cleaned:
-                sig_lines.append(cleaned)
+            cleaned_ln = re.sub(r"[ \t]{4,}", "    ", ln).rstrip()
+            if cleaned_ln:
+                sig_lines.append(cleaned_ln)
 
     formatted_header = []
     for h in header_lines:
@@ -254,6 +265,10 @@ def clean(text: str, unwrap: bool = False) -> str:
     """Clean up and format FriCAS documentation text."""
     text = re.sub(r"(?m)^\s*Value\s*=.*$", "", text)
     text = re.sub(r"\s*Type:\s*Void\s*", "", text)
+    # Remove any echoed command lines
+    text = re.sub(r"(?m)^\s*\)[a-zA-Z].*$", "", text)
+    text = re.sub(r"(?m)^\s*(?:constructorDocumentation|operationDocumentation)\(.*$", "", text)
+    text = re.sub(r"(?m)^\s*\(\d+\)\s*->.*$", "", text)
 
     lines = text.splitlines()
     while lines and not lines[0].strip():
@@ -320,26 +335,74 @@ def clean(text: str, unwrap: bool = False) -> str:
 
     return "".join(new_parts)
 
+def clean_op_token(tok: str) -> str:
+    """Extract clean operation name from token.
+
+    Handles FriCAS )show operator placeholder conventions:
+    - Infix operators: '?*?', '?+?', '?<=?', '?=? etc. -> '*', '+', '<=', '='
+    - Unary prefix placeholders: '?~' -> '~'
+    - Unary punctuation operators: '-?', '#?' -> '-', '#'
+    - Predicate functions ending with '?': 'zero?', 'jlApprox?', 'empty?', etc. -> preserved
+    """
+    tok = tok.strip().strip('"')
+    # Infix operators: ?*?, ?+?, ?=?, ?<=?, etc.
+    if tok.startswith("?") and tok.endswith("?") and len(tok) > 2:
+        return tok[1:-1]
+    # Unary prefix placeholder
+    if tok.startswith("?"):
+        return tok[1:]
+    # Unary punctuation operator placeholder (e.g. -?, #?)
+    if tok.endswith("?") and len(tok) > 1 and not (tok[:-1].replace("_", "").isalnum()):
+        return tok[:-1]
+    # Standard identifier / predicate ending in ?
+    return tok
+
+def parse_show_signatures(show_text: str) -> dict[str, list[str]]:
+    """Extract all operation names and their signatures from the )show block."""
+    sigs = {}
+    for line in show_text.splitlines():
+        trimmed = line.strip()
+        if not trimmed:
+            continue
+        if any(hdr in line for hdr in ("is a domain", "is a category", "is a package", "Abbreviation for", "Operations")):
+            continue
+        # In )show, multiple columns are separated by 4 or more spaces
+        chunks = re.split(r"[ \t]{4,}", trimmed)
+        for chunk in chunks:
+            chunk = chunk.strip()
+            if ":" in chunk:
+                parts = chunk.split(":", 1)
+                op_name = clean_op_token(parts[0])
+                sig = parts[1].strip()
+                if op_name and not op_name.startswith("-") and not op_name.startswith("="):
+                    if op_name not in sigs:
+                        sigs[op_name] = []
+                    if sig not in sigs[op_name]:
+                        sigs[op_name].append(sig)
+    return sigs
+
 def parse_op_names_from_show(show_text: str) -> list[str]:
     """Extract operation names from the signatures text."""
-    ops = set()
-    for line in show_text.splitlines():
-        # Skip any header lines that might contain colons (e.g. WSAggregate(E: ...))
-        if "is a domain" in line or "is a category" in line or "is a package" in line or "Abbreviation for" in line:
-            continue
-        parts = line.split(":")
-        for p in parts[:-1]:
-            tok = p.strip().split()[-1] if p.strip().split() else ""
-            # Strip leading/trailing question marks from infix ops like ?*?, but keep boolean ops like jlApprox?
-            if tok.startswith("?") and tok.endswith("?") and len(tok) > 2:
-                name = tok[1:-1]
-            elif tok.startswith("?"):
-                name = tok[1:]
-            else:
-                name = tok
-            if name and not name.startswith("-") and not name.startswith("=") and len(name) > 0:
-                ops.add(name)
-    return sorted(list(ops))
+    sigs = parse_show_signatures(show_text)
+    return sorted(list(sigs.keys()))
+
+def get_constructor_ancestors(name: str) -> set[str]:
+    """Fetch ancestor constructor names for a given constructor."""
+    if not HAS_FRICAS:
+        return {name}
+    raw = run_fricas_evals([f")lisp (|ancestorsOf| '(|{name}|) NIL)"])
+    if "<<ERROR" in raw or "<<TIMEOUT>>" in raw or "<<FRICAS_UNAVAILABLE>>" in raw:
+        return {name}
+    symbols = set(re.findall(r"\|([A-Za-z0-9_]+)\|", raw))
+    symbols.add(name)
+    return symbols
+
+def get_origin_base(from_str: str) -> str:
+    """Extract base constructor name from origin string (e.g. VectorCategory(R) -> VectorCategory)."""
+    if not from_str:
+        return ""
+    m = re.match(r"^\s*([A-Za-z0-9_]+)", from_str)
+    return m.group(1) if m else from_str.strip()
 
 def parse_spad_operations(spad_path: str, start_line: int) -> dict[str, list[dict]]:
     """Extract operations and signatures defined directly in SPAD source code."""
@@ -375,12 +438,7 @@ def parse_spad_operations(spad_path: str, start_line: int) -> dict[str, list[dic
                     i += 1
                     continue
 
-                if tok.startswith("?") and tok.endswith("?") and len(tok) > 2:
-                    op_name = tok[1:-1]
-                elif tok.startswith("?"):
-                    op_name = tok[1:]
-                else:
-                    op_name = tok
+                op_name = clean_op_token(tok)
 
                 # Read docstring: check following lines first (++ doc below op : sig), otherwise preceding lines
                 doc_lines = []
@@ -423,10 +481,10 @@ def parse_delimited_op_blocks(raw_text: str) -> dict[str, list[dict]]:
         lines = op_body.splitlines()
         current_block = []
         for line in lines:
-            if "Type: Void" in line or re.match(r"^\s*Value\s*=", line):
+            if "Type: Void" in line or re.match(r"^\s*Value\s*=", line) or "operationDocumentation(" in line or re.match(r"^\s*\(\d+\)\s*->", line):
                 continue
             current_block.append(line)
-            m = re.search(r"From:\s*([A-Za-z0-9_()]+)", line)
+            m = re.search(r"From:\s*(.+)", line)
             if m:
                 from_c = m.group(1).strip()
                 block_str = "\n".join(current_block)
@@ -435,7 +493,7 @@ def parse_delimited_op_blocks(raw_text: str) -> dict[str, list[dict]]:
 
                 desc_lines = []
                 for b_ln in current_block:
-                    if b_ln.strip().startswith("Signature:") or b_ln.strip().startswith("From:"):
+                    if b_ln.strip().startswith("Signature:") or b_ln.strip().startswith("From:") or "operationDocumentation(" in b_ln or re.match(r"^\s*\(\d+\)\s*->", b_ln):
                         continue
                     desc_lines.append(b_ln)
                 desc = clean("\n".join(desc_lines), unwrap=True)
@@ -449,6 +507,30 @@ def parse_delimited_op_blocks(raw_text: str) -> dict[str, list[dict]]:
                 })
                 current_block = []
     return ops_dict
+
+OP_SLUGS = {
+    "#": "op-hash",
+    "*": "op-mul",
+    "+": "op-add",
+    "-": "op-sub",
+    "/": "op-div",
+    "^": "op-pow",
+    "=": "op-eq",
+    "~=": "op-neq",
+    "<": "op-lt",
+    "<=": "op-le",
+    ">": "op-gt",
+    ">=": "op-ge",
+}
+
+def slugify(text: str) -> str:
+    """Convert operation name to valid HTML anchor slug."""
+    s = text.strip()
+    if s in OP_SLUGS:
+        return OP_SLUGS[s]
+    s = s.lower()
+    s = re.sub(r"[^a-z0-9_-]+", "-", s)
+    return s.strip("-") or "op"
 
 def fetch_constructor_doc(name: str, fallback_meta: dict) -> dict:
     """Fetch constructor description, signatures, and detailed operations documentation."""
@@ -500,38 +582,59 @@ def fetch_constructor_doc(name: str, fallback_meta: dict) -> dict:
 
     constructor_header_md, show_block = split_show_block(show_block)
 
-    # 2. Extract operation names and fetch operationDocumentation for them
-    op_names = parse_op_names_from_show(show_block)
+    # 2. Extract constructor ancestors and operation signatures
+    ancestors = get_constructor_ancestors(name)
+    show_sigs = parse_show_signatures(show_block)
+    op_names = sorted(list(show_sigs.keys()))
     ops = {}
 
-    # First, parse operations and docstrings directly from SPAD file if available
-    if source_path:
-        spad_ops = parse_spad_operations(source_path, source_line)
-        for k, v in spad_ops.items():
-            ops[k] = list(v)
+    # First, parse operations directly from SPAD source
+    spad_ops = parse_spad_operations(source_path, source_line) if source_path else {}
 
-    if op_names:
-        # Only query operations not already extracted from SPAD source
-        skip_ops = {"*", "+", "-", "/", "^", "0", "1", "<", "<=", "=", ">", ">=", "~=", "D"}
-        query_ops = [op for op in op_names if op not in skip_ops and op not in ops]
+    # Query documentation for operations from FriCAS (skip wildcard/pattern operators which match all operations in search_operations)
+    SKIP_SDOC_OPS = {"*", "?", "+", "-", "/", "^", "<", "<=", "=", ">", ">=", "~="}
+    query_ops = [op for op in op_names if op not in SKIP_SDOC_OPS]
 
-        if query_ops:
-            chunk_size = 20
-            for i in range(0, len(query_ops), chunk_size):
-                chunk = query_ops[i:i + chunk_size]
-                op_evals = []
-                for op in chunk:
-                    op_evals.append(f')lisp (format t "~%<<<OP:{op}>>>~%")')
-                    op_evals.append(f"operationDocumentation('{op})$SpadDoc")
-                op_raw = run_fricas_evals(op_evals, timeout=10)
-                if "<<TIMEOUT>>" not in op_raw and "<<ERROR" not in op_raw:
-                    parsed_ops = parse_delimited_op_blocks(op_raw)
-                    for k, v in parsed_ops.items():
-                        if k not in ops:
-                            ops[k] = []
-                        for item in v:
-                            if not any(e.get("signature") == item.get("signature") and e.get("description") == item.get("description") for e in ops[k]):
-                                ops[k].append(item)
+    doc_blocks = {}
+    if query_ops:
+        chunk_size = 20
+        for i in range(0, len(query_ops), chunk_size):
+            chunk = query_ops[i:i + chunk_size]
+            op_evals = []
+            for op in chunk:
+                op_evals.append(f')lisp (format t "~%<<<OP:{op}>>>~%")')
+                op_evals.append(f'operationDocumentation(string("{op}")::Symbol)$SpadDoc')
+            op_raw = run_fricas_evals(op_evals, timeout=90)
+            if "<<TIMEOUT>>" not in op_raw and "<<ERROR" not in op_raw:
+                parsed_ops = parse_delimited_op_blocks(op_raw)
+                for k, v in parsed_ops.items():
+                    # Only retain doc blocks whose origin constructor belongs to this constructor's ancestors!
+                    valid_v = [b for b in v if get_origin_base(b.get("from", "")) in ancestors or b.get("from") == name or not b.get("from")]
+                    if valid_v:
+                        doc_blocks[k] = valid_v
+
+    # Merge operations with exact signatures and matched docstrings
+    for op in op_names:
+        ops[op] = []
+        if op in spad_ops:
+            for s_op in spad_ops[op]:
+                ops[op].append(s_op)
+
+        if op in doc_blocks:
+            for b in doc_blocks[op]:
+                if not any((e.get("description") and e.get("description") == b.get("description")) or (e.get("signature") and e.get("signature") == b.get("signature")) for e in ops[op]):
+                    ops[op].append(dict(b))
+
+        concrete_sigs = show_sigs.get(op, [])
+        if not ops[op]:
+            for sig in concrete_sigs:
+                ops[op].append({
+                    "signature": sig,
+                    "description": "",
+                    "from": ""
+                })
+        elif len(ops[op]) == 1 and len(concrete_sigs) == 1:
+            ops[op][0]["signature"] = concrete_sigs[0]
 
     return {
         "description": description,
@@ -582,12 +685,6 @@ def find_op_line(spad_path: str, op_name: str, start_line: int = 1) -> int | Non
         pass
     return None
 
-def slugify(text: str) -> str:
-    """Convert operation name to valid HTML anchor slug."""
-    s = text.lower().strip()
-    s = re.sub(r"[^a-z0-9_-]+", "-", s)
-    return s.strip("-") or "op"
-
 def render_md(name: str, kind: str, group: str, info: dict, source_meta: dict) -> str:
     """Render a clean GitHub-Flavored Markdown document for a constructor and its operations."""
     kind_str = f"**Kind**: {kind}"
@@ -627,15 +724,7 @@ def render_md(name: str, kind: str, group: str, info: dict, source_meta: dict) -
     ops = info.get("ops", {})
     if ops:
         lines += ["## Operations", ""]
-
-        # Filter operations relevant to this constructor or jlFriCAS
-        relevant_ops = {}
-        for op_name, blocks in ops.items():
-            my_blocks = [b for b in blocks if b.get("from") == name or not b.get("from") or b.get("from") in ALL_JLFRICAS]
-            if my_blocks:
-                relevant_ops[op_name] = my_blocks
-            elif blocks:
-                relevant_ops[op_name] = blocks
+        relevant_ops = ops
 
         if relevant_ops:
             # Operation Quick Links Overview Table / Badges
@@ -647,8 +736,9 @@ def render_md(name: str, kind: str, group: str, info: dict, source_meta: dict) -
                     if b.get("description"):
                         first_desc = b["description"].splitlines()[0][:90] + "..." if len(b["description"]) > 90 else b["description"].splitlines()[0]
                         break
+                first_desc = first_desc or f"Operation defined in {name}"
                 first_desc = first_desc.replace("|", "\\|")
-                lines.append(f"| [`{op_name}`](#{op_slug}) | {first_desc or 'Operation defined in ' + name} |")
+                lines.append(f"| [`{op_name}`](#{op_slug}) | {first_desc} |")
             lines.append("")
 
             # Detailed Operation Documentation
@@ -690,10 +780,16 @@ def render_md(name: str, kind: str, group: str, info: dict, source_meta: dict) -
 
                         if desc:
                             lines.append(desc)
-                            lines.append("")
+                        else:
+                            lines.append(f"Operation defined in {name}.")
+                        lines.append("")
 
                         if from_c and from_c != name:
-                            lines.append(f"- **From**: [`{from_c}`]({from_c}.md)")
+                            from_base = get_origin_base(from_c)
+                            if from_base in ALL_JLFRICAS:
+                                lines.append(f"- **From**: [`{from_c}`]({from_base}.md)")
+                            else:
+                                lines.append(f"- **From**: `{from_c}`")
                             lines.append("")
                 elif len(seen_entries) == 1:
                     entry = seen_entries[0]
@@ -703,11 +799,18 @@ def render_md(name: str, kind: str, group: str, info: dict, source_meta: dict) -
 
                     if desc:
                         lines.append(desc)
-                        lines.append("")
+                    else:
+                        lines.append(f"Operation defined in {name}.")
+                    lines.append("")
+
                     if sig:
                         lines.append(f"- **Signature**: `{sig}`")
                     if from_c and from_c != name:
-                        lines.append(f"- **From**: [`{from_c}`]({from_c}.md)")
+                        from_base = get_origin_base(from_c)
+                        if from_base in ALL_JLFRICAS:
+                            lines.append(f"- **From**: [`{from_c}`]({from_base}.md)")
+                        else:
+                            lines.append(f"- **From**: `{from_c}`")
                     lines.append("")
 
         if lines and lines[-1] == "":
