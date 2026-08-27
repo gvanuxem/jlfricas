@@ -110,7 +110,7 @@ jlEvalString("sin(pi / 4)")@JLFloat64
 
 ### 2. High-Performance Linear Algebra
 ```fricas
--- Create a 64-bit float matrix backed by Julia
+-- Create a 64-bit float matrix in the FriCAS process
 M : JLFloat64Matrix := urand01(2, 2)
 
 -- Or construct with explicit elements
