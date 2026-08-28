@@ -336,7 +336,7 @@ JLObject() : Exports == Implementation where
     coerce(obj) : OutputForm ==
       ret : List String := jl_stringify_wrapped_index("show",
         "_"text/plain_"", jlId(obj))$Lisp
-      if #ret = 1 then
+      if #ret = 1 and not jlRegexMatch?(string(jlType(obj)), jlRegex "String") then
         setelt!(ret, 1, jlRegexReplace(elt(ret,1), jlString("//"), jlString("/")))
       #ret ~= 1 or more?(elt(ret,1), _$LINELENGTH$Lisp)
         => pile(append(["" pretend OutputForm], ret pretend List OutputForm))
