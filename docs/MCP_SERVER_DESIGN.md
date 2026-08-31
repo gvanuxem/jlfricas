@@ -92,3 +92,6 @@ High-resolution plots (SVG/PNG) generated via `jlPlot` and FriCAS graphics routi
 *   The environment has `yason` installed and available to the Lisp implementation.
 *   The user has Julia configured with the `GR` backend (or compatible) for reliable SVG generation.
 *   The `SpadDoc` package is compiled and exposed in FriCAS for documentation tools.
+
+---
+[Back to Index](index.md)

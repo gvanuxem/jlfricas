@@ -177,7 +177,6 @@ parseAndEvalToStringEqNum str ==
     -- Only spad error? (1/0)
     -- captured_msg = '"" => ['"Unknown error during parsing in BOOT function parseAndEvalToStringEqNum"]
     string2Lines(captured_msg)
-
   NREVERSE $outputLines
 
 parseAndEvalBlockToStringEqNum str ==

@@ -467,6 +467,14 @@
             </svg>
             <span>Home & Architecture</span>
           </a>
+          <a href="#MCP_SERVER_DESIGN" onclick="navigate('MCP_SERVER_DESIGN')" id="nav-item-mcp"
+            class="flex items-center space-x-2 px-2.5 py-1.5 rounded-md text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition mt-1">
+            <svg class="w-3.5 h-3.5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+            </svg>
+            <span>MCP Server Design</span>
+          </a>
         </div>
 
         <!-- Dynamic Group Sections (Categories, Domains, Packages) -->
@@ -877,6 +885,15 @@
         }
       }
 
+      const mcpLink = document.getElementById('nav-item-mcp');
+      if (mcpLink) {
+        if (currentPage === 'MCP_SERVER_DESIGN' || pageTarget === 'MCP_SERVER_DESIGN.md') {
+          mcpLink.className = "flex items-center space-x-2 px-2.5 py-1.5 rounded-md text-xs font-semibold text-purple-300 bg-purple-600/20 border-l-2 border-purple-500 mt-1";
+        } else {
+          mcpLink.className = "flex items-center space-x-2 px-2.5 py-1.5 rounded-md text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition mt-1";
+        }
+      }
+
       const contentEl = document.getElementById('content');
       const headerEl = document.getElementById('content-header');
       const footerEl = document.getElementById('content-footer');
@@ -898,6 +915,19 @@
           const res = await fetch('index.md');
           if (!res.ok) throw new Error(`Could not load index.md (HTTP ${res.status})`);
           markdownText = await res.text();
+        } else if (currentPage === 'MCP_SERVER_DESIGN' || currentPage === 'MCP_SERVER_DESIGN.md') {
+          const res = await fetch('MCP_SERVER_DESIGN.md');
+          if (!res.ok) throw new Error(`Could not load MCP_SERVER_DESIGN.md (HTTP ${res.status})`);
+          markdownText = await res.text();
+          renderHeaderBar({
+            name: "MCP Server Design",
+            kind: "Specification",
+            group: "JL",
+            group_name: "jlFriCAS",
+            abbrev: "MCPSRV",
+            file: "MCP_SERVER_DESIGN.md"
+          });
+          headerEl.classList.remove('hidden');
         } else {
           // Attempt to fetch from constructors/${currentPage}.md
           let loaded = false;
@@ -909,6 +939,18 @@
             }
           } catch (e) {
             loaded = false;
+          }
+
+          if (!loaded) {
+            try {
+              const res = await fetch(`${currentPage}.md`);
+              if (res.ok) {
+                markdownText = await res.text();
+                loaded = true;
+              }
+            } catch (e) {
+              loaded = false;
+            }
           }
 
           // If no markdown file on disk, render from embedded catalog fallback
@@ -1019,15 +1061,19 @@
       const badgeContainer = document.getElementById('header-badges');
       const kindBadge = meta.kind === 'Category' ? 'bg-purple-950 text-purple-300 border-purple-800' :
         meta.kind === 'Domain' ? 'bg-amber-950 text-amber-300 border-amber-800' :
-          'bg-emerald-950 text-emerald-300 border-emerald-800';
+          meta.kind === 'Specification' ? 'bg-indigo-950 text-indigo-300 border-indigo-800' :
+            'bg-emerald-950 text-emerald-300 border-emerald-800';
 
       const groupBadge = meta.group === 'JL' ? 'bg-blue-950 text-blue-300 border-blue-800' :
         meta.group === 'NM' ? 'bg-teal-950 text-teal-300 border-teal-800' :
-          'bg-indigo-950 text-indigo-300 border-indigo-800';
+          meta.group === 'WS' ? 'bg-indigo-950 text-indigo-300 border-indigo-800' :
+            'bg-slate-900 text-slate-300 border-slate-700';
 
       let sourceLink = '';
       if (meta.file) {
-        const url = `${GITHUB_BASE}${meta.file}#L${meta.line || 1}`;
+        const url = meta.file.startsWith('docs/') || meta.file === 'MCP_SERVER_DESIGN.md'
+          ? `https://github.com/gvanuxem/jlfricas/blob/master/docs/${meta.file.replace(/^docs\//, '')}`
+          : `${GITHUB_BASE}${meta.file}#L${meta.line || 1}`;
         sourceLink = `
           <a href="${url}" target="_blank" rel="noopener" class="inline-flex items-center space-x-1.5 text-xs px-2.5 py-1 rounded-md bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 transition" title="View Source in GitHub">
             <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
@@ -1482,8 +1528,9 @@ View the full SPAD implementation in [${meta.file}](${sourceUrl}).
       const targetPage = parts[0];
       const targetAnchor = parts[1] || '';
 
-      // Check if targetPage is a known page (constructor name or index)
+      // Check if targetPage is a known page (constructor name or index or MCP_SERVER_DESIGN)
       const isKnownPage = targetPage === 'index' || targetPage === 'index.md' ||
+        targetPage === 'MCP_SERVER_DESIGN' || targetPage === 'MCP_SERVER_DESIGN.md' ||
         CONSTRUCTORS.some(c => c.name === targetPage);
 
       if (isKnownPage && targetPage !== currentPage) {

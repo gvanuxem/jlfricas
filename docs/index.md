@@ -169,7 +169,7 @@ jlRApply("rnorm", 5::JLObjR)
 - **Streaming Plot Display & MCP Resources**: Real-time streaming of generated 2D/3D visualizations (SVG/PNG) via `display` notifications and exposure of session plots as MCP resources (`plot://<index>`).
 - **Flexible Standalone Support**: Auto-detects runtime capabilities to operate seamlessly in both full `jlFriCAS` and standalone `FriCAS` installations.
 
-For architectural details, transport modes (StdIO and TCP/Unix sockets), and protocol specifications, see the [MCP Server Design Specification](https://github.com/gvanuxem/jlfricas/blob/master/docs/MCP_SERVER_DESIGN.md).
+For architectural details, transport modes (StdIO and TCP/Unix sockets), and protocol specifications, see the [MCP Server Design Specification](MCP_SERVER_DESIGN.md).
 
 ---
 
