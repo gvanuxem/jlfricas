@@ -2,7 +2,7 @@
 
 [FriCAS](https://fricas.github.io) is a general purpose computer algebra system with a powerful, strongly typed algebra library written in Spad. This integration incorporates the [Julia](https://julialang.org) runtime directly into FriCAS's Common Lisp process, giving FriCAS in-memory access to Julia's high-performance numerical ecosystem — including [Nemo](https://nemocas.github.io/Nemo.jl/stable/) / [FLINT](https://flintlib.org/) algebraic routines, certified [Arb](https://arblib.org/) interval ball arithmetic, and optional [Wolfram®](https://www.wolfram.com/) symbolic/numeric
 capabilities using [MathLink](https://github.com/JuliaInterop/MathLink.jl) via the [WSTP](https://www.wolfram.com/wstp/) protocol.
-Minor bridges to [Python®](https://www.python.org) and [R](https://www.r-project.org/) via [PythonCall](https://github.com/JuliaPy/PythonCall.jl) and [RCall](https://github.com/JuliaInterop/RCall.jl) are also supported natively through Julia.
+Minor bridges to [Python®](https://www.python.org) and [R](https://www.r-project.org/) via [PythonCall](https://juliapy.github.io/PythonCall.jl/stable/) and [RCall](https://juliainterop.github.io/RCall.jl/stable/) are also supported natively through Julia.
 
 > **Trademark Notice**  
 > *Wolfram* is a registered trademark of Wolfram Research, Inc.  
