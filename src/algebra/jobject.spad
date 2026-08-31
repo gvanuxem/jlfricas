@@ -201,6 +201,8 @@ JLObjectAggregate() : Category == Join(JLObjectType, Aggregate, finiteAggregate)
     import from JLSymbol
 
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+    junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
+
     #obj == jlEvalString(concat(["length(", getind(obj), ")"]))
     elt(obj : %, jsy : JLSymbol) ==
       defined : String := concat(["hasproperty(", getind(obj), ",",
@@ -216,8 +218,7 @@ JLObjectAggregate() : Category == Join(JLObjectType, Aggregate, finiteAggregate)
     qelt(obj : %, ind : Integer) ==
       jlref(concat([getind(obj), "[", string(ind), "]"]))
     empty() == jlref("missing")
-    empty? m ==
-      jlEvalString(concat(["ismissing(", getind(m),")"]))@Boolean
+    empty? m == junbfunc("ismissing", m)
 
 )abbrev category JOBRING JLObjectRing
 ++ Category for Julia object rings
@@ -979,12 +980,10 @@ JLFloat() : Exports == Implementation where
       oldp
     precision(x : %) == jlEvalString(concat(["precision(", getind(x),")"]))
     precision(x : %, p : PI) ==
-      tmp : String := concat(["setprecision(", getind(x),",", string(p),")"])
-      jlref(tmp)
+      jlref concat(["setprecision(", getind(x),",", string(p),")"])
     bits() == jlEvalString("precision(BigFloat)")@PI
     bits(n) ==
-      jlEvalString(concat ["setprecision(BigFloat,",
-        string(n), ")"])@PI
+      jlEvalString(concat ["setprecision(BigFloat,", string(n), ")"])@PI
 
     0         == jlref("zero(BigFloat)")
     1         == jlref("one(BigFloat)")
@@ -2030,9 +2029,9 @@ JLMatrix(R : JLObjectRing) : Exports == Implementation where
       jbinfunc("lll_gram", mat, cont)
 
     square?(m) == nrows(m) = ncols(m)
-    zero?(m) == jlEvalString(concat(["iszero(", getind(m), ")"]))
-    diagonal?(m) == jlEvalString(concat(["is_diagonal(", getind(m), ")"]))
-    symmetric?(m) == jlEvalString(concat(["is_symmetric(", getind(m), ")"]))
+    zero?(m) == junbfunc("iszero", m)
+    diagonal?(m) == junbfunc("is_diagonal", m)
+    symmetric?(m) == junbfunc("is_symmetric", m)
     --positiveDefinite?(m : %) : Boolean =
     --   jl_bool_2dfunction(0$NNI,"isposdef", m.elts, m.ncols)$Lisp
 
@@ -2064,13 +2063,13 @@ JLMatrix(R : JLObjectRing) : Exports == Implementation where
 
     identity(n) ==
         m := new(n,n, 0$R)
-        for i in 1..n repeat setelt!(m,i,i,1$R)
+        for i in 1..n repeat qsetelt!(m,i,i,1$R)
         m
 
     diagonalMatrix(v : JLVector(R)) : % ==
       n : NNI := #v
       u := new(n, n, 0$R)
-      for i in 1..n repeat setelt!(u, i, i, elt(v,i))
+      for i in 1..n repeat qsetelt!(u, i, i, qelt(v,i))
       u
 
     factorize(m : JLMatrix(JLObjFloat32)) == junfunc("factorize", m)

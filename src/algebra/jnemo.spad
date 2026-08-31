@@ -137,8 +137,7 @@ NMInteger() : Exports == Implementation where
     odd? x == junbfunc("isodd",x)
     even? x == junbfunc("iseven",x)
     prime? x == junbfunc("is_prime",x)
-    probablePrime? x ==
-      jlEvalString(concat ["is_probable_prime(",getind(x),")"])
+    probablePrime? x == junbfunc("is_probable_prime", x)
     x  * y : Integer == jlref(concat([getind(x), "*", string(y)]))
     abs(x) == junfunc("abs", x)
     abs2(x) == junfunc("abs2", x)
@@ -178,8 +177,7 @@ NMInteger() : Exports == Implementation where
     lcm(a,b) == jbinfunc("lcm",a,b)
     (p1:% exquo p2:%): Union(%,"failed") ==
       ret : JLObjTuple := jbinfunc("divides", p1, p2)
-      not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
-        => "failed"
+      not junbfunc("first", ret) => "failed"
       junfunc("last", ret)@%
     inverse(x) == junfunc("inv",x)
     divide(a,b) : Record(quotient : %, remainder : %) ==
@@ -1345,10 +1343,8 @@ InnerNMExactCalciumField(Options : JLObjDict) : Exports ==
     1    == jlref(concat ["one(", INECF,")"])
     -- Why this redundancy here? Cf. jnemo.input checks
     -- TODO (and check other inner domains - jnball)
-    x = y ==
-      jlEvalString(concat [getind(x),"==",getind(y)])@Boolean
-    x ~= y ==
-      jlEvalString(concat [getind(x),"!=",getind(y)])@Boolean
+    x = y == jbinbfunc("==",x,y)
+    x ~= y == jbinbfunc("~=",x,y)
     imaginary() == jlref(concat ["onei(", INECF,")"])
     real(x) == junfunc("real", x)
     imag(x) == junfunc("imag", x)
@@ -1751,10 +1747,8 @@ NMExactCalciumField() : Exports == Implementation where
     1    == jlref(concat ["one(", NECF,")"])
     -- Why this redundancy here? Cf. jnemo.input checks
     -- TODO (and check other inner domains - jnball)
-    x = y ==
-      jlEvalString(concat [getind(x),"==",getind(y)])@Boolean
-    x ~= y ==
-      jlEvalString(concat [getind(x),"!=",getind(y)])@Boolean
+    x = y == jbinbfunc("==",x,y)
+    x ~= y == jbinbfunc("!=",x,y)
     imaginary() == jlref(concat ["onei(", NECF,")"])
     real(x) == junfunc("real", x)
     imag(x) == junfunc("imag", x)
@@ -1998,6 +1992,7 @@ NMFraction(R : Join(NMCommutativeRing, IntegralDomain)) :
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
     jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+    junbfunc(func,a) ==> jl_call1_bool_wrapped_index(func,jlId(a))$Lisp
     jbinbfunc(op,a,b) ==>
       jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
@@ -2061,8 +2056,7 @@ NMFraction(R : Join(NMCommutativeRing, IntegralDomain)) :
       x rem y == jbinfunc("%", x, y)
       (p1:% exquo p2:%): Union(%,"failed") ==
         ret : JLObjTuple := jbinfunc("divides", p1, p2)
-        not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
-          => "failed"
+        not junbfunc("first", ret) => "failed"
         junfunc("last", ret)@%
       D(x) == 0
       D(x, nni) == 0

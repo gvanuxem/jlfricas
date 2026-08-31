@@ -1,6 +1,3 @@
-;(locally
-;  (declare (optimize (speed 3) (safety 0) (debug 0))))
-
 (in-package "FRICAS-LISP")
 
 #+(or :sbcl :openmcl)
@@ -158,6 +155,9 @@
 )
 
 (in-package "BOOT")
+
+(locally
+  (declare (optimize (speed 3) (safety 0) (debug 0)))
 
 (defun make-jlindex()
     (loop for n from 1 upto most-positive-fixnum
@@ -655,3 +655,4 @@
                     (funcall send-display-fn kind data)
                     t)))))
         (error () nil)))))
+)

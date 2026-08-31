@@ -1,4 +1,9 @@
 (in-package "BOOT")
+
+(locally
+  (declare (optimize (speed 3) (safety 0) (debug 0)))
+
+
 (export (import (find-symbol "FIXNUMP" 'ccl)) 'boot)
 
 (defconstant single-positive-infinity (coerce ccl::double-float-positive-infinity 'single-float))
@@ -564,3 +569,4 @@
             (ccl::external-call "jl_clear_env" :void)
             (setf  *julia-initialized* nil))
         *julia-initialized*))
+)

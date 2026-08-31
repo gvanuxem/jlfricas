@@ -271,8 +271,7 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
 
     (p1:% exquo p2:%) ==
       ret : JLObjTuple := jbinfunc("divides", p1, p2)
-      not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
-        => "failed"
+      not junbfunc("first", ret) => "failed"
       junfunc("last", ret)@%
     a:% quo b:% == jbinfunc("div", a, b)
     a:% rem b:% == jbinfunc("mod", a, b)
@@ -284,8 +283,7 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
     if R has DivisionRing then
       recip(p) ==
         ret : JLObjTuple := jbinfunc("divides", 1, p)
-        not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
-          => "failed"
+        not junbfunc("first", ret) => "failed"
         junfunc("last", ret)@%
       p/(r : R) == inv(r)*p
       unitNormal(p) ==
@@ -326,7 +324,7 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
     degree(p) == jlEvalString(concat(["degree(", getind(p),")"]))@NNI
     minimumDegree(p) ==
       jlEvalString(concat(["findfirst(!iszero, _
-        collect(coefficients(",getind(p),")))-1"]))@NNI
+        collect(coefficients(", getind(p),")))-1"]))@NNI
     leadingTerm(p) ==
       [degree(p), leadingCoefficient(p)]
     listOfTerms(p) ==
@@ -568,8 +566,7 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
     exactDivide(p,q) == jbinfunc("divexact", p, q)
     (p1:% exquo p2:%) ==
       ret : JLObjTuple := jbinfunc("divides", p1, p2)
-      not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
-        => "failed"
+      not junbfunc("first", ret) => "failed"
       junfunc("last", ret)@%
     divide(a,b) : Record(quotient : %, remainder : %) ==
       ret : JLObjTuple := jbinfunc("divrem",a,b)
@@ -580,9 +577,8 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
     if R has DivisionRing then
       recip(p) ==
         ret : JLObjTuple := jbinfunc("divides", 1$R, p)
-        not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
-          => "failed"
-        junfunc("last", ret) pretend %
+        not junbfunc("first", ret) => "failed"
+        junfunc("last", ret)@%
       p/r : R == inv(r)*p -- TODO
       unitNormal(p) ==
         unitC : R := junfunc("canonical_unit", p)
@@ -627,8 +623,7 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
     --constantCoefficient(p) ==
     --  jlref(concat ["constant_coefficient(", getind(p),")"])$R
     --degree(p) == jlEvalString(concat(["degree(", getind(p),")"]))@NNI
-    minimumDegree(p) : INT == -- ??
-      jlEvalString(concat [getind(p), ".mindeg"])
+    minimumDegree(p) : INT == jlEvalString(concat [getind(p), ".mindeg"])
     --leadingTerm(p) ==
     --  ind := getind(p)
     --  deg : NNI := parsei(string jlref(concat ["degree(", ind,")"]))
@@ -862,8 +857,7 @@ InnerNMPolynomial(R : NMRing, Ordering : JLSymbol) : Exports == Implementation w
 
     (p1:% exquo p2:%) ==
       ret : JLObjTuple := jbinfunc("divides", p1, p2)
-      not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
-        => "failed"
+      not junbfunc("first", ret) => "failed"
       junfunc("last", ret)@%
     characteristic() ==
       jlEvalString(concat(["characteristic(", NUNPRing,"[1])"]))
@@ -914,9 +908,8 @@ InnerNMPolynomial(R : NMRing, Ordering : JLSymbol) : Exports == Implementation w
         l := concat(l, string(v.i)::Symbol)
       l
     mainVariable(p : %) : Union(Symbol, "failed") ==
-      jlEvalString(concat(["is_constant(", getind(p), ")"]))@Boolean
-        => "failed"
-      v_p : JLVector(JLObject) := jlref(concat(["vars(", getind(p), ")"]))
+      junbfunc("is_constant", p) => "failed"
+      v_p : JLVector(JLObject) := junfunc("vars", p)
       #v_p = 0 => "failed"
       string(qelt(v_p, 1))::Symbol
     variables(p) ==
@@ -1034,8 +1027,7 @@ InnerNMPolynomial(R : NMRing, Ordering : JLSymbol) : Exports == Implementation w
     --  jlref(ret)
 
     retractIfCan(p : %) : Union(R,"failed") ==
-      jlEvalString(concat(["is_constant(", getind(p),")"]))@Boolean
-        => jlref(string(p))$R -- Huh: TODO
+      junbfunc("is_constant", p) => jlref(string(p))$R
       "failed"
 
     coerce(v : Symbol) ==
@@ -1318,8 +1310,7 @@ InnerNMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
 
     (p1:% exquo p2:%) ==
       ret : JLObjTuple := jbinfunc("divides", p1, p2)
-      not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
-        => "failed"
+      not junbfunc("first", ret) => "failed"
       junfunc("last", ret)@%
     characteristic() ==
       jlEvalString(concat(["characteristic(", NMPRing,"[1])"]))
@@ -1332,16 +1323,19 @@ InnerNMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
     factor(a : %) : NMFactored(%) == factor(a)$NMFactored(%)
     factor(a : %) : Factored(%) == factor(a)$NMFactored(%)
     mainVariable(p : %) ==
-      jlEvalString(concat(["is_constant(", getind(p),")"]))@Boolean
-        => "failed"
+      junbfunc("is_constant", p) => "failed"
       sym : String := jlEvalString(concat ["string(vars(",getind(p),")[1])"])
       variable(sym::Symbol)$OrderedVariableList(VarSet)
     variables(p) == enumerate()$OrderedVariableList(VarSet)
     length(p) == jlEvalString(concat(["length(", getind(p),")"]))
     shiftLeft(p,n) == jlref(concat ["shift_left(", getind(p),",", string(n),")"])
     shiftRight(p,n) == jlref(concat ["shift_right(", getind(p),",", string(n),")"])
-    shiftLeft!(p,n) == jlref(concat ["shift_left!(", getind(p),",", string(n),")"])
-    shiftRight!(p,n) == jlref(concat ["shift_right!(", getind(p),",", string(n),")"])
+    shiftLeft!(p,n) ==
+      jlEvalString(concat ["shift_left!(", getind(p),",", string(n),")"])@Void
+      p
+    shiftRight!(p,n) ==
+      jlEvalString(concat ["shift_right!(", getind(p),",", string(n),")"])@Void
+      p
 
     coefficients(p) : JLVector(R) ==
       jlref(concat ["collect(coefficients(", getind(p),"))"])
@@ -1460,8 +1454,7 @@ InnerNMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
       jlref(ret)
 
     retractIfCan(p : %) : Union(R,"failed") ==
-      jlEvalString(concat(["is_constant(", getind(p),")"]))@Boolean
-        => jlref(string(p))$R -- Huh: TODO
+      junbfunc("is_constant", p) => jlref(string(p))$R
       "failed"
 
     coerce(v : OrderedVariableList(VarSet)) ==
@@ -1834,8 +1827,7 @@ NMMultivariateLaurentPolynomial(R : NMRing,
 
     (p1:% exquo p2:%) ==
       ret : JLObjTuple := jbinfunc("divides", p1, p2)
-      not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
-        => "failed"
+      not junbfunc("first", ret) => "failed"
       junfunc("last", ret)@%
 
     reductum(p : %) : % ==
@@ -1954,8 +1946,7 @@ NMMultivariateLaurentPolynomial(R : NMRing,
     if R has DivisionRing then
       recip(p) ==
         ret : JLObjTuple := jbinfunc("divides", 1$R, p)
-        not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
-          => "failed"
+        not junbfunc("first", ret) => "failed"
         junfunc("last",ret) pretend %
       p/(r : R) == inv(r)*p
       unitNormal(p) ==

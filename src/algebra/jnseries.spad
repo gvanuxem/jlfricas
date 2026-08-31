@@ -120,8 +120,7 @@ NMUnivariatePowerSeries(R, x, prec, abs) : Exports == Implementation where
     exactDivide(p,q) == jbinfunc("divexact", p, q)
     (p1:% exquo p2:%) ==
       ret : JLObjTuple := jbinfunc("divides", p1, p2)
-      not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
-        => "failed"
+      not junbfunc("first", ret) => "failed"
       junfunc("last", ret)@%
 
     characteristic() ==
@@ -129,10 +128,10 @@ NMUnivariatePowerSeries(R, x, prec, abs) : Exports == Implementation where
     variable(s : %) == x
     coefficient(s : %, n : NNI) ==
       jlref(concat ["coeff(", getind(s),",", string(n) ")"])$R
-    valuation(s) == jlEvalString(concat ["valuation(",getind(s),")"])
+    valuation(s) == jlEvalString(concat ["valuation(", getind(s),")"])
 
     jlNMRing() == NUPSRing
-    jlObject() == jlEvalString(concat ["string(",NUPSRing,")"])@String
+    jlObject() == jlEvalString(concat ["string(", NUPSRing,")"])@String
 
     if R has Algebra NMFraction(NMInteger) then
       exp(s) == junfunc("exp", s)
@@ -326,8 +325,7 @@ NMUnivariateLaurentSeries(R, x, prec) : Exports == Implementation where
     exactDivide(p,q) == jbinfunc("divexact", p, q)
     (p1:% exquo p2:%) ==
       ret : JLObjTuple := jbinfunc("divides", p1, p2)
-      not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
-        => "failed"
+      not junbfunc("first", ret) => "failed"
       junfunc("last", ret)@%
 
     characteristic() ==
@@ -494,8 +492,7 @@ NMUnivariatePuiseuxSeries(R, x, prec) : Exports == Implementation where
     exactDivide(p,q) == jbinfunc("divexact", p, q)
     (p1:% exquo p2:%) ==
       ret : JLObjTuple := jbinfunc("divides", p1, p2)
-      not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
-        => "failed"
+      not junbfunc("first", ret) => "failed"
       junfunc("last", ret)@%
 
     characteristic() ==

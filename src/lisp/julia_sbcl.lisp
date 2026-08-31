@@ -1,4 +1,8 @@
 (in-package "BOOT")
+
+(locally
+  (declare (optimize (speed 3) (safety 0) (debug 0)))
+
 (export (import (find-symbol "FIXNUMP" 'sb-ext)) 'boot)
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
@@ -881,3 +885,4 @@
                 (sb-alien:function sb-alien:void)))
 	  (setf *julia-initialized* nil))
       *julia-initialized*))
+)

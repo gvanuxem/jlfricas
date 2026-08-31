@@ -270,8 +270,7 @@ NMArbField(p: PositiveInteger) : Exports == Implementation where
     trim(x) == junfunc("trim",x)
     uniqueInteger(x) ==
       ret : JLObjTuple := junfunc("unique_integer",x)
-      not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
-        => "failed"
+      not junbfunc("first", ret) => "failed"
       junfunc("last", ret)@NMInteger
     setUnion(x,y) == jbinfunc("setunion",x,y)
 
@@ -738,8 +737,7 @@ NMAcbField(p: PositiveInteger) : Exports == Implementation where
     trim(x) == junfunc("trim",x)
     uniqueInteger(x) ==
       ret : JLObjTuple := junfunc("unique_integer",x)
-      not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
-        => "failed"
+      not junbfunc("first", ret) => "failed"
       junfunc("last", ret)@NMInteger
 
     jlNMRing() == NACB
@@ -1206,8 +1204,7 @@ NMRealField() : Exports == Implementation where
       x
     uniqueInteger(x) ==
       ret : JLObjTuple := junfunc("unique_integer",x)
-      not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
-        => "failed"
+      not junbfunc("first", ret) => "failed"
       junfunc("last", ret)@NMInteger
     setUnion(x,y) == jbinfunc("setunion",x,y)
 
@@ -1656,8 +1653,7 @@ NMComplexField() : Exports == Implementation where
     trim(x) == junfunc("trim",x)
     uniqueInteger(x) ==
       ret : JLObjTuple := junfunc("unique_integer",x)
-      not jlEvalString(concat(["first(", getind(ret), ")"]))@Boolean
-        => "failed"
+      not junbfunc("first", ret) => "failed"
       junfunc("last", ret)@NMInteger
 
     jlNMRing() == "NCF"
