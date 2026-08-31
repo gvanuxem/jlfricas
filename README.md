@@ -2,7 +2,8 @@
 
 [![FriCAS CI on x64|arm64 Linux (with Julia support - SBCL based)](https://github.com/gvanuxem/jlfricas/actions/workflows/linuxJulia_sbcl.yml/badge.svg)](https://github.com/gvanuxem/jlfricas/actions/workflows/linuxJulia_sbcl.yml)\
 [![FriCAS CI on x64 Windows (with Julia support - SBCL based)](https://github.com/gvanuxem/jlfricas/actions/workflows/windowsJulia_sbcl.yml/badge.svg)](https://github.com/gvanuxem/jlfricas/actions/workflows/windowsJulia_sbcl.yml)\
-[![FriCAS CI on arm64|intel macOS (with Julia support - SBCL based)](https://github.com/gvanuxem/jlfricas/actions/workflows/macOSJulia_sbcl.yml/badge.svg)](https://github.com/gvanuxem/jlfricas/actions/workflows/macOS_Julia_sbcl.yml)
+[![FriCAS CI on arm64|intel macOS (with Julia support - SBCL based)](https://github.com/gvanuxem/jlfricas/actions/workflows/macOSJulia_sbcl.yml/badge.svg)](https://github.com/gvanuxem/jlfricas/actions/workflows/macOS_Julia_sbcl.yml)\
+[![Generate jlFriCAS Documentation](https://github.com/gvanuxem/jlfricas/actions/workflows/generate_docs.yml/badge.svg)](https://github.com/gvanuxem/jlfricas/actions/workflows/generate_docs.yml)
 
 
 
