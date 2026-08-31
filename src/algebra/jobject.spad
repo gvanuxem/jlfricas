@@ -24,9 +24,10 @@ JLObjectType() : Category == JLType() with
     ++ jlRef(obj) returns the internal Lisp representation
     ++ of the Julia object obj.
     jlGetJuliaIndex : % -> String
-    ++ jlGetJuliaIndex(obj) returns the Julia indexed dictionary index
-    ++ referencing the object obj.
-    ++ Convenience function for use in the interpreter.
+    ++ jlGetJuliaIndex(obj) returns the string that allows access to the
+    ++ Julia indexed dictionary index referencing the object obj.
+    ++ Convenience function for use in the interpreter (jlref).
+    ++ For example: jlGetJuliaIndex(df) => "getindex(refs,10)"
     jlDump : JLObject -> Void
     ++ jlDump(obj) dumps (shows) the Julia object (internal structure with type).
     mutable? : % -> Boolean
@@ -286,15 +287,15 @@ JLObject() : Exports == Implementation where
     ++ jlCollect(obj) collects element of a Julia iterator
     ++ in a JLVector.
     jany : () -> %
-    ++ jany() returns the JLObject representing Any in Julia.
+    ++ jany() returns the JLObject representing the Any DataType in Julia.
     jmissing : () -> %
-    ++ jmissing() returns the JLObject representing Missing in Julia.
+    ++ jmissing() returns the JLObject representing missing in Julia.
     jnothing : () -> %
-    ++ jnothing() returns the JLObject representing Nothing in Julia.
+    ++ jnothing() returns the JLObject representing nothing in Julia.
     junion : List(%) -> %
     ++ junion(l) returns the JLObject representing the union of the types in l.
     jstring : String -> %
-    ++ jstring(str) returns the JLObject representing the String str.
+    ++ jstring(str) returns the JLObject representing the Julia String str.
     ++ Convenience function.
     jobject : Integer -> %
     ++ jobject(n) returns the JLObject representing the integer n.

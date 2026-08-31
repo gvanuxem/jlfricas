@@ -35,7 +35,7 @@ jobs:
         tar -czf jlFriCAS-linux-sbcl-${ARCH}-${{ github.sha }}.tar.gz target/
 
     - name: Upload Linux binary
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
         archive: false
         path: jlFriCAS-linux-sbcl-${{ env.ARCH }}-${{ github.sha }}.tar.gz
