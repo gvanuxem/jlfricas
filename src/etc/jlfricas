@@ -104,6 +104,47 @@ algebra_off=')set output algebra off'
 texmacs_on=')set output texmacs on'
 markers=")lisp (setf |\$ioHook| (lambda (x &optional args) (cond ((eq x '|startPrompt|) (princ (concat (code-char 2) \"prompt\#\") ))  ((eq x '|endOfTeXmacsOutput|) (princ (concat (code-char 5) (code-char 10)))) ((eq x '|startTeXmacsOutput|) (princ (code-char 2)))  ((eq x '|startKeyedMsg|)  (princ (concat (code-char 2) \"verbatim:\")))  ((eq x '|endOfKeyedMsg|)  (princ (code-char 5)))  ((eq x '|endOfPrompt|) (princ (code-char 5) ))  )))"
 
+if [ "$*" = "-texmacs" ] ; then
+    exec "$FRICAS/bin/FRICASsys" -- -eval "$algebra_off" -eval "$markers" -eval "$texmacs_on"
+fi
+
+# Start FriCAS from inside emacs. Discard output to stderr.
+if [ "$*" = "-emacs" ] ; then
+    eval "exec $FRICAS/bin/sman -noclef 2>/dev/null"
+fi
+
+# Call FRICASsys directly.
+if [ "$1" = "-nosman" ] ; then
+    shift
+
+    # If -rl option is given, it must come right after -nosman
+    if [ "$1" = "-rl" ] ; then
+        shift
+        if ! have_rlwrap ; then RLWRAP=""; fi
+    else
+        RLWRAP=""
+    fi
+
+    # Check if MCP mode is requested — need fd 3 setup
+    nosman_mcp=false
+    for arg in "$@"; do
+        case "$arg" in
+            --mcp|--mcp-port) nosman_mcp=true; break ;;
+        esac
+    done
+
+    if [ "$nosman_mcp" = "true" ] ; then
+        # MCP Mode: save original stdout as fd 3 for JSON output,
+        # then redirect stdout to stderr so the FRICASsys banner
+        # doesn't pollute the JSON-RPC stream.
+        exec 3>&1 1>&2 "$FRICAS/bin/FRICASsys" "$@"
+    else
+        exec $RLWRAP "$FRICAS/bin/FRICASsys" "$@"
+    fi
+
+    exit 1
+fi
+
 list=no
 go=yes
 wsname=FRICASsys
@@ -201,27 +242,12 @@ while [ "$*" != "" ] ; do
         shift
 done
 
-# Setup special frontends.
-if [ "$otheropts" = "-texmacs" ] ; then
-    exec "$FRICAS/bin/FRICASsys" -- -eval "$algebra_off" -eval "$markers" -eval "$texmacs_on"
-fi
-
-# Start FriCAS from inside emacs. Discard output to stderr.
-if [ "$otheropts" = "-emacs" ] ; then
-    eval "exec $FRICAS/bin/sman -noclef 2>/dev/null"
-fi
-
-# Call FRICASsys directly if -nosman or MCP mode
+# Call FRICASsys directly if MCP mode
 if [ "$mcp_mode" = "true" ] ; then
-    if [ "$opt_mcp" = "" ] ; then
-        # -nosman Case (no MCP flag, just skip sman)
-        exec $RLWRAP -s 1000 "$FRICAS/bin/FRICASsys" $otheropts
-    else
-        # MCP Mode: save original stdout as fd 3 for JSON output,
-        # then redirect stdout to stderr so the FRICASsys banner
-        # doesn't pollute the JSON-RPC stream.
-        exec 3>&1 1>&2 "$FRICAS/bin/FRICASsys" $otheropts
-    fi
+    # MCP Mode: save original stdout as fd 3 for JSON output,
+    # then redirect stdout to stderr so the FRICASsys banner
+    # doesn't pollute the JSON-RPC stream.
+    exec 3>&1 1>&2 "$FRICAS/bin/FRICASsys" $otheropts
     exit 1
 fi
 

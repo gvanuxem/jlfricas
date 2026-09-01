@@ -888,10 +888,11 @@
       (handler-case
           (let ((msgs-sym (find-symbol "$displayStartMsgs" boot-pkg))
                 (quiet-sym (find-symbol "$QuietCommand" boot-pkg))
+                (initroot-sym (find-symbol "initroot" boot-pkg))
                 (init-sym (find-symbol "fricas_init" boot-pkg))
                 (curout-sym (find-symbol "CUROUTSTREAM" boot-pkg))
-                (int-frame-sym (find-symbol "$InteractiveFrame" boot-pkg))
-                (jl-init-sym (find-symbol "init_julia_env" boot-pkg)))
+                (jl-init-sym (find-symbol "init_julia_env" boot-pkg))
+                (load-libspad-sym (find-symbol "*FRICAS-LOAD-LIBSPAD*" boot-pkg)))
 
             (when msgs-sym (set msgs-sym nil))
             (when quiet-sym (set quiet-sym t))
@@ -899,14 +900,22 @@
             ;; Ensure CUROUTSTREAM is redirected to STDERR
             (when curout-sym (set curout-sym *error-output*))
 
-            ;; Initialize FriCAS only if not already running
-            ;; (when started via -eval, FriCAS is already initialized)
-            (when (and init-sym
-                      (or (not int-frame-sym)
-                          (not (boundp int-frame-sym))
-                          (null (symbol-value int-frame-sym))))
-              (let ((*standard-output* (make-broadcast-stream)))
-                (funcall init-sym)))
+            ;; Always ensure initroot is called so $spadroot is derived from FRICAS env var or binary path
+            (when (and initroot-sym (fboundp initroot-sym))
+              (funcall initroot-sym))
+
+            ;; If fricas_init has not yet run (i.e. *FRICAS-LOAD-LIBSPAD* is true or unbound), run it now.
+            ;; This loads libspad, gmp_wrap, julia_wrap and calls interpsys_restart (which opens databases).
+            (if (and init-sym
+                     (fboundp init-sym)
+                     (or (null load-libspad-sym)
+                         (not (boundp load-libspad-sym))
+                         (symbol-value load-libspad-sym)))
+                (let ((*standard-output* (make-broadcast-stream)))
+                  (funcall init-sym))
+                (let ((interp-restart-sym (find-symbol "interpsys_restart" boot-pkg)))
+                  (when (and interp-restart-sym (fboundp interp-restart-sym))
+                    (funcall interp-restart-sym))))
 
             ;; Patch database read for thread-safety before opening them
             (patch-fricas-database-read)
@@ -1153,12 +1162,14 @@
 
        ;; Use fd 3 for output (original stdout), fd 0 for input
        #+sbcl
-       (let* ((bin-out (handler-case
+       (let* ((using-fd3 t)
+              (bin-out (handler-case
                            (sb-sys:make-fd-stream 3
                                                   :output t
                                                   :buffering :full
                                                   :element-type '(unsigned-byte 8))
                          (error ()
+                           (setf using-fd3 nil)
                            (sb-sys:make-fd-stream 1
                                                   :output t
                                                   :buffering :full
@@ -1167,11 +1178,11 @@
                                               :input t
                                               :element-type '(unsigned-byte 8))))
          (setf *mcp-json-stream* bin-out)
-         ;; Redirect fd 1 to stderr (fd 2) at the C level,
+         ;; Redirect fd 1 to stderr (fd 2) at the C level when using fd 3,
          ;; so any C-level output (e.g. "Checking for foreign routines")
          ;; goes to stderr instead of leaking to the MCP client via fd 3.
-         ;; The fd 3 stream (bin-out) is already open and unaffected.
-         (sb-posix:dup2 2 1)
+         (when using-fd3
+           (sb-posix:dup2 2 1))
          (unwind-protect
               (progn
                 (initialize-fricas-for-mcp)
@@ -1179,14 +1190,15 @@
                 (mcp-loop bin-in bin-out))
            (fricas-lisp:quit)))
        #+openmcl
-       (let* ((bin-out (handler-case
+       (let* ((using-fd3 t)
+              (bin-out (handler-case
                            (ccl::make-fd-stream 3
                                                 :direction :output
                                                 :character-p t)
                          (error ()
+                           (setf using-fd3 nil)
                            ;; fd 3 doesn't exist (e.g., -nosman mode)
                            ;; Fall back to stdout (fd 1)
-                           (format *error-output* "fd 3 doesn't exist")
                            (ccl::make-fd-stream 1
                                                 :direction :output
                                                 :character-p t))))
@@ -1194,9 +1206,9 @@
                                             :direction :input
                                             :character-p t)))
          (setf *mcp-json-stream* bin-out)
-         ;; Redirect fd 1 to stderr (fd 2) at the C level,
-         ;; so any C-level output doesn't leak to the MCP client.
-         (ccl:external-call "dup2" :int 2 :int 1 :int)
+         ;; Redirect fd 1 to stderr (fd 2) at the C level when using fd 3.
+         (when using-fd3
+           (ccl:external-call "dup2" :int 2 :int 1 :int))
          (unwind-protect
               (progn
                 (initialize-fricas-for-mcp)
