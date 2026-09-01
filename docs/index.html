@@ -1131,10 +1131,17 @@ View the full SPAD implementation in [${meta.file}](${sourceUrl}).
           if (c.startsWith('language-')) lang = c.replace('language-', '');
         });
 
+        let displayLang = lang.toUpperCase();
+        if (lang.toLowerCase() === 'fricas') displayLang = 'FriCAS';
+        else if (lang.toLowerCase() === 'julia' || lang.toLowerCase() === 'jl') displayLang = 'Julia';
+        else if (lang.toLowerCase() === 'lisp') displayLang = 'Lisp';
+        else if (lang.toLowerCase() === 'spad') displayLang = 'SPAD';
+        else if (lang.toLowerCase() === 'boot') displayLang = 'Boot';
+
         const header = document.createElement('div');
         header.className = 'code-block-header';
         header.innerHTML = `
-          <span>${lang.toUpperCase()}</span>
+          <span>${displayLang}</span>
           <button class="copy-btn" onclick="copySnippet(this)">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
             <span>Copy</span>

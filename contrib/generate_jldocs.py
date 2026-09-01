@@ -54,6 +54,218 @@ if args.clean:
                 continue
             os.remove(os.path.join(OUT_DIR, f))
 
+# ── SPAD Docstring Formatting Helpers ────────────────────────────────────────
+
+def extract_brace(s: str, pos: int) -> tuple[str, int]:
+    """Given string s and pos pointing at opening '{', returns (inner_content, next_pos)."""
+    n = len(s)
+    count = 1
+    i = pos + 1
+    res = []
+    while i < n and count > 0:
+        if s[i] == "\\" and i + 1 < n:
+            res.append(s[i:i+2])
+            i += 2
+        elif s[i] == "{":
+            count += 1
+            res.append(s[i])
+            i += 1
+        elif s[i] == "}":
+            count -= 1
+            if count > 0:
+                res.append(s[i])
+            i += 1
+        else:
+            res.append(s[i])
+            i += 1
+    return "".join(res), i
+
+def clean_spad_macros(s: str) -> str:
+    """Clean SPAD TeX markup macros like \\spad{...}, \\em{...}, \\spadfunFrom{...}{...}, etc."""
+    n = len(s)
+    res = []
+    i = 0
+    while i < n:
+        if s[i] == "\\":
+            i += 1
+            if i >= n:
+                res.append("\\")
+                break
+            start = i
+            while i < n and (s[i].isalpha() or s[i] in "@&_"):
+                i += 1
+            mac = s[start:i]
+            if not mac:
+                # Escaped char like \{, \}, \%, \\, \_
+                if i < n:
+                    res.append(s[i])
+                    i += 1
+                continue
+
+            if mac in ("spad", "spadop", "spadfun", "spadtype", "url", "em", "it", "bold", "spadvar", "spadgloss", "pspadfun", "spadsys", "spadpaste", "spadignore", "spadcommand", "footnote", "s"):
+                if i < n and s[i] == "{":
+                    inner, next_pos = extract_brace(s, i)
+                    cleaned_inner = clean_spad_macros(inner)
+                    if mac in ("em", "it"):
+                        res.append(f"*{cleaned_inner}*")
+                    elif mac == "bold":
+                        res.append(f"**{cleaned_inner}**")
+                    else:
+                        res.append(cleaned_inner)
+                    i = next_pos
+                else:
+                    res.append(mac)
+            elif mac in ("spadfunFrom", "spadopFrom"):
+                if i < n and s[i] == "{":
+                    arg1, p1 = extract_brace(s, i)
+                    i = p1
+                    if i < n and s[i] == "{":
+                        arg2, p2 = extract_brace(s, i)
+                        i = p2
+                        res.append(f"{clean_spad_macros(arg1)} from {clean_spad_macros(arg2)}")
+                    else:
+                        res.append(clean_spad_macros(arg1))
+                else:
+                    res.append(mac)
+            elif mac in ("blankline", "newline"):
+                res.append("\n\n")
+            elif mac == "tab":
+                res.append("    ")
+            elif mac == "space":
+                res.append(" ")
+            elif mac == "LaTeX":
+                res.append("LaTeX")
+            elif mac == "TeX":
+                res.append("TeX")
+            elif mac == "undocumented":
+                res.append("is undocumented")
+            else:
+                if i < n and s[i] == "{":
+                    inner, next_pos = extract_brace(s, i)
+                    res.append(clean_spad_macros(inner))
+                    i = next_pos
+                else:
+                    res.append(mac)
+        elif s[i] in ("{", "}"):
+            i += 1
+        else:
+            res.append(s[i])
+            i += 1
+    return "".join(res)
+
+def format_spad_docstring(doc_lines_or_text) -> str:
+    """Format docstring lines or raw text into GitHub Markdown with ```fricas code blocks for examples."""
+    if isinstance(doc_lines_or_text, list):
+        cleaned_lines = []
+        for ln in doc_lines_or_text:
+            s = ln.strip()
+            if s.startswith("++"):
+                s = s[2:].strip()
+            cleaned_lines.append(s)
+        raw_text = "\n".join(cleaned_lines)
+    else:
+        raw_text = doc_lines_or_text or ""
+        lines = []
+        for ln in raw_text.splitlines():
+            s = ln.strip()
+            if s.startswith("++"):
+                s = s[2:].strip()
+            lines.append(s)
+        raw_text = "\n".join(lines)
+
+    if not raw_text.strip():
+        return ""
+
+    # Clean FriCAS output noise
+    raw_text = re.sub(r"(?m)^\s*Value\s*=.*$", "", raw_text)
+    raw_text = re.sub(r"\s*Type:\s*Void\s*", "", raw_text)
+    raw_text = re.sub(r"(?m)^\s*\)[a-zA-Z].*$", "", raw_text)
+    raw_text = re.sub(r"(?m)^\s*(?:constructorDocumentation|operationDocumentation)\(.*$", "", raw_text)
+    raw_text = re.sub(r"(?m)^\s*\(\d+\)\s*->.*$", "", raw_text)
+
+    # 1. Extract \example{...} blocks
+    segments = []  # list of ('text' | 'example', str)
+    i = 0
+    n = len(raw_text)
+    cur_text = []
+
+    while i < n:
+        if raw_text[i:i+8] == "\\example" and i + 8 < n and raw_text[i+8] == "{":
+            if cur_text:
+                segments.append(("text", "".join(cur_text)))
+                cur_text = []
+            inner, next_pos = extract_brace(raw_text, i + 8)
+            code = inner.replace("\\{", "{").replace("\\}", "}").replace('\\"', '"').strip()
+            segments.append(("example", code))
+            i = next_pos
+        else:
+            cur_text.append(raw_text[i])
+            i += 1
+    if cur_text:
+        segments.append(("text", "".join(cur_text)))
+
+    # 2. Also handle Example: blocks from FriCAS SpadDoc output
+    expanded = []
+    for kind, val in segments:
+        if kind == "example":
+            expanded.append((kind, val))
+        else:
+            val_fixed = re.sub(r"Ex\s*ample\s*:\s*", "\nExample: ", val)
+            if "Example:" in val_fixed:
+                parts = re.split(r"(?m)^Example:\s*", val_fixed)
+                if parts[0].strip():
+                    expanded.append(("text", parts[0]))
+                for p in parts[1:]:
+                    p_lines = p.splitlines()
+                    ex_lines = []
+                    rest_lines = []
+                    in_ex = True
+                    for ln in p_lines:
+                        if not ln.strip():
+                            in_ex = False
+                            continue
+                        if in_ex:
+                            ex_lines.append(ln.strip())
+                        else:
+                            rest_lines.append(ln)
+                    if ex_lines:
+                        expanded.append(("example", "\n".join(ex_lines)))
+                    if rest_lines:
+                        expanded.append(("text", "\n".join(rest_lines)))
+            else:
+                expanded.append(("text", val))
+
+    # 3. Group consecutive examples together if separated only by whitespace
+    grouped = []
+    for kind, val in expanded:
+        if kind == "text":
+            cleaned = clean_spad_macros(val)
+            if not cleaned.strip():
+                if grouped and grouped[-1][0] == "example":
+                    continue
+            grouped.append(("text", cleaned))
+        elif kind == "example":
+            if grouped and grouped[-1][0] == "example":
+                prev_code = grouped[-1][1]
+                grouped[-1] = ("example", f"{prev_code}\n{val}")
+            else:
+                grouped.append(("example", val))
+
+    # 4. Build formatted markdown
+    out_parts = []
+    for kind, val in grouped:
+        if kind == "text":
+            lines = [ln.strip() for ln in val.splitlines() if ln.strip()]
+            if lines:
+                para = " ".join(lines)
+                para = re.sub(r"\s+", " ", para).strip()
+                if para:
+                    out_parts.append(para)
+        elif kind == "example":
+            out_parts.append(f"```fricas\n{val}\n```")
+
+    return "\n\n".join(out_parts)
+
 # ── Dynamic Constructor Discovery ────────────────────────────────────────────
 
 CONSTRUCTOR_SOURCES = {}
@@ -94,12 +306,15 @@ def discover_all_constructors():
                         doc_lines.append(lines[j].strip()[2:].strip())
                         j += 1
 
-                    doc = " ".join(doc_lines).strip()
-                    doc = re.sub(r"\\example\{[^}]*\}", "", doc)
-                    doc = re.sub(r"Author:[^+\n]*", "", doc)
-                    doc = re.sub(r"Date Created:[^+\n]*", "", doc)
-                    doc = re.sub(r"Description:", "", doc).strip()
-                    doc = re.sub(r"\s+", " ", doc)
+                    filtered_doc_lines = []
+                    for d_line in doc_lines:
+                        if re.match(r"^(Author|Date Created|Basic Operations|Keywords):", d_line, re.IGNORECASE):
+                            continue
+                        if d_line.startswith("Description:"):
+                            d_line = d_line[len("Description:"):].strip()
+                        filtered_doc_lines.append(d_line)
+
+                    doc = format_spad_docstring(filtered_doc_lines)
 
                     # Group classification
                     if cname.startswith("WS") or fname.startswith("jws"):
@@ -263,77 +478,7 @@ def clean_show_block(show_text: str) -> str:
 
 def clean(text: str, unwrap: bool = False) -> str:
     """Clean up and format FriCAS documentation text."""
-    text = re.sub(r"(?m)^\s*Value\s*=.*$", "", text)
-    text = re.sub(r"\s*Type:\s*Void\s*", "", text)
-    # Remove any echoed command lines
-    text = re.sub(r"(?m)^\s*\)[a-zA-Z].*$", "", text)
-    text = re.sub(r"(?m)^\s*(?:constructorDocumentation|operationDocumentation)\(.*$", "", text)
-    text = re.sub(r"(?m)^\s*\(\d+\)\s*->.*$", "", text)
-
-    lines = text.splitlines()
-    while lines and not lines[0].strip():
-        lines.pop(0)
-    while lines and not lines[-1].strip():
-        lines.pop()
-
-    if not lines:
-        return ""
-
-    if unwrap:
-        paras = []
-        cur = []
-        for ln in lines:
-            if not ln.strip():
-                if cur:
-                    paras.append(" ".join(cur))
-                    cur = []
-            else:
-                cur.append(ln.strip())
-        if cur:
-            paras.append(" ".join(cur))
-        final_text = "\n\n".join(paras)
-    else:
-        final_text = "\n".join(lines)
-
-    final_text = re.sub(r"Ex\s*ample:", "Example:", final_text)
-
-    # Format Example: blocks into markdown code blocks
-    parts = re.split(r"(Example:)", final_text)
-    new_parts = []
-    i = 0
-    while i < len(parts):
-        if parts[i] == "Example:":
-            current_examples = []
-            rest = ""
-            j = i
-            while j < len(parts) and parts[j] == "Example:":
-                if j + 1 < len(parts):
-                    content = parts[j+1]
-                    code_parts = re.split(r"(\n\n)", content)
-                    code = code_parts[0].strip()
-                    if code:
-                        current_examples.append(code)
-                    rest = "".join(code_parts[1:])
-                    if j + 2 < len(parts) and parts[j+2] == "Example:" and not rest.strip():
-                        j += 2
-                    else:
-                        break
-                else:
-                    rest = ""
-                    break
-
-            if current_examples:
-                merged_code = "\n".join(current_examples)
-                label = "Examples" if len(current_examples) > 1 else "Example"
-                new_parts.append(f"\n\n**{label}**:\n```fricas\n{merged_code}\n```\n")
-            if rest:
-                new_parts.append(rest)
-            i = j + 2
-        else:
-            new_parts.append(parts[i])
-            i += 1
-
-    return "".join(new_parts)
+    return format_spad_docstring(text)
 
 def clean_op_token(tok: str) -> str:
     """Extract clean operation name from token.
@@ -428,8 +573,8 @@ def parse_spad_operations(spad_path: str, start_line: int) -> dict[str, list[dic
                 i += 1
                 continue
 
-            # Look for op : sig
-            m = re.match(r"^\s*([a-zA-Z0-9_?+*\-^/<=>~]+|\"[^\"]+\")\s*:\s*(.+)$", line)
+            # Look for op : sig (including ! in op name)
+            m = re.match(r"^\s*([a-zA-Z0-9_?+*\-^/<=>~!]+|\"[^\"]+\")\s*:\s*(.+)$", line)
             if m:
                 tok = m.group(1).strip().strip('"')
                 sig = m.group(2).strip()
@@ -453,8 +598,7 @@ def parse_spad_operations(spad_path: str, start_line: int) -> dict[str, list[dic
                         doc_lines.insert(0, lines[k].strip()[2:].strip())
                         k -= 1
 
-                desc = " ".join(doc_lines).strip()
-                desc = re.sub(r"\s+", " ", desc)
+                desc = format_spad_docstring(doc_lines)
 
                 if op_name not in ops:
                     ops[op_name] = []

@@ -155,11 +155,11 @@ Julia WS integers using the MathLink Julia package.
 | [`jlEval`](#jleval) | jlEval(expr) evaluates expr using the WS Transport Protocol. |
 | [`jlFieldNames`](#jlfieldnames) | jlFieldNames(obj) returns the field names of obj. |
 | [`jlGetField`](#jlgetfield) | jlGetField(obj, sym) returns the property/element sym of obj. |
-| [`jlGetJuliaIndex`](#jlgetjuliaindex) | jlGetJuliaIndex(obj) returns the Julia indexed dictionary index referencing the object obj... |
+| [`jlGetJuliaIndex`](#jlgetjuliaindex) | jlGetJuliaIndex(obj) returns the string that allows access to the Julia indexed dictionary... |
 | [`jlGetProperty`](#jlgetproperty) | jlGetProperty(obj, sym) returns the property/element sym of obj. |
 | [`jlHead`](#jlhead) | jlHead(expr) returns the Head type of expr. |
 | [`jlId`](#jlid) | jlId(obj) returns the Julia indexed dictionary index referencing the object obj. |
-| [`jlObject`](#jlobject) | jlObject() returns the internal Julia name of the Julia module used. For example: ... |
+| [`jlObject`](#jlobject) | jlObject() returns the internal Julia name of the Julia module used. For example:... |
 | [`jlPropertyNames`](#jlpropertynames) | jlPropertyNames(obj) returns the property/element names of obj. |
 | [`jlRef`](#jlref) | jlRef(obj) returns the internal Lisp representation of the Julia object obj. |
 | [`jlSymbolic`](#jlsymbolic) | jlSymbolic(expr) returns the symbolic 'FullForm'. |
@@ -178,7 +178,7 @@ Julia WS integers using the MathLink Julia package.
 | [`min`](#min) | min(x,y) returns the minimum of x and y relative to "<". |
 | [`missing?`](#missing) | missing?(obj) checks whether or not obj is missing. |
 | [`mulmod`](#mulmod) | mulmod(a, b, p), 0<=a, b<p>1, means a*b mod p. |
-| [`multiEuclidean`](#multieuclidean) | multiEuclidean([f1, ..., fn], z) returns a list of coefficients [a1, ..., an] such that  z... |
+| [`multiEuclidean`](#multieuclidean) | multiEuclidean([f1, ..., fn], z) returns a list of coefficients [a1, ..., an] such that z ... |
 | [`mutable?`](#mutable) | mutable?(obj) checks whether or not obj is mutable. |
 | [`negative?`](#negative) | negative?(x) tests whether x is strictly less than 0. |
 | [`nextItem`](#nextitem) | nextItem(x) returns the next item, or "failed" if domain is exhausted. |
@@ -215,8 +215,8 @@ Julia WS integers using the MathLink Julia package.
 | [`smaller?`](#smaller) | smaller?(x, y) is a strict ordering on depending on representatives of elements of the set... |
 | [`squareFree`](#squarefree) | squareFree(x) returns the square-free factorization of x i.e. such that the factors are pa... |
 | [`squareFreePart`](#squarefreepart) | squareFreePart(x) returns a product of prime factors of x each taken with multiplicity one... |
-| [`stirling1`](#stirling1) | stirling1(n,m) returns the Stirling number of the first kind from n and m. For example: \e... |
-| [`stirling2`](#stirling2) | stirling2(n,m) returns the Stirling number of the second kind from n and m. For example: \... |
+| [`stirling1`](#stirling1) | stirling1(n,m) returns the Stirling number of the first kind from n and m. For example:... |
+| [`stirling2`](#stirling2) | stirling2(n,m) returns the Stirling number of the second kind from n and m. For example:... |
 | [`string`](#string) | string(jt) returns the string representation of jt. |
 | [`submod`](#submod) | submod(a, b, p), 0<=a, b<p>1, means a-b mod p. |
 | [`subtractIfCan`](#subtractifcan) | subtractIfCan(x, y) returns an element z such that z+y=x or "failed" if no such element ex... |
@@ -648,13 +648,14 @@ jWSInterpret(form) interprets form.
 
 ##### `jWSInterpret` : `(String, String) -> %`
 
-jWSInterpret(Type|Form, Expr) interprets Expr to be of type Type or Form using the WS Language. For exampl e: 
+jWSInterpret(Type|Form, Expr) interprets Expr to be of type Type or Form using the WS Language. For exampl e:
 
-**Examples**:
 ```fricas
 jWSInterpret("Number","3.2")@WSREAL
 jWSInterpret("Real","3.2")@WSREAL
-jWSInterpret("L ocation","Lille")$WSEXPR See jWSExpr "$InterpreterTypes"
+jWSInterpret("L
+ocation","Lille")$WSEXPR
+See jWSExpr "$InterpreterTypes"
 ```
 
 - **From**: [`WSObject`](WSObject.md)
@@ -676,24 +677,25 @@ jlAbout(obj) displays Julia information about obj if you have About.jl installed
 
 ##### `jlApply` : `(String, %) -> JLObject`
 
-jlApply(func, obj) applies the function func with obj as parameter and returns the result as a FriCAS JLObject. For exam ple, using JLMatrix(JLObjFloat64): 
+jlApply(func, obj) applies the function func with obj as parameter and returns the result as a FriCAS JLObject. For exam ple, using JLMatrix(JLObjFloat64):
 
-**Examples**:
 ```fricas
 M:=nrand(4,4);
-jlApply("svd", M::JLMatrix(JLObjFloat64)).S shou ld be "equivalent" to svdvals(M).
+jlApply("svd", M::JLMatrix(JLObjFloat64)).S
+shou
+ld be "equivalent" to svdvals(M).
 ```
 
 - **From**: [`JLObjectType`](JLObjectType.md)
 
 ##### `jlApply` : `(String, %, %) -> JLObject`
 
-jlApply(func, obj1, obj2) applies the function func with obj1 and obj2 as parameters and returns the result as a FriCAS JLObject. For example (equivalent to map(cos, v)): 
+jlApply(func, obj1, obj2) applies the function func with obj1 and obj2 as parameters and returns the result as a FriCAS JLObject. For example (equivalent to map(cos, v)):
 
-**Examples**:
 ```fricas
 v:=urand01(5)$JLVector(JLFloat)
-jlApply("map", " cos", coerce v)
+jlApply("map", "
+cos", coerce v)
 ```
 
 - **From**: [`JLObjectType`](JLObjectType.md)
@@ -753,7 +755,7 @@ jlGetField(obj, sym) returns the property/element sym of obj.
 
 #### `jlGetJuliaIndex` <a id="jlgetjuliaindex"></a>
 
-jlGetJuliaIndex(obj) returns the Julia indexed dictionary index referencing the object obj. Convenience function for use in the interpreter.
+jlGetJuliaIndex(obj) returns the string that allows access to the Julia indexed dictionary index referencing the object obj. Convenience function for use in the interpreter (jlref). For example: jlGetJuliaIndex(df) => "getindex(refs,10)"
 
 - **Signature**: `% -> String`
 - **From**: [`JLObjectType`](JLObjectType.md)
@@ -781,11 +783,11 @@ jlId(obj) returns the Julia indexed dictionary index referencing the object obj.
 
 #### `jlObject` <a id="jlobject"></a>
 
-jlObject() returns the internal Julia name of the Julia module used. For example: 
+jlObject() returns the internal Julia name of the Julia module used. For example:
 
-**Example**:
 ```fricas
-jlObject()$NMUnivariatePolyn omial(NINT,'x)
+jlObject()$NMUnivariatePolyn
+omial(NINT,'x)
 ```
 
 - **Signature**: `() -> String`
@@ -821,9 +823,8 @@ jlSymbolic(expr) returns the symbolic 'FullForm'.
 
 #### `jlText` <a id="jltext"></a>
 
-jlText(obj, mimest) returns the text representation of obj as a list of String lines with mime subtype mimest, for examp le "plain" for "text/plain" or "html" for "text/html" if is implemented at Julia level. Use internally the 'show' method . For example: 
+jlText(obj, mimest) returns the text representation of obj as a list of String lines with mime subtype mimest, for examp le "plain" for "text/plain" or "html" for "text/html" if is implemented at Julia level. Use internally the 'show' method . For example:
 
-**Examples**:
 ```fricas
 df:=jdframe nrand(6,3)
 jlText(df, "plain")
@@ -956,7 +957,7 @@ mulmod(a, b, p), 0<=a, b<p>1, means a*b mod p.
 
 #### `multiEuclidean` <a id="multieuclidean"></a>
 
-multiEuclidean([f1, ..., fn], z) returns a list of coefficients [a1, ..., an] such that  z / prod fi = sum aj/fj. If no such list of coefficients exists, "failed" is returned.
+multiEuclidean([f1, ..., fn], z) returns a list of coefficients [a1, ..., an] such that z / prod fi = sum aj/fj. If no such list of coefficients exists, "failed" is returned.
 
 - **Signature**: `(List(%), %) -> Union(List(%),"failed")`
 - **From**: `EuclideanDomain`
@@ -1235,13 +1236,21 @@ squareFreePart(x) returns a product of prime factors of x each taken with multip
 
 #### `stirling1` <a id="stirling1"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L284)\]
 
-stirling1(n,m) returns the Stirling number of the first kind from n and m. For example: \example{stirling1(20, jWSInt 2)}
+stirling1(n,m) returns the Stirling number of the first kind from n and m. For example:
+
+```fricas
+stirling1(20, jWSInt 2)
+```
 
 - **Signature**: `(%, %) -> %`
 
 #### `stirling2` <a id="stirling2"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L288)\]
 
-stirling2(n,m) returns the Stirling number of the second kind from n and m. For example: \example{stirling2(20, jWSInt 2)}
+stirling2(n,m) returns the Stirling number of the second kind from n and m. For example:
+
+```fricas
+stirling2(20, jWSInt 2)
+```
 
 - **Signature**: `(%, %) -> %`
 

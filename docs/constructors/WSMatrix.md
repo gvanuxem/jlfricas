@@ -172,7 +172,7 @@ Julia WS matrices using the MathLink Julia package.
 | [`accumulate`](#accumulate) | accumulate(agg) returns the partial sums of elements in agg. |
 | [`adjoint`](#adjoint) | adjoint(m) returns the adjoint of m, i.e. the conjugate transposition of m. |
 | [`adjugate`](#adjugate) | adjugate(m) returns the adjugate of square m. |
-| [`antisymmetric?`](#antisymmetric) | \spad{antisymmetric?(m)} returns true if the matrix m is square and antisymmetric (i.e. \s... |
+| [`antisymmetric?`](#antisymmetric) | antisymmetric?(m) returns true if the matrix m is square and antisymmetric (i.e. m[i, j] =... |
 | [`any?`](#any) | any?(p, u) tests if p(x) is true for any element x of u. Note: for collections, any?(p, u)... |
 | [`append`](#append) | append(l, elt) appends elt to the list l. |
 | [`array2`](#array2) | array2(ll) constructs a 2-dimensional array, the inner list being the rows. |
@@ -189,15 +189,15 @@ Julia WS matrices using the MathLink Julia package.
 | [`delete`](#delete) | delete(l, inds) deletes element(s) of the list l at index(es) inds. |
 | [`determinant`](#determinant) | determinant(m) returns the determinant of the matrix m. Error: if the matrix is not square... |
 | [`diagonal`](#diagonal) | diagonal(m) returns the diagonal elements of m as a vector. |
-| [`diagonal?`](#diagonal) | \spad{diagonal?(m)} returns true if the matrix m is square and diagonal (i.e. all entries ... |
-| [`diagonalMatrix`](#diagonalmatrix) | \spad{diagonalMatrix(l)} returns a diagonal matrix with elements of l as diagonal elements... |
+| [`diagonal?`](#diagonal) | diagonal?(m) returns true if the matrix m is square and diagonal (i.e. all entries of m no... |
+| [`diagonalMatrix`](#diagonalmatrix) | diagonalMatrix(l) returns a diagonal matrix with elements of l as diagonal elements. |
 | [`differences`](#differences) | differences(agg) returns the differences between adjacent elements in agg. |
 | [`dimensions`](#dimensions) | dimensions(agg) returns dimensions of agg. |
 | [`eigenSystem`](#eigensystem) | eigenvectors(m) returns the eigenvectors of the square matrix m. |
 | [`eigenvalues`](#eigenvalues) | eigenvalues(m) returns the eigenvalues of the square matrix m. |
 | [`eigenvectors`](#eigenvectors) | eigenvectors(m) returns the eigenvectors of the square matrix m. |
 | [`elt`](#elt) | elt(mat, m, n) returns the element (m,n) of the matrix mat. |
-| [`empty`](#empty) | empty()$D creates an aggregate of type D with 0 elements. Note: The  $D can be dropped if ... |
+| [`empty`](#empty) | empty()$D creates an aggregate of type D with 0 elements. Note: The $D can be dropped if u... |
 | [`empty?`](#empty) | empty?(u) tests if u has 0 elements. |
 | [`eq?`](#eq) | eq?(u, v) tests if u and v are same objects. |
 | [`eval`](#eval) | eval(f, x, v) replaces x by v in f. |
@@ -208,13 +208,13 @@ Julia WS matrices using the MathLink Julia package.
 | [`first`](#first) | first(agg) returns the first element of agg. |
 | [`hash`](#hash) | hash(s) calculates a hash code for s. |
 | [`hashUpdate!`](#hashupdate) | hashUpdate!(hs, s) computes new HashState from old and s used for incremental computation ... |
-| [`hermitian?`](#hermitian) | \spad{hermitian?(m)} checks whether or not m is hermitian. |
+| [`hermitian?`](#hermitian) | hermitian?(m) checks whether or not m is hermitian. |
 | [`hessenberg`](#hessenberg) | hessenberg(m) computes the Hessenberg decomposition of the square matrix m. |
 | [`horizConcat`](#horizconcat) | horizConcat(x, y) horizontally concatenates two arrays with an equal number of rows. The e... |
 | [`horizSplit`](#horizsplit) | horizSplit(a, [n1, n2, ..., ni]) splits a into arrays having n1, ..., ni columns. Error: i... |
 | [`insert`](#insert) | insert(l, elt, ind) inserts elt to the list l at index ind. |
 | [`intersection`](#intersection) | intersection(agg1, agg2) is the intersection operator. |
-| [`inverse`](#inverse) | inverse(m) computes the inverse of m. For example: \example{m:=jWSMatrix("\{\{a, b\}, \{b,... |
+| [`inverse`](#inverse) | inverse(m) computes the inverse of m. For example:... |
 | [`invertIfCan`](#invertifcan) | invertIfCan(m) returns the inverse of the matrix m. If the matrix is not invertible, "fail... |
 | [`jWSAggregate`](#jwsaggregate) | jWSAggregate(list) constructs agg to a WSAggregate. |
 | [`jWSInterpret`](#jwsinterpret) | jWSInterpret(form) interprets form. |
@@ -226,11 +226,11 @@ Julia WS matrices using the MathLink Julia package.
 | [`jlEval`](#jleval) | jlEval(expr) evaluates expr using the WS Transport Protocol. |
 | [`jlFieldNames`](#jlfieldnames) | jlFieldNames(obj) returns the field names of obj. |
 | [`jlGetField`](#jlgetfield) | jlGetField(obj, sym) returns the property/element sym of obj. |
-| [`jlGetJuliaIndex`](#jlgetjuliaindex) | jlGetJuliaIndex(obj) returns the Julia indexed dictionary index referencing the object obj... |
+| [`jlGetJuliaIndex`](#jlgetjuliaindex) | jlGetJuliaIndex(obj) returns the string that allows access to the Julia indexed dictionary... |
 | [`jlGetProperty`](#jlgetproperty) | jlGetProperty(obj, sym) returns the property/element sym of obj. |
 | [`jlHead`](#jlhead) | jlHead(expr) returns the Head type of expr. |
 | [`jlId`](#jlid) | jlId(obj) returns the Julia indexed dictionary index referencing the object obj. |
-| [`jlObject`](#jlobject) | jlObject() returns the internal Julia name of the Julia module used. For example: ... |
+| [`jlObject`](#jlobject) | jlObject() returns the internal Julia name of the Julia module used. For example:... |
 | [`jlPropertyNames`](#jlpropertynames) | jlPropertyNames(obj) returns the property/element names of obj. |
 | [`jlRef`](#jlref) | jlRef(obj) returns the internal Lisp representation of the Julia object obj. |
 | [`jlSymbolic`](#jlsymbolic) | jlSymbolic(expr) returns the symbolic 'FullForm'. |
@@ -279,7 +279,7 @@ Julia WS matrices using the MathLink Julia package.
 | [`part`](#part) | part(agg,i) returns the i-th element. |
 | [`parts`](#parts) | parts(m) returns a list of the elements of m in row major order |
 | [`permanent`](#permanent) | permanent(m) returns the permanent of m. |
-| [`positiveDefinite?`](#positivedefinite) | \spad{positiveDefinite?(m)} checks whether or not m is positive definite. |
+| [`positiveDefinite?`](#positivedefinite) | positiveDefinite?(m) checks whether or not m is positive definite. |
 | [`positivePower`](#positivepower) | positivePower(x, n) computes a positive integral power of the matrix x. Error: if the matr... |
 | [`prepend`](#prepend) | prepend(l, elt) prepends elt to the list l. |
 | [`pseudoInverse`](#pseudoinverse) | pseudoInverse(m) computes the pseudo inverse of m also known as Moore-Penrose inverse. |
@@ -287,7 +287,7 @@ Julia WS matrices using the MathLink Julia package.
 | [`qnew`](#qnew) | qnew(m, n) is an m-by-n uninitialized array |
 | [`qr`](#qr) | qr(m) computes the QR decomposition of the matrix m. |
 | [`qsetelt`](#qsetelt) | qsetelt(mat,n,m,elt) returns a new matrix with element (n,m) replaced by the element elt. |
-| [`qsetelt!`](#qsetelt) | qsetelt!(l,i,elem) returns l with i-th element replaced by elem. No checks are done at the... |
+| [`qsetelt!`](#qsetelt) | qsetelt!(mat,n,m,elt) returns the element elt. The matrix mat is modified in place. |
 | [`randomComplexMatrix`](#randomcomplexmatrix) | randomComplexMatrix(range, dims) returns a random matrix with random complex numbers in th... |
 | [`randomRealMatrix`](#randomrealmatrix) | randomRealMatrix(range, dims) returns a random matrix with random numbers in the range ran... |
 | [`rank`](#rank) | rank(m) returns the rank of the matrix m. |
@@ -312,7 +312,7 @@ Julia WS matrices using the MathLink Julia package.
 | [`smaller?`](#smaller) | smaller?(x, y) is a strict ordering on depending on representatives of elements of the set... |
 | [`sort`](#sort) | sort(agg) returns agg in sorted order. For complex numbers, sorts them by their real part ... |
 | [`sorted?`](#sorted) | sorted?(agg) checks whether agg is sorted or not. |
-| [`square?`](#square) | \spad{square?(m)} returns true if m is a square matrix (i.e. if m has the same number of r... |
+| [`square?`](#square) | square?(m) returns true if m is a square matrix (i.e. if m has the same number of rows as ... |
 | [`squareTop`](#squaretop) | squareTop(m) returns an n-by-n array consisting of the first n rows of the m-by-n array m.... |
 | [`string`](#string) | string(jt) returns the string representation of jt. |
 | [`subMatrix`](#submatrix) | subMatrix(x, i1, i2, j1, j2) extracts the submatrix [x(i, j)] where the index i ranges fro... |
@@ -320,7 +320,7 @@ Julia WS matrices using the MathLink Julia package.
 | [`svdvals`](#svdvals) | svdvals(m) returns the singular values of the matrix m. |
 | [`swapColumns!`](#swapcolumns) | swapColumns!(m, i, j) interchanges the ith and jth columns of m. This destructively alters... |
 | [`swapRows!`](#swaprows) | swapRows!(m, i, j) interchanges the ith and jth rows of m. This destructively alters the a... |
-| [`symmetric?`](#symmetric) | \spad{symmetric?(m)} returns true if the matrix m is square and symmetric (i.e. \spad{m[i,... |
+| [`symmetric?`](#symmetric) | symmetric?(m) returns true if the matrix m is square and symmetric (i.e. m[i, j] = m[j, i]... |
 | [`take`](#take) | take(l,i) returns the first i elements. |
 | [`toString`](#tostring) | toString(mat, form) returns the string representation of mat with WS language format form. |
 | [`total`](#total) | total(agg) returns the sum of the elements in agg. |
@@ -361,19 +361,19 @@ n*a scales the matrix a by n.
 
 ##### `*` : `(E,%) -> %`
 
-\spad{r*x} is the left scalar multiple of the scalar r and the matrix x.
+r*x is the left scalar multiple of the scalar r and the matrix x.
 
 ##### `*` : `(%,E) -> %`
 
-\spad{x * r} is the right scalar multiple of the scalar r and the matrix x.
+x * r is the right scalar multiple of the scalar r and the matrix x.
 
 ##### `*` : `(%,WSVector(E)) -> %`
 
-\spad{x * c} is the product of the matrix x and the column vector c. Error: if the dimensions are incompatible.
+x * c is the product of the matrix x and the column vector c. Error: if the dimensions are incompatible.
 
 ##### `*` : `(WSVector(E),%) -> %`
 
-\spad{r * x} is the product of the row vector r and the matrix x. Error: if the dimensions are incompatible.
+r * x is the product of the row vector r and the matrix x. Error: if the dimensions are incompatible.
 
 #### `+` <a id="op-add"></a>
 
@@ -425,7 +425,7 @@ adjugate(m) returns the adjugate of square m.
 
 #### `antisymmetric?` <a id="antisymmetric"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L364)\]
 
-\spad{antisymmetric?(m)} returns true if the matrix m is square and antisymmetric (i.e. \spad{m[i, j] = -m[j, i]} for all i and j) and false otherwise.
+antisymmetric?(m) returns true if the matrix m is square and antisymmetric (i.e. m[i, j] = -m[j, i] for all i and j) and false otherwise.
 
 - **Signature**: `% -> Boolean`
 
@@ -591,7 +591,7 @@ diagonal(m) returns the diagonal elements of m as a vector.
 
 #### `diagonal?` <a id="diagonal"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L355)\]
 
-\spad{diagonal?(m)} returns true if the matrix m is square and diagonal (i.e. all entries of m not on the diagonal are zero) and false otherwise.
+diagonal?(m) returns true if the matrix m is square and diagonal (i.e. all entries of m not on the diagonal are zero) and false otherwise.
 
 - **Signature**: `% -> Boolean`
 
@@ -599,11 +599,11 @@ diagonal(m) returns the diagonal elements of m as a vector.
 
 ##### `diagonalMatrix` : `WSList(E) -> %`
 
-\spad{diagonalMatrix(l)} returns a diagonal matrix with elements of l as diagonal elements.
+diagonalMatrix(l) returns a diagonal matrix with elements of l as diagonal elements.
 
 ##### `diagonalMatrix` : `List(%) -> %`
 
-diagonalMatrix([m1, ..., mk]) creates a block diagonal matrix M with block matrices  m1, ...,  mk down the diagonal, wit h 0 block matrices elsewhere. More precisely: if ri := nrows mi, ci := ncols mi, then m is an (r1+..+rk) by (c1+..+ck) m atrix with entries m.i.j = ml.(i-r1-..-r(l-1)).(j-c1-..-c(l-1)), if (r1+..+r(l-1)) < i <= r1+..+rl and (c1+..+c(l-1)) < i <= c1+..+cl, m.i.j = 0 otherwise.
+diagonalMatrix([m1, ..., mk]) creates a block diagonal matrix M with block matrices m1, ..., mk down the diagonal, wit h 0 block matrices elsewhere. More precisely: if ri := nrows mi, ci := ncols mi, then m is an (r1+..+rk) by (c1+..+ck) m atrix with entries m.i.j = ml.(i-r1-..-r(l-1)).(j-c1-..-c(l-1)), if (r1+..+r(l-1)) < i <= r1+..+rl and (c1+..+c(l-1)) < i <= c1+..+cl, m.i.j = 0 otherwise.
 
 - **From**: `MatrixCategory(R,Row,Col)`
 
@@ -749,7 +749,7 @@ elt(m, i, j, r) returns the element in the ith row and jth column of the array m
 
 #### `empty` <a id="empty"></a>
 
-empty()$D creates an aggregate of type D with 0 elements. Note: The  $D can be dropped if understood by context, e.g. u: D := empty().
+empty()$D creates an aggregate of type D with 0 elements. Note: The $D can be dropped if understood by context, e.g. u: D := empty().
 
 - **Signature**: `() -> %`
 - **From**: `Aggregate`
@@ -852,7 +852,7 @@ hashUpdate!(hs, s) computes new HashState from old and s used for incremental co
 
 #### `hermitian?` <a id="hermitian"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L370)\]
 
-\spad{hermitian?(m)} checks whether or not m is hermitian.
+hermitian?(m) checks whether or not m is hermitian.
 
 - **Signature**: `% -> Boolean`
 
@@ -908,7 +908,12 @@ intersection(agg1, agg2) is the intersection operator.
 
 ##### `inverse` : `% -> %`
 
-inverse(m) computes the inverse of m. For example: \example{m:=jWSMatrix("\{\{a, b\}, \{b, a\}\}")@WSMAT(WSEXPR)} \example{inverse m}
+inverse(m) computes the inverse of m. For example:
+
+```fricas
+m:=jWSMatrix("{{a, b}, {b, a}}")@WSMAT(WSEXPR)
+inverse m
+```
 
 ##### `inverse` : `% -> Union(%,"failed")`
 
@@ -939,13 +944,14 @@ jWSInterpret(form) interprets form.
 
 ##### `jWSInterpret` : `(String, String) -> %`
 
-jWSInterpret(Type|Form, Expr) interprets Expr to be of type Type or Form using the WS Language. For exampl e: 
+jWSInterpret(Type|Form, Expr) interprets Expr to be of type Type or Form using the WS Language. For exampl e:
 
-**Examples**:
 ```fricas
 jWSInterpret("Number","3.2")@WSREAL
 jWSInterpret("Real","3.2")@WSREAL
-jWSInterpret("L ocation","Lille")$WSEXPR See jWSExpr "$InterpreterTypes"
+jWSInterpret("L
+ocation","Lille")$WSEXPR
+See jWSExpr "$InterpreterTypes"
 ```
 
 - **From**: [`WSObject`](WSObject.md)
@@ -973,24 +979,25 @@ jlAbout(obj) displays Julia information about obj if you have About.jl installed
 
 ##### `jlApply` : `(String, %) -> JLObject`
 
-jlApply(func, obj) applies the function func with obj as parameter and returns the result as a FriCAS JLObject. For exam ple, using JLMatrix(JLObjFloat64): 
+jlApply(func, obj) applies the function func with obj as parameter and returns the result as a FriCAS JLObject. For exam ple, using JLMatrix(JLObjFloat64):
 
-**Examples**:
 ```fricas
 M:=nrand(4,4);
-jlApply("svd", M::JLMatrix(JLObjFloat64)).S shou ld be "equivalent" to svdvals(M).
+jlApply("svd", M::JLMatrix(JLObjFloat64)).S
+shou
+ld be "equivalent" to svdvals(M).
 ```
 
 - **From**: [`JLObjectType`](JLObjectType.md)
 
 ##### `jlApply` : `(String, %, %) -> JLObject`
 
-jlApply(func, obj1, obj2) applies the function func with obj1 and obj2 as parameters and returns the result as a FriCAS JLObject. For example (equivalent to map(cos, v)): 
+jlApply(func, obj1, obj2) applies the function func with obj1 and obj2 as parameters and returns the result as a FriCAS JLObject. For example (equivalent to map(cos, v)):
 
-**Examples**:
 ```fricas
 v:=urand01(5)$JLVector(JLFloat)
-jlApply("map", " cos", coerce v)
+jlApply("map", "
+cos", coerce v)
 ```
 
 - **From**: [`JLObjectType`](JLObjectType.md)
@@ -1050,7 +1057,7 @@ jlGetField(obj, sym) returns the property/element sym of obj.
 
 #### `jlGetJuliaIndex` <a id="jlgetjuliaindex"></a>
 
-jlGetJuliaIndex(obj) returns the Julia indexed dictionary index referencing the object obj. Convenience function for use in the interpreter.
+jlGetJuliaIndex(obj) returns the string that allows access to the Julia indexed dictionary index referencing the object obj. Convenience function for use in the interpreter (jlref). For example: jlGetJuliaIndex(df) => "getindex(refs,10)"
 
 - **Signature**: `% -> String`
 - **From**: [`JLObjectType`](JLObjectType.md)
@@ -1078,11 +1085,11 @@ jlId(obj) returns the Julia indexed dictionary index referencing the object obj.
 
 #### `jlObject` <a id="jlobject"></a>
 
-jlObject() returns the internal Julia name of the Julia module used. For example: 
+jlObject() returns the internal Julia name of the Julia module used. For example:
 
-**Example**:
 ```fricas
-jlObject()$NMUnivariatePolyn omial(NINT,'x)
+jlObject()$NMUnivariatePolyn
+omial(NINT,'x)
 ```
 
 - **Signature**: `() -> String`
@@ -1118,9 +1125,8 @@ jlSymbolic(expr) returns the symbolic 'FullForm'.
 
 #### `jlText` <a id="jltext"></a>
 
-jlText(obj, mimest) returns the text representation of obj as a list of String lines with mime subtype mimest, for examp le "plain" for "text/plain" or "html" for "text/html" if is implemented at Julia level. Use internally the 'show' method . For example: 
+jlText(obj, mimest) returns the text representation of obj as a list of String lines with mime subtype mimest, for examp le "plain" for "text/plain" or "html" for "text/html" if is implemented at Julia level. Use internally the 'show' method . For example:
 
-**Examples**:
 ```fricas
 df:=jdframe nrand(6,3)
 jlText(df, "plain")
@@ -1321,7 +1327,12 @@ matrix(n,m,f) constructs an n * m matrix with the (i,j) entry equal to f(i,j).
 
 #### `matrixFunction` <a id="matrixfunction"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L484)\]
 
-matrixFunction(func, m) applies the matrix function func, if available, to the matrix m. The Wolfram Language operator needs to be used. Note that it is not an element-wise operation. For example: \example{m := jWSMatrix("\{\{1.2, 1.7\},\{1.12, -2.1\}\}")@WSMAT(WSREAL)} \example{matrixFunction("Sqrt", m)}
+matrixFunction(func, m) applies the matrix function func, if available, to the matrix m. The Wolfram Language operator needs to be used. Note that it is not an element-wise operation. For example:
+
+```fricas
+m := jWSMatrix("{{1.2, 1.7},{1.12, -2.1}}")@WSMAT(WSREAL)
+matrixFunction("Sqrt", m)
+```
 
 - **Signature**: `(WSExpression, %) -> WSMatrix(WSExpression)`
 
@@ -1533,7 +1544,7 @@ permanent(m) returns the permanent of m.
 
 #### `positiveDefinite?` <a id="positivedefinite"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L368)\]
 
-\spad{positiveDefinite?(m)} checks whether or not m is positive definite.
+positiveDefinite?(m) checks whether or not m is positive definite.
 
 - **Signature**: `% -> Boolean`
 
@@ -1602,17 +1613,15 @@ qsetelt(l,i,elem) returns a copy of l with i-th element replaced by the element 
 
 #### `qsetelt!` <a id="qsetelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L410)\]
 
+##### `qsetelt!` : `(%, Integer, Integer, E) -> E`
+
+qsetelt!(mat,n,m,elt) returns the element elt. The matrix mat is modified in place.
+
 ##### `qsetelt!` : `(%, Integer, E) -> %`
 
 qsetelt!(l,i,elem) returns l with i-th element replaced by elem. No checks are done at the FriCAS level.
 
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
-
-##### `qsetelt!` : `(%, Integer, Integer, E) -> E`
-
-qsetelt!(mat,n,m,elt) returns the element elt. The matrix mat is modified in place.
-
-- **From**: [`WSMatrix(E)`](WSMatrix.md)
 
 ##### `qsetelt!` : `(%, Integer, Integer, R) -> R`
 
@@ -1622,12 +1631,12 @@ qsetelt!(m, i, j, r) sets the element in the ith row and jth column of m to r NO
 
 #### `randomComplexMatrix` <a id="randomcomplexmatrix"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L496)\]
 
-randomComplexMatrix(range, dims) returns a random matrix with random complex numbers in the range range and dims dimensi ons. 
+randomComplexMatrix(range, dims) returns a random matrix with random complex numbers in the range range and dims dimensi ons.
 
-**Examples**:
 ```fricas
 range:=jWSList("{1+I}")@WSLIST(WSCPLX)
-randomComplexMatrix(range,jWSList("{3,3}")$WSLIST(WSINT ))@WSMAT(WSCPLX)
+randomComplexMatrix(range,jWSList("{3,3}")$WSLIST(WSINT
+))@WSMAT(WSCPLX)
 ```
 
 - **Signature**: `(WSList(WSComplex), WSList(WSInteger)) -> WSMatrix(WSComplex)`
@@ -1635,11 +1644,11 @@ randomComplexMatrix(range,jWSList("{3,3}")$WSLIST(WSINT ))@WSMAT(WSCPLX)
 
 #### `randomRealMatrix` <a id="randomrealmatrix"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L490)\]
 
-randomRealMatrix(range, dims) returns a random matrix with random numbers in the range range and dims dimensions. Examp le: range := jWSList("{-5,5}")$WSLIST(WSREAL)
+randomRealMatrix(range, dims) returns a random matrix with random numbers in the range range and dims dimensions. Examp le: range := jWSList("-5,5")$WSLIST(WSREAL)
 
-**Example**:
 ```fricas
-randomRealMatrix(range,jWSList("{3,3}")$WSLIST(WSINT))@WSMAT(WS REAL)
+randomRealMatrix(range,jWSList("{3,3}")$WSLIST(WSINT))@WSMAT(WS
+REAL)
 ```
 
 - **Signature**: `(WSList(WSReal), WSList(WSInteger)) -> WSMatrix(WSReal)`
@@ -1903,7 +1912,7 @@ sorted?(agg) checks whether agg is sorted or not.
 
 #### `square?` <a id="square"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L352)\]
 
-\spad{square?(m)} returns true if m is a square matrix (i.e. if m has the same number of rows as columns) and false otherwise.
+square?(m) returns true if m is a square matrix (i.e. if m has the same number of rows as columns) and false otherwise.
 
 - **Signature**: `% -> Boolean`
 
@@ -1956,7 +1965,7 @@ swapRows!(m, i, j) interchanges the ith and jth rows of m. This destructively al
 
 #### `symmetric?` <a id="symmetric"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L359)\]
 
-\spad{symmetric?(m)} returns true if the matrix m is square and symmetric (i.e. \spad{m[i, j] = m[j, i]} for all i and j) and false otherwise.
+symmetric?(m) returns true if the matrix m is square and symmetric (i.e. m[i, j] = m[j, i] for all i and j) and false otherwise.
 
 - **Signature**: `% -> Boolean`
 

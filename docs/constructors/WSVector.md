@@ -157,7 +157,7 @@ Julia WS vectors using the MathLink Julia package.
 | [`dimensions`](#dimensions) | dimensions(agg) returns dimensions of agg. |
 | [`dot`](#dot) | dot(v1, v2) is the dot product of v1 and v2. |
 | [`elt`](#elt) | elt(op, l) creates a form for application of op to list of arguments l. |
-| [`empty`](#empty) | empty()$D creates an aggregate of type D with 0 elements. Note: The  $D can be dropped if ... |
+| [`empty`](#empty) | empty()$D creates an aggregate of type D with 0 elements. Note: The $D can be dropped if u... |
 | [`empty?`](#empty) | empty?(u) tests if u has 0 elements. |
 | [`entries`](#entries) | entries(u) returns a list of all the entries of aggregate u in no assumed order. |
 | [`entry?`](#entry) | entry?(x, u) tests if x equals u . i for some index i. |
@@ -184,11 +184,11 @@ Julia WS vectors using the MathLink Julia package.
 | [`jlEval`](#jleval) | jlEval(expr) evaluates expr using the WS Transport Protocol. |
 | [`jlFieldNames`](#jlfieldnames) | jlFieldNames(obj) returns the field names of obj. |
 | [`jlGetField`](#jlgetfield) | jlGetField(obj, sym) returns the property/element sym of obj. |
-| [`jlGetJuliaIndex`](#jlgetjuliaindex) | jlGetJuliaIndex(obj) returns the Julia indexed dictionary index referencing the object obj... |
+| [`jlGetJuliaIndex`](#jlgetjuliaindex) | jlGetJuliaIndex(obj) returns the string that allows access to the Julia indexed dictionary... |
 | [`jlGetProperty`](#jlgetproperty) | jlGetProperty(obj, sym) returns the property/element sym of obj. |
 | [`jlHead`](#jlhead) | jlHead(expr) returns the Head type of expr. |
 | [`jlId`](#jlid) | jlId(obj) returns the Julia indexed dictionary index referencing the object obj. |
-| [`jlObject`](#jlobject) | jlObject() returns the internal Julia name of the Julia module used. For example: ... |
+| [`jlObject`](#jlobject) | jlObject() returns the internal Julia name of the Julia module used. For example:... |
 | [`jlPropertyNames`](#jlpropertynames) | jlPropertyNames(obj) returns the property/element names of obj. |
 | [`jlRef`](#jlref) | jlRef(obj) returns the internal Lisp representation of the Julia object obj. |
 | [`jlSymbolic`](#jlsymbolic) | jlSymbolic(expr) returns the symbolic 'FullForm'. |
@@ -258,7 +258,7 @@ Julia WS vectors using the MathLink Julia package.
 | [`transpose`](#transpose) | transpose(v) transposes v. For esoteric purpose, and if you know what you are doing. There... |
 | [`trim`](#trim) | trim(u, x) returns a copy of u with all occurrences of x deleted from right and left ends.... |
 | [`union`](#union) | union(agg1, agg2) is the union set operator. Elements are sorted on output. |
-| [`vector`](#vector) | vector(list) returns list as a vector. Inplace coercion. \example{vector(range(5)} |
+| [`vector`](#vector) | vector(list) returns list as a vector. Inplace coercion. |
 | [`zero`](#zero) | zero(n) creates a zero vector of length n. |
 | [`zero?`](#zero) | zero?(x) returns true if x is a zero vector, false otherwise. |
 | [`~=`](#op-neq) | Operation defined in WSVector |
@@ -287,11 +287,11 @@ n*a scales the vector a by n.
 
 ##### `*` : `(E,%) -> %`
 
-\spad{r*x} is the left scalar multiple of the scalar r and the vector x.
+r*x is the left scalar multiple of the scalar r and the vector x.
 
 ##### `*` : `(%,E) -> %`
 
-\spad{x * r} is the right scalar multiple of the scalar r and the vector x.
+x * r is the right scalar multiple of the scalar r and the vector x.
 
 #### `+` <a id="op-add"></a>
 
@@ -553,7 +553,7 @@ elt(u, x, y) applies u to x if x is in the domain of u, and returns y otherwise.
 
 #### `empty` <a id="empty"></a>
 
-empty()$D creates an aggregate of type D with 0 elements. Note: The  $D can be dropped if understood by context, e.g. u: D := empty().
+empty()$D creates an aggregate of type D with 0 elements. Note: The $D can be dropped if understood by context, e.g. u: D := empty().
 
 - **Signature**: `() -> %`
 - **From**: `Aggregate`
@@ -732,13 +732,14 @@ jWSInterpret(form) interprets form.
 
 ##### `jWSInterpret` : `(String, String) -> %`
 
-jWSInterpret(Type|Form, Expr) interprets Expr to be of type Type or Form using the WS Language. For exampl e: 
+jWSInterpret(Type|Form, Expr) interprets Expr to be of type Type or Form using the WS Language. For exampl e:
 
-**Examples**:
 ```fricas
 jWSInterpret("Number","3.2")@WSREAL
 jWSInterpret("Real","3.2")@WSREAL
-jWSInterpret("L ocation","Lille")$WSEXPR See jWSExpr "$InterpreterTypes"
+jWSInterpret("L
+ocation","Lille")$WSEXPR
+See jWSExpr "$InterpreterTypes"
 ```
 
 - **From**: [`WSObject`](WSObject.md)
@@ -770,24 +771,25 @@ jlAbout(obj) displays Julia information about obj if you have About.jl installed
 
 ##### `jlApply` : `(String, %) -> JLObject`
 
-jlApply(func, obj) applies the function func with obj as parameter and returns the result as a FriCAS JLObject. For exam ple, using JLMatrix(JLObjFloat64): 
+jlApply(func, obj) applies the function func with obj as parameter and returns the result as a FriCAS JLObject. For exam ple, using JLMatrix(JLObjFloat64):
 
-**Examples**:
 ```fricas
 M:=nrand(4,4);
-jlApply("svd", M::JLMatrix(JLObjFloat64)).S shou ld be "equivalent" to svdvals(M).
+jlApply("svd", M::JLMatrix(JLObjFloat64)).S
+shou
+ld be "equivalent" to svdvals(M).
 ```
 
 - **From**: [`JLObjectType`](JLObjectType.md)
 
 ##### `jlApply` : `(String, %, %) -> JLObject`
 
-jlApply(func, obj1, obj2) applies the function func with obj1 and obj2 as parameters and returns the result as a FriCAS JLObject. For example (equivalent to map(cos, v)): 
+jlApply(func, obj1, obj2) applies the function func with obj1 and obj2 as parameters and returns the result as a FriCAS JLObject. For example (equivalent to map(cos, v)):
 
-**Examples**:
 ```fricas
 v:=urand01(5)$JLVector(JLFloat)
-jlApply("map", " cos", coerce v)
+jlApply("map", "
+cos", coerce v)
 ```
 
 - **From**: [`JLObjectType`](JLObjectType.md)
@@ -847,7 +849,7 @@ jlGetField(obj, sym) returns the property/element sym of obj.
 
 #### `jlGetJuliaIndex` <a id="jlgetjuliaindex"></a>
 
-jlGetJuliaIndex(obj) returns the Julia indexed dictionary index referencing the object obj. Convenience function for use in the interpreter.
+jlGetJuliaIndex(obj) returns the string that allows access to the Julia indexed dictionary index referencing the object obj. Convenience function for use in the interpreter (jlref). For example: jlGetJuliaIndex(df) => "getindex(refs,10)"
 
 - **Signature**: `% -> String`
 - **From**: [`JLObjectType`](JLObjectType.md)
@@ -875,11 +877,11 @@ jlId(obj) returns the Julia indexed dictionary index referencing the object obj.
 
 #### `jlObject` <a id="jlobject"></a>
 
-jlObject() returns the internal Julia name of the Julia module used. For example: 
+jlObject() returns the internal Julia name of the Julia module used. For example:
 
-**Example**:
 ```fricas
-jlObject()$NMUnivariatePolyn omial(NINT,'x)
+jlObject()$NMUnivariatePolyn
+omial(NINT,'x)
 ```
 
 - **Signature**: `() -> String`
@@ -915,9 +917,8 @@ jlSymbolic(expr) returns the symbolic 'FullForm'.
 
 #### `jlText` <a id="jltext"></a>
 
-jlText(obj, mimest) returns the text representation of obj as a list of String lines with mime subtype mimest, for examp le "plain" for "text/plain" or "html" for "text/html" if is implemented at Julia level. Use internally the 'show' method . For example: 
+jlText(obj, mimest) returns the text representation of obj as a list of String lines with mime subtype mimest, for examp le "plain" for "text/plain" or "html" for "text/html" if is implemented at Julia level. Use internally the 'show' method . For example:
 
-**Examples**:
 ```fricas
 df:=jdframe nrand(6,3)
 jlText(df, "plain")
@@ -1540,7 +1541,11 @@ union(agg1, agg2) is the union set operator. Elements are sorted on output.
 
 #### `vector` <a id="vector"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L277)\]
 
-vector(list) returns list as a vector. Inplace coercion. \example{vector(range(5)}
+vector(list) returns list as a vector. Inplace coercion.
+
+```fricas
+vector(range(5)
+```
 
 - **Signature**: `WSList(E) -> %`
 

@@ -76,11 +76,11 @@ Julia WS category for rings using the Wolfram Symbol Transport Protocol.
 | [`jlEval`](#jleval) | jlEval(expr) evaluates expr using the WS Transport Protocol. |
 | [`jlFieldNames`](#jlfieldnames) | jlFieldNames(obj) returns the field names of obj. |
 | [`jlGetField`](#jlgetfield) | jlGetField(obj, sym) returns the property/element sym of obj. |
-| [`jlGetJuliaIndex`](#jlgetjuliaindex) | jlGetJuliaIndex(obj) returns the Julia indexed dictionary index referencing the object obj... |
+| [`jlGetJuliaIndex`](#jlgetjuliaindex) | jlGetJuliaIndex(obj) returns the string that allows access to the Julia indexed dictionary... |
 | [`jlGetProperty`](#jlgetproperty) | jlGetProperty(obj, sym) returns the property/element sym of obj. |
 | [`jlHead`](#jlhead) | jlHead(expr) returns the Head type of expr. |
 | [`jlId`](#jlid) | jlId(obj) returns the Julia indexed dictionary index referencing the object obj. |
-| [`jlObject`](#jlobject) | jlObject() returns the internal Julia name of the Julia module used. For example: ... |
+| [`jlObject`](#jlobject) | jlObject() returns the internal Julia name of the Julia module used. For example:... |
 | [`jlPropertyNames`](#jlpropertynames) | jlPropertyNames(obj) returns the property/element names of obj. |
 | [`jlRef`](#jlref) | jlRef(obj) returns the internal Lisp representation of the Julia object obj. |
 | [`jlSymbolic`](#jlsymbolic) | jlSymbolic(expr) returns the symbolic 'FullForm'. |
@@ -240,13 +240,14 @@ jWSInterpret(form) interprets form.
 
 ##### `jWSInterpret` : `(String, String) -> %`
 
-jWSInterpret(Type|Form, Expr) interprets Expr to be of type Type or Form using the WS Language. For exampl e: 
+jWSInterpret(Type|Form, Expr) interprets Expr to be of type Type or Form using the WS Language. For exampl e:
 
-**Examples**:
 ```fricas
 jWSInterpret("Number","3.2")@WSREAL
 jWSInterpret("Real","3.2")@WSREAL
-jWSInterpret("L ocation","Lille")$WSEXPR See jWSExpr "$InterpreterTypes"
+jWSInterpret("L
+ocation","Lille")$WSEXPR
+See jWSExpr "$InterpreterTypes"
 ```
 
 - **From**: [`WSObject`](WSObject.md)
@@ -268,24 +269,25 @@ jlAbout(obj) displays Julia information about obj if you have About.jl installed
 
 ##### `jlApply` : `(String, %) -> JLObject`
 
-jlApply(func, obj) applies the function func with obj as parameter and returns the result as a FriCAS JLObject. For exam ple, using JLMatrix(JLObjFloat64): 
+jlApply(func, obj) applies the function func with obj as parameter and returns the result as a FriCAS JLObject. For exam ple, using JLMatrix(JLObjFloat64):
 
-**Examples**:
 ```fricas
 M:=nrand(4,4);
-jlApply("svd", M::JLMatrix(JLObjFloat64)).S shou ld be "equivalent" to svdvals(M).
+jlApply("svd", M::JLMatrix(JLObjFloat64)).S
+shou
+ld be "equivalent" to svdvals(M).
 ```
 
 - **From**: [`JLObjectType`](JLObjectType.md)
 
 ##### `jlApply` : `(String, %, %) -> JLObject`
 
-jlApply(func, obj1, obj2) applies the function func with obj1 and obj2 as parameters and returns the result as a FriCAS JLObject. For example (equivalent to map(cos, v)): 
+jlApply(func, obj1, obj2) applies the function func with obj1 and obj2 as parameters and returns the result as a FriCAS JLObject. For example (equivalent to map(cos, v)):
 
-**Examples**:
 ```fricas
 v:=urand01(5)$JLVector(JLFloat)
-jlApply("map", " cos", coerce v)
+jlApply("map", "
+cos", coerce v)
 ```
 
 - **From**: [`JLObjectType`](JLObjectType.md)
@@ -345,7 +347,7 @@ jlGetField(obj, sym) returns the property/element sym of obj.
 
 #### `jlGetJuliaIndex` <a id="jlgetjuliaindex"></a>
 
-jlGetJuliaIndex(obj) returns the Julia indexed dictionary index referencing the object obj. Convenience function for use in the interpreter.
+jlGetJuliaIndex(obj) returns the string that allows access to the Julia indexed dictionary index referencing the object obj. Convenience function for use in the interpreter (jlref). For example: jlGetJuliaIndex(df) => "getindex(refs,10)"
 
 - **Signature**: `% -> String`
 - **From**: [`JLObjectType`](JLObjectType.md)
@@ -373,11 +375,11 @@ jlId(obj) returns the Julia indexed dictionary index referencing the object obj.
 
 #### `jlObject` <a id="jlobject"></a>
 
-jlObject() returns the internal Julia name of the Julia module used. For example: 
+jlObject() returns the internal Julia name of the Julia module used. For example:
 
-**Example**:
 ```fricas
-jlObject()$NMUnivariatePolyn omial(NINT,'x)
+jlObject()$NMUnivariatePolyn
+omial(NINT,'x)
 ```
 
 - **Signature**: `() -> String`
@@ -413,9 +415,8 @@ jlSymbolic(expr) returns the symbolic 'FullForm'.
 
 #### `jlText` <a id="jltext"></a>
 
-jlText(obj, mimest) returns the text representation of obj as a list of String lines with mime subtype mimest, for examp le "plain" for "text/plain" or "html" for "text/html" if is implemented at Julia level. Use internally the 'show' method . For example: 
+jlText(obj, mimest) returns the text representation of obj as a list of String lines with mime subtype mimest, for examp le "plain" for "text/plain" or "html" for "text/html" if is implemented at Julia level. Use internally the 'show' method . For example:
 
-**Examples**:
 ```fricas
 df:=jdframe nrand(6,3)
 jlText(df, "plain")

@@ -486,10 +486,10 @@ Julia WS expressions using the MathLink Julia package. It supports the Eltable c
 | [`acsch`](#acsch) | acsch(x) returns the hyperbolic arc-cosecant of x. |
 | [`airyAi`](#airyai) | airyAi(x) is the Airy function Ai(x). |
 | [`airyAiPrime`](#airyaiprime) | airyAiPrime(x) is the derivative of the Airy function Ai(x). |
-| [`airyAiZero`](#airyaizero) | airyAiZero(n) is the n-th zero of the Airy function \spad{Ai(z)}. |
+| [`airyAiZero`](#airyaizero) | airyAiZero(n) is the n-th zero of the Airy function Ai(z). |
 | [`airyBi`](#airybi) | airyBi(x) is the Airy function Bi(x). |
 | [`airyBiPrime`](#airybiprime) | airyBiPrime(x) is the derivative of the Airy function Bi(x). |
-| [`airyBiZero`](#airybizero) | airyBiZero(n) is the n-th zero of the Airy function \spad{Bi(z)}. |
+| [`airyBiZero`](#airybizero) | airyBiZero(n) is the n-th zero of the Airy function Bi(z). |
 | [`algtower`](#algtower) | algtower(f) is algtower([f]) |
 | [`angerJ`](#angerj) | angerJ(v, n, z) is the associated Anger J function. |
 | [`annihilate?`](#annihilate) | annihilate?(x,y) holds when the product of x and y is 0. |
@@ -528,7 +528,7 @@ Julia WS expressions using the MathLink Julia package. It supports the Eltable c
 | [`charlierC`](#charlierc) | charlierC(n, a, z) is the Charlier polynomial. |
 | [`chebyshevT`](#chebyshevt) | chebyshevT(n, x) returns the Chebyshev polynomial of the first kind or evaluates it at x i... |
 | [`chebyshevU`](#chebyshevu) | chebyshevU(n, x) returns Chebyshev polynomial of the second kind or evaluates it at x if x... |
-| [`coefficient`](#coefficient) | coefficient(p,expr) returns the coefficient of expr in p. \example{x:= jWSExpr x} \example... |
+| [`coefficient`](#coefficient) | coefficient(p,expr) returns the coefficient of expr in p.... |
 | [`coefficientList`](#coefficientlist) | coefficientList(p,expr) returns the list of coefficients of expr in p. |
 | [`coefficientRules`](#coefficientrules) | coefficientRules(p) returns the coefficients and exponents of p as WS rules. |
 | [`coerce`](#coerce) | coerce(z) coerces the integer z to a WSExpression. Convenience function. |
@@ -562,7 +562,7 @@ Julia WS expressions using the MathLink Julia package. It supports the Eltable c
 | [`denom`](#denom) | denom(f) returns the denominator of f viewed as a polynomial in the kernels over R. |
 | [`denominator`](#denominator) | denominator(expr) returns the denominator of expr. |
 | [`derivationCoordinates`](#derivationcoordinates) | derivationCoordinates(b, ') returns M such that b' = M b. |
-| [`derivative`](#derivative) | derivative(func,n) returns the derivative of order n of func. \example{fprime:=derivative(... |
+| [`derivative`](#derivative) | derivative(func,n) returns the derivative of order n of func.... |
 | [`differentiate`](#differentiate) | differentiate(x, v) computes the partial derivative of x with respect to v. |
 | [`digamma`](#digamma) | digamma(n,z) is the n-th derivative of the digamma function. |
 | [`dilog`](#dilog) | dilog(x) returns the dilogarithm of x, i.e. the integral of log(x) / (1 - x) dx. |
@@ -571,7 +571,7 @@ Julia WS expressions using the MathLink Julia package. It supports the Eltable c
 | [`dirichletEta`](#dirichleteta) | dirichletEta(z) computes the Dirichlet eta. |
 | [`dirichletL`](#dirichletl) | dirichletL(k,j,s) returns Dirichlet L-function of s, modulus k, index j. |
 | [`discriminant`](#discriminant) | discriminant(p, x) returns the discriminant of p with respect to x. |
-| [`distribute`](#distribute) | distribute(expr) distributes expr over addition. For illustration: \example{distribute(jWS... |
+| [`distribute`](#distribute) | distribute(expr) distributes expr over addition. For illustration:... |
 | [`divide`](#divide) | divide(x, y) divides x by y producing a record containing a quotient and remainder, where ... |
 | [`ellipticE`](#elliptice) | ellipticE(x) computes the complete elliptic integral of the second kind. |
 | [`ellipticF`](#ellipticf) | ellipticF(phi,m) computes the elliptic integral of the first kind. |
@@ -595,7 +595,7 @@ Julia WS expressions using the MathLink Julia package. It supports the Eltable c
 | [`expand`](#expand) | expand(expr) puts out products and positive powers of integers of the expression expr. |
 | [`expandDenominator`](#expanddenominator) | expandDenominator(expr) expands denominators of rational expression expr. |
 | [`expandNumerator`](#expandnumerator) | expandNumerator(expr) expands numerators of rational expression expr. |
-| [`exponent`](#exponent) | exponent(p,expr) returns the maximum exponent of p for expr. \example{x:= jWSExpr x;y := j... |
+| [`exponent`](#exponent) | exponent(p,expr) returns the maximum exponent of p for expr.... |
 | [`expressIdealMember`](#expressidealmember) | expressIdealMember([f1, ..., fn], h) returns a representation of h as a linear combination... |
 | [`exquo`](#exquo) | exquo(f, g) creates the equivalent infix form. |
 | [`extendedEuclidean`](#extendedeuclidean) | extendedEuclidean(x, y) returns a record rec where rec.coef1*x+rec.coef2*y = rec.generator... |
@@ -604,7 +604,7 @@ Julia WS expressions using the MathLink Julia package. It supports the Eltable c
 | [`extract`](#extract) | extract(expr,i) returns the i-th element of expr seen as a list. |
 | [`factor`](#factor) | factor(expr) factors the expression or polynomial expr. |
 | [`factorList`](#factorlist) | factorList(expr) factors the expression or polynomial expr, but returns the result as a li... |
-| [`factorPolynomial`](#factorpolynomial) | factorPolynomial(p) factorizes the polynomial p. For example: \example{x := jWSExpr x} \ex... |
+| [`factorPolynomial`](#factorpolynomial) | factorPolynomial(p) factorizes the polynomial p. For example:... |
 | [`factorSquareFree`](#factorsquarefree) | factorSquareFree(expr) factors the expression or polynomial expr in square free factors. |
 | [`factorSquareFreeList`](#factorsquarefreelist) | factorSquareFreeList(expr) factors the expression or polynomial expr in square free factor... |
 | [`factorSquareFreePolynomial`](#factorsquarefreepolynomial) | factorSquareFreePolynomial(p) factors the univariate polynomial p into irreducibles where ... |
@@ -614,7 +614,7 @@ Julia WS expressions using the MathLink Julia package. It supports the Eltable c
 | [`factorials`](#factorials) | factorials(f) rewrites the permutations and binomials in f in terms of factorials. |
 | [`fibonacci`](#fibonacci) | fibonacci(n, x) returns the Fibonacci polynomial or evaluates it at x if x is a number. |
 | [`findInstance`](#findinstance) | findInstance(expr,lvars) tries to find an instance of the equation in expr. |
-| [`findRoot`](#findroot) | findRoot(expr,start) tries to find the root of expr starting at start. \example{x:= jWSExp... |
+| [`findRoot`](#findroot) | findRoot(expr,start) tries to find the root of expr starting at start.... |
 | [`first`](#first) | first(agg) returns the first element of agg. |
 | [`floor`](#floor) | floor(x) returns the greatest integer less than or equal to x |
 | [`fourier`](#fourier) | fourier(expr) returns the discrete Fourier transform from a list of numbers. |
@@ -635,7 +635,7 @@ Julia WS expressions using the MathLink Julia package. It supports the Eltable c
 | [`ground?`](#ground) | ground?(f) tests if f is an element of R. |
 | [`gudermannian`](#gudermannian) | gudermannian(z) computes the Gudermannian of z. |
 | [`guessGeneratingFunction`](#guessgeneratingfunction) | guessGeneratingFunction(l,x) finds the generating function applied to x from the list of c... |
-| [`guessSequenceFunction`](#guesssequencefunction) | guessSequenceFunction(l) finds the sequence from the list of coefficients l. For example: ... |
+| [`guessSequenceFunction`](#guesssequencefunction) | guessSequenceFunction(l) finds the sequence from the list of coefficients l. For example:... |
 | [`hahnQ`](#hahnq) | hahnQ(n, a, b, N, z) s the Hahn polynomial. |
 | [`hahnR`](#hahnr) | hahnR(n, c, d, N, z) is the dual Hahn polynomial. |
 | [`hahnS`](#hahns) | hahnS(n, a, b, c, z) is the continuous dual Hahn polynomial. |
@@ -690,7 +690,7 @@ Julia WS expressions using the MathLink Julia package. It supports the Eltable c
 | [`jWSLess`](#jwsless) | jWSLess(lhs,rhs) returns the Julia WS inequality lhs < rhs. |
 | [`jWSLessEqual`](#jwslessequal) | jWSLessEqual(lhs,rhs) returns the Julia WS inequality lhs <= rhs. |
 | [`jWSNotEqual`](#jwsnotequal) | jWSNotEqual(lhs,rhs) returns the Julia WS inequality lhs != rhs. |
-| [`jWSQuantity`](#jwsquantity) | jWSQuantity(jWSString(u)) returns quantity unit u of 1. For example: \example{jWSQuantity ... |
+| [`jWSQuantity`](#jwsquantity) | jWSQuantity(jWSString(u)) returns quantity unit u of 1. For example:... |
 | [`jWSRule`](#jwsrule) | jWSRule(lhs,rhs) returns the Julia WS rule lhs->rhs. |
 | [`jWSTable`](#jwstable) | jWSTable(expr, range) applies the expr to the defined range. |
 | [`jacobiAmplitude`](#jacobiamplitude) | jacobiAmplitude(u,m) computes the amplitude function am. |
@@ -707,12 +707,12 @@ Julia WS expressions using the MathLink Julia package. It supports the Eltable c
 | [`jlEval`](#jleval) | jlEval(expr, param) evaluates expression expr with param as parameter(s). See also `eval` ... |
 | [`jlFieldNames`](#jlfieldnames) | jlFieldNames(obj) returns the field names of obj. |
 | [`jlGetField`](#jlgetfield) | jlGetField(obj, sym) returns the property/element sym of obj. |
-| [`jlGetJuliaIndex`](#jlgetjuliaindex) | jlGetJuliaIndex(obj) returns the Julia indexed dictionary index referencing the object obj... |
+| [`jlGetJuliaIndex`](#jlgetjuliaindex) | jlGetJuliaIndex(obj) returns the string that allows access to the Julia indexed dictionary... |
 | [`jlGetProperty`](#jlgetproperty) | jlGetProperty(obj, sym) returns the property/element sym of obj. |
 | [`jlGreedyEval`](#jlgreedyeval) | jlGreedyEval(bool) toggles automatic arithmetic operations. Plus[a, a] can become Times[2,... |
 | [`jlHead`](#jlhead) | jlHead(expr) returns the Head type of expr. |
 | [`jlId`](#jlid) | jlId(obj) returns the Julia indexed dictionary index referencing the object obj. |
-| [`jlObject`](#jlobject) | jlObject() returns the internal Julia name of the Julia module used. For example: ... |
+| [`jlObject`](#jlobject) | jlObject() returns the internal Julia name of the Julia module used. For example:... |
 | [`jlPropertyNames`](#jlpropertynames) | jlPropertyNames(obj) returns the property/element names of obj. |
 | [`jlRef`](#jlref) | jlRef(obj) returns the internal Lisp representation of the Julia object obj. |
 | [`jlSymbolic`](#jlsymbolic) | jlSymbolic(expr) returns the symbolic 'FullForm'. |
@@ -786,7 +786,7 @@ Julia WS expressions using the MathLink Julia package. It supports the Eltable c
 | [`missing?`](#missing) | missing?(data) checks whether or not data is Missing. |
 | [`modularLambda`](#modularlambda) | modularLambda() computes the lambda modular function. |
 | [`monomialList`](#monomiallist) | monomialList(p) returns the list of monomials in p. |
-| [`multiEuclidean`](#multieuclidean) | multiEuclidean([f1, ..., fn], z) returns a list of coefficients [a1, ..., an] such that  z... |
+| [`multiEuclidean`](#multieuclidean) | multiEuclidean([f1, ..., fn], z) returns a list of coefficients [a1, ..., an] such that z ... |
 | [`mutable?`](#mutable) | mutable?(obj) checks whether or not obj is mutable. |
 | [`negative?`](#negative) | negative?(expr) checks whether or not expr is negative. |
 | [`norm`](#norm) | norm(x) returns x * conjugate(x) |
@@ -812,11 +812,11 @@ Julia WS expressions using the MathLink Julia package. It supports the Eltable c
 | [`operator`](#operator) | operator(op) returns a copy of op with the domain-dependent properties appropriate for %. |
 | [`operators`](#operators) | operators(f) returns all the basic operators appearing in f, no matter what their levels a... |
 | [`opposite?`](#opposite) | opposite?(x,y) holds if the sum of x and y is 0. |
-| [`padeApproximant`](#padeapproximant) | padeApproximant(expr, "{x,x0, {n,m}"}) returns the Padé approximant at x0. |
+| [`padeApproximant`](#padeapproximant) | padeApproximant(expr, "x,x0, n,m") returns the Padé approximant at x0. |
 | [`parabolicCylinderD`](#paraboliccylinderd) | parabolicCylinderD(nu,x) computes the parabolic cylinder function D of x. |
 | [`paren`](#paren) | paren(f) returns (f). This prevents f from being evaluated when operators are applied to i... |
 | [`part`](#part) | part(agg,i) returns the i-th element. |
-| [`percentForm`](#percentform) | percentForm(x) returns the printed representation of x in percent form. For example: \exam... |
+| [`percentForm`](#percentform) | percentForm(x) returns the printed representation of x in percent form. For example:... |
 | [`permutation`](#permutation) | permutation(n, m) returns the number of permutations of n objects taken m at a time. Note:... |
 | [`pi`](#pi) | pi() returns the constant pi. |
 | [`plenaryPower`](#plenarypower) | plenaryPower(a, n) is recursively defined to be plenaryPower(a, n-1)*plenaryPower(a, n-1) ... |
@@ -878,8 +878,8 @@ Julia WS expressions using the MathLink Julia package. It supports the Eltable c
 | [`replacePart`](#replacepart) | replacePart(expr, part) replaces expr using rule(s) expressing position(s). |
 | [`replaceRepeated`](#replacerepeated) | replaceRepeated(expr, rule) applies rule(s) to expr, but repeatedly. |
 | [`represents`](#represents) | represents([a1, .., an]) returns a1*v1 + ... + an*vn, where v1, ..., vn are the elements o... |
-| [`residue`](#residue) | residue(expr, {x,x0}) returns the residue of expr at x0. |
-| [`residueSum`](#residuesum) | residueSum(expr, var) returns the residue of expr. \example{residueSum(Gamma(x),x)} |
+| [`residue`](#residue) | residue(expr, x,x0) returns the residue of expr at x0. |
+| [`residueSum`](#residuesum) | residueSum(expr, var) returns the residue of expr. |
 | [`rest`](#rest) | rest(agg) returns agg without the first element. |
 | [`resultant`](#resultant) | resultant(p1,p2,x) returns the resultant of p1 and p2. |
 | [`retract`](#retract) | retract(expr) tries to retract expr to an Expression(Integer). Throws an error otherwise. |
@@ -901,13 +901,13 @@ Julia WS expressions using the MathLink Julia package. It supports the Eltable c
 | [`sec`](#sec) | sec(x) returns the secant of x. |
 | [`sech`](#sech) | sech(x) returns the hyperbolic secant of x. |
 | [`select`](#select) | select(expr, form) selects elements of expr if form(element) is true. |
-| [`series`](#series) | series(expr, opt) returns a series from expr. \example{x:=jWSExpr(x);a:=jWSExpr(a);} \exam... |
+| [`series`](#series) | series(expr, opt) returns a series from expr.... |
 | [`setIntersection`](#setintersection) | setIntersection(agg1, agg2) is the intersection set operator. |
 | [`setelt`](#setelt) | setelt(l,i,elem) returns a copy of l with i-th element replaced by the element elem. |
 | [`setelt!`](#setelt) | setelt!(l,i,elem) returns l with i-th element replaced by elem. |
 | [`siegelTheta`](#siegeltheta) | siegelTheta(tau, s) computes the Siegel theta function. |
 | [`sign`](#sign) | sign(x) returns the sign of x. |
-| [`simplify`](#simplify) | simplify(expr) simplifies the expr. \example{x:=jWSExpr("x"); simplify(sqrt(x^2)^2)} |
+| [`simplify`](#simplify) | simplify(expr) simplifies the expr. |
 | [`sin`](#sin) | sin(x) returns the sine of x. |
 | [`sinc`](#sinc) | sinc(x) computes the unnormalized sinc of x, sin(x)/x and 0 if x = 0. |
 | [`sinh`](#sinh) | sinh(x) returns the hyperbolic sine of x. |
@@ -970,7 +970,7 @@ Julia WS expressions using the MathLink Julia package. It supports the Eltable c
 | [`whittakerW`](#whittakerw) | whittakerW(k,m,z) computes the Whittaker function W of z. |
 | [`wilsonW`](#wilsonw) | wilsonW(n, a, b, c, d, z) is the Wilson polynomial. |
 | [`zernikeR`](#zerniker) | zernikeR(n, m, x) returns the Zernike radial polynomial or evaluates it at x if x is a num... |
-| [`zero?`](#zero) | zero? x tries to determine if x is 0. For example: \example{expr:=0$WSEXPR/1*sqrt(17::WSEX... |
+| [`zero?`](#zero) | zero? x tries to determine if x is 0. For example:... |
 | [`zeroOf`](#zeroof) | zeroOf(p) returns y such that p(y) = 0. The value y is expressed in terms of radicals if p... |
 | [`zerosOf`](#zerosof) | zerosOf(p) returns [y1, ..., yn] such that p(yi) = 0. The yi's are expressed in radicals i... |
 | [`~=`](#op-neq) | Operation defined in WSExpression |
@@ -1261,11 +1261,11 @@ airyAiPrime(x) is the derivative of the Airy function Ai(x).
 
 ##### `airyAiZero` : `% -> %`
 
-airyAiZero(n) is the n-th zero of the Airy function \spad{Ai(z)}.
+airyAiZero(n) is the n-th zero of the Airy function Ai(z).
 
 ##### `airyAiZero` : `(%, %) -> %`
 
-airyAiZero(n,x) is the n-th zero of the Airy function \spad{Ai(z)} less than x.
+airyAiZero(n,x) is the n-th zero of the Airy function Ai(z) less than x.
 
 #### `airyBi` <a id="airybi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1471)\]
 
@@ -1285,11 +1285,11 @@ airyBiPrime(x) is the derivative of the Airy function Bi(x).
 
 ##### `airyBiZero` : `% -> %`
 
-airyBiZero(n) is the n-th zero of the Airy function \spad{Bi(z)}.
+airyBiZero(n) is the n-th zero of the Airy function Bi(z).
 
 ##### `airyBiZero` : `(%, %) -> %`
 
-airyBiZero(n,x) is the n-th zero of the Airy function \spad{Bi(z)} less than x.
+airyBiZero(n,x) is the n-th zero of the Airy function Bi(z) less than x.
 
 #### `algtower` <a id="algtower"></a>
 
@@ -1595,7 +1595,12 @@ chebyshevU(n, x) returns Chebyshev polynomial of the second kind or evaluates it
 
 ##### `coefficient` : `(%, %) -> %`
 
-coefficient(p,expr) returns the coefficient of expr in p. \example{x:= jWSExpr x} \example{coefficient((x - y)^4, x * y^3)}
+coefficient(p,expr) returns the coefficient of expr in p.
+
+```fricas
+x:= jWSExpr x
+coefficient((x - y)^4, x * y^3)
+```
 
 ##### `coefficient` : `(%, %, %) -> %`
 
@@ -1641,7 +1646,11 @@ coerce(eq) coerces the equation eq to a WSExpression equation.
 
 ##### `coerce` : `String  -> %`
 
-coerce(str) coerces the string str to a WSExpression evaluating str as a WS Language Expression. For example: \example{expr := "Sqrt[x]"::WSEXPR;jlEval(expr,"x=2.0")}
+coerce(str) coerces the string str to a WSExpression evaluating str as a WS Language Expression. For example:
+
+```fricas
+expr := "Sqrt[x]"::WSEXPR;jlEval(expr,"x=2.0")
+```
 
 ##### `coerce` : `Symbol -> %`
 
@@ -1898,17 +1907,30 @@ csch(x) returns the hyperbolic cosecant of x.
 
 ##### `dSolve` : `(%, %, %) -> %`
 
-dSolve(expr, funcs, vars) solves the (list of) differential equation(s) expr for the function(s) funcs with independent variable(s) vars. \example{x:=jWSExpr x;} \example{fx:=derivative(operator('f),0,x)} \example{fprimex:=derivative(operator('f),1,x)} \example{dSolve(jWSEqual(fprimex + fx , a *sin(x)),fx,x)}
+dSolve(expr, funcs, vars) solves the (list of) differential equation(s) expr for the function(s) funcs with independent variable(s) vars.
+
+```fricas
+x:=jWSExpr x;
+fx:=derivative(operator('f),0,x)
+fprimex:=derivative(operator('f),1,x)
+dSolve(jWSEqual(fprimex + fx , a *sin(x)),fx,x)
+```
 
 ##### `dSolve` : `(Equation(%), %, %)  -> %`
 
-dSolve(eq, func,var) solves the differential equation eq for the function(s) funcs with independent variable(s) vars. \example{x:=jWSExpr x;} \example{fx:=derivative(operator('f),0,x)} \example{fprimex:=derivative(operator('f),1,x)} \example{dSolve(fprimex + fx = a * sin(x)/cos(x),fx,x)}
+dSolve(eq, func,var) solves the differential equation eq for the function(s) funcs with independent variable(s) vars.
+
+```fricas
+x:=jWSExpr x;
+fx:=derivative(operator('f),0,x)
+fprimex:=derivative(operator('f),1,x)
+dSolve(fprimex + fx = a * sin(x)/cos(x),fx,x)
+```
 
 ##### `dSolve` : `(Equation(%), %, %) -> %`
 
 dSolve(eq, func,var) solves the differential equation eq for the function(s) funcs with independent variable(s) vars. E xample: x:=jWSExpr x;
 
-**Examples**:
 ```fricas
 fx:=derivative(operator('f),0,x)
 fprimex:=derivative(operator('f),1,x)
@@ -1920,7 +1942,16 @@ Exa mple: dSolve(fprimex + fx = a * sin(x)/cos(x),fx,x)
 
 ##### `dSolveValue` : `(%, %, %) -> %`
 
-dSolveValue(expr,funcs, vars) returns the value determined by the differential equation(s) in expr for the function(s) funcs with independent variable(s) vars. \example{x:=jWSExpr x;} \example{f:=derivative(operator('f),0)} \example{f0:=derivative(operator('f),0,0)} \example{fx:=derivative(operator('f),0,x)} \example{fprimex:=derivative(operator('f),1,x)} \example{dSolveValue(jWSExpr([jWSEqual(fprimex + fx , a *sin(x)/cos(x)), jWSEqual(f0,0)]),f,x)}
+dSolveValue(expr,funcs, vars) returns the value determined by the differential equation(s) in expr for the function(s) funcs with independent variable(s) vars.
+
+```fricas
+x:=jWSExpr x;
+f:=derivative(operator('f),0)
+f0:=derivative(operator('f),0,0)
+fx:=derivative(operator('f),0,x)
+fprimex:=derivative(operator('f),1,x)
+dSolveValue(jWSExpr([jWSEqual(fprimex + fx , a *sin(x)/cos(x)), jWSEqual(f0,0)]),f,x)
+```
 
 ##### `dSolveValue` : `(Equation(%), %, %)  -> %`
 
@@ -2015,11 +2046,20 @@ derivationCoordinates(b, ') returns M such that b' = M b.
 
 ##### `derivative` : `(BasicOperator, %) -> %`
 
-derivative(func,n) returns the derivative of order n of func. \example{fprime:=derivative(operator('f),1)}
+derivative(func,n) returns the derivative of order n of func.
+
+```fricas
+fprime:=derivative(operator('f),1)
+```
 
 ##### `derivative` : `(BasicOperator, %, %) -> %`
 
-derivative(func, n, var) returns the derivative of order n of func applied to var. \example{x := jWSExpr x} \example{fprimex:=derivative(operator('f),1,x)}
+derivative(func, n, var) returns the derivative of order n of func applied to var.
+
+```fricas
+x := jWSExpr x
+fprimex:=derivative(operator('f),1,x)
+```
 
 #### `differentiate` <a id="differentiate"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1632)\]
 
@@ -2132,7 +2172,11 @@ discriminant([v1, .., vn]) returns determinant(traceMatrix([v1, .., vn])).
 
 ##### `distribute` : `% -> %`
 
-distribute(expr) distributes expr over addition. For illustration: \example{distribute(jWSExpr "(x + y) * (a + b + c)")}
+distribute(expr) distributes expr over addition. For illustration:
+
+```fricas
+distribute(jWSExpr "(x + y) * (a + b + c)")
+```
 
 ##### `distribute` : `(%, %) -> %`
 
@@ -2481,11 +2525,23 @@ expandNumerator(expr) expands numerators of rational expression expr.
 
 ##### `exponent` : `(%, %) -> %`
 
-exponent(p,expr) returns the maximum exponent of p for expr. \example{x:= jWSExpr x;y := jWSExpr y} \example{p:=(x^2-2)^3*(y*x^3+x^11*y^7)*(y^5+x*y^2+x^11+y)} \example{exponent(%,(x^2-2))}
+exponent(p,expr) returns the maximum exponent of p for expr.
+
+```fricas
+x:= jWSExpr x;y := jWSExpr y
+p:=(x^2-2)^3*(y*x^3+x^11*y^7)*(y^5+x*y^2+x^11+y)
+exponent(%,(x^2-2))
+```
 
 ##### `exponent` : `(%, %, %) -> %`
 
-exponent(p, expr, map) applies map to the exponents related to expr and returns it. By default map = "Max". \example{x:= jWSExpr x;y := jWSExpr y} \example{p:=expand((x^2-2)^3*(y*x^3+x^11*y^7)*(y^5+x*y^2+x^11+y))} \example{exponent(p,x,"Min")}
+exponent(p, expr, map) applies map to the exponents related to expr and returns it. By default map = "Max".
+
+```fricas
+x:= jWSExpr x;y := jWSExpr y
+p:=expand((x^2-2)^3*(y*x^3+x^11*y^7)*(y^5+x*y^2+x^11+y))
+exponent(p,x,"Min")
+```
 
 #### `expressIdealMember` <a id="expressidealmember"></a>
 
@@ -2538,7 +2594,18 @@ extendedExpand(expr) puts out all products and positive powers of integers.
 
 ##### `extendedSimplify` : `% -> %`
 
-extendedSimplify(expr) is the extended version of simplify. This is the full version of simplify. \example{x:= jWSExpr x} \example{expr := Gamma(x)/Gamma(x-1)} Compare with simplify(expr). \example{extendedSimplify(expr)}
+extendedSimplify(expr) is the extended version of simplify. This is the full version of simplify.
+
+```fricas
+x:= jWSExpr x
+expr := Gamma(x)/Gamma(x-1)
+```
+
+Compare with simplify(expr).
+
+```fricas
+extendedSimplify(expr)
+```
 
 ##### `extendedSimplify` : `(%, %) -> %`
 
@@ -2564,7 +2631,12 @@ factor(expr) factors the expression or polynomial expr.
 
 ##### `factor` : `(%, %) -> %`
 
-factor(expr, opt) factors the expression or polynomial expr. For example: \example{x := jWSExpr x;} \example{factor(1 + x^2, "GaussianIntegers -> True")}
+factor(expr, opt) factors the expression or polynomial expr. For example:
+
+```fricas
+x := jWSExpr x;
+factor(1 + x^2, "GaussianIntegers -> True")
+```
 
 ##### `factor` : `% -> Factored(%)`
 
@@ -2582,7 +2654,13 @@ factorList(expr) factors the expression or polynomial expr, but returns the resu
 
 ##### `factorPolynomial` : `% -> %`
 
-factorPolynomial(p) factorizes the polynomial p. For example: \example{x := jWSExpr x} \example{p:=expand(chebyshevT(7,x)* chebyshevU(9,x))} \example{factorPolynomial p}
+factorPolynomial(p) factorizes the polynomial p. For example:
+
+```fricas
+x := jWSExpr x
+p:=expand(chebyshevT(7,x)* chebyshevU(9,x))
+factorPolynomial p
+```
 
 ##### `factorPolynomial` : `SparseUnivariatePolynomial(%) -> Factored(SparseUnivariatePolynomial(%))`
 
@@ -2688,7 +2766,12 @@ findInstance(expr,lvars,dom, n) tries to find n instance(s) to the (in)equation 
 
 #### `findRoot` <a id="findroot"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L849)\]
 
-findRoot(expr,start) tries to find the root of expr starting at start. \example{x:= jWSExpr x} \example{findRoot(sin(x) + cos(x), "\{x, 0\}")}
+findRoot(expr,start) tries to find the root of expr starting at start.
+
+```fricas
+x:= jWSExpr x
+findRoot(sin(x) + cos(x), "{x, 0}")
+```
 
 - **Signature**: `(%, %) -> %`
 
@@ -2764,7 +2847,13 @@ fresnelS(x) is the Fresnel integral S, defined by S(x) = integrate(sin(%pi*t^2/2
 
 #### `fromCoefficientRules` <a id="fromcoefficientrules"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L722)\]
 
-fromCoefficientRules(list, vars) constructs the polynomial from the list of coefficients and exponents rules. \example{x:= jWSExpr x;y := jWSExpr y} \example{coefficientRules((x + y)^2+x^11,jWSExpr [x,y])} \example{fromCoefficientRules(%, jWSExpr [x,y])}
+fromCoefficientRules(list, vars) constructs the polynomial from the list of coefficients and exponents rules.
+
+```fricas
+x:= jWSExpr x;y := jWSExpr y
+coefficientRules((x + y)^2+x^11,jWSExpr [x,y])
+fromCoefficientRules(%, jWSExpr [x,y])
+```
 
 - **Signature**: `(%, %) -> %`
 
@@ -2772,7 +2861,11 @@ fromCoefficientRules(list, vars) constructs the polynomial from the list of coef
 
 ##### `functionExpand` : `% -> %`
 
-functionExpand(expr) tries to expand functions in expr to more elementary functions. For example: \example{functionExpand sphericalBesselJ(3,8)}
+functionExpand(expr) tries to expand functions in expr to more elementary functions. For example:
+
+```fricas
+functionExpand sphericalBesselJ(3,8)
+```
 
 ##### `functionExpand` : `(%, %) -> %`
 
@@ -2870,25 +2963,45 @@ gudermannian(z) computes the Gudermannian of z.
 
 ##### `guessGeneratingFunction` : `(WSList(%), %) -> %`
 
-guessGeneratingFunction(l,x) finds the generating function applied to x from the list of coefficients l. Or from the list of lists l (list of pairs as list (n-th, coef-th)). For example: \example{guessGeneratingFunction([1,2,4,8],x)}
+guessGeneratingFunction(l,x) finds the generating function applied to x from the list of coefficients l. Or from the list of lists l (list of pairs as list (n-th, coef-th)). For example:
+
+```fricas
+guessGeneratingFunction([1,2,4,8],x)
+```
 
 ##### `guessGeneratingFunction` : `(%, %) -> %`
 
-guessGeneratingFunction(l,x) finds the generating function applied to x from the list of coefficients l. Or from the list of lists l (list of pairs as list (n-th, coef-th)). For example: \example{guessGeneratingFunction(jWSExpr("{1,2,4,8}"),x)}
+guessGeneratingFunction(l,x) finds the generating function applied to x from the list of coefficients l. Or from the list of lists l (list of pairs as list (n-th, coef-th)). For example:
+
+```fricas
+guessGeneratingFunction(jWSExpr("{1,2,4,8}"),x)
+```
 
 #### `guessSequenceFunction` <a id="guesssequencefunction"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L394)\]
 
 ##### `guessSequenceFunction` : `WSList(WSInteger) -> %`
 
-guessSequenceFunction(l) finds the sequence from the list of coefficients l. For example: \example{guessSequenceFunction(jWSExpr("{1,2,4,8}"))}
+guessSequenceFunction(l) finds the sequence from the list of coefficients l. For example:
+
+```fricas
+guessSequenceFunction(jWSExpr("{1,2,4,8}"))
+```
 
 ##### `guessSequenceFunction` : `% -> %`
 
-guessSequenceFunction(l) finds the sequence from the list of coefficients l Or from the list of lists l (list of pairs as list (n-th, coef-th)). For example: \example{guessSequenceFunction(jWSExpr("{1,2,4,8}"))}
+guessSequenceFunction(l) finds the sequence from the list of coefficients l Or from the list of lists l (list of pairs as list (n-th, coef-th)). For example:
+
+```fricas
+guessSequenceFunction(jWSExpr("{1,2,4,8}"))
+```
 
 ##### `guessSequenceFunction` : `(%, %) -> %`
 
-guessSequenceFunction(l,x) finds the sequence function applied to x from the list of coefficients l. For example: \example{guessSequenceFunction([1,2,4,jWSInt 8]::WSList(WSInteger),x)}
+guessSequenceFunction(l,x) finds the sequence function applied to x from the list of coefficients l. For example:
+
+```fricas
+guessSequenceFunction([1,2,4,jWSInt 8]::WSList(WSInteger),x)
+```
 
 #### `hahnQ` <a id="hahnq"></a>
 
@@ -3050,7 +3163,21 @@ integral(f, x) returns the formal integral of f dx.
 
 ##### `integrate` : `(%, %) -> %`
 
-integrate(expr, opts|var) integrates expr with respect to opt or var as options. For example: \example{x:=jWSExpr x;integrate(1/(x^4-1),x)} \example{opt:=jWSList [x,-1,1]} \example{integrate(cos(x),opt)} => 2 sin(1) \example{integrate(cos(x),"\{x,-1.0,1.0\}")} => 1.68294
+integrate(expr, opts|var) integrates expr with respect to opt or var as options. For example:
+
+```fricas
+x:=jWSExpr x;integrate(1/(x^4-1),x)
+opt:=jWSList [x,-1,1]
+integrate(cos(x),opt)
+```
+
+=> 2 sin(1)
+
+```fricas
+integrate(cos(x),"{x,-1.0,1.0}")
+```
+
+=> 1.68294
 
 ##### `integrate` : `(%, %, Segment(Integer)) -> %`
 
@@ -3307,7 +3434,15 @@ jWSExpr(list) returns the list of WSExpression as a WSExpression.
 
 ##### `jWSExpr` : `String -> %`
 
-jWSExpr(str) constructs str as a WSExpression evaluating str as a WS Language expression. For example: \example{jWSExpr "Factorial[5]"} \example{jWSExpr "3.14159"} \example{jlWSDateString(jWSExpr "Tomorrow")} \example{toString jWSExpr "TextSentences[WikipediaData[_"Sun_"]][[;; 40]]"} Example: jWSExpr "Probability[x < 1, x \[Distributed] NormalDistribution[]]"
+jWSExpr(str) constructs str as a WSExpression evaluating str as a WS Language expression. For example:
+
+```fricas
+jWSExpr "Factorial[5]"
+jWSExpr "3.14159"
+jlWSDateString(jWSExpr "Tomorrow")
+toString jWSExpr "TextSentences[WikipediaData[_"Sun_"]][[;; 40]]"
+jWSExpr "Probability[x < 1, x \[Distributed] NormalDistribution[]]"
+```
 
 #### `jWSGreater` <a id="jwsgreater"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1206)\]
 
@@ -3331,13 +3466,14 @@ jWSInterpret(form) interprets form.
 
 ##### `jWSInterpret` : `(String, String) -> %`
 
-jWSInterpret(Type|Form, Expr) interprets Expr to be of type Type or Form using the WS Language. For exampl e: 
+jWSInterpret(Type|Form, Expr) interprets Expr to be of type Type or Form using the WS Language. For exampl e:
 
-**Examples**:
 ```fricas
 jWSInterpret("Number","3.2")@WSREAL
 jWSInterpret("Real","3.2")@WSREAL
-jWSInterpret("L ocation","Lille")$WSEXPR See jWSExpr "$InterpreterTypes"
+jWSInterpret("L
+ocation","Lille")$WSEXPR
+See jWSExpr "$InterpreterTypes"
 ```
 
 - **From**: [`WSObject`](WSObject.md)
@@ -3370,11 +3506,19 @@ jWSNotEqual(lhs,rhs) returns the Julia WS inequality lhs != rhs.
 
 ##### `jWSQuantity` : `% -> %`
 
-jWSQuantity(jWSString(u)) returns quantity unit u of 1. For example: \example{jWSQuantity jWSString "Meter"}
+jWSQuantity(jWSString(u)) returns quantity unit u of 1. For example:
+
+```fricas
+jWSQuantity jWSString "Meter"
+```
 
 ##### `jWSQuantity` : `(%, %) -> %`
 
-jWSQuantity(x,jWSString(u)) returns quantity unit u of x. For example: \example{jWSQuantity(1.2, jWSString "Meter")}
+jWSQuantity(x,jWSString(u)) returns quantity unit u of x. For example:
+
+```fricas
+jWSQuantity(1.2, jWSString "Meter")
+```
 
 #### `jWSRule` <a id="jwsrule"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1190)\]
 
@@ -3384,7 +3528,13 @@ jWSRule(lhs,rhs) returns the Julia WS rule lhs->rhs.
 
 ##### `jWSRule` : `Equation(%) -> %`
 
-jWSRule(eq) returns the Julia WS rule lhs->rhs for the equation eq. For example: \example{x := jWSExpr x} \example{p := 1/2 * legendreQ(5,x)} \example{replaceAll(p, jWSRule(x = jWSExpr "1.55555556444883838383833777333333333"))}
+jWSRule(eq) returns the Julia WS rule lhs->rhs for the equation eq. For example:
+
+```fricas
+x := jWSExpr x
+p := 1/2 * legendreQ(5,x)
+replaceAll(p, jWSRule(x = jWSExpr "1.55555556444883838383833777333333333"))
+```
 
 #### `jWSTable` <a id="jwstable"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1186)\]
 
@@ -3464,24 +3614,25 @@ jlAbout(obj) displays Julia information about obj if you have About.jl installed
 
 ##### `jlApply` : `(String, %) -> JLObject`
 
-jlApply(func, obj) applies the function func with obj as parameter and returns the result as a FriCAS JLObject. For exam ple, using JLMatrix(JLObjFloat64): 
+jlApply(func, obj) applies the function func with obj as parameter and returns the result as a FriCAS JLObject. For exam ple, using JLMatrix(JLObjFloat64):
 
-**Examples**:
 ```fricas
 M:=nrand(4,4);
-jlApply("svd", M::JLMatrix(JLObjFloat64)).S shou ld be "equivalent" to svdvals(M).
+jlApply("svd", M::JLMatrix(JLObjFloat64)).S
+shou
+ld be "equivalent" to svdvals(M).
 ```
 
 - **From**: [`JLObjectType`](JLObjectType.md)
 
 ##### `jlApply` : `(String, %, %) -> JLObject`
 
-jlApply(func, obj1, obj2) applies the function func with obj1 and obj2 as parameters and returns the result as a FriCAS JLObject. For example (equivalent to map(cos, v)): 
+jlApply(func, obj1, obj2) applies the function func with obj1 and obj2 as parameters and returns the result as a FriCAS JLObject. For example (equivalent to map(cos, v)):
 
-**Examples**:
 ```fricas
 v:=urand01(5)$JLVector(JLFloat)
-jlApply("map", " cos", coerce v)
+jlApply("map", "
+cos", coerce v)
 ```
 
 - **From**: [`JLObjectType`](JLObjectType.md)
@@ -3512,7 +3663,7 @@ jlDisplay(expr) returns the traditional form of expr. This is equivalent to: jWS
 
 ##### `jlDisplay` : `(WSExpression, WSExpression) -> WSExpression`
 
-jlDisplay(expr, form) returns the `form` form of expr resulting for example in: "Format[Sin[x], TeXForm]" => \sin x
+jlDisplay(expr, form) returns the `form` form of expr resulting for example in: "Format[Sin[x], TeXForm]" => sin x
 
 ##### `jlDisplay` : `% -> Void`
 
@@ -3531,11 +3682,20 @@ jlDump(obj) dumps (shows) the Julia object (internal structure with type).
 
 ##### `jlEval` : `(%, String) -> %`
 
-jlEval(expr, param) evaluates expression expr with param as parameter(s). See also `eval` or `replaceAll`. For example: \example{x:=jWSExpr("x");jlEval(sqrt(x),"x=2.0")}
+jlEval(expr, param) evaluates expression expr with param as parameter(s). See also `eval` or `replaceAll`. For example:
+
+```fricas
+x:=jWSExpr("x");jlEval(sqrt(x),"x=2.0")
+```
 
 ##### `jlEval` : `(%, String, String) -> %`
 
-jlEval(expr, param1, param2) evaluates expression expr with param1 and param2 as parameters. See also `eval` or `replaceAll`. \example{a:=jWSExpr("a");b:=jWSExpr("b");} \example{jlEval(sqrt(a^2+b^2),"a=1.0","b=1.0")}
+jlEval(expr, param1, param2) evaluates expression expr with param1 and param2 as parameters. See also `eval` or `replaceAll`.
+
+```fricas
+a:=jWSExpr("a");b:=jWSExpr("b");
+jlEval(sqrt(a^2+b^2),"a=1.0","b=1.0")
+```
 
 ##### `jlEval` : `(%, String, String, String) -> %`
 
@@ -3563,7 +3723,7 @@ jlGetField(obj, sym) returns the property/element sym of obj.
 
 #### `jlGetJuliaIndex` <a id="jlgetjuliaindex"></a>
 
-jlGetJuliaIndex(obj) returns the Julia indexed dictionary index referencing the object obj. Convenience function for use in the interpreter.
+jlGetJuliaIndex(obj) returns the string that allows access to the Julia indexed dictionary index referencing the object obj. Convenience function for use in the interpreter (jlref). For example: jlGetJuliaIndex(df) => "getindex(refs,10)"
 
 - **Signature**: `% -> String`
 - **From**: [`JLObjectType`](JLObjectType.md)
@@ -3597,11 +3757,11 @@ jlId(obj) returns the Julia indexed dictionary index referencing the object obj.
 
 #### `jlObject` <a id="jlobject"></a>
 
-jlObject() returns the internal Julia name of the Julia module used. For example: 
+jlObject() returns the internal Julia name of the Julia module used. For example:
 
-**Example**:
 ```fricas
-jlObject()$NMUnivariatePolyn omial(NINT,'x)
+jlObject()$NMUnivariatePolyn
+omial(NINT,'x)
 ```
 
 - **Signature**: `() -> String`
@@ -3637,9 +3797,8 @@ jlSymbolic(expr) returns the symbolic 'FullForm'.
 
 #### `jlText` <a id="jltext"></a>
 
-jlText(obj, mimest) returns the text representation of obj as a list of String lines with mime subtype mimest, for examp le "plain" for "text/plain" or "html" for "text/html" if is implemented at Julia level. Use internally the 'show' method . For example: 
+jlText(obj, mimest) returns the text representation of obj as a list of String lines with mime subtype mimest, for examp le "plain" for "text/plain" or "html" for "text/html" if is implemented at Julia level. Use internally the 'show' method . For example:
 
-**Examples**:
 ```fricas
 df:=jdframe nrand(6,3)
 jlText(df, "plain")
@@ -3666,7 +3825,13 @@ jlWSAccuracy(expr) get accuracy of expr.
 
 #### `jlWSDefined?` <a id="jlwsdefined"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L66)\]
 
-jlWSDefined?(sym) checks whether or not the symbol sym is defined in the WS language. For example: \example{jlWSDefined? "Sin"} => true
+jlWSDefined?(sym) checks whether or not the symbol sym is defined in the WS language. For example:
+
+```fricas
+jlWSDefined? "Sin"
+```
+
+=> true
 
 - **Signature**: `String -> Boolean`
 
@@ -3821,7 +3986,11 @@ kummerU(mu, nu, z) is the Kummer U function.
 
 ##### `laguerreL` : `(%, %) -> %`
 
-laguerreL(n, x) returns the Laguerre polynomial or evaluates it at x if x is a number. For example: \example{laguerreL(5, jWSExpr x)}
+laguerreL(n, x) returns the Laguerre polynomial or evaluates it at x if x is a number. For example:
+
+```fricas
+laguerreL(5, jWSExpr x)
+```
 
 ##### `laguerreL` : `(%, %, %) -> %`
 
@@ -3909,7 +4078,11 @@ legendreP(n, m, x) returns the associated Legendre polynomial of the first type 
 
 ##### `legendreQ` : `(%, %) -> %`
 
-legendreQ(n, x) returns the Legendre function of the second kind or evaluates it at x if x is a number. \example{legendreQ(3,jWSExpr x)}
+legendreQ(n, x) returns the Legendre function of the second kind or evaluates it at x if x is a number.
+
+```fricas
+legendreQ(3,jWSExpr x)
+```
 
 ##### `legendreQ` : `(%, %, %) -> %`
 
@@ -3959,7 +4132,11 @@ lift(z) returns a minimal degree univariate polynomial up such that z=reduce up.
 
 #### `limit` <a id="limit"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L520)\]
 
-limit(expr, params) returns the limit, eventually nested or multivariate, of expr. For example: \example{x:=jWSExpr x; limit(sin(x)-sin(x-1/x),"x->Infinity")}
+limit(expr, params) returns the limit, eventually nested or multivariate, of expr. For example:
+
+```fricas
+x:=jWSExpr x; limit(sin(x)-sin(x-1/x),"x->Infinity")
+```
 
 - **Signature**: `(%, %) -> %`
 
@@ -4196,7 +4373,7 @@ monomialList(p) returns the list of monomials in p.
 
 #### `multiEuclidean` <a id="multieuclidean"></a>
 
-multiEuclidean([f1, ..., fn], z) returns a list of coefficients [a1, ..., an] such that  z / prod fi = sum aj/fj. If no such list of coefficients exists, "failed" is returned.
+multiEuclidean([f1, ..., fn], z) returns a list of coefficients [a1, ..., an] such that z / prod fi = sum aj/fj. If no such list of coefficients exists, "failed" is returned.
 
 - **Signature**: `(List(%), %) -> Union(List(%),"failed")`
 - **From**: `EuclideanDomain`
@@ -4225,7 +4402,13 @@ norm(x) returns x * conjugate(x)
 
 ##### `normal` : `% -> %`
 
-normal(expr) converts expr to a normal expression from different expression types. Can be applied to a power series for example. For example: \example{x:=jWSExpr x} \example{s:=series(exp(x),jWSExpr "\{x,0,10\}")} \example{normal(s)::EXPR INT}
+normal(expr) converts expr to a normal expression from different expression types. Can be applied to a power series for example. For example:
+
+```fricas
+x:=jWSExpr x
+s:=series(exp(x),jWSExpr "{x,0,10}")
+normal(s)::EXPR INT
+```
 
 ##### `normal` : `(%, %) -> %`
 
@@ -4356,7 +4539,14 @@ numericMaximize(expr, vars, dom) maximizes numerically the expression function e
 
 ##### `numericMinimize` : `(%, %) -> %`
 
-numericMinimize(expr, vars) minimizes numerically the expression function expr with respect to vars. For example, global optimization from the SIAM 100 digits challenge: \example{x := jWSExpr(x);y:=jWSExpr y;} \example{expr := exp(sin(50*x))+sin(60*exp(y))+ sin(70*sin(x))+ sin(sin(80*y))-sin(10*(x+y))+(x^2+y^2)/4} \example{numericMinimize(expr, jWSList [x,y])}
+numericMinimize(expr, vars) minimizes numerically the expression function expr with respect to vars. For example, global optimization from the SIAM 100 digits challenge:
+
+```fricas
+x := jWSExpr(x);y:=jWSExpr y;
+expr := exp(sin(50*x))+sin(60*exp(y))+ sin(70*sin(x))+
+sin(sin(80*y))-sin(10*(x+y))+(x^2+y^2)/4
+numericMinimize(expr, jWSList [x,y])
+```
 
 ##### `numericMinimize` : `(%, Symbol) -> %`
 
@@ -4370,7 +4560,13 @@ numericMinimize(expr, vars, dom) minimizes numerically the expression function e
 
 ##### `numericProduct` : `(%, %) -> %`
 
-numericProduct(f(n),range) returns an evaluated numerical approximation of the sum f(imin) + ... + f(imax) defined by the list range, for example \example{jWSExpr("\{i, imin, imax\}")}. See Wolfram language specifications.
+numericProduct(f(n),range) returns an evaluated numerical approximation of the sum f(imin) + ... + f(imax) defined by the list range, for example
+
+```fricas
+jWSExpr("{i, imin, imax}")
+```
+
+. See Wolfram language specifications.
 
 ##### `numericProduct` : `(%, %, Segment(Integer)) -> %`
 
@@ -4390,7 +4586,13 @@ numericSolve(expr, vars) returns the solution(s) to the expression expr.
 
 ##### `numericSum` : `(%, %) -> %`
 
-numericSum(f(n),range) returns an evaluated numerical approximation of the sum f(imin) + ... + f(imax) defined by the list range, for example \example{jWSExpr("\{i, imin, imax\}")}. See Wolfram language specifications.
+numericSum(f(n),range) returns an evaluated numerical approximation of the sum f(imin) + ... + f(imax) defined by the list range, for example
+
+```fricas
+jWSExpr("{i, imin, imax}")
+```
+
+. See Wolfram language specifications.
 
 ##### `numericSum` : `(%, %, Segment(Integer)) -> %`
 
@@ -4426,7 +4628,7 @@ opposite?(x,y) holds if the sum of x and y is 0.
 
 #### `padeApproximant` <a id="padeapproximant"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L739)\]
 
-padeApproximant(expr, "{x,x0, {n,m}"}) returns the Padé approximant at x0.
+padeApproximant(expr, "x,x0, n,m") returns the Padé approximant at x0.
 
 - **Signature**: `(%, %) -> %`
 
@@ -4461,7 +4663,11 @@ part(agg,i) returns the i-th element.
 
 ##### `percentForm` : `% -> %`
 
-percentForm(x) returns the printed representation of x in percent form. For example: \example{percentForm jWSExpr 0.50}
+percentForm(x) returns the printed representation of x in percent form. For example:
+
+```fricas
+percentForm jWSExpr 0.50
+```
 
 ##### `percentForm` : `(%, %) -> %`
 
@@ -4636,7 +4842,13 @@ principalIdeal([f1, ..., fn]) returns a record whose generator component is a ge
 
 ##### `product` : `(%, %) -> %`
 
-product(f(n),range) returns the product f(imin) * ... * f(imax) defined by the list range, for example \example{jWSExpr("\{i, imin, imax\}")}. See Wolfram language specifications.
+product(f(n),range) returns the product f(imin) * ... * f(imax) defined by the list range, for example
+
+```fricas
+jWSExpr("{i, imin, imax}")
+```
+
+. See Wolfram language specifications.
 
 ##### `product` : `(%, %, Segment(Integer)) -> %`
 
@@ -4968,13 +5180,17 @@ represents([a1, .., an], [v1, .., vn]) returns a1*v1 + ... + an*vn.
 
 #### `residue` <a id="residue"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L639)\]
 
-residue(expr, {x,x0}) returns the residue of expr at x0.
+residue(expr, x,x0) returns the residue of expr at x0.
 
 - **Signature**: `(%, %) -> %`
 
 #### `residueSum` <a id="residuesum"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L641)\]
 
-residueSum(expr, var) returns the residue of expr. \example{residueSum(Gamma(x),x)}
+residueSum(expr, var) returns the residue of expr.
+
+```fricas
+residueSum(Gamma(x),x)
+```
 
 - **Signature**: `(%, %) -> %`
 
@@ -5224,7 +5440,15 @@ select(expr, form, n) selects the n first elements of expr if form(element) is t
 
 #### `series` <a id="series"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L407)\]
 
-series(expr, opt) returns a series from expr. \example{x:=jWSExpr(x);a:=jWSExpr(a);} \example{opt:=jWSList [x,pi()$WSEXPR/4,7]} \example{series(sin(a*x),opt)} \example{series(cos(x),"\{x, 0, 12\}")} \example{series(inverseErfc(x),"\{x,0,3\}")}
+series(expr, opt) returns a series from expr.
+
+```fricas
+x:=jWSExpr(x);a:=jWSExpr(a);
+opt:=jWSList [x,pi()$WSEXPR/4,7]
+series(sin(a*x),opt)
+series(cos(x),"{x, 0, 12}")
+series(inverseErfc(x),"{x,0,3}")
+```
 
 - **Signature**: `(%, %) -> %`
 
@@ -5270,11 +5494,19 @@ sign(x) returns the sign of x.
 
 ##### `simplify` : `% -> %`
 
-simplify(expr) simplifies the expr. \example{x:=jWSExpr("x"); simplify(sqrt(x^2)^2)}
+simplify(expr) simplifies the expr.
+
+```fricas
+x:=jWSExpr("x"); simplify(sqrt(x^2)^2)
+```
 
 ##### `simplify` : `(%, %) -> %`
 
-simplify(expr, assumptions) simplifies the expression expr assuming that assumptions are satisfied. For example: \example{x:=jWSExpr("x"); simplify(sqrt(x^2), "x>0")}
+simplify(expr, assumptions) simplifies the expression expr assuming that assumptions are satisfied. For example:
+
+```fricas
+x:=jWSExpr("x"); simplify(sqrt(x^2), "x>0")
+```
 
 #### `sin` <a id="sin"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1385)\]
 
@@ -5475,7 +5707,13 @@ subtractIfCan(x, y) returns an element z such that z+y=x or "failed" if no such 
 
 ##### `sum` : `(%, %) -> %`
 
-sum(f(n),range) returns the sum f(imin) + ... + f(imax) defined by the list range, for example \example{jWSExpr("\{i, imin, imax\}")}. See Wolfram Language specifications.
+sum(f(n),range) returns the sum f(imin) + ... + f(imax) defined by the list range, for example
+
+```fricas
+jWSExpr("{i, imin, imax}")
+```
+
+. See Wolfram Language specifications.
 
 ##### `sum` : `(%, %, Segment(Integer)) -> %`
 
@@ -5741,7 +5979,7 @@ weierstrassP(g2, g3, z) is the Weierstrass P function.
 
 #### `weierstrassPInverse` <a id="weierstrasspinverse"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L177)\]
 
-weierstrassPInverse(g2, g3, z) is the inverse of Weierstrass P function, defined by the formula \spad{WeierstrassP(g2, g3, WeierstrassPInverse(g2, g3, z)) = z}.
+weierstrassPInverse(g2, g3, z) is the inverse of Weierstrass P function, defined by the formula WeierstrassP(g2, g3, WeierstrassPInverse(g2, g3, z)) = z.
 
 - **Signature**: `(%, %, %) -> %`
 
@@ -5790,7 +6028,11 @@ zernikeR(n, m, x) returns the Zernike radial polynomial or evaluates it at x if 
 
 #### `zero?` <a id="zero"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L31)\]
 
-zero? x tries to determine if x is 0. For example: \example{expr:=0$WSEXPR/1*sqrt(17::WSEXPR); zero? expr}
+zero? x tries to determine if x is 0. For example:
+
+```fricas
+expr:=0$WSEXPR/1*sqrt(17::WSEXPR); zero? expr
+```
 
 - **Signature**: `% -> Boolean`
 

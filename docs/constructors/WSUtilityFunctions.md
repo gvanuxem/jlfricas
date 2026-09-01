@@ -42,18 +42,18 @@ Julia WS utility functions using the MathLink Julia package.
 | Operation | Summary |
 | :--- | :--- |
 | [`fourierMatrix`](#fouriermatrix) | fourierMatrix(n) returns the n x n Fourier matrix. |
-| [`gaussianMatrix`](#gaussianmatrix) | gaussianMatrix(r) returns the Gaussian matrix with radius r. For example: \example{gaussia... |
+| [`gaussianMatrix`](#gaussianmatrix) | gaussianMatrix(r) returns the Gaussian matrix with radius r. For example:... |
 | [`hankelMatrix`](#hankelmatrix) | hankelMatrix(n) returns the square Hankel matrix with integer coefficients. |
 | [`hilbertMatrix`](#hilbertmatrix) | hilbertMatrix(n) returns the square Hilbert matrix. |
 | [`identityMatrix`](#identitymatrix) | identityMatrix(n) returns the identity matrix of size n. |
 | [`jWSDateObject`](#jwsdateobject) | jWSDateObject() returns the WSExpression object of the local date and time. |
-| [`jWSRange`](#jwsrange) | jWSRange(n) returns a WSList that ranges from 1 to n. For example: \example{jWSRange(10)@W... |
-| [`jlWSDateString`](#jlwsdatestring) | jlWSDateString() returns the WSExpression string of the local date and time. For example: ... |
+| [`jWSRange`](#jwsrange) | jWSRange(n) returns a WSList that ranges from 1 to n. For example:... |
+| [`jlWSDateString`](#jlwsdatestring) | jlWSDateString() returns the WSExpression string of the local date and time. For example:... |
 | [`jlWSDocumentation`](#jlwsdocumentation) | jlWSDocumentation(sym) prints WS information about the symbol sym. Note that the WS langua... |
 | [`jlWSExport`](#jlwsexport) | jlWSExport(file.ext, obj) exports the object obj to the file file.ext. The extension ext w... |
 | [`jlWSExportString`](#jlwsexportstring) | jlWSExportString(expr, form) returns the string representation of expr in the specified fo... |
 | [`jlWSFileFormat`](#jlwsfileformat) | jlWSFileFormat(src) tries to determine the format of the source src from its content. Can ... |
-| [`jlWSImport`](#jlwsimport) | jlWSImport(src) imports the source src. For example: \example{file:=jlWSImport jWSString "... |
+| [`jlWSImport`](#jlwsimport) | jlWSImport(src) imports the source src. For example:... |
 | [`jlWSPlot`](#jlwsplot) | jlWSPlot(expr, options) is the WS plot function. Since it should be run in a Wolfram noteb... |
 | [`jlWSSeedRandom!`](#jlwsseedrandom) | jlWSSeedRandom!(n) reseeds the random number generator with n as seed. Returns the random ... |
 | [`jlWSSnippet`](#jlwssnippet) | jlWSSnippet(expr, n) returns the first (or last) n snippets of the WSExpression expr. For ... |
@@ -72,7 +72,11 @@ fourierMatrix(n) returns the n x n Fourier matrix.
 
 #### `gaussianMatrix` <a id="gaussianmatrix"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L38)\]
 
-gaussianMatrix(r) returns the Gaussian matrix with radius r. For example: \example{gaussianMatrix "2.2"}
+gaussianMatrix(r) returns the Gaussian matrix with radius r. For example:
+
+```fricas
+gaussianMatrix "2.2"
+```
 
 - **Signature**: `WSReal -> WSMatrix(WSReal)`
 
@@ -112,7 +116,11 @@ jWSDateObject(date,type) returns the WSExpression object of the date and type, f
 
 ##### `jWSRange` : `WSInteger -> WSList(WSInteger)`
 
-jWSRange(n) returns a WSList that ranges from 1 to n. For example: \example{jWSRange(10)@WSLIST(WSINT)}
+jWSRange(n) returns a WSList that ranges from 1 to n. For example:
+
+```fricas
+jWSRange(10)@WSLIST(WSINT)
+```
 
 ##### `jWSRange` : `(WSInteger, WSInteger) -> WSList(WSInteger)`
 
@@ -130,31 +138,58 @@ jWSRange(n,m,d) returns a WSList that ranges from n to m with step d.
 
 ##### `jlWSDateString` : `() -> WSExpression`
 
-jlWSDateString() returns the WSExpression string of the local date and time. For example: \example{toString jlWSDateString()}
+jlWSDateString() returns the WSExpression string of the local date and time. For example:
+
+```fricas
+toString jlWSDateString()
+```
 
 ##### `jlWSDateString` : `WSExpression -> WSExpression`
 
-jlWSDateString(expr) returns the WSExpression string of the date from a WS date object. For example: \example{jlWSDateString jWSExpr "Tomorrow"}
+jlWSDateString(expr) returns the WSExpression string of the date from a WS date object. For example:
+
+```fricas
+jlWSDateString jWSExpr "Tomorrow"
+```
 
 ##### `jlWSDateString` : `(WSExpression, WSExpression) -> WSExpression`
 
-jlWSDateString(expr, form) returns WSExpression string of the date from a WS date object with WS format form. For example: \example{jlWSDateString(jWSExpr("Now"), jWSExpr("Entity[_"Language_", _"French::367gk_"]"))}
+jlWSDateString(expr, form) returns WSExpression string of the date from a WS date object with WS format form. For example:
+
+```fricas
+jlWSDateString(jWSExpr("Now"), jWSExpr("Entity[_"Language_", _"French::367gk_"]"))
+```
 
 #### `jlWSDocumentation` <a id="jlwsdocumentation"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L86)\]
 
-jlWSDocumentation(sym) prints WS information about the symbol sym. Note that the WS language is preferable. Trivial implementation. For example: \example{jlWSDocumentation sin} \example{jlWSDocumentation ArcSin}
+jlWSDocumentation(sym) prints WS information about the symbol sym. Note that the WS language is preferable. Trivial implementation. For example:
+
+```fricas
+jlWSDocumentation sin
+jlWSDocumentation ArcSin
+```
 
 - **Signature**: `Symbol -> WSExpression`
 
 #### `jlWSExport` <a id="jlwsexport"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L115)\]
 
-jlWSExport(file.ext, obj) exports the object obj to the file file.ext. The extension ext will determine the saved format. A WS expression for example can be exported in an image file, it will be saved in the WS 'StandardForm' whereas in FriCAS it is displayed in WS 'OutputForm': \example{x:=jWSExpr(x);jlWSExport("legendreP.png", legendreP(7, x))}
+jlWSExport(file.ext, obj) exports the object obj to the file file.ext. The extension ext will determine the saved format. A WS expression for example can be exported in an image file, it will be saved in the WS 'StandardForm' whereas in FriCAS it is displayed in WS 'OutputForm':
+
+```fricas
+x:=jWSExpr(x);jlWSExport("legendreP.png", legendreP(7, x))
+```
 
 - **Signature**: `(String, WSExpression) -> WSExpression`
 
 #### `jlWSExportString` <a id="jlwsexportstring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L125)\]
 
-jlWSExportString(expr, form) returns the string representation of expr in the specified format. Use toString or string to obtain the FriCAS String. For example: \example{jWSExpr \"Probability[x < 0, x \\[Distributed] NormalDistribution[]]\"} \example{jWSExpr \"Probability[x < 1, x \\[Distributed] NormalDistribution[]]\"} \example{string jlWSExportString(%,jWSString "TeX")}
+jlWSExportString(expr, form) returns the string representation of expr in the specified format. Use toString or string to obtain the FriCAS String. For example:
+
+```fricas
+jWSExpr "Probability[x < 0, x \\[Distributed] NormalDistribution[]]"
+jWSExpr "Probability[x < 1, x \\[Distributed] NormalDistribution[]]"
+string jlWSExportString(%,jWSString "TeX")
+```
 
 - **Signature**: `(WSExpression, WSString) -> WSExpression`
 
@@ -162,25 +197,43 @@ jlWSExportString(expr, form) returns the string representation of expr in the sp
 
 ##### `jlWSFileFormat` : `WSString -> WSExpression`
 
-jlWSFileFormat(src) tries to determine the format of the source src from its content. Can be used with jWSImport. For example: \example{jlWSFileFormat("examples/customers-100.csv")}
+jlWSFileFormat(src) tries to determine the format of the source src from its content. Can be used with jWSImport. For example:
+
+```fricas
+jlWSFileFormat("examples/customers-100.csv")
+```
 
 ##### `jlWSFileFormat` : `(WSString, WSExpression) -> WSExpression`
 
-jlWSFileFormat(src, list(form)) tries to determine the format of the source src from its content using the list of formats form. Returns WS None if no format is found. Can be used with jWSImport. For example: \spad{jlWSFileFormat("examples/customers-100.csv",jWSExpr "{_"CSV_",_"TSV_"}")}
+jlWSFileFormat(src, list(form)) tries to determine the format of the source src from its content using the list of formats form. Returns WS None if no format is found. Can be used with jWSImport. For example: jlWSFileFormat("examples/customers-100.csv",jWSExpr "_"CSV_",_"TSV_"")
 
 #### `jlWSImport` <a id="jlwsimport"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L92)\]
 
 ##### `jlWSImport` : `WSString -> WSExpression`
 
-jlWSImport(src) imports the source src. For example: \example{file:=jlWSImport jWSString "examples/customers-100.csv";} \example{jlWSDateString(file.2.11)}
+jlWSImport(src) imports the source src. For example:
+
+```fricas
+file:=jlWSImport jWSString "examples/customers-100.csv";
+jlWSDateString(file.2.11)
+```
 
 ##### `jlWSImport` : `(WSString, WSString) -> WSExpression`
 
-jlWSImport(myfile, form) imports the file myfile with format form. For example: \example{file:=jlWSImport(jWSString("examples/customers-100.csv"), jWSString "CSV");}
+jlWSImport(myfile, form) imports the file myfile with format form. For example:
+
+```fricas
+file:=jlWSImport(jWSString("examples/customers-100.csv"), jWSString "CSV");
+```
 
 #### `jlWSPlot` <a id="jlwsplot"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L133)\]
 
-jlWSPlot(expr, options) is the WS plot function. Since it should be run in a Wolfram notebook or any other supported graphical interfaces, the Wolfram Jupyter "plugin" for example, it is left to the user for testing purposes. The following uses the jlWSExport function: \example{x:=jWSExpr(x);opt:=jWSList [x,-5,5]} \example{jlWSExport("sin.png", jlWSPlot(sin(x),opt))}
+jlWSPlot(expr, options) is the WS plot function. Since it should be run in a Wolfram notebook or any other supported graphical interfaces, the Wolfram Jupyter "plugin" for example, it is left to the user for testing purposes. The following uses the jlWSExport function:
+
+```fricas
+x:=jWSExpr(x);opt:=jWSList [x,-5,5]
+jlWSExport("sin.png", jlWSPlot(sin(x),opt))
+```
 
 - **Signature**: `(WSExpression, WSExpression) -> WSExpression`
 
@@ -192,7 +245,11 @@ jlWSSeedRandom!(n) reseeds the random number generator with n as seed. Returns t
 
 #### `jlWSSnippet` <a id="jlwssnippet"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L111)\]
 
-jlWSSnippet(expr, n) returns the first (or last) n snippets of the WSExpression expr. For example: \example{jlWSSnippet(jlWSImport jWSString "http://www.fricas.org/",-2)}
+jlWSSnippet(expr, n) returns the first (or last) n snippets of the WSExpression expr. For example:
+
+```fricas
+jlWSSnippet(jlWSImport jWSString "http://www.fricas.org/",-2)
+```
 
 - **Signature**: `(WSExpression, WSInteger) -> WSExpression`
 

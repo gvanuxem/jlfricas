@@ -89,7 +89,7 @@ JLPlotFunctions() : Exports == Implementation where
     jlPlotTitle! : String -> Void
     ++ jlPlotTitle!(title) draws `title' as plot title in the current plot.
     ++ For example:
-    ++   jlPlotTitle! "sin(x)"
+    ++ \example{jlPlotTitle! "sin(x)"}
     ++ if you have the LaTeXStrings Julia package
     ++ \example{jlPlotTitle! jlLatex latex sin(x)}
     ++ For simple expressions title will automatically
