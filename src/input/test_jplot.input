@@ -71,11 +71,11 @@ jlPlot!(cos(x)*sin(y), x = -3.0..3.0, y = -3.0..3.0)
 -------------------------------------------------------------------------------
 
 -- Define test anonymous functions
-f1D := (t : DoubleFloat) : DoubleFloat +-> sin(t)*exp(-t/5)
-g1D := (t : DoubleFloat) : DoubleFloat +-> cos(t)*exp(-t/5)
-f2D := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> sin(u)*cos(v)
-g2D := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> cos(u)*sin(v)
-f3D := (t : DoubleFloat) : DoubleFloat +-> t / 5.0
+f1D := (t : DoubleFloat) : DoubleFloat +-> sin(t)*exp(-t/5);
+g1D := (t : DoubleFloat) : DoubleFloat +-> cos(t)*exp(-t/5);
+f2D := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> sin(u)*cos(v);
+g2D := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> cos(u)*sin(v);
+f3D := (t : DoubleFloat) : DoubleFloat +-> t / 5.0;
 
 -- 2.1 1D Functional Plotting (all 8 overloads)
 jlPlot(f1D, -5.0..5.0)
@@ -187,9 +187,9 @@ jlVectorField(f2D, g2D, -2.0..2.0, -2.0..2.0, 20, "Vector Field (f, g) (20x20)")
 pdf(x) ==> x pretend DoubleFloat
 
 -- 3.1 Vector creation and 1D/3D array plots
-vx := jlRange(-%pi..%pi, 100)
-vy := map(x +-> coerce(sin(pdf(x)))@JF64, vx)
-vz := map(x +-> coerce(cos(pdf(x)))@JF64, vx)
+vx := jlRange(-%pi..%pi, 100);
+vy := map(x +-> coerce(sin(pdf(x)))@JF64, vx);
+vz := map(x +-> coerce(cos(pdf(x)))@JF64, vx);
 
 jlPlot(vx, vy)
 jlPlot!(vx, vz)
@@ -205,11 +205,11 @@ jlDensity(vy)
 jlDensity!(vz)
 
 -- 3.3 2D Grid & Matrix plotting (Surface, Wireframe, Contour, Contourf, Heatmap)
-nx : PositiveInteger := 40
-ny : PositiveInteger := 40
-xGrid := jlRange(-3.0..3.0, nx)
-yGrid := jlRange(-3.0..3.0, ny)
-zMat := qnew(nx, ny)$JF64MAT
+nx : PositiveInteger := 40;
+ny : PositiveInteger := 40;
+xGrid := jlRange(-3.0..3.0, nx);
+yGrid := jlRange(-3.0..3.0, ny);
+zMat := qnew(nx, ny)$JF64MAT;
 for i in 1..nx repeat
   xi := pdf(qelt(xGrid, i))
   for j in 1..ny repeat
@@ -268,8 +268,8 @@ jlPlotYlims!(-4.0, 4.0)
 jlPlotZlims!(-2.0, 2.0)
 
 -- 4.6 Global sampling points configuration
-p2d := jlPlotPoints()
-p3d := jlPlot3dPoints()
+p2d := jlPlotPoints();
+p3d := jlPlot3dPoints();
 jlSetPlotPoints!(350)
 jlSetPlot3dPoints!(75)
 jlSetPlotPoints!(p2d)
