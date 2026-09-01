@@ -7,6 +7,7 @@
 ++ using the Plots package for Julia.
 JLPlotFunctions() : Exports == Implementation where
   NNI     ==> NonNegativeInteger
+  PI      ==> PositiveInteger
   JF64    ==> JLFloat64
   DF      ==> DoubleFloat
   SEG     ==> Segment Float
@@ -15,13 +16,24 @@ JLPlotFunctions() : Exports == Implementation where
   Exports ==> with
     jlSetPlotsBackend! : String -> Void
     ++ jlSetPlotsBackend!(backend) sets the backend for plotting.
-    ++ The available backends are "gr", gaston", "plotly", "plotlyjs",
+    ++ The available backends are "gr", "gaston", "plotly", "plotlyjs",
     ++ "pythonplot", "pgfplotsx", "unicodeplots" and "inspectdr".
     jlClosePlots : Void
     ++ jlClosePlots() closes all plot windows.
+    jlPlotPoints : () -> PositiveInteger
+    ++ jlPlotPoints() returns the default number of points used for 1D and 2D curves.
+    jlSetPlotPoints! : PositiveInteger -> PositiveInteger
+    ++ jlSetPlotPoints!(n) sets the default number of points used for 1D and 2D curves
+    ++ and returns the previous value.
+    jlPlot3dPoints : () -> PositiveInteger
+    ++ jlPlot3dPoints() returns the default number of grid points per axis
+    ++ used for 3D surface, wireframe and contour plots.
+    jlSetPlot3dPoints! : PositiveInteger -> PositiveInteger
+    ++ jlSetPlot3dPoints!(n) sets the default number of grid points per axis
+    ++ used for 3D plots and returns the previous value.
     jlRange : SEG -> JLFloat64Vector
     ++ jlRange(range) is a utility function that returns a JLFloat64Vector
-    ++ with 250 points from \spad{low(range)} to \spad{high(range)}.
+    ++ with jlPlotPoints() points from \spad{low(range)} to \spad{high(range)}.
     jlRange : (SEG, PositiveInteger) -> JLFloat64Vector
     ++ jlRange(range, n) is a utility function that returns a
     ++ JLFloat64Vector with n points from \spad{low(range)}
@@ -88,10 +100,28 @@ JLPlotFunctions() : Exports == Implementation where
     ++ \example{jlPlotTitle! jlLatex "Plot: $sin(x)$"}
     jlPlotXlims! : (JF64, JF64) -> Void
     ++ jlPlotXlims!(x1,x2) sets x plot limits.
+    jlPlotXlims! : (DF, DF) -> Void
+    ++ jlPlotXlims!(x1,x2) sets x plot limits.
+    jlPlotXlims! : (Float, Float) -> Void
+    ++ jlPlotXlims!(x1,x2) sets x plot limits.
+    jlPlotXlims! : SEG -> Void
+    ++ jlPlotXlims!(range) sets x plot limits.
     jlPlotYlims! : (JF64, JF64) -> Void
     ++ jlPlotYlims!(y1,y2) sets y plot limits.
+    jlPlotYlims! : (DF, DF) -> Void
+    ++ jlPlotYlims!(y1,y2) sets y plot limits.
+    jlPlotYlims! : (Float, Float) -> Void
+    ++ jlPlotYlims!(y1,y2) sets y plot limits.
+    jlPlotYlims! : SEG -> Void
+    ++ jlPlotYlims!(range) sets y plot limits.
     jlPlotZlims! : (JF64, JF64) -> Void
     ++ jlPlotZlims!(z1,z2) sets z plot limits.
+    jlPlotZlims! : (DF, DF) -> Void
+    ++ jlPlotZlims!(z1,z2) sets z plot limits.
+    jlPlotZlims! : (Float, Float) -> Void
+    ++ jlPlotZlims!(z1,z2) sets z plot limits.
+    jlPlotZlims! : SEG -> Void
+    ++ jlPlotZlims!(range) sets z plot limits.
     jlPlotXlabel! : String -> Void
     ++ jlPlotXlabel!(str) sets x label.
     ++ See \spadfunFrom{jlPlotTitle}{JLPlotFunctions} for more
@@ -104,68 +134,257 @@ JLPlotFunctions() : Exports == Implementation where
     ++ jlPlotZlabel!(str) sets z label.
     ++ See \spadfunFrom{jlPlotTitle}{JLPlotFunctions} for more
     ++ informations on the different supported formats.
+    jlPlotSize! : (PositiveInteger, PositiveInteger) -> Void
+    ++ jlPlotSize!(w, h) sets the plot window dimensions in pixels (width, height).
+    jlPlotDpi! : PositiveInteger -> Void
+    ++ jlPlotDpi!(dpi) sets the figure rendering resolution in DPI (dots per inch).
+    jlPlotColorMap! : String -> Void
+    ++ jlPlotColorMap!(palette) sets the color palette / colormap
+    ++ (e.g. "viridis", "plasma", "inferno", "turbo", "coolwarm", "cividis").
+    jlPlotXscale! : String -> Void
+    ++ jlPlotXscale!(scale) sets the x-axis scale ("identity", "log10", "log2", "ln").
+    jlPlotYscale! : String -> Void
+    ++ jlPlotYscale!(scale) sets the y-axis scale ("identity", "log10", "log2", "ln").
+    jlPlotLegend! : String -> Void
+    ++ jlPlotLegend!(pos) sets the legend position
+    ++ ("topleft", "topright", "bottomleft", "bottomright", "outertopright", "none", "false").
+    jlPlotGrid! : Boolean -> Void
+    ++ jlPlotGrid!(flag) enables or disables grid lines on the plot.
 
-    -- Should be moved to another package
+    -- Functional plotting functions
     jlPlot : (DF -> DF, SEG) -> Void
     ++ jlPlot(f, a..b) draws the graph of \spad{y = f(x)} as x
     ++ ranges from \spad{min(a, b)} to \spad{max(a, b)}.
     ++ For example:
     ++ \example{jlPlot(x+->sinc(x),-15..15)}
+    jlPlot : (DF -> DF, SEG, PositiveInteger) -> Void
+    ++ jlPlot(f, a..b, n) draws the graph of \spad{y = f(x)} using n points.
+    jlPlot : (DF -> DF, SEG, String) -> Void
+    ++ jlPlot(f, a..b, title) draws the graph of \spad{y = f(x)} with title.
+    jlPlot : (DF -> DF, SEG, PositiveInteger, String) -> Void
+    ++ jlPlot(f, a..b, n, title) draws the graph of \spad{y = f(x)} with title using n points.
     jlPlot! : (DF -> DF, SEG) -> Void
     ++ jlPlot!(f, a..b) adds the graph of \spad{y = f(x)} as x
     ++ ranges from \spad{min(a, b)} to \spad{max(a, b)}
     ++ to the existing graph object.
+    jlPlot! : (DF -> DF, SEG, PositiveInteger) -> Void
+    ++ jlPlot!(f, a..b, n) adds the graph of \spad{y = f(x)} using n points.
+    jlPlot! : (DF -> DF, SEG, String) -> Void
+    ++ jlPlot!(f, a..b, title) adds the graph of \spad{y = f(x)} with title.
+    jlPlot! : (DF -> DF, SEG, PositiveInteger, String) -> Void
+    ++ jlPlot!(f, a..b, n, title) adds the graph of \spad{y = f(x)} with title using n points.
+
     jlPlot : ((DF, DF) -> DF, SEG, SEG) -> Void
     ++ jlPlot(f, a..b, c..d) draws the graph of \spad{z = f(x, y)} as x
     ++ ranges from \spad{min(a, b)} to \spad{max(a, b)} and y
-    ++ ranges from \spad{min(c, d)} to \spad{max(c, d)}
+    ++ ranges from \spad{min(c, d)} to \spad{max(c, d)}.
+    jlPlot : ((DF, DF) -> DF, SEG, SEG, PositiveInteger) -> Void
+    ++ jlPlot(f, a..b, c..d, n) draws the graph of \spad{z = f(x, y)} using an n by n grid.
+    jlPlot : ((DF, DF) -> DF, SEG, SEG, String) -> Void
+    ++ jlPlot(f, a..b, c..d, title) draws the graph of \spad{z = f(x, y)} with title.
+    jlPlot : ((DF, DF) -> DF, SEG, SEG, PositiveInteger, String) -> Void
+    ++ jlPlot(f, a..b, c..d, n, title) draws the graph of \spad{z = f(x, y)} with title using an n by n grid.
     jlPlot! : ((DF, DF) -> DF, SEG, SEG) -> Void
     ++ jlPlot!(f, a..b, c..d) adds the graph of \spad{z = f(x, y)} as x
     ++ ranges from \spad{min(a, b)} to \spad{max(a, b)} and y
     ++ ranges from \spad{min(c, d)} to \spad{max(c, d)}
     ++ on the existing graph object.
+    jlPlot! : ((DF, DF) -> DF, SEG, SEG, PositiveInteger) -> Void
+    ++ jlPlot!(f, a..b, c..d, n) adds the graph of \spad{z = f(x, y)} using an n by n grid.
+    jlPlot! : ((DF, DF) -> DF, SEG, SEG, String) -> Void
+    ++ jlPlot!(f, a..b, c..d, title) adds the graph of \spad{z = f(x, y)} with title.
+    jlPlot! : ((DF, DF) -> DF, SEG, SEG, PositiveInteger, String) -> Void
+    ++ jlPlot!(f, a..b, c..d, n, title) adds the graph of \spad{z = f(x, y)} with title using an n by n grid.
+
     jlWireframe : ((DF, DF) -> DF, SEG, SEG) -> Void
     ++ jlWireframe(f, a..b, c..d) draws the wireframe of
-    ++ \spad{y = f(x,y)} as x ranges from \spad{min(a, b)}
+    ++ \spad{z = f(x,y)} as x ranges from \spad{min(a, b)}
     ++ to \spad{max(a, b)} and y ranges from \spad{min(c, d)}
     ++ to \spad{max(c, d)}.
+    jlWireframe : ((DF, DF) -> DF, SEG, SEG, PositiveInteger) -> Void
+    ++ jlWireframe(f, a..b, c..d, n) draws the wireframe using an n by n grid.
+    jlWireframe : ((DF, DF) -> DF, SEG, SEG, String) -> Void
+    ++ jlWireframe(f, a..b, c..d, title) draws the wireframe with title.
+    jlWireframe : ((DF, DF) -> DF, SEG, SEG, PositiveInteger, String) -> Void
+    ++ jlWireframe(f, a..b, c..d, n, title) draws the wireframe with title using an n by n grid.
     jlWireframe! : ((DF, DF) -> DF, SEG, SEG) -> Void
-    ++ jlWireframe!(f, a..b, c..d) draws add the wireframe
-    ++ of \spad{y = f(x,y)} as x ranges from \spad{min(a, b)}
+    ++ jlWireframe!(f, a..b, c..d) adds the wireframe
+    ++ of \spad{z = f(x,y)} as x ranges from \spad{min(a, b)}
     ++ to \spad{max(a, b)} and y ranges from \spad{min(c, d)}
     ++ to \spad{max(c, d)} on the existing graph object.
+    jlWireframe! : ((DF, DF) -> DF, SEG, SEG, PositiveInteger) -> Void
+    ++ jlWireframe!(f, a..b, c..d, n) adds the wireframe using an n by n grid.
+    jlWireframe! : ((DF, DF) -> DF, SEG, SEG, String) -> Void
+    ++ jlWireframe!(f, a..b, c..d, title) adds the wireframe with title.
+    jlWireframe! : ((DF, DF) -> DF, SEG, SEG, PositiveInteger, String) -> Void
+    ++ jlWireframe!(f, a..b, c..d, n, title) adds the wireframe with title using an n by n grid.
+
     jlSurface : ((DF, DF) -> DF, SEG, SEG) -> Void
-    ++ jlSurface(f, a..b, c..d) draws the surface of \spad{y = f(x,y)} as x
+    ++ jlSurface(f, a..b, c..d) draws the surface of \spad{z = f(x,y)} as x
     ++ ranges from \spad{min(a, b)} to \spad{max(a, b)} and y
     ++ ranges from \spad{min(c, d)} to \spad{max(c, d)}.
+    jlSurface : ((DF, DF) -> DF, SEG, SEG, PositiveInteger) -> Void
+    ++ jlSurface(f, a..b, c..d, n) draws the surface of \spad{z = f(x,y)} using an n by n grid.
+    jlSurface : ((DF, DF) -> DF, SEG, SEG, String) -> Void
+    ++ jlSurface(f, a..b, c..d, title) draws the surface of \spad{z = f(x,y)} with title.
+    jlSurface : ((DF, DF) -> DF, SEG, SEG, PositiveInteger, String) -> Void
+    ++ jlSurface(f, a..b, c..d, n, title) draws the surface of \spad{z = f(x,y)} with title using an n by n grid.
     jlSurface! : ((DF, DF) -> DF, SEG, SEG) -> Void
-    ++ jlSurface!(f, a..b, c..d) draws the surface
-    ++ of \spad{y = f(x,y)} as x ranges from \spad{min(a, b)}
+    ++ jlSurface!(f, a..b, c..d) adds the surface
+    ++ of \spad{z = f(x,y)} as x ranges from \spad{min(a, b)}
     ++ to \spad{max(a, b)} and y ranges from \spad{min(c, d)}
     ++ to \spad{max(c, d)} on the existing graph object.
+    jlSurface! : ((DF, DF) -> DF, SEG, SEG, PositiveInteger) -> Void
+    ++ jlSurface!(f, a..b, c..d, n) adds the surface of \spad{z = f(x,y)} using an n by n grid.
+    jlSurface! : ((DF, DF) -> DF, SEG, SEG, String) -> Void
+    ++ jlSurface!(f, a..b, c..d, title) adds the surface of \spad{z = f(x,y)} with title.
+    jlSurface! : ((DF, DF) -> DF, SEG, SEG, PositiveInteger, String) -> Void
+    ++ jlSurface!(f, a..b, c..d, n, title) adds the surface of \spad{z = f(x,y)} with title using an n by n grid.
+
     jlContour : ((DF, DF) -> DF, SEG, SEG) -> Void
     ++ jlContour(f, a..b, c..d) draws the contour plot
-    ++ of \spad{y = f(x,y)} as x ranges from \spad{min(a, b)}
+    ++ of \spad{z = f(x,y)} as x ranges from \spad{min(a, b)}
     ++ to \spad{max(a, b)} and y ranges from \spad{min(c, d)}
     ++ to \spad{max(c, d)}.
+    jlContour : ((DF, DF) -> DF, SEG, SEG, PositiveInteger) -> Void
+    ++ jlContour(f, a..b, c..d, n) draws the contour plot using an n by n grid.
+    jlContour : ((DF, DF) -> DF, SEG, SEG, String) -> Void
+    ++ jlContour(f, a..b, c..d, title) draws the contour plot with title.
+    jlContour : ((DF, DF) -> DF, SEG, SEG, PositiveInteger, String) -> Void
+    ++ jlContour(f, a..b, c..d, n, title) draws the contour plot with title using an n by n grid.
     jlContour! : ((DF, DF) -> DF, SEG, SEG) -> Void
-    ++ jlContour!(f, a..b, c..d) draws the contour plot
-    ++ of \spad{y = f(x,y)} as x ranges from \spad{min(a, b)}
+    ++ jlContour!(f, a..b, c..d) adds the contour plot
+    ++ of \spad{z = f(x,y)} as x ranges from \spad{min(a, b)}
     ++ to \spad{max(a, b)} and y ranges from \spad{min(c, d)}
     ++ to \spad{max(c, d)} on the existing graph object.
+    jlContour! : ((DF, DF) -> DF, SEG, SEG, PositiveInteger) -> Void
+    ++ jlContour!(f, a..b, c..d, n) adds the contour plot using an n by n grid.
+    jlContour! : ((DF, DF) -> DF, SEG, SEG, String) -> Void
+    ++ jlContour!(f, a..b, c..d, title) adds the contour plot with title.
+    jlContour! : ((DF, DF) -> DF, SEG, SEG, PositiveInteger, String) -> Void
+    ++ jlContour!(f, a..b, c..d, n, title) adds the contour plot with title using an n by n grid.
+
     jlContourf : ((DF, DF) -> DF, SEG, SEG) -> Void
-    ++ jlContourf(f, a..b, c..d) draws the contour plot
-    ++ of \spad{y = f(x,y)} as x ranges from \spad{min(a, b)}
+    ++ jlContourf(f, a..b, c..d) draws the filled contour plot
+    ++ of \spad{z = f(x,y)} as x ranges from \spad{min(a, b)}
     ++ to \spad{max(a, b)} and y ranges from \spad{min(c, d)}
     ++ to \spad{max(c, d)}. Fill area between contours.
+    jlContourf : ((DF, DF) -> DF, SEG, SEG, PositiveInteger) -> Void
+    ++ jlContourf(f, a..b, c..d, n) draws the filled contour plot using an n by n grid.
+    jlContourf : ((DF, DF) -> DF, SEG, SEG, String) -> Void
+    ++ jlContourf(f, a..b, c..d, title) draws the filled contour plot with title.
+    jlContourf : ((DF, DF) -> DF, SEG, SEG, PositiveInteger, String) -> Void
+    ++ jlContourf(f, a..b, c..d, n, title) draws the filled contour plot with title using an n by n grid.
     jlContourf! : ((DF, DF) -> DF, SEG, SEG) -> Void
-    ++ jlContourf!(f, a..b, c..d) draws the contour plot
-    ++ of \spad{y = f(x,y)} as x ranges from \spad{min(a, b)}
+    ++ jlContourf!(f, a..b, c..d) adds the filled contour plot
+    ++ of \spad{z = f(x,y)} as x ranges from \spad{min(a, b)}
     ++ to \spad{max(a, b)} and y ranges from \spad{min(c, d)}
     ++ to \spad{max(c, d)} on the existing graph object.
     ++ Fill area between contours.
+    jlContourf! : ((DF, DF) -> DF, SEG, SEG, PositiveInteger) -> Void
+    ++ jlContourf!(f, a..b, c..d, n) adds the filled contour plot using an n by n grid.
+    jlContourf! : ((DF, DF) -> DF, SEG, SEG, String) -> Void
+    ++ jlContourf!(f, a..b, c..d, title) adds the filled contour plot with title.
+    jlContourf! : ((DF, DF) -> DF, SEG, SEG, PositiveInteger, String) -> Void
+    ++ jlContourf!(f, a..b, c..d, n, title) adds the filled contour plot with title using an n by n grid.
+
+    -- Heatmap plotting functions
+    jlHeatmap : (JF64VEC, JF64VEC, JF64MAT) -> Void
+    ++ jlHeatmap(x, y, mat) draws a heatmap of surface mat.
+    jlHeatmap! : (JF64VEC, JF64VEC, JF64MAT) -> Void
+    ++ jlHeatmap!(x, y, mat) adds a heatmap of surface mat on existing graphic.
+    jlHeatmap : ((DF, DF) -> DF, SEG, SEG) -> Void
+    ++ jlHeatmap(f, a..b, c..d) draws a 2D heatmap of f(x, y).
+    jlHeatmap : ((DF, DF) -> DF, SEG, SEG, PositiveInteger) -> Void
+    ++ jlHeatmap(f, a..b, c..d, n) draws a 2D heatmap of f(x, y) using an n by n grid.
+    jlHeatmap : ((DF, DF) -> DF, SEG, SEG, String) -> Void
+    ++ jlHeatmap(f, a..b, c..d, title) draws a 2D heatmap with title.
+    jlHeatmap : ((DF, DF) -> DF, SEG, SEG, PositiveInteger, String) -> Void
+    ++ jlHeatmap(f, a..b, c..d, n, title) draws a 2D heatmap with title using an n by n grid.
+    jlHeatmap! : ((DF, DF) -> DF, SEG, SEG) -> Void
+    ++ jlHeatmap!(f, a..b, c..d) adds a 2D heatmap on the existing plot.
+    jlHeatmap! : ((DF, DF) -> DF, SEG, SEG, PositiveInteger) -> Void
+    ++ jlHeatmap!(f, a..b, c..d, n) adds a 2D heatmap using an n by n grid.
+    jlHeatmap! : ((DF, DF) -> DF, SEG, SEG, String) -> Void
+    ++ jlHeatmap!(f, a..b, c..d, title) adds a 2D heatmap with title.
+    jlHeatmap! : ((DF, DF) -> DF, SEG, SEG, PositiveInteger, String) -> Void
+    ++ jlHeatmap!(f, a..b, c..d, n, title) adds a 2D heatmap with title using an n by n grid.
+
+    -- Parametric plotting functions
+    jlParametricPlot : (DF -> DF, DF -> DF, SEG) -> Void
+    ++ jlParametricPlot(fx, fy, a..b) draws the 2D parametric curve (fx(t), fy(t)).
+    jlParametricPlot : (DF -> DF, DF -> DF, SEG, PositiveInteger) -> Void
+    ++ jlParametricPlot(fx, fy, a..b, n) draws the 2D parametric curve using n points.
+    jlParametricPlot : (DF -> DF, DF -> DF, SEG, String) -> Void
+    ++ jlParametricPlot(fx, fy, a..b, title) draws the 2D parametric curve with title.
+    jlParametricPlot : (DF -> DF, DF -> DF, SEG, PositiveInteger, String) -> Void
+    ++ jlParametricPlot(fx, fy, a..b, n, title) draws the 2D parametric curve with title using n points.
+    jlParametricPlot! : (DF -> DF, DF -> DF, SEG) -> Void
+    ++ jlParametricPlot!(fx, fy, a..b) adds the 2D parametric curve on existing plot.
+    jlParametricPlot! : (DF -> DF, DF -> DF, SEG, PositiveInteger) -> Void
+    ++ jlParametricPlot!(fx, fy, a..b, n) adds the 2D parametric curve using n points.
+    jlParametricPlot! : (DF -> DF, DF -> DF, SEG, String) -> Void
+    ++ jlParametricPlot!(fx, fy, a..b, title) adds the 2D parametric curve with title.
+    jlParametricPlot! : (DF -> DF, DF -> DF, SEG, PositiveInteger, String) -> Void
+    ++ jlParametricPlot!(fx, fy, a..b, n, title) adds the 2D parametric curve with title using n points.
+
+    jlParametricPlot : (DF -> DF, DF -> DF, DF -> DF, SEG) -> Void
+    ++ jlParametricPlot(fx, fy, fz, a..b) draws the 3D space curve (fx(t), fy(t), fz(t)).
+    jlParametricPlot : (DF -> DF, DF -> DF, DF -> DF, SEG, PositiveInteger) -> Void
+    ++ jlParametricPlot(fx, fy, fz, a..b, n) draws the 3D space curve using n points.
+    jlParametricPlot : (DF -> DF, DF -> DF, DF -> DF, SEG, String) -> Void
+    ++ jlParametricPlot(fx, fy, fz, a..b, title) draws the 3D space curve with title.
+    jlParametricPlot : (DF -> DF, DF -> DF, DF -> DF, SEG, PositiveInteger, String) -> Void
+    ++ jlParametricPlot(fx, fy, fz, a..b, n, title) draws the 3D space curve with title using n points.
+    jlParametricPlot! : (DF -> DF, DF -> DF, DF -> DF, SEG) -> Void
+    ++ jlParametricPlot!(fx, fy, fz, a..b) adds the 3D space curve on existing plot.
+    jlParametricPlot! : (DF -> DF, DF -> DF, DF -> DF, SEG, PositiveInteger) -> Void
+    ++ jlParametricPlot!(fx, fy, fz, a..b, n) adds the 3D space curve using n points.
+    jlParametricPlot! : (DF -> DF, DF -> DF, DF -> DF, SEG, String) -> Void
+    ++ jlParametricPlot!(fx, fy, fz, a..b, title) adds the 3D space curve with title.
+    jlParametricPlot! : (DF -> DF, DF -> DF, DF -> DF, SEG, PositiveInteger, String) -> Void
+    ++ jlParametricPlot!(fx, fy, fz, a..b, n, title) adds the 3D space curve with title using n points.
+
+    -- Polar plotting functions
+    jlPolar : (DF -> DF, SEG) -> Void
+    ++ jlPolar(f, a..b) draws the polar curve r = f(theta).
+    jlPolar : (DF -> DF, SEG, PositiveInteger) -> Void
+    ++ jlPolar(f, a..b, n) draws the polar curve r = f(theta) using n points.
+    jlPolar : (DF -> DF, SEG, String) -> Void
+    ++ jlPolar(f, a..b, title) draws the polar curve r = f(theta) with title.
+    jlPolar : (DF -> DF, SEG, PositiveInteger, String) -> Void
+    ++ jlPolar(f, a..b, n, title) draws the polar curve with title using n points.
+    jlPolar! : (DF -> DF, SEG) -> Void
+    ++ jlPolar!(f, a..b) adds the polar curve on existing plot.
+    jlPolar! : (DF -> DF, SEG, PositiveInteger) -> Void
+    ++ jlPolar!(f, a..b, n) adds the polar curve using n points.
+    jlPolar! : (DF -> DF, SEG, String) -> Void
+    ++ jlPolar!(f, a..b, title) adds the polar curve with title.
+    jlPolar! : (DF -> DF, SEG, PositiveInteger, String) -> Void
+    ++ jlPolar!(f, a..b, n, title) adds the polar curve with title using n points.
+
+    -- Implicit curve plotting
+    jlImplicitPlot : ((DF, DF) -> DF, SEG, SEG) -> Void
+    ++ jlImplicitPlot(f, a..b, c..d) draws the 2D implicit curve f(x, y) = 0.
+    jlImplicitPlot : ((DF, DF) -> DF, SEG, SEG, PositiveInteger) -> Void
+    ++ jlImplicitPlot(f, a..b, c..d, n) draws the 2D implicit curve f(x, y) = 0 using an n by n grid.
+    jlImplicitPlot : ((DF, DF) -> DF, SEG, SEG, String) -> Void
+    ++ jlImplicitPlot(f, a..b, c..d, title) draws the 2D implicit curve with title.
+    jlImplicitPlot : ((DF, DF) -> DF, SEG, SEG, PositiveInteger, String) -> Void
+    ++ jlImplicitPlot(f, a..b, c..d, n, title) draws the 2D implicit curve with title using an n by n grid.
+
+    -- 2D Vector field plotting
+    jlVectorField : ((DF, DF) -> DF, (DF, DF) -> DF, SEG, SEG) -> Void
+    ++ jlVectorField(u, v, a..b, c..d) draws the 2D vector field (u(x, y), v(x, y)).
+    jlVectorField : ((DF, DF) -> DF, (DF, DF) -> DF, SEG, SEG, PositiveInteger) -> Void
+    ++ jlVectorField(u, v, a..b, c..d, n) draws the 2D vector field using an n by n grid.
+    jlVectorField : ((DF, DF) -> DF, (DF, DF) -> DF, SEG, SEG, String) -> Void
+    ++ jlVectorField(u, v, a..b, c..d, title) draws the 2D vector field with title.
+    jlVectorField : ((DF, DF) -> DF, (DF, DF) -> DF, SEG, SEG, PositiveInteger, String) -> Void
+    ++ jlVectorField(u, v, a..b, c..d, n, title) draws the 2D vector field with title using an n by n grid.
+
     jlSavePlot : String -> Void
-    ++ jlSavePlot(file) save the current plot in file.
+    ++ jlSavePlot(file) saves the current plot in file.
     ++ Supported formats:
     ++ png (default), PDF, svg and more.
     ++ See https://docs.juliaplots.org/latest/output/#savefig-/-format
@@ -175,7 +394,21 @@ JLPlotFunctions() : Exports == Implementation where
     jlInitialize(true)
 
     pdf(x) ==> x pretend DF
-    POINTS ==> 250
+
+    default_points : PositiveInteger := 250
+    default_points3d : PositiveInteger := 50
+
+    jlPlotPoints() == default_points
+    jlSetPlotPoints!(n) ==
+      old := default_points
+      default_points := n
+      old
+
+    jlPlot3dPoints() == default_points3d
+    jlSetPlot3dPoints!(n) ==
+      old := default_points3d
+      default_points3d := n
+      old
 
     if not jlUsing("Plots") then
       error "JLPlotFunctions: The Julia package Plots is not installed"
@@ -184,13 +417,11 @@ JLPlotFunctions() : Exports == Implementation where
       jlMessageStyled("LaTeXStrings is not installed in Julia." _
         " Do not use it (axis, title, etc.).\n",
           jsym("green")$JLSymbol)$JLStringUtilities
-    --if jlUsing "Gaston" then
-    --  jlEvalString("gaston()")
-    --if jlUsing "UnicodePlots" then
-    --  jlEvalString("unicodeplots()")
-    --if jlUsing("Mackie") and jlUsing("WGLMakie") then
-    --  jlEvalString("WGLMakie.activate!()")
-    -- jlEvalString("plotlyjs()")
+
+    jlEvalString("jl_quiver(v) = (M = reshape(v, 4, :); quiver(M[1, :], M[2, :], quiver=(M[3, :], M[4, :])))")
+    jlEvalString("jl_polar(th, r) = plot(th, r, proj=:polar)")
+    jlEvalString("jl_polar!(th, r) = plot!(th, r, proj=:polar)")
+    jlEvalString("jl_implicit(x, y, z) = contour(x, y, z, levels=[0.0], colorbar=false)")
 
     -- local
     display() : Void ==
@@ -199,55 +430,77 @@ JLPlotFunctions() : Exports == Implementation where
       else
         jlEvalString("gui()")
 
-    jlClosePlots() == jlEvalString("closeall()")
-    jlSetPlotsBackend!(backend) == jlEvalString(concat([backend, "()"]))
+    jlClosePlots() == jlEvalString("try; closeall(); catch; end")
+    jlSetPlotsBackend!(backend) == jlEvalString(concat(["try; ", backend, "(); catch; end"]))
     jlSavePlot(file) == jlEvalString(concat(["savefig(_"",file,"_")"]))
 
-    jlRange(seg)  ==
-      xHi := coerce(high(seg))@DF
-      xLo := coerce(low(seg))@DF
-      v := qnew(POINTS)$JLFloat64Vector
-      xLow := coerce(xLo)@JF64
-      xPad := coerce((xHi - xLo)/(POINTS-1))@JF64
-      for i in 1..POINTS repeat
-        qsetelt!(v, i, xLow)
-        xLow := xLow + xPad
-      v
+    jlPlotSize!(w, h) ==
+      jlEvalString(concat(["plot!(size=(", string(w), ", ", string(h), "))"]))
+      display()
+    jlPlotDpi!(dpi) ==
+      jlEvalString(concat(["plot!(dpi=", string(dpi), ")"]))
+      display()
+    jlPlotColorMap!(palette) ==
+      jlEvalString(concat(["plot!(palette=:", palette, ")"]))
+      display()
+    jlPlotXscale!(scale) ==
+      jlEvalString(concat(["plot!(xscale=:", scale, ")"]))
+      display()
+    jlPlotYscale!(scale) ==
+      jlEvalString(concat(["plot!(yscale=:", scale, ")"]))
+      display()
+    jlPlotLegend!(pos) ==
+      if pos = "none" or pos = "false" then
+        jlEvalString("plot!(legend=false)")
+      else
+        jlEvalString(concat(["plot!(legend=:", pos, ")"]))
+      display()
+    jlPlotGrid!(flag) ==
+      if flag then
+        jlEvalString("plot!(grid=true)")
+      else
+        jlEvalString("plot!(grid=false)")
+      display()
 
-    jlRange(seg, n)  ==
+    jlRange(seg) == jlRange(seg, default_points)
+
+    jlRange(seg, n) ==
       xHi := coerce(high(seg))@DF
       xLo := coerce(low(seg))@DF
-      xPad := coerce((xHi - xLo)/(n-1))@JF64
       v := qnew(n)$JLFloat64Vector
-      xLow := coerce(xLo)@JF64
+      n = 1 =>
+        qsetelt!(v, 1, coerce(xLo)@JF64)
+        v
       xPad := coerce((xHi - xLo)/(n-1))@JF64
-      for i in 1..n repeat
+      xLow := coerce(xLo)@JF64
+      for i in 1..n-1 repeat
         qsetelt!(v, i, xLow)
         xLow := xLow + xPad
+      qsetelt!(v, n, coerce(xHi)@JF64)
       v
 
-    jlDensity(x)    ==
+    jlDensity(x) ==
       jlApply("density", x)
       display()
-    jlDensity!(x)   ==
+    jlDensity!(x) ==
       jlApply("density!", x)
       display()
-    jlPlot(x,y)     ==
+    jlPlot(x,y) ==
       jlApply("plot", x, y)
       display()
-    jlPlot!(x,y)    ==
+    jlPlot!(x,y) ==
       jlApply("plot!", x, y)
       display()
-    jlPlot(x,y,z)   ==
+    jlPlot(x,y,z) ==
       jlApply("plot", x, y, z)
       display()
-    jlPlot!(x,y,z)  ==
+    jlPlot!(x,y,z) ==
       jlApply("plot!", x, y, z)
       display()
-    jlCurves(x,y)   ==
+    jlCurves(x,y) ==
       jlApply("curves", x, y)
       display()
-    jlCurves!(x,y)  ==
+    jlCurves!(x,y) ==
       jlApply("curves!", x, y)
       display()
     jlBar(x,y) ==
@@ -256,16 +509,16 @@ JLPlotFunctions() : Exports == Implementation where
     jlBar!(x,y) ==
       jlApply("bar!",x, y)
       display()
-    jlSurface(x,y, mat : JLFloat64Matrix)  ==
+    jlSurface(x,y, mat : JLFloat64Matrix) ==
       jl_2v2dfunction("surface",x,y,jlVector(mat), nrows(mat))$Lisp
       display()
-    jlSurface!(x,y, mat : JLFloat64Matrix)     ==
+    jlSurface!(x,y, mat : JLFloat64Matrix) ==
       jl_2v2dfunction("surface!",x,y,jlVector(mat), nrows(mat))$Lisp
       display()
-    jlWireframe(x,y,mat)     ==
+    jlWireframe(x,y,mat) ==
       jl_2v2dfunction("wireframe",x,y,jlVector(mat), nrows(mat))$Lisp
       display()
-    jlWireframe!(x,y,mat)     ==
+    jlWireframe!(x,y,mat) ==
       jl_2v2dfunction("wireframe!",x,y,jlVector(mat), nrows(mat))$Lisp
       display()
     jlContour(x,y,mat) ==
@@ -283,133 +536,376 @@ JLPlotFunctions() : Exports == Implementation where
 
     -- Plot attributes
 
-    jlPlotTitle!(title)    ==
-      if first(title) = char "L" and elt(title, 2) = char "_"" then
-        jlEvalString(concat(["display(title!(", title,"))"]))
+    setPlotLabelNoDisplay!(cmd : String, label : String) : Void ==
+      #label = 0 => void()
+      if #label >= 2 and first(label) = char "L" and elt(label, 2) = char "_"" then
+        jlEvalString(concat([cmd, "(", label, ")"]))
       else
-        jlEvalString(concat(["display(title!(_"", title,"_"))"]))
+        jlEvalString(concat([cmd, "(_"", label, "_")"]))
 
-    jlPlotXlims!(x,y)      ==
+    setPlotLabel!(cmd : String, label : String) : Void ==
+      setPlotLabelNoDisplay!(cmd, label)
+      display()
+
+    jlPlotTitle!(title)   == setPlotLabel!("title!", title)
+    jlPlotXlabel!(xlabel) == setPlotLabel!("xlabel!", xlabel)
+    jlPlotYlabel!(ylabel) == setPlotLabel!("ylabel!", ylabel)
+    jlPlotZlabel!(zlabel) == setPlotLabel!("zlabel!", zlabel)
+
+    jlPlotXlims!(x,y) ==
       jlApply("xlims!", x, y)
       display()
-    jlPlotYlims!(x,y)      ==
+    jlPlotXlims!(x1 : DF, x2 : DF) ==
+      jlPlotXlims!(coerce(x1)@JF64, coerce(x2)@JF64)
+    jlPlotXlims!(x1 : Float, x2 : Float) ==
+      jlPlotXlims!(coerce(convert(x1)@DF)@JF64, coerce(convert(x2)@DF)@JF64)
+    jlPlotXlims!(seg : SEG) ==
+      jlPlotXlims!(low(seg), high(seg))
+
+    jlPlotYlims!(x,y) ==
       jlApply("ylims!", x, y)
       display()
-    jlPlotZlims!(x,y)      ==
+    jlPlotYlims!(y1 : DF, y2 : DF) ==
+      jlPlotYlims!(coerce(y1)@JF64, coerce(y2)@JF64)
+    jlPlotYlims!(y1 : Float, y2 : Float) ==
+      jlPlotYlims!(coerce(convert(y1)@DF)@JF64, coerce(convert(y2)@DF)@JF64)
+    jlPlotYlims!(seg : SEG) ==
+      jlPlotYlims!(low(seg), high(seg))
+
+    jlPlotZlims!(x,y) ==
       jlApply("zlims!", x, y)
       display()
-    jlPlotXlabel!(xlabel)  ==
-      if first(xlabel) = char "L" and elt(xlabel, 2) = char "_"" then
-        jlEvalString(concat(["display(xlabel!(", xlabel,"))"]))
-      else
-        jlEvalString(concat(["display(xlabel!(_"", xlabel,"_"))"]))
-    jlPlotYlabel!(ylabel)  ==
-      if first(ylabel) = char "L" and elt(ylabel, 2) = char "_"" then
-        jlEvalString(concat(["display(ylabel!(", ylabel,"))"]))
-      else
-        jlEvalString(concat(["display(ylabel!(_"", ylabel,"_"))"]))
-    jlPlotZlabel!(zlabel)  ==
-      if first(zlabel) = char "L" and elt(zlabel, 2) = char "_"" then
-        jlEvalString(concat(["display(zlabel!(", zlabel,"))"]))
-      else
-        jlEvalString(concat(["display(zlabel!(_"", zlabel,"_"))"]))
+    jlPlotZlims!(z1 : DF, z2 : DF) ==
+      jlPlotZlims!(coerce(z1)@JF64, coerce(z2)@JF64)
+    jlPlotZlims!(z1 : Float, z2 : Float) ==
+      jlPlotZlims!(coerce(convert(z1)@DF)@JF64, coerce(convert(z2)@DF)@JF64)
+    jlPlotZlims!(seg : SEG) ==
+      jlPlotZlims!(low(seg), high(seg))
 
-    -- FROM HERE: should be in another package
-    -- TODO: factorize
+    -- Factorized 1D and 3D grid evaluations
+
+    plot1d(plotFunc : String, func : DF -> DF, seg : SEG, n : PositiveInteger, tit : String) : Void ==
+      v  := jlRange(seg, n)
+      v1 := map(x +-> coerce(func(pdf(x))), v)
+      jlApply(plotFunc, v, v1)
+      if #tit > 0 then
+        setPlotLabelNoDisplay!("title!", tit)
+      display()
 
     jlPlot(func : DF -> DF, seg : SEG) ==
-      v  := jlRange(seg)
-      v1 := map(x+->coerce(func(pdf(x))), v)
-      jlPlot(v,v1)
+      plot1d("plot", func, seg, default_points, "")
+    jlPlot(func : DF -> DF, seg : SEG, n : PositiveInteger) ==
+      plot1d("plot", func, seg, n, "")
+    jlPlot(func : DF -> DF, seg : SEG, tit : String) ==
+      plot1d("plot", func, seg, default_points, tit)
+    jlPlot(func : DF -> DF, seg : SEG, n : PositiveInteger, tit : String) ==
+      plot1d("plot", func, seg, n, tit)
 
     jlPlot!(func : DF -> DF, seg : SEG) ==
-      v  := jlRange(seg)
-      v1 := map(x+->coerce(func(pdf(x))), v)
-      jlPlot!(v,v1)
+      plot1d("plot!", func, seg, default_points, "")
+    jlPlot!(func : DF -> DF, seg : SEG, n : PositiveInteger) ==
+      plot1d("plot!", func, seg, n, "")
+    jlPlot!(func : DF -> DF, seg : SEG, tit : String) ==
+      plot1d("plot!", func, seg, default_points, tit)
+    jlPlot!(func : DF -> DF, seg : SEG, n : PositiveInteger, tit : String) ==
+      plot1d("plot!", func, seg, n, tit)
 
-    jlPlot(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG) ==
-      v1 := jlRange(s1)
-      v2 := jlRange(s2)
-      v  := map((x,y)+->coerce(func(pdf(x), pdf(y))), v1, v2)
-      jlPlot(v1, v2, v)
+    evalGrid(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG, n : PositiveInteger) : Record(x : JF64VEC, y : JF64VEC, z : JF64MAT) ==
+      v1 := jlRange(s1, n)
+      v2 := jlRange(s2, n)
+      mat := qnew(n, n)$JF64MAT
+      for i in 1..n repeat
+        xi := pdf(qelt(v1, i))
+        for j in 1..n repeat
+          qsetelt!(mat, i, j, coerce(func(xi, pdf(qelt(v2, j)))))
+      [v1, v2, mat]
 
-    jlPlot!(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG) ==
-      v1 := jlRange(s1)
-      v2 := jlRange(s2)
-      v  := map((x,y)+->coerce(func(pdf(x), pdf(y))), v1, v2)
-      jlPlot!(v1, v2, v)
+    plot3dGrid(plotFunc : String, func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG, n : PositiveInteger, tit : String) : Void ==
+      g := evalGrid(func, s1, s2, n)
+      jl_2v2dfunction(plotFunc, g.x, g.y, jlVector(g.z), nrows(g.z))$Lisp
+      if #tit > 0 then
+        setPlotLabelNoDisplay!("title!", tit)
+      display()
 
     jlWireframe(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG) ==
-      v1 := jlRange(s1)
-      v2 := jlRange(s2)
-      height := qnew(POINTS,POINTS)$JF64MAT
-      for i in 1..POINTS repeat
-        for j in 1..POINTS repeat
-          qsetelt!(height, i, j, coerce(func(pdf(qelt(v1,i)), pdf(qelt(v2,j)))))
-      jlWireframe(v1, v2, height)
+      plot3dGrid("wireframe", func, s1, s2, default_points3d, "")
+    jlWireframe(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG, n : PositiveInteger) ==
+      plot3dGrid("wireframe", func, s1, s2, n, "")
+    jlWireframe(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG, tit : String) ==
+      plot3dGrid("wireframe", func, s1, s2, default_points3d, tit)
+    jlWireframe(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG, n : PositiveInteger, tit : String) ==
+      plot3dGrid("wireframe", func, s1, s2, n, tit)
 
     jlWireframe!(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG) ==
-      v1 := jlRange(s1)
-      v2 := jlRange(s2)
-      height := qnew(POINTS,POINTS)$JF64MAT
-      for i in 1..POINTS repeat
-        for j in 1..POINTS repeat
-          qsetelt!(height, i, j, coerce(func(pdf(qelt(v1,i)), pdf(qelt(v2,j)))))
-      jlWireframe!(v1, v2, height)
+      plot3dGrid("wireframe!", func, s1, s2, default_points3d, "")
+    jlWireframe!(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG, n : PositiveInteger) ==
+      plot3dGrid("wireframe!", func, s1, s2, n, "")
+    jlWireframe!(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG, tit : String) ==
+      plot3dGrid("wireframe!", func, s1, s2, default_points3d, tit)
+    jlWireframe!(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG, n : PositiveInteger, tit : String) ==
+      plot3dGrid("wireframe!", func, s1, s2, n, tit)
 
     jlSurface(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG) ==
-      v1 := jlRange(s1)
-      v2 := jlRange(s2)
-      height := qnew(POINTS,POINTS)$JF64MAT
-      for i in 1..POINTS repeat
-        for j in 1..POINTS repeat
-          qsetelt!(height, i, j, coerce(func(pdf(qelt(v1,i)), pdf(qelt(v2,j)))))
-      jlSurface(v1, v2, height)
+      plot3dGrid("surface", func, s1, s2, default_points3d, "")
+    jlSurface(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG, n : PositiveInteger) ==
+      plot3dGrid("surface", func, s1, s2, n, "")
+    jlSurface(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG, tit : String) ==
+      plot3dGrid("surface", func, s1, s2, default_points3d, tit)
+    jlSurface(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG, n : PositiveInteger, tit : String) ==
+      plot3dGrid("surface", func, s1, s2, n, tit)
 
     jlSurface!(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG) ==
-      v1 := jlRange(s1)
-      v2 := jlRange(s2)
-      height := qnew(POINTS,POINTS)$JF64MAT
-      for i in 1..POINTS repeat
-        for j in 1..POINTS repeat
-          qsetelt!(height, i, j, coerce(func(pdf(qelt(v1,i)), pdf(qelt(v2,j)))))
-      jlSurface!(v1, v2, height)
+      plot3dGrid("surface!", func, s1, s2, default_points3d, "")
+    jlSurface!(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG, n : PositiveInteger) ==
+      plot3dGrid("surface!", func, s1, s2, n, "")
+    jlSurface!(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG, tit : String) ==
+      plot3dGrid("surface!", func, s1, s2, default_points3d, tit)
+    jlSurface!(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG, n : PositiveInteger, tit : String) ==
+      plot3dGrid("surface!", func, s1, s2, n, tit)
 
     jlContour(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG) ==
-      v1 := jlRange(s1)
-      v2 := jlRange(s2)
-      height := qnew(POINTS,POINTS)$JF64MAT
-      for i in 1..POINTS repeat
-        for j in 1..POINTS repeat
-          qsetelt!(height, i, j, coerce(func(pdf(qelt(v1,i)), pdf(qelt(v2,j)))))
-      jlContour(v1, v2, height)
+      plot3dGrid("contour", func, s1, s2, default_points3d, "")
+    jlContour(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG, n : PositiveInteger) ==
+      plot3dGrid("contour", func, s1, s2, n, "")
+    jlContour(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG, tit : String) ==
+      plot3dGrid("contour", func, s1, s2, default_points3d, tit)
+    jlContour(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG, n : PositiveInteger, tit : String) ==
+      plot3dGrid("contour", func, s1, s2, n, tit)
 
     jlContour!(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG) ==
-      v1 := jlRange(s1)
-      v2 := jlRange(s2)
-      height := qnew(POINTS,POINTS)$JF64MAT
-      for i in 1..POINTS repeat
-        for j in 1..POINTS repeat
-          qsetelt!(height, i, j, coerce(func(pdf(qelt(v1,i)), pdf(qelt(v2,j)))))
-      jlContour!(v1, v2, height)
+      plot3dGrid("contour!", func, s1, s2, default_points3d, "")
+    jlContour!(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG, n : PositiveInteger) ==
+      plot3dGrid("contour!", func, s1, s2, n, "")
+    jlContour!(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG, tit : String) ==
+      plot3dGrid("contour!", func, s1, s2, default_points3d, tit)
+    jlContour!(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG, n : PositiveInteger, tit : String) ==
+      plot3dGrid("contour!", func, s1, s2, n, tit)
 
     jlContourf(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG) ==
-      v1 := jlRange(s1)
-      v2 := jlRange(s2)
-      height := qnew(POINTS,POINTS)$JF64MAT
-      for i in 1..POINTS repeat
-        for j in 1..POINTS repeat
-          qsetelt!(height, i, j, coerce(func(pdf(qelt(v1,i)), pdf(qelt(v2,j)))))
-      jlContourf(v1, v2, height)
+      plot3dGrid("contourf", func, s1, s2, default_points3d, "")
+    jlContourf(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG, n : PositiveInteger) ==
+      plot3dGrid("contourf", func, s1, s2, n, "")
+    jlContourf(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG, tit : String) ==
+      plot3dGrid("contourf", func, s1, s2, default_points3d, tit)
+    jlContourf(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG, n : PositiveInteger, tit : String) ==
+      plot3dGrid("contourf", func, s1, s2, n, tit)
 
     jlContourf!(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG) ==
-      v1 := jlRange(s1)
-      v2 := jlRange(s2)
-      height := qnew(POINTS,POINTS)$JF64MAT
-      for i in 1..POINTS repeat
-        for j in 1..POINTS repeat
-          qsetelt!(height, i, j, coerce(func(pdf(qelt(v1,i)), pdf(qelt(v2,j)))))
-      jlContourf!(v1, v2, height)
+      plot3dGrid("contourf!", func, s1, s2, default_points3d, "")
+    jlContourf!(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG, n : PositiveInteger) ==
+      plot3dGrid("contourf!", func, s1, s2, n, "")
+    jlContourf!(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG, tit : String) ==
+      plot3dGrid("contourf!", func, s1, s2, default_points3d, tit)
+    jlContourf!(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG, n : PositiveInteger, tit : String) ==
+      plot3dGrid("contourf!", func, s1, s2, n, tit)
+
+    -- 2-variable jlPlot dispatches to surface plotting
+    jlPlot(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG) ==
+      jlSurface(func, s1, s2)
+    jlPlot(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG, n : PositiveInteger) ==
+      jlSurface(func, s1, s2, n)
+    jlPlot(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG, tit : String) ==
+      jlSurface(func, s1, s2, tit)
+    jlPlot(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG, n : PositiveInteger, tit : String) ==
+      jlSurface(func, s1, s2, n, tit)
+
+    jlPlot!(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG) ==
+      jlSurface!(func, s1, s2)
+    jlPlot!(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG, n : PositiveInteger) ==
+      jlSurface!(func, s1, s2, n)
+    jlPlot!(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG, tit : String) ==
+      jlSurface!(func, s1, s2, tit)
+    jlPlot!(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG, n : PositiveInteger, tit : String) ==
+      jlSurface!(func, s1, s2, n, tit)
+
+    -- Heatmap implementations
+    jlHeatmap(x, y, mat : JLFloat64Matrix) ==
+      jl_2v2dfunction("heatmap", x, y, jlVector(mat), nrows(mat))$Lisp
+      display()
+    jlHeatmap!(x, y, mat : JLFloat64Matrix) ==
+      jl_2v2dfunction("heatmap!", x, y, jlVector(mat), nrows(mat))$Lisp
+      display()
+
+    jlHeatmap(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG) ==
+      plot3dGrid("heatmap", func, s1, s2, default_points3d, "")
+    jlHeatmap(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG, n : PositiveInteger) ==
+      plot3dGrid("heatmap", func, s1, s2, n, "")
+    jlHeatmap(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG, tit : String) ==
+      plot3dGrid("heatmap", func, s1, s2, default_points3d, tit)
+    jlHeatmap(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG, n : PositiveInteger, tit : String) ==
+      plot3dGrid("heatmap", func, s1, s2, n, tit)
+
+    jlHeatmap!(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG) ==
+      plot3dGrid("heatmap!", func, s1, s2, default_points3d, "")
+    jlHeatmap!(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG, n : PositiveInteger) ==
+      plot3dGrid("heatmap!", func, s1, s2, n, "")
+    jlHeatmap!(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG, tit : String) ==
+      plot3dGrid("heatmap!", func, s1, s2, default_points3d, tit)
+    jlHeatmap!(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG, n : PositiveInteger, tit : String) ==
+      plot3dGrid("heatmap!", func, s1, s2, n, tit)
+
+    -- 2D Parametric implementations
+    jlParametricPlot(fx : (DF -> DF), fy : (DF -> DF), seg : SEG) ==
+      jlParametricPlot(fx, fy, seg, default_points, "")
+    jlParametricPlot(fx : (DF -> DF), fy : (DF -> DF), seg : SEG, n : PositiveInteger) ==
+      jlParametricPlot(fx, fy, seg, n, "")
+    jlParametricPlot(fx : (DF -> DF), fy : (DF -> DF), seg : SEG, tit : String) ==
+      jlParametricPlot(fx, fy, seg, default_points, tit)
+    jlParametricPlot(fx : (DF -> DF), fy : (DF -> DF), seg : SEG, n : PositiveInteger, tit : String) ==
+      vt := jlRange(seg, n)
+      vx := qnew(n)$JF64VEC
+      vy := qnew(n)$JF64VEC
+      for i in 1..n repeat
+        t := pdf(qelt(vt, i))
+        qsetelt!(vx, i, coerce(fx(t))@JF64)
+        qsetelt!(vy, i, coerce(fy(t))@JF64)
+      jlPlot(vx, vy)
+      if #tit >= 2 then setPlotLabelNoDisplay!("title!", tit)
+      display()
+
+    jlParametricPlot!(fx : (DF -> DF), fy : (DF -> DF), seg : SEG) ==
+      jlParametricPlot!(fx, fy, seg, default_points, "")
+    jlParametricPlot!(fx : (DF -> DF), fy : (DF -> DF), seg : SEG, n : PositiveInteger) ==
+      jlParametricPlot!(fx, fy, seg, n, "")
+    jlParametricPlot!(fx : (DF -> DF), fy : (DF -> DF), seg : SEG, tit : String) ==
+      jlParametricPlot!(fx, fy, seg, default_points, tit)
+    jlParametricPlot!(fx : (DF -> DF), fy : (DF -> DF), seg : SEG, n : PositiveInteger, tit : String) ==
+      vt := jlRange(seg, n)
+      vx := qnew(n)$JF64VEC
+      vy := qnew(n)$JF64VEC
+      for i in 1..n repeat
+        t := pdf(qelt(vt, i))
+        qsetelt!(vx, i, coerce(fx(t))@JF64)
+        qsetelt!(vy, i, coerce(fy(t))@JF64)
+      jlPlot!(vx, vy)
+      if #tit >= 2 then setPlotLabelNoDisplay!("title!", tit)
+      display()
+
+    -- 3D Parametric implementations
+    jlParametricPlot(fx : (DF -> DF), fy : (DF -> DF), fz : (DF -> DF), seg : SEG) ==
+      jlParametricPlot(fx, fy, fz, seg, default_points, "")
+    jlParametricPlot(fx : (DF -> DF), fy : (DF -> DF), fz : (DF -> DF), seg : SEG, n : PositiveInteger) ==
+      jlParametricPlot(fx, fy, fz, seg, n, "")
+    jlParametricPlot(fx : (DF -> DF), fy : (DF -> DF), fz : (DF -> DF), seg : SEG, tit : String) ==
+      jlParametricPlot(fx, fy, fz, seg, default_points, tit)
+    jlParametricPlot(fx : (DF -> DF), fy : (DF -> DF), fz : (DF -> DF), seg : SEG, n : PositiveInteger, tit : String) ==
+      vt := jlRange(seg, n)
+      vx := qnew(n)$JF64VEC
+      vy := qnew(n)$JF64VEC
+      vz := qnew(n)$JF64VEC
+      for i in 1..n repeat
+        t := pdf(qelt(vt, i))
+        qsetelt!(vx, i, coerce(fx(t))@JF64)
+        qsetelt!(vy, i, coerce(fy(t))@JF64)
+        qsetelt!(vz, i, coerce(fz(t))@JF64)
+      jlPlot(vx, vy, vz)
+      if #tit >= 2 then setPlotLabelNoDisplay!("title!", tit)
+      display()
+
+    jlParametricPlot!(fx : (DF -> DF), fy : (DF -> DF), fz : (DF -> DF), seg : SEG) ==
+      jlParametricPlot!(fx, fy, fz, seg, default_points, "")
+    jlParametricPlot!(fx : (DF -> DF), fy : (DF -> DF), fz : (DF -> DF), seg : SEG, n : PositiveInteger) ==
+      jlParametricPlot!(fx, fy, fz, seg, n, "")
+    jlParametricPlot!(fx : (DF -> DF), fy : (DF -> DF), fz : (DF -> DF), seg : SEG, tit : String) ==
+      jlParametricPlot!(fx, fy, fz, seg, default_points, tit)
+    jlParametricPlot!(fx : (DF -> DF), fy : (DF -> DF), fz : (DF -> DF), seg : SEG, n : PositiveInteger, tit : String) ==
+      vt := jlRange(seg, n)
+      vx := qnew(n)$JF64VEC
+      vy := qnew(n)$JF64VEC
+      vz := qnew(n)$JF64VEC
+      for i in 1..n repeat
+        t := pdf(qelt(vt, i))
+        qsetelt!(vx, i, coerce(fx(t))@JF64)
+        qsetelt!(vy, i, coerce(fy(t))@JF64)
+        qsetelt!(vz, i, coerce(fz(t))@JF64)
+      jlPlot!(vx, vy, vz)
+      if #tit >= 2 then setPlotLabelNoDisplay!("title!", tit)
+      display()
+
+    -- Polar implementations
+    jlPolar(f : (DF -> DF), seg : SEG) ==
+      jlPolar(f, seg, default_points, "")
+    jlPolar(f : (DF -> DF), seg : SEG, n : PositiveInteger) ==
+      jlPolar(f, seg, n, "")
+    jlPolar(f : (DF -> DF), seg : SEG, tit : String) ==
+      jlPolar(f, seg, default_points, tit)
+    jlPolar(f : (DF -> DF), seg : SEG, n : PositiveInteger, tit : String) ==
+      vth := jlRange(seg, n)
+      vr := qnew(n)$JF64VEC
+      for i in 1..n repeat
+        th := pdf(qelt(vth, i))
+        qsetelt!(vr, i, coerce(f(th))@JF64)
+      jlApply("jl_polar", vth, vr)
+      if #tit >= 2 then setPlotLabelNoDisplay!("title!", tit)
+      display()
+
+    jlPolar!(f : (DF -> DF), seg : SEG) ==
+      jlPolar!(f, seg, default_points, "")
+    jlPolar!(f : (DF -> DF), seg : SEG, n : PositiveInteger) ==
+      jlPolar!(f, seg, n, "")
+    jlPolar!(f : (DF -> DF), seg : SEG, tit : String) ==
+      jlPolar!(f, seg, default_points, tit)
+    jlPolar!(f : (DF -> DF), seg : SEG, n : PositiveInteger, tit : String) ==
+      vth := jlRange(seg, n)
+      vr := qnew(n)$JF64VEC
+      for i in 1..n repeat
+        th := pdf(qelt(vth, i))
+        qsetelt!(vr, i, coerce(f(th))@JF64)
+      jlApply("jl_polar!", vth, vr)
+      if #tit >= 2 then setPlotLabelNoDisplay!("title!", tit)
+      display()
+
+    -- Implicit implementations
+    jlImplicitPlot(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG) ==
+      plot3dGrid("jl_implicit", func, s1, s2, default_points3d, "")
+    jlImplicitPlot(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG, n : PositiveInteger) ==
+      plot3dGrid("jl_implicit", func, s1, s2, n, "")
+    jlImplicitPlot(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG, tit : String) ==
+      plot3dGrid("jl_implicit", func, s1, s2, default_points3d, tit)
+    jlImplicitPlot(func : ((DF, DF) -> DF), s1 : SEG, s2 : SEG, n : PositiveInteger, tit : String) ==
+      plot3dGrid("jl_implicit", func, s1, s2, n, tit)
+
+    -- Vector field implementations
+    jlVectorField(fu : ((DF, DF) -> DF), fv : ((DF, DF) -> DF), s1 : SEG, s2 : SEG) ==
+      jlVectorField(fu, fv, s1, s2, 16, "")
+    jlVectorField(fu : ((DF, DF) -> DF), fv : ((DF, DF) -> DF), s1 : SEG, s2 : SEG, n : PositiveInteger) ==
+      jlVectorField(fu, fv, s1, s2, n, "")
+    jlVectorField(fu : ((DF, DF) -> DF), fv : ((DF, DF) -> DF), s1 : SEG, s2 : SEG, tit : String) ==
+      jlVectorField(fu, fv, s1, s2, 16, tit)
+    jlVectorField(fu : ((DF, DF) -> DF), fv : ((DF, DF) -> DF), s1 : SEG, s2 : SEG, n : PositiveInteger, tit : String) ==
+      v1 := jlRange(s1, n)
+      v2 := jlRange(s2, n)
+      tot := n * n
+      v := qnew(4 * tot)$JF64VEC
+      dx := (coerce(high(s1))@DF - coerce(low(s1))@DF) / coerce(n)@DF
+      dy := (coerce(high(s2))@DF - coerce(low(s2))@DF) / coerce(n)@DF
+      cellSize := min(dx, dy)
+      maxMag : DF := 0.0
+      idx : Integer := 1
+      for i in 1..n repeat
+        xi := pdf(qelt(v1, i))
+        for j in 1..n repeat
+          yj := pdf(qelt(v2, j))
+          ui := fu(xi, yj)
+          vj := fv(xi, yj)
+          mag := sqrt(ui * ui + vj * vj)
+          if mag > maxMag then maxMag := mag
+          qsetelt!(v, idx, coerce(xi)@JF64)
+          qsetelt!(v, idx + 1, coerce(yj)@JF64)
+          qsetelt!(v, idx + 2, coerce(ui)@JF64)
+          qsetelt!(v, idx + 3, coerce(vj)@JF64)
+          idx := idx + 4
+      if maxMag > 0.0 then
+        s := (0.8 * cellSize) / maxMag
+        for k in 1..tot repeat
+          kidx := (k - 1) * 4
+          u_orig := pdf(qelt(v, kidx + 3))
+          v_orig := pdf(qelt(v, kidx + 4))
+          qsetelt!(v, kidx + 3, coerce(s * u_orig)@JF64)
+          qsetelt!(v, kidx + 4, coerce(s * v_orig)@JF64)
+      jl_1dfunction(0$NNI, "jl_quiver", v)$Lisp
+      if #tit >= 2 then setPlotLabelNoDisplay!("title!", tit)
+      display()
 
 )abbrev package JDRAW JLDrawFunctions
 ++ Author: G. Vanuxem
@@ -444,7 +940,7 @@ JLDrawFunctions(Ex : Join(ConvertibleTo InputForm, SetCategory)):
 
       jlPlot : (Ex, BIND, BIND) -> Void
       ++ jlPlot(f(x, y), x = a..b, y = c..d) draws the graph of
-      ++ \spad{z = f(x, y)} as x ranges from \spad{min(a, b)} to
+      ++ \spad{z = f(x, y)} as x ranges from \spad{min(a, b)}
       ++ to \spad{max(a, b)} and y ranges from \spad{min(c, d)}
       ++ to \spad{max(c, d)}. \spad{f(x, y)} appears as the title.
       jlPlot! : (Ex, BIND, BIND) -> Void
@@ -453,9 +949,10 @@ JLDrawFunctions(Ex : Join(ConvertibleTo InputForm, SetCategory)):
       ++ to \spad{max(a, b)} and y ranges from \spad{min(c, d)}
       ++ to \spad{max(c, d)} on the existing graph window.
       ++ \spad{f(x, y)} appears as the title.
+
       jlWireframe : (Ex, BIND, BIND) -> Void
       ++ jlWireframe(f(x, y), x = a..b, y = c..d) draws the wireframe of
-      ++ \spad{z = f(x, y)} as x ranges from \spad{min(a, b)} to
+      ++ \spad{z = f(x, y)} as x ranges from \spad{min(a, b)}
       ++ to \spad{max(a, b)} and y ranges from \spad{min(c, d)}
       ++ to \spad{max(c, d)}; \spad{f(x, y)} appears as the title.
       jlWireframe! : (Ex, BIND, BIND) -> Void
@@ -464,9 +961,10 @@ JLDrawFunctions(Ex : Join(ConvertibleTo InputForm, SetCategory)):
       ++ to \spad{max(a, b)} and y ranges from \spad{min(c, d)}
       ++ to \spad{max(c, d)} on the existing graph window.
       ++ \spad{f(x, y)} appears as the title.
+
       jlSurface : (Ex, BIND, BIND) -> Void
       ++ jlSurface(f(x, y), x = a..b, y = c..d) draws the surface of
-      ++ \spad{z = f(x, y)} as x ranges from \spad{min(a, b)} to
+      ++ \spad{z = f(x, y)} as x ranges from \spad{min(a, b)}
       ++ to \spad{max(a, b)} and y ranges from \spad{min(c, d)}
       ++ to \spad{max(c, d)}. \spad{f(x, y)} appears as the title.
       jlSurface! : (Ex, BIND, BIND) -> Void
@@ -475,30 +973,75 @@ JLDrawFunctions(Ex : Join(ConvertibleTo InputForm, SetCategory)):
       ++ to \spad{max(a, b)} and y ranges from \spad{min(c, d)}
       ++ to \spad{max(c, d)} on the existing graph window.
       ++ \spad{f(x, y)} appears as the title.
+
       jlContour : (Ex, BIND, BIND) -> Void
-      ++ jlContour(f(x, y), x = a..b, y = c..d) draws the surface of
-      ++ \spad{z = f(x, y)} as x ranges from \spad{min(a, b)} to
+      ++ jlContour(f(x, y), x = a..b, y = c..d) draws the contour plot of
+      ++ \spad{z = f(x, y)} as x ranges from \spad{min(a, b)}
       ++ to \spad{max(a, b)} and y ranges from \spad{min(c, d)}
       ++ to \spad{max(c, d)}. \spad{f(x, y)} appears as the title.
       jlContour! : (Ex, BIND, BIND) -> Void
-      ++ jlContour!(f(x, y), x = a..b, y = c..d) adds the surface of
+      ++ jlContour!(f(x, y), x = a..b, y = c..d) adds the contour plot of
       ++ \spad{z = f(x, y)} as x ranges from \spad{min(a, b)}
       ++ to \spad{max(a, b)} and y ranges from \spad{min(c, d)}
       ++ to \spad{max(c, d)} on the existing graph window.
       ++ \spad{f(x, y)} appears as the title.
+
       jlContourf : (Ex, BIND, BIND) -> Void
-      ++ jlContourf(f(x, y), x = a..b, y = c..d) draws the surface of
-      ++ \spad{z = f(x, y)} as x ranges from \spad{min(a, b)} to
+      ++ jlContourf(f(x, y), x = a..b, y = c..d) draws the filled contour plot of
+      ++ \spad{z = f(x, y)} as x ranges from \spad{min(a, b)}
       ++ to \spad{max(a, b)} and y ranges from \spad{min(c, d)}
       ++ to \spad{max(c, d)}. \spad{f(x, y)} appears as the title.
       ++ Fills area between contours.
       jlContourf! : (Ex, BIND, BIND) -> Void
-      ++ jlContourf!(f(x, y), x = a..b, y = c..d) adds the surface of
+      ++ jlContourf!(f(x, y), x = a..b, y = c..d) adds the filled contour plot of
       ++ \spad{z = f(x, y)} as x ranges from \spad{min(a, b)}
       ++ to \spad{max(a, b)} and y ranges from \spad{min(c, d)}
       ++ to \spad{max(c, d)} on the existing graph window.
       ++ \spad{f(x, y)} appears as the title.
       ++ Fills area between contours.
+
+      --% Multi-Curve plotting from list of expressions
+
+      jlPlot : (List Ex, BIND) -> Void
+      ++ jlPlot([f1, f2, ...], x = a..b) draws multiple curves on the same plot.
+      jlPlot! : (List Ex, BIND) -> Void
+      ++ jlPlot!([f1, f2, ...], x = a..b) adds multiple curves on the existing plot.
+
+      --% Heatmap
+
+      jlHeatmap : (Ex, BIND, BIND) -> Void
+      ++ jlHeatmap(f(x, y), x = a..b, y = c..d) draws a 2D heatmap of f(x, y).
+      jlHeatmap! : (Ex, BIND, BIND) -> Void
+      ++ jlHeatmap!(f(x, y), x = a..b, y = c..d) adds a 2D heatmap on the existing plot.
+
+      --% Parametric plotting
+
+      jlParametricPlot : (Ex, Ex, BIND) -> Void
+      ++ jlParametricPlot(x(t), y(t), t = a..b) draws the 2D parametric curve.
+      jlParametricPlot! : (Ex, Ex, BIND) -> Void
+      ++ jlParametricPlot!(x(t), y(t), t = a..b) adds the 2D parametric curve on existing plot.
+
+      jlParametricPlot : (Ex, Ex, Ex, BIND) -> Void
+      ++ jlParametricPlot(x(t), y(t), z(t), t = a..b) draws the 3D space curve.
+      jlParametricPlot! : (Ex, Ex, Ex, BIND) -> Void
+      ++ jlParametricPlot!(x(t), y(t), z(t), t = a..b) adds the 3D space curve on existing plot.
+
+      --% Polar plotting
+
+      jlPolar : (Ex, BIND) -> Void
+      ++ jlPolar(r(theta), theta = a..b) draws the polar curve r = f(theta).
+      jlPolar! : (Ex, BIND) -> Void
+      ++ jlPolar!(r(theta), theta = a..b) adds the polar curve on existing plot.
+
+      --% Implicit curve plotting
+
+      jlImplicitPlot : (Ex, BIND, BIND) -> Void
+      ++ jlImplicitPlot(f(x, y), x = a..b, y = c..d) draws the 2D implicit curve f(x, y) = 0.
+
+      --% 2D Vector fields
+
+      jlVectorField : (Ex, Ex, BIND, BIND) -> Void
+      ++ jlVectorField(u(x, y), v(x, y), x = a..b, y = c..d) draws the 2D vector field.
 
     Implementation ==> add
       import from JLPlotFunctions
@@ -509,17 +1052,23 @@ JLDrawFunctions(Ex : Join(ConvertibleTo InputForm, SetCategory)):
 
       jlPlot(f : Ex, bind : BIND) ==
         func := makeFloatFunction(f, variable bind)
-        v := jlRange(segment bind)
-        ret := map(x+->coerce(func(pdf(x))),v)
-        jlPlot(v, ret)
+        jlPlot(func, segment bind)
         jlPlotTitle!(title(f))
 
       jlPlot!(f : Ex, bind : BIND) ==
         func := makeFloatFunction(f, variable bind)
-        v := jlRange(segment bind)
-        ret := map(x+->coerce(func(pdf(x))),v)
-        jlPlot!(v, ret)
+        jlPlot!(func, segment bind)
         jlPlotTitle!(title(f))
+
+      jlPlot(lf : List Ex, bind : BIND) ==
+        empty?(lf) => void()
+        jlPlot(first lf, bind)
+        for f in rest lf repeat
+          jlPlot!(f, bind)
+
+      jlPlot!(lf : List Ex, bind : BIND) ==
+        for f in lf repeat
+          jlPlot!(f, bind)
 
       jlPlot(f : Ex, b1 : BIND, b2 : BIND) ==
         func := makeFloatFunction(f, variable b1, variable b2)
@@ -570,3 +1119,60 @@ JLDrawFunctions(Ex : Join(ConvertibleTo InputForm, SetCategory)):
         func := makeFloatFunction(f, variable b1, variable b2)
         jlContourf!(func, segment b1, segment b2)
         jlPlotTitle!(title(f))
+
+      jlHeatmap(f : Ex, b1 : BIND, b2 : BIND) ==
+        func := makeFloatFunction(f, variable b1, variable b2)
+        jlHeatmap(func, segment b1, segment b2)
+        jlPlotTitle!(title(f))
+
+      jlHeatmap!(f : Ex, b1 : BIND, b2 : BIND) ==
+        func := makeFloatFunction(f, variable b1, variable b2)
+        jlHeatmap!(func, segment b1, segment b2)
+        jlPlotTitle!(title(f))
+
+      jlParametricPlot(fx : Ex, fy : Ex, bind : BIND) ==
+        funcX := makeFloatFunction(fx, variable bind)
+        funcY := makeFloatFunction(fy, variable bind)
+        jlParametricPlot(funcX, funcY, segment bind)
+        jlPlotTitle!(concat(["[", title(fx), ", ", title(fy), "]"]))
+
+      jlParametricPlot!(fx : Ex, fy : Ex, bind : BIND) ==
+        funcX := makeFloatFunction(fx, variable bind)
+        funcY := makeFloatFunction(fy, variable bind)
+        jlParametricPlot!(funcX, funcY, segment bind)
+        jlPlotTitle!(concat(["[", title(fx), ", ", title(fy), "]"]))
+
+      jlParametricPlot(fx : Ex, fy : Ex, fz : Ex, bind : BIND) ==
+        funcX := makeFloatFunction(fx, variable bind)
+        funcY := makeFloatFunction(fy, variable bind)
+        funcZ := makeFloatFunction(fz, variable bind)
+        jlParametricPlot(funcX, funcY, funcZ, segment bind)
+        jlPlotTitle!(concat(["[", title(fx), ", ", title(fy), ", ", title(fz), "]"]))
+
+      jlParametricPlot!(fx : Ex, fy : Ex, fz : Ex, bind : BIND) ==
+        funcX := makeFloatFunction(fx, variable bind)
+        funcY := makeFloatFunction(fy, variable bind)
+        funcZ := makeFloatFunction(fz, variable bind)
+        jlParametricPlot!(funcX, funcY, funcZ, segment bind)
+        jlPlotTitle!(concat(["[", title(fx), ", ", title(fy), ", ", title(fz), "]"]))
+
+      jlPolar(f : Ex, bind : BIND) ==
+        func := makeFloatFunction(f, variable bind)
+        jlPolar(func, segment bind)
+        jlPlotTitle!(title(f))
+
+      jlPolar!(f : Ex, bind : BIND) ==
+        func := makeFloatFunction(f, variable bind)
+        jlPolar!(func, segment bind)
+        jlPlotTitle!(title(f))
+
+      jlImplicitPlot(f : Ex, b1 : BIND, b2 : BIND) ==
+        func := makeFloatFunction(f, variable b1, variable b2)
+        jlImplicitPlot(func, segment b1, segment b2)
+        jlPlotTitle!(concat([title(f), " = 0"]))
+
+      jlVectorField(u : Ex, v : Ex, b1 : BIND, b2 : BIND) ==
+        funcU := makeFloatFunction(u, variable b1, variable b2)
+        funcV := makeFloatFunction(v, variable b1, variable b2)
+        jlVectorField(funcU, funcV, segment b1, segment b2)
+        jlPlotTitle!(concat(["[", title(u), ", ", title(v), "]"]))
