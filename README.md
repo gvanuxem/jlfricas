@@ -60,11 +60,12 @@ To build FriCAS with Julia support, the <code>julia</code> executable needs to b
  And optionnally:
   - [MathLink](https://github.com/JuliaInterop/MathLink.jl) (use the option `--enable-mathlink` at configure time)
   - [PythonCall](https://juliapy.github.io/PythonCall.jl/stable/) (and CondaPkg if you want to install some Python® packages, use Julia for this)
+  - [RCall](https://juliainterop.github.io/RCall.jl/stable/)
   - [Plots](https://docs.juliaplots.org/stable/)
   - [UnicodePlots](https://juliaplots.org/UnicodePlots.jl/stable/)
   - [Latexify](https://github.com/korsbo/Latexify.jl)
   - [LaTeXStrings](https://github.com/JuliaStrings/LaTeXStrings.jl)
-  - [DataFrames](https://dataframes.juliadata.org/stable/) and [Statistics](https://juliastats.org/Statistics.jl/dev/) (needed for tests)
+  - [DataFrames](https://dataframes.juliadata.org/stable/) and [Statistics](https://juliastats.org/Statistics.jl/dev/) (needed for tests - make check)
 
 As of now with Clozure CL [queues](https://github.com/oconnore/queues) is required. Use installed [quicklisp](https://www.quicklisp.org/beta/) with `queues` installed and at configure time use the `--with-quicklisp` option, see the `quicklisp` documentation for how to install it. Another possibility, easier, is to use [roswell](https://roswell.github.io/) with added `ccl-bin` and `queues`.
 
