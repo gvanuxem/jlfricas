@@ -167,8 +167,8 @@ WSAggregate(E : WSObject) : Category == WSObject with
 
     elt(agg, i) ==
       i > integer length(agg) => error "elt: index too large"
-      jbinfunc("W_"Part_"(", agg, jWSInt(i))
-    qelt(agg, i) == jbinfunc("W_"Part_"(", agg, jWSInt(i))
+      jbinfunc("W_"Part_"(", agg, jWSInteger(i))
+    qelt(agg, i) == jbinfunc("W_"Part_"(", agg, jWSInteger(i))
     setelt(agg, i, elem) ==
       i > integer length(agg) => error "setelt: index too large"
       jbinfunc("W_"ReplacePart_"(", agg, jWSRule(jWSExpr(i),
@@ -314,7 +314,7 @@ WSVector(E : WSObject) : Exports == Implementation where
     x - y == jbinop("-", x, y)
     - x   == junfunc("-(", x)
     --x : % * y : % == jbinfunc("W_"Dot_"(", x, y)
-    x : Integer * y : % == jbinop("*", jWSInt(x), y)
+    x : Integer * y : % == jbinop("*", jWSInteger(x), y)
     x : WSInteger * y : % == jbinop("*", x, y)
     a : E * x : % == jbinop("*", a, x)
     x : % * a : E == jbinop("*", x, a)
@@ -580,19 +580,19 @@ WSMatrix(E : WSRing) : Exports == Implementation where
       dims := dimensions(mat)
       i > integer first(dims) or j > integer last(dims) =>
         error "elt$WSMatrix: index is/are too large"
-      jterfunc("W_"Part_"(", mat, jWSInt(i), jWSInt(j))
-    qelt(mat, i, j) == jterfunc("W_"Part_"(", mat, jWSInt(i), jWSInt(j))
+      jterfunc("W_"Part_"(", mat, jWSInteger(i), jWSInteger(j))
+    qelt(mat, i, j) == jterfunc("W_"Part_"(", mat, jWSInteger(i), jWSInteger(j))
     setelt(mat : %,i : Integer, j : Integer, elem) ==
       dims := dimensions(mat)
       i > integer first(dims) or j > integer last(dims) =>
         error "setelt$WSMatrix: index(es) is/are too large"
-      inds : List(WSInteger)  := [jWSInt(i), jWSInt(j)]
+      inds : List(WSInteger)  := [jWSInteger(i), jWSInteger(j)]
       rule := jWSRule(jWSList(inds)@WSList(WSInteger) pretend WSExpression,
         elem pretend WSExpression)
       jbinfunc("W_"ReplacePart_"(", mat, rule)
     qsetelt(mat : %,i : Integer, j : Integer, elem) ==
       dims := dimensions(mat)
-      inds : List(WSInteger)  := [jWSInt(i), jWSInt(j)]
+      inds : List(WSInteger)  := [jWSInteger(i), jWSInteger(j)]
       rule := jWSRule(jWSList(inds)@WSList(WSInteger) pretend WSExpression,
         elem pretend WSExpression)
       jbinfunc("W_"ReplacePart_"(", mat, rule)
@@ -600,7 +600,7 @@ WSMatrix(E : WSRing) : Exports == Implementation where
       dims := dimensions(mat)
       i > integer first(dims) or j > integer last(dims) =>
         error "setelt!$WSMatrix: index(es) is/are too large"
-      inds : List(WSInteger)  := [jWSInt(i), jWSInt(j)]
+      inds : List(WSInteger)  := [jWSInteger(i), jWSInteger(j)]
       rule := jWSRule(jWSList(inds)@WSList(WSInteger) pretend WSExpression,
         elem pretend WSExpression)
       cmd := concat(["weval(W_"ReplacePart_"(", getind(mat), ",", getind(rule),"))"])
@@ -609,7 +609,7 @@ WSMatrix(E : WSRing) : Exports == Implementation where
       elem
     qsetelt!(mat,i,j,elem) ==
       dims := dimensions(mat)
-      inds : List(WSInteger)  := [jWSInt(i), jWSInt(j)]
+      inds : List(WSInteger)  := [jWSInteger(i), jWSInteger(j)]
       rule := jWSRule(jWSList(inds)@WSList(WSInteger) pretend WSExpression,
         elem pretend WSExpression)
       cmd := concat(["weval(W_"ReplacePart_"(", getind(mat), ",", getind(rule),"))"])
@@ -625,7 +625,7 @@ WSMatrix(E : WSRing) : Exports == Implementation where
     row(m, i) ==
       i > integer first(dimensions(m)) =>
         error "row$WSMatrix: index is too large"
-      jbinfunc("W_"Part_"(", m, jWSInt(i))
+      jbinfunc("W_"Part_"(", m, jWSInteger(i))
     column(m, i) ==
       i > integer last(dimensions(m)) =>
         error "column$WSMatrix: index is too large"
@@ -711,7 +711,7 @@ WSMatrix(E : WSRing) : Exports == Implementation where
     toString(mat, form) == string jbinfunc("W_"ToString_"(", mat, form)
     qnew(m,n) ==
       jbinfunc("W_"ConstantArray_"(", 0$E,
-        jWSList([jWSInt(m), jWSInt(n)])@WSList(WSInteger))
+        jWSList([jWSInteger(m), jWSInteger(n)])@WSList(WSInteger))
     matrix(vec) : %  == vec pretend %
     diagonalMatrix(l) == junfunc("W_"DiagonalMatrix_"(", l)
     randomRealMatrix(range, dims) == jbinfunc("W_"RandomReal_"(", range, dims)

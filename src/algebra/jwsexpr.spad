@@ -378,7 +378,7 @@ WSExpression() : Exports == Implementation where
     kleinInvariantJ : % -> %
     ++ kleinInvariantJ(tau) computes the Klein's absolute invariant.
     modularLambda : % -> %
-    ++ modularLambda() computes the lambda modular function.
+    ++ modularLambda(tau) computes the lambda modular function.
     guessGeneratingFunction : (WSList(%), %) -> %
     ++ guessGeneratingFunction(l,x) finds the generating function applied to x from
     ++ the list of coefficients l. Or from the list of lists l (list of pairs as list
@@ -403,7 +403,7 @@ WSExpression() : Exports == Implementation where
     guessSequenceFunction : (%, %) -> %
     ++ guessSequenceFunction(l,x) finds the sequence function applied to x from the
     ++ list of coefficients l. For example:
-    ++ \example{guessSequenceFunction([1,2,4,jWSInt 8]::WSList(WSInteger),x)}
+    ++ \example{guessSequenceFunction([1,2,4,jWSInteger 8]::WSList(WSInteger),x)}
     series : (%, %) -> %
     ++ series(expr, opt) returns a series from expr.
     ++ \example{x:=jWSExpr(x);a:=jWSExpr(a);}
@@ -1154,6 +1154,12 @@ WSExpression() : Exports == Implementation where
     ++ coerce(expr) coerces expr to a WSInteger if possible.
     coerce : % -> WSRational
     ++ coerce(expr) coerces expr to a WSRational if possible.
+    convert : Polynomial(Integer) -> %
+    ++ convert(p) converts p to a WSExpression.
+    convert : Polynomial(Fraction(Integer)) -> %
+    ++ convert(p) converts p to a WSExpression.
+    convert : Polynomial(Float) -> %
+    ++ convert(p) converts p to a WSExpression.
     jlWSPrecision : % -> %
     ++ jlWSPrecision get precision of expr.
     jlWSAccuracy : % -> %
@@ -1262,10 +1268,10 @@ WSExpression() : Exports == Implementation where
       jlref(concat(["weval(",func, getind(a), ",", getind(b),"))"]))
     jterfunc(func,a,b,c) ==>
       jlref(concat(["weval(",func, getind(a), ",",
-        getind(b), ",", getind(c)"))"]))
+        getind(b), ",", getind(c), "))"]))
     jquatfunc(func,a,b,c,d) ==>
       jlref(concat(["weval(",func, getind(a), ",", getind(b), ",",
-        getind(c), ",", getind(d),"))"]))
+        getind(c), ",", getind(d), "))"]))
     jbinbop(op,a,b) ==>
       jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
     error1(msg, f) ==> error concat [msg, " ", toString f]
@@ -1824,7 +1830,7 @@ WSExpression() : Exports == Implementation where
       l : List(Symbol) := []
       lvars : WSL(%) := junfunc("W_"Variables_"(", p)
       for i in 1..integer(length(lvars)) repeat
-        l := concat(l, coerce(toString(part(lvars, jWSInt i)))@Symbol)
+        l := concat(l, coerce(toString(part(lvars, jWSInteger i)))@Symbol)
       l
     exponent(p,x) == jbinfunc("W_"Exponent_"(", p, x)
     exponent(p,x,map) == jterfunc("W_"Exponent_"(", p, x, map)
@@ -1958,7 +1964,7 @@ WSExpression() : Exports == Implementation where
     extract(expr, i) == jbinfunc("W_"Extract_"(", expr, jWSExpr(string(i)))
     level(expr, level) == jbinfunc("W_"Level_"(", expr, level)
     level(expr, level, head) ==
-      if head then jterfunc("W_"Level_"", expr, level, jWSExpr "Heads->True(")
+      if head then jterfunc("W_"Level_"(", expr, level, jWSExpr "Heads -> True")
       else jbinfunc("W_"Level_"(", expr, level)
     lookup(assocs,keys) == jbinfunc("W_"Lookup_"(",assocs,keys)
     lookup(assocs,keys,def) == jterfunc("W_"Lookup_"(",assocs,keys,def)
@@ -2094,6 +2100,17 @@ WSExpression() : Exports == Implementation where
       error "Not a rational number"
     coerce(eq : Equation(%)) == jWSEqual(lhs(eq), rhs(eq))
 
+    convert(p: Polynomial(Integer)) ==
+      jWSExpr(first(lines formatExpression(p::OutputForm)$Format1D))
+    convert(p: Polynomial(Fraction(Integer))) ==
+      jWSExpr(first(lines formatExpression(p::OutputForm)$Format1D))
+    convert(p: Polynomial(Float)) ==
+      tmp := outputSpacing(0)$Float
+      try
+        jWSExpr(first(lines formatExpression(p::OutputForm)$Format1D))
+      finally
+        outputSpacing(tmp)$Float
+
     baseForm(x,n) ==
       integer? x and integer? n => jbinfunc("W_"BaseForm_"(", x,n)
       error "baseForm: Integer(s) not used"
@@ -2149,8 +2166,8 @@ WSExpression() : Exports == Implementation where
       head = WFormat => message(string(expr))
       pagew := string(_$LINELENGTH$Lisp pretend Integer - 2)
       sexpr := toString(expr, jWSExpr concat("PageWidth -> ", pagew))
-      str : String := jlEvalString(concat(["replace(_"", sexpr,
-        "_", '[' => '(', ']' => ')', r_"\b[A-Z][a-z]{2}_" => x -> lowercase(x))"]))
+      str : String := jlEvalString(concat(["replace(raw_"", sexpr,
+        "_", '[' => '(', ']' => ')', r_"\bI\b_" => _"%i_" , r_"\b[A-Z][a-z]{2}_" => x -> lowercase(x))"]))
       l := split(str, newline())
       #l > 1 => pile(append([""],l) pretend List(OutputForm))
       message(str)

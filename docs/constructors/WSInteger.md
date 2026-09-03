@@ -43,7 +43,7 @@ Julia WS integers using the MathLink Julia package.
  gcd : (%, %) -> %    gcd : List(%) -> %
  hyperFactorial : % -> %    inc : % -> %
  init : () -> %    integer : % -> Integer
- invmod : (%, %) -> %    jWSInt : Integer -> %
+ invmod : (%, %) -> %    jWSInteger : Integer -> %
  jWSInterpret : String -> %    jWSInterpret : (String, String) -> %
  jWSInterpret : (String, String, String) -> %    jlAbout : % -> Void
  jlApply : (String, %) -> JLObject    jlApply : (String, %, %) -> JLObject
@@ -146,7 +146,7 @@ Julia WS integers using the MathLink Julia package.
 | [`init`](#init) | init() chooses an initial object for stepping. |
 | [`integer`](#integer) | integer(i) returns i as a FriCAS Integer. |
 | [`invmod`](#invmod) | invmod(a, b), 0<=a<b>1, (a, b)=1 means 1/a mod b. |
-| [`jWSInt`](#jwsint) | jWSInt(int) constructs int as a WSInteger. |
+| [`jWSInteger`](#jwsinteger) | jWSInteger(int) constructs int as a WSInteger. |
 | [`jWSInterpret`](#jwsinterpret) | jWSInterpret(form) interprets form. |
 | [`jlAbout`](#jlabout) | jlAbout(obj) displays Julia information about obj if you have About.jl installed in Julia.... |
 | [`jlApply`](#jlapply) | jlApply(func, obj) applies the function func with obj as parameter and returns the result ... |
@@ -632,9 +632,9 @@ invmod(a, b), 0<=a<b>1, (a, b)=1 means 1/a mod b.
 - **Signature**: `(%, %) -> %`
 - **From**: `IntegerNumberSystem`
 
-#### `jWSInt` <a id="jwsint"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L298)\]
+#### `jWSInteger` <a id="jwsinteger"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L298)\]
 
-jWSInt(int) constructs int as a WSInteger.
+jWSInteger(int) constructs int as a WSInteger.
 
 - **Signature**: `Integer -> %`
 
@@ -1239,7 +1239,7 @@ squareFreePart(x) returns a product of prime factors of x each taken with multip
 stirling1(n,m) returns the Stirling number of the first kind from n and m. For example:
 
 ```fricas
-stirling1(20, jWSInt 2)
+stirling1(20, jWSInteger 2)
 ```
 
 - **Signature**: `(%, %) -> %`
@@ -1249,7 +1249,7 @@ stirling1(20, jWSInt 2)
 stirling2(n,m) returns the Stirling number of the second kind from n and m. For example:
 
 ```fricas
-stirling2(20, jWSInt 2)
+stirling2(20, jWSInteger 2)
 ```
 
 - **Signature**: `(%, %) -> %`

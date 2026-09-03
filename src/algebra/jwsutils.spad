@@ -182,17 +182,17 @@ WSUtilityFunctions() : Exports == Implementation where
 
     urand01Real(rows,cols) ==
       range := jWSList("{0,1}")@WSList(WSInteger)
-      dims := jWSList([jWSInt(rows),jWSInt(cols)])@WSList(WSInteger)
+      dims := jWSList([jWSInteger(rows),jWSInteger(cols)])@WSList(WSInteger)
       jbinfunc("W_"RandomReal_"(", range, dims)
     urand01Real(n) ==
       range := jWSList("{0,1}")@WSList(WSInteger)
-      jbinfunc("W_"RandomReal_"(", range, jWSInt n)
+      jbinfunc("W_"RandomReal_"(", range, jWSInteger n)
     urand01Complex(n) ==
       range := jWSList("1+I")@WSList(WSInteger)
-      jbinfunc("W_"RandomComplex_"(", range, jWSInt n)
+      jbinfunc("W_"RandomComplex_"(", range, jWSInteger n)
     urand01Complex(rows,cols) ==
       range := jWSList("1+I")@WSList(WSInteger)
-      dims := jWSList([jWSInt(rows),jWSInt(cols)])@WSList(WSInteger)
+      dims := jWSList([jWSInteger(rows),jWSInteger(cols)])@WSList(WSInteger)
       jbinfunc("W_"RandomComplex_"(", range, dims)
 
     jWSRange(n) ==
@@ -202,16 +202,16 @@ WSUtilityFunctions() : Exports == Implementation where
     jWSRange(m,n,step) ==
       jterfunc("W_"Range_"(", m, n, step)
 
-    hankelMatrix(n) == junfunc("W_"HankelMatrix_"(", jWSInt(n))
-    hilbertMatrix(n) == junfunc("W_"HilbertMatrix_"(", jWSInt(n))
-    fourierMatrix(n) == junfunc("W_"FourierMatrix_"(", jWSInt(n))
+    hankelMatrix(n) == junfunc("W_"HankelMatrix_"(", jWSInteger(n))
+    hilbertMatrix(n) == junfunc("W_"HilbertMatrix_"(", jWSInteger(n))
+    fourierMatrix(n) == junfunc("W_"FourierMatrix_"(", jWSInteger(n))
     gaussianMatrix(r) == junfunc("W_"GaussianMatrix_"(", r)
     vandermondeMatrix(lvars) == junfunc("W_"VandermondeMatrix_"(", lvars)
     vandermondeMatrix(lvars, m) == jbinfunc("W_"VandermondeMatrix_"(", lvars, m)
-    identityMatrix(n) == junfunc("W_"IdentityMatrix_"(", jWSInt(n))
+    identityMatrix(n) == junfunc("W_"IdentityMatrix_"(", jWSInteger(n))
     zeroMatrix(m,n) ==
       jbinfunc("W_"ConstantArray_"(", 0$WSInteger,
-        jWSList([jWSInt(m), jWSInt(n)])@WSList(WSInteger))
+        jWSList([jWSInteger(m), jWSInteger(n)])@WSList(WSInteger))
     jlWSDocumentation(sym) ==
       str : String := string(sym)
       setelt!(str,1, upperCase str.1)

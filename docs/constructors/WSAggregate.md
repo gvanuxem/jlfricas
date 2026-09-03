@@ -280,8 +280,9 @@ jlApply(func, obj) applies the function func with obj as parameter and returns t
 ```fricas
 M:=nrand(4,4);
 jlApply("svd", M::JLMatrix(JLObjFloat64)).S
+shou
+ld be "equivalent" to svdvals(M).
 ```
-should be "equivalent" to svdvals(M).
 
 - **From**: [`JLObjectType`](JLObjectType.md)
 

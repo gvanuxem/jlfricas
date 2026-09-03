@@ -284,19 +284,19 @@ WSInteger() : Exports == Implementation where
     stirling1 : (%, %) -> %
     ++ stirling1(n,m) returns the Stirling number of the first kind
     ++ from n and m. For example:
-    ++ \example{stirling1(20, jWSInt 2)}
+    ++ \example{stirling1(20, jWSInteger 2)}
     stirling2 : (%, %) -> %
     ++ stirling2(n,m) returns the Stirling number of the second kind
     ++ from n and m. For example:
-    ++ \example{stirling2(20, jWSInt 2)}
+    ++ \example{stirling2(20, jWSInteger 2)}
     factor : % -> WSList WSList(%)
     ++ factor(n) returns the WS factorization of n.
     coerce  : Integer  -> %
     ++ coerce(z) coerces z.
     coerce  : % -> WSRational
     ++ coerce(z) coerces z.
-    jWSInt : Integer -> %
-    ++ jWSInt(int) constructs int as a WSInteger.
+    jWSInteger : Integer -> %
+    ++ jWSInteger(int) constructs int as a WSInteger.
   Implementation ==> JLObject add
     import from JLUtilityFunctions
     import from String
@@ -367,7 +367,7 @@ WSInteger() : Exports == Implementation where
     -- makeFR()$factored(%)
     stirling1(n,m) == jbinfunc("W_"StirlingS1_"(", n, m)
     stirling2(n,m) == jbinfunc("W_"StirlingS2_"(", n, m)
-    -- TODO: factor jWSInt 70421676397833365421106577172389167104000000000000
+    -- TODO: factor jWSInteger 70421676397833365421106577172389167104000000000000
     factor(n)         == junfunc("W_"FactorInteger_"(", n)
 
     prime?(z) == junfunc("W_"PrimeQ_"(", z) = WT
@@ -379,7 +379,7 @@ WSInteger() : Exports == Implementation where
       jlref(concat(getind(x), "/1"))$WSRational
     coerce(x : %) : WSExpression == x pretend WSExpression
     coerce(i : Integer) == jlref(concat(["WInteger(_"", string(i), "_")"]))
-    jWSInt(i : Integer) == jlref(concat(["WInteger(_"", string(i), "_")"]))
+    jWSInteger(i : Integer) == jlref(concat(["WInteger(_"", string(i), "_")"]))
     -- TODO
     coerce(i) : OutputForm ==
       ret : String := jl_string_getindex(jlId i)$Lisp
