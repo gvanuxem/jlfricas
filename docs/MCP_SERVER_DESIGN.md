@@ -8,7 +8,7 @@ The server follows a three-layer bridge architecture and supports multiple trans
 
 1.  **Protocol Layer (Common Lisp - SBCL / CCL)**:
     *   Hosted natively within the FriCAS Common Lisp image.
-    *   Uses `yason` for JSON-RPC 2.0 handling.
+    *   Uses a native built-in JSON parser and serializer for JSON-RPC 2.0 handling with zero external dependencies.
     *   Runs in a background thread to maintain responsiveness (in Socket mode).
     *   Supports dynamic runtime detection of Julia support (`:fricas_has_julia` feature flag) with automatic fallback to standalone FriCAS mode.
     *   Automatically resolves and loads foreign shared libraries (`libspad.so`, `julia_wrap.so`) on startup via `quiet_load_alien`.
@@ -89,7 +89,7 @@ High-resolution plots (SVG/PNG) generated via `jlPlot` and FriCAS graphics routi
 | **SVG over PNG** | Preferred for plots to ensure vector scalability and compact footprint in notification payloads. |
 
 ## 💡 Assumptions
-*   The environment has `yason` installed and available to the Lisp implementation.
+*   The MCP server is completely self-contained with no external Common Lisp library requirements.
 *   The user has Julia configured with the `GR` backend (or compatible) for reliable SVG generation.
 *   The `SpadDoc` package is compiled and exposed in FriCAS for documentation tools.
 

@@ -16,7 +16,6 @@ JULIA_LIBDIR = @JULIA_LIBDIR@
 JULIA_EXT=@JULIA_EXT@
 JULIA_LISP_REQUIREMENTS=@JULIA_LISP_REQUIREMENTS@
 BUILD_MCP_INTERFACE = @BUILD_MCP_INTERFACE@
-MCP_LISP_REQUIREMENT=@MCP_LISP_REQUIREMENT@
 LISP_CMD = $(FRICAS_LISP) $(fricas_quiet_flags)
 
 ## Create a fresh image for building interpsys and FRICASsys
@@ -196,7 +195,6 @@ do_it.SBCL do_it.CLISP do_it.Clozure do_it.lispworks do_it.CMUCL: \
 	     '#+(or :sbcl :openmcl)' \
 	     '(load (compile-file "num_gmpx.lisp"))' \
          '${JULIA_LISP_REQUIREMENTS}' \
-		 '${MCP_LISP_REQUIREMENT}' \
 	     '(load (compile-file "fricas-lisp.lisp"))' \
 	     '#+:fricas_has_julia' \
 	     '(load (compile-file "julia.lisp"))' \

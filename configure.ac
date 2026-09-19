@@ -1097,16 +1097,14 @@ FRICAS_MAKEFILE([src/etc/Makefile])
 ## --enable-mcp=no, --disable-mcp:
 ##   User asks to skip the build of the MCP interface.
 BUILD_MCP_INTERFACE=no
-MCP_LISP_REQUIREMENT=""
 AC_ARG_ENABLE(mcp,
   [AS_HELP_STRING([--enable-mcp],
-                  [build the SBCL or Clozure CL MCP interface on Linux (require the YASON CL library), (yes/no)])],
-  [AS_IF([test x"$enableval" = xyes], [BUILD_MCP_INTERFACE=yes] [MCP_LISP_REQUIREMENT="(require :asdf)"],
-    [AS_IF([test x"$enableval" = xno], [BUILD_MCP_INTERFACE=no] [MCP_LISP_REQUIREMENT=""],
+                  [build the SBCL or Clozure CL MCP interface on Linux, (yes/no)])],
+  [AS_IF([test x"$enableval" = xyes], [BUILD_MCP_INTERFACE=yes],
+    [AS_IF([test x"$enableval" = xno], [BUILD_MCP_INTERFACE=no],
     [AC_MSG_ERROR([only yes/no allowed as value for --enable-mcp])])])]
 )
 AC_SUBST(BUILD_MCP_INTERFACE)
-AC_SUBST(MCP_LISP_REQUIREMENT)
 ###################################################################
 ## The following section deals with the generation of the
 ## aldor interface.

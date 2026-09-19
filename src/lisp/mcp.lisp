@@ -1,14 +1,13 @@
 (in-package :boot)
 
-;; Ensure yason is loaded
+;; Required system sockets
 (eval-when (:compile-toplevel :load-toplevel :execute)
-  (require :asdf)
-  (asdf:load-system :yason)
   #+sbcl (require :sb-bsd-sockets))
 
 (defpackage :fricas-mcp
   (:use :cl :boot)
-  (:export #:start-mcp-server #:stop-mcp-server #:check-mcp-args #:start-socket-mcp-server #:start-socket-mcp-client))
+  (:export #:start-mcp-server #:stop-mcp-server #:check-mcp-args #:start-socket-mcp-server #:start-socket-mcp-client
+           #:json-parse #:json-encode))
 
 (in-package :fricas-mcp)
 
@@ -64,6 +63,193 @@
 
 (defvar *fricas-databases-shared* nil)
 
+;;; =========================================================================
+;;; Lightweight Native JSON Parser and Serializer (RFC 8259 compliant)
+;;; =========================================================================
+
+(defun json-skip-whitespace (stream)
+  (loop for ch = (peek-char nil stream nil nil)
+        while (and ch (member ch '(#\Space #\Tab #\Newline #\Return)))
+        do (read-char stream)))
+
+(defun json-expect-literal (stream word value)
+  (dotimes (i (length word) value)
+    (let ((ch (read-char stream nil nil)))
+      (unless (and ch (char= ch (char word i)))
+        (error "Expected literal ~A in JSON, got ~C" word ch)))))
+
+(defun json-read-string (stream)
+  (read-char stream) ; consume opening quote
+  (with-output-to-string (out)
+    (loop for ch = (read-char stream t)
+          do (cond
+               ((char= ch #\") (return))
+               ((char= ch #\\)
+                (let ((esc (read-char stream t)))
+                  (case esc
+                    (#\" (write-char #\" out))
+                    (#\\ (write-char #\\ out))
+                    (#\/ (write-char #\/ out))
+                    (#\b (write-char #\Backspace out))
+                    (#\f (write-char (code-char 12) out))
+                    (#\n (write-char #\Newline out))
+                    (#\r (write-char #\Return out))
+                    (#\t (write-char #\Tab out))
+                    (#\u
+                     (let ((hex (make-string 4)))
+                       (dotimes (i 4)
+                         (setf (char hex i) (read-char stream t)))
+                       (let ((code (parse-integer hex :radix 16)))
+                         (write-char (code-char code) out))))
+                    (t (write-char esc out)))))
+               (t (write-char ch out))))))
+
+(defun json-read-number (stream)
+  (let ((buf (make-array 16 :element-type 'character :adjustable t :fill-pointer 0))
+        (has-exp nil)
+        (has-dot nil))
+    (loop for ch = (peek-char nil stream nil nil)
+          while (and ch (or (digit-char-p ch)
+                            (char= ch #\-)
+                            (char= ch #\+)
+                            (char= ch #\.)
+                            (char= ch #\e)
+                            (char= ch #\E)))
+          do (when (char= ch #\.) (setf has-dot t))
+             (when (or (char= ch #\e) (char= ch #\E)) (setf has-exp t))
+             (vector-push-extend (read-char stream) buf))
+    (if (or has-dot has-exp)
+        (let ((*read-eval* nil))
+          (read-from-string buf))
+        (parse-integer buf))))
+
+(defun json-read-object (stream)
+  (read-char stream) ; consume '{'
+  (json-skip-whitespace stream)
+  (let ((table (make-hash-table :test 'equal)))
+    (when (char= (peek-char nil stream t) #\})
+      (read-char stream)
+      (return-from json-read-object table))
+    (loop
+      (json-skip-whitespace stream)
+      (unless (char= (peek-char nil stream t) #\")
+        (error "Expected string key in JSON object"))
+      (let ((key (json-read-string stream)))
+        (json-skip-whitespace stream)
+        (unless (char= (read-char stream t) #\:)
+          (error "Expected ':' in JSON object"))
+        (let ((val (json-read-value stream)))
+          (setf (gethash key table) val)))
+      (json-skip-whitespace stream)
+      (let ((next-ch (read-char stream t)))
+        (cond
+          ((char= next-ch #\,) nil)
+          ((char= next-ch #\}) (return table))
+          (t (error "Expected ',' or '}' in JSON object, got ~C" next-ch)))))))
+
+(defun json-read-array (stream)
+  (read-char stream) ; consume '['
+  (json-skip-whitespace stream)
+  (when (char= (peek-char nil stream t) #\])
+    (read-char stream)
+    (return-from json-read-array nil))
+  (let ((items nil))
+    (loop
+      (push (json-read-value stream) items)
+      (json-skip-whitespace stream)
+      (let ((next-ch (read-char stream t)))
+        (cond
+          ((char= next-ch #\,) nil)
+          ((char= next-ch #\]) (return (nreverse items)))
+          (t (error "Expected ',' or ']' in JSON array, got ~C" next-ch)))))))
+
+(defun json-read-value (stream)
+  (json-skip-whitespace stream)
+  (let ((ch (peek-char nil stream nil nil)))
+    (cond
+      ((null ch) (error "Unexpected EOF in JSON"))
+      ((char= ch #\{) (json-read-object stream))
+      ((char= ch #\[) (json-read-array stream))
+      ((char= ch #\") (json-read-string stream))
+      ((or (digit-char-p ch) (char= ch #\-)) (json-read-number stream))
+      ((char= ch #\t) (json-expect-literal stream "true" t))
+      ((char= ch #\f) (json-expect-literal stream "false" nil))
+      ((char= ch #\n) (json-expect-literal stream "null" nil))
+      (t (error "Unexpected character in JSON: ~C" ch)))))
+
+(defun json-parse (input)
+  "Parse a JSON string or character stream into Lisp data structures.
+   Objects are parsed as hash-tables (:test 'equal) with string keys."
+  (if (streamp input)
+      (json-read-value input)
+      (with-input-from-string (s input)
+        (json-read-value s))))
+
+(defun json-write-string (str stream)
+  (write-char #\" stream)
+  (loop for ch across str
+        do (case ch
+             (#\" (write-string "\\\"" stream))
+             (#\\ (write-string "\\\\" stream))
+             (#\Backspace (write-string "\\b" stream))
+             (#\Page (write-string "\\f" stream))
+             (#\Newline (write-string "\\n" stream))
+             (#\Return (write-string "\\r" stream))
+             (#\Tab (write-string "\\t" stream))
+             (t
+              (let ((code (char-code ch)))
+                (if (< code 32)
+                    (format stream "\\u~4,'0X" code)
+                    (write-char ch stream))))))
+  (write-char #\" stream))
+
+(defun json-write-value (obj stream)
+  (cond
+    ((null obj) (write-string "null" stream))
+    ((eq obj t) (write-string "true" stream))
+    ((eq obj :false) (write-string "false" stream))
+    ((eq obj :null) (write-string "null" stream))
+    ((eq obj :true) (write-string "true" stream))
+    ((stringp obj) (json-write-string obj stream))
+    ((integerp obj) (format stream "~D" obj))
+    ((floatp obj) (format stream "~F" obj))
+    ((rationalp obj) (format stream "~F" (float obj 1.0d0)))
+    ((hash-table-p obj)
+     (write-char #\{ stream)
+     (let ((first t))
+       (maphash (lambda (k v)
+                  (if first
+                      (setf first nil)
+                      (write-char #\, stream))
+                  (json-write-string (string k) stream)
+                  (write-char #\: stream)
+                  (json-write-value v stream))
+                obj))
+     (write-char #\} stream))
+    ((consp obj)
+     (write-char #\[ stream)
+     (let ((first t))
+       (dolist (item obj)
+         (if first
+             (setf first nil)
+             (write-char #\, stream))
+         (json-write-value item stream)))
+     (write-char #\] stream))
+    ((vectorp obj)
+     (write-char #\[ stream)
+     (loop for i from 0 below (length obj)
+           do (when (> i 0) (write-char #\, stream))
+              (json-write-value (aref obj i) stream))
+     (write-char #\] stream))
+    (t (json-write-string (format nil "~A" obj) stream))))
+
+(defun json-encode (obj &optional stream)
+  "Encode OBJ as a JSON string. If STREAM is non-nil, writes to STREAM."
+  (if stream
+      (json-write-value obj stream)
+      (with-output-to-string (s)
+        (json-write-value obj s))))
+
 (defun send-json (data &optional stream)
   "Encode data as JSON and send.
     When *mcp-use-content-length* is T, uses LSP-style Content-Length headers.
@@ -73,8 +259,7 @@
     element-type. For those streams we use character-mode Content-Length framing
     with the length reported as char count (equals byte count for ASCII-only JSON)."
   (let* ((out (or stream *mcp-output-stream* *mcp-json-stream* *standard-output*))
-         (json-str (with-output-to-string (s)
-                     (yason:encode data s)))
+         (json-str (json-encode data))
          (octets
            #+sbcl (sb-ext:string-to-octets json-str :external-format :utf-8)
            #+openmcl (ccl:encode-string-to-octets json-str :external-format :utf-8)
@@ -204,7 +389,7 @@
         (setf (gethash "mimeType" res) (cadr plot))
         (push res resources)
         (decf index)))
-    (setf (gethash "resources" result) resources)
+    (setf (gethash "resources" result) (or resources #()))
     (send-result id result)))
 
 (defun handle-read-resource (id params)
@@ -834,7 +1019,7 @@
                                           (let ((buf (make-string len)))
                                             (read-sequence buf input)
                                             buf))))
-                                 (json (ignore-errors (yason:parse json-str))))
+                                 (json (ignore-errors (json-parse json-str))))
                             (if (not json)
                                 (send-error nil -32700 "Parse error")
                                 (process-mcp-request json))))))
@@ -845,7 +1030,7 @@
                            nil))
                      ((and (stringp line) (> (length line) 0))
                       ;; Fallback for line-based JSON (no Content-Length header, stdio mode)
-                      (let ((json (ignore-errors (yason:parse line))))
+                      (let ((json (ignore-errors (json-parse line))))
                         (when json (process-mcp-request json)))))))
       (error (c)
         (format *error-output* "MCP Loop aborted: ~A~%" c)))))
