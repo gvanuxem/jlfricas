@@ -60,7 +60,8 @@ SPAD_SRCS= \
      groebsol gseries hashstate html hypertex ideal idecomp indexedp \
      intaf intalg intaux intclos intden intef integer \
      integrat interval intfact intlocp intpar intpm intrf intspec irexpand \
-     irsn ituple jarray32 jarray64 jcfsf jimobject jla32 jla64 jnemo jnpoly \
+     irsn ituple jafunctions jarray32 jarray64 jcfsf jimobject jla32 jla64 \
+     jnemo jnpadic jnpoly \
      jnseries jobject jplot jfsf jfsf2 jf32sf jf64sf jf32sf2 jf64sf2 jnball \
      julia jutils jet jws jwsagg jwsexpr jwsnsf jwsutils kl kovacic laplace \
      jfricas laurent leadcdet lie limitps lindep lingrob linpen liouv listgcd list \
