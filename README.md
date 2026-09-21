@@ -21,8 +21,7 @@ The MCP server is also used by [fricas-vscode](https://github.com/gvanuxem/frica
 [A general source of information](https://gvanuxem.github.io/jlfricas.documentation/) can also be found in HTML format.
 Take into account that this is absolutely not the official documentation even though it is highly based on the official FriCAS web site which can be built from the FriCAS source code (thanks to Ralf Hemmecke and Kurt Pagani for their amazing work).
 
-
-![Capture1](https://github.com/user-attachments/assets/0e2cdcc2-e798-4691-913b-79c19a4fb2ad)
+![Capture1](https://github.com/user-attachments/assets/f570c6ea-b472-4053-b8c5-957d0defcc35)
 
 ### Julia Plots and HyperDoc:
 
@@ -32,19 +31,15 @@ export QT_WAYLAND_SHELL_INTEGRATION=xdg-shell
 ``
 in your shell first.
 
-![Capture2](https://github.com/user-attachments/assets/e260f810-402e-4ead-a0ff-2cc3edc108b7)
-
+![Capture2](https://github.com/user-attachments/assets/c1835c3b-efff-495a-a3e6-ff5958d08ffa)
 
 ### Julia Plots on Windows/cmd.exe:
 
-![Capture3](https://github.com/user-attachments/assets/42efad57-a70d-4eb5-843b-26f84c6ec911)
-
+![Capture3](https://github.com/user-attachments/assets/0633a734-f0f1-4712-9285-c9230446e2da)
 
 ### Linear Algebra:
 
-![Capture4](https://github.com/user-attachments/assets/d72ef641-ccd3-4a68-a7db-b8a244b8a9a2)
-
-
+![Capture4](https://github.com/user-attachments/assets/e63e2e54-226c-45e9-84ea-37e4dd1843fc)
 
 ## Building and Installing
 
