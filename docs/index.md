@@ -77,13 +77,13 @@ The integration provides **two complementary interfaces** for FriCAS to communic
 ### 1. Low-Level Direct CL-FFI Interface
 - **Direct Value & Buffer Sharing**: Pure scalars (integers, machine floats, booleans) and numerical matrices/vectors are mapped directly between Common Lisp and Julia via `libjulia`'s C-API.
 - **Zero-Copy Memory**: Numerical arrays and matrices share the same underlying memory pointers without data duplication, giving native C/Fortran execution speed.
-- **Underlying Constructors**: Managed at the Lisp level by [JLUtilityFunctions](constructors/JLUtilityFunctions.md) and [JLObjDynamicLinker](constructors/JLObjDynamicLinker.md).
+- **Underlying Constructors**: Managed at the Lisp level by [JLUtilityFunctions](constructors/JLUtilityFunctions.md).
 
 ### 2. High-Level `JLObjectType` Object System (`JLObject`)
 - **Direct Manipulation in the Julia Namespace**: Instead of converting Julia data into FriCAS types, FriCAS holds opaque reference handles (`JLObject`) to objects living directly in the **Julia namespace/memory space**.
-- **Dynamic Method Dispatch & Mutation**: You can call arbitrary Julia functions on these objects (`jlApply`), inspect field names (`jlFieldNames`), mutate properties (`jlSetProperty!`), and evaluate code in local or global scopes (`jlEval`).
+- **Dynamic Method Dispatch & Mutation**: You can call arbitrary Julia functions on these objects (`jlApply`), inspect field names (`jlFieldNames`), mutate properties (`jlSetProperty!`), and evaluate code in local or global scopes (`jobject`).
 - **Data Structures & Polyglot Bridge**: Manipulate native Julia dictionaries ([JLObjDict](constructors/JLObjDict.md)), tabular data ([JLDataFrame](constructors/JLDataFrame.md)), anonymous functions ([JLObjAnonymousFunction](constructors/JLObjAnonymousFunction.md)), and seamlessly call **Python** ([JLObjPy](constructors/JLObjPy.md) via PythonCall) and **R** ([JLObjR](constructors/JLObjR.md) via RCall) without converting intermediate data back to FriCAS.
-- **Underlying Categories & Domains**: Defined in [JLObjectType](constructors/JLObjectType.md), [JLObject](constructors/JLObject.md), and [jobject.spad](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jobject.spad).
+- **Underlying Categories & Domains**: Defined in [JLObjectType](constructors/JLObjectType.md), [JLObject](constructors/JLObject.md) ([jobject.spad](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jobject.spad)).
 
 ---
 
