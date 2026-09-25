@@ -602,9 +602,14 @@ JLObjPy() : Exports == Implementation where
     ++ jlPyApply(mod1, mod2, func, pyobj1, pyobj2, pyobj3, pyobj4, pyobj5) applies
     ++ the Python function func from the module mod1.mod2 to the Python objects
     ++ pyobj1, pyobj2, pyobj3, pyobj4 and pyobj5.
+    jlPyType : % -> %
+    ++ jlPyType(pyobj) returns the Python type of the Python object pyobj.
     jlPyConvert : (String, %) -> JLObject
     ++ jlPyConvert(type, pyobj) converts the Python object pyobj
     ++ to the Julia type 'type'.
+    jlPyRepr : % -> %
+    ++ jlPyRepr(pyobj) returns the Julia Python object representing the
+    ++ Python object pyobj.
     jlPyDocumentation : String -> Void
     ++ jlPyDocumentation(obj) displays the Python documentation
     ++ for the Python object obj. Use 'q' followed by ENTER to quit.
@@ -617,6 +622,9 @@ JLObjPy() : Exports == Implementation where
     ++ coerce(f) coerces f to a Julia Python object.
     coerce : String -> %
     ++ coerce(str) coerces the string str to a Julia Python string object.
+    jpython : JLObject -> %
+    ++ jpython(obj) coerces the Julia object obj to a Julia Python object.
+    ++ Use jlDisplay(pyobj) to display the Python object pyobj.
     jpython : String -> %
     ++ jpython(str) coerces the string str to a Julia Python object.
     ++ Use jlDisplay(pyobj) to display the Python object pyobj.
@@ -625,6 +633,8 @@ JLObjPy() : Exports == Implementation where
 
     jlInitialize(true)
     Rep := SExpression
+
+    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
 
     not jlUsing "PythonCall" =>
       error "JLObjPy: PythonCall is not installed in Julia"
@@ -677,26 +687,21 @@ JLObjPy() : Exports == Implementation where
       jlref(concat(["pyimport(_"", m1, "_").", m2, ".", func, "(", getind(pyobj1), ",",
         getind(pyobj2), ",", getind(pyobj3), ",", getind(pyobj4), ",",
           getind(pyobj5), ")"]))
-
+    jlPyType(pyobj : %) == junfunc("pytype", pyobj)
     jlPyConvert(type, pyobj) ==
       jlref(concat(["pyconvert(", type, ",", getind(pyobj),")"]))
-    jlPyDocumentation(obj) ==
-      jlref(concat(["pyhelp(_"", obj, "_")"]))
-    coerce(i : Integer) ==
-      jlref(concat(["Py(", string(i),")"]))
-    coerce(str : String) ==
-      jlref(concat(["Py(_"", str, "_")"]))
+    jlPyDocumentation(obj) == jlref(concat(["pyhelp(_"", obj, "_")"]))
+    coerce(i : Integer) == jlref(concat(["Py(", string(i),")"]))
+    coerce(str : String) == jlref(concat(["Py(_"", str, "_")"]))
     coerce(f : Float) ==
       tmp := outputSpacing(0)
       try
-        ret := jlref(toString(f))
-        jlref(concat(["Py(", getind(ret),")"]))
+        jlref(concat(["Py(", toString(f),")"]))
       finally
         outputSpacing(tmp)
-    coerce(pyobj : %) : OutputForm ==
-      jl_string_getindex(jlId pyobj)$Lisp
-    jpython(str : String) ==
-      jlref(concat(["Py(", str, ")"]))
+    jpython(obj : JLObject) == junfunc("pyjl", obj)
+    jpython(str : String) == jlref(concat(["Py(", str, ")"]))
+    coerce(pyobj : %) : OutputForm == jl_string_getindex(jlId pyobj)$Lisp
 
 )abbrev domain JOBR JLObjR
 ++ Convenience domain for Julia R objects using
@@ -727,6 +732,11 @@ JLObjR() : Exports == Implementation where
     jlRApply : (String, %, %, %, %, %) -> %
     ++ jlRApply(func, robj1, robj2, robj3, robj4, robj5) applies the R function func
     ++ form the module __main__ to the R objects robj1, robj2, robj3, robj4 and robj5.
+    jlREval : % -> %
+    ++ jlREval(rexpr) evaluates the R expression rexpr in the Julia R environment.
+    jlRParse : String -> %
+    ++ jlRParse(str) parses the R expression str and returns it as a Julia R object.
+    ++ Can be evaluated using the jlREval function for example.
     jlRCopy : % -> JLObject
     ++ jlRCopy(robj) returns a Julia object copy of the R object robj
     ++ if possible.
@@ -744,6 +754,8 @@ JLObjR() : Exports == Implementation where
     --++ the Julia R environment.
     jlRPrint : % -> Void
     ++ jlRPrint(robj) prints the R representation of robj.
+    jlRType : % -> %
+    ++ jlRType(robj) returns the R type of the Julia R object robj.
     coerce : Integer -> %
     ++ coerce(i) coerces the integer i to a Julia R object.
     coerce : Float -> %
@@ -753,7 +765,8 @@ JLObjR() : Exports == Implementation where
     jr : JLObject -> %
     ++ jr(obj) returns obj as a Julia R object.
     jr : String -> %
-    ++ jr(str) coerces the string str to a Julia R object.
+    ++ jr(str) coerces the string str to a Julia R object
+    ++ using the Julia @R_str macro.
     ++ Use jlDisplay(robj) to display the R object robj.
     ++  For example:
     ++ \example{jr "optim(0, $(x -> x-cos(x)), method='L-BFGS-B')"}
@@ -796,21 +809,20 @@ JLObjR() : Exports == Implementation where
       jlref(concat(["convert(", type, ",", getind(robj),")"]))
     jlRCopy(robj : %) == junfunc("rcopy", robj)
     jlRPrint(robj : %) == junfunc("rprint", robj)
+    jlRType(robj : %) == jlref(concat(["rcall(:typeof,", getind(robj), ")"]))
+    jlREval(robj : %) == junfunc("reval", robj)
+    jlRParse(str : String) == jlref(concat(["rparse(_"", str, "_")"]))
 
-    coerce(i : Integer) ==
-      jlref(concat(["R_"", string(i),"_""]))
-    coerce(str : String) ==
-      jlref(concat(["R_"", str, "_""]))
+    coerce(i : Integer) == jlref(concat(["R_"", string(i),"_""]))
+    coerce(str : String) == jlref(concat(["R_"", str, "_""]))
     coerce(f : Float) ==
       tmp := outputSpacing(0)
       try
         jlref(concat(["R_"", toString(f),"_""]))
       finally
         outputSpacing(tmp)
-    jr(robj : JLObject) ==
-      junfunc("robject", robj)
-    jr(str : String) ==
-      jlref(concat(["R_"", str, "_""]))
+    jr(robj : JLObject) == junfunc("robject", robj)
+    jr(str : String) == jlref(concat(["R_"", str, "_""]))
     coerce(obj) : OutputForm ==
       lstr := rest jlText(obj,"plain")
       #lstr = 0 => message("No output")
