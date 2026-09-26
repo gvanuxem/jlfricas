@@ -111,17 +111,35 @@ html_theme = 'default'
 # further.  For a list of options available for each theme, see the
 # documentation.
 html_theme_options = {
-    'sidebarwidth' : 300,
+    'sidebarwidth': 300,
     'collapsiblesidebar': True,
-    'bodyfont': "'arial', sans-serif",
-    'headfont': "'arial', sans-serif",
-    'sidebarbtncolor': '#666',
-    'sidebarbgcolor': '#444',
-    'sidebarlinkcolor': '#ddd',
-    'relbarbgcolor': '#333',
-    'footerbgcolor': '#333',
-    'headbgcolor': '#fff',
+    'bodyfont': "'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+    'headfont': "'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+    'bgcolor': '#020617',          # slate-950 (docs body background)
+    'textcolor': '#cbd5e1',        # slate-300 (docs body text)
+    'linkcolor': '#60a5fa',        # brand-400 (docs primary link blue)
+    'visitedlinkcolor': '#93c5fd', # brand-300
+    'headbgcolor': '#020617',      # slate-950 (seamless heading background)
+    'headtextcolor': '#f8fafc',    # slate-50 (headings text)
+    'headlinkcolor': '#60a5fa',    # brand-400
+    'sidebarbgcolor': '#0b1120',   # slate-925 (docs sidebar background)
+    'sidebartextcolor': '#cbd5e1', # slate-300
+    'sidebarlinkcolor': '#60a5fa', # brand-400
+    'sidebarbtncolor': '#1e293b',  # slate-800 (docs border / button color)
+    'relbarbgcolor': '#0f172a',    # slate-900 (docs navbar background)
+    'relbartextcolor': '#cbd5e1',  # slate-300
+    'relbarlinkcolor': '#60a5fa',  # brand-400
+    'footerbgcolor': '#020617',    # slate-950
+    'footertextcolor': '#64748b',  # slate-500
+    'codebgcolor': '#0f172a',      # slate-900 (docs code background)
+    'codetextcolor': '#93c5fd',    # brand-300 (docs code text)
 }
+
+pygments_style = 'one-dark'
+
+html_css_files = [
+    'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap',
+]
 
 # Add any paths that contain custom themes here, relative to this directory.
 html_theme_path = ['_theme']
