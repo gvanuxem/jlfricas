@@ -5,7 +5,6 @@
 ++ functions if available, calling JL functions is costly.
 JLFloat32SpecialFunctions2() : Exports == Implementation where
   JF32 ==> JLFloat32
-  JI64 ==> JLInt64
   Exports ==> with
 
     -- Gamma Function
@@ -24,7 +23,7 @@ JLFloat32SpecialFunctions2() : Exports == Implementation where
     ++ invdigamma(x) computes invdigamma function (i.e. inverse of digamma function at x using fixed-point iteration algorithm)
     trigamma : JF32 -> JF32
     ++ trigamma(x) computes trigamma function (i.e the logarithmic second derivative of gamma at x)
-    polygamma : (JI64, JF32) -> JF32
+    polygamma : (JLInt64, JF32) -> JF32
     ++ polygamma(m,x) computes polygamma function (i.e the (m+1)-th derivative of the loggamma function at x)
     Gamma : (JF32, JF32) -> JF32
     ++ Gamma(a,z) computes upper incomplete gamma function \Gamma(a,z)

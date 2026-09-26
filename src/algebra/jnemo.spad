@@ -8,7 +8,7 @@
 ++ Date Created: Apr, 2024
 ++ Description:
 ++  Parent category of Nemo domains.
-NMType() : Category == JLObjectType
+NMType() : Category == JLObjectType()
 
 )abbrev category NRING NMRing
 ++ Category for Nemo ring domains
@@ -37,8 +37,6 @@ NMRing() : Category == Join(NMType, JLObjectRing) with
     add
       import from JLUtilityFunctions
 
-      getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-      junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
       jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
       junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
       jbinbfunc(op,a,b) ==> jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
@@ -78,6 +76,12 @@ NMInteger() : Exports == Implementation where
   Z         ==> Integer
   JI64      ==> JLInt64
   parsei    ==> PARSE_-INTEGER$Lisp
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+  jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+  junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
+  jbinbfunc(op,a,b) ==>
+    jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
   Exports ==> Join(NMCommutativeRing, IntegerNumberSystem,
       PolynomialFactorizationExplicit, Canonical, canonicalsClosed) with
     "*" : (%, Integer) -> %
@@ -105,22 +109,13 @@ NMInteger() : Exports == Implementation where
   Implementation ==> add
     import from JLUtilityFunctions
     import from String
-
     jlInitialize(true)
-    Rep := SExpression
-
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
-    jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
-    junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
-    jbinbfunc(op,a,b) ==>
-      jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
     jlNMRing() == "ZZ"
     jlObject() == jlEvalString(concat(["string(", "ZZ",")"]))@String
-
     0 == jlref("zero(ZZ)")
     1 == jlref("one(ZZ)")
+  
     inc(x) == x + 1
     dec(x) == x - 1
     base() == jlref("ZZ(2)")
@@ -217,6 +212,12 @@ NMAlgebraicNumber() : Exports == Implementation where
   NINT      ==> NMInteger
   Z         ==> Integer
   parsei    ==> PARSE_-INTEGER$Lisp
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+  jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+  junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
+  jbinbfunc(op,a,b) ==>
+    jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
   Exports ==> Join(NMField, AlgebraicallyClosedField,
       RetractableTo NMInteger, RetractableTo NMFraction(NMInteger),
       RetractableTo Integer, RetractableTo Fraction(Integer),
@@ -287,8 +288,8 @@ NMAlgebraicNumber() : Exports == Implementation where
     minimalPolynomial : % -> SparseUnivariatePolynomial(%)
     ++ minimalPolynomial(an) returns the minimal polynomial of an
     ++ over algebraic numbers.
-    minimalPolynomial : % -> SparseUnivariatePolynomial(Z)
-    ++ minimalPolynomial(an) returns the minimal polynomial of an.
+    --minimalPolynomial : % -> SparseUnivariatePolynomial(Z)
+    --++ minimalPolynomial(an) returns the minimal polynomial of an.
     height : % -> NNI
     ++ height(a) returns the height of a.
     heightBits : % -> NNI
@@ -336,30 +337,18 @@ NMAlgebraicNumber() : Exports == Implementation where
     ++ QQbar(x) returns x as a NMAlgebraicNumber.
     QQbar : NMFraction(NMInteger) -> %
     ++ QQbar(q) returns q as a NMAlgebraicNumber.
-
   Implementation ==> add
     import from JLUtilityFunctions
     import from JLStringUtilities
     import from KernelFunctions2(%,%)
-
     jlInitialize(true)
-    Rep := SExpression
-    --ALGOP := '%alg
-
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
-    jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
-    junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
-    jbinbfunc(op,a,b) ==>
-      jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
     jlNMRing() == "QQBar"
     jlObject() == jlEvalString(concat(["string(", "QQBar",")"]))@String
-
     0 == jlref("zero(QQBar)")
     1 == jlref("one(QQBar)")
-
     characteristic() == 0
+
     rootOfUnity(n) == jlref(concat(["root_of_unity(QQBar,", string(n),")"]))
     rootOfUnity(n,k) ==
       jlref(concat(["root_of_unity(QQBar,", string(n), ",", string(k), ")"]))
@@ -374,14 +363,14 @@ NMAlgebraicNumber() : Exports == Implementation where
       interpret(inp)$InputFormFunctions1(UP)
         pretend SparseUnivariatePolynomial(%)
 
-    minimalPolynomial(an) : SparseUnivariatePolynomial(Z) ==
-      AN  := NMAlgebraicNumber
-      sym : Symbol := coerce jlRandomString(8)
-      UP := UnivariatePolynomial(sym, Integer)
-      p := minimalPolynomial(an pretend AN)@NUP(NINT, sym)
-      inp := parse(string p)$InputForm
-      interpret(inp)$InputFormFunctions1(UP)
-        pretend SparseUnivariatePolynomial(Z)
+    --minimalPolynomial(an) : SparseUnivariatePolynomial(Z) ==
+    --  AN  := NMAlgebraicNumber
+    --  sym : Symbol := coerce jlRandomString(8)
+    --  UP := UnivariatePolynomial(sym, Integer)
+    --  p := minimalPolynomial(an pretend AN)@NUP(NINT, sym)
+    --  inp := parse(string p)$InputForm
+    --  interpret(inp)$InputFormFunctions1(UP)
+    --    pretend SparseUnivariatePolynomial(Z)
 
     random(deg, bits) ==
       jlref(concat(["rand(QQBar,degree=", string(deg),
@@ -535,11 +524,12 @@ NMAlgebraicNumber() : Exports == Implementation where
     coerce(i : NMInteger) : % == junfunc("QQBar", i)
     coerce(fi : NMFraction(NMInteger)) : % == junfunc("QQBar", fi)
     coerce(x : Fraction(Integer)) == coerce(coerce(x)@NMFraction(NMInteger))
-    coerce(x : %) : AlgebraicNumber ==
-      mapped := map(coerce,
-        minimalPolynomial(x)@SparseUnivariatePolynomial(Z)
-          )$SparseUnivariatePolynomialFunctions2(Z,AlgebraicNumber)
-      rootOf(mapped)$AlgebraicNumber
+    --TODO
+    --coerce(x : %) : AlgebraicNumber ==
+    --  mapped := map(coerce,
+    --    minimalPolynomial(x)@SparseUnivariatePolynomial(Z)
+    --      )$SparseUnivariatePolynomialFunctions2(Z,AlgebraicNumber)
+    --  rootOf(mapped)$AlgebraicNumber
 
     jnanumber(i : Integer) == jlref(concat(["QQBar(",string(i),")"]))
     jnanumber(fi : Fraction(Integer)) == coerce(fi)
@@ -567,6 +557,9 @@ NMResidueRing(R, P, poly) : Exports == Implementation where
   PI      ==> PositiveInteger
   NNI     ==> NonNegativeInteger
   parsei  ==> PARSE_-INTEGER$Lisp
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+  jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
   Exports ==> NMCommutativeRing with
     "*" : (%, Integer) -> %
     ++ x*i is the multiplication by an integer.
@@ -600,14 +593,7 @@ NMResidueRing(R, P, poly) : Exports == Implementation where
   Implementation ==> add
     import from JLUtilityFunctions
     import from NMInteger
-
     jlInitialize(true)
-    Rep := SExpression
-
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
-    jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
-    junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
 
     -- Set up the ring
     RESRINGD := concat("RESRING", string(jlApply("hash",(poly))))
@@ -659,6 +645,10 @@ NMResidueField(R, P, poly) : Exports == Implementation where
   PI      ==> PositiveInteger
   NNI     ==> NonNegativeInteger
   parsei  ==> PARSE_-INTEGER$Lisp
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+  jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+  junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
   Exports ==> NMField with
     square? : % -> Boolean
     ++ square?(x) returns true if x is a square in the field.
@@ -690,22 +680,15 @@ NMResidueField(R, P, poly) : Exports == Implementation where
     coerce : P -> %
     ++ coerce(p) coerces p.
     jnresidue : Integer -> %
-    ++ jnresidue(i) returns i as an element of the residue ring NMResidueRing.
+    ++ jnresidue(i) returns i as an element of the residue field NMResidueField.
     jnresidue : NMInteger -> %
-    ++ jnresidue(i) returns i as an element of the residue ring NMResidueRing.
+    ++ jnresidue(i) returns i as an element of the residue field NMResidueField.
     jnresidue : P -> %
-    ++ jnresidue(p) returns p as an element of the residue ring NMResidueRing.
+    ++ jnresidue(p) returns p as an element of the residue field NMResidueField.
   Implementation ==> add
     import from JLUtilityFunctions
     import from NMInteger
-
     jlInitialize(true)
-    Rep := SExpression
-
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
-    jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
-    junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
 
     --degree(poly) < 1 => error "The modulus must be a polynomial of degree at least 1."
     --lc := leadingCoefficient poly
@@ -762,6 +745,9 @@ NMIntegerMod(p : PositiveInteger) : Exports == Implementation where
   PI      ==> PositiveInteger
   NNI     ==> NonNegativeInteger
   parsei  ==> PARSE_-INTEGER$Lisp
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+  jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
   Exports ==> Join(NMCommutativeRing, Finite,
         ConvertibleTo(Integer), StepThrough) with
     "*" : (%, Integer) -> %
@@ -781,19 +767,12 @@ NMIntegerMod(p : PositiveInteger) : Exports == Implementation where
   Implementation ==> add
     import from JLUtilityFunctions
     import from String
-    import from NMInteger
-
     jlInitialize(true)
-    Rep := SExpression
 
     -- initialize
     NZMOD := concat ["NZMOD",string(p)]
     jlEvalString(concat([NZMOD,",=residue_ring(ZZ,", string(p),")"]))@Void
     NZMODP := concat(NZMOD,"(")
-
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
-    jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
 
     jlNMRing() == NZMOD
     jlObject() == jlEvalString(concat(["string(", NZMOD,")"]))@String
@@ -843,6 +822,10 @@ NMPrimeField(p : PositiveInteger) : Exports == Implementation where
   INT       ==> Integer
   SUP       ==> SparseUnivariatePolynomial
   parsei    ==> PARSE_-INTEGER$Lisp
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+  jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+  junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
   Exports ==> Join(NMField, FiniteFieldCategory,
                    FiniteAlgebraicExtensionField(%),
                    ConvertibleTo(Integer)) with
@@ -877,22 +860,13 @@ NMPrimeField(p : PositiveInteger) : Exports == Implementation where
   Implementation ==> add
     import from JLUtilityFunctions
     import from String
-    import from IntegerNumberTheoryFunctions
-
     jlInitialize(true)
-    Rep := SExpression
 
     -- initialize
     not prime?(p) => error "Argument to NMPrimeField(p) must be a prime"
     NPF := concat(["NPF", string(p)])
     jlEvalString(concat([NPF,"=GF(", string(p),")"]))@Void
     NPFP := concat(NPF,"(")
-
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-
-    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
-    jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
-    junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
 
     jlNMRing() == NPF
     jlObject() == jlEvalString(concat(["string(", NPF,")"]))@String
@@ -904,7 +878,6 @@ NMPrimeField(p : PositiveInteger) : Exports == Implementation where
     index(n : PI) == coerce(n)
     random() == coerce(random(p)$Integer)
 
-
     x : % * y : NMInteger == jbinfunc("*", x, y)
     x : % * y : Integer == jlref(concat [getind(x), "*", string(y)])
     x : % / y : % == jbinfunc("/", x, y)
@@ -913,7 +886,7 @@ NMPrimeField(p : PositiveInteger) : Exports == Implementation where
         "//", string(denom(y)),")"])
     x ^ y : Integer == jlref(concat [getind(x), "^", string(y)])
     recip(x) ==
-      -- TODO: compute an euclidean dvision to check
+      -- TODO: compute an euclidean division to check
       zero?(x) => "failed"
       junfunc("inv",x)@%
     inv(x) == junfunc("inv",x)
@@ -986,7 +959,7 @@ NMPrimeField(p : PositiveInteger) : Exports == Implementation where
     coerce(i : %) : OutputForm == message(string(i))
 
 )abbrev domain NFF NMFiniteField
-++ Experimental domain for Nemo Galois Fields
+++ Domain for Nemo Galois Fields (finite fields)
 ++ Author: G. Vanuxem
 ++ Date Created: Feb, 2024
 ++ Reference: https://flintlib.org/
@@ -1000,6 +973,10 @@ NMFiniteField(p : PositiveInteger, n: PositiveInteger) : Exports == Implementati
   NNI       ==> NonNegativeInteger
   SUP       ==> SparseUnivariatePolynomial
   parsei    ==> PARSE_-INTEGER$Lisp
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+  jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+  junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
   Exports ==> Join(NMField, FiniteFieldCategory,
                    FiniteAlgebraicExtensionField(NMPrimeField(p)),
                    ConvertibleTo(Integer)) with
@@ -1039,9 +1016,7 @@ NMFiniteField(p : PositiveInteger, n: PositiveInteger) : Exports == Implementati
   Implementation ==> add
     import from JLUtilityFunctions
     import from String
-
     jlInitialize(true)
-    Rep := SExpression
 
     -- initialize
     not prime?(p) => error "NMFiniteField(p, n): argument p must be a prime"
@@ -1049,14 +1024,8 @@ NMFiniteField(p : PositiveInteger, n: PositiveInteger) : Exports == Implementati
     jlEvalString(concat([NFF, "=GF(", string(p),",", string(n),")"]))@Void
     NFFP := concat(NFF,"(")
 
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
-    jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
-    junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
-
     jlNMRing() == NFF
     jlObject() == jlEvalString(concat(["string(", NFF,")"]))@String
-
     0 == jlref(concat(["zero(", NFF,")"]))
     1 == jlref(concat(["one(", NFF,")"]))
 
@@ -1141,6 +1110,12 @@ InnerNMExactCalciumField(Options : JLObjDict) : Exports ==
   PI        ==> PositiveInteger
   NNI       ==> NonNegativeInteger
   JF64      ==> JLFloat64
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)),")"])
+  junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+  jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+  junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
+  jbinbfunc(op,a,b) ==>
+    jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
   Exports ==> Join(NMField, OrderedSet, RadicalCategory,
             ComplexCategory(%), TranscendentalFunctionCategory) with
     real? : % -> Boolean
@@ -1314,18 +1289,7 @@ InnerNMExactCalciumField(Options : JLObjDict) : Exports ==
   Implementation ==> add
     import from JLUtilityFunctions
     import from String
-    import from NMFraction(NMInteger)
-    import from NMAlgebraicNumber
-
     jlInitialize(true)
-    Rep := SExpression
-
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)),")"])
-    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
-    jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
-    junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
-    jbinbfunc(op,a,b) ==>
-      jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
     -- initialize (see Calcium constructor options)
     INECF := concat(["INECF",
@@ -1338,7 +1302,6 @@ InnerNMExactCalciumField(Options : JLObjDict) : Exports ==
 
     jlNMRing() == INECF
     jlObject() == jlEvalString(concat(["string(", INECF,")"]))@String
-
     0    == jlref(concat ["zero(", INECF,")"])
     1    == jlref(concat ["one(", INECF,")"])
     -- Why this redundancy here? Cf. jnemo.input checks
@@ -1552,6 +1515,12 @@ NMExactCalciumField() : Exports == Implementation where
   PI        ==> PositiveInteger
   NNI       ==> NonNegativeInteger
   JF64      ==> JLFloat64
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+  jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+  junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
+  jbinbfunc(op,a,b) ==>
+    jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
   Exports ==> Join(NMField, OrderedSet, RadicalCategory,
             ComplexCategory(%), TranscendentalFunctionCategory) with
     real? : % -> Boolean
@@ -1722,17 +1691,7 @@ NMExactCalciumField() : Exports == Implementation where
     ++ where real is the real part and cplx the complex part.
   Implementation ==> add
     import from JLUtilityFunctions
-    import from NMFraction(NMInteger)
-
     jlInitialize(true)
-    Rep := SExpression
-
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
-    jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
-    junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
-    jbinbfunc(op,a,b) ==>
-      jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
     NECF := "NECF"
     jlEvalString("NECF=CalciumField(extended=true)")
@@ -1742,7 +1701,6 @@ NMExactCalciumField() : Exports == Implementation where
 
     jlNMRing() == NECF
     jlObject() == jlEvalString(concat(["string(", NECF,")"]))@String
-
     0    == jlref(concat ["zero(", NECF,")"])
     1    == jlref(concat ["one(", NECF,")"])
     -- Why this redundancy here? Cf. jnemo.input checks
@@ -1871,7 +1829,6 @@ NMExactCalciumField() : Exports == Implementation where
       a@%
     coth x == cosh x * csch x
 
-
     asinh x == log(x + sqrt(x^2 + 1))
     acosh x == 2*log(sqrt((x+1)/2) + sqrt((x-1)/2))
     atanh x == (log(1+x)-log(1-x))/2
@@ -1948,6 +1905,13 @@ NMExactCalciumField() : Exports == Implementation where
 -- TODO: random everywhere.
 NMFraction(R : Join(NMCommutativeRing, IntegralDomain)) :
     Exports == Implementation where
+  NNI ==> NonNegativeInteger
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+  jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+  junbfunc(func,a) ==> jl_call1_bool_wrapped_index(func,jlId(a))$Lisp
+  jbinbfunc(op,a,b) ==>
+    jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
   Exports ==> Join(NMField, QuotientFieldCategory(R)) with
     -- if R has ... then PolynomialFactorizationExplicit, TODO
     -- factor : % -> NMFactoredFraction(R) TODO
@@ -1987,14 +1951,6 @@ NMFraction(R : Join(NMCommutativeRing, IntegralDomain)) :
     import from JLUtilityFunctions
     import from JLStringUtilities
     import from NMFactored(R)
-
-    NNI ==> NonNegativeInteger
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
-    jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
-    junbfunc(func,a) ==> jl_call1_bool_wrapped_index(func,jlId(a))$Lisp
-    jbinbfunc(op,a,b) ==>
-      jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
     NFR := concat("NFR", jlNMRing()$R)
     NFRP := concat(NFR,"(")
@@ -2111,6 +2067,8 @@ NMFactored(R : Join(NMRing, IntegralDomain)) :
   FF     ==> Record(flag : fUnion, factor : R, exponent : NonNegativeInteger)
   FFE ==> Record(flag : Union("nil", "sqfr", "irred", "prime"),
                     factor : R, exponent : NonNegativeInteger)
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
   Exports ==> JLObjectType with
     factor : R -> %
     ++ factor(intd) returns the factorization of intd.
@@ -2128,12 +2086,6 @@ NMFactored(R : Join(NMRing, IntegralDomain)) :
   Implementation ==> JLObject add
     import from JLUtilityFunctions
     import from JLStringUtilities
-
-    jlInitialize(true)
-
-    Rep := SExpression
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
 
     unit(fac) == junfunc("unit", fac)
     factor(intd : R) : % == junfunc("factor", intd)

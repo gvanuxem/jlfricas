@@ -99,7 +99,6 @@ JLUtilityFunctions() : Exports == Implementation where
     import from JLStringUtilities
     import from BrowserInformation
     import from JLObject
-
     jlInitialize(true)
 
     defined?(func) ==>
@@ -234,22 +233,19 @@ JLStringUtilities() : Exports == Implementation where
         ++ in str with subst. More information in String documentation of Julia.
         ++ For example:
         ++  jlRegexReplace("hey", jlRegex("$"), jlSubstitute(" you!"))
-
     Implementation ==> add
         import from JLUtilityFunctions
         import from JLStringUtilities
         import from JLSymbol
         import from StringTable(String)
-
         jlInitialize(true)
-
-        junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
 
         if not jlUsing "StyledStrings" then
             error "The Julia package StyledStrings must be installed"
         if not jlUsing "Latexify" then
             jlMessageStyled("The Julia package Latexify should be installed. " _
                 "You will not be able to latexify a string (jlToLatex).\n\n", jsym "green")
+
         jlRegex(s) == concat ["r_"", s, "_""]
         jlSubstitute(s) == concat ["s_"", s, "_""]
         jlLatex(s) == concat ["L_"", s, "_""]
@@ -336,6 +332,7 @@ JLObjDynamicLinker() : Exports == Implementation where
     NNI  ==> NonNegativeInteger
     JOBJ ==> JLObject
     STR  ==> String
+    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     Exports ==> JLObjectType with
         jlDlCApply : (%, JOBJ) -> JOBJ
         ++ jlDlCApply(func,x) applies the function pointer func to x.
@@ -483,12 +480,10 @@ JLObjDynamicLinker() : Exports == Implementation where
         import from JLUtilityFunctions
         import from String
         import from JLObject
-
         jlInitialize(true)
+
         jlUsing("Libdl")
 
-        Rep := SExpression
-        getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
         jlDlCApply(func, x) ==
             type_str := string jlType x
             jlref(concat ["ccall(", getind(func),

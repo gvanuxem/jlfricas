@@ -152,9 +152,9 @@ JLF64LinearAlgebra() : Exports == Implementation where
 
     normalize(v : JF64VEC) ==
       vt := copy(v)
-      jlApplyFunction("normalize!", vt)
+      jlApplyFunction!("normalize!", vt)
       vt
-    normalize!(v: JF64VEC) == (jlApplyFunction("normalize!", v);v)
+    normalize!(v: JF64VEC) == (jlApplyFunction!("normalize!", v);v)
     normalize(m : JF64MAT) ==
       nr := nrows(m)
       mt := qnew(nr, ncols(m))$JF64MAT
@@ -162,7 +162,7 @@ JLF64LinearAlgebra() : Exports == Implementation where
         jlVector(m), nr)
       mt
     normalize!(m: JF64MAT) ==
-      jlApplyFunction("normalize!", jlVector(m), nrows(m))
+      jlApplyFunction!("normalize!", jlVector(m), nrows(m))
       m
 
     norm(v : JF64VEC) == jlApplyFunction("norm", v)
@@ -380,20 +380,20 @@ JLF64LinearAlgebra() : Exports == Implementation where
 
     triu(m) ==
       mm := copy m
-      jlApplyFunction("triu!", jlVector(mm), nrows(mm))
+      jlApplyFunction!("triu!", jlVector(mm), nrows(mm))
       mm
 
     triu!(m) ==
-      jlApplyFunction("triu!", jlVector(m), nrows(m))
+      jlApplyFunction!("triu!", jlVector(m), nrows(m))
       m
 
     tril(m) ==
       mm := copy m
-      jlApplyFunction("tril!", jlVector(mm), nrows(mm))
+      jlApplyFunction!("tril!", jlVector(mm), nrows(mm))
       mm
 
     tril!(m) ==
-      jlApplyFunction("tril!", jlVector(m), nrows(m))
+      jlApplyFunction!("tril!", jlVector(m), nrows(m))
       m
 
 )abbrev package JCF64LA JLCF64LinearAlgebra
@@ -500,10 +500,10 @@ JLCF64LinearAlgebra() : Exports == Implementation where
 
     normalize(v : JCF64VEC) ==
       vtmp := copy(v)
-      jlApplyFunction("normalize!", vtmp)
+      jlApplyFunction!("normalize!", vtmp)
       vtmp
 
-    normalize!(v: JCF64VEC) == (jlApplyFunction("normalize!", v);v)
+    normalize!(v: JCF64VEC) == (jlApplyFunction!("normalize!", v);v)
 
     normalize(m : JCF64MAT) ==
       nr := nrows(m)
@@ -512,7 +512,7 @@ JLCF64LinearAlgebra() : Exports == Implementation where
       mtmp
 
     normalize!(m: JCF64MAT) ==
-      jlApplyFunction("normalize!", jlVector(m), nrows(m))
+      jlApplyFunction!("normalize!", jlVector(m), nrows(m))
       m
 
     norm(v : JCF64VEC) == jlApplyFunction("norm", v)

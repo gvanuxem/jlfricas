@@ -19,9 +19,7 @@ JLObjBool() : Exports == Implementation where
     ++ jfalse() returns the Julia boolean false value.
   Implementation ==> add
     import from JLUtilityFunctions
-
     jlInitialize(true)
-    Rep := SExpression
 
     coerce(bool) : Boolean ==
       jl_string_getindex(jlId bool)$Lisp pretend String = "true"
@@ -39,6 +37,11 @@ JLObjBool() : Exports == Implementation where
 ++ or function argument for example.
 ++ Only basic arithmetic operations are supported.
 JLObjFloat32() : Exports == Implementation where
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+  jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+  jbinbfunc(op,a,b) ==>
+    jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
   Exports ==> Join(OrderedSet, JLObjectRing, Field) with
     "*" : (%, Integer) -> %
     ++ x*i is the multiplication of x by an integer.
@@ -99,15 +102,7 @@ JLObjFloat32() : Exports == Implementation where
     ++\example{jfloat32("0.7")}
   Implementation ==> add
     import from JLUtilityFunctions
-
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
-    jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
-    jbinbfunc(op,a,b) ==>
-      jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
-
     jlInitialize(true)
-    Rep := SExpression
 
     0 == jlref("0.0")
     1 == jlref("1.0")
@@ -172,6 +167,11 @@ JLObjFloat32() : Exports == Implementation where
 ++ or function argument for example.
 ++ Only basic arithmetic operations are supported.
 JLObjFloat64() : Exports == Implementation where
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+  jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+  jbinbfunc(op,a,b) ==>
+    jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
   Exports ==> Join(OrderedSet, JLObjectRing, Field) with
     "*" : (%, Integer) -> %
     ++ x*i is the integer multiplication.
@@ -237,15 +237,7 @@ JLObjFloat64() : Exports == Implementation where
     ++\example{jfloat64("0.7")}
   Implementation ==> add
     import from JLUtilityFunctions
-
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
-    jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
-    jbinbfunc(op,a,b) ==>
-      jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
-
     jlInitialize(true)
-    Rep := SExpression
 
     0 == jlref("0.0")
     1 == jlref("1.0")
@@ -310,6 +302,11 @@ JLObjFloat64() : Exports == Implementation where
 ++ or function argument for example.
 ++ Only basic arithmetic operations are supported.
 JLObjComplexF32() : Exports == Implementation where
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+  jbinfunc(func, a, b) ==> make_jlref_wcall2(func, a, b)$Lisp
+  jbinbfunc(op,a,b) ==>
+    jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
   Exports ==> Join(JLObjectRing, Field) with
     "*" : (%, Integer) -> %
     ++ x*i is the integer multiplication.
@@ -317,6 +314,16 @@ JLObjComplexF32() : Exports == Implementation where
     ++ x/i is the division by an integer.
     "/" : (Integer, %) -> %
     ++ i/x is the division of an integer by x.
+    jlApprox?: (%, %) -> Boolean
+    ++ jlApprox?(x,y) computes inexact equality comparison
+    ++ with default parameters.
+    ++ Two numbers compare equal if their relative distance
+    ++ or their absolute distance is within tolerance bounds.
+    jlApprox?: (%, %, %) -> Boolean
+    ++ jlApprox?(x,y,atol) computes inexact equality comparison
+    ++ with absolute tolerance atol.
+    ++ Two numbers compare equal if their relative distance
+    ++ or their absolute distance is within tolerance bounds.
     jlApply : (String, %) -> %
     ++ jlApply(func, x) applies the function func with x as parameter.
     jlApply : (String, %, %) -> %
@@ -335,15 +342,7 @@ JLObjComplexF32() : Exports == Implementation where
     ++ \example{jcfloat32 "cos(2pi)im"}
   Implementation ==> add
     import from JLUtilityFunctions
-
     jlInitialize(true)
-    Rep := SExpression
-
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
-    jbinfunc(func, a, b) ==> make_jlref_wcall2(func, a, b)$Lisp
-    jbinbfunc(op,a,b) ==>
-      jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
     0 == jlref("0.0+0im")
     1 == jlref("1.0+0im")
@@ -358,6 +357,10 @@ JLObjComplexF32() : Exports == Implementation where
     i : Integer / x : % == jlref(concat [string(i), "/", getind(x)])
     cis(x)   == junfunc("cis",x)
     cispi(x) == junfunc("cispi",x)
+    jlApprox?(x, y) == jbinbfunc("isapprox",x,y)
+    jlApprox?(x, y, atol) ==
+      jlEvalString(concat(["isapprox(", getind(x),
+        ",", getind(y), ", atol=", getind(atol),")"]))@Boolean
     jcfloat32(str) ==
       ret : % := jlref(str)
       jlType(ret) ~= 'ComplexF32 => error "jcfloat32: not a Julia ComplexF32"
@@ -374,6 +377,11 @@ JLObjComplexF32() : Exports == Implementation where
 ++ or function argument for example.
 ++ Only basic arithmetic operations are supported.
 JLObjComplexF64() : Exports == Implementation where
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+  jbinfunc(func, a, b) ==> make_jlref_wcall2(func, a, b)$Lisp
+  jbinbfunc(op,a,b) ==>
+    jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
   Exports ==> Join(JLObjectRing, Field) with
     "*" : (%, Integer) -> %
     ++ x*i is the multiplication by an integer.
@@ -381,6 +389,16 @@ JLObjComplexF64() : Exports == Implementation where
     ++ x/i is the division by an integer.
     "/" : (Integer, %) -> %
     ++ i/x is the division of an integer by c.
+    jlApprox?: (%, %) -> Boolean
+    ++ jlApprox?(x,y) computes inexact equality comparison
+    ++ with default parameters.
+    ++ Two numbers compare equal if their relative distance
+    ++ or their absolute distance is within tolerance bounds.
+    jlApprox?: (%, %, %) -> Boolean
+    ++ jlApprox?(x,y,atol) computes inexact equality comparison
+    ++ with absolute tolerance atol.
+    ++ Two numbers compare equal if their relative distance
+    ++ or their absolute distance is within tolerance bounds.
     jlApply : (String, %) -> %
     ++ jlApply(func, x) applies the function func with x as parameter.
     jlApply : (String, %, %) -> %
@@ -399,15 +417,7 @@ JLObjComplexF64() : Exports == Implementation where
     ++ \example{jcfloat64 "cos(2pi)im"}
   Implementation ==> add
     import from JLUtilityFunctions
-
     jlInitialize(true)
-    Rep := SExpression
-
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
-    jbinfunc(func, a, b) ==> make_jlref_wcall2(func, a, b)$Lisp
-    jbinbfunc(op,a,b) ==>
-      jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
     0 == jlref("0.0+0im")
     1 == jlref("1.0+0im")
@@ -422,6 +432,10 @@ JLObjComplexF64() : Exports == Implementation where
     i : Integer / x : % == jlref(concat [string(i), "/", getind(x)])
     cis(x)   == junfunc("cis",x)
     cispi(x) == junfunc("cispi",x)
+    jlApprox?(x, y) == jbinbfunc("isapprox",x,y)
+    jlApprox?(x, y, atol) ==
+      jlEvalString(concat(["isapprox(", getind(x),
+        ",", getind(y), ", atol=", getind(atol),")"]))@Boolean
     jcfloat64(str) ==
       ret : % := jlref(str)
       jlType(ret) ~= 'ComplexF64 => error "jcfloat64: not a Julia ComplexF64"
@@ -443,6 +457,11 @@ JLObjComplexF64() : Exports == Implementation where
 ++ check overflow imposing a performance penalty.
 JLObjUInt64() : Exports == Implementation where
   parsei    ==> PARSE_-INTEGER$Lisp
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+  jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+  jbinbfunc(op,a,b) ==>
+    jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
   Exports ==> Join(OrderedSet, JLObjectRing, CommutativeRing,
         EuclideanDomain, OrderedRing) with
     coerce : % -> NonNegativeInteger
@@ -461,17 +480,10 @@ JLObjUInt64() : Exports == Implementation where
     ++ juint64(str) returns the Julia UInt64 from the str command.
   Implementation ==> add
     import from JLUtilityFunctions
-
     jlInitialize(true)
-    jlUsing("Base.Checked")
-    Rep := SExpression
-    jprint := true
 
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
-    jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
-    jbinbfunc(op,a,b) ==>
-      jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
+    jlUsing("Base.Checked")
+    jprint := true
 
     juliaUI64Print(b) ==
       oldjprint := jprint
@@ -529,6 +541,9 @@ JLObjUInt64() : Exports == Implementation where
 ++ are supported.
 JLObjInt64() : Exports == Implementation where
   parsei    ==> PARSE_-INTEGER$Lisp
+  jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+  jbinbfunc(op,a,b) ==>
+    jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
   Exports ==> Join(OrderedSet, JLObjectRing, CommutativeRing,
         EuclideanDomain, OrderedRing) with
     coerce : % -> Integer
@@ -539,15 +554,7 @@ JLObjInt64() : Exports == Implementation where
     ++ jint64(str) returns the Julia Int64 from the str command.
   Implementation ==> add
     import from JLUtilityFunctions
-
     jlInitialize(true)
-    Rep := SExpression
-
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
-    jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
-    jbinbfunc(op,a,b) ==>
-      jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
     0 == jlref("0")
     1 == jlref("1")
@@ -584,6 +591,12 @@ JLObjInt64() : Exports == Implementation where
 ++ It is not meant to be used directly, but rather for returned value
 ++ or function argument for example.
 JLObjRational() : Exports == Implementation where
+  parsei    ==> PARSE_-INTEGER$Lisp
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+  jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+  jbinbfunc(op,a,b) ==>
+    jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
   Exports ==> Join(OrderedSet, JLObjectRing, DivisionRing) with
     "+" : (%, Integer) -> %
     ++ x+i is the addition with an integer.
@@ -624,15 +637,7 @@ JLObjRational() : Exports == Implementation where
   Implementation ==> add
     import from JLUtilityFunctions
     import from JLStringUtilities
-
-    parsei    ==> PARSE_-INTEGER$Lisp
     jlInitialize(true)
-    Rep := SExpression
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
-    jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
-    jbinbfunc(op,a,b) ==>
-      jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
     0 == jlref("zero(Rational{BigInt})")
     1 == jlref("one(Rational{BigInt})")
@@ -695,6 +700,7 @@ JLObjRational() : Exports == Implementation where
 ++ or function argument for example.
 JLObjPair(F : JLObjectType, L : JLObjectType)
     : Exports == Implementation where
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
   Exports ==> JLObjectAggregate() with
     first : % -> F
     ++ first(pair) returns the first element of pair.
@@ -707,11 +713,7 @@ JLObjPair(F : JLObjectType, L : JLObjectType)
     ++ \example{jpair("_"a_"=>7")$JLObjPair(JLObject,JLObjInt64)}
   Implementation ==> add
     import from JLUtilityFunctions
-
     jlInitialize(true)
-
-    Rep := SExpression
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
 
     first(pair) : F == jlref(concat [getind(pair), "[1]" ])$F
     last(pair) : L == jlref(concat [getind(pair), "[2]" ])$L
@@ -728,6 +730,7 @@ JLObjPair(F : JLObjectType, L : JLObjectType)
 ++ It is not meant to be used directly, but rather for returned value
 ++ or function argument for example.
 JLObjTuple() : Exports == Implementation where
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
   Exports ==> JLObjectAggregate() with
     jtuple : List(Any) -> %
     ++ jtuple(lst) returns a Julia Tuple from the List lst.
@@ -737,10 +740,7 @@ JLObjTuple() : Exports == Implementation where
     ++ from the evaluation of the Julia command str.
   Implementation ==> add
     import from JLUtilityFunctions
-
     jlInitialize(true)
-    Rep := SExpression
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
 
     #tuple == jlEvalString(concat(["length(", getind(tuple), ")"]))
     jtuple(l : List(Any)) ==
@@ -766,6 +766,7 @@ JLObjTuple() : Exports == Implementation where
 ++ It is not meant to be used directly, but rather for returned value
 ++ or function argument for example.
 JLObjNamedTuple() : Exports == Implementation where
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
   Exports ==> JLObjectAggregate() with
     jntuple : Tuple(Any) -> %
     ++ jntuple(lst) returns a Julia Named Tuple from the List lst.
@@ -777,10 +778,7 @@ JLObjNamedTuple() : Exports == Implementation where
     ++ we rename jntuple to jnamedtuple.
   Implementation ==> add
     import from JLUtilityFunctions
-
     jlInitialize(true)
-    Rep := SExpression
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
 
     #tuple == jlEvalString(concat(["length(", getind(tuple), ")"]))
     jntuple(l : Tuple(Any)) ==
@@ -804,6 +802,7 @@ JLObjNamedTuple() : Exports == Implementation where
 ++  Convenience domain for Julia Anonymous Functions, objects that are used
 ++ within Julia, and not directly by the underlying FriCAS Common Lisp.
 JLObjAnonymousFunction() : Exports == Implementation where
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
   Exports ==> JLObjectType with
     elt : (%, JLObject) -> JLObject
     ++ elt(jaf, arg) returns result of applying the Julia Anonymous Function
@@ -825,7 +824,7 @@ JLObjAnonymousFunction() : Exports == Implementation where
     jafunction : AnonymousFunction -> %
     ++ jafunction(af) returns a Julia Anonymous Function from the AnonymousFunction
     ++ af must be compatible with 1D format.
-    ++ \example{f:=jafunction(x +-> sqrt sqrt(x^2))}
+    ++ \example{f:=jafunction(x +-> sqrt(x^2))}
     ++ \example{f(jfloat64 2.0)}
     ++ \example{jlType %}
     jafunction : String -> %
@@ -834,10 +833,7 @@ JLObjAnonymousFunction() : Exports == Implementation where
   Implementation ==> add
     import from JLUtilityFunctions
     import from JLStringUtilities
-
     jlInitialize(true)
-    Rep  := SExpression
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
 
     elt(jaf : %, arg : JLObject) : JLObject ==
       jlref(concat [getind(jaf), "(", getind(arg), ")"])
@@ -884,6 +880,7 @@ JLObjAnonymousFunction() : Exports == Implementation where
 ++ FriCAS functions in Julia. Use anonymous functions instead, or the string
 ++ version. For example: `f:=jfunction("f(x)=x+1")` and then `f(1)`.
 JLObjFunction(f : Symbol) : Exports == Implementation where
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
   Exports ==> Join(JLObjectType, ConvertibleTo InputForm) with
     elt  : (%, JLObject) -> JLObject
     ++ elt(jfunction, arg) returns result of applying the Julia Function
@@ -916,10 +913,7 @@ JLObjFunction(f : Symbol) : Exports == Implementation where
   Implementation ==> add
     import from JLUtilityFunctions
     import from JLStringUtilities
-
     jlInitialize(true)
-    Rep := SExpression
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
 
     elt(jfunction, arg : JLObject) : JLObject ==
       jlref(concat [getind(jfunction), "(", getind(arg), ")"])

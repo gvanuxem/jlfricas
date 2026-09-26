@@ -102,27 +102,22 @@ WSAggregate(E : WSObject) : Category == WSObject with
     jWSAggregate : List(E) -> %
     ++ jWSAggregate(list) constructs agg to a WSAggregate.
   add
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     import from JLUtilityFunctions
     import from WSExpression
     import from WSInteger
+    jlInitialize(true)
 
-    jbinop(op,a,b) ==> jlref(concat(["weval(", getind(a), op, getind(b),")"]))
+    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     junfunc(func,a) ==> jlref(concat(["weval(",func, getind(a),"))"]))
     jbinfunc(func,a,b) ==>
       jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
     jterfunc(func,a,b,c) ==>
       jlref(concat(["weval(", func, getind(a), ",", getind(b), ",", getind(c)"))"]))
-    jquatfunc(func,a,b,c,d) ==>
-      jlref(concat(["weval(", func, getind(a), ",", getind(b), ",",
-        getind(c), ",", getind(d)"))"]))
     jbinbop(op,a,b) ==>
       jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
 
-    jlInitialize(true)
     if not jlUsing("MathLink") then
       error "The Julia MathLink package is not installed."
-    Rep := SExpression
     WT : WSSymbol := WTrue()
 
     sorted?(agg) == junfunc("W_"OrderedQ_"(",agg) = WT
@@ -212,7 +207,6 @@ WSAggregate(E : WSObject) : Category == WSObject with
 ++  Julia Wolfram Symbolic lists using the MathLink Julia package.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 WSList(E : WSObject) : Exports == Implementation where
-  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
   Exports ==> WSAggregate(E) with
     coerce  : % -> List(E)
     ++ coerce(l) coerces l to a FriCAS List.
@@ -223,11 +217,10 @@ WSList(E : WSObject) : Exports == Implementation where
     ++ str must be in the WS language.
   Implementation ==> JLObject add
     import from JLUtilityFunctions
-
     jlInitialize(true)
+
     if not jlUsing("MathLink") then
       error "The Julia MathLink package is not installed."
-    Rep := SExpression
 
     coerce(wslist) : List(E) ==
       l : List(E) := []
@@ -248,6 +241,12 @@ WSList(E : WSObject) : Exports == Implementation where
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 WSVector(E : WSObject) : Exports == Implementation where
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  jbinop(op,a,b) ==> jlref(concat(["weval(", getind(a), op, getind(b),")"]))
+  junfunc(func,a) ==> jlref(concat(["weval(",func, getind(a),"))"]))
+  jbinfunc(func,a,b) ==>
+      jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
+  jbinbop(op,a,b) ==>
+      jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
   Exports ==> Join(WSAggregate(E), VectorCategory(E)) with
     --cross Length_
     "+" : (%, %) -> %
@@ -289,24 +288,10 @@ WSVector(E : WSObject) : Exports == Implementation where
   Implementation ==> JLObject add
     import from JLUtilityFunctions
     import from WSInteger
-
-    jbinop(op,a,b) ==> jlref(concat(["weval(", getind(a), op, getind(b),")"]))
-    junfunc(func,a) ==> jlref(concat(["weval(",func, getind(a),"))"]))
-    jbinfunc(func,a,b) ==>
-      jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
-    jterfunc(func,a,b,c) ==>
-      jlref(concat(["weval(", func, getind(a), ",",
-        getind(b), ",", getind(c)"))"]))
-    jquatfunc(func,a,b,c,d) ==>
-      jlref(concat(["weval(", func, getind(a), ",", getind(b), ",",
-        getind(c), ",", getind(d)"))"]))
-    jbinbop(op,a,b) ==>
-      jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
-
     jlInitialize(true)
+
     if not jlUsing("MathLink") then
       error "The Julia MathLink package is not installed."
-    Rep := SExpression
 
     x = y  == jbinbop("==",x,y)
     x ~= y == jbinbop("!=",x,y)
@@ -346,6 +331,16 @@ WSMatrix(E : WSRing) : Exports == Implementation where
   Col   ==> WSVector(E)
   MLAF  ==> MatrixLinearAlgebraFunctions(E, Row, Col, %)
   parsei    ==> PARSE_-INTEGER$Lisp
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  jbinop(op,a,b) ==> jlref(concat(["weval(", getind(a), op, getind(b),")"]))
+  junfunc(func,a) ==> jlref(concat(["weval(",func, getind(a),"))"]))
+  jbinfunc(func,a,b) ==>
+    jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
+  jterfunc(func,a,b,c) ==>
+    jlref(concat(["weval(", func, getind(a), ",",
+      getind(b), ",", getind(c)"))"]))
+  jbinbop(op,a,b) ==>
+    jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
   Exports ==> Join(WSAggregate(WSVector(E)),
             MatrixCategory(E, Row, Col)) with
   --WSObject with -- TODO:adapt to aggregates
@@ -514,26 +509,11 @@ WSMatrix(E : WSRing) : Exports == Implementation where
     import from JLUtilityFunctions
     import from WSExpression
     import from WSInteger
-
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-    jbinop(op,a,b) ==> jlref(concat(["weval(", getind(a), op, getind(b),")"]))
-    junfunc(func,a) ==> jlref(concat(["weval(",func, getind(a),"))"]))
-    jbinfunc(func,a,b) ==>
-      jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
-    jterfunc(func,a,b,c) ==>
-      jlref(concat(["weval(", func, getind(a), ",",
-        getind(b), ",", getind(c)"))"]))
-    jquatfunc(func,a,b,c,d) ==>
-      jlref(concat(["weval(", func, getind(a), ",", getind(b), ",",
-        getind(c), ",", getind(d)"))"]))
-    jbinbop(op,a,b) ==>
-      jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
-
     jlInitialize(true)
+
     if not jlUsing("MathLink") then
       error "The Julia MathLink package is not installed."
 
-    Rep := SExpression
     WT : WSSymbol := WTrue()
 
     latex(expr) == jlEvalString(concat(["W2Tex(", getind(expr),")"]))

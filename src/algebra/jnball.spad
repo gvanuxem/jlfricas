@@ -12,6 +12,12 @@ NMArbField(p: PositiveInteger) : Exports == Implementation where
   NNI       ==> NonNegativeInteger
   JI64      ==> JLInt64
   JF64      ==> JLFloat64
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+  jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+  junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
+  jbinbfunc(op,a,b) ==>
+    jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
   Exports ==> Join(NMField, FloatingPointSystem,
             Approximate, JLArbitraryPrecision,
             TranscendentalFunctionCategory,
@@ -223,18 +229,7 @@ NMArbField(p: PositiveInteger) : Exports == Implementation where
   Implementation ==> add
     import from JLUtilityFunctions
     import from String
-    import from NMInteger
-    import from NMFraction(NMInteger)
-
     jlInitialize(true)
-    Rep := SExpression
-
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
-    jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
-    junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
-    jbinbfunc(op,a,b) ==>
-      jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
     -- initialize
     NARB := concat(["NARB", string(p)])
@@ -474,6 +469,14 @@ NMAcbField(p: PositiveInteger) : Exports == Implementation where
   NNI       ==> NonNegativeInteger
   JI64      ==> JLInt64
   JF64      ==> JLFloat64
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+  jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+  jterfunc(func,a,b,c) ==> make_jlref_wcall3(func, a, b, c)$Lisp
+  jquaterfunc(func,a,b,c,d) ==> make_jlref_wcall4(func, a, b, c, d)$Lisp
+  junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
+  jbinbfunc(op,a,b) ==>
+    jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
   Exports ==> Join(NMField, ComplexCategory(NMArbField(p)),
                 Approximate, JLArbitraryPrecision,
                 DifferentialRing) with
@@ -710,20 +713,7 @@ NMAcbField(p: PositiveInteger) : Exports == Implementation where
   Implementation ==> add
     import from JLUtilityFunctions
     import from String
-    import from NMFraction(NMInteger)
-
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-
-    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
-    jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
-    jterfunc(func,a,b,c) ==> make_jlref_wcall3(func, a, b, c)$Lisp
-    jquaterfunc(func,a,b,c,d) ==> make_jlref_wcall4(func, a, b, c, d)$Lisp
-    junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
-    jbinbfunc(op,a,b) ==>
-      jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
-
     jlInitialize(true)
-    Rep := SExpression
 
     -- initialize
     NACB : String := concat(["NACB", string(p)])
@@ -951,6 +941,12 @@ NMRealField() : Exports == Implementation where
   NNI       ==> NonNegativeInteger
   JI64      ==> JLInt64
   JF64      ==> JLFloat64
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+  jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+  junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
+  jbinbfunc(op,a,b) ==>
+    jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
   Exports ==> Join(NMField, FloatingPointSystem,
             arbitraryPrecision, TranscendentalFunctionCategory,
             DifferentialRing) with
@@ -1151,20 +1147,10 @@ NMRealField() : Exports == Implementation where
   Implementation ==> add
     import from JLUtilityFunctions
     import from String
-    import from NMFraction(NMInteger)
-
     jlInitialize(true)
-    Rep := SExpression
 
     -- initialize
     jlEvalString("NRF=RealField()")@Void
-
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
-    jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
-    junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
-    jbinbfunc(op,a,b) ==>
-      jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
     precision() == jlEvalString("precision(NRF)")
     bits() == jlEvalString("precision(NRF)")
@@ -1394,8 +1380,16 @@ NMComplexField() : Exports == Implementation where
   PI        ==> PositiveInteger
   JF64      ==> JLFloat64
   NRF       ==> NMRealField
-  Exports ==> Join(NMField, ComplexCategory(NMRealField),
-            arbitraryPrecision, DifferentialRing) with
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+  jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+  jterfunc(func,a,b,c) ==> make_jlref_wcall3(func, a, b, c)$Lisp
+  jquaterfunc(func,a,b,c,d) ==> make_jlref_wcall4(func, a, b, c, d)$Lisp
+  junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
+  jbinbfunc(op,a,b) ==>
+    jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
+  Exports ==> Join(NMField, ComplexCategory(NRF), arbitraryPrecision,
+            DifferentialRing) with
     integer? : % -> Boolean
     ++ integer?(x) checks whether or not x is an integer.
     finite? : % -> Boolean
@@ -1626,22 +1620,10 @@ NMComplexField() : Exports == Implementation where
   Implementation ==> add
     import from JLUtilityFunctions
     import from String
-    import from NMFraction(NMInteger)
-
     jlInitialize(true)
-    Rep := SExpression
 
     -- initialize
     jlEvalString("NCF=ComplexField()")@Void
-
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
-    jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
-    jterfunc(func,a,b,c) ==> make_jlref_wcall3(func, a, b, c)$Lisp
-    jquaterfunc(func,a,b,c,d) ==> make_jlref_wcall4(func, a, b, c, d)$Lisp
-    junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
-    jbinbfunc(op,a,b) ==>
-      jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
     precision() == jlEvalString("precision(NCF)")
     precision(p : PI) ==

@@ -5,7 +5,6 @@
 ++ functions if available, calling Julia functions is costly.
 JLFloat64SpecialFunctions2() : Exports == Implementation where
   JF64 ==> JLFloat64
-  JI64 ==> JLInt64
   Exports ==> with
 
     -- Gamma Function
@@ -24,7 +23,7 @@ JLFloat64SpecialFunctions2() : Exports == Implementation where
     ++ invdigamma(x) computes invdigamma function (i.e. inverse of digamma function at x using fixed-point iteration algorithm)
     trigamma : JF64 -> JF64
     ++ trigamma(x) computes trigamma function (i.e the logarithmic second derivative of gamma at x)
-    polygamma : (JI64, JF64) -> JF64
+    polygamma : (JLInt64, JF64) -> JF64
     ++ polygamma(m,x) computes polygamma function (i.e the (m+1)-th derivative of the loggamma function at x)
     Gamma : (JF64, JF64) -> JF64
     ++ Gamma(a,z) computes upper incomplete gamma function \Gamma(a,z)

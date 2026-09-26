@@ -3,8 +3,9 @@
 ++ Date Created: June, 2026
 ++ Description:
 ++  Category of polynomials using the Nemo Julia package.
-NMPolynomialCategory(R : NMRing, E : OrderedAbelianMonoidSup, VarSet : OrderedSet) : Category ==
-  Join(NMCommutativeRing, PolynomialCategory(R, E, VarSet))
+NMPolynomialCategory(R : NMRing, E : OrderedAbelianMonoidSup,
+  VarSet : OrderedSet) : Category == Join(NMCommutativeRing,
+    PolynomialCategory(R, E, VarSet))
 
 )abbrev category NUPC NMUnivariatePolynomialCategory
 ++ Author: Grégory Vanuxem
@@ -35,14 +36,17 @@ NMUnivariatePolynomialCategory(R : NMRing) : Category ==
 -- TODO: eval, elt, subst, compose, evaluate (elt???)
 NMUnivariatePolynomial(R : NMRing, x : Symbol):
       Exports == Implementation where
-  NINT      ==> NMInteger
-  NRAT      ==> NMFraction(NMInteger)
-  JI64      ==> JLInt64
   INT       ==> Integer
   PI        ==> PositiveInteger
   NNI       ==> NonNegativeInteger
-  SUP       ==> SparseUnivariatePolynomial(R)
+  NRAT      ==> NMFraction(NMInteger)
   parsei    ==> PARSE_-INTEGER$Lisp
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  junfunc(func,a) ==> make_jlref_wcall1(func, a)$Lisp
+  jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+  junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
+  jbinbfunc(op,a,b) ==>
+    jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
   Exports ==> NMUnivariatePolynomialCategory(R) with
     constant? : % -> Boolean
     ++ constant?(p) checks whether or not p is a constant polynomial.
@@ -159,9 +163,7 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
   Implementation ==> add
     import from JLUtilityFunctions
     import from JLStringUtilities
-
     jlInitialize(true)
-    Rep := SExpression
 
     tmp : SExpression := devaluate(R)$Lisp
     op_of_Ring : Symbol := CAR(tmp)$Lisp
@@ -170,13 +172,6 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
     NUPRing := concat(["UP",FORMAT(false, "~a", tmp)$Lisp, string(x)])
     NUPRing := jlRegexReplace(NUPRing,jlRegex("[(|)|\s]"),
       jlSubstitute(""))
-
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-    junfunc(func,a) ==> make_jlref_wcall1(func, a)$Lisp
-    jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
-    junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
-    jbinbfunc(op,a,b) ==>
-      jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
     strToPoly(s : String) : Union(Polynomial(Fraction Integer), "failed") ==
       jlRegexMatch?(s, jlRegex("[\[|{|O]")) => "failed"
@@ -404,14 +399,18 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
 --   should be removed or rewritten. See commented out implementations.
 NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
       Exports == Implementation where
-  NINT      ==> NMInteger
-  NRAT      ==> NMFraction(NMInteger)
-  JI64      ==> JLInt64
   INT       ==> Integer
   PI        ==> PositiveInteger
   NNI       ==> NonNegativeInteger
-  SUP       ==> SparseUnivariatePolynomial(R)
-  parsei    ==> PARSE_-INTEGER$Lisp
+  NINT      ==> NMInteger
+  NRAT      ==> NMFraction(NMInteger)
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+  jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+  junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
+  jbinbfunc(op,a,b) ==>
+    jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
+  --parsei    ==> PARSE_-INTEGER$Lisp
   Exports ==> Join(NMCommutativeRing, NMUnivariatePolynomialCategory(R)) with
     --constant? : % -> Boolean
     --++ constant?(p) checks whether or not p is a constant polynomial.
@@ -492,9 +491,8 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
   Implementation ==> add
     import from JLUtilityFunctions
     import from JLStringUtilities
-
     jlInitialize(true)
-    Rep := SExpression
+
     nprint := true
 
     tmp : SExpression := devaluate(R)$Lisp
@@ -503,13 +501,6 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
     NRing : String := string(op_of_Ring)
     NULPRing := concat(["ULP",FORMAT(false, "~a", tmp)$Lisp,string(x)])
     NULPRing := jlRegexReplace(NULPRing, jlRegex("[(|)|\s]"), jlSubstitute(""))
-
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
-    jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
-    junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
-    jbinbfunc(op,a,b) ==>
-      jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
     -- Set up the ring
     tuple : Boolean := jbinbfunc("isa", jobject(jlNMRing()$R)$JLObject,
@@ -682,13 +673,17 @@ NMUnivariateLaurentPolynomial(R : NMRing, x : Symbol):
 -- Experimental domain.
 -- TODO: eval, elt, subst, compose, evaluate, constructOrdered ???
 InnerNMPolynomial(R : NMRing, Ordering : JLSymbol) : Exports == Implementation where
-  NINT      ==> NMInteger
-  NRAT      ==> NMFraction(NMInteger)
-  JI64      ==> JLInt64
   INT       ==> Integer
   PI        ==> PositiveInteger
   NNI       ==> NonNegativeInteger
-  parsei    ==> PARSE_-INTEGER$Lisp
+  NINT      ==> NMInteger
+  NRAT      ==> NMFraction(NMInteger)
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+  jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+  junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
+  jbinbfunc(op,a,b) ==>
+    jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
   Exports ==> Join(NMCommutativeRing, NMPolynomialCategory(R,
                   IndexedExponents(Symbol), Symbol)) with
     constant? : % -> Boolean
@@ -758,10 +753,8 @@ InnerNMPolynomial(R : NMRing, Ordering : JLSymbol) : Exports == Implementation w
   Implementation ==> add
     import from JLUtilityFunctions
     import from JLStringUtilities
-    import from JLSymbol
-
     jlInitialize(true)
-    Rep := SExpression
+
     nprint := false
 
     tmp : SExpression := devaluate(R)$Lisp
@@ -772,13 +765,6 @@ InnerNMPolynomial(R : NMRing, Ordering : JLSymbol) : Exports == Implementation w
     -- Our Nemo Ring
     NUNPRing := jlRegexReplace(concat("NUPOLY", FORMAT(false, "~a", tmp)$Lisp),
       jlRegex("[(|)|\s]"), jlSubstitute(""))
-
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
-    jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
-    junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
-    jbinbfunc(op,a,b) ==>
-      jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
     -- Set up the ring
     tuple : Boolean := jbinbfunc("isa", jobject(jlNMRing()$R)$JLObject,
@@ -1094,13 +1080,17 @@ NMPolynomial(R : NMRing) == InnerNMPolynomial(R, coerce("lex")@JLSymbol)
 -- https://en.wikipedia.org/wiki/Monomial_order
 InnerNMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
           Ordering : JLSymbol) : Exports == Implementation where
-  NINT      ==> NMInteger
-  NRAT      ==> NMFraction(NMInteger)
-  JI64      ==> JLInt64
   INT       ==> Integer
   PI        ==> PositiveInteger
   NNI       ==> NonNegativeInteger
-  parsei    ==> PARSE_-INTEGER$Lisp
+  NINT      ==> NMInteger
+  NRAT      ==> NMFraction(NMInteger)
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+  jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+  junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
+  jbinbfunc(op,a,b) ==>
+    jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
   Exports ==> Join(NMCommutativeRing, PolynomialCategory(R,
                   IndexedExponents(OrderedVariableList(VarSet)),
                     OrderedVariableList(VarSet))) with
@@ -1185,9 +1175,8 @@ InnerNMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
   Implementation ==> add
     import from JLUtilityFunctions
     import from JLStringUtilities
-
     jlInitialize(true)
-    Rep := SExpression
+
     nprint := false
 
     tmp : SExpression := devaluate(R)$Lisp
@@ -1211,13 +1200,6 @@ InnerNMMultivariatePolynomial(R : NMRing, VarSet : List Symbol,
     -- Our Julia ring
 
     NMPRing := concat([NMPRing, concat(lvars)])
-
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
-    jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
-    junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
-    jbinbfunc(op,a,b) ==>
-      jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
     -- Set up the ring
     tuple : Boolean := jbinbfunc("isa", jobject(jlNMRing()$R)$JLObject,
@@ -1535,15 +1517,19 @@ NMMultivariatePolynomial(R : NMRing, VarSet : List Symbol) ==
 -- TODO: eval, elt, subst, compose, evaluate
 NMMultivariateLaurentPolynomial(R : NMRing,
     VarSet : List Symbol) : Exports == Implementation where
-  NINT      ==> NMInteger
-  NRAT      ==> NMFraction(NMInteger)
-  NRF        ==> NMRealField
-  NCF        ==> NMComplexField
-  JI64      ==> JLInt64
+  NRF       ==> NMRealField
+  NCF       ==> NMComplexField
   INT       ==> Integer
   PI        ==> PositiveInteger
   NNI       ==> NonNegativeInteger
-  parsei    ==> PARSE_-INTEGER$Lisp
+  NINT      ==> NMInteger
+  NRAT      ==> NMFraction(NMInteger)
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+  jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+  junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
+  jbinbfunc(op,a,b) ==>
+    jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
   Exports ==> Join(NMCommutativeRing, PolynomialCategory(R,
                   IndexedExponents(OrderedVariableList(VarSet)),
                     OrderedVariableList(VarSet))) with
@@ -1660,9 +1646,8 @@ NMMultivariateLaurentPolynomial(R : NMRing,
   Implementation ==> add
     import from JLUtilityFunctions
     import from JLStringUtilities
-
     jlInitialize(true)
-    Rep := SExpression
+
     nprint := true
 
     tmp : SExpression := devaluate(R)$Lisp
@@ -1685,13 +1670,6 @@ NMMultivariateLaurentPolynomial(R : NMRing,
 
     -- Our Julia ring
     NMLPRing := concat([NMLPRing, concat(lvars)])
-
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
-    jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
-    junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
-    jbinbfunc(op,a,b) ==>
-      jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
     -- Set up the ring
     tuple : Boolean := jbinbfunc("isa", jobject(jlNMRing()$R)$JLObject,
@@ -1940,7 +1918,6 @@ NMMultivariateLaurentPolynomial(R : NMRing,
       coef := qelt(coeffs, 1)
       [evToIndex(ev1), coef]
 
-
     -- unitCanonical(p) == junfunc("canonical_unit", p) -- The Nemo one
 
     if R has DivisionRing then
@@ -1981,4 +1958,3 @@ NMMultivariateLaurentPolynomial(R : NMRing,
       else
         (ret := strToExpr(str)) case "failed" => message(str)
         coerce(ret)
-

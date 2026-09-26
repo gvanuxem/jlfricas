@@ -390,7 +390,6 @@ JLPlotFunctions() : Exports == Implementation where
     ++ See https://docs.juliaplots.org/latest/output/#savefig-/-format
   Implementation ==> add
     import from JLUtilityFunctions
-
     jlInitialize(true)
 
     pdf(x) ==> x pretend DF

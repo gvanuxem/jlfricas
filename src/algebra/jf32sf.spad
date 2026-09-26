@@ -5,9 +5,8 @@
 ++ functions if available, calling Julia functions is costly.
 JLFloat32SpecialFunctions() : Exports == Implementation where
   JF32 ==> JLFloat32
-  JI64 ==> JLInt64
   Exports ==> with
-    ldexp : (JF32, JI64) -> JF32
+    ldexp : (JF32, JLInt64) -> JF32
     ++ ldexp(x,n) computes x*2^n
     exp2   : JF32 -> JF32
     ++ exp2(x) computes the base 2 exponential of x.

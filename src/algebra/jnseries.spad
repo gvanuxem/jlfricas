@@ -21,6 +21,12 @@ NMUnivariatePowerSeries(R, x, prec, abs) : Exports == Implementation where
   INT       ==> Integer
   PI        ==> PositiveInteger
   NNI       ==> NonNegativeInteger
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  junfunc(func,a) ==> make_jlref_wcall1(func, a)$Lisp
+  jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+  junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
+  jbinbfunc(op,a,b) ==>
+    jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
   Exports ==> Join(NMCommutativeRing,
                 PowerSeriesCategory(R, NNI, SingletonAsOrderedSet),
                 DifferentialRing) with
@@ -75,10 +81,7 @@ NMUnivariatePowerSeries(R, x, prec, abs) : Exports == Implementation where
   Implementation ==> add
     import from JLUtilityFunctions
     import from JLStringUtilities
-    --import from JLSymbol
-
     jlInitialize(true)
-    Rep := SExpression
 
     tmp : SExpression := devaluate(R)$Lisp
     op_of_Ring : Symbol := CAR(tmp)$Lisp
@@ -88,13 +91,6 @@ NMUnivariatePowerSeries(R, x, prec, abs) : Exports == Implementation where
         string(prec) , string(x), string(abs)])
     NUPSRing := jlRegexReplace(NUPSRing,jlRegex("[(|)|\s\:]"),
       jlSubstitute(""))
-
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-    junfunc(func,a) ==> make_jlref_wcall1(func, a)$Lisp
-    jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
-    junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
-    jbinbfunc(op,a,b) ==>
-      jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
     -- Set up the ring
     -- Use a tuple to do not define x in the Julia main namespace
@@ -212,6 +208,12 @@ NMUnivariateLaurentSeries(R, x, prec) : Exports == Implementation where
   INT       ==> Integer
   PI        ==> PositiveInteger
   NNI       ==> NonNegativeInteger
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  junfunc(func,a) ==> make_jlref_wcall1(func, a)$Lisp
+  jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+  junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
+  jbinbfunc(op,a,b) ==>
+    jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
   Exports ==> Join(NMCommutativeRing,
         PowerSeriesCategory(R, INT, SingletonAsOrderedSet)) with
     DifferentialRing
@@ -264,10 +266,7 @@ NMUnivariateLaurentSeries(R, x, prec) : Exports == Implementation where
   Implementation ==> add
     import from JLUtilityFunctions
     import from JLStringUtilities
-    --import from JLSymbol
-
     jlInitialize(true)
-    Rep := SExpression
 
     tmp : SExpression := devaluate(R)$Lisp
     op_of_Ring : Symbol := CAR(tmp)$Lisp
@@ -277,13 +276,6 @@ NMUnivariateLaurentSeries(R, x, prec) : Exports == Implementation where
         string(prec) , string(x)])
     NULSRing := jlRegexReplace(NULSRing,jlRegex("[(|)|\s\:]"),
       jlSubstitute(""))
-
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-    junfunc(func,a) ==> make_jlref_wcall1(func, a)$Lisp
-    jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
-    junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
-    jbinbfunc(op,a,b) ==>
-      jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
     -- Set up the ring
     -- Use a tuple to do not define x in the Julia main namespace
@@ -373,6 +365,12 @@ NMUnivariatePuiseuxSeries(R, x, prec) : Exports == Implementation where
   INT       ==> Integer
   PI        ==> PositiveInteger
   NNI       ==> NonNegativeInteger
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  junfunc(func,a) ==> make_jlref_wcall1(func, a)$Lisp
+  jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+  junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
+  jbinbfunc(op,a,b) ==>
+    jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
   Exports ==> Join(NMCommutativeRing,
         PowerSeriesCategory(R, Fraction(INT), SingletonAsOrderedSet)) with
     DifferentialRing
@@ -429,10 +427,7 @@ NMUnivariatePuiseuxSeries(R, x, prec) : Exports == Implementation where
   Implementation ==> add
     import from JLUtilityFunctions
     import from JLStringUtilities
-    --import from JLSymbol
-
     jlInitialize(true)
-    Rep := SExpression
 
     tmp : SExpression := devaluate(R)$Lisp
     op_of_Ring : Symbol := CAR(tmp)$Lisp
@@ -442,13 +437,6 @@ NMUnivariatePuiseuxSeries(R, x, prec) : Exports == Implementation where
         string(prec) , string(x)])
     NUPSXRing := jlRegexReplace(NUPSXRing,jlRegex("[(|)|\s\:]"),
       jlSubstitute(""))
-
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-    junfunc(func,a) ==> make_jlref_wcall1(func, a)$Lisp
-    jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
-    junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
-    jbinbfunc(op,a,b) ==>
-      jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
     -- Set up the ring
     -- Use a tuple to do not define x in the Julia main namespace

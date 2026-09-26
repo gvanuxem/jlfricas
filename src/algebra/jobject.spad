@@ -97,6 +97,7 @@ JLObjectType() : Category == JLType() with
     import from JLUtilityFunctions
     import from JLSymbol
     import from NonNegativeInteger
+    jlInitialize(true)
 
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)),")"])
     junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
@@ -199,6 +200,7 @@ JLObjectAggregate() : Category == Join(JLObjectType, Aggregate, finiteAggregate)
   add
     import from JLUtilityFunctions
     import from JLSymbol
+    jlInitialize(true)
 
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
@@ -232,6 +234,7 @@ JLObjectRing() : Category == Join(JLObjectType, JLRing) with
     ++ result depends on the type of x. Check it using jlType.
   add
     import from JLUtilityFunctions
+    jlInitialize(true)
 
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
@@ -272,6 +275,7 @@ JLArbitraryPrecision() : Category ==  JLType with
 JLObject() : Exports == Implementation where
   INT ==> Integer
   NNI ==> NonNegativeInteger
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
   Exports ==> JLObjectAggregate with
     isa? : (%, %) -> Boolean
     ++ isa?(x, y) returns true if x is a subtype of y.
@@ -310,12 +314,7 @@ JLObject() : Exports == Implementation where
   Implementation ==> add
     import from JLUtilityFunctions
     import from JLStringUtilities
-
     jlInitialize(true)
-
-    Rep := SExpression
-
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
 
     #obj == jlEvalString(concat(["length(", getind(obj), ")"]))
     jlCollect(obj) == jlref(concat ["collect(", getind(obj),")"])
@@ -358,6 +357,10 @@ JLObject() : Exports == Implementation where
 ++ https://gmplib.org/
 JLObjBigInt() : Exports == Implementation where
   parsei    ==> PARSE_-INTEGER$Lisp
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+  jbinbfunc(op,a,b) ==>
+    jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
   Exports ==> Join(OrderedSet, JLObjectRing, CommutativeRing,
         EuclideanDomain, OrderedRing) with
     jlBICApply : (JLObjDynamicLinker, %) -> %
@@ -380,15 +383,7 @@ JLObjBigInt() : Exports == Implementation where
     ++ \example{jbigint "BigInt(1234567890)"}
   Implementation == add
     import from JLUtilityFunctions
-
     jlInitialize(true)
-    Rep := SExpression
-
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
-    jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
-    jbinbfunc(op,a,b) ==>
-      jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
     0 == jlref("BigInt(0)")
     1 == jlref("BigInt(1)")
@@ -437,6 +432,7 @@ JLObjBigInt() : Exports == Implementation where
 ++ It is not meant to be used directly, but rather for returned value
 ++ or function argument for example.
 JLObjDict() : Exports == Implementation where
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
   Exports ==> JLObjectAggregate() with
     elt : (%, Any) -> JLObject
     ++ elt(dict, key) returns the value associated to the key of dict.
@@ -483,11 +479,8 @@ JLObjDict() : Exports == Implementation where
   Implementation ==> add
     import from JLUtilityFunctions
     import from String
-
     jlInitialize(true)
-    Rep := SExpression
 
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     #dict == jlEvalString(concat(["length(", getind(dict), ")"]))
     elt(obj : %, jany : Any) ==
       key : String := first lines formatExpression(jany::OutputForm)$Format1D
@@ -547,6 +540,7 @@ JLObjDict() : Exports == Implementation where
 ++ Software Foundation.
 JLObjPy() : Exports == Implementation where
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
   Exports ==> JLObjectType with
     jlPyApply : (String, %) -> %
     ++ jlPyApply(func, pyobj) applies the Python function func
@@ -630,11 +624,7 @@ JLObjPy() : Exports == Implementation where
     ++ Use jlDisplay(pyobj) to display the Python object pyobj.
   Implementation ==> add
     import from JLUtilityFunctions
-
     jlInitialize(true)
-    Rep := SExpression
-
-    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
 
     not jlUsing "PythonCall" =>
       error "JLObjPy: PythonCall is not installed in Julia"
@@ -716,6 +706,7 @@ JLObjPy() : Exports == Implementation where
 ++ R objects to the one of jlFriCAS for JLObjectType references.
 JLObjR() : Exports == Implementation where
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
   Exports ==> JLObjectType with
     jlRApply : (String, %) -> %
     ++ jlRApply(func, robj) applies the R function func
@@ -775,11 +766,7 @@ JLObjR() : Exports == Implementation where
     ++ \example{jlRApply("prcomp", b)}
   Implementation ==> add
     import from JLUtilityFunctions
-
     jlInitialize(true)
-    Rep := SExpression
-
-    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
 
     not jlUsing "RCall" =>
       error "JLObjR: RCall is not installed in Julia"
@@ -846,6 +833,12 @@ JLFloat() : Exports == Implementation where
   NNI       ==> NonNegativeInteger
   JF64      ==> JLFloat64
   parsei    ==> PARSE_-INTEGER$Lisp
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+  jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+  junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
+  jbinbfunc(op,a,b) ==>
+    jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
   Exports ==> Join(JLObjectRing, FloatingPointSystem, arbitraryPrecision,
             ElementaryFunctionCategory, TranscendentalFunctionCategory,
             DifferentialRing) with
@@ -969,21 +962,10 @@ JLFloat() : Exports == Implementation where
     ++ jfloat(x) returns x as a JFLoat.
   Implementation ==> add
     import from JLUtilityFunctions
-    import from NMInteger
-    import from NMFraction(NMInteger)
-
     jlInitialize(true)
-    Rep := SExpression
 
     -- For direct access to MPFR via C call (LLVM)
     jlEvalString("using Base.MPFR: MPFRRoundingMode, ROUNDING_MODE")@Void
-
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
-    jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
-    junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
-    jbinbfunc(op,a,b) ==>
-      jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
     precision() == jlEvalString("precision(BigFloat)")@PI
     precision(p : PI) ==
@@ -1173,6 +1155,12 @@ JLComplexFloat() : Exports == Implementation where
   PI        ==> PositiveInteger
   NNI       ==> NonNegativeInteger
   JF64      ==> JLFloat64
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+  jbinfunc(func, a, b) ==> make_jlref_wcall2(func, a, b)$Lisp
+  junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
+  jbinbfunc(op,a,b) ==>
+    jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
   Exports ==> Join(JLObjectRing, ComplexCategory(JLFloat)) with
     jlApprox?: (%, %) -> Boolean
     ++ jlApprox?(x,y) computes inexact equality comparison
@@ -1261,16 +1249,7 @@ JLComplexFloat() : Exports == Implementation where
     import from JLUtilityFunctions
     import from NMInteger
     import from NMFraction(NMInteger)
-
     jlInitialize(true)
-    Rep := SExpression
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-
-    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
-    jbinfunc(func, a, b) ==> make_jlref_wcall2(func, a, b)$Lisp
-    junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
-    jbinbfunc(op,a,b) ==>
-      jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
     0           == jlref("zero(Complex{BigFloat})")
     1           == jlref("one(Complex{BigFloat})")
@@ -1418,6 +1397,8 @@ JLDataFrame() : Exports == Implementation where
   Z   ==> Integer
   JI64 ==> JLObjInt64
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+  jbinfunc(func, a, b) ==> make_jlref_wcall2(func, a, b)$Lisp
   Exports ==> Join(JLObjectAggregate, finiteAggregate) with
     jlDescribe : % -> %
     ++ jlDescribe(df) returns basic statistics about df.
@@ -1449,19 +1430,13 @@ JLDataFrame() : Exports == Implementation where
     ++ last(df, n) returns the last n rows.
   Implementation ==> add
     import from JLUtilityFunctions
-
     jlInitialize(true)
-    Rep := SExpression
 
     not jlUsing "DataFrames, Statistics" =>
       error "JLDataFrame: DataFrames and Statistics is/are not installed in Julia"
     -- jlEvalString("macro dfa(obj) DataFrame(eval(Meta.parse(obj)),:auto) end")@Void
 
-    Rep := SExpression
     jlEvalString("function dfa(obj) DataFrame(obj, :auto) end")@Void
-
-    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
-    jbinfunc(func, a, b) ==> make_jlref_wcall2(func, a, b)$Lisp
 
     nrows(df) == jlEvalString(concat(["nrow(", getind(df),")"]))
     ncols(df) == jlEvalString(concat(["ncol(", getind(df),")"]))
@@ -1509,6 +1484,9 @@ JLVector(R : JLObjectType) : Exports == Implementation where
   PI  ==> PositiveInteger
   NNI ==> NonNegativeInteger
   Z   ==> Integer
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+  jbinfunc(func, a, b) ==> make_jlref_wcall2(func, a, b)$Lisp
   Exports ==> Join(JLObjectAggregate, JLVectorCategory(R)) with
     vector : List R -> %
     ++ vector(l) converts the list l to a vector.
@@ -1549,13 +1527,7 @@ JLVector(R : JLObjectType) : Exports == Implementation where
     ++ No checks are done at the FriCAS level.
   Implementation ==> Vector(R) add
     import from JLUtilityFunctions
-
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
-    jbinfunc(func, a, b) ==> make_jlref_wcall2(func, a, b)$Lisp
-
     jlInitialize(true)
-    Rep := SExpression
 
     minIndex x == 1$Lisp
     maxIndex x == jlEvalString(concat(["length(", getind(x),")"]))
@@ -1697,6 +1669,12 @@ JLMatrix(R : JLObjectRing) : Exports == Implementation where
   Col     ==> JLVector(R)
   MLAF    ==> MatrixLinearAlgebraFunctions(R, Row, Col, %)
   parsei  ==> PARSE_-INTEGER$Lisp
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+  jbinfunc(func, a ,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+  junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
+  jbinbfunc(op,a,b) ==>
+    jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
   Exports ==> Join(JLObjectAggregate,
                 JLMatrixCategory(R, Row, Col)) with
     new : (NNI, NNI, R) -> %
@@ -1884,17 +1862,7 @@ JLMatrix(R : JLObjectRing) : Exports == Implementation where
     ++ No checks are done at the FriCAS level.
   Implementation ==> add --Matrix(R) add
     import from JLUtilityFunctions
-
     jlInitialize(true)
-
-    Rep := SExpression
-
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
-    jbinfunc(func, a ,b) ==> make_jlref_wcall2(func, a, b)$Lisp
-    junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
-    jbinbfunc(op,a,b) ==>
-      jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
 
     if R has NMRing then
       tuple : Boolean := jbinbfunc("isa",jobject(jlNMRing()$R)$JLObject,

@@ -123,10 +123,6 @@ JLSymbol() : Exports == Implementation where
     jsym : Symbol -> %
     ++ jsym(sym) converts sym to a Julia symbol.
   Implementation ==> add
-    import from JLUtilityFunctions
-
-    jlInitialize(true)
-
     x:% = y:% == EQUAL(x,y)$Lisp
     convert(sy : %) : String == PNAME(sy)$Lisp
     coerce(s : String) : %  == VALUES(INTERN(concat(":",s))$Lisp)$Lisp
@@ -170,8 +166,6 @@ JLInt64() : Exports == Implementation where
     ++ ji64(x) returns x as a Julia Int64 (in Julia memory area).
     ++ Error if x cannot be coerced.
   Implementation ==> SingleInteger add
-    import JLUtilityFunctions
-    jlInitialize(true)
     Rep := SingleInteger
 
     jlsi(x) ==> x pretend %
@@ -183,7 +177,6 @@ JLInt64() : Exports == Implementation where
       (x <= convert(max())@Integer) and (x >= convert(min())@Integer) =>
         x pretend %
       error "Integer too large to represent in a machine word"
-
 
 )abbrev domain JF32 JLFloat32
 ++ Domain for Julia Float32
@@ -214,7 +207,6 @@ JLFloat32() : Exports == Implementation where
     ++ jf32(x) coerces x to a Julia Float32.
   Implementation ==> add
     import from JLUtilityFunctions
-
     jlInitialize(true)
 
     MAX ==> MOST_-POSITIVE_-SINGLE_-FLOAT$Lisp
@@ -406,6 +398,9 @@ JLComplexF32() : Exports == Implementation where
     ++ jcf32(r,i) returns a JLComplexF32 with real part r and
     ++ imaginary part i.
   Implementation ==> Complex(JLFloat32) add
+    import from JLUtilityFunctions
+    jlInitialize(true)
+
     jlApprox?(x, y) : Boolean ==
       jl_bool_function_flt_flt("isapprox", real(x), real(y))$Lisp
         and jl_bool_function_flt_flt("isapprox", imag(x), imag(y))$Lisp
@@ -445,8 +440,8 @@ JLFloat64() : Exports == Implementation where
     ++ Convenience function.
   Implementation ==> DoubleFloat add
     import from JLUtilityFunctions
-
     jlInitialize(true)
+
     defined?(func) ==>
       not jlDefined?(func) =>
         error concat(func, " is not defined in Julia")
@@ -631,6 +626,9 @@ JLComplexF64() : Exports == Implementation where
     ++ jcf64(r,i) returns a JLComplexF64 with real part r and
     ++ imaginary part i.
   Implementation ==> Complex(JLFloat64) add
+    import from JLUtilityFunctions
+    jlInitialize(true)
+
     jlApprox?(x, y) : Boolean ==
       jl_bool_function_dbl_dbl("isapprox", real(x), real(y))$Lisp
         and jl_bool_function_dbl_dbl("isapprox", imag(x), imag(y))$Lisp

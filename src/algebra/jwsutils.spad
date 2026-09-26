@@ -9,6 +9,12 @@
 ++ TODO: jWSImportString, WSString domain?? Relation to world wide data?
 WSUtilityFunctions() : Exports == Implementation where
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
+  jbinfunc(func,a,b) ==>
+    jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
+  jterfunc(func,a,b,c) ==>
+    jlref(concat(["weval(", func, getind(a), ",",
+      getind(b), ",", getind(c)"))"]))
   Exports ==> with
     jlWSSeedRandom! : WSInteger -> WSExpression
     ++ jlWSSeedRandom!(n) reseeds the random number generator with n as seed.
@@ -140,20 +146,8 @@ WSUtilityFunctions() : Exports == Implementation where
   Implementation ==> add
     import from JLUtilityFunctions
     import from WSInteger
-    import from WSList(WSInteger)
-    import from WSString
-
-    junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
-    jbinfunc(func,a,b) ==>
-      jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
-    jterfunc(func,a,b,c) ==>
-      jlref(concat(["weval(", func, getind(a), ",",
-        getind(b), ",", getind(c)"))"]))
-    jquatfunc(func,a,b,c,d) ==>
-      jlref(concat(["weval(", func, getind(a), ",", getind(b), ",",
-        getind(c), ",", getind(d)"))"]))
-
     jlInitialize(true)
+
     if not jlUsing("MathLink") then
       error "The Julia MathLink package is not installed."
     jlWSSeedRandom!(n) == junfunc("W_"SeedRandom_"(", n)

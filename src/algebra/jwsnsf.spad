@@ -10,6 +10,14 @@
 -- integer arguments
 WSNumericalSpecialFunctions(R : WSNumber) : Exports ==Implementation where
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
+  jbinfunc(func,a,b) ==>
+    jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
+  jterfunc(func,a,b,c) ==>
+    jlref(concat(["weval(", func, getind(a), ",", getind(b), ",", getind(c)"))"]))
+  jquatfunc(func,a,b,c,d) ==>
+    jlref(concat(["weval(", func, getind(a), ",", getind(b), ",",
+      getind(c), ",", getind(d)"))"]))
   Exports ==> with --SpecialFunctionCategory with
     sign : R -> R
     ++ sign(x) is 1 if x is positive, -1 if x is negative, 0 if x equals 0.
@@ -387,14 +395,6 @@ WSNumericalSpecialFunctions(R : WSNumber) : Exports ==Implementation where
     modularLambda : R -> R
     ++ modularLambda(tau) computes the lambda modular function.
   Implementation ==> add
-    junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
-    jbinfunc(func,a,b) ==>
-      jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
-    jterfunc(func,a,b,c) ==>
-      jlref(concat(["weval(", func, getind(a), ",", getind(b), ",", getind(c)"))"]))
-    jquatfunc(func,a,b,c,d) ==>
-      jlref(concat(["weval(", func, getind(a), ",", getind(b), ",",
-        getind(c), ",", getind(d)"))"]))
     jtypeassert(a,b) ==> jlHead(a) ~= jlHead(b)
         => error "Type of output does not match input type"
 

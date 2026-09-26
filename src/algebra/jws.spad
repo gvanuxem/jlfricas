@@ -6,7 +6,7 @@
 ++  Julia Wolfram Symbolic Object category using the Wolfram Symbol
 ++  Transport Protocol.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
-WSObject() : Category == JLObjectType with
+WSObject() : Category == JLObjectType() with
     jWSInterpret : String -> %
     ++ jWSInterpret(form) interprets form.
     -- For later use. See WS call in ?? Spad code (WSEXPR)
@@ -40,12 +40,11 @@ WSObject() : Category == JLObjectType with
     ++ the Julia WS format.
     coerce : % -> WSExpression
     ++ coerce(expr) returns the WSExpression representation of expr.
-
   add
     import from JLUtilityFunctions
     import from String
-
     jlInitialize(true)
+
     if not jlUsing("MathLink") then
       error "The Julia MathLink package is not installed."
 
@@ -120,8 +119,9 @@ WSNumber() : Category == WSRing
 ++  Julia Wolfram Symbolic symbols using the MathLink Julia package.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 WSSymbol() : Exports == Implementation where
-  INT ==> Integer
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  jbinbop(op,a,b) ==>
+    jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
   Exports ==> WSObject with
     WReal     : () -> %
     ++ WReal() returns the WS Real symbol.
@@ -170,18 +170,11 @@ WSSymbol() : Exports == Implementation where
   Implementation ==> JLObject add
     import from JLUtilityFunctions
     import from String
-
-    jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
-    jbinbop(op,a,b) ==>
-      jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
-    junfunc(func,a) ==> jlref(concat([func, getind(a),")"]))
-
     jlInitialize(true)
+
     if not jlUsing("MathLink") then
       error "The Julia MathLink package is not installed."
     jlEvalString("import MathLink: WSymbol")
-
-    Rep := SExpression
 
     x = y  == jbinbop("==", x, y)
     x ~= y == jbinbop("!=", x, y)
@@ -220,12 +213,13 @@ WSSymbol() : Exports == Implementation where
 ++  Julia Wolfram Symbolic strings using the MathLink Julia package.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 WSString() : Exports == Implementation where
-  INT ==> Integer
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  jbinbop(op,a,b) ==> jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
+  junfunc(func,a) ==> jlref(concat([func, getind(a),")"]))
   Exports ==> WSObject with
     characters : % -> WSList(%)
     ++ characters(str) returns the characters of str as a WSList.
-    elt : (%, INT) -> %
+    elt : (%, Integer) -> %
     ++ elt(str,i) returns the i-th character of str.
     coerce  : % -> String
     ++ coerce(str) coerces str to a FriCAS String.
@@ -237,17 +231,10 @@ WSString() : Exports == Implementation where
   Implementation ==> JLObject add
     import from JLUtilityFunctions
     import from String
-
-    jbinop(op,a,b) ==> jlref(concat([getind(a), op, getind(b)]))
-    jbinbop(op,a,b) ==>
-      jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
-    junfunc(func,a) ==> jlref(concat([func, getind(a),")"]))
-
     jlInitialize(true)
+
     if not jlUsing("MathLink") then
       error "The Julia MathLink package is not installed."
-
-    Rep := SExpression
 
     x = y  == jbinbop("==", x, y)
     x ~= y == jbinbop("!=", x, y)
@@ -268,8 +255,14 @@ WSString() : Exports == Implementation where
 ++  Julia Wolfram Symbolic integers using the MathLink Julia package.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 WSInteger() : Exports == Implementation where
-  INT       ==> Integer
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  jbinop(op,a,b) ==> jlref(concat(["weval(", getind(a), op, getind(b),")"]))
+  junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
+  jbinfunc(func,a,b) ==>
+    jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
+  jterfunc(func,a,b,c) ==>
+    jlref(concat(["weval(", func, getind(a), ",", getind(b), ",", getind(c)"))"]))
+  jbinbop(op,a,b) ==> jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
   parsei ==> PARSE_-INTEGER$Lisp
   Exports ==> Join(WSNumber, IntegerNumberSystem,
                   Canonical, canonicalsClosed) with
@@ -300,24 +293,11 @@ WSInteger() : Exports == Implementation where
   Implementation ==> JLObject add
     import from JLUtilityFunctions
     import from String
-
-    jbinop(op,a,b) ==> jlref(concat(["weval(", getind(a), op, getind(b),")"]))
-    junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
-    jbinfunc(func,a,b) ==>
-      jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
-    jterfunc(func,a,b,c) ==>
-      jlref(concat(["weval(", func, getind(a), ",", getind(b), ",", getind(c)"))"]))
-    jquatfunc(func,a,b,c,d) ==>
-      jlref(concat(["weval(", func, getind(a), ",", getind(b), ",",
-        getind(c), ",", getind(d)"))"]))
-    jbinbop(op,a,b) ==> jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
-
     jlInitialize(true)
+
     if not jlUsing("MathLink") then
       error "The Julia MathLink package is not installed."
     jlEvalString("import MathLink: WInteger")@Void
-
-    Rep := SExpression
 
     0 == jlref("WInteger(_"0_")")
     1 == jlref("WInteger(_"1_")")
@@ -393,8 +373,13 @@ WSInteger() : Exports == Implementation where
 ++  Julia Wolfram Symbolic rational numbers using the MathLink Julia package.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 WSRational() : Exports == Implementation where
-  INT ==> Integer
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  jbinop(op,a,b) ==> jlref(concat(["weval(",getind(a), op, getind(b),")"]))
+  junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
+  jbinfunc(func,a,b) ==>
+    jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
+  jbinbop(op,a,b) ==>
+    jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
   parsei ==> PARSE_-INTEGER$Lisp
   Exports ==> Join(WSNumber,
       QuotientFieldCategory(WSInteger)) with
@@ -411,19 +396,11 @@ WSRational() : Exports == Implementation where
   Implementation ==> JLObject add
     import from JLUtilityFunctions
     import from String
-
-    jbinop(op,a,b) ==> jlref(concat(["weval(",getind(a), op, getind(b),")"]))
-    junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
-    jbinfunc(func,a,b) ==>
-      jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
-    jbinbop(op,a,b) ==>
-      jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
-
     jlInitialize(true)
+
     if not jlUsing("MathLink") then
       error "The Julia MathLink package is not installed."
     jlEvalString("WRAT=W_"Rational_"")@Void
-    Rep := SExpression
 
     0 == jlref("WRAT(0,1)")
     1 == jlref("WRAT(1,1)")
@@ -508,9 +485,13 @@ WSRational() : Exports == Implementation where
 ++  the MathLink Julia package.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 WSReal() : Exports == Implementation where
-  INT   ==> Integer
-  JF64  ==> JLFloat64
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  jbinop(op,a,b) ==> jlref(concat(["weval(",getind(a), op, getind(b),")"]))
+  junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
+  jbinfunc(func,a,b) ==>
+    jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
+  jbinbop(op,a,b) ==>
+    jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
   Exports ==> Join(WSNumber, FloatingPointSystem,
                     DifferentialRing, ElementaryFunctionCategory,
                     TranscendentalFunctionCategory,
@@ -572,27 +553,14 @@ WSReal() : Exports == Implementation where
     import from JLUtilityFunctions
     import from String
     import from WSExpression
+    jlInitialize(true)
 
-    jbinop(op,a,b) ==> jlref(concat(["weval(",getind(a), op, getind(b),")"]))
-    junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
-    jbinfunc(func,a,b) ==>
-      jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
-    jterfunc(func,a,b,c) ==>
-      jlref(concat(["weval(", func, getind(a), ",",
-        getind(b), ",", getind(c)"))"]))
-    jquatfunc(func,a,b,c,d) ==>
-      jlref(concat(["weval(", func, getind(a), ",", getind(b), ",",
-        getind(c), ",", getind(d)"))"]))
-    jbinbop(op,a,b) ==>
-      jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
     error1(msg, f) ==> error concat [msg, " ", toString f]
 
-    jlInitialize(true)
     if not jlUsing("MathLink") then
       error "The Julia MathLink package is not installed."
     jlEvalString("import MathLink: WReal")@Void
 
-    Rep := SExpression
     -- Internal threshold precision
     -- iprec := jWSReal("1.e-15")
 
@@ -737,7 +705,7 @@ WSReal() : Exports == Implementation where
     erfi(x)     == junfunc("W_"Erfi_"(",x)
 
     Si(x)       == junfunc("W_"SinIntegral_"(",x)
-    Shi(x)       == junfunc("W_"SinhIntegral_"(",x)
+    Shi(x)      == junfunc("W_"SinhIntegral_"(",x)
     Ci(x)       == junfunc("W_"CosIntegral_"(",x)
     Chi(x)      == junfunc("W_"CoshIntegral_"(",x)
     Ei(x)       == junfunc("W_"ExpIntegralEi_"(",x)
@@ -754,7 +722,7 @@ WSReal() : Exports == Implementation where
         getind(x),",", string(p+n), ")))"]))
 
     coerce(r : %) : DoubleFloat ==
-      jlEvalString(getind(jlEval r))@JF64 pretend DoubleFloat
+      jlEvalString(getind(jlEval r))@JLFloat64 pretend DoubleFloat
     coerce(r : %) : JLFloat64 == jlEvalString(getind(jlEval r))
     coerce(x : %) : WSExpression == x pretend WSExpression
     coerce(x) : JLFloat ==
@@ -807,8 +775,13 @@ WSReal() : Exports == Implementation where
 ++  Wolfram Symbolic Transport Protocol.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 WSAPReal(prec : PositiveInteger) : Exports == Implementation where
-  INT ==> Integer
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  jbinop(op,a,b) ==> jlref(concat(["weval(",getind(a), op, getind(b),")"]))
+  junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
+  jbinfunc(func,a,b) ==>
+    jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
+  jbinbop(op,a,b) ==>
+    jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
   Exports ==> Join(WSNumber, FloatingPointSystem, arbitraryPrecision,
                     DifferentialRing, ElementaryFunctionCategory,
                     TranscendentalFunctionCategory,
@@ -864,37 +837,21 @@ WSAPReal(prec : PositiveInteger) : Exports == Implementation where
     import from JLUtilityFunctions
     import from String
     import from WSExpression
+    jlInitialize(true)
 
-    jbinop(op,a,b) ==> jlref(concat(["weval(",getind(a), op, getind(b),")"]))
-    junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
-    jbinfunc(func,a,b) ==>
-      jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
-    jterfunc(func,a,b,c) ==>
-      jlref(concat(["weval(", func, getind(a), ",",
-        getind(b), ",", getind(c)"))"]))
-    jquatfunc(func,a,b,c,d) ==>
-      jlref(concat(["weval(", func, getind(a), ",", getind(b), ",",
-        getind(c), ",", getind(d)"))"]))
-    jbinbop(op,a,b) ==>
-      jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
     jtypeassert(a) ==> jlHead(a) ~= WReal()
         => error "Type of output does not match input type"
     error1(msg, f) ==> error(concat [msg, " ", toString(f)])
 
-    jlInitialize(true)
     if not jlUsing("MathLink") then
       error "The Julia MathLink package is not installed."
 
     jlEvalString("NN=W_`Interpreter[_"Real_"]_`")@Void
 
-    Rep := SExpression
-
     0    == jlref(concat(["W_"N_"(0,", string(prec), ")"]))
     1    == jlref(concat(["W_"N_"(1,", string(prec), ")"]))
     WT : WSSymbol := WTrue()
 
-    --pi() == jlref(concat ["W_"N_"(", "W_"Pi_"", ",", string(prec), ")"])
-    --exp() == jlref(concat ["W_"N_"(", "W_"E_"", ",", string(prec), ")"])
     pi()  ==
       jWSExpr(concat(["N[Pi,", string(prec),"]"]))$WSExpression pretend %
     exp() ==
@@ -1103,9 +1060,14 @@ WSAPReal(prec : PositiveInteger) : Exports == Implementation where
 ++  Julia Wolfram Symbolic gaussian integers using the MathLink Julia package.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 WSGaussianInteger() : Exports == Implementation where
-  INT ==> Integer
   parsei ==> PARSE_-INTEGER$Lisp
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  jbinop(op,a,b) ==> jlref(concat(["weval(",getind(a), op, getind(b),")"]))
+  junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
+  jbinfunc(func,a,b) ==>
+    jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
+  jbinbop(op,a,b) ==>
+    jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
   Exports ==> Join(WSNumber, ComplexCategory(WSInteger)) with
     random   : WSInteger -> %
     ++ random(n) returns a gaussian integer where real part is in the range 0..n
@@ -1117,19 +1079,12 @@ WSGaussianInteger() : Exports == Implementation where
     ++ part re and imaginary part im.
   Implementation ==> JLObject add
     import from JLUtilityFunctions
+    jlInitialize(true)
 
-    jbinop(op,a,b) ==> jlref(concat(["weval(",getind(a), op, getind(b),")"]))
-    junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
-    jbinfunc(func,a,b) ==>
-      jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
-    jbinbop(op,a,b) ==>
-      jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
     bool(a) ==> coerce(a)$WSSymbol
 
-    jlInitialize(true)
     if not jlUsing("MathLink") then
       error "The Julia MathLink package is not installed."
-    Rep := SExpression
 
     0 == jlref("W_"Complex_"(0,0)")
     1 == jlref("W_"Complex_"(1,0)")
@@ -1204,8 +1159,12 @@ WSGaussianInteger() : Exports == Implementation where
 ++  Julia Wolfram Symbolic complex numbers using the MathLink Julia package.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 WSComplex() : Exports == Implementation where
-  INT ==> Integer
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  jbinop(op,a,b) ==> jlref(concat(["weval(",getind(a), op, getind(b),")"]))
+  junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
+  jbinfunc(func,a,b) ==>
+    jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
+  jbinbop(op,a,b) ==> jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
   Exports ==> Join(WSNumber, ComplexCategory(WSReal),
                 ElementaryFunctionCategory, TranscendentalFunctionCategory,
                 LiouvillianFunctionCategory) with
@@ -1254,24 +1213,13 @@ WSComplex() : Exports == Implementation where
   Implementation ==> JLObject add
     import from JLUtilityFunctions
     import from WSExpression
+    jlInitialize(true)
 
-    jbinop(op,a,b) ==> jlref(concat(["weval(",getind(a), op, getind(b),")"]))
-    junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
-    jbinfunc(func,a,b) ==>
-      jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
-    jterfunc(func,a,b,c) ==>
-      jlref(concat(["weval(", func, getind(a), ",", getind(b), ",", getind(c), "))"]))
-    jquatfunc(func,a,b,c,d) ==>
-      jlref(concat(["weval(", func, getind(a), ",", getind(b), ",",
-        getind(c), ",", getind(d)"))"]))
-    jbinbop(op,a,b) ==> jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
     error1(msg, f) ==> error concat [msg, " ", toString f]
     bool(a) ==> coerce(a)$WSSymbol
 
-    jlInitialize(true)
     if not jlUsing("MathLink") then
       error "The Julia MathLink package is not installed."
-    Rep := SExpression
 
     0 == jlref(concat(["W_`Complex[0.0,0.0]_`"]))
     1 == jlref(concat(["W_`Complex[1.0,0.0]_`"]))
@@ -1439,8 +1387,12 @@ WSComplex() : Exports == Implementation where
 ++  Transport Protocol.
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 WSAPComplex(prec : PositiveInteger) : Exports == Implementation where
-  INT ==> Integer
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  jbinop(op,a,b) ==> jlref(concat(["weval(",getind(a), op, getind(b),")"]))
+  junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
+  jbinfunc(func,a,b) ==>
+    jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
+  jbinbop(op,a,b) ==> jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
   Exports ==> Join(WSNumber, ComplexCategory(WSAPReal(prec)),
                 ElementaryFunctionCategory, TranscendentalFunctionCategory,
                 LiouvillianFunctionCategory) with
@@ -1485,25 +1437,13 @@ WSAPComplex(prec : PositiveInteger) : Exports == Implementation where
   Implementation ==> JLObject add
     import from JLUtilityFunctions
     import from WSExpression
+    jlInitialize(true)
 
-    jbinop(op,a,b) ==> jlref(concat(["weval(",getind(a), op, getind(b),")"]))
-    junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
-    jbinfunc(func,a,b) ==>
-      jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
-    jterfunc(func,a,b,c) ==>
-      jlref(concat(["weval(", func, getind(a), ",",
-        getind(b), ",", getind(c)"))"]))
-    jquatfunc(func,a,b,c,d) ==>
-      jlref(concat(["weval(", func, getind(a), ",", getind(b), ",",
-        getind(c), ",", getind(d)"))"]))
-    jbinbop(op,a,b) ==> jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
     error1(msg, f) ==> error concat [msg, " ", toString(f, jWSExpr "OutputForm")]
     bool(a) ==> coerce(a)$WSSymbol
 
-    jlInitialize(true)
     if not jlUsing("MathLink") then
       error "The Julia MathLink package is not installed."
-    Rep := SExpression
 
     0 == jlref(concat(["W_`N[Complex[0,0],", string(prec), "]_`"]))
     1 == jlref(concat(["W_`N[Complex[1,0],", string(prec), "]_`"]))

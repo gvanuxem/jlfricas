@@ -35,8 +35,10 @@ JLInt64Vector() : Exports == Implementation where
     ++ By default it is the Julia version.
   Implementation ==> add
     import JLUtilityFunctions
-    pprint := true
     jlInitialize(true)
+
+    pprint := true
+
     #x                  == Qsize x
     minIndex x          == 1$Lisp
     maxIndex x          == Qsize(x)
@@ -134,6 +136,7 @@ JLFloat64Vector() : Exports == Implementation where
   Implementation ==> add
     import from JLUtilityFunctions
     jlInitialize(true)
+
     defined?(func) ==> not jlDefined?(func) =>
       error concat(func, " is not defined in Julia")
     pprint := true
@@ -238,7 +241,6 @@ JLFloat64Vector() : Exports == Implementation where
       jl_1dfunction(0$NNI,"randexp!", v)$Lisp
       v
 
-
 )abbrev package JF64VEC2 JLFloat64VectorFunctions2
 ++ Author:
 ++ Basic Functions:
@@ -252,7 +254,6 @@ JLFloat64Vector() : Exports == Implementation where
 ++ JLFloat64Vector and functions from JLFloat64 to
 ++ JLFloat64. The operations all iterate over their vector argument
 ++ and either return a value of type JLFloat64Vector or a JLFloat64.
-
 JLFloat64VectorFunctions2() : Exports == Implementation where
   A  ==> JLFloat64
   B  ==> JLFloat64
@@ -260,7 +261,6 @@ JLFloat64VectorFunctions2() : Exports == Implementation where
   VB ==> JLFloat64Vector
   O2 ==> FiniteLinearAggregateFunctions2(A, VA, B, VB)
   UB ==> Union(B, "failed")
-
   Exports ==> with
     scan   : ((A, B) -> B, VA, B) -> VB
     ++ scan(func, vec, ident) creates a new vector whose elements are
@@ -276,7 +276,6 @@ JLFloat64VectorFunctions2() : Exports == Implementation where
     map : (A -> UB, VA) -> Union(VB, "failed")
     ++ map(f, v) applies the function f to every element of the vector v
     ++ producing a new vector containing the values or \spad{"failed"}.
-
   Implementation ==> add
     scan(f, v, b)   == scan(f, v, b)$O2
     reduce(f, v, b) == reduce(f, v, b)$O2
@@ -586,6 +585,8 @@ JLFloat64Matrix() : Exports == Implementation where
 JLF64SquareMatrix(n: NonNegativeInteger) : Exports == Implementation where
   Row ==> DirectProduct(n, JLFloat64)
   Col ==> DirectProduct(n, JLFloat64)
+  JF64MAT ==> JLFloat64Matrix
+  NNI ==> NonNegativeInteger
   Exports ==> Join(JLType, SquareMatrixCategory(n, JLFloat64,
       Row, Col), CoercibleTo(JLFloat64Matrix)) with
     qcoerce : JLFloat64Matrix -> %
@@ -595,8 +596,7 @@ JLF64SquareMatrix(n: NonNegativeInteger) : Exports == Implementation where
     ++ squareMatrix(m) returns a copy of m as a JLF64SquareMatrix.
   Implementation ==>  JLFloat64Matrix add
     import from JLFloat64Matrix
-    JF64MAT ==> JLFloat64Matrix
-    NNI ==> NonNegativeInteger
+
     qcoerce(m) == m pretend %
     coerce(m) == m pretend JLFloat64Matrix
 
@@ -668,6 +668,7 @@ JLComplexF64Vector() : Exports == Implementation where
     import from JLUtilityFunctions
     import from JLCF64LinearAlgebra
     jlInitialize(true)
+
     defined?(func) ==> not jlDefined?(func) =>
       error concat(func, " is not defined in Julia")
     pprint := true
@@ -1042,6 +1043,8 @@ JLComplexF64Matrix() : Exports == Implementation where
 JLComplexF64SquareMatrix(n : NonNegativeInteger) : Exports == Implementation where
   Row ==> DirectProduct(n, JLComplexF64)
   Col ==> DirectProduct(n, JLComplexF64)
+  JCF64MAT ==> JLComplexF64Matrix
+  NNI ==> NonNegativeInteger
   Exports ==> Join(JLType, SquareMatrixCategory(n, JLComplexF64,
           Row, Col), CoercibleTo(JLComplexF64Matrix)) with
     qcoerce : JLComplexF64Matrix -> %
@@ -1054,8 +1057,6 @@ JLComplexF64SquareMatrix(n : NonNegativeInteger) : Exports == Implementation whe
     ++ a JLComplexF64SquareMatrix.
   Implementation ==> JLComplexF64Matrix add
     import from JLComplexF64Matrix
-    JCF64MAT ==> JLComplexF64Matrix
-    NNI ==> NonNegativeInteger
 
     qcoerce(m) == m pretend %
     coerce(m) == m pretend JLComplexF64Matrix

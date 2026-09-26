@@ -16,9 +16,21 @@
 -- interval({-2, 2})
 -- limit etc. "x=0" assignment vs. jlEval
 WSExpression() : Exports == Implementation where
-  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
   WSL  ==> WSList
   JF64  ==> JLFloat64
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  jbinop(op,a,b) ==> jlref(concat(["weval(", getind(a), op, getind(b),")"]))
+  junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
+  jbinfunc(func,a,b) ==>
+    jlref(concat(["weval(",func, getind(a), ",", getind(b),"))"]))
+  jterfunc(func,a,b,c) ==>
+    jlref(concat(["weval(",func, getind(a), ",",
+      getind(b), ",", getind(c), "))"]))
+  jquatfunc(func,a,b,c,d) ==>
+    jlref(concat(["weval(",func, getind(a), ",", getind(b), ",",
+      getind(c), ",", getind(d), "))"]))
+  jbinbop(op,a,b) ==>
+    jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
   Exports ==> Join(WSAggregate(%), PartialOrder, WSRing,
                   ComplexCategory(%), PartialDifferentialRing(%),
                   ExpressionSpace) with
@@ -1256,29 +1268,13 @@ WSExpression() : Exports == Implementation where
     import from WSComplex
     import from WSReal
     import from WSString
-
     jlInitialize(true)
-    if not jlUsing("MathLink") then
-      error "The Julia MathLink package is not installed."
-    Rep := SExpression
-
-    jbinop(op,a,b) ==> jlref(concat(["weval(", getind(a), op, getind(b),")"]))
-    junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
-    jbinfunc(func,a,b) ==>
-      jlref(concat(["weval(",func, getind(a), ",", getind(b),"))"]))
-    jterfunc(func,a,b,c) ==>
-      jlref(concat(["weval(",func, getind(a), ",",
-        getind(b), ",", getind(c), "))"]))
-    jquatfunc(func,a,b,c,d) ==>
-      jlref(concat(["weval(",func, getind(a), ",", getind(b), ",",
-        getind(c), ",", getind(d), "))"]))
-    jbinbop(op,a,b) ==>
-      jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
-    error1(msg, f) ==> error concat [msg, " ", toString f]
 
     if not jlUsing("MathLink") then
       error "The Julia MathLink package is not installed."
     jlEvalString("import MathLink: WExpr, WSymbol, WReal, WRational, WInteger")
+
+    error1(msg, f) ==> error concat [msg, " ", toString f]
 
     strToExprInt(s : String) : Union(Expression(Integer), "failed") ==
       str := concat("0$Expression(Integer)+", s)
@@ -1298,7 +1294,6 @@ WSExpression() : Exports == Implementation where
         jlEvalString "set_GreedyEval(true)"
       else
         jlEvalString "set_GreedyEval(false)"
-
 
     0 == jlref("W_`0_`")
     1 == jlref("W_`1_`")

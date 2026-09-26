@@ -9,16 +9,15 @@
 -- Description?
 JLF32ArrayFunctions() : Exports == Implementation where
   NNI       ==> NonNegativeInteger
-  JI64      ==> JLInt64
   JF32      ==> JLFloat32
   JF32VEC   ==> JLFloat32Vector
   JCF32VEC  ==> JLComplexF32Vector
   STR       ==> String
   Exports ==> with
-    jlApplyFunction : (STR, JF32VEC) -> Void
-    ++ jlApplyFunction(func, vec) applies func to vec.
-    jlApplyFunction : (STR, JCF32VEC) -> Void
-    ++ jlApplyFunction(func, vec) applies func to cvec.
+    jlApplyFunction! : (STR, JF32VEC) -> Void
+    ++ jlApplyFunction!(func, vec) applies func to vec.
+    jlApplyFunction! : (STR, JCF32VEC) -> Void
+    ++ jlApplyFunction!(func, vec) applies func to cvec.
     jlApplyFunction : (STR, JF32VEC) -> JF32
     ++ jlApplyFunction(func, vec) returns the output value
     ++ of func applied to vec.
@@ -54,12 +53,12 @@ JLF32ArrayFunctions() : Exports == Implementation where
     ++ overwriting is done by Julia and not FriCAS.
     ++ See Julia 'copy!' or adjoint! for example. 
 
-    jlApplyFunction : (STR, JF32VEC, NNI) -> Void
-    ++ jlApplyFunction(func, mat, nr) applies func to the matrix mat,
-    ++ internally a vector, where the numer of rows is nr.
-    jlApplyFunction : (STR, JCF32VEC, NNI) -> Void
-    ++ jlApplyFunction(func, cmat, nr) applies func to the matrix mat,
-    ++ internally a vector, where the numer of rows is nr.
+    jlApplyFunction! : (STR, JF32VEC, NNI) -> Void
+    ++ jlApplyFunction!(func, mat, nr) applies func to the matrix mat,
+    ++ internally a vector, where the number of rows is nr.
+    jlApplyFunction! : (STR, JCF32VEC, NNI) -> Void
+    ++ jlApplyFunction!(func, cmat, nr) applies func to the matrix mat,
+    ++ internally a vector, where the number of rows is nr.
     jlApplyFunction : (STR, JF32VEC, NNI) -> JF32
     ++ jlApplyFunction(func, mat, nr) returns the output value of
     ++ func applied to mat, internally a vector, where the number of rows
@@ -97,11 +96,9 @@ JLF32ArrayFunctions() : Exports == Implementation where
     ++ func to the matrix cmat and returns the result in carray. It is FriCAS
     ++ that puts, at the C level, the resulting matrix in carray.
   Implementation ==> add
-    import from String
-
-    jlApplyFunction(func, v) : Void ==
+    jlApplyFunction!(func, v) : Void ==
       jl_1dffunction(0$NNI,func,v)$Lisp
-    jlApplyFunction(func, v : JCF32VEC) : Void ==
+    jlApplyFunction!(func, v : JCF32VEC) : Void ==
       jl_1dffunction(1$NNI,func,v)$Lisp
     jlApplyFunction(func, v : JF32VEC) : JF32 ==
       jl_flt_1dffunction(0$NNI,func,v)$Lisp
@@ -117,9 +114,9 @@ JLF32ArrayFunctions() : Exports == Implementation where
     jlApplyFunction!(func, v1 : JCF32VEC, v2: JCF32VEC) : Void ==
       jl_1d2ffunction(1$NNI,func,v1,v2)$Lisp
 
-    jlApplyFunction(func, mat : JF32VEC, nr : NNI) : Void ==
+    jlApplyFunction!(func, mat : JF32VEC, nr : NNI) : Void ==
       jl_2dffunction(0$NNI,func,mat,nr)$Lisp
-    jlApplyFunction(func, mat : JCF32VEC, nr : NNI) : Void ==
+    jlApplyFunction!(func, mat : JCF32VEC, nr : NNI) : Void ==
       jl_2dffunction(1$NNI,func,mat,nr)$Lisp
     jlApplyFunction(func, mat : JF32VEC, nr : NNI) : JF32 ==
       jl_flt_2dffunction(0$NNI,func,mat,nr)$Lisp
@@ -155,16 +152,15 @@ JLF32ArrayFunctions() : Exports == Implementation where
 -- Description?
 JLF64ArrayFunctions() : Exports == Implementation where
   NNI       ==> NonNegativeInteger
-  JI64      ==> JLInt64
   JF64      ==> JLFloat64
   JF64VEC   ==> JLFloat64Vector
   JCF64VEC  ==> JLComplexF64Vector
   STR       ==> String
   Exports ==> with
-    jlApplyFunction : (STR, JF64VEC) -> Void
-    ++ jlApplyFunction(func, vec) applies func to vec.
-    jlApplyFunction : (STR, JCF64VEC) -> Void
-    ++ jlApplyFunction(func, vec) applies func to cvec.
+    jlApplyFunction! : (STR, JF64VEC) -> Void
+    ++ jlApplyFunction!(func, vec) applies func to vec.
+    jlApplyFunction! : (STR, JCF64VEC) -> Void
+    ++ jlApplyFunction!(func, vec) applies func to cvec.
     jlApplyFunction : (STR, JF64VEC) -> JF64
     ++ jlApplyFunction(func, vec) returns the output value
     ++ of func applied to vec.
@@ -200,12 +196,12 @@ JLF64ArrayFunctions() : Exports == Implementation where
     ++ overwriting is done by Julia and not FriCAS.
     ++ See Julia 'copy!' or adjoint! for example. 
 
-    jlApplyFunction : (STR, JF64VEC, NNI) -> Void
-    ++ jlApplyFunction(func, mat, nr) applies func to the matrix mat,
-    ++ internally a vector, where the numer of rows is nr.
-    jlApplyFunction : (STR, JCF64VEC, NNI) -> Void
-    ++ jlApplyFunction(func, cmat, nr) applies func to the matrix mat,
-    ++ internally a vector, where the numer of rows is nr.
+    jlApplyFunction! : (STR, JF64VEC, NNI) -> Void
+    ++ jlApplyFunction!(func, mat, nr) applies func to the matrix mat,
+    ++ internally a vector, where the number of rows is nr.
+    jlApplyFunction! : (STR, JCF64VEC, NNI) -> Void
+    ++ jlApplyFunction!(func, cmat, nr) applies func to the matrix mat,
+    ++ internally a vector, where the number of rows is nr.
     jlApplyFunction : (STR, JF64VEC, NNI) -> JF64
     ++ jlApplyFunction(func, mat, nr) returns the output value of
     ++ func applied to mat, internally a vector, where the number of rows
@@ -243,11 +239,9 @@ JLF64ArrayFunctions() : Exports == Implementation where
     ++ func to the matrix cmat and returns the result in carray. It is FriCAS
     ++ that puts, at the C level, the resulting matrix in carray.
   Implementation ==> add
-    import from String
-
-    jlApplyFunction(func, v) : Void ==
+    jlApplyFunction!(func, v) : Void ==
       jl_1dfunction(0$NNI,func,v)$Lisp
-    jlApplyFunction(func, v : JCF64VEC) : Void ==
+    jlApplyFunction!(func, v : JCF64VEC) : Void ==
       jl_1dfunction(1$NNI,func,v)$Lisp
     jlApplyFunction(func, v : JF64VEC) : JF64 ==
       jl_dbl_1dfunction(0$NNI,func,v)$Lisp
@@ -263,9 +257,9 @@ JLF64ArrayFunctions() : Exports == Implementation where
     jlApplyFunction!(func, v1 : JCF64VEC, v2: JCF64VEC) : Void ==
       jl_1d2function(1$NNI,func,v1,v2)$Lisp
 
-    jlApplyFunction(func, mat : JF64VEC, nr : NNI) : Void ==
+    jlApplyFunction!(func, mat : JF64VEC, nr : NNI) : Void ==
       jl_2dfunction(0$NNI,func,mat,nr)$Lisp
-    jlApplyFunction(func, mat : JCF64VEC, nr : NNI) : Void ==
+    jlApplyFunction!(func, mat : JCF64VEC, nr : NNI) : Void ==
       jl_2dfunction(1$NNI,func,mat,nr)$Lisp
     jlApplyFunction(func, mat : JF64VEC, nr : NNI) : JF64 ==
       jl_dbl_2dfunction(0$NNI,func,mat,nr)$Lisp

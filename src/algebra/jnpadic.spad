@@ -12,13 +12,10 @@
 ++   the p-adic numbers using the Nemo Julia package.
 NMPadicNumberCategory(p) : Category == Definition where
   p     : Integer
-  NINT  ==> NMInteger
   I     ==> Integer
   NNI   ==> NonNegativeInteger
   Definition ==> Join(NMCommutativeRing, EuclideanDomain, CharacteristicZero,
       RadicalCategory, ElementaryFunctionCategory) with
-    --digits : % -> ST I
-    --  ++ \spad{digits(x)} returns a stream of p-adic digits of x.
     order : % -> NNI
       ++ \spad{order(x)} returns the exponent of the highest power of p
       ++ dividing x.
@@ -62,6 +59,11 @@ NMExtendedPadicInteger(p : Integer, prec : Integer) :
   OUT  ==> OutputForm
   NINT ==> NMInteger
   NFINT ==> NMFraction(NMInteger)
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+  jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+  junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
+  jbinbfunc(op,a,b) ==> jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
   Exports ==> NMPadicNumberCategory(p) with
     "+" : (NINT, %) -> %
     ++ i + x is the addition of a Julia Nemo Integer
@@ -112,17 +114,11 @@ NMExtendedPadicInteger(p : Integer, prec : Integer) :
   Implementation ==> add
     import from JLUtilityFunctions
     import from String
+    jlInitialize(true)
 
     jlImport "Nemo.Generic.prime"
     jlImport "Nemo.O"
 
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
-    jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
-    junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
-    jbinbfunc(op,a,b) ==> jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
-
-    Rep := SExpression
     not prime?(p) => error "p must be a prime number"
     
     -- Set up the field
@@ -268,11 +264,12 @@ NMExtendedPadicRational(p,deg,prec) : Exports == Implementation where
   prec  : Integer
   NINT ==> NMInteger
   NFINT ==> NMFraction(NMInteger)
-  PADIC ==> NMPadicNumberCategory(p)
   I     ==> Integer
-  NNI   ==> NonNegativeInteger
-  OUT   ==> OutputForm
-  RN    ==> Fraction Integer
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+  jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+  junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
+  jbinbfunc(op,a,b) ==> jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
   Exports ==> Join(NMCommutativeRing,
       QuotientFieldCategory(NMExtendedPadicInteger(p,prec)),
       RadicalCategory, ElementaryFunctionCategory) with
@@ -328,17 +325,10 @@ NMExtendedPadicRational(p,deg,prec) : Exports == Implementation where
   Implementation ==> add
     import from JLUtilityFunctions
     import from String
+    jlInitialize(true)
   
     jlImport "Nemo.Generic.prime"
     jlImport "Nemo.O"
-  
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
-    jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
-    junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
-    jbinbfunc(op,a,b) ==> jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
-  
-    Rep := SExpression
     
     -- Set up the field
     PADICQ := concat(["PADICQ", string(p), "p",string(prec)])
@@ -435,7 +425,7 @@ NMExtendedPadicRational(p,deg,prec) : Exports == Implementation where
     coerce(i : NMInteger) == jlref(concat([PADICQP, string(i),")"]))
     jnpadic(x:Integer) == jlref(concat([PADICQP, string(x),")"]))
     jnpadic(i : NMInteger) == jlref(concat([PADICQP, string(i),")"]))
-    coerce(x) : OUT == string(x) pretend OUT
+    coerce(x) : OutputForm == string(x) pretend OutputForm
 
 )abbrev domain NPADICR NMPadicRational
 ++ Author: Grégory Vanuxem

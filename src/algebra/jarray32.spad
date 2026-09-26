@@ -65,6 +65,7 @@ JLFloat32Vector() : Exports == Implementation where
   Implementation ==> add
     import from JLUtilityFunctions
     jlInitialize(true)
+
     defined?(func) ==> not jlDefined?(func) =>
       error concat(func, " is not defined in Julia")
     pprint := true
@@ -213,12 +214,12 @@ JLFloat32VectorFunctions2() : Exports == Implementation where
     map(f : (A->B), v : VA) : VB == map(f, v)$O2
 
     map(f:(A -> UB), a:VA):Union(VB, "failed") ==
-     res : List B  := []
-     for u in entries(a) repeat
-       r := f u
-       r = "failed" => return "failed"
-       res := cons(r::B, res)
-     vector reverse! res
+      res : List B  := []
+      for u in entries(a) repeat
+        r := f u
+        r = "failed" => return "failed"
+        res := cons(r::B, res)
+      vector reverse! res
 
 )abbrev domain JF32MAT JLFloat32Matrix
 ++ Domain for Julia Float32 matrices
@@ -511,6 +512,8 @@ JLFloat32Matrix() : Exports == Implementation where
 JLF32SquareMatrix(n: NonNegativeInteger) : Exports == Implementation where
   Row ==> DirectProduct(n, JLFloat32)
   Col ==> DirectProduct(n, JLFloat32)
+  JF32MAT ==> JLFloat32Matrix
+  NNI ==> NonNegativeInteger
   Exports ==> Join(JLType, SquareMatrixCategory(n, JLFloat32,
         Row, Col), CoercibleTo(JLFloat32Matrix)) with
     qcoerce : JLFloat32Matrix -> %
@@ -520,8 +523,6 @@ JLF32SquareMatrix(n: NonNegativeInteger) : Exports == Implementation where
     ++ squareMatrix(m) returns a copy of m as a JLF32SquareMatrix.
   Implementation ==>  JLFloat32Matrix add
     import from JLFloat32Matrix
-    JF32MAT ==> JLFloat32Matrix
-    NNI ==> NonNegativeInteger
 
     qcoerce(m) == m pretend %
     coerce(m) == m pretend JLFloat32Matrix
@@ -599,20 +600,21 @@ JLComplexF32Vector() : Exports == Implementation where
     import from JLUtilityFunctions
     import from JLCF32LinearAlgebra
     jlInitialize(true)
+
     defined?(func) ==> not jlDefined?(func) =>
       error concat(func, " is not defined in Julia")
     pprint := true
 
     qelt(x, i)                  == Qelt1(x, i)
     elt(x, i : Integer)         ==
-        i < 1 or i > #x =>
-            error "elt$JLComplexF32Vector: index out of range"
-        Qelt1(x, i)
+      i < 1 or i > #x =>
+        error "elt$JLComplexF32Vector: index out of range"
+      Qelt1(x, i)
     qsetelt!(x, i, s)           == Qsetelt1(x, i, s)
     setelt!(x : %, i : Integer, s:JLComplexF32) ==
-        i < 1 or i > #x =>
-            error "setelt!$JLComplexF32Vector: index out of range"
-        Qsetelt1(x, i, s)
+      i < 1 or i > #x =>
+        error "setelt!$JLComplexF32Vector: index out of range"
+      Qsetelt1(x, i, s)
     #x          == Qsize(x)
     minIndex x  == 1
     maxIndex x  == Qsize(x)
@@ -773,14 +775,15 @@ JLComplexF32Matrix() : Exports == Implementation where
     import from JLCF32LinearAlgebra
     import from JLFloat32Vector
     import from JLFloat32Matrix
-
     jlInitialize(true)
 
     defined?(func) ==> not jlDefined?(func) =>
       error concat(func, " is not defined in Julia")
     pprint := true
+
     Rep := Record(elts : JLComplexF32Vector,
         ncols : NonNegativeInteger, nrows : NonNegativeInteger)
+
     minRowIndex x == 1
     minColIndex x == 1
     nrows x == x.ncols
@@ -789,19 +792,18 @@ JLComplexF32Matrix() : Exports == Implementation where
     maxColIndex x == x.nrows
     qelt(m, i, j) == Qelt2(m.elts, m.ncols, j, i)
     elt(m:%, i : Integer, j : Integer) ==
-        i < 1 or i > m.ncols or j < 1 or j > m.nrows =>
-            error "elt$JLComplexF32Matrix: index(es) out of range"
-        Qelt2(m.elts, m.ncols, j, i)
+      i < 1 or i > m.ncols or j < 1 or j > m.nrows =>
+        error "elt$JLComplexF32Matrix: index(es) out of range"
+      Qelt2(m.elts, m.ncols, j, i)
     qsetelt!(m, i, j, r) == Qsetelt2(m.elts, m.ncols, j, i, r)
     setelt!(m : %, i : Integer, j : Integer, r : JCF32) ==
-        i < 1 or i > m.ncols or j < 1 or j > m.nrows =>
-            error "setelt!$JLComplexF32Matrix: index(es) out of range"
-        Qsetelt2(m.elts, m.ncols, j, i, r)
+      i < 1 or i > m.ncols or j < 1 or j > m.nrows =>
+        error "setelt!$JLComplexF32Matrix: index(es) out of range"
+      Qsetelt2(m.elts, m.ncols, j, i, r)
     elt(m:%, i:NonNegativeInteger) ==
       i > #m => error "elt$JLComplexF32Matrix: index out of range"
       JCFELT(m.elts,i)$Lisp
-    qelt(m:%, i:NonNegativeInteger) ==
-      JCFELT(m.elts,i)$Lisp
+    qelt(m:%, i:NonNegativeInteger) == JCFELT(m.elts,i)$Lisp
     setelt!(m : %, i : NonNegativeInteger, r : JCF32) ==
       i > #m =>
         error "setelt!$JLComplexF32Matrix: index out of range"
@@ -810,99 +812,99 @@ JLComplexF32Matrix() : Exports == Implementation where
       JCFSETELT(m.elts,i,r)$Lisp
     empty() == error "empty()$JLComplexF32Matrix is not supported"
     qnew(rows, cols) ==
-        vec : JCF32VEC := Qnew(rows*cols)
-        [vec, rows, cols]
+      vec : JCF32VEC := Qnew(rows*cols)
+      [vec, rows, cols]
     new(rows, cols, a) ==
-        vec : JCF32VEC := new(rows*cols, a)
-        [vec,rows,cols]
+      vec : JCF32VEC := new(rows*cols, a)
+      [vec,rows,cols]
     jlVector(mat) == mat.elts
     zero(m,n) == new(m,n,0)
     real(m) ==
-        nr := nrows(m)
-        ret := qnew(nr, ncols(m))$JF32MAT
-        jl_array_2dffunction(0$NNI,1$NNI,"real",
-            jlVector(ret), jlVector(m), nr)$Lisp
-        ret
+      nr := nrows(m)
+      ret := qnew(nr, ncols(m))$JF32MAT
+      jl_array_2dffunction(0$NNI,1$NNI,"real",
+        jlVector(ret), jlVector(m), nr)$Lisp
+      ret
     imag(m) ==
-        nr := nrows(m)
-        ret := qnew(nr, ncols(m))$JF32MAT
-        jl_array_2dffunction(0$NNI,1$NNI,"imag",
-            jlVector(ret), jlVector(m), nr)$Lisp
-        ret
+      nr := nrows(m)
+      ret := qnew(nr, ncols(m))$JF32MAT
+      jl_array_2dffunction(0$NNI,1$NNI,"imag",
+        jlVector(ret), jlVector(m), nr)$Lisp
+      ret
     square?(m) == m.nrows = m.ncols
     zero?(m) == jl_bool_2dffunction(1$NNI, "iszero", m.elts, m.ncols)$Lisp
     diagonal?(m) == jl_bool_2dffunction(1$NNI, "isdiag", m.elts, m.ncols)$Lisp
     symmetric?(m : %) : Boolean ==
-        jl_bool_2dffunction(1$NNI,"issymmetric", m.elts, m.ncols)$Lisp
+      jl_bool_2dffunction(1$NNI,"issymmetric", m.elts, m.ncols)$Lisp
     hermitian?(m : %) : Boolean ==
-        jl_bool_2dffunction(1$NNI,"ishermitian", m.elts, m.ncols)$Lisp
+      jl_bool_2dffunction(1$NNI,"ishermitian", m.elts, m.ncols)$Lisp
     positiveDefinite?(m : %) : Boolean ==
-        jl_bool_2dffunction(1$NNI,"isposdef", m.elts, m.ncols)$Lisp
+      jl_bool_2dffunction(1$NNI,"isposdef", m.elts, m.ncols)$Lisp
     jlApprox?(x, y) : Boolean ==
-        jl_bool_2d2ffunction(1$NNI,"isapprox", jlVector(x), nrows(x),
-            jlVector(y), nrows(y))$Lisp
+      jl_bool_2d2ffunction(1$NNI,"isapprox", jlVector(x), nrows(x),
+        jlVector(y), nrows(y))$Lisp
     hermitianPart(m) ==
-        m.nrows ~= m.ncols => error "hermitianPart: matrix is not square"
-        her := copy m
-        jl_2dffunction(1$NNI,"hermitianpart!", her.elts, her.ncols)$Lisp
-        her
+      m.nrows ~= m.ncols => error "hermitianPart: matrix is not square"
+      her := copy m
+      jl_2dffunction(1$NNI,"hermitianpart!", her.elts, her.ncols)$Lisp
+      her
     hermitianPart!(m) ==
-        m.nrows ~= m.ncols => error "hermitianPart!: matrix is not square"
-        jl_2dffunction(1$NNI,"hermitianpart!", m.elts, m.ncols)$Lisp
-        m
+      m.nrows ~= m.ncols => error "hermitianPart!: matrix is not square"
+      jl_2dffunction(1$NNI,"hermitianpart!", m.elts, m.ncols)$Lisp
+      m
     copy!(b, a) ==
-        jl_2d2ffunction(1$NNI,"copy!", b.elts, b.ncols,
-            a.elts, a.ncols)$Lisp
-        b
+      jl_2d2ffunction(1$NNI,"copy!", b.elts, b.ncols,
+        a.elts, a.ncols)$Lisp
+      b
     copy(a) ==
-        b := qnew(a.ncols, a.nrows)
-        jl_2d2ffunction(1$NNI,"copy!",
-            b.elts, b.ncols, a.elts, a.ncols)$Lisp
-        b
+      b := qnew(a.ncols, a.nrows)
+      jl_2d2ffunction(1$NNI,"copy!",
+        b.elts, b.ncols, a.elts, a.ncols)$Lisp
+      b
     transpose(m) ==
-        b := qnew(m.nrows, m.ncols)
-        jl_2d2ffunction(1$NNI,"transpose!",
-            b.elts, b.ncols, m.elts, m.ncols)$Lisp
-        b
+      b := qnew(m.nrows, m.ncols)
+      jl_2d2ffunction(1$NNI,"transpose!",
+        b.elts, b.ncols, m.elts, m.ncols)$Lisp
+      b
     transpose!(b,a) ==
-        jl_2d2ffunction(1$NNI,"transpose!",
-            b.elts, b.ncols, a.elts, a.ncols)$Lisp
-        b
+      jl_2d2ffunction(1$NNI,"transpose!",
+        b.elts, b.ncols, a.elts, a.ncols)$Lisp
+      b
     adjoint(m) ==
-        b := qnew(m.ncols, m.nrows)
-        jl_2d2ffunction(1$NNI,"adjoint!",
-            b.elts, b.ncols, m.elts, m.ncols)$Lisp
-        b
+      b := qnew(m.ncols, m.nrows)
+      jl_2d2ffunction(1$NNI,"adjoint!",
+        b.elts, b.ncols, m.elts, m.ncols)$Lisp
+      b
     adjoint!(b,a) ==
-        jl_2d2ffunction(1$NNI,"adjoint!",
-            b.elts, b.ncols, a.elts, a.ncols)$Lisp
-        b
+      jl_2d2ffunction(1$NNI,"adjoint!",
+        b.elts, b.ncols, a.elts, a.ncols)$Lisp
+      b
     jlApply(func, m : %) : Void ==
-        defined?(func)
-        jl_2dffunction(1$NNI,func, m.elts, m.ncols)$Lisp
+      defined?(func)
+      jl_2dffunction(1$NNI,func, m.elts, m.ncols)$Lisp
     jlApply(func, m : %) : JF32 ==
-        defined?(func)
-        jl_flt_2dffunction(1$NNI,func,  m.elts, m.ncols)$Lisp
+      defined?(func)
+      jl_flt_2dffunction(1$NNI,func,  m.elts, m.ncols)$Lisp
     jlApply(func, m : %, val : JF32) : JF32 ==
-        defined?(func)
-        jl_flt_2dffunction_flt(1$NNI,func,  m.elts, m.ncols, val)$Lisp
+      defined?(func)
+      jl_flt_2dffunction_flt(1$NNI,func,  m.elts, m.ncols, val)$Lisp
     a : % * b : % ==
-        (nr := a.nrows) ~= (nc := b.ncols) =>
-            error "Matrix multiplication: ncols(a) ~= nrows(b)"
-        c := qnew(nrows(a), ncols(b))
-        jl_2d3ffunction(1$NNI,"mul!", c.elts, c.ncols,
-            a.elts, a.ncols, b.elts, b.ncols)$Lisp
-        c
+      (nr := a.nrows) ~= (nc := b.ncols) =>
+        error "Matrix multiplication: ncols(a) ~= nrows(b)"
+      c := qnew(nrows(a), ncols(b))
+      jl_2d3ffunction(1$NNI,"mul!", c.elts, c.ncols,
+        a.elts, a.ncols, b.elts, b.ncols)$Lisp
+      c
     -- ??? why the pretend?
     rank(m) ==
-        prec : JF32 := SINGLE_-FLOAT_-EPSILON$Lisp
-        rank(m pretend JLComplexF32Matrix,
-            prec * jf32(10))$JLCF32LinearAlgebra
+      prec : JF32 := SINGLE_-FLOAT_-EPSILON$Lisp
+      rank(m pretend JLComplexF32Matrix,
+        prec * jf32(10))$JLCF32LinearAlgebra
     inverse(m) ==
-        m.nrows ~= m.ncols => error "inverse: matrix is not square"
-        inv := qnew(m.ncols, m.ncols)
-        jl_array_2dffunction(1$NNI,1$NNI,"inv", inv.elts, m.elts, m.ncols)$Lisp
-        inv
+      m.nrows ~= m.ncols => error "inverse: matrix is not square"
+      inv := qnew(m.ncols, m.ncols)
+      jl_array_2dffunction(1$NNI,1$NNI,"inv", inv.elts, m.elts, m.ncols)$Lisp
+      inv
     determinant(m) == determinant(m)$MLAF
 
     nullity(m) == nullity(m)$MLAF
@@ -910,36 +912,36 @@ JLComplexF32Matrix() : Exports == Implementation where
     rowEchelon(m) == rowEchelon(m)$MLAF
     minordet(m) == minordet(m)$MLAF
     jlDisplay(m) ==
-        jl_2dffunction(1$NNI,"display", m.elts, m.ncols)$Lisp
+      jl_2dffunction(1$NNI,"display", m.elts, m.ncols)$Lisp
     juliaCMPrint(b) ==
-        oldpprint := pprint
-        pprint:=b
-        oldpprint
+      oldpprint := pprint
+      pprint:=b
+      oldpprint
     diagonalMatrix(v:JCF32VEC) ==
-        n : NNI := #v
-        u := new(n, n, 0$JCF32)
-        for i in 1..n repeat setelt!(u, i, i, elt(v,i))
-        u
+      n : NNI := #v
+      u := new(n, n, 0$JCF32)
+      for i in 1..n repeat setelt!(u, i, i, elt(v,i))
+      u
     urand01(m, n) ==
-        mat := qnew(m, n)
-        jl_2dffunction(1$NNI,"rand!", mat.elts, mat.ncols)$Lisp
-        mat
+      mat := qnew(m, n)
+      jl_2dffunction(1$NNI,"rand!", mat.elts, mat.ncols)$Lisp
+      mat
     nrand(m, n) ==
-        mat := qnew(m, n)
-        jl_2dffunction(1$NNI,"randn!", mat.elts, mat.ncols)$Lisp
-        mat
+      mat := qnew(m, n)
+      jl_2dffunction(1$NNI,"randn!", mat.elts, mat.ncols)$Lisp
+      mat
     coerce(m : %) : OutputForm ==
-        if pprint then
-            ret: List OutputForm :=
-                jl_stringify_2dffunction(1$NNI, "show", "_"text/plain_"",
-                    m.elts, m.ncols)$Lisp
-            pile(append(["" pretend OutputForm],rest ret))
-        else
-            l : List List OutputForm
-            l := [[qelt(m, j, i) :: OutputForm _
-                for i in 1 .. ncols(m)] _
-                for j in 1 .. nrows(m)]
-            matrix l
+      if pprint then
+        ret: List OutputForm :=
+          jl_stringify_2dffunction(1$NNI, "show", "_"text/plain_"",
+            m.elts, m.ncols)$Lisp
+        pile(append(["" pretend OutputForm],rest ret))
+      else
+        l : List List OutputForm
+        l := [[qelt(m, j, i) :: OutputForm _
+              for i in 1 .. ncols(m)] _
+              for j in 1 .. nrows(m)]
+        matrix l
     coerce(m : JLFloat32Matrix) : % ==
       newm := qnew(nrows(m), ncols(m))
       for i in 1 .. ncols(m) repeat
@@ -956,6 +958,8 @@ JLComplexF32Matrix() : Exports == Implementation where
 JLComplexF32SquareMatrix(n : NonNegativeInteger) : Exports == Implementation where
   Row ==> DirectProduct(n, JLComplexF32)
   Col ==> DirectProduct(n, JLComplexF32)
+  JCF32MAT ==> JLComplexF32Matrix
+  NNI ==> NonNegativeInteger
   Exports ==> Join(JLType, SquareMatrixCategory(n, JLComplexF32,
         Row, Col), CoercibleTo(JLComplexF32Matrix)) with
     qcoerce : JLComplexF32Matrix -> %
@@ -968,8 +972,6 @@ JLComplexF32SquareMatrix(n : NonNegativeInteger) : Exports == Implementation whe
     ++ a JLComplexF32SquareMatrix.
   Implementation ==> JLComplexF32Matrix add
     import from JLComplexF32Matrix
-    JCF32MAT ==> JLComplexF32Matrix
-    NNI ==> NonNegativeInteger
 
     qcoerce(m) == m pretend %
     coerce(m) == m pretend JLComplexF32Matrix
@@ -978,13 +980,13 @@ JLComplexF32SquareMatrix(n : NonNegativeInteger) : Exports == Implementation whe
     1  : % == scalarMatrix(n,1)$JCF32MAT pretend %
 
     matrix(ll) ==
-        (#ll = n) and (#ll.1 = n) => matrix(ll)$JCF32MAT pretend %
-        error "matrix: incompatible dimensions"
+      (#ll = n) and (#ll.1 = n) => matrix(ll)$JCF32MAT pretend %
+      error "matrix: incompatible dimensions"
 
     squareMatrix(m) ==
-        nr := nrows(m)
-        nr ~= n or nr ~= ncols(m) => error "squareMatrix: incompatible dimensions"
-        copy(m) pretend %
+      nr := nrows(m)
+      nr ~= n or nr ~= ncols(m) => error "squareMatrix: incompatible dimensions"
+      copy(m) pretend %
 
     one?(m) == jl_bool_2dffunction(1$NNI, "isone",
-                jlVector(m pretend JCF32MAT), ncols(m pretend JCF32MAT))$Lisp
+      jlVector(m pretend JCF32MAT), ncols(m pretend JCF32MAT))$Lisp

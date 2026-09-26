@@ -142,21 +142,20 @@ JLF32LinearAlgebra() : Exports == Implementation where
 
     normalize(v : JF32VEC) ==
       vt := copy(v)
-      jlApplyFunction("normalize!", vt)
+      jlApplyFunction!("normalize!", vt)
       vt
-    normalize!(v: JF32VEC) == (jlApplyFunction("normalize!", v);v)
+    normalize!(v: JF32VEC) == (jlApplyFunction!("normalize!", v);v)
     normalize(m : JF32MAT) ==
       nr := nrows(m)
       mt := qnew(nr, ncols(m))$JF32MAT
       jlApplyFunction!("normalize", jlVector(mt), jlVector(m), nr)
       mt
     normalize!(m: JF32MAT) ==
-      jlApplyFunction("normalize!", jlVector(m), nrows(m))
+      jlApplyFunction!("normalize!", jlVector(m), nrows(m))
       m
 
     norm(v : JF32VEC) == jlApplyFunction("norm", v)
-    norm(v : JF32VEC, p:JF32) ==
-      jlApplyFunction("norm", v, p)
+    norm(v : JF32VEC, p:JF32) == jlApplyFunction("norm", v, p)
     norm(m : JF32MAT) == jlApplyFunction("norm", jlVector(m),nrows(m))
     norm(m : JF32MAT, p:JF32) ==
       jlApplyFunction( "norm", jlVector(m),nrows(m), p)
@@ -237,8 +236,7 @@ JLF32LinearAlgebra() : Exports == Implementation where
       m := nrows(a)
       m ~= ncols(a) => error "eigvecs: matrix is not square"
       ret := qnew(m,m)$JCF32MAT
-      jlApplyFunction!("eigvecs", jlVector(ret),
-        jlVector(a), m)
+      jlApplyFunction!("eigvecs", jlVector(ret),jlVector(a), m)
       ret
 
     eigen(a) ==
@@ -374,20 +372,20 @@ JLF32LinearAlgebra() : Exports == Implementation where
 
     triu(m) ==
       mm := copy m
-      jlApplyFunction("triu!", jlVector(mm), nrows(mm))
+      jlApplyFunction!("triu!", jlVector(mm), nrows(mm))
       mm
 
     triu!(m) ==
-      jlApplyFunction("triu!", jlVector(m), nrows(m))
+      jlApplyFunction!("triu!", jlVector(m), nrows(m))
       m
 
     tril(m) ==
       mm := copy m
-      jlApplyFunction("tril!", jlVector(mm), nrows(mm))
+      jlApplyFunction!("tril!", jlVector(mm), nrows(mm))
       mm
 
     tril!(m) ==
-      jlApplyFunction("tril!", jlVector(m), nrows(m))
+      jlApplyFunction!("tril!", jlVector(m), nrows(m))
       m
 
 )abbrev package JCF32LA JLCF32LinearAlgebra
@@ -494,10 +492,10 @@ JLCF32LinearAlgebra() : Exports == Implementation where
 
     normalize(v : JCF32VEC) == -- TODO: avoid copy (use qnew)
       vtmp := copy(v)
-      jlApplyFunction("normalize!", vtmp)
+      jlApplyFunction!("normalize!", vtmp)
       vtmp
 
-    normalize!(v: JCF32VEC) == (jlApplyFunction("normalize!", v);v)
+    normalize!(v: JCF32VEC) == (jlApplyFunction!("normalize!", v);v)
 
     normalize(m : JCF32MAT) ==
       nr := nrows(m)
@@ -506,7 +504,7 @@ JLCF32LinearAlgebra() : Exports == Implementation where
       mtmp
 
     normalize!(m: JCF32MAT) ==
-      jlApplyFunction("normalize!", jlVector(m), nrows(m))
+      jlApplyFunction!("normalize!", jlVector(m), nrows(m))
       m
 
     norm(v : JCF32VEC) == jlApplyFunction("norm", v)

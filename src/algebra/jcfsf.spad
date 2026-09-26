@@ -2,6 +2,7 @@
 ++ Special functions computed using Julia's ecosystem.
 JLComplexFloatSpecialFunctions() : Exports == Implementation where
   JCF ==> JLComplexFloat
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
   Exports ==> with
     sind   : JCF -> JCF
     ++ sind(x) computes sine of x, where x is in degrees.
@@ -49,8 +50,6 @@ JLComplexFloatSpecialFunctions() : Exports == Implementation where
     ++ deg2Rad(x) converts x to radians, where x is in degrees.
 
   Implementation ==> add
-
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
 
     jl_cfloat_function_cfloat(func, fl) ==>
       jlref(concat([func, "(", getind(fl),")"]))$JCF

@@ -80,7 +80,6 @@ JLFloatSpecialFunctions2() : Exports == Implementation where
     ++ riemannZeta(x) computes Riemann zeta function at x.
 
   Implementation ==> add
-    import from JLUtilityFunctions
 
     -- Gamma Functions
 

@@ -2,10 +2,10 @@
 ++ Special functions computed using Julia's ecosystem.
 JLFloatSpecialFunctions() : Exports == Implementation where
   JF ==> JLFloat
-  INT ==> Integer
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
   Exports ==> with
 
-    ldexp : (JF, INT) -> JF
+    ldexp : (JF, Integer) -> JF
     ++ ldexp(x,n) computes x*2^n
 
     sind   : JF -> JF
@@ -55,7 +55,7 @@ JLFloatSpecialFunctions() : Exports == Implementation where
     ++ deg2Rad(x) converts x to radians, where x is in degrees.
 
   Implementation ==> add
-    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+
     ldexp(x,n) == jlref(concat(["ldexp(", getind(x), ",", string(n), ")"]))$JF
 
     sinpi(x) == jlApply("sinpi", x)
