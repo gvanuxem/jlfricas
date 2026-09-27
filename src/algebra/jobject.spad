@@ -78,6 +78,9 @@ JLObjectType() : Category == JLType() with
     ++ In the Julia interpreter, enter in the package management mode
     ++ with ']', and issue:
     ++ pkg> add "https://github.com/tecosaur/About.jl"
+    jlNames : % -> JLObject
+    ++ jlNames(obj) returns the names of obj depending of the type
+    ++ of obj.
     jlPropertyNames : % -> JLObject
     ++ jlPropertyNames(obj) returns the property/element names of obj.
     jlGetProperty : (%, JLSymbol) -> JLObject
@@ -147,6 +150,7 @@ JLObjectType() : Category == JLType() with
         error(concat("jlAbout: the _"About.jl_" Julia package is not installed.",
           " See the JLObjectType category documentation for information"))
       jlEvalString(concat(["about(", getind(obj),")"]))@Void
+    jlNames(obj) == junfunc("names", obj)
     jlFieldNames(obj) == junfunc("fieldnames", obj)
     jlPropertyNames(obj) == junfunc("propertynames", obj)
     jlGetProperty(obj, sym) ==
@@ -711,6 +715,10 @@ JLObjR() : Exports == Implementation where
     jlRApply : (String, %) -> %
     ++ jlRApply(func, robj) applies the R function func
     ++ form the module __main__ to the R object robj.
+    ++ For example:
+    ++ \example{jlRApply("abs", (-2)::JLObjR)}
+    ++ \example{jlREval jstring "mtcars";}
+    ++ \example{jlRApply("summary", %)}
     jlRApply : (String, %, %) -> %
     ++ jlRApply(func, robj1, robj2) applies the R function func
     ++ form the module __main__ to the R objects robj1 and robj2.
@@ -725,12 +733,19 @@ JLObjR() : Exports == Implementation where
     ++ form the module __main__ to the R objects robj1, robj2, robj3, robj4 and robj5.
     jlREval : % -> %
     ++ jlREval(rexpr) evaluates the R expression rexpr in the Julia R environment.
+    jlREval : JLObject -> %
+    ++ jlREval(obj) evaluates the expression obj as a Julia object
+    ++ in the Julia R environment. For example:
+    ++ \example{jlREval jstring "mtcars"}
     jlRParse : String -> %
     ++ jlRParse(str) parses the R expression str and returns it as a Julia R object.
     ++ Can be evaluated using the jlREval function for example.
     jlRCopy : % -> JLObject
     ++ jlRCopy(robj) returns a Julia object copy of the R object robj
-    ++ if possible.
+    ++ if possible. Use jlType to know the resulting type of robj if
+    ++ necessary. For example:
+    ++ \example{robj:=jlREval jstring "mtcars";}
+    ++ \example{jlRCopy robj}
     jlRConvert : (String, %) -> JLObject
     ++ jlRConvert(type, robj) converts the R object robj
     ++ to the Julia type 'type'.
@@ -798,6 +813,7 @@ JLObjR() : Exports == Implementation where
     jlRPrint(robj : %) == junfunc("rprint", robj)
     jlRType(robj : %) == jlref(concat(["rcall(:typeof,", getind(robj), ")"]))
     jlREval(robj : %) == junfunc("reval", robj)
+    jlREval(obj : JLObject) == jlApply("reval", obj) pretend %
     jlRParse(str : String) == jlref(concat(["rparse(_"", str, "_")"]))
 
     coerce(i : Integer) == jlref(concat(["R_"", string(i),"_""]))
@@ -1451,8 +1467,7 @@ JLDataFrame() : Exports == Implementation where
     first(df, n) == head(df, n)
     last(df, n) == tail(df, n)
 
-    #df ==
-      nrows(df) * ncols(df)
+    #df == nrows(df) * ncols(df)
     elt(obj : %, jsy : JLSymbol) ==
       defined := concat(["hasproperty(", getind(obj), ",",
         str := string(jsy), ")"])
@@ -1475,7 +1490,6 @@ JLDataFrame() : Exports == Implementation where
       tls := first lines formatExpression(lnames::OutputForm)$Format1D
       jlref(concat(["DataFrame(",
         getind(coerce(array)$JLMatrix(JLObjFloat64)),",", tls, ")"]))
-    coerce(obj : %) : OutputForm == coerce(obj pretend JLObject)
 
 )abbrev domain JVECTOR JLVector
 ++ Description: This domain provides a JLVector type

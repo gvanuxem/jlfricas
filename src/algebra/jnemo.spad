@@ -329,14 +329,14 @@ NMAlgebraicNumber() : Exports == Implementation where
     jnanumber : String -> %
     ++ jnanumber(str) evaluates str (which must return a Nemo AlgebraicNumber
     ++ in Julia) and returns the corresponding NMAlgebraicNumber.
-    QQbar : Integer -> %
-    ++ QQbar(x) returns x as a NMAlgebraicNumber.
-    QQbar : Fraction(Integer) -> %
-    ++ QQbar(q) returns q as a NMAlgebraicNumber.
-    QQbar : NMInteger -> %
-    ++ QQbar(x) returns x as a NMAlgebraicNumber.
-    QQbar : NMFraction(NMInteger) -> %
-    ++ QQbar(q) returns q as a NMAlgebraicNumber.
+    QQBar : Integer -> %
+    ++ QQBar(x) returns x as a NMAlgebraicNumber.
+    QQBar : Fraction(Integer) -> %
+    ++ QQBar(q) returns q as a NMAlgebraicNumber.
+    QQBar : NMInteger -> %
+    ++ QQBar(x) returns x as a NMAlgebraicNumber.
+    QQBar : NMFraction(NMInteger) -> %
+    ++ QQBar(q) returns q as a NMAlgebraicNumber.
   Implementation ==> add
     import from JLUtilityFunctions
     import from JLStringUtilities
@@ -537,10 +537,10 @@ NMAlgebraicNumber() : Exports == Implementation where
     jnanumber(fi : NMFraction(NMInteger)) == coerce(fi)
     jnanumber(s: String) == jlref(concat(["QQBar(", s,")"]))
 
-    QQbar(i : Integer) == jlref(concat(["QQBar(",string(i),")"]))
-    QQbar(fi : Fraction(Integer)) == coerce(fi)
-    QQbar(i : NMInteger) == coerce(i)
-    QQbar(fi : NMFraction(NMInteger)) == coerce(fi)
+    QQBar(i : Integer) == jlref(concat(["QQBar(",string(i),")"]))
+    QQBar(fi : Fraction(Integer)) == coerce(fi)
+    QQBar(i : NMInteger) == coerce(i)
+    QQBar(fi : NMFraction(NMInteger)) == coerce(fi)
     coerce(i : %) : OutputForm == message(string(i))
 
 )abbrev domain NRESRING NMResidueRing
