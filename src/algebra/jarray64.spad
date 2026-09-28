@@ -319,6 +319,8 @@ JLFloat64Matrix() : Exports == Implementation where
     ++ Column major order.
     coerce : % -> Matrix(DoubleFloat)
     ++ coerce(m) coerces a copy of m to a Matrix(DoubleFloat).
+    coerce : Matrix(DoubleFloat) -> %
+    ++ coerce(m) coerces a copy of m to a JLFloat64Matrix.
     jlVector : % -> JLFloat64Vector
     ++ jlVector(m) returns reference to the internal vector representation.
     jlApply : (String, %) -> Void
@@ -465,12 +467,17 @@ JLFloat64Matrix() : Exports == Implementation where
         matrix l
 
     coerce(m : %) : Matrix(DoubleFloat) ==
-        l : List List DoubleFloat
-        l := [[qelt(m, j, i)::DoubleFloat _
-          for i in 1 .. ncols(m)] _
-          for j in 1 .. nrows(m)]
-        matrix l
-
+      mat : Matrix(DoubleFloat) := qnew(nrows(m),ncols(m))
+      for i in 1 .. nrows(m) repeat 
+        for j in 1 .. ncols(m) repeat 
+          qsetelt!(mat, i, j, qelt(m,i,j) pretend DoubleFloat)
+      mat
+    coerce(m : Matrix(DoubleFloat)) : % ==
+      mat : % := qnew(nrows(m),ncols(m))
+      for i in 1 .. nrows(m) repeat 
+        for j in 1 .. ncols(m) repeat 
+          qsetelt!(mat, i, j, qelt(m,i,j) pretend JLFloat64)
+      mat
     square?(m) == m.nrows = m.ncols
     zero?(m) == jl_bool_2dfunction(0$NNI, "iszero", m.elts, m.ncols)$Lisp
     diagonal?(m) == jl_bool_2dfunction(0$NNI, "isdiag", m.elts, m.ncols)$Lisp

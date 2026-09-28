@@ -770,7 +770,7 @@ JLObjR() : Exports == Implementation where
     ++ coerce(str) coerces the string str to a Julia R string object.
     jr : JLObject -> %
     ++ jr(obj) returns obj as a Julia R object. This is the preferred
-    ++ method.For example:
+    ++ method. For example:
     ++ \example{a:= nrand(10,4)}
     ++ \example{b := jr(a::JLMatrix(JLObjFloat64))}
     ++ \example{jlRApply("prcomp", b)}
@@ -1855,13 +1855,19 @@ JLMatrix(R : JLObjectRing) : Exports == Implementation where
     coerce : % -> Matrix(R)
     ++ coerce(m) coerces a copy of m to a Matrix(R).
     coerce : JLFloat64Matrix -> JLMatrix(JLObjFloat64)
-    ++ coerce(x): convenience function.
+    ++ coerce(m): convenience function.
     coerce : JLComplexF64Matrix -> JLMatrix(JLObjComplexF64)
-    ++ coerce(x): convenience function.
+    ++ coerce(m): convenience function.
     coerce : JLFloat32Matrix -> JLMatrix(JLObjFloat32)
-    ++ coerce(x): convenience function.
+    ++ coerce(m): convenience function.
     coerce : JLComplexF32Matrix -> JLMatrix(JLObjComplexF32)
-    ++ coerce(x): convenience function.
+    ++ coerce(m): convenience function.
+    coerce : JLMatrix(JLObjFloat32) -> JLFloat32Matrix
+    ++ coerce(m): convenience function.
+    coerce : JLMatrix(JLObjFloat64) -> JLFloat64Matrix
+    ++ coerce(m): convenience function.
+    coerce : JLMatrix(JLObjFloat64) -> Matrix(DoubleFloat)
+    ++ coerce(m): convenience function.
     factorize : JLMatrix(JLObjFloat32) -> JLObject
     ++ factorize(m) factorizes m using a suited matrix factorization for m.
     ++ For a symmetric matrix the Bunch-Kaufman factorization will be chosen
@@ -2106,5 +2112,24 @@ JLMatrix(R : JLObjectRing) : Exports == Implementation where
       make_jlref_from_mat(0$NNI, jlVector(m), nrows m)$Lisp
     coerce(m : JLComplexF64Matrix) : JLMatrix(JLObjComplexF64) ==
       make_jlref_from_mat(1$NNI, jlVector(m), nrows m)$Lisp
+    coerce(m : JLMatrix(JLObjFloat32)) : JLFloat32Matrix ==
+      mat := qnew(nrows(m), ncols(m))$JLFloat32Matrix
+      for i in 1..ncols(m) repeat
+        for j in 1..nrows(m) repeat
+          qsetelt!(mat, i, j, jlEvalString(jlGetJuliaIndex(qelt(m, i, j)))@JLFloat32)
+      mat
+    coerce(m : JLMatrix(JLObjFloat64)) : JLFloat64Matrix ==
+      mat := qnew(nrows(m), ncols(m))$JLFloat64Matrix
+      for i in 1..ncols(m) repeat
+        for j in 1..nrows(m) repeat
+          qsetelt!(mat, i, j, jlEvalString(jlGetJuliaIndex(qelt(m, i, j)))@JLFloat64)
+      mat
+    coerce(m : JLMatrix(JLObjFloat64)) : Matrix(DoubleFloat) ==
+      mat := qnew(nrows(m), ncols(m))$Matrix(DoubleFloat)
+      for i in 1..ncols(m) repeat
+        for j in 1..nrows(m) repeat
+          qsetelt!(mat, i, j,
+            jlEvalString(jlGetJuliaIndex(qelt(m, i, j)))@JLFloat64 pretend DoubleFloat)
+      mat
     coerce(m : %) : OutputForm == coerce(m pretend JLObject)
     jmatrix(str) == jlref(str)
