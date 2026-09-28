@@ -711,13 +711,13 @@ JLObjPy() : Exports == Implementation where
 JLObjR() : Exports == Implementation where
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
   junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
-  Exports ==> JLObjectType with
+  Exports ==> Join(JLObjectType, JLObjectAggregate) with
     jlRApply : (String, %) -> %
     ++ jlRApply(func, robj) applies the R function func
     ++ form the module __main__ to the R object robj.
     ++ For example:
     ++ \example{jlRApply("abs", (-2)::JLObjR)}
-    ++ \example{jlREval jstring "mtcars";}
+    ++ \example{jlREval "mtcars";}
     ++ \example{jlRApply("summary", %)}
     jlRApply : (String, %, %) -> %
     ++ jlRApply(func, robj1, robj2) applies the R function func
@@ -736,7 +736,7 @@ JLObjR() : Exports == Implementation where
     jlREval : JLObject -> %
     ++ jlREval(obj) evaluates the expression obj as a Julia object
     ++ in the Julia R environment. For example:
-    ++ \example{jlREval jstring "mtcars"}
+    ++ \example{jlREval "mtcars"}
     jlRParse : String -> %
     ++ jlRParse(str) parses the R expression str and returns it as a Julia R object.
     ++ Can be evaluated using the jlREval function for example.
@@ -744,7 +744,7 @@ JLObjR() : Exports == Implementation where
     ++ jlRCopy(robj) returns a Julia object copy of the R object robj
     ++ if possible. Use jlType to know the resulting type of robj if
     ++ necessary. For example:
-    ++ \example{robj:=jlREval jstring "mtcars";}
+    ++ \example{robj:=jlREval "mtcars";}
     ++ \example{jlRCopy robj}
     jlRConvert : (String, %) -> JLObject
     ++ jlRConvert(type, robj) converts the R object robj
@@ -769,16 +769,20 @@ JLObjR() : Exports == Implementation where
     coerce : String -> %
     ++ coerce(str) coerces the string str to a Julia R string object.
     jr : JLObject -> %
-    ++ jr(obj) returns obj as a Julia R object.
-    jr : String -> %
-    ++ jr(str) coerces the string str to a Julia R object
-    ++ using the Julia @R_str macro.
-    ++ Use jlDisplay(robj) to display the R object robj.
-    ++  For example:
-    ++ \example{jr "optim(0, $(x -> x-cos(x)), method='L-BFGS-B')"}
+    ++ jr(obj) returns obj as a Julia R object. This is the preferred
+    ++ method.For example:
     ++ \example{a:= nrand(10,4)}
     ++ \example{b := jr(a::JLMatrix(JLObjFloat64))}
     ++ \example{jlRApply("prcomp", b)}
+    jr : String -> %
+    ++ jr(str) coerces the string str to a Julia R object
+    ++ using the Julia @R_str macro.
+    ++ Use jlDisplay(robj) to display the R object robj if
+    ++ necessary.
+    ++  For example:
+    ++ \example{jr "optim(0, $(x -> x-cos(x)), method='L-BFGS-B')"}
+    ++ \example{ret:= jlRCopy %}
+    ++ \example{qelt(ret,par), qelt(ret,value)}
   Implementation ==> add
     import from JLUtilityFunctions
     jlInitialize(true)
@@ -1420,6 +1424,8 @@ JLDataFrame() : Exports == Implementation where
     ++ jlDescribe(df) returns basic statistics about df.
     matrix : % -> JLObject
     ++ matrix(df) returns a copy of the internal DataFrame matrix.
+    jdframe : JLObject -> %
+    ++ jdframe(obj) returns the object as a DataFrame. If possible.
     jdframe : JLFloat64Matrix -> %
     ++ jdframe(array) returns an automatically created data frame.
     jdframe : JLMatrix(JLObjFloat64) -> %
@@ -1482,6 +1488,7 @@ JLDataFrame() : Exports == Implementation where
       jlref(concat([getind(obj), "[!,", string(ind), "]"]))
     jlDescribe(df) == junfunc("describe", df)
     matrix(df) == junfunc("Matrix", df)
+    jdframe(obj : JLObject) == junfunc("dfa", obj)
     jdframe(array : JLFloat64Matrix) ==
       junfunc("dfa", coerce(array)$JLMatrix(JLObjFloat64))
     jdframe(array : JLMatrix(JLObjFloat64)) ==
