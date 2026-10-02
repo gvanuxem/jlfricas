@@ -1868,6 +1868,7 @@ JLMatrix(R : JLObjectRing) : Exports == Implementation where
     ++ coerce(m): convenience function.
     coerce : JLMatrix(JLObjFloat64) -> Matrix(DoubleFloat)
     ++ coerce(m): convenience function.
+    ++ \example{nrand(4,4)::JLMatrix(JLObjFloat64)::Matrix(DoubleFloat)}
     factorize : JLMatrix(JLObjFloat32) -> JLObject
     ++ factorize(m) factorizes m using a suited matrix factorization for m.
     ++ For a symmetric matrix the Bunch-Kaufman factorization will be chosen
@@ -1887,6 +1888,7 @@ JLMatrix(R : JLObjectRing) : Exports == Implementation where
     jmatrix : String -> %
     ++ jmatrix(str) evaluates the string str and returns the generated matrix.
     ++ No checks are done at the FriCAS level.
+    ++ \example{jmatrix("rand(3,3)")$JLMatrix(JLObjFloat64)}
   Implementation ==> add --Matrix(R) add
     import from JLUtilityFunctions
     jlInitialize(true)

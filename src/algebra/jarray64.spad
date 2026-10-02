@@ -58,7 +58,7 @@ JLInt64Vector() : Exports == Implementation where
     fill!(v, x)       == (for i in 1..Qsize v repeat Qsetelt(v, i, x); v)
     less?(v,n) == #v < n
     vector l == construct l
-    coerce(v) : OutputForm      ==
+    coerce(v) : OutputForm  ==
       ~pprint => bracket [qelt(v, k)::OutputForm for k in 1$Lisp .. maxIndex v]
       ret: List OutputForm :=
         jl_stringify_1difunction("show", "_"text/plain_"", v)$Lisp
@@ -83,7 +83,7 @@ JLFloat64Vector() : Exports == Implementation where
   Qsetelt         ==> DFSETAREF11$Lisp
   Exports ==> JLVectorCategory(JLFloat64) with
     coerce  : % -> DoubleFloatVector
-    ++ coerce(v) coerces a copy of v to a DoubleFloatVector.
+    ++ coerce(v) coerces v to a DoubleFloatVector.
     coerce! : % -> DoubleFloatVector
     ++ coerce!(v) coerces v to a DoubleFloatVector.
     vector  : List JF64 -> %
@@ -318,9 +318,9 @@ JLFloat64Matrix() : Exports == Implementation where
     ++ qsetelt!(m, i, r) sets the i-th element of m to r.
     ++ Column major order.
     coerce : % -> Matrix(DoubleFloat)
-    ++ coerce(m) coerces a copy of m to a Matrix(DoubleFloat).
+    ++ coerce(m) coerces m to a Matrix(DoubleFloat).
     coerce : Matrix(DoubleFloat) -> %
-    ++ coerce(m) coerces a copy of m to a JLFloat64Matrix.
+    ++ coerce(m) coerces a m to a JLFloat64Matrix.
     jlVector : % -> JLFloat64Vector
     ++ jlVector(m) returns reference to the internal vector representation.
     jlApply : (String, %) -> Void
