@@ -545,7 +545,21 @@ JLObjDict() : Exports == Implementation where
 JLObjPy() : Exports == Implementation where
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
   junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
-  Exports ==> JLObjectType with
+  Exports ==> Join(JLObjectType, JLObjectAggregate) with
+    elt : (%, JLSymbol) -> %
+    ++ elt(obj, sym) returns the property/element sym of obj.
+    ++ For example:
+    ++ \example{ret := jlApply("svd", jobject("rand(4,4)")); ret.U}
+    qelt : (%, JLSymbol) -> %
+    ++ qelt(obj, sym) returns the property/element sym of obj. No checks are done
+    ++ regarding the existence of the sym property. If it does not exist,
+    ++ Julia throws an error.
+    elt : (%, Integer) -> %
+    ++ elt(obj, ind) returns the element at index ind of obj.
+    ++ It can be used, for example, with a Tuple or a Vector.
+    qelt : (%, Integer) -> %
+    ++ qelt(obj, ind) returns the element at index ind of obj.
+    ++ It can be used, for example, with a Tuple or a Vector.
     jlPyApply : (String, %) -> %
     ++ jlPyApply(func, pyobj) applies the Python function func
     ++ form the module __main__ to the Python object pyobj.
@@ -636,6 +650,19 @@ JLObjPy() : Exports == Implementation where
     jlPyImport(pmod) ==
       jlref(concat(["pyimport(_"", pmod, "_")"]))
 
+    elt(obj : %, jsy : JLSymbol) ==
+      defined : String := concat(["hasproperty(", getind(obj), ",",
+        str := string(jsy), ")"])
+      not jlEvalString(defined)@Boolean =>
+        error concat("elt: undefined symbol ", str)
+      jlref(concat(["getproperty(", getind(obj), ",", string(jsy), ")"]))
+    qelt(obj : %, jsy : JLSymbol) ==
+      jlref(concat(["get(", getind(obj), ",", string(jsy), ", missing)"]))
+    elt(obj : %, ind : Integer) ==
+      jlref(concat([getind(obj), "[", string(ind), "]"]))
+    qelt(obj : %, ind : Integer) ==
+      jlref(concat([getind(obj), "[", string(ind), "]"]))
+
     jlPyApply(func : String, pyobj : %) ==
       jlref(concat([func, "(", getind(pyobj), ")"]))
     jlPyApply(func : String, pyobj1 : %, pyobj2 : %) ==
@@ -712,6 +739,20 @@ JLObjR() : Exports == Implementation where
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
   junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
   Exports ==> Join(JLObjectType, JLObjectAggregate) with
+    elt : (%, JLSymbol) -> %
+    ++ elt(obj, sym) returns the property/element sym of obj.
+    ++ For example:
+    ++ \example{ret := jlApply("svd", jobject("rand(4,4)")); ret.U}
+    qelt : (%, JLSymbol) -> %
+    ++ qelt(obj, sym) returns the property/element sym of obj. No checks are done
+    ++ regarding the existence of the sym property. If it does not exist,
+    ++ Julia throws an error.
+    elt : (%, Integer) -> %
+    ++ elt(obj, ind) returns the element at index ind of obj.
+    ++ It can be used, for example, with a Tuple or a Vector.
+    qelt : (%, Integer) -> %
+    ++ qelt(obj, ind) returns the element at index ind of obj.
+    ++ It can be used, for example, with a Tuple or a Vector.
     jlRApply : (String, %) -> %
     ++ jlRApply(func, robj) applies the R function func
     ++ form the module __main__ to the R object robj.
@@ -794,6 +835,19 @@ JLObjR() : Exports == Implementation where
     -- Does not compile
     -- jlRImport(mod) == jlEvalString(concat("@rimport ", mod))
 
+    elt(obj : %, jsy : JLSymbol) ==
+      defined : String := concat(["hasproperty(", getind(obj), ",",
+        str := string(jsy), ")"])
+      not jlEvalString(defined)@Boolean =>
+        error concat("elt: undefined symbol ", str)
+      jlref(concat(["getproperty(", getind(obj), ",", string(jsy), ")"]))
+    qelt(obj : %, jsy : JLSymbol) ==
+      jlref(concat(["get(", getind(obj), ",", string(jsy), ", missing)"]))
+    elt(obj : %, ind : Integer) ==
+      jlref(concat([getind(obj), "[", string(ind), "]"]))
+    qelt(obj : %, ind : Integer) ==
+      jlref(concat([getind(obj), "[", string(ind), "]"]))
+
     jlRApply(func : String, robj : %) ==
       jlref(concat(["rcall(:", func, ",", getind(robj), ")"]))
     jlRApply(func : String, robj1 : %, robj2 : %) ==
@@ -831,11 +885,11 @@ JLObjR() : Exports == Implementation where
     jr(robj : JLObject) == junfunc("robject", robj)
     jr(str : String) == jlref(concat(["R_"", str, "_""]))
     coerce(obj) : OutputForm ==
-      lstr := rest jlText(obj,"plain")
-      #lstr = 0 => message("No output")
-      #lstr > 1 => pile(append(["" pretend OutputForm],
-        lstr pretend List OutputForm))
-      message(elt(lstr,1))
+      lstr := jlText(obj,"plain")
+      n := #lstr
+      n = 0 => message("No output")
+      n = 1 => message(elt(lstr,1))
+      pile(append(["" pretend OutputForm], rest(lstr) pretend List OutputForm))
 
 )abbrev domain JFLOAT JLFloat
 ++ Domain for Julia (Big) floats
