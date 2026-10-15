@@ -23,16 +23,16 @@ Julia WS Object category using the Wolfram Symbol Transport Protocol.
  jlEval : % -> %    jlFieldNames : % -> JLObject
  jlGetField : (%, JLSymbol) -> JLObject    jlGetJuliaIndex : % -> String
  jlGetProperty : (%, JLSymbol) -> JLObject    jlHead : % -> WSSymbol
- jlId : % -> Integer    jlObject : () -> String
- jlPropertyNames : % -> JLObject    jlRef : % -> SExpression
- jlSymbolic : % -> String    jlText : (%, String) -> List(String)
- jlType : % -> Symbol    jlimref : String -> %
- jlref : String -> %    latex : % -> String
- missing? : % -> Boolean    mutable? : % -> Boolean
- nothing? : % -> Boolean    numeric : (%, PositiveInteger) -> WSExpression
- numeric : % -> WSExpression    numeric? : % -> Boolean
- string : % -> String    toString : % -> String
- ?~=? : (%, %) -> Boolean
+ jlId : % -> Integer    jlNames : % -> JLObject
+ jlObject : () -> String    jlPropertyNames : % -> JLObject
+ jlRef : % -> SExpression    jlSymbolic : % -> String
+ jlText : (%, String) -> List(String)    jlType : % -> Symbol
+ jlimref : String -> %    jlref : String -> %
+ latex : % -> String    missing? : % -> Boolean
+ mutable? : % -> Boolean    nothing? : % -> Boolean
+ numeric : (%, PositiveInteger) -> WSExpression    numeric : % -> WSExpression
+ numeric? : % -> Boolean    string : % -> String
+ toString : % -> String    ?~=? : (%, %) -> Boolean
 ```
 
 ## Operations
@@ -55,6 +55,7 @@ Julia WS Object category using the Wolfram Symbol Transport Protocol.
 | [`jlGetProperty`](#jlgetproperty) | jlGetProperty(obj, sym) returns the property/element sym of obj. |
 | [`jlHead`](#jlhead) | jlHead(expr) returns the Head type of expr. |
 | [`jlId`](#jlid) | jlId(obj) returns the Julia indexed dictionary index referencing the object obj. |
+| [`jlNames`](#jlnames) | jlNames(obj) returns the names of obj depending of the type of obj. |
 | [`jlObject`](#jlobject) | jlObject() returns the internal Julia name of the Julia module used. For example:... |
 | [`jlPropertyNames`](#jlpropertynames) | jlPropertyNames(obj) returns the property/element names of obj. |
 | [`jlRef`](#jlref) | jlRef(obj) returns the internal Lisp representation of the Julia object obj. |
@@ -93,7 +94,7 @@ coerce(obj) coerces obj to JLObject. Convenience function.
 
 - **From**: [`JLObjectType`](JLObjectType.md)
 
-#### `convert` <a id="convert"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L377)\]
+#### `convert` <a id="convert"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L357)\]
 
 convert(a) transforms a into an element of S.
 
@@ -129,7 +130,7 @@ jlAbout(obj) displays Julia information about obj if you have About.jl installed
 - **Signature**: `% -> Void`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
-#### `jlApply` <a id="jlapply"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L58)\]
+#### `jlApply` <a id="jlapply"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L57)\]
 
 ##### `jlApply` : `(String, %) -> JLObject`
 
@@ -235,6 +236,13 @@ jlId(obj) returns the Julia indexed dictionary index referencing the object obj.
 - **Signature**: `% -> Integer`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
+#### `jlNames` <a id="jlnames"></a>
+
+jlNames(obj) returns the names of obj depending of the type of obj.
+
+- **Signature**: `% -> JLObject`
+- **From**: [`JLObjectType`](JLObjectType.md)
+
 #### `jlObject` <a id="jlobject"></a>
 
 jlObject() returns the internal Julia name of the Julia module used. For example:
@@ -303,7 +311,7 @@ jlimref(str) evaluates the Julia command str and returns the corresponding FriCA
 - **Signature**: `String -> %`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
-#### `jlref` <a id="jlref"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L57)\]
+#### `jlref` <a id="jlref"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L56)\]
 
 ##### `jlref` : `% -> SExpression`
 

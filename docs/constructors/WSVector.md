@@ -1,6 +1,6 @@
 # WSVector
 
-> **Kind**: Domain &nbsp;|&nbsp; \[[Source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L242)\] &nbsp;|&nbsp; **Group**: WS — MathLink
+> **Kind**: Domain &nbsp;|&nbsp; \[[Source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L235)\] &nbsp;|&nbsp; **Group**: WS — MathLink
 
 ## Description
 
@@ -47,40 +47,41 @@ Julia WS vectors using the MathLink Julia package.
  jlEval : % -> %    jlFieldNames : % -> JLObject
  jlGetField : (%, JLSymbol) -> JLObject    jlGetJuliaIndex : % -> String
  jlGetProperty : (%, JLSymbol) -> JLObject    jlHead : % -> WSSymbol
- jlId : % -> Integer    jlObject : () -> String
- jlPropertyNames : % -> JLObject    jlRef : % -> SExpression
- jlSymbolic : % -> String    jlText : (%, String) -> List(String)
- jlType : % -> Symbol    jlimref : String -> %
- jlref : String -> %    join : (%, %) -> %
- last : % -> E    latex : % -> String
- length : % -> E if E has RADCAT and E has RING    length : % -> WSInteger
- less? : (%, NonNegativeInteger) -> Boolean    map : ((E -> E), %) -> %
- map : (((E, E) -> E), %, %) -> %    map! : ((E -> E), %) -> % if % has ATSHMUT
- max : % -> E if % has ATFINAG and E has ORDSET    maxIndex : % -> Integer if Integer has ORDSET
- members : % -> List(E) if % has ATFINAG    min : % -> E if % has ATFINAG and E has ORDSET
- minIndex : % -> Integer if Integer has ORDSET    missing? : % -> Boolean
- more? : (%, NonNegativeInteger) -> Boolean    mutable? : % -> Boolean
- new : (NonNegativeInteger, E) -> %    norm : % -> E
- nothing? : % -> Boolean    numeric : (%, PositiveInteger) -> WSExpression
- numeric : % -> WSExpression    numeric? : % -> Boolean
- outerProduct : (%, %) -> Matrix(E) if E has RING    part : (%, WSInteger) -> E
- parts : % -> List(E) if % has ATFINAG    prepend : (%, E) -> %
- qelt : (%, Integer) -> E    qsetelt : (%, Integer, E) -> %
- qsetelt! : (%, Integer, E) -> E if % has ATSHMUT    qsetelt! : (%, Integer, E) -> %
- reduce : (((E, E) -> E), %) -> E if % has ATFINAG    removeDuplicates : % -> %
- replacePart : (%, %) -> %    rest : % -> %
- reverse : (%, WSList(WSInteger)) -> %    reverse : (%, WSInteger) -> %
- reverse : % -> %    riffle : (%, %, %) -> %
- riffle : (%, %) -> %    sample : () -> %
- setIntersection : (%, %) -> %    setelt : (%, Integer, E) -> %
- setelt! : (%, Integer, E) -> E if % has ATSHMUT    setelt! : (%, Integer, E) -> %
- size? : (%, NonNegativeInteger) -> Boolean    sort : % -> %
- sorted? : % -> Boolean    string : % -> String
- take : (%, WSList(WSInteger)) -> %    take : (%, Integer) -> %
- toString : % -> String    total : % -> E if E has WSNUM
- transpose : % -> %    union : (%, %) -> %
- vector : WSList(E) -> %    zero : NonNegativeInteger -> % if E has ABELMON
- zero? : % -> Boolean if E has ABELMON    ?~=? : (%, %) -> Boolean
+ jlId : % -> Integer    jlNames : % -> JLObject
+ jlObject : () -> String    jlPropertyNames : % -> JLObject
+ jlRef : % -> SExpression    jlSymbolic : % -> String
+ jlText : (%, String) -> List(String)    jlType : % -> Symbol
+ jlimref : String -> %    jlref : String -> %
+ join : (%, %) -> %    last : % -> E
+ latex : % -> String    length : % -> E if E has RADCAT and E has RING
+ length : % -> WSInteger    less? : (%, NonNegativeInteger) -> Boolean
+ map : ((E -> E), %) -> %    map : (((E, E) -> E), %, %) -> %
+ map! : ((E -> E), %) -> % if % has ATSHMUT    max : % -> E if % has ATFINAG and E has ORDSET
+ maxIndex : % -> Integer if Integer has ORDSET    members : % -> List(E) if % has ATFINAG
+ min : % -> E if % has ATFINAG and E has ORDSET    minIndex : % -> Integer if Integer has ORDSET
+ missing? : % -> Boolean    more? : (%, NonNegativeInteger) -> Boolean
+ mutable? : % -> Boolean    new : (NonNegativeInteger, E) -> %
+ norm : % -> E    nothing? : % -> Boolean
+ numeric : (%, PositiveInteger) -> WSExpression    numeric : % -> WSExpression
+ numeric? : % -> Boolean    outerProduct : (%, %) -> Matrix(E) if E has RING
+ part : (%, WSInteger) -> E    parts : % -> List(E) if % has ATFINAG
+ prepend : (%, E) -> %    qelt : (%, Integer) -> E
+ qsetelt : (%, Integer, E) -> %    qsetelt! : (%, Integer, E) -> E if % has ATSHMUT
+ qsetelt! : (%, Integer, E) -> %    reduce : (((E, E) -> E), %) -> E if % has ATFINAG
+ removeDuplicates : % -> %    replacePart : (%, %) -> %
+ rest : % -> %    reverse : (%, WSList(WSInteger)) -> %
+ reverse : (%, WSInteger) -> %    reverse : % -> %
+ riffle : (%, %, %) -> %    riffle : (%, %) -> %
+ sample : () -> %    setIntersection : (%, %) -> %
+ setelt : (%, Integer, E) -> %    setelt! : (%, Integer, E) -> E if % has ATSHMUT
+ setelt! : (%, Integer, E) -> %    size? : (%, NonNegativeInteger) -> Boolean
+ sort : % -> %    sorted? : % -> Boolean
+ string : % -> String    take : (%, WSList(WSInteger)) -> %
+ take : (%, Integer) -> %    toString : % -> String
+ total : % -> E if E has WSNUM    transpose : % -> %
+ union : (%, %) -> %    vector : WSList(E) -> %
+ zero : NonNegativeInteger -> % if E has ABELMON    zero? : % -> Boolean if E has ABELMON
+ ?~=? : (%, %) -> Boolean
  ?<? : (%, %) -> Boolean if % has ATFINAG and E has ORDSET
  ?<=? : (%, %) -> Boolean if % has ATFINAG and E has ORDSET
  ?>? : (%, %) -> Boolean if % has ATFINAG and E has ORDSET
@@ -188,6 +189,7 @@ Julia WS vectors using the MathLink Julia package.
 | [`jlGetProperty`](#jlgetproperty) | jlGetProperty(obj, sym) returns the property/element sym of obj. |
 | [`jlHead`](#jlhead) | jlHead(expr) returns the Head type of expr. |
 | [`jlId`](#jlid) | jlId(obj) returns the Julia indexed dictionary index referencing the object obj. |
+| [`jlNames`](#jlnames) | jlNames(obj) returns the names of obj depending of the type of obj. |
 | [`jlObject`](#jlobject) | jlObject() returns the internal Julia name of the Julia module used. For example:... |
 | [`jlPropertyNames`](#jlpropertynames) | jlPropertyNames(obj) returns the property/element names of obj. |
 | [`jlRef`](#jlref) | jlRef(obj) returns the internal Lisp representation of the Julia object obj. |
@@ -344,7 +346,7 @@ append(l, elt) appends elt to the list l.
 - **Signature**: `(%, E) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `coerce` <a id="coerce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L282)\]
+#### `coerce` <a id="coerce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L281)\]
 
 ##### `coerce` : `% -> WSMatrix(E)`
 
@@ -455,7 +457,7 @@ count(p, u) returns the number of elements x in u such that p(x) is true. For co
 
 - **From**: `HomogeneousAggregate(S)`
 
-#### `cross` <a id="cross"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L271)\]
+#### `cross` <a id="cross"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L270)\]
 
 ##### `cross` : `(%,%) -> %`
 
@@ -494,14 +496,14 @@ differences(agg) returns the differences between adjacent elements in agg.
 - **Signature**: `% -> % if E has WSNUM`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `dimensions` <a id="dimensions"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L551)\]
+#### `dimensions` <a id="dimensions"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L531)\]
 
 dimensions(agg) returns dimensions of agg.
 
 - **Signature**: `% -> WSList(WSInteger)`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `dot` <a id="dot"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L267)\]
+#### `dot` <a id="dot"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L266)\]
 
 ##### `dot` : `(%, %) -> E`
 
@@ -525,7 +527,7 @@ dot(x, y) computes the inner product of the two vectors x and y. Error: if x and
 
 - **From**: `VectorCategory(R)`
 
-#### `elt` <a id="elt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L399)\]
+#### `elt` <a id="elt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L394)\]
 
 ##### `elt` : `(%, List(%)) -> %`
 
@@ -750,7 +752,7 @@ jWSInterpret(form1,form2,form3) interprets forms.
 
 - **From**: [`WSObject`](WSObject.md)
 
-#### `jWSVector` <a id="jwsvector"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L284)\]
+#### `jWSVector` <a id="jwsvector"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L283)\]
 
 ##### `jWSVector` : `List(E) -> %`
 
@@ -875,6 +877,13 @@ jlId(obj) returns the Julia indexed dictionary index referencing the object obj.
 - **Signature**: `% -> Integer`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
+#### `jlNames` <a id="jlnames"></a>
+
+jlNames(obj) returns the names of obj depending of the type of obj.
+
+- **Signature**: `% -> JLObject`
+- **From**: [`JLObjectType`](JLObjectType.md)
+
 #### `jlObject` <a id="jlobject"></a>
 
 jlObject() returns the internal Julia name of the Julia module used. For example:
@@ -944,7 +953,7 @@ jlimref(str) evaluates the Julia command str and returns the corresponding FriCA
 - **Signature**: `String -> %`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
-#### `jlref` <a id="jlref"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L296)\]
+#### `jlref` <a id="jlref"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L247)\]
 
 ##### `jlref` : `% -> SExpression`
 
@@ -965,14 +974,14 @@ join(agg1, agg2) joins the two aggregates agg1 and agg2.
 - **Signature**: `(%, %) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `last` <a id="last"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L560)\]
+#### `last` <a id="last"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L540)\]
 
 last(agg) returns the last element of agg.
 
 - **Signature**: `% -> E`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `latex` <a id="latex"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L539)\]
+#### `latex` <a id="latex"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L519)\]
 
 latex(s) returns a LaTeX-printable output representation of s.
 
@@ -1146,7 +1155,7 @@ new(n, x) returns a new aggregate of size n all of whose entries are x.
 - **Signature**: `(NonNegativeInteger, E) -> %`
 - **From**: `LinearAggregate(S)`
 
-#### `norm` <a id="norm"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L269)\]
+#### `norm` <a id="norm"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L268)\]
 
 norm(v) computes the norm of the vector v.
 
@@ -1235,7 +1244,7 @@ prepend(l, elt) prepends elt to the list l.
 - **Signature**: `(%, E) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `qelt` <a id="qelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L401)\]
+#### `qelt` <a id="qelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L396)\]
 
 ##### `qelt` : `(%, Integer) -> E`
 
@@ -1249,14 +1258,14 @@ qelt(u, x) applies u to x without checking whether x is in the domain of u. If x
 
 - **From**: `EltableAggregate(Dom,Im)`
 
-#### `qsetelt` <a id="qsetelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L407)\]
+#### `qsetelt` <a id="qsetelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L402)\]
 
 qsetelt(l,i,elem) returns a copy of l with i-th element replaced by the element elem. No checks are done at the FriCAS l evel.
 
 - **Signature**: `(%, Integer, E) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `qsetelt!` <a id="qsetelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L410)\]
+#### `qsetelt!` <a id="qsetelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L405)\]
 
 ##### `qsetelt!` : `(%, Integer, E) -> %`
 
@@ -1394,14 +1403,14 @@ setIntersection(agg1, agg2) is the intersection set operator.
 - **Signature**: `(%, %) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `setelt` <a id="setelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L404)\]
+#### `setelt` <a id="setelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L399)\]
 
 setelt(l,i,elem) returns a copy of l with i-th element replaced by the element elem.
 
 - **Signature**: `(%, Integer, E) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `setelt!` <a id="setelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L599)\]
+#### `setelt!` <a id="setelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L579)\]
 
 ##### `setelt!` : `(%, Integer, E) -> %`
 
@@ -1505,7 +1514,7 @@ take(l,i) returns the first i elements.
 - **Signature**: `(%, Integer) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `toString` <a id="tostring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L505)\]
+#### `toString` <a id="tostring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L500)\]
 
 toString(obj) returns the string representation of obj.
 
@@ -1519,7 +1528,7 @@ total(agg) returns the sum of the elements in agg.
 - **Signature**: `% -> E if E has WSNUM`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `transpose` <a id="transpose"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L273)\]
+#### `transpose` <a id="transpose"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L272)\]
 
 transpose(v) transposes v. For esoteric purpose, and if you know what you are doing. There is only one type of vector in the Wolfram language. Should not be used, and for normal purpose, does nothing.
 
@@ -1539,7 +1548,7 @@ union(agg1, agg2) is the union set operator. Elements are sorted on output.
 - **Signature**: `(%, %) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `vector` <a id="vector"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L277)\]
+#### `vector` <a id="vector"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L276)\]
 
 vector(list) returns list as a vector. Inplace coercion.
 

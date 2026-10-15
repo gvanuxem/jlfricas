@@ -8,7 +8,7 @@ Julia WS expressions using the MathLink Julia package. It supports the Eltable c
 
 **WSExpression is a domain constructor.**  
 **Abbreviation for WSExpression is WSEXPR**  
-**520 names for 826 operations in this domain.**
+**521 names for 827 operations in this domain.**
 
 ## Signatures
 
@@ -221,188 +221,189 @@ Julia WS expressions using the MathLink Julia package. It supports the Eltable c
  jlFieldNames : % -> JLObject    jlGetField : (%, JLSymbol) -> JLObject
  jlGetJuliaIndex : % -> String    jlGetProperty : (%, JLSymbol) -> JLObject
  jlGreedyEval : Boolean -> Void    jlHead : % -> WSSymbol
- jlId : % -> Integer    jlObject : () -> String
- jlPropertyNames : % -> JLObject    jlRef : % -> SExpression
- jlSymbolic : % -> String    jlText : (%, String) -> List(String)
- jlType : % -> Symbol    jlWSAccuracy : % -> %
- jlWSDefined? : String -> Boolean    jlWSPrecision : % -> %
- jlWSSetAccuracy : (%, %) -> %    jlWSSetOptions : (%, %) -> %
- jlWSSetPrecision : (%, %) -> %    jlimref : String -> %
- jlref : String -> %    join : (%, %) -> %
- kelvinBei : (%, %) -> %    kelvinBer : (%, %) -> %
- kelvinKei : (%, %) -> %    kelvinKer : (%, %) -> %
- kernel : (BasicOperator, %) -> %    kernel : (BasicOperator, List(%)) -> %
- kernels : % -> List(Kernel(%))    kernels : List(%) -> List(Kernel(%))
- key? : (%, %) -> Boolean    keys : % -> %
- kleinInvariantJ : % -> %    krawtchoukK : (%, %, %, %) -> %
- kummerM : (%, %, %) -> %    kummerU : (%, %, %) -> %
- laguerreL : (%, %) -> %    laguerreL : (%, %, %) -> %
- lambertW : % -> %    lambertW : (WSInteger, %) -> %
- last : % -> %    latex : % -> String
- lcm : (%, %) -> %    lcm : List(%) -> %
- leftPower : (%, NonNegativeInteger) -> %    leftPower : (%, PositiveInteger) -> %
- leftRecip : % -> Union(%,"failed")    legendreP : (%, %) -> %
- legendreP : (%, %, %) -> %    legendreQ : (%, %) -> %
- legendreQ : (%, %, %) -> %    length : % -> %
- length : % -> WSInteger    lerchPhi : (%, %, %) -> %
- level : (%, %) -> WSList(%)    level : (%, %, Boolean) -> WSList(%)
- li : % -> %    lift : % -> SparseUnivariatePolynomial(%)
- limit : (%, %) -> %    log : % -> %
- log10 : % -> %    log2 : % -> %
- logBarnesG : % -> %    logGamma : % -> %
- lommelS1 : (%, %, %) -> %    lommelS2 : (%, %, %) -> %
- lookup : (%, %) -> %    lookup : (%, %, %) -> %
- machineNumber? : % -> Boolean    mainKernel : % -> Union(Kernel(%),"failed")
- map : ((% -> %), %) -> %    map : ((% -> %), Kernel(%)) -> %
- mathieuC : (%, %, %) -> %    mathieuCPrime : (%, %, %) -> %
- mathieuCharacteristicA : (%, %) -> %    mathieuCharacteristicB : (%, %) -> %
- mathieuCharacteristicExponent : (%, %) -> %    mathieuS : (%, %, %) -> %
- mathieuSPrime : (%, %, %) -> %    matrixForm : % -> %
- maxLimit : (%, %) -> %    maximize : (%, %) -> %
- maximize : (%, %, %) -> %    maximize : (%, Symbol) -> %
- meixnerM : (%, %, %, %) -> %    meixnerP : (%, %, %, %) -> %
- member? : (%, %) -> Boolean    minLimit : (%, %) -> %
- minPoly : Kernel(%) -> SparseUnivariatePolynomial(%)    minimalPolynomial : (%, %) -> %
- minimalPolynomial : (%, %, %) -> %    minimalPolynomial : % -> SparseUnivariatePolynomial(%)
- minimize : (%, %) -> %    minimize : (%, %, %) -> %
- minimize : (%, Symbol) -> %    missing? : % -> Boolean
- modularLambda : % -> %    monomialList : % -> %
- mutable? : % -> Boolean    negative? : % -> Boolean
- norm : % -> %    normal : % -> %
- normal : (%, %) -> %    nothing? : % -> Boolean
- nthRoot : (%, Integer) -> %    number? : % -> Boolean
- numberForm : % -> %    numberForm : (%, %) -> %
- numerDenom : % -> WSList(%)    numerator : % -> %
- numeric : % -> WSExpression    numeric : (%, PositiveInteger) -> WSExpression
- numeric? : % -> Boolean    numericDSolve : (%, %, %) -> %
- numericDSolve : (%, %, %, %) -> %    numericDSolve : (Equation(%), %, %) -> %
- numericDSolveValue : (%, %, %) -> %    numericDSolveValue : (%, %, %, %) -> %
- numericDSolveValue : (Equation(%), %, %) -> %    numericIntegrate : (%, %) -> %
- numericIntegrate : (%, %, Segment(Integer)) -> %    numericMaximize : (%, %) -> %
- numericMaximize : (%, %, %) -> %    numericMaximize : (%, Symbol) -> %
- numericMinimize : (%, %) -> %    numericMinimize : (%, %, %) -> %
- numericMinimize : (%, Symbol) -> %    numericProduct : (%, %) -> %
- numericProduct : (%, %, Segment(Integer)) -> %    numericSolve : (%, %) -> %
- numericSolve : (Equation(%), %) -> %    numericSum : (%, %) -> %
- numericSum : (%, %, Segment(Integer)) -> %    one? : % -> Boolean
- operator : BasicOperator -> BasicOperator    operators : % -> List(BasicOperator)
- opposite? : (%, %) -> Boolean    padeApproximant : (%, %) -> %
- parabolicCylinderD : (%, %) -> %    paren : % -> %
- part : (%, WSInteger) -> %    percentForm : % -> %
- percentForm : (%, %) -> %    permutation : (%, %) -> %
- pi : () -> %    plenaryPower : (%, PositiveInteger) -> %
- pochhammer : (%, %) -> %    polygamma : (%, %) -> %
- polylog : (%, %) -> %    polylog : (%, %, %) -> %
- polynomial? : (%, %) -> Boolean    polynomial? : (%, WSList(%)) -> Boolean
- polynomialExpression? : (%, %) -> Boolean    polynomialExpression? : (%, WSList(%)) -> Boolean
- polynomialExtendedGCD : (%, %, %) -> %    polynomialGCD : (%, %) -> %
- polynomialGCD : (%, %, %) -> %    polynomialLCM : (%, %) -> %
- polynomialLCM : (%, %, %) -> %    polynomialMod : (%, %) -> %
- polynomialQuotient : (%, %, %) -> %    polynomialQuotientRemainder : (%, %, %) -> WSList(%)
- polynomialReduce : (%, %, %) -> %    polynomialRemainder : (%, %, %) -> %
- positive? : % -> Boolean    positiveInfinity : () -> %
- powerExpand : % -> %    powerExpand : (%, %) -> %
- prepend : (%, %) -> %    prime? : % -> Boolean
- product : (%, %) -> %    product : (%, %, Segment(Integer)) -> %
- product : (%, SegmentBinding(%)) -> %    product : (%, Symbol) -> %
- qBinomial : (%, %, %) -> %    qFactorial : (%, %) -> %
- qGamma : (%, %) -> %    qPochhammer : (%, %) -> %
- qPochhammer : (%, %, %) -> %    qPolyGamma : (%, %) -> %
- qPolyGamma : (%, %, %) -> %    qelt : (%, Integer) -> %
- qsetelt : (%, Integer, %) -> %    qsetelt! : (%, Integer, %) -> %
- quantityForm : (%, %) -> %    quantityForm : (%, WSList(%)) -> %
- quantityMagnitude : % -> %    quantityUnit : % -> %
- ?quo? : (%, %) -> %    racahR : (%, %, %, %, %, %) -> %
- ramanujanTau : % -> %    ramanujanTauL : % -> %
- ramanujanTauTheta : % -> %    ramanujanTauZ : % -> %
- rank : () -> PositiveInteger    rational? : % -> Boolean
- rationalApproximation : % -> %    rationalApproximation : (%, %) -> %
- rationalExpression? : (%, %) -> Boolean    rationalExpression? : (%, WSList(%)) -> Boolean
- real : % -> %    real? : % -> Boolean
- realNumeric? : % -> Boolean    realNumericSolve : (%, %) -> %
- realNumericSolve : (Equation(%), %) -> %    recip : % -> Union(%,"failed")
- reduce : (%, %) -> %    reduce : (%, %, %) -> %
- reduce : (Equation(%), %) -> %    reduce : (Equation(%), %, %) -> %
- reduce : SparseUnivariatePolynomial(%) -> %    reducedSystem : Matrix(%) -> Matrix(%)
- refine : (%, %) -> %    regularRepresentation : % -> Matrix(%)
- regularRepresentation : (%, Vector(%)) -> Matrix(%)    ?rem? : (%, %) -> %
- removeDuplicates : % -> %    replace : (%, %) -> %
- replace : (%, %, %) -> %    replaceAll : (%, %) -> %
- replaceAt : (%, %, %) -> %    replacePart : (%, %) -> %
- replaceRepeated : (%, %) -> %    represents : Vector(%) -> %
- represents : (Vector(%), Vector(%)) -> %    residue : (%, %) -> %
- residueSum : (%, %) -> %    rest : % -> %
- resultant : (%, %, %) -> %    retract : % -> %
- retract : % -> Expression(Float)    retract : % -> Expression(Integer)
- retract : % -> Fraction(Polynomial(%))    retract : % -> Kernel(%)
- retract : % -> Polynomial(%)    retract : % -> Symbol
- retractIfCan : % -> Union(%,"failed")    retractIfCan : % -> Union(DoubleFloat,"failed")
- retractIfCan : % -> Union(Expression(Float),"failed")    retractIfCan : % -> Union(Expression(Integer),"failed")
- retractIfCan : % -> Union(JLFloat64,"failed")    retractIfCan : % -> Union(Kernel(%),"failed")
- retractIfCan : % -> Union(Polynomial(%),"failed")    retractIfCan : % -> Union(Symbol,"failed")
- reverse : % -> %    reverse : (%, WSInteger) -> %
- reverse : (%, WSList(WSInteger)) -> %    riemannSiegelTheta : % -> %
- riemannSiegelZ : % -> %    riemannZeta : % -> %
- riemannZeta : (%, %) -> %    riffle : (%, %) -> %
- riffle : (%, %, %) -> %    rightPower : (%, NonNegativeInteger) -> %
- rightPower : (%, PositiveInteger) -> %    rightRecip : % -> Union(%,"failed")
- rootOf : % -> %    rootOf : (%, Symbol) -> %
- rootOf : Polynomial(%) -> %    rootOf : SparseUnivariatePolynomial(%) -> %
- rootOf : (SparseUnivariatePolynomial(%), Symbol) -> %    rootReduce : % -> %
- rootsOf : % -> List(%)    rootsOf : (%, Symbol) -> List(%)
- rootsOf : Polynomial(%) -> List(%)    rootsOf : SparseUnivariatePolynomial(%) -> List(%)
- round : % -> %    sample : () -> %
- scientificForm : % -> %    scientificForm : (%, %) -> %
- sec : % -> %    sech : % -> %
- select : (%, %) -> %    select : (%, %, %) -> %
- series : (%, %) -> %    setIntersection : (%, %) -> %
- setelt : (%, Integer, %) -> %    setelt! : (%, Integer, %) -> %
- siegelTheta : (%, %) -> %    siegelTheta : (%, %, %) -> %
- sign : % -> %    simplify : % -> %
- simplify : (%, %) -> %    sin : % -> %
- sinc : % -> %    sinh : % -> %
- sizeLess? : (%, %) -> Boolean    smaller? : (%, %) -> Boolean
- solve : (%, %) -> WSList(WSList(%))    solve : (%, %, %) -> WSList(WSList(%))
- solve : (Equation(%), %) -> WSList(WSList(%))    solve : (Equation(%), %, %) -> WSList(WSList(%))
- sort : % -> %    sorted? : % -> Boolean
- sphericalBesselJ : (%, %) -> %    sphericalBesselY : (%, %) -> %
- sphericalHankelH1 : (%, %) -> %    sphericalHankelH2 : (%, %) -> %
- sphericalHarmonicY : (%, %, %, %) -> %    sqrt : % -> %
- squareFree : % -> Factored(%)    squareFreePart : % -> %
- stieltjesGamma : % -> %    stieltjesGamma : (%, %) -> %
- string : % -> String    struveH : (%, %) -> %
- struveL : (%, %) -> %    subResultants : (%, %, %) -> %
- subst : (%, Equation(%)) -> %    subst : (%, List(Equation(%))) -> %
- subst : (%, List(Kernel(%)), List(%)) -> %    subtractIfCan : (%, %) -> Union(%,"failed")
- sum : (%, %) -> %    sum : (%, %, Segment(Integer)) -> %
- sum : (%, Symbol) -> %    summation : (%, SegmentBinding(%)) -> %
- summation : (%, Symbol) -> %    symmetricPolynomial : (%, WSList(%)) -> %
- symmetricReduction : (%, WSList(%)) -> WSList(%)    take : (%, Integer) -> %
- take : (%, WSList(WSInteger)) -> %    tan : % -> %
- tanh : % -> %    toExpression : String -> %
- toExpression : (String, %) -> %    toExpression : (String, %, %) -> %
- toString : % -> String    toString : (%, %) -> String
- together : % -> %    tower : % -> List(Kernel(%))
- tower : List(%) -> List(Kernel(%))    trace : % -> %
- traceMatrix : () -> Matrix(%)    traceMatrix : Vector(%) -> Matrix(%)
- traditionalForm : % -> %    trigExpand : % -> %
- trigFactor : % -> %    trigFactorList : % -> WSList(%)
- trigReduce : % -> %    trigToExp : % -> %
- union : (%, %) -> %    unit? : % -> Boolean
- unitCanonical : % -> %    unitStep : % -> %
- values : % -> %    variables : % -> List(Symbol)
- variables : List(%) -> List(Symbol)    variables : % -> WSList(%)
- weberE : (%, %) -> %    weberE : (%, %, %) -> %
- weierstrassP : (%, %, %) -> %    weierstrassPInverse : (%, %, %) -> %
- weierstrassPPrime : (%, %, %) -> %    weierstrassSigma : (%, %, %) -> %
- weierstrassZeta : (%, %, %) -> %    whittakerM : (%, %, %) -> %
- whittakerW : (%, %, %) -> %    wilsonW : (%, %, %, %, %, %) -> %
- zernikeR : (%, %, %) -> %    zero? : % -> Boolean
- zeroOf : % -> %    zeroOf : (%, Symbol) -> %
- zeroOf : Polynomial(%) -> %    zeroOf : SparseUnivariatePolynomial(%) -> %
- zeroOf : (SparseUnivariatePolynomial(%), Symbol) -> %    zerosOf : % -> List(%)
- zerosOf : (%, Symbol) -> List(%)    zerosOf : Polynomial(%) -> List(%)
- zerosOf : SparseUnivariatePolynomial(%) -> List(%)    ?~=? : (%, %) -> Boolean
+ jlId : % -> Integer    jlNames : % -> JLObject
+ jlObject : () -> String    jlPropertyNames : % -> JLObject
+ jlRef : % -> SExpression    jlSymbolic : % -> String
+ jlText : (%, String) -> List(String)    jlType : % -> Symbol
+ jlWSAccuracy : % -> %    jlWSDefined? : String -> Boolean
+ jlWSPrecision : % -> %    jlWSSetAccuracy : (%, %) -> %
+ jlWSSetOptions : (%, %) -> %    jlWSSetPrecision : (%, %) -> %
+ jlimref : String -> %    jlref : String -> %
+ join : (%, %) -> %    kelvinBei : (%, %) -> %
+ kelvinBer : (%, %) -> %    kelvinKei : (%, %) -> %
+ kelvinKer : (%, %) -> %    kernel : (BasicOperator, %) -> %
+ kernel : (BasicOperator, List(%)) -> %    kernels : % -> List(Kernel(%))
+ kernels : List(%) -> List(Kernel(%))    key? : (%, %) -> Boolean
+ keys : % -> %    kleinInvariantJ : % -> %
+ krawtchoukK : (%, %, %, %) -> %    kummerM : (%, %, %) -> %
+ kummerU : (%, %, %) -> %    laguerreL : (%, %) -> %
+ laguerreL : (%, %, %) -> %    lambertW : % -> %
+ lambertW : (WSInteger, %) -> %    last : % -> %
+ latex : % -> String    lcm : (%, %) -> %
+ lcm : List(%) -> %    leftPower : (%, NonNegativeInteger) -> %
+ leftPower : (%, PositiveInteger) -> %    leftRecip : % -> Union(%,"failed")
+ legendreP : (%, %) -> %    legendreP : (%, %, %) -> %
+ legendreQ : (%, %) -> %    legendreQ : (%, %, %) -> %
+ length : % -> %    length : % -> WSInteger
+ lerchPhi : (%, %, %) -> %    level : (%, %) -> WSList(%)
+ level : (%, %, Boolean) -> WSList(%)    li : % -> %
+ lift : % -> SparseUnivariatePolynomial(%)    limit : (%, %) -> %
+ log : % -> %    log10 : % -> %
+ log2 : % -> %    logBarnesG : % -> %
+ logGamma : % -> %    lommelS1 : (%, %, %) -> %
+ lommelS2 : (%, %, %) -> %    lookup : (%, %) -> %
+ lookup : (%, %, %) -> %    machineNumber? : % -> Boolean
+ mainKernel : % -> Union(Kernel(%),"failed")    map : ((% -> %), %) -> %
+ map : ((% -> %), Kernel(%)) -> %    mathieuC : (%, %, %) -> %
+ mathieuCPrime : (%, %, %) -> %    mathieuCharacteristicA : (%, %) -> %
+ mathieuCharacteristicB : (%, %) -> %    mathieuCharacteristicExponent : (%, %) -> %
+ mathieuS : (%, %, %) -> %    mathieuSPrime : (%, %, %) -> %
+ matrixForm : % -> %    maxLimit : (%, %) -> %
+ maximize : (%, %) -> %    maximize : (%, %, %) -> %
+ maximize : (%, Symbol) -> %    meixnerM : (%, %, %, %) -> %
+ meixnerP : (%, %, %, %) -> %    member? : (%, %) -> Boolean
+ minLimit : (%, %) -> %    minPoly : Kernel(%) -> SparseUnivariatePolynomial(%)
+ minimalPolynomial : (%, %) -> %    minimalPolynomial : (%, %, %) -> %
+ minimalPolynomial : % -> SparseUnivariatePolynomial(%)    minimize : (%, %) -> %
+ minimize : (%, %, %) -> %    minimize : (%, Symbol) -> %
+ missing? : % -> Boolean    modularLambda : % -> %
+ monomialList : % -> %    mutable? : % -> Boolean
+ negative? : % -> Boolean    norm : % -> %
+ normal : % -> %    normal : (%, %) -> %
+ nothing? : % -> Boolean    nthRoot : (%, Integer) -> %
+ number? : % -> Boolean    numberForm : % -> %
+ numberForm : (%, %) -> %    numerDenom : % -> WSList(%)
+ numerator : % -> %    numeric : % -> WSExpression
+ numeric : (%, PositiveInteger) -> WSExpression    numeric? : % -> Boolean
+ numericDSolve : (%, %, %) -> %    numericDSolve : (%, %, %, %) -> %
+ numericDSolve : (Equation(%), %, %) -> %    numericDSolveValue : (%, %, %) -> %
+ numericDSolveValue : (%, %, %, %) -> %    numericDSolveValue : (Equation(%), %, %) -> %
+ numericIntegrate : (%, %) -> %    numericIntegrate : (%, %, Segment(Integer)) -> %
+ numericMaximize : (%, %) -> %    numericMaximize : (%, %, %) -> %
+ numericMaximize : (%, Symbol) -> %    numericMinimize : (%, %) -> %
+ numericMinimize : (%, %, %) -> %    numericMinimize : (%, Symbol) -> %
+ numericProduct : (%, %) -> %    numericProduct : (%, %, Segment(Integer)) -> %
+ numericSolve : (%, %) -> %    numericSolve : (Equation(%), %) -> %
+ numericSum : (%, %) -> %    numericSum : (%, %, Segment(Integer)) -> %
+ one? : % -> Boolean    operator : BasicOperator -> BasicOperator
+ operators : % -> List(BasicOperator)    opposite? : (%, %) -> Boolean
+ padeApproximant : (%, %) -> %    parabolicCylinderD : (%, %) -> %
+ paren : % -> %    part : (%, WSInteger) -> %
+ percentForm : % -> %    percentForm : (%, %) -> %
+ permutation : (%, %) -> %    pi : () -> %
+ plenaryPower : (%, PositiveInteger) -> %    pochhammer : (%, %) -> %
+ polygamma : (%, %) -> %    polylog : (%, %) -> %
+ polylog : (%, %, %) -> %    polynomial? : (%, %) -> Boolean
+ polynomial? : (%, WSList(%)) -> Boolean    polynomialExpression? : (%, %) -> Boolean
+ polynomialExpression? : (%, WSList(%)) -> Boolean    polynomialExtendedGCD : (%, %, %) -> %
+ polynomialGCD : (%, %) -> %    polynomialGCD : (%, %, %) -> %
+ polynomialLCM : (%, %) -> %    polynomialLCM : (%, %, %) -> %
+ polynomialMod : (%, %) -> %    polynomialQuotient : (%, %, %) -> %
+ polynomialQuotientRemainder : (%, %, %) -> WSList(%)    polynomialReduce : (%, %, %) -> %
+ polynomialRemainder : (%, %, %) -> %    positive? : % -> Boolean
+ positiveInfinity : () -> %    powerExpand : % -> %
+ powerExpand : (%, %) -> %    prepend : (%, %) -> %
+ prime? : % -> Boolean    product : (%, %) -> %
+ product : (%, %, Segment(Integer)) -> %    product : (%, SegmentBinding(%)) -> %
+ product : (%, Symbol) -> %    qBinomial : (%, %, %) -> %
+ qFactorial : (%, %) -> %    qGamma : (%, %) -> %
+ qPochhammer : (%, %) -> %    qPochhammer : (%, %, %) -> %
+ qPolyGamma : (%, %) -> %    qPolyGamma : (%, %, %) -> %
+ qelt : (%, Integer) -> %    qsetelt : (%, Integer, %) -> %
+ qsetelt! : (%, Integer, %) -> %    quantityForm : (%, %) -> %
+ quantityForm : (%, WSList(%)) -> %    quantityMagnitude : % -> %
+ quantityUnit : % -> %    ?quo? : (%, %) -> %
+ racahR : (%, %, %, %, %, %) -> %    ramanujanTau : % -> %
+ ramanujanTauL : % -> %    ramanujanTauTheta : % -> %
+ ramanujanTauZ : % -> %    rank : () -> PositiveInteger
+ rational? : % -> Boolean    rationalApproximation : % -> %
+ rationalApproximation : (%, %) -> %    rationalExpression? : (%, %) -> Boolean
+ rationalExpression? : (%, WSList(%)) -> Boolean    real : % -> %
+ real? : % -> Boolean    realNumeric? : % -> Boolean
+ realNumericSolve : (%, %) -> %    realNumericSolve : (Equation(%), %) -> %
+ recip : % -> Union(%,"failed")    reduce : (%, %) -> %
+ reduce : (%, %, %) -> %    reduce : (Equation(%), %) -> %
+ reduce : (Equation(%), %, %) -> %    reduce : SparseUnivariatePolynomial(%) -> %
+ reducedSystem : Matrix(%) -> Matrix(%)    refine : (%, %) -> %
+ regularRepresentation : % -> Matrix(%)    regularRepresentation : (%, Vector(%)) -> Matrix(%)
+ ?rem? : (%, %) -> %    removeDuplicates : % -> %
+ replace : (%, %) -> %    replace : (%, %, %) -> %
+ replaceAll : (%, %) -> %    replaceAt : (%, %, %) -> %
+ replacePart : (%, %) -> %    replaceRepeated : (%, %) -> %
+ represents : Vector(%) -> %    represents : (Vector(%), Vector(%)) -> %
+ residue : (%, %) -> %    residueSum : (%, %) -> %
+ rest : % -> %    resultant : (%, %, %) -> %
+ retract : % -> %    retract : % -> Expression(Float)
+ retract : % -> Expression(Integer)    retract : % -> Fraction(Polynomial(%))
+ retract : % -> Kernel(%)    retract : % -> Polynomial(%)
+ retract : % -> Symbol    retractIfCan : % -> Union(%,"failed")
+ retractIfCan : % -> Union(DoubleFloat,"failed")    retractIfCan : % -> Union(Expression(Float),"failed")
+ retractIfCan : % -> Union(Expression(Integer),"failed")    retractIfCan : % -> Union(JLFloat64,"failed")
+ retractIfCan : % -> Union(Kernel(%),"failed")    retractIfCan : % -> Union(Polynomial(%),"failed")
+ retractIfCan : % -> Union(Symbol,"failed")    reverse : % -> %
+ reverse : (%, WSInteger) -> %    reverse : (%, WSList(WSInteger)) -> %
+ riemannSiegelTheta : % -> %    riemannSiegelZ : % -> %
+ riemannZeta : % -> %    riemannZeta : (%, %) -> %
+ riffle : (%, %) -> %    riffle : (%, %, %) -> %
+ rightPower : (%, NonNegativeInteger) -> %    rightPower : (%, PositiveInteger) -> %
+ rightRecip : % -> Union(%,"failed")    rootOf : % -> %
+ rootOf : (%, Symbol) -> %    rootOf : Polynomial(%) -> %
+ rootOf : SparseUnivariatePolynomial(%) -> %    rootOf : (SparseUnivariatePolynomial(%), Symbol) -> %
+ rootReduce : % -> %    rootsOf : % -> List(%)
+ rootsOf : (%, Symbol) -> List(%)    rootsOf : Polynomial(%) -> List(%)
+ rootsOf : SparseUnivariatePolynomial(%) -> List(%)    round : % -> %
+ sample : () -> %    scientificForm : % -> %
+ scientificForm : (%, %) -> %    sec : % -> %
+ sech : % -> %    select : (%, %) -> %
+ select : (%, %, %) -> %    series : (%, %) -> %
+ setIntersection : (%, %) -> %    setelt : (%, Integer, %) -> %
+ setelt! : (%, Integer, %) -> %    siegelTheta : (%, %) -> %
+ siegelTheta : (%, %, %) -> %    sign : % -> %
+ simplify : % -> %    simplify : (%, %) -> %
+ sin : % -> %    sinc : % -> %
+ sinh : % -> %    sizeLess? : (%, %) -> Boolean
+ smaller? : (%, %) -> Boolean    solve : (%, %) -> WSList(WSList(%))
+ solve : (%, %, %) -> WSList(WSList(%))    solve : (Equation(%), %) -> WSList(WSList(%))
+ solve : (Equation(%), %, %) -> WSList(WSList(%))    sort : % -> %
+ sorted? : % -> Boolean    sphericalBesselJ : (%, %) -> %
+ sphericalBesselY : (%, %) -> %    sphericalHankelH1 : (%, %) -> %
+ sphericalHankelH2 : (%, %) -> %    sphericalHarmonicY : (%, %, %, %) -> %
+ sqrt : % -> %    squareFree : % -> Factored(%)
+ squareFreePart : % -> %    stieltjesGamma : % -> %
+ stieltjesGamma : (%, %) -> %    string : % -> String
+ struveH : (%, %) -> %    struveL : (%, %) -> %
+ subResultants : (%, %, %) -> %    subst : (%, Equation(%)) -> %
+ subst : (%, List(Equation(%))) -> %    subst : (%, List(Kernel(%)), List(%)) -> %
+ subtractIfCan : (%, %) -> Union(%,"failed")    sum : (%, %) -> %
+ sum : (%, %, Segment(Integer)) -> %    sum : (%, Symbol) -> %
+ summation : (%, SegmentBinding(%)) -> %    summation : (%, Symbol) -> %
+ symmetricPolynomial : (%, WSList(%)) -> %    symmetricReduction : (%, WSList(%)) -> WSList(%)
+ take : (%, Integer) -> %    take : (%, WSList(WSInteger)) -> %
+ tan : % -> %    tanh : % -> %
+ toExpression : String -> %    toExpression : (String, %) -> %
+ toExpression : (String, %, %) -> %    toString : % -> String
+ toString : (%, %) -> String    together : % -> %
+ tower : % -> List(Kernel(%))    tower : List(%) -> List(Kernel(%))
+ trace : % -> %    traceMatrix : () -> Matrix(%)
+ traceMatrix : Vector(%) -> Matrix(%)    traditionalForm : % -> %
+ trigExpand : % -> %    trigFactor : % -> %
+ trigFactorList : % -> WSList(%)    trigReduce : % -> %
+ trigToExp : % -> %    union : (%, %) -> %
+ unit? : % -> Boolean    unitCanonical : % -> %
+ unitStep : % -> %    values : % -> %
+ variables : % -> List(Symbol)    variables : List(%) -> List(Symbol)
+ variables : % -> WSList(%)    weberE : (%, %) -> %
+ weberE : (%, %, %) -> %    weierstrassP : (%, %, %) -> %
+ weierstrassPInverse : (%, %, %) -> %    weierstrassPPrime : (%, %, %) -> %
+ weierstrassSigma : (%, %, %) -> %    weierstrassZeta : (%, %, %) -> %
+ whittakerM : (%, %, %) -> %    whittakerW : (%, %, %) -> %
+ wilsonW : (%, %, %, %, %, %) -> %    zernikeR : (%, %, %) -> %
+ zero? : % -> Boolean    zeroOf : % -> %
+ zeroOf : (%, Symbol) -> %    zeroOf : Polynomial(%) -> %
+ zeroOf : SparseUnivariatePolynomial(%) -> %    zeroOf : (SparseUnivariatePolynomial(%), Symbol) -> %
+ zerosOf : % -> List(%)    zerosOf : (%, Symbol) -> List(%)
+ zerosOf : Polynomial(%) -> List(%)    zerosOf : SparseUnivariatePolynomial(%) -> List(%)
+ ?~=? : (%, %) -> Boolean
  ?/? : (SparseMultivariatePolynomial(%,Kernel(%)), SparseMultivariatePolynomial(%,Kernel(%))) -> %
  characteristicPolynomial : % -> SparseUnivariatePolynomial(%)
  coerce : SparseMultivariatePolynomial(%,Kernel(%)) -> %
@@ -713,6 +714,7 @@ Julia WS expressions using the MathLink Julia package. It supports the Eltable c
 | [`jlGreedyEval`](#jlgreedyeval) | jlGreedyEval(bool) toggles automatic arithmetic operations. Plus[a, a] can become Times[2,... |
 | [`jlHead`](#jlhead) | jlHead(expr) returns the Head type of expr. |
 | [`jlId`](#jlid) | jlId(obj) returns the Julia indexed dictionary index referencing the object obj. |
+| [`jlNames`](#jlnames) | jlNames(obj) returns the names of obj depending of the type of obj. |
 | [`jlObject`](#jlobject) | jlObject() returns the internal Julia name of the Julia module used. For example:... |
 | [`jlPropertyNames`](#jlpropertynames) | jlPropertyNames(obj) returns the property/element names of obj. |
 | [`jlRef`](#jlref) | jlRef(obj) returns the internal Lisp representation of the Julia object obj. |
@@ -1023,14 +1025,14 @@ Operation defined in WSExpression.
 
 Operation defined in WSExpression.
 
-#### `0` <a id="0"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1303)\]
+#### `0` <a id="0"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1298)\]
 
 0 is a distinguished element, in AbelianMonoid it is the additive identity element, in MagmaWithZero it is multiplicativ e zero.
 
 - **Signature**: `() -> %`
 - **From**: `SetWithZero`
 
-#### `1` <a id="1"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1304)\]
+#### `1` <a id="1"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1299)\]
 
 1 returns the unit element, denoted by 1.
 
@@ -1061,7 +1063,7 @@ Operation defined in WSExpression.
 
 - **Signature**: `(%, %) -> Boolean`
 
-#### `Beta` <a id="beta"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1534)\]
+#### `Beta` <a id="beta"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1529)\]
 
 ##### `Beta` : `(%, %) -> %`
 
@@ -1075,21 +1077,21 @@ Beta(x, a, b) is the incomplete Beta function.
 
 - **From**: `SpecialFunctionCategory`
 
-#### `Chi` <a id="chi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1429)\]
+#### `Chi` <a id="chi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1424)\]
 
 Chi(x) returns the hyperbolic cosine integral of x, i.e. the integral of cosh(x) / x dx.
 
 - **Signature**: `% -> %`
 - **From**: `LiouvillianFunctionCategory`
 
-#### `Ci` <a id="ci"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1428)\]
+#### `Ci` <a id="ci"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1423)\]
 
 Ci(x) returns the cosine integral of x, i.e. the integral of cos(x) / x dx.
 
 - **Signature**: `% -> %`
 - **From**: `LiouvillianFunctionCategory`
 
-#### `D` <a id="d"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1636)\]
+#### `D` <a id="d"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1631)\]
 
 ##### `D` : `(%, S) -> %`
 
@@ -1127,20 +1129,20 @@ D(x, deriv, n) differentiate x n times using a derivation which extends deriv on
 
 - **From**: `DifferentialExtension(R)`
 
-#### `Ei` <a id="ei"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1430)\]
+#### `Ei` <a id="ei"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1425)\]
 
 Ei(x) returns the exponential integral of x, i.e. the integral of exp(x)/x dx.
 
 - **Signature**: `% -> %`
 - **From**: `LiouvillianFunctionCategory`
 
-#### `EiEn` <a id="eien"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L209)\]
+#### `EiEn` <a id="eien"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L221)\]
 
 EiEn(n,z) returns the exponential integral En(z).
 
 - **Signature**: `(%, %) -> %`
 
-#### `Gamma` <a id="gamma"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L215)\]
+#### `Gamma` <a id="gamma"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L227)\]
 
 ##### `Gamma` : `(%, %, %) -> %`
 
@@ -1158,14 +1160,14 @@ Gamma(a, x) is the incomplete Gamma function.
 
 - **From**: `SpecialFunctionCategory`
 
-#### `Shi` <a id="shi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1427)\]
+#### `Shi` <a id="shi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1422)\]
 
 Shi(x) returns the hyperbolic sine integral of x, i.e. the integral of sinh(x) / x dx.
 
 - **Signature**: `% -> %`
 - **From**: `LiouvillianFunctionCategory`
 
-#### `Si` <a id="si"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1426)\]
+#### `Si` <a id="si"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1421)\]
 
 Si(x) returns the sine integral of x, i.e. the integral of sin(x) / x dx.
 
@@ -1178,7 +1180,7 @@ Si(x) returns the sine integral of x, i.e. the integral of sin(x) / x dx.
 
 - **Signature**: `(%, WSRational) -> %`
 
-#### `abs` <a id="abs"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1379)\]
+#### `abs` <a id="abs"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1374)\]
 
 ##### `abs` : `% -> %`
 
@@ -1192,7 +1194,7 @@ abs(x) returns the absolute value of x = sqrt(norm(x)).
 
 - **From**: `ComplexCategory(R)`
 
-#### `accountingForm` <a id="accountingform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1078)\]
+#### `accountingForm` <a id="accountingform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1090)\]
 
 ##### `accountingForm` : `% -> %`
 
@@ -1202,63 +1204,63 @@ accountingForm(x,n) returns the accounting printed representation of x.
 
 accountingForm(x,n) returns the accounting printed representation of x with n digits of precision.
 
-#### `acos` <a id="acos"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1400)\]
+#### `acos` <a id="acos"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1395)\]
 
 acos(x) returns the arc-cosine of x. When evaluated into some subset of the complex numbers, one branch cut for acos lie s along the negative real axis to the left of -1 (inclusive), continuous with the upper half plane, the other along the positive real axis to the right of 1 (inclusive), continuous with the lower half plane.
 
 - **Signature**: `% -> %`
 - **From**: `ArcTrigonometricFunctionCategory`
 
-#### `acosh` <a id="acosh"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1415)\]
+#### `acosh` <a id="acosh"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1410)\]
 
 acosh(x) returns the hyperbolic arc-cosine of x.
 
 - **Signature**: `% -> %`
 - **From**: `ArcHyperbolicFunctionCategory`
 
-#### `acot` <a id="acot"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1405)\]
+#### `acot` <a id="acot"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1400)\]
 
 acot(x) returns the arc-cotangent of x.
 
 - **Signature**: `% -> %`
 - **From**: `ArcTrigonometricFunctionCategory`
 
-#### `acoth` <a id="acoth"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1419)\]
+#### `acoth` <a id="acoth"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1414)\]
 
 acoth(x) returns the hyperbolic arc-cotangent of x.
 
 - **Signature**: `% -> %`
 - **From**: `ArcHyperbolicFunctionCategory`
 
-#### `acsc` <a id="acsc"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1404)\]
+#### `acsc` <a id="acsc"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1399)\]
 
 acsc(x) returns the arc-cosecant of x.
 
 - **Signature**: `% -> %`
 - **From**: `ArcTrigonometricFunctionCategory`
 
-#### `acsch` <a id="acsch"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1418)\]
+#### `acsch` <a id="acsch"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1413)\]
 
 acsch(x) returns the hyperbolic arc-cosecant of x.
 
 - **Signature**: `% -> %`
 - **From**: `ArcHyperbolicFunctionCategory`
 
-#### `airyAi` <a id="airyai"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1474)\]
+#### `airyAi` <a id="airyai"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1469)\]
 
 airyAi(x) is the Airy function Ai(x).
 
 - **Signature**: `% -> %`
 - **From**: `SpecialFunctionCategory`
 
-#### `airyAiPrime` <a id="airyaiprime"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1480)\]
+#### `airyAiPrime` <a id="airyaiprime"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1475)\]
 
 airyAiPrime(x) is the derivative of the Airy function Ai(x).
 
 - **Signature**: `% -> %`
 - **From**: `SpecialFunctionCategory`
 
-#### `airyAiZero` <a id="airyaizero"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L146)\]
+#### `airyAiZero` <a id="airyaizero"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L158)\]
 
 ##### `airyAiZero` : `% -> %`
 
@@ -1268,21 +1270,21 @@ airyAiZero(n) is the n-th zero of the Airy function Ai(z).
 
 airyAiZero(n,x) is the n-th zero of the Airy function Ai(z) less than x.
 
-#### `airyBi` <a id="airybi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1477)\]
+#### `airyBi` <a id="airybi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1472)\]
 
 airyBi(x) is the Airy function Bi(x).
 
 - **Signature**: `% -> %`
 - **From**: `SpecialFunctionCategory`
 
-#### `airyBiPrime` <a id="airybiprime"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1481)\]
+#### `airyBiPrime` <a id="airybiprime"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1476)\]
 
 airyBiPrime(x) is the derivative of the Airy function Bi(x).
 
 - **Signature**: `% -> %`
 - **From**: `SpecialFunctionCategory`
 
-#### `airyBiZero` <a id="airybizero"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L151)\]
+#### `airyBiZero` <a id="airybizero"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L163)\]
 
 ##### `airyBiZero` : `% -> %`
 
@@ -1306,7 +1308,7 @@ algtower([f1, ..., fn]) returns list of kernels [ak1, ..., akl] such that each t
 
 - **From**: `FunctionSpace2(R,K)`
 
-#### `angerJ` <a id="angerj"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L120)\]
+#### `angerJ` <a id="angerj"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L132)\]
 
 ##### `angerJ` : `(%, %, %) -> %`
 
@@ -1332,7 +1334,7 @@ antiCommutator(a, b) returns a*b+b*a.
 - **Signature**: `(%, %) -> %`
 - **From**: `NonAssociativeSemiRng`
 
-#### `apart` <a id="apart"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L910)\]
+#### `apart` <a id="apart"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L922)\]
 
 ##### `apart` : `% -> %`
 
@@ -1388,28 +1390,28 @@ argument(x) returns the angle made by (1, 0) and x.
 - **Signature**: `% -> %`
 - **From**: `ComplexCategory(R)`
 
-#### `asec` <a id="asec"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1403)\]
+#### `asec` <a id="asec"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1398)\]
 
 asec(x) returns the arc-secant of x.
 
 - **Signature**: `% -> %`
 - **From**: `ArcTrigonometricFunctionCategory`
 
-#### `asech` <a id="asech"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1417)\]
+#### `asech` <a id="asech"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1412)\]
 
 asech(x) returns the hyperbolic arc-secant of x.
 
 - **Signature**: `% -> %`
 - **From**: `ArcHyperbolicFunctionCategory`
 
-#### `asin` <a id="asin"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1399)\]
+#### `asin` <a id="asin"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1394)\]
 
 asin(x) returns the arc-sine of x. When evaluated into some subset of the complex numbers, one branch cut for asin lies along the negative real axis to the left of -1 (inclusive), continuous with the upper half plane, the other along the po sitive real axis to the right of 1 (inclusive), continuous with the lower half plane.
 
 - **Signature**: `% -> %`
 - **From**: `ArcTrigonometricFunctionCategory`
 
-#### `asinh` <a id="asinh"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1414)\]
+#### `asinh` <a id="asinh"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1409)\]
 
 asinh(x) returns the hyperbolic arc-sine of x.
 
@@ -1430,13 +1432,13 @@ associator(a, b, c) returns (a*b)*c-a*(b*c).
 - **Signature**: `(%, %, %) -> %`
 - **From**: `NonAssociativeRng`
 
-#### `assuming` <a id="assuming"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L890)\]
+#### `assuming` <a id="assuming"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L902)\]
 
 assuming(assumption(s), expr) uses the assumptions for use of expr with refine, simplify and integrate for example. The assumption(s) are not always supported by MathLink. Use assumptions with 'refine' etc. directly instead.
 
 - **Signature**: `(%, %) -> %`
 
-#### `atan` <a id="atan"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L98)\]
+#### `atan` <a id="atan"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L110)\]
 
 ##### `atan` : `(%, %) -> %`
 
@@ -1448,20 +1450,20 @@ atan(x) returns the arc-tangent of x. When evaluated into some subset of the com
 
 - **From**: `ArcTrigonometricFunctionCategory`
 
-#### `atanh` <a id="atanh"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1416)\]
+#### `atanh` <a id="atanh"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1411)\]
 
 atanh(x) returns the hyperbolic arc-tangent of x.
 
 - **Signature**: `% -> %`
 - **From**: `ArcHyperbolicFunctionCategory`
 
-#### `barnesG` <a id="barnesg"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L229)\]
+#### `barnesG` <a id="barnesg"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L241)\]
 
 barnesG(z) computes the Barnes G-function of z.
 
 - **Signature**: `% -> %`
 
-#### `baseForm` <a id="baseform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1041)\]
+#### `baseForm` <a id="baseform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1053)\]
 
 baseForm(x, n) returns the printed representation of x in base b.
 
@@ -1481,53 +1483,53 @@ belong?(op) tests if % accepts op as applicable to its elements.
 - **Signature**: `BasicOperator -> Boolean`
 - **From**: `ExpressionSpace2(K)`
 
-#### `besselI` <a id="besseli"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1489)\]
+#### `besselI` <a id="besseli"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1484)\]
 
 besselI(v, z) is the modified Bessel function of the first kind.
 
 - **Signature**: `(%, %) -> %`
 - **From**: `SpecialFunctionCategory`
 
-#### `besselJ` <a id="besselj"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1485)\]
+#### `besselJ` <a id="besselj"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1480)\]
 
 besselJ(v, z) is the Bessel function of the first kind.
 
 - **Signature**: `(%, %) -> %`
 - **From**: `SpecialFunctionCategory`
 
-#### `besselJZero` <a id="besseljzero"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L128)\]
+#### `besselJZero` <a id="besseljzero"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L140)\]
 
 besselJZero(n,x) returns the n-th zero of the Bessel J n-th function.
 
 - **Signature**: `(%, %) -> %`
 
-#### `besselK` <a id="besselk"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1490)\]
+#### `besselK` <a id="besselk"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1485)\]
 
 besselK(v, z) is the modified Bessel function of the second kind.
 
 - **Signature**: `(%, %) -> %`
 - **From**: `SpecialFunctionCategory`
 
-#### `besselY` <a id="bessely"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1487)\]
+#### `besselY` <a id="bessely"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1482)\]
 
 besselY(v, z) is the Bessel function of the second kind.
 
 - **Signature**: `(%, %) -> %`
 - **From**: `SpecialFunctionCategory`
 
-#### `besselYZero` <a id="besselyzero"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L131)\]
+#### `besselYZero` <a id="besselyzero"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L143)\]
 
 besselYZero(n,x) returns the n-th zero of the Bessel Y n-th function.
 
 - **Signature**: `(%, %) -> %`
 
-#### `betaRegularized` <a id="betaregularized"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L211)\]
+#### `betaRegularized` <a id="betaregularized"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L223)\]
 
 betaRegularized(x,a,b) computes the regularized incomplete Beta function.
 
 - **Signature**: `(%, %, %) -> %`
 
-#### `binomial` <a id="binomial"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1533)\]
+#### `binomial` <a id="binomial"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1528)\]
 
 binomial(n, r) returns the (n, r) binomial coefficient (often denoted in the literature by C(n, r)). Note: C(n, r) = n!/ (r!(n-r)!) where n >= r >= 0.
 
@@ -1541,19 +1543,19 @@ box(f) returns f with a 'box' around it that prevents f from being evaluated whe
 - **Signature**: `% -> %`
 - **From**: `ExpressionSpace2(K)`
 
-#### `cancel` <a id="cancel"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L922)\]
+#### `cancel` <a id="cancel"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L934)\]
 
 cancel(expr) cancels common factors in numerators and denominators of the rational expression expr.
 
 - **Signature**: `% -> %`
 
-#### `catalan` <a id="catalan"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L88)\]
+#### `catalan` <a id="catalan"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L100)\]
 
 catalan() returns Catalan's constant.
 
 - **Signature**: `() -> %`
 
-#### `ceiling` <a id="ceiling"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L78)\]
+#### `ceiling` <a id="ceiling"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L90)\]
 
 ceiling(x) returns the smallest integer greater than or equal to x.
 
@@ -1580,19 +1582,19 @@ charlierC(n, a, z) is the Charlier polynomial.
 - **Signature**: `(%, %, %) -> %`
 - **From**: `SpecialFunctionCategory`
 
-#### `chebyshevT` <a id="chebyshevt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L258)\]
+#### `chebyshevT` <a id="chebyshevt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L270)\]
 
 chebyshevT(n, x) returns the Chebyshev polynomial of the first kind or evaluates it at x if x is a number.
 
 - **Signature**: `(%, %) -> %`
 
-#### `chebyshevU` <a id="chebyshevu"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L261)\]
+#### `chebyshevU` <a id="chebyshevu"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L273)\]
 
 chebyshevU(n, x) returns Chebyshev polynomial of the second kind or evaluates it at x if x is a number.
 
 - **Signature**: `(%, %) -> %`
 
-#### `coefficient` <a id="coefficient"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L708)\]
+#### `coefficient` <a id="coefficient"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L720)\]
 
 ##### `coefficient` : `(%, %) -> %`
 
@@ -1607,13 +1609,13 @@ coefficient((x - y)^4, x * y^3)
 
 coefficient(p, expr, n) returns the coefficient of expr^n in p.
 
-#### `coefficientList` <a id="coefficientlist"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L714)\]
+#### `coefficientList` <a id="coefficientlist"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L726)\]
 
 coefficientList(p,expr) returns the list of coefficients of expr in p.
 
 - **Signature**: `(%, %) -> %`
 
-#### `coefficientRules` <a id="coefficientrules"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L716)\]
+#### `coefficientRules` <a id="coefficientrules"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L728)\]
 
 ##### `coefficientRules` : `% -> %`
 
@@ -1623,7 +1625,7 @@ coefficientRules(p) returns the coefficients and exponents of p as WS rules.
 
 coefficientRules(p,vars) returns the coefficients and exponents of p with respect to var(s) as WS rules.
 
-#### `coerce` <a id="coerce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1128)\]
+#### `coerce` <a id="coerce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1140)\]
 
 ##### `coerce` : `Integer  -> %`
 
@@ -1739,7 +1741,7 @@ coerce(expr) returns the WSExpression representation of expr.
 
 - **From**: [`WSObject`](WSObject.md)
 
-#### `collect` <a id="collect"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L904)\]
+#### `collect` <a id="collect"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L916)\]
 
 ##### `collect` : `(%, %) -> %`
 
@@ -1763,7 +1765,7 @@ complex(x, y) constructs x + %i*y.
 - **Signature**: `(%, %) -> %`
 - **From**: `ComplexCategory(R)`
 
-#### `complexExpand` <a id="complexexpand"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L942)\]
+#### `complexExpand` <a id="complexexpand"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L954)\]
 
 ##### `complexExpand` : `% -> %`
 
@@ -1773,14 +1775,14 @@ complexExpand(expr) expands expr assuming variables are real.
 
 complexExpand(expr, cvars) expands expr assuming all but cvars variables are real.
 
-#### `conjugate` <a id="conjugate"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1382)\]
+#### `conjugate` <a id="conjugate"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1377)\]
 
 conjugate(x + %i y) returns x - %i y.
 
 - **Signature**: `% -> %`
 - **From**: `ComplexCategory(R)`
 
-#### `convert` <a id="convert"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1157)\]
+#### `convert` <a id="convert"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1169)\]
 
 ##### `convert` : `Polynomial(Integer) -> %`
 
@@ -1850,73 +1852,73 @@ coordinates(a, basis) returns the coordinates of a with respect to the basis bas
 
 - **From**: `FiniteRankAlgebra(R,UP)`
 
-#### `cos` <a id="cos"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1392)\]
+#### `cos` <a id="cos"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1387)\]
 
 cos(x) returns the cosine of x.
 
 - **Signature**: `% -> %`
 - **From**: `TrigonometricFunctionCategory`
 
-#### `cosh` <a id="cosh"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1408)\]
+#### `cosh` <a id="cosh"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1403)\]
 
 cosh(x) returns the hyperbolic cosine of x.
 
 - **Signature**: `% -> %`
 - **From**: `HyperbolicFunctionCategory`
 
-#### `cot` <a id="cot"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1396)\]
+#### `cot` <a id="cot"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1391)\]
 
 cot(x) returns the cotangent of x.
 
 - **Signature**: `% -> %`
 - **From**: `TrigonometricFunctionCategory`
 
-#### `coth` <a id="coth"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1412)\]
+#### `coth` <a id="coth"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1407)\]
 
 coth(x) returns the hyperbolic cotangent of x.
 
 - **Signature**: `% -> %`
 - **From**: `HyperbolicFunctionCategory`
 
-#### `coulombF` <a id="coulombf"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L299)\]
+#### `coulombF` <a id="coulombf"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L311)\]
 
 coulombF(l,eta,ro) is the regular Coulomb wave function.
 
 - **Signature**: `(%, %, %) -> %`
 
-#### `coulombG` <a id="coulombg"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L301)\]
+#### `coulombG` <a id="coulombg"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L313)\]
 
 coulombG(l,eta,ro) is the irregular Coulomb wave function.
 
 - **Signature**: `(%, %, %) -> %`
 
-#### `coulombH1` <a id="coulombh1"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L303)\]
+#### `coulombH1` <a id="coulombh1"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L315)\]
 
 coulombH1(l,eta,ro) is the incoming irregular Coulomb wave function H^(+).
 
 - **Signature**: `(%, %, %) -> %`
 
-#### `coulombH2` <a id="coulombh2"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L305)\]
+#### `coulombH2` <a id="coulombh2"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L317)\]
 
 coulombH2(l,eta,ro) is the incoming irregular Coulomb wave function H^(-).
 
 - **Signature**: `(%, %, %) -> %`
 
-#### `csc` <a id="csc"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1395)\]
+#### `csc` <a id="csc"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1390)\]
 
 csc(x) returns the cosecant of x.
 
 - **Signature**: `% -> %`
 - **From**: `TrigonometricFunctionCategory`
 
-#### `csch` <a id="csch"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1411)\]
+#### `csch` <a id="csch"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1406)\]
 
 csch(x) returns the hyperbolic cosecant of x.
 
 - **Signature**: `% -> %`
 - **From**: `HyperbolicFunctionCategory`
 
-#### `dSolve` <a id="dsolve"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L586)\]
+#### `dSolve` <a id="dsolve"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L598)\]
 
 ##### `dSolve` : `(%, %, %) -> %`
 
@@ -1951,7 +1953,7 @@ fprimex:=derivative(operator('f),1,x)
 
 Exa mple: dSolve(fprimex + fx = a * sin(x)/cos(x),fx,x)
 
-#### `dSolveValue` <a id="dsolvevalue"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L600)\]
+#### `dSolveValue` <a id="dsolvevalue"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L612)\]
 
 ##### `dSolveValue` : `(%, %, %) -> %`
 
@@ -1974,13 +1976,13 @@ dSolveValue(eq, func,var) returns the value determined by the differential equat
 
 dSolveValue(eq, func,var) returns the value determined by the differential equation eq for the function func with indepe ndent variable var.
 
-#### `dawson` <a id="dawson"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L104)\]
+#### `dawson` <a id="dawson"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L116)\]
 
 dawson(x) computes the Dawson integral of x.
 
 - **Signature**: `% -> %`
 
-#### `decimalForm` <a id="decimalform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1050)\]
+#### `decimalForm` <a id="decimalform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1062)\]
 
 ##### `decimalForm` : `% -> %`
 
@@ -1990,19 +1992,19 @@ decimalForm(x) returns the printed representation of x in decimal form i.e. with
 
 decimalForm(x, expr) returns the printed representation of x in decimal form with expr as specification (number of digits of precision or a 2-list of number of digits and the number of digits after the decimal point).
 
-#### `decompose` <a id="decompose"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L836)\]
+#### `decompose` <a id="decompose"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L848)\]
 
 decompose(poly, x) is a polynomial decomposition function, here, related to x.
 
 - **Signature**: `(%, %) -> WSList(%)`
 
-#### `dedekindEta` <a id="dedekindeta"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L374)\]
+#### `dedekindEta` <a id="dedekindeta"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L386)\]
 
 dedekindEta(tau) computes the Dedekind modular elliptic eta.
 
 - **Signature**: `% -> %`
 
-#### `defined?` <a id="defined"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L35)\]
+#### `defined?` <a id="defined"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L47)\]
 
 defined?(sym) checks whether or not sym is a WS symbol.
 
@@ -2022,7 +2024,7 @@ definingPolynomial() returns the minimal polynomial which generator() satisfies.
 
 - **From**: `MonogenicAlgebra(R,UP)`
 
-#### `degree` <a id="degree"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L82)\]
+#### `degree` <a id="degree"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L94)\]
 
 degree() returns conversion factor from degrees to radians, π/180.
 
@@ -2042,7 +2044,7 @@ denom(f) returns the denominator of f viewed as a polynomial in the kernels over
 - **Signature**: `% -> SparseMultivariatePolynomial(%,Kernel(%))`
 - **From**: `FunctionSpace2(R,K)`
 
-#### `denominator` <a id="denominator"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L672)\]
+#### `denominator` <a id="denominator"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L684)\]
 
 denominator(expr) returns the denominator of expr.
 
@@ -2055,7 +2057,7 @@ derivationCoordinates(b, ') returns M such that b' = M b.
 - **Signature**: `(Vector(%), (% -> %)) -> Matrix(%)`
 - **From**: `MonogenicAlgebra(R,UP)`
 
-#### `derivative` <a id="derivative"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L578)\]
+#### `derivative` <a id="derivative"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L590)\]
 
 ##### `derivative` : `(BasicOperator, %) -> %`
 
@@ -2074,7 +2076,7 @@ x := jWSExpr x
 fprimex:=derivative(operator('f),1,x)
 ```
 
-#### `differentiate` <a id="differentiate"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1638)\]
+#### `differentiate` <a id="differentiate"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1633)\]
 
 ##### `differentiate` : `(%, S) -> %`
 
@@ -2118,7 +2120,7 @@ differentiate(f, n) creates a form for the nth derivative of f, e.g. f', f'', f'
 
 - **From**: `OutputForm`
 
-#### `digamma` <a id="digamma"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L126)\]
+#### `digamma` <a id="digamma"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L138)\]
 
 ##### `digamma` : `(%, %) -> %`
 
@@ -2130,7 +2132,7 @@ digamma(x) is the logarithmic derivative of Gamma(x) (often written psi(x) in th
 
 - **From**: `SpecialFunctionCategory`
 
-#### `dilog` <a id="dilog"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1435)\]
+#### `dilog` <a id="dilog"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1430)\]
 
 dilog(x) returns the dilogarithm of x, i.e. the integral of log(x) / (1 - x) dx.
 
@@ -2144,26 +2146,26 @@ dimensions(agg) returns dimensions of agg.
 - **Signature**: `% -> WSList(WSInteger)`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `diracDelta` <a id="diracdelta"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1512)\]
+#### `diracDelta` <a id="diracdelta"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1507)\]
 
 diracDelta(x) is unit mass at zeros of x.
 
 - **Signature**: `% -> %`
 - **From**: `SpecialFunctionCategory`
 
-#### `dirichletEta` <a id="dirichleteta"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L376)\]
+#### `dirichletEta` <a id="dirichleteta"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L388)\]
 
 dirichletEta(z) computes the Dirichlet eta.
 
 - **Signature**: `% -> %`
 
-#### `dirichletL` <a id="dirichletl"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L161)\]
+#### `dirichletL` <a id="dirichletl"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L173)\]
 
 dirichletL(k,j,s) returns Dirichlet L-function of s, modulus k, index j.
 
 - **Signature**: `(%, %, %) -> %`
 
-#### `discriminant` <a id="discriminant"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L775)\]
+#### `discriminant` <a id="discriminant"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L787)\]
 
 ##### `discriminant` : `(%, %) -> %`
 
@@ -2181,7 +2183,7 @@ discriminant([v1, .., vn]) returns determinant(traceMatrix([v1, .., vn])).
 
 - **From**: `FiniteRankAlgebra(R,UP)`
 
-#### `distribute` <a id="distribute"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L928)\]
+#### `distribute` <a id="distribute"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L940)\]
 
 ##### `distribute` : `% -> %`
 
@@ -2202,7 +2204,7 @@ divide(x, y) divides x by y producing a record containing a quotient and remaind
 - **Signature**: `(%, %) -> Record(quotient: %,remainder: %)`
 - **From**: `EuclideanDomain`
 
-#### `ellipticE` <a id="elliptice"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L362)\]
+#### `ellipticE` <a id="elliptice"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L374)\]
 
 ##### `ellipticE` : `% -> %`
 
@@ -2218,19 +2220,19 @@ ellipticE(z, m) is the incomplete elliptic integral of the second kind: elliptic
 
 - **From**: `SpecialFunctionCategory`
 
-#### `ellipticF` <a id="ellipticf"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L360)\]
+#### `ellipticF` <a id="ellipticf"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L372)\]
 
 ellipticF(phi,m) computes the elliptic integral of the first kind.
 
 - **Signature**: `(%, %) -> %`
 
-#### `ellipticK` <a id="elliptick"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L357)\]
+#### `ellipticK` <a id="elliptick"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L369)\]
 
 ellipticK(m) computes the complete elliptic integral of the first kind.
 
 - **Signature**: `% -> %`
 
-#### `ellipticPi` <a id="ellipticpi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L366)\]
+#### `ellipticPi` <a id="ellipticpi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L378)\]
 
 ##### `ellipticPi` : `(%, %)-> %`
 
@@ -2246,13 +2248,13 @@ ellipticPi(z, n, m) is the incomplete elliptic integral of the third kind: ellip
 
 - **From**: `SpecialFunctionCategory`
 
-#### `ellipticTheta` <a id="elliptictheta"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L347)\]
+#### `ellipticTheta` <a id="elliptictheta"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L359)\]
 
 ellipticTheta(a, u, q) computes the theta function, a ranges from 1 to 4.
 
 - **Signature**: `(%, %, %) -> %`
 
-#### `ellipticThetaPrime` <a id="ellipticthetaprime"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L350)\]
+#### `ellipticThetaPrime` <a id="ellipticthetaprime"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L362)\]
 
 ellipticThetaPrime(a, u, q) computes the derivative of the theta function, a ranges from 1 to 4.
 
@@ -2338,7 +2340,7 @@ elt(agg,i) returns the i-th element.
 
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `engineeringForm` <a id="engineeringform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1064)\]
+#### `engineeringForm` <a id="engineeringform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1076)\]
 
 ##### `engineeringForm` : `% -> %`
 
@@ -2348,7 +2350,7 @@ engineeringForm(x) returns the printed representation of x in engineering form.
 
 engineeringForm(x,n) returns the printed representation of x in engineering form with n digits of precision.
 
-#### `erf` <a id="erf"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L100)\]
+#### `erf` <a id="erf"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L112)\]
 
 ##### `erf` : `(%, %) -> %`
 
@@ -2360,13 +2362,13 @@ erf(x) returns the error function of x, i.e. 2 / sqrt(%pi) times the integral of
 
 - **From**: `LiouvillianFunctionCategory`
 
-#### `erfc` <a id="erfc"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L102)\]
+#### `erfc` <a id="erfc"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L114)\]
 
 erfc(x) computes the complementary error function.
 
 - **Signature**: `% -> %`
 
-#### `erfi` <a id="erfi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1424)\]
+#### `erfi` <a id="erfi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1419)\]
 
 erfi(x) denotes -%i*erf(%i*x)
 
@@ -2380,7 +2382,7 @@ euclideanSize(x) returns the euclidean size of the element x. Error: if x is zer
 - **Signature**: `% -> NonNegativeInteger`
 - **From**: `EuclideanDomain`
 
-#### `eulerE` <a id="eulere"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L110)\]
+#### `eulerE` <a id="eulere"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L122)\]
 
 ##### `eulerE` : `WSInteger -> %`
 
@@ -2390,19 +2392,19 @@ eulerE(n) returns the Euler number En.
 
 eulerE(n,z) returns the Euler E polynomial of degree n.
 
-#### `eulerGamma` <a id="eulergamma"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L84)\]
+#### `eulerGamma` <a id="eulergamma"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L96)\]
 
 eulerGamma() returns Euler's constant Gamma(γ).
 
 - **Signature**: `() -> %`
 
-#### `eulerPhi` <a id="eulerphi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L107)\]
+#### `eulerPhi` <a id="eulerphi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L119)\]
 
 eulerPhi(n) is the totient function, i.e. the number of integers that are relatively prime to n in the range [1,n].
 
 - **Signature**: `WSInteger -> %`
 
-#### `eval` <a id="eval"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1961)\]
+#### `eval` <a id="eval"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1956)\]
 
 ##### `eval` : `(%, A, B) -> %`
 
@@ -2488,13 +2490,13 @@ eval(x, s, n, f) replaces every s(a1, ..., am)^n in x by f(a1, ..., am) for any 
 
 - **From**: `FunctionSpace2(R,K)`
 
-#### `exactNumber?` <a id="exactnumber"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L51)\]
+#### `exactNumber?` <a id="exactnumber"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L63)\]
 
 exactNumber?(x) checks whether or not x is an exact number.
 
 - **Signature**: `% -> Boolean`
 
-#### `exp` <a id="exp"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L80)\]
+#### `exp` <a id="exp"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L92)\]
 
 ##### `exp` : `() -> %`
 
@@ -2506,13 +2508,13 @@ exp(x) returns %e to the power x.
 
 - **From**: `ElementaryFunctionCategory`
 
-#### `expToTrig` <a id="exptotrig"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L972)\]
+#### `expToTrig` <a id="exptotrig"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L984)\]
 
 expToTrig(expr) returns expr with exponentials converted to (hyperbolic) trigonometric functions.
 
 - **Signature**: `% -> %`
 
-#### `expand` <a id="expand"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L895)\]
+#### `expand` <a id="expand"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L907)\]
 
 ##### `expand` : `% -> %`
 
@@ -2522,19 +2524,19 @@ expand(expr) puts out products and positive powers of integers of the expression
 
 expand(expr, opt) is the expand version with excluded pattern-s or any other options available (for example "Modulus->p").
 
-#### `expandDenominator` <a id="expanddenominator"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L919)\]
+#### `expandDenominator` <a id="expanddenominator"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L931)\]
 
 expandDenominator(expr) expands denominators of rational expression expr.
 
 - **Signature**: `% -> %`
 
-#### `expandNumerator` <a id="expandnumerator"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L917)\]
+#### `expandNumerator` <a id="expandnumerator"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L929)\]
 
 expandNumerator(expr) expands numerators of rational expression expr.
 
 - **Signature**: `% -> %`
 
-#### `exponent` <a id="exponent"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L697)\]
+#### `exponent` <a id="exponent"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L709)\]
 
 ##### `exponent` : `(%, %) -> %`
 
@@ -2597,13 +2599,13 @@ extendedEuclidean(x, y, z) either returns a record rec where rec.coef1*x+rec.coe
 
 - **From**: `EuclideanDomain`
 
-#### `extendedExpand` <a id="extendedexpand"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L901)\]
+#### `extendedExpand` <a id="extendedexpand"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L913)\]
 
 extendedExpand(expr) puts out all products and positive powers of integers.
 
 - **Signature**: `% -> %`
 
-#### `extendedSimplify` <a id="extendedsimplify"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L876)\]
+#### `extendedSimplify` <a id="extendedsimplify"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L888)\]
 
 ##### `extendedSimplify` : `% -> %`
 
@@ -2624,7 +2626,7 @@ extendedSimplify(expr)
 
 extendedSimplify(expr, assumptions) is the extended version of simplify with respect to assumptions or ExcludedForms. This is the full version.
 
-#### `extract` <a id="extract"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1017)\]
+#### `extract` <a id="extract"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1029)\]
 
 ##### `extract` : `(%, NonNegativeInteger) -> %`
 
@@ -2636,7 +2638,7 @@ extract(agg, parts) extracts parts of agg.
 
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `factor` <a id="factor"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L797)\]
+#### `factor` <a id="factor"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L809)\]
 
 ##### `factor` : `% -> %`
 
@@ -2657,13 +2659,13 @@ factor(x) returns the factorization of x into irreducibles.
 
 - **From**: `UniqueFactorizationDomain`
 
-#### `factorList` <a id="factorlist"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L823)\]
+#### `factorList` <a id="factorlist"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L835)\]
 
 factorList(expr) factors the expression or polynomial expr, but returns the result as a list of pairs (factor, exponent).
 
 - **Signature**: `% -> WSList(WSList(%))`
 
-#### `factorPolynomial` <a id="factorpolynomial"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L790)\]
+#### `factorPolynomial` <a id="factorpolynomial"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L802)\]
 
 ##### `factorPolynomial` : `% -> %`
 
@@ -2681,13 +2683,13 @@ factorPolynomial(p) returns the factorization into irreducibles of the univariat
 
 - **From**: `PolynomialFactorizationExplicit`
 
-#### `factorSquareFree` <a id="factorsquarefree"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L804)\]
+#### `factorSquareFree` <a id="factorsquarefree"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L816)\]
 
 factorSquareFree(expr) factors the expression or polynomial expr in square free factors.
 
 - **Signature**: `% -> %`
 
-#### `factorSquareFreeList` <a id="factorsquarefreelist"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L826)\]
+#### `factorSquareFreeList` <a id="factorsquarefreelist"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L838)\]
 
 factorSquareFreeList(expr) factors the expression or polynomial expr in square free factors but returns the result as a list of pairs (factor, exponent).
 
@@ -2700,7 +2702,7 @@ factorSquareFreePolynomial(p) factors the univariate polynomial p into irreducib
 - **Signature**: `SparseUnivariatePolynomial(%) -> Factored(SparseUnivariatePolynomial(%)) if % has PFECAT`
 - **From**: `PolynomialFactorizationExplicit`
 
-#### `factorTerms` <a id="factorterms"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L807)\]
+#### `factorTerms` <a id="factorterms"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L819)\]
 
 ##### `factorTerms` : `% -> %`
 
@@ -2714,7 +2716,7 @@ factorTerms(p, var) factors out numerical factors of the expression or polynomia
 
 factorTerms(p, vars) factors the expression or polynomial expr by pulling out numerical factors without those related to var(s).
 
-#### `factorTermsList` <a id="factortermslist"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L816)\]
+#### `factorTermsList` <a id="factortermslist"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L828)\]
 
 ##### `factorTermsList` : `% -> WSList(%)`
 
@@ -2724,7 +2726,7 @@ factorTermsList(expr) is the counterpart of factorTerms but here returned as a l
 
 factorTermsList(expr, vars) is the counterpart of factorTerms but here returned as a list of pairs (numerical factor, polynomial factor). The numerical factors related to var(s) are not factored.
 
-#### `factorial` <a id="factorial"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1572)\]
+#### `factorial` <a id="factorial"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1567)\]
 
 factorial(n) computes the factorial of n (denoted in the literature by n!) Note: n! = n (n-1)! when n > 0; also, 0! = 1.
 
@@ -2745,13 +2747,13 @@ factorials(f, x) rewrites the permutations and binomials in f involving x in ter
 
 - **From**: `CombinatorialOpsCategory`
 
-#### `fibonacci` <a id="fibonacci"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L233)\]
+#### `fibonacci` <a id="fibonacci"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L245)\]
 
 fibonacci(n, x) returns the Fibonacci polynomial or evaluates it at x if x is a number.
 
 - **Signature**: `(%, %) -> %`
 
-#### `findInstance` <a id="findinstance"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L652)\]
+#### `findInstance` <a id="findinstance"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L664)\]
 
 ##### `findInstance` : `(Equation(%), %) -> WSL(WSL(%))`
 
@@ -2777,7 +2779,7 @@ findInstance(expr,lvars,dom) tries to find an instance to the equation in expr.
 
 findInstance(expr,lvars,dom, n) tries to find n instance(s) to the (in)equation in expr.
 
-#### `findRoot` <a id="findroot"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L849)\]
+#### `findRoot` <a id="findroot"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L861)\]
 
 findRoot(expr,start) tries to find the root of expr starting at start.
 
@@ -2795,13 +2797,13 @@ first(agg) returns the first element of agg.
 - **Signature**: `% -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `floor` <a id="floor"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L76)\]
+#### `floor` <a id="floor"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L88)\]
 
 floor(x) returns the greatest integer less than or equal to x
 
 - **Signature**: `% -> %`
 
-#### `fourier` <a id="fourier"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L549)\]
+#### `fourier` <a id="fourier"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L561)\]
 
 ##### `fourier` : `% -> %`
 
@@ -2823,7 +2825,7 @@ fourier(list, lpos) returns the elements of the discrete Fourier transform from 
 
 fourier(list, lpos) returns the elements of the discrete Fourier transform from a list of numbers with position(s) in th e list lpos.
 
-#### `fractionPart` <a id="fractionpart"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1380)\]
+#### `fractionPart` <a id="fractionpart"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1375)\]
 
 fractionPart(x) returns the fractional part of x. Note: fractionPart(x) = x - floor(x).
 
@@ -2844,21 +2846,21 @@ freeOf?(x, s) tests if x does not contain any operator whose name is s.
 
 - **From**: `ExpressionSpace2(K)`
 
-#### `fresnelC` <a id="fresnelc"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1432)\]
+#### `fresnelC` <a id="fresnelc"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1427)\]
 
 fresnelC(x) is the Fresnel integral C, defined by C(x) = integrate(cos(%pi*t^2/2), t=0..x)
 
 - **Signature**: `% -> %`
 - **From**: `LiouvillianFunctionCategory`
 
-#### `fresnelS` <a id="fresnels"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1433)\]
+#### `fresnelS` <a id="fresnels"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1428)\]
 
 fresnelS(x) is the Fresnel integral S, defined by S(x) = integrate(sin(%pi*t^2/2), t=0..x)
 
 - **Signature**: `% -> %`
 - **From**: `LiouvillianFunctionCategory`
 
-#### `fromCoefficientRules` <a id="fromcoefficientrules"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L722)\]
+#### `fromCoefficientRules` <a id="fromcoefficientrules"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L734)\]
 
 fromCoefficientRules(list, vars) constructs the polynomial from the list of coefficients and exponents rules.
 
@@ -2870,7 +2872,7 @@ fromCoefficientRules(%, jWSExpr [x,y])
 
 - **Signature**: `(%, %) -> %`
 
-#### `functionExpand` <a id="functionexpand"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L950)\]
+#### `functionExpand` <a id="functionexpand"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L962)\]
 
 ##### `functionExpand` : `% -> %`
 
@@ -2884,13 +2886,13 @@ functionExpand sphericalBesselJ(3,8)
 
 functionExpand(expr,assumptions) tries to expand functions in expr to more elementary functions assuming that assumptions are satisfied.
 
-#### `gammaRegularized` <a id="gammaregularized"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L213)\]
+#### `gammaRegularized` <a id="gammaregularized"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L225)\]
 
 gammaRegularized(a,x) computes the regularized incomplete Gamma function.
 
 - **Signature**: `(%, %) -> %`
 
-#### `gcd` <a id="gcd"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1895)\]
+#### `gcd` <a id="gcd"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1890)\]
 
 ##### `gcd` : `(%, %) -> %`
 
@@ -2911,7 +2913,7 @@ gcdPolynomial(p, q) returns the greatest common divisor (gcd) of univariate poly
 - **Signature**: `(SparseUnivariatePolynomial(%), SparseUnivariatePolynomial(%)) -> SparseUnivariatePolynomial(%)`
 - **From**: `GcdDomain`
 
-#### `gegenbauerC` <a id="gegenbauerc"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L252)\]
+#### `gegenbauerC` <a id="gegenbauerc"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L264)\]
 
 ##### `gegenbauerC` : `(%, %) -> %`
 
@@ -2928,13 +2930,13 @@ generator() returns the generator for this domain.
 - **Signature**: `() -> %`
 - **From**: `MonogenicAlgebra(R,UP)`
 
-#### `goldenRatio` <a id="goldenratio"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L90)\]
+#### `goldenRatio` <a id="goldenratio"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L102)\]
 
 goldenRatio() returns the golden ratio.
 
 - **Signature**: `() -> %`
 
-#### `groebnerBasis` <a id="groebnerbasis"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L777)\]
+#### `groebnerBasis` <a id="groebnerbasis"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L789)\]
 
 ##### `groebnerBasis` : `(%, %) -> WSL(%)`
 
@@ -2966,13 +2968,13 @@ ground?(f) tests if f is an element of R.
 - **Signature**: `% -> Boolean`
 - **From**: `FunctionSpace2(R,K)`
 
-#### `gudermannian` <a id="gudermannian"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L122)\]
+#### `gudermannian` <a id="gudermannian"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L134)\]
 
 gudermannian(z) computes the Gudermannian of z.
 
 - **Signature**: `% -> %`
 
-#### `guessGeneratingFunction` <a id="guessgeneratingfunction"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L382)\]
+#### `guessGeneratingFunction` <a id="guessgeneratingfunction"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L394)\]
 
 ##### `guessGeneratingFunction` : `(WSList(%), %) -> %`
 
@@ -2990,7 +2992,7 @@ guessGeneratingFunction(l,x) finds the generating function applied to x from the
 guessGeneratingFunction(jWSExpr("{1,2,4,8}"),x)
 ```
 
-#### `guessSequenceFunction` <a id="guesssequencefunction"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L394)\]
+#### `guessSequenceFunction` <a id="guesssequencefunction"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L406)\]
 
 ##### `guessSequenceFunction` : `WSList(WSInteger) -> %`
 
@@ -3044,21 +3046,21 @@ hahn_p(n, a, b, bar_a, bar_b, z) is the continuous Hahn polynomial.
 - **Signature**: `(%, %, %, %, %, %) -> %`
 - **From**: `SpecialFunctionCategory`
 
-#### `hankelH1` <a id="hankelh1"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1495)\]
+#### `hankelH1` <a id="hankelh1"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1490)\]
 
 hankelH1(v, z) is first Hankel function (Bessel function of the third kind).
 
 - **Signature**: `(%, %) -> %`
 - **From**: `SpecialFunctionCategory`
 
-#### `hankelH2` <a id="hankelh2"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1496)\]
+#### `hankelH2` <a id="hankelh2"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1491)\]
 
 hankelH2(v, z) is the second Hankel function (Bessel function of the third kind).
 
 - **Signature**: `(%, %) -> %`
 - **From**: `SpecialFunctionCategory`
 
-#### `haversine` <a id="haversine"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L116)\]
+#### `haversine` <a id="haversine"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L128)\]
 
 haversine(z) computes the Haversine of z.
 
@@ -3071,74 +3073,74 @@ height(f) returns the highest nesting level appearing in f. Constants have heigh
 - **Signature**: `% -> NonNegativeInteger`
 - **From**: `ExpressionSpace2(K)`
 
-#### `hermiteH` <a id="hermiteh"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L264)\]
+#### `hermiteH` <a id="hermiteh"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L276)\]
 
 hermiteH(n, x) returns the Hermite polynomial or evaluates it at x if x is a number.
 
 - **Signature**: `(%, %) -> %`
 
-#### `hornerForm` <a id="hornerform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L934)\]
+#### `hornerForm` <a id="hornerform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L946)\]
 
 hornerForm(expr, x) returns the Horner form of expr (minimizing multiplications).
 
 - **Signature**: `(%, %) -> %`
 
-#### `hurwitzLerchPhi` <a id="hurwitzlerchphi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L199)\]
+#### `hurwitzLerchPhi` <a id="hurwitzlerchphi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L211)\]
 
 hurwitzLerchPhi(z,s,a) computes the Hurwitz–Lerch transcendent phi function.
 
 - **Signature**: `(%, %, %) -> %`
 
-#### `hurwitzZeta` <a id="hurwitzzeta"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L197)\]
+#### `hurwitzZeta` <a id="hurwitzzeta"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L209)\]
 
 hurwitzZeta(s,a) computes the Hurwitz zeta.
 
 - **Signature**: `(%, %) -> %`
 
-#### `hyperFactorial` <a id="hyperfactorial"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L231)\]
+#### `hyperFactorial` <a id="hyperfactorial"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L243)\]
 
 hyperFactorial(n) computes the hyperfactorial of n.
 
 - **Signature**: `% -> %`
 
-#### `hypergeometric0F1` <a id="hypergeometric0f1"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L281)\]
+#### `hypergeometric0F1` <a id="hypergeometric0f1"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L293)\]
 
 hypergeometric0F1(a,z) is the hypergeometric 0F1.
 
 - **Signature**: `(%, %) -> %`
 
-#### `hypergeometric0F1Regularized` <a id="hypergeometric0f1regularized"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L283)\]
+#### `hypergeometric0F1Regularized` <a id="hypergeometric0f1regularized"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L295)\]
 
 hypergeometric0F1Regularized(a,z) is the regularized hypergeometric 0F1.
 
 - **Signature**: `(%, %) -> %`
 
-#### `hypergeometric1F1` <a id="hypergeometric1f1"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L285)\]
+#### `hypergeometric1F1` <a id="hypergeometric1f1"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L297)\]
 
 hypergeometric1F1(a,b,z) is the Kummer confluent hypergeometric function 1F1.
 
 - **Signature**: `(%, %, %) -> %`
 
-#### `hypergeometric1F1Regularized` <a id="hypergeometric1f1regularized"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L288)\]
+#### `hypergeometric1F1Regularized` <a id="hypergeometric1f1regularized"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L300)\]
 
 hypergeometric1F1Regularized(a,b,z) is the regularized confluent hypergeometric function 1F1.
 
 - **Signature**: `(%, %, %) -> %`
 
-#### `hypergeometricU` <a id="hypergeometricu"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L291)\]
+#### `hypergeometricU` <a id="hypergeometricu"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L303)\]
 
 hypergeometricU(a,b,z) is the confluent hypergeometric function U.
 
 - **Signature**: `(%, %, %) -> %`
 
-#### `imag` <a id="imag"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1316)\]
+#### `imag` <a id="imag"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1311)\]
 
 imag(x) returns imaginary part of x.
 
 - **Signature**: `% -> %`
 - **From**: `ComplexCategory(R)`
 
-#### `imaginary` <a id="imaginary"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1305)\]
+#### `imaginary` <a id="imaginary"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1300)\]
 
 imaginary() = sqrt(-1) = %i.
 
@@ -3152,7 +3154,7 @@ insert(l, elt, ind) inserts elt to the list l at index ind.
 - **Signature**: `(%, %, WSInteger) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `integer?` <a id="integer"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L42)\]
+#### `integer?` <a id="integer"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L54)\]
 
 integer?(i) checks whether or not i is an integer.
 
@@ -3172,7 +3174,7 @@ integral(f, x) returns the formal integral of f dx.
 
 - **From**: `PrimitiveFunctionCategory`
 
-#### `integrate` <a id="integrate"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L499)\]
+#### `integrate` <a id="integrate"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L511)\]
 
 ##### `integrate` : `(%, %) -> %`
 
@@ -3200,7 +3202,7 @@ integrate(expr, var, seg) is the definite integration of expr with respect to va
 
 integrate(expr, var) is the indefinite integration of expr with respect to var.
 
-#### `interpolatingPolynomial` <a id="interpolatingpolynomial"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L839)\]
+#### `interpolatingPolynomial` <a id="interpolatingpolynomial"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L851)\]
 
 interpolatingPolynomial(lpoly,x) interpolates the list of polynomials lpoly with respect to x.
 
@@ -3220,25 +3222,25 @@ inv x returns the multiplicative inverse of x. Error: if x is 0.
 - **Signature**: `% -> %`
 - **From**: `DivisionRing`
 
-#### `inverseBetaRegularized` <a id="inversebetaregularized"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L217)\]
+#### `inverseBetaRegularized` <a id="inversebetaregularized"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L229)\]
 
 inverseBetaRegularized(s,a,b) computes the inverse Beta regularized function.
 
 - **Signature**: `(%, %, %) -> %`
 
-#### `inverseErf` <a id="inverseerf"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L204)\]
+#### `inverseErf` <a id="inverseerf"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L216)\]
 
 inverseErf(x) computes the inverse error function of x.
 
 - **Signature**: `% -> %`
 
-#### `inverseErfc` <a id="inverseerfc"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L206)\]
+#### `inverseErfc` <a id="inverseerfc"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L218)\]
 
 inverseErfc(x) computes the inverse complementary error function of x.
 
 - **Signature**: `% -> %`
 
-#### `inverseFourier` <a id="inversefourier"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L563)\]
+#### `inverseFourier` <a id="inversefourier"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L575)\]
 
 ##### `inverseFourier` : `% -> %`
 
@@ -3260,37 +3262,37 @@ inverseFourier(list, lpos) returns the elements of the discrete inverse Fourier 
 
 inverseFourier(list, lpos) returns the elements of the discrete inverse Fourier transform from a list of numbers with po sition(s) in the list lpos.
 
-#### `inverseGammaRegularized` <a id="inversegammaregularized"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L219)\]
+#### `inverseGammaRegularized` <a id="inversegammaregularized"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L231)\]
 
 inverseGammaRegularized(a,s) computes the inverse Gamma regularized function.
 
 - **Signature**: `(%, %) -> %`
 
-#### `inverseGudermannian` <a id="inversegudermannian"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L124)\]
+#### `inverseGudermannian` <a id="inversegudermannian"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L136)\]
 
 inverseGudermannian(z) computes the inverse Gudermannian.
 
 - **Signature**: `% -> %`
 
-#### `inverseHaversine` <a id="inversehaversine"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L118)\]
+#### `inverseHaversine` <a id="inversehaversine"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L130)\]
 
 inverseHaversine(z) computes the inverse Haversine.
 
 - **Signature**: `% -> %`
 
-#### `inverseJacobiCn` <a id="inversejacobicn"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L345)\]
+#### `inverseJacobiCn` <a id="inversejacobicn"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L357)\]
 
 inverseJacobiCn(nu, m) computes the inverse Jacobi CN elliptic function.
 
 - **Signature**: `(%, %) -> %`
 
-#### `inverseJacobiSn` <a id="inversejacobisn"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L343)\]
+#### `inverseJacobiSn` <a id="inversejacobisn"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L355)\]
 
 inverseJacobiSn(nu, m) computes the inverse Jacobi SN elliptic function.
 
 - **Signature**: `(%, %) -> %`
 
-#### `irreducible?` <a id="irreducible"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L830)\]
+#### `irreducible?` <a id="irreducible"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L842)\]
 
 ##### `irreducible?` : `% -> Boolean`
 
@@ -3369,13 +3371,13 @@ jWSAggregate(list) constructs agg to a WSAggregate.
 - **Signature**: `List(%) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `jWSAssociation` <a id="jwsassociation"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1189)\]
+#### `jWSAssociation` <a id="jwsassociation"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1201)\]
 
 jWSAssociation(rules) returns the associations (key->value) created from the rules.
 
 - **Signature**: `WSList(%) -> %`
 
-#### `jWSData` <a id="jwsdata"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1174)\]
+#### `jWSData` <a id="jwsdata"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1186)\]
 
 ##### `jWSData` : `() -> %`
 
@@ -3405,13 +3407,13 @@ jWSData(sym, prop) returns the property of sym.
 
 jWSData(sym, prop, ann) returns the annotation for the property of sym.
 
-#### `jWSEqual` <a id="jwsequal"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1204)\]
+#### `jWSEqual` <a id="jwsequal"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1216)\]
 
 jWSEqual(lhs,rhs) returns the Julia WS equality lhs == rhs.
 
 - **Signature**: `(%, %) -> %`
 
-#### `jWSExpr` <a id="jwsexpr"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1224)\]
+#### `jWSExpr` <a id="jwsexpr"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1236)\]
 
 ##### `jWSExpr` : `Symbol -> %`
 
@@ -3457,13 +3459,13 @@ toString jWSExpr "TextSentences[WikipediaData[_"Sun_"]][[;; 40]]"
 jWSExpr "Probability[x < 1, x \[Distributed] NormalDistribution[]]"
 ```
 
-#### `jWSGreater` <a id="jwsgreater"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1212)\]
+#### `jWSGreater` <a id="jwsgreater"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1224)\]
 
 jWSGreater(lhs,rhs) returns the Julia WS inequality lhs > rhs.
 
 - **Signature**: `(%, %) -> %`
 
-#### `jWSGreaterEqual` <a id="jwsgreaterequal"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1214)\]
+#### `jWSGreaterEqual` <a id="jwsgreaterequal"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1226)\]
 
 jWSGreaterEqual(lhs,rhs) returns the Julia WS inequality lhs >= rhs.
 
@@ -3497,25 +3499,25 @@ jWSInterpret(form1,form2,form3) interprets forms.
 
 - **From**: [`WSObject`](WSObject.md)
 
-#### `jWSLess` <a id="jwsless"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1208)\]
+#### `jWSLess` <a id="jwsless"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1220)\]
 
 jWSLess(lhs,rhs) returns the Julia WS inequality lhs < rhs.
 
 - **Signature**: `(%, %) -> %`
 
-#### `jWSLessEqual` <a id="jwslessequal"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1210)\]
+#### `jWSLessEqual` <a id="jwslessequal"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1222)\]
 
 jWSLessEqual(lhs,rhs) returns the Julia WS inequality lhs <= rhs.
 
 - **Signature**: `(%, %) -> %`
 
-#### `jWSNotEqual` <a id="jwsnotequal"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1206)\]
+#### `jWSNotEqual` <a id="jwsnotequal"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1218)\]
 
 jWSNotEqual(lhs,rhs) returns the Julia WS inequality lhs != rhs.
 
 - **Signature**: `(%, %) -> %`
 
-#### `jWSQuantity` <a id="jwsquantity"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1216)\]
+#### `jWSQuantity` <a id="jwsquantity"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1228)\]
 
 ##### `jWSQuantity` : `% -> %`
 
@@ -3533,7 +3535,7 @@ jWSQuantity(x,jWSString(u)) returns quantity unit u of x. For example:
 jWSQuantity(1.2, jWSString "Meter")
 ```
 
-#### `jWSRule` <a id="jwsrule"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1196)\]
+#### `jWSRule` <a id="jwsrule"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1208)\]
 
 ##### `jWSRule` : `(%,  %) -> %`
 
@@ -3549,7 +3551,7 @@ p := 1/2 * legendreQ(5,x)
 replaceAll(p, jWSRule(x = jWSExpr "1.55555556444883838383833777333333333"))
 ```
 
-#### `jWSTable` <a id="jwstable"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1192)\]
+#### `jWSTable` <a id="jwstable"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1204)\]
 
 ##### `jWSTable` : `(%, %) -> WSList(%)`
 
@@ -3559,40 +3561,40 @@ jWSTable(expr, range) applies the expr to the defined range.
 
 jWSTable(expr, range1, range2) applies the expr to the defined ranges.
 
-#### `jacobiAmplitude` <a id="jacobiamplitude"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L341)\]
+#### `jacobiAmplitude` <a id="jacobiamplitude"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L353)\]
 
 jacobiAmplitude(u,m) computes the amplitude function am.
 
 - **Signature**: `(%, %) -> %`
 
-#### `jacobiCn` <a id="jacobicn"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1612)\]
+#### `jacobiCn` <a id="jacobicn"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1607)\]
 
 jacobiCn(z, m) is the Jacobi elliptic cn function, defined by jacobiCn(z, m)^2 + jacobiSn(z, m)^2 = 1 and jacobiCn(0, m) = 1.
 
 - **Signature**: `(%, %) -> %`
 - **From**: `SpecialFunctionCategory`
 
-#### `jacobiDn` <a id="jacobidn"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1613)\]
+#### `jacobiDn` <a id="jacobidn"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1608)\]
 
 jacobiDn(z, m) is the Jacobi elliptic dn function, defined by jacobiDn(z, m)^2 + m*jacobiSn(z, m)^2 = 1 and jacobiDn(0, m) = 1.
 
 - **Signature**: `(%, %) -> %`
 - **From**: `SpecialFunctionCategory`
 
-#### `jacobiP` <a id="jacobip"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L278)\]
+#### `jacobiP` <a id="jacobip"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L290)\]
 
 jacobiP(n, a, b, x) returns the Jacobi polynomial or evaluates it at x if x is a number.
 
 - **Signature**: `(%, %, %, %) -> %`
 
-#### `jacobiSn` <a id="jacobisn"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1611)\]
+#### `jacobiSn` <a id="jacobisn"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1606)\]
 
 jacobiSn(z, m) is the Jacobi elliptic sn function, defined by the formula jacobiSn(ellipticF(z, m), m) = z.
 
 - **Signature**: `(%, %) -> %`
 - **From**: `SpecialFunctionCategory`
 
-#### `jacobiTheta` <a id="jacobitheta"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L221)\]
+#### `jacobiTheta` <a id="jacobitheta"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L233)\]
 
 ##### `jacobiTheta` : `(WSInteger, %, %) -> %`
 
@@ -3604,7 +3606,7 @@ jacobiTheta(z, m) is the Jacobi Theta function in Jacobi notation.
 
 - **From**: `SpecialFunctionCategory`
 
-#### `jacobiZeta` <a id="jacobizeta"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L371)\]
+#### `jacobiZeta` <a id="jacobizeta"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L383)\]
 
 ##### `jacobiZeta` : `(%, %)-> %`
 
@@ -3668,7 +3670,7 @@ jlApply(func, obj1, obj2, obj3, obj4, obj5) applies the function func with obj1,
 
 - **From**: [`JLObjectType`](JLObjectType.md)
 
-#### `jlDisplay` <a id="jldisplay"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1033)\]
+#### `jlDisplay` <a id="jldisplay"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1045)\]
 
 ##### `jlDisplay` : `WSExpression -> WSExpression`
 
@@ -3691,7 +3693,7 @@ jlDump(obj) dumps (shows) the Julia object (internal structure with type).
 - **Signature**: `JLObject -> Void`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
-#### `jlEval` <a id="jleval"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L995)\]
+#### `jlEval` <a id="jleval"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1007)\]
 
 ##### `jlEval` : `(%, String) -> %`
 
@@ -3748,7 +3750,7 @@ jlGetProperty(obj, sym) returns the property/element sym of obj.
 - **Signature**: `(%, JLSymbol) -> JLObject`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
-#### `jlGreedyEval` <a id="jlgreedyeval"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L992)\]
+#### `jlGreedyEval` <a id="jlgreedyeval"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1004)\]
 
 jlGreedyEval(bool) toggles automatic arithmetic operations. Plus[a, a] can become Times[2, a] using or not Julia `weval`.
 
@@ -3766,6 +3768,13 @@ jlHead(expr) returns the Head type of expr.
 jlId(obj) returns the Julia indexed dictionary index referencing the object obj.
 
 - **Signature**: `% -> Integer`
+- **From**: [`JLObjectType`](JLObjectType.md)
+
+#### `jlNames` <a id="jlnames"></a>
+
+jlNames(obj) returns the names of obj depending of the type of obj.
+
+- **Signature**: `% -> JLObject`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
 #### `jlObject` <a id="jlobject"></a>
@@ -3823,20 +3832,20 @@ jlText(df, "latex")
 - **Signature**: `(%, String) -> List(String)`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
-#### `jlType` <a id="jltype"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L2043)\]
+#### `jlType` <a id="jltype"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L2038)\]
 
 jlType(obj) returns the Julia type of obj.
 
 - **Signature**: `% -> Symbol`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
-#### `jlWSAccuracy` <a id="jlwsaccuracy"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1165)\]
+#### `jlWSAccuracy` <a id="jlwsaccuracy"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1177)\]
 
 jlWSAccuracy(expr) get accuracy of expr.
 
 - **Signature**: `% -> %`
 
-#### `jlWSDefined?` <a id="jlwsdefined"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L66)\]
+#### `jlWSDefined?` <a id="jlwsdefined"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L78)\]
 
 jlWSDefined?(sym) checks whether or not the symbol sym is defined in the WS language. For example:
 
@@ -3848,25 +3857,25 @@ jlWSDefined? "Sin"
 
 - **Signature**: `String -> Boolean`
 
-#### `jlWSPrecision` <a id="jlwsprecision"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1163)\]
+#### `jlWSPrecision` <a id="jlwsprecision"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1175)\]
 
 jlWSPrecision get precision of expr.
 
 - **Signature**: `% -> %`
 
-#### `jlWSSetAccuracy` <a id="jlwssetaccuracy"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1169)\]
+#### `jlWSSetAccuracy` <a id="jlwssetaccuracy"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1181)\]
 
 jlWSSetAccuracy(expr, acc) sets accuracy of expr to acc.
 
 - **Signature**: `(%, %) -> %`
 
-#### `jlWSSetOptions` <a id="jlwssetoptions"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1171)\]
+#### `jlWSSetOptions` <a id="jlwssetoptions"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1183)\]
 
 jlWSSetOptions(type, opts) sets some internal engine options.
 
 - **Signature**: `(%, %) -> %`
 
-#### `jlWSSetPrecision` <a id="jlwssetprecision"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1167)\]
+#### `jlWSSetPrecision` <a id="jlwssetprecision"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1179)\]
 
 jlWSSetPrecision(expr, prec) sets precision of expr to prec.
 
@@ -3879,7 +3888,7 @@ jlimref(str) evaluates the Julia command str and returns the corresponding FriCA
 - **Signature**: `String -> %`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
-#### `jlref` <a id="jlref"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1268)\]
+#### `jlref` <a id="jlref"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L25)\]
 
 ##### `jlref` : `% -> SExpression`
 
@@ -3900,28 +3909,28 @@ join(agg1, agg2) joins the two aggregates agg1 and agg2.
 - **Signature**: `(%, %) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `kelvinBei` <a id="kelvinbei"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1492)\]
+#### `kelvinBei` <a id="kelvinbei"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1487)\]
 
 kelvinBei(v, z) is the Kelvin bei function defined by equality kelvinBei(v, z) = imag(besselJ(v, exp(3*%pi*%i/4)*z)) for z and v real.
 
 - **Signature**: `(%, %) -> %`
 - **From**: `SpecialFunctionCategory`
 
-#### `kelvinBer` <a id="kelvinber"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1491)\]
+#### `kelvinBer` <a id="kelvinber"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1486)\]
 
 kelvinBer(v, z) is the Kelvin ber function defined by equality kelvinBer(v, z) = real(besselJ(v, exp(3*%pi*%i/4)*z)) for z and v real.
 
 - **Signature**: `(%, %) -> %`
 - **From**: `SpecialFunctionCategory`
 
-#### `kelvinKei` <a id="kelvinkei"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1494)\]
+#### `kelvinKei` <a id="kelvinkei"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1489)\]
 
 kelvinKei(v, z) is the Kelvin kei function defined by equality kelvinKei(v, z) = imag(exp(-v*%pi*%i/2)*besselK(v, exp(%p i*%i/4)*z)) for z and v real.
 
 - **Signature**: `(%, %) -> %`
 - **From**: `SpecialFunctionCategory`
 
-#### `kelvinKer` <a id="kelvinker"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1493)\]
+#### `kelvinKer` <a id="kelvinker"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1488)\]
 
 kelvinKer(v, z) is the Kelvin kei function defined by equality kelvinKer(v, z) = real(exp(-v*%pi*%i/2)*besselK(v, exp(%p i*%i/4)*z)) for z and v real.
 
@@ -3956,19 +3965,19 @@ kernels([f1,...,fn]) returns the list of all the top-level kernels appearing in 
 
 - **From**: `ExpressionSpace2(K)`
 
-#### `key?` <a id="key"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L61)\]
+#### `key?` <a id="key"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L73)\]
 
 key?(assoc,key) checks whether or not key exists in the association assoc.
 
 - **Signature**: `(%, %) -> Boolean`
 
-#### `keys` <a id="keys"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1019)\]
+#### `keys` <a id="keys"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1031)\]
 
 keys(expr) returns the key elements in expr if any.
 
 - **Signature**: `% -> %`
 
-#### `kleinInvariantJ` <a id="kleininvariantj"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L378)\]
+#### `kleinInvariantJ` <a id="kleininvariantj"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L390)\]
 
 kleinInvariantJ(tau) computes the Klein's absolute invariant.
 
@@ -3995,7 +4004,7 @@ kummerU(mu, nu, z) is the Kummer U function.
 - **Signature**: `(%, %, %) -> %`
 - **From**: `SpecialFunctionCategory`
 
-#### `laguerreL` <a id="laguerrel"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L267)\]
+#### `laguerreL` <a id="laguerrel"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L279)\]
 
 ##### `laguerreL` : `(%, %) -> %`
 
@@ -4009,7 +4018,7 @@ laguerreL(5, jWSExpr x)
 
 laguerreL(n, a, x) returns the generalized Laguerre polynomial or evaluates it at x if x is a number.
 
-#### `lambertW` <a id="lambertw"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L114)\]
+#### `lambertW` <a id="lambertw"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L126)\]
 
 ##### `lambertW` : `(WSInteger, %) -> %`
 
@@ -4028,14 +4037,14 @@ last(agg) returns the last element of agg.
 - **Signature**: `% -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `latex` <a id="latex"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1357)\]
+#### `latex` <a id="latex"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1352)\]
 
 latex(s) returns a LaTeX-printable output representation of s.
 
 - **Signature**: `% -> String`
 - **From**: `SetCategory`
 
-#### `lcm` <a id="lcm"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1896)\]
+#### `lcm` <a id="lcm"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1891)\]
 
 ##### `lcm` : `(%, %) -> %`
 
@@ -4077,7 +4086,7 @@ leftRecip(a) returns an element, which is a left inverse of a, or "failed" if su
 - **Signature**: `% -> Union(%,"failed")`
 - **From**: `MagmaWithUnit`
 
-#### `legendreP` <a id="legendrep"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L236)\]
+#### `legendreP` <a id="legendrep"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L248)\]
 
 ##### `legendreP` : `(%, %) -> %`
 
@@ -4087,7 +4096,7 @@ legendreP(n, x) returns the Legendre polynomial of the first kind or evaluates i
 
 legendreP(n, m, x) returns the associated Legendre polynomial of the first type or evaluates it at x if x is a number.
 
-#### `legendreQ` <a id="legendreq"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L239)\]
+#### `legendreQ` <a id="legendreq"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L251)\]
 
 ##### `legendreQ` : `(%, %) -> %`
 
@@ -4101,7 +4110,7 @@ legendreQ(3,jWSExpr x)
 
 legendreQ(n, m, x) returns the associated Legendre function of the second kind or evaluates it at x if x is a number.
 
-#### `length` <a id="length"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1010)\]
+#### `length` <a id="length"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1022)\]
 
 ##### `length` : `% -> %`
 
@@ -4113,13 +4122,13 @@ length(agg) returns the length of agg. 0 if it is a scalar, an index for example
 
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `lerchPhi` <a id="lerchphi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L164)\]
+#### `lerchPhi` <a id="lerchphi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L176)\]
 
 lerchPhi(z,s,a) returns Lerch's transcendent phi of arguments.
 
 - **Signature**: `(%, %, %) -> %`
 
-#### `level` <a id="level"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1012)\]
+#### `level` <a id="level"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1024)\]
 
 ##### `level` : `(%, %) -> WSL(%)`
 
@@ -4129,7 +4138,7 @@ level(expr, lev) returns the list of expression expr at level lev.
 
 level(expr, lev, head) returns the list of expression expr at level lev with heads if head is true.
 
-#### `li` <a id="li"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1434)\]
+#### `li` <a id="li"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1429)\]
 
 li(x) returns the logarithmic integral of x, i.e. the integral of dx / log(x).
 
@@ -4143,7 +4152,7 @@ lift(z) returns a minimal degree univariate polynomial up such that z=reduce up.
 - **Signature**: `% -> SparseUnivariatePolynomial(%)`
 - **From**: `MonogenicAlgebra(R,UP)`
 
-#### `limit` <a id="limit"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L520)\]
+#### `limit` <a id="limit"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L532)\]
 
 limit(expr, params) returns the limit, eventually nested or multivariate, of expr. For example:
 
@@ -4153,52 +4162,52 @@ x:=jWSExpr x; limit(sin(x)-sin(x-1/x),"x->Infinity")
 
 - **Signature**: `(%, %) -> %`
 
-#### `log` <a id="log"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1386)\]
+#### `log` <a id="log"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1381)\]
 
 log(x) returns the natural logarithm of x. When evaluated into some subset of the complex numbers, the branch cut lies a long the negative real axis, continuous with quadrant II. The domain does not contain the origin.
 
 - **Signature**: `% -> %`
 - **From**: `ElementaryFunctionCategory`
 
-#### `log10` <a id="log10"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L96)\]
+#### `log10` <a id="log10"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L108)\]
 
 log10(x) computes the logarithm of x in base 10.
 
 - **Signature**: `% -> %`
 
-#### `log2` <a id="log2"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L94)\]
+#### `log2` <a id="log2"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L106)\]
 
 log2(x) computes the logarithm of x in base 2.
 
 - **Signature**: `% -> %`
 
-#### `logBarnesG` <a id="logbarnesg"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L227)\]
+#### `logBarnesG` <a id="logbarnesg"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L239)\]
 
 logBarnesG(x) is the logarithm of the Barnes G-function.
 
 - **Signature**: `% -> %`
 
-#### `logGamma` <a id="loggamma"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L225)\]
+#### `logGamma` <a id="loggamma"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L237)\]
 
 logGamma(z) returns the log-Gamma of z.
 
 - **Signature**: `% -> %`
 
-#### `lommelS1` <a id="lommels1"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1498)\]
+#### `lommelS1` <a id="lommels1"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1493)\]
 
 lommelS1(mu, nu, z) is the Lommel s function.
 
 - **Signature**: `(%, %, %) -> %`
 - **From**: `SpecialFunctionCategory`
 
-#### `lommelS2` <a id="lommels2"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1499)\]
+#### `lommelS2` <a id="lommels2"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1494)\]
 
 lommelS2(mu, nu, z) is the Lommel S function.
 
 - **Signature**: `(%, %, %) -> %`
 - **From**: `SpecialFunctionCategory`
 
-#### `lookup` <a id="lookup"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1023)\]
+#### `lookup` <a id="lookup"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1035)\]
 
 ##### `lookup` : `(%, %) -> %`
 
@@ -4208,7 +4217,7 @@ lookup(assocs,keys) returns value(s) associated to key(s).
 
 lookup(assocs,keys, defaultval) returns value(s) associated to key(s) if key(s) exist(s), otherwise defaultval
 
-#### `machineNumber?` <a id="machinenumber"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L48)\]
+#### `machineNumber?` <a id="machinenumber"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L60)\]
 
 machineNumber?(expr) checks whether or not expr is a CPU/GPU supported number.
 
@@ -4235,61 +4244,61 @@ map(f, ex) evaluates ex, applying f to values of type R in ex.
 
 - **From**: `FullyEvalableOver(R)`
 
-#### `mathieuC` <a id="mathieuc"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L322)\]
+#### `mathieuC` <a id="mathieuc"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L334)\]
 
 mathieuC(a,q,z) is the even Mathieu function with characteristic a and parameter q.
 
 - **Signature**: `(%, %, %) -> %`
 
-#### `mathieuCPrime` <a id="mathieucprime"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L328)\]
+#### `mathieuCPrime` <a id="mathieucprime"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L340)\]
 
 mathieuCPrime(a,q,z) is the derivative of the even Mathieu function.
 
 - **Signature**: `(%, %, %) -> %`
 
-#### `mathieuCharacteristicA` <a id="mathieucharacteristica"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L332)\]
+#### `mathieuCharacteristicA` <a id="mathieucharacteristica"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L344)\]
 
 mathieuCharacteristicA(r,q) returns the characteristic for even Mathieu function.
 
 - **Signature**: `(%, %) -> %`
 
-#### `mathieuCharacteristicB` <a id="mathieucharacteristicb"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L335)\]
+#### `mathieuCharacteristicB` <a id="mathieucharacteristicb"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L347)\]
 
 mathieuCharacteristicB(r,q) returns the characteristic for odd Mathieu function.
 
 - **Signature**: `(%, %) -> %`
 
-#### `mathieuCharacteristicExponent` <a id="mathieucharacteristicexponent"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L338)\]
+#### `mathieuCharacteristicExponent` <a id="mathieucharacteristicexponent"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L350)\]
 
 mathieuCharacteristicExponent(a,q) returns the characteristic exponent of the Mathieu function.
 
 - **Signature**: `(%, %) -> %`
 
-#### `mathieuS` <a id="mathieus"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L325)\]
+#### `mathieuS` <a id="mathieus"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L337)\]
 
 mathieuS(b,q,z) is the odd Mathieu function with characteristic b and parameter q.
 
 - **Signature**: `(%, %, %) -> %`
 
-#### `mathieuSPrime` <a id="mathieusprime"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L330)\]
+#### `mathieuSPrime` <a id="mathieusprime"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L342)\]
 
 mathieuSPrime(b,q,z) is the derivative of the odd Mathieu function.
 
 - **Signature**: `(%, %, %) -> %`
 
-#### `matrixForm` <a id="matrixform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1084)\]
+#### `matrixForm` <a id="matrixform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1096)\]
 
 matrixForm(mat) returns a pretty-printable form of mat i.e. its WS 'MatrixForm'.
 
 - **Signature**: `% -> %`
 
-#### `maxLimit` <a id="maxlimit"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L528)\]
+#### `maxLimit` <a id="maxlimit"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L540)\]
 
 maxLimit(expr, params) returns the max limit, eventually nested or multivariate, of expr.
 
 - **Signature**: `(%, %) -> %`
 
-#### `maximize` <a id="maximize"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L475)\]
+#### `maximize` <a id="maximize"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L487)\]
 
 ##### `maximize` : `(%, %) -> %`
 
@@ -4317,13 +4326,13 @@ meixnerP(n, phi, lambda, z) is the Meixner-Pollaczek polynomial.
 - **Signature**: `(%, %, %, %) -> %`
 - **From**: `SpecialFunctionCategory`
 
-#### `member?` <a id="member"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L59)\]
+#### `member?` <a id="member"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L71)\]
 
 member?(list, expr) checks if expr is in list.
 
 - **Signature**: `(%, %) -> Boolean`
 
-#### `minLimit` <a id="minlimit"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L525)\]
+#### `minLimit` <a id="minlimit"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L537)\]
 
 minLimit(expr, params) returns the min limit, eventually nested or multivariate, of expr.
 
@@ -4336,7 +4345,7 @@ minPoly(k) returns p such that p(k) = 0.
 - **Signature**: `Kernel(%) -> SparseUnivariatePolynomial(%)`
 - **From**: `ExpressionSpace2(K)`
 
-#### `minimalPolynomial` <a id="minimalpolynomial"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L843)\]
+#### `minimalPolynomial` <a id="minimalpolynomial"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L855)\]
 
 ##### `minimalPolynomial` : `(%, %) -> %`
 
@@ -4352,7 +4361,7 @@ minimalPolynomial(a) returns the minimal polynomial of a.
 
 - **From**: `FiniteRankAlgebra(R,UP)`
 
-#### `minimize` <a id="minimize"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L447)\]
+#### `minimize` <a id="minimize"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L459)\]
 
 ##### `minimize` : `(%, %) -> %`
 
@@ -4366,19 +4375,19 @@ minimize(expr, sym) symbolically minimizes expression function expr with respect
 
 minimize(expr, vars, dom) is the WS symbolic minimization function. dom restricts the domain of variables, for example, Integers.
 
-#### `missing?` <a id="missing"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L64)\]
+#### `missing?` <a id="missing"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L76)\]
 
 missing?(data) checks whether or not data is Missing.
 
 - **Signature**: `% -> Boolean`
 
-#### `modularLambda` <a id="modularlambda"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L380)\]
+#### `modularLambda` <a id="modularlambda"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L392)\]
 
 modularLambda(tau) computes the lambda modular function.
 
 - **Signature**: `% -> %`
 
-#### `monomialList` <a id="monomiallist"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L728)\]
+#### `monomialList` <a id="monomiallist"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L740)\]
 
 monomialList(p) returns the list of monomials in p.
 
@@ -4398,7 +4407,7 @@ mutable?(obj) checks whether or not obj is mutable.
 - **Signature**: `% -> Boolean`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
-#### `negative?` <a id="negative"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L57)\]
+#### `negative?` <a id="negative"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L69)\]
 
 negative?(expr) checks whether or not expr is negative.
 
@@ -4411,7 +4420,7 @@ norm(x) returns x * conjugate(x)
 - **Signature**: `% -> %`
 - **From**: `ComplexCategory(R)`
 
-#### `normal` <a id="normal"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L857)\]
+#### `normal` <a id="normal"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L869)\]
 
 ##### `normal` : `% -> %`
 
@@ -4441,13 +4450,13 @@ nthRoot(x, n) returns the nth root of x.
 - **Signature**: `(%, Integer) -> %`
 - **From**: `RadicalCategory`
 
-#### `number?` <a id="number"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L46)\]
+#### `number?` <a id="number"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L58)\]
 
 number?(expr) checks whether or not expr is a number.
 
 - **Signature**: `% -> Boolean`
 
-#### `numberForm` <a id="numberform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1043)\]
+#### `numberForm` <a id="numberform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1055)\]
 
 ##### `numberForm` : `% -> %`
 
@@ -4464,13 +4473,13 @@ numer(f) returns the numerator of f viewed as a polynomial in the kernels over R
 - **Signature**: `% -> SparseMultivariatePolynomial(%,Kernel(%))`
 - **From**: `FunctionSpace2(R,K)`
 
-#### `numerDenom` <a id="numerdenom"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L674)\]
+#### `numerDenom` <a id="numerdenom"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L686)\]
 
 numerDenom(expr) returns the numerator and denominator of expr.
 
 - **Signature**: `% -> WSList(%)`
 
-#### `numerator` <a id="numerator"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L670)\]
+#### `numerator` <a id="numerator"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L682)\]
 
 numerator(expr) returns the numerator of expr.
 
@@ -4490,13 +4499,13 @@ numeric(expr, prec) returns the numerical expr with prec digits of precision if 
 
 - **From**: [`WSObject`](WSObject.md)
 
-#### `numeric?` <a id="numeric"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L53)\]
+#### `numeric?` <a id="numeric"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L65)\]
 
 numeric?(x) checks whether or not x is or would yield a number.
 
 - **Signature**: `% -> Boolean`
 
-#### `numericDSolve` <a id="numericdsolve"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L614)\]
+#### `numericDSolve` <a id="numericdsolve"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L626)\]
 
 ##### `numericDSolve` : `(%, %, %) -> %`
 
@@ -4510,7 +4519,7 @@ numericDSolve(eq,fun,xrange) solves numerically the differential equation eq for
 
 numericDSolve(expr,fun,xrange,yrange) solves numerically the differential equation(s) in expr for the function fun, in the ranges xrange and yrange. Other combinations of parameters are also available (see documentation).
 
-#### `numericDSolveValue` <a id="numericdsolvevalue"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L625)\]
+#### `numericDSolveValue` <a id="numericdsolvevalue"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L637)\]
 
 ##### `numericDSolveValue` : `(%, %, %) -> %`
 
@@ -4524,7 +4533,7 @@ numericDSolveValue(eq,fun,xrange) returns the numerical solution of the differen
 
 numericDSolveValue(expr,fun,xrange,yrange) returns the numerical solution of the differential equation(s) in expr for the function fun, in the ranges xrange and yrange. Other combinations of parameters are also available (see documentation).
 
-#### `numericIntegrate` <a id="numericintegrate"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L514)\]
+#### `numericIntegrate` <a id="numericintegrate"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L526)\]
 
 ##### `numericIntegrate` : `(%, %) -> %`
 
@@ -4534,7 +4543,7 @@ numericIntegrate(expr, opt|var) integrates numerically expr with respect to opt 
 
 numericIntegrate(expr, var, seg) integrates expr using segment seg with respect to var.
 
-#### `numericMaximize` <a id="numericmaximize"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L488)\]
+#### `numericMaximize` <a id="numericmaximize"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L500)\]
 
 ##### `numericMaximize` : `(%, %) -> %`
 
@@ -4548,7 +4557,7 @@ numericMaximize(expr, sym) maximizes numerically the expression function expr wi
 
 numericMaximize(expr, vars, dom) maximizes numerically the expression function expr with respect to vars and vars restricted to the domain dom.
 
-#### `numericMinimize` <a id="numericminimize"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L460)\]
+#### `numericMinimize` <a id="numericminimize"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L472)\]
 
 ##### `numericMinimize` : `(%, %) -> %`
 
@@ -4569,7 +4578,7 @@ numericMinimize(expr, sym) minimizes numerically the expression function expr wi
 
 numericMinimize(expr, vars, dom) minimizes numerically the expression function expr with respect to vars and vars restricted to the domain dom.
 
-#### `numericProduct` <a id="numericproduct"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L438)\]
+#### `numericProduct` <a id="numericproduct"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L450)\]
 
 ##### `numericProduct` : `(%, %) -> %`
 
@@ -4585,7 +4594,7 @@ jWSExpr("{i, imin, imax}")
 
 numericProduct(f(n),n, a..b) returns an evaluated numerical approximation of the product f(a) * ... * f(b).
 
-#### `numericSolve` <a id="numericsolve"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L540)\]
+#### `numericSolve` <a id="numericsolve"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L552)\]
 
 ##### `numericSolve` : `(Equation(%), %) -> %`
 
@@ -4595,7 +4604,7 @@ numericSolve(eq, vars) returns the solution(s) to the equation eq.
 
 numericSolve(expr, vars) returns the solution(s) to the expression expr.
 
-#### `numericSum` <a id="numericsum"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L430)\]
+#### `numericSum` <a id="numericsum"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L442)\]
 
 ##### `numericSum` : `(%, %) -> %`
 
@@ -4639,13 +4648,13 @@ opposite?(x,y) holds if the sum of x and y is 0.
 - **Signature**: `(%, %) -> Boolean`
 - **From**: `AbelianMonoid`
 
-#### `padeApproximant` <a id="padeapproximant"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L739)\]
+#### `padeApproximant` <a id="padeapproximant"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L751)\]
 
 padeApproximant(expr, "x,x0, n,m") returns the Padé approximant at x0.
 
 - **Signature**: `(%, %) -> %`
 
-#### `parabolicCylinderD` <a id="paraboliccylinderd"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L297)\]
+#### `parabolicCylinderD` <a id="paraboliccylinderd"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L309)\]
 
 parabolicCylinderD(nu,x) computes the parabolic cylinder function D of x.
 
@@ -4672,7 +4681,7 @@ part(agg,i) returns the i-th element.
 - **Signature**: `(%, WSInteger) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `percentForm` <a id="percentform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1070)\]
+#### `percentForm` <a id="percentform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1082)\]
 
 ##### `percentForm` : `% -> %`
 
@@ -4693,7 +4702,7 @@ permutation(n, m) returns the number of permutations of n objects taken m at a t
 - **Signature**: `(%, %) -> %`
 - **From**: `CombinatorialFunctionCategory`
 
-#### `pi` <a id="pi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1307)\]
+#### `pi` <a id="pi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1302)\]
 
 pi() returns the constant pi.
 
@@ -4707,20 +4716,20 @@ plenaryPower(a, n) is recursively defined to be plenaryPower(a, n-1)*plenaryPowe
 - **Signature**: `(%, PositiveInteger) -> %`
 - **From**: `NonAssociativeAlgebra(R)`
 
-#### `pochhammer` <a id="pochhammer"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L223)\]
+#### `pochhammer` <a id="pochhammer"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L235)\]
 
 pochhammer(a,n) returns the Pochhammer symbol.
 
 - **Signature**: `(%, %) -> %`
 
-#### `polygamma` <a id="polygamma"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1467)\]
+#### `polygamma` <a id="polygamma"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1462)\]
 
 polygamma(k, x) is the k-th derivative of digamma(x), (often written psi(k, x) in the literature).
 
 - **Signature**: `(%, %) -> %`
 - **From**: `SpecialFunctionCategory`
 
-#### `polylog` <a id="polylog"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L166)\]
+#### `polylog` <a id="polylog"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L178)\]
 
 ##### `polylog` : `(%, %, %) -> %`
 
@@ -4732,7 +4741,7 @@ polylog(s, x) is the polylogarithm of order s at x.
 
 - **From**: `SpecialFunctionCategory`
 
-#### `polynomial?` <a id="polynomial"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L678)\]
+#### `polynomial?` <a id="polynomial"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L690)\]
 
 ##### `polynomial?` : `(%, %) -> Boolean`
 
@@ -4742,7 +4751,7 @@ polynomial?(p,x) checks whether or not p is a polynomial in x.
 
 polynomial?(p,vlist) checks whether or not p is a polynomial in the list of variables vlist.
 
-#### `polynomialExpression?` <a id="polynomialexpression"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L683)\]
+#### `polynomialExpression?` <a id="polynomialexpression"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L695)\]
 
 ##### `polynomialExpression?` : `(%, %) -> Boolean`
 
@@ -4752,13 +4761,13 @@ polynomialExpression?(p,x) checks whether or not p is a polynomial expression in
 
 polynomialExpression?(p,vlist) checks whether or not p is a polynomial expression in the list of variables vlist.
 
-#### `polynomialExtendedGCD` <a id="polynomialextendedgcd"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L759)\]
+#### `polynomialExtendedGCD` <a id="polynomialextendedgcd"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L771)\]
 
 polynomialExtendedGCD(p1, p2, x) returns the greatest common divisor of p1 and p2 considered as univariate polynomials in x
 
 - **Signature**: `(%, %, %) -> %`
 
-#### `polynomialGCD` <a id="polynomialgcd"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L753)\]
+#### `polynomialGCD` <a id="polynomialgcd"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L765)\]
 
 ##### `polynomialGCD` : `(%, %) -> %`
 
@@ -4768,7 +4777,7 @@ polynomialGCD(p1, p2) returns the greatest common divisor of p1 and p2.
 
 polynomialGCD(p1, p2, opt) returns the greatest common divisor of p1 and p2 with options opt, for example Modulus->p.
 
-#### `polynomialLCM` <a id="polynomiallcm"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L762)\]
+#### `polynomialLCM` <a id="polynomiallcm"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L774)\]
 
 ##### `polynomialLCM` : `(%, %) -> %`
 
@@ -4778,49 +4787,49 @@ polynomialLCM(p1,p2) returns the least common divisor of p1 and p2.
 
 polynomialLCM(p1,p2,opt) returns the least common divisor of p1 and p2 with options opt, for example an Extension rule.
 
-#### `polynomialMod` <a id="polynomialmod"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L767)\]
+#### `polynomialMod` <a id="polynomialmod"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L779)\]
 
 polynomialMod(p,mod) reduces modulo p the integer coefficients of the polynomial p.
 
 - **Signature**: `(%, %) -> %`
 
-#### `polynomialQuotient` <a id="polynomialquotient"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L731)\]
+#### `polynomialQuotient` <a id="polynomialquotient"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L743)\]
 
 polynomialQuotient(p1, p2, x) returns the quotient of p1 and p2 in x.
 
 - **Signature**: `(%, %, %) -> %`
 
-#### `polynomialQuotientRemainder` <a id="polynomialquotientremainder"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L735)\]
+#### `polynomialQuotientRemainder` <a id="polynomialquotientremainder"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L747)\]
 
 polynomialQuotientRemainder(p1,p2,var) returns the quotient and remainder of p1 and p2 in x.
 
 - **Signature**: `(%, %, %) -> WSList(%)`
 
-#### `polynomialReduce` <a id="polynomialreduce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L785)\]
+#### `polynomialReduce` <a id="polynomialreduce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L797)\]
 
 polynomialReduce(poly,lpoly,lvar) returns a minimal representation of the polynomial poly in terms of the polynomial list lpoly with respect to the list of variables lvar.
 
 - **Signature**: `(%, %, %) -> %`
 
-#### `polynomialRemainder` <a id="polynomialremainder"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L733)\]
+#### `polynomialRemainder` <a id="polynomialremainder"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L745)\]
 
 polynomialRemainder(p1,p2, x) returns the remainder of p1 and p2 in x.
 
 - **Signature**: `(%, %, %) -> %`
 
-#### `positive?` <a id="positive"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L55)\]
+#### `positive?` <a id="positive"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L67)\]
 
 positive?(expr) checks whether or not expr is positive.
 
 - **Signature**: `% -> Boolean`
 
-#### `positiveInfinity` <a id="positiveinfinity"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L86)\]
+#### `positiveInfinity` <a id="positiveinfinity"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L98)\]
 
 positiveInfinity() returns positive infinity (∞).
 
 - **Signature**: `() -> %`
 
-#### `powerExpand` <a id="powerexpand"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L937)\]
+#### `powerExpand` <a id="powerexpand"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L949)\]
 
 ##### `powerExpand` : `% -> %`
 
@@ -4851,7 +4860,7 @@ principalIdeal([f1, ..., fn]) returns a record whose generator component is a ge
 - **Signature**: `List(%) -> Record(coef: List(%),generator: %)`
 - **From**: `PrincipalIdealDomain`
 
-#### `product` <a id="product"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L422)\]
+#### `product` <a id="product"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L434)\]
 
 ##### `product` : `(%, %) -> %`
 
@@ -4877,25 +4886,25 @@ product(f(n), n = a..b) returns f(a) * ... * f(b) as a formal product.
 
 - **From**: `CombinatorialOpsCategory`
 
-#### `qBinomial` <a id="qbinomial"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L313)\]
+#### `qBinomial` <a id="qbinomial"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L325)\]
 
 qBinomial(n,m,q) returns the q-analog of binomial coefficient.
 
 - **Signature**: `(%, %, %) -> %`
 
-#### `qFactorial` <a id="qfactorial"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L311)\]
+#### `qFactorial` <a id="qfactorial"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L323)\]
 
 qFactorial(x,q) returns the q-analog of factorial of x.
 
 - **Signature**: `(%, %) -> %`
 
-#### `qGamma` <a id="qgamma"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L315)\]
+#### `qGamma` <a id="qgamma"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L327)\]
 
 qGamma(x,q) returns the q-analog of Euler Gamma of x.
 
 - **Signature**: `(%, %) -> %`
 
-#### `qPochhammer` <a id="qpochhammer"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L307)\]
+#### `qPochhammer` <a id="qpochhammer"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L319)\]
 
 ##### `qPochhammer` : `(%, %) -> %`
 
@@ -4905,7 +4914,7 @@ qPochhammer(x,q) returns the q-Pochhammer symbol of x.
 
 qPochhammer(x,q,n) returns the q-Pochhammer symbol of x.
 
-#### `qPolyGamma` <a id="qpolygamma"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L317)\]
+#### `qPolyGamma` <a id="qpolygamma"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L329)\]
 
 ##### `qPolyGamma` : `(%, %)-> %`
 
@@ -4936,7 +4945,7 @@ qsetelt!(l,i,elem) returns l with i-th element replaced by elem. No checks are d
 - **Signature**: `(%, Integer, %) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `quantityForm` <a id="quantityform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1090)\]
+#### `quantityForm` <a id="quantityform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1102)\]
 
 ##### `quantityForm` : `(%, %) -> %`
 
@@ -4946,13 +4955,13 @@ quantityForm(expr,form) returns expr as a quantity with format form.
 
 quantityForm(expr,lform) returns expr as a quantity with a list of formats lform.
 
-#### `quantityMagnitude` <a id="quantitymagnitude"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1030)\]
+#### `quantityMagnitude` <a id="quantitymagnitude"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1042)\]
 
 quantityMagnitude(val) returns magnitude of val.
 
 - **Signature**: `% -> %`
 
-#### `quantityUnit` <a id="quantityunit"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1028)\]
+#### `quantityUnit` <a id="quantityunit"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1040)\]
 
 quantityUnit(val) returns unit of val.
 
@@ -4972,25 +4981,25 @@ racahR(n, a, b, c, d, z) is the Racah polynomial.
 - **Signature**: `(%, %, %, %, %, %) -> %`
 - **From**: `SpecialFunctionCategory`
 
-#### `ramanujanTau` <a id="ramanujantau"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L181)\]
+#### `ramanujanTau` <a id="ramanujantau"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L193)\]
 
 ramanujanTau(n) returns the Ramanujan tau of n.
 
 - **Signature**: `% -> %`
 
-#### `ramanujanTauL` <a id="ramanujantaul"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L183)\]
+#### `ramanujanTauL` <a id="ramanujantaul"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L195)\]
 
 ramanujanTauL(s) computes the Ramanujan tau Dirichlet L-function of s.
 
 - **Signature**: `% -> %`
 
-#### `ramanujanTauTheta` <a id="ramanujantautheta"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L185)\]
+#### `ramanujanTauTheta` <a id="ramanujantautheta"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L197)\]
 
 ramanujanTauTheta(z) returns the Ramanujan tau theta of z.
 
 - **Signature**: `% -> %`
 
-#### `ramanujanTauZ` <a id="ramanujantauz"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L187)\]
+#### `ramanujanTauZ` <a id="ramanujantauz"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L199)\]
 
 ramanujanTauZ(t) computes the Ramanujan tau Z-function of t.
 
@@ -5003,13 +5012,13 @@ rank() returns the rank of the algebra.
 - **Signature**: `() -> PositiveInteger`
 - **From**: `FiniteRankAlgebra(R,UP)`
 
-#### `rational?` <a id="rational"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L44)\]
+#### `rational?` <a id="rational"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L56)\]
 
 rational?(q) checks whether or not q is a rational number.
 
 - **Signature**: `% -> Boolean`
 
-#### `rationalApproximation` <a id="rationalapproximation"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L986)\]
+#### `rationalApproximation` <a id="rationalapproximation"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L998)\]
 
 ##### `rationalApproximation` : `% -> %`
 
@@ -5019,7 +5028,7 @@ rationalApproximation(expr) tries to find a rational approximation of the expres
 
 rationalApproximation(expr, dx) tries to find a rational approximation of the expression expr within tolerance dx.
 
-#### `rationalExpression?` <a id="rationalexpression"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L689)\]
+#### `rationalExpression?` <a id="rationalexpression"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L701)\]
 
 ##### `rationalExpression?` : `(%, %) -> Boolean`
 
@@ -5029,26 +5038,26 @@ rationalExpression?(p,x) checks whether or not p is a rational expression in x.
 
 rationalExpression?(p,vlist) checks whether or not p is a rational expression in the list of variables vlist.
 
-#### `real` <a id="real"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1315)\]
+#### `real` <a id="real"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1310)\]
 
 real(x) returns real part of x.
 
 - **Signature**: `% -> %`
 - **From**: `ComplexCategory(R)`
 
-#### `real?` <a id="real"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L37)\]
+#### `real?` <a id="real"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L49)\]
 
 real?(x) checks whether or not x represents a real number.
 
 - **Signature**: `% -> Boolean`
 
-#### `realNumeric?` <a id="realnumeric"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L39)\]
+#### `realNumeric?` <a id="realnumeric"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L51)\]
 
 realNumeric?(x) checks whether or not x represents a real value (numeric).
 
 - **Signature**: `% -> Boolean`
 
-#### `realNumericSolve` <a id="realnumericsolve"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L544)\]
+#### `realNumericSolve` <a id="realnumericsolve"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L556)\]
 
 ##### `realNumericSolve` : `(Equation(%), %) -> %`
 
@@ -5065,7 +5074,7 @@ recip(a) returns an element, which is both a left and a right inverse of a, or "
 - **Signature**: `% -> Union(%,"failed")`
 - **From**: `MagmaWithUnit`
 
-#### `reduce` <a id="reduce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L644)\]
+#### `reduce` <a id="reduce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L656)\]
 
 ##### `reduce` : `(Equation(%), %) -> %`
 
@@ -5109,7 +5118,7 @@ reducedSystem(A, v) returns a matrix B and a vector w such that A x = v and B x 
 
 - **From**: `LinearlyExplicitOver(R)`
 
-#### `refine` <a id="refine"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L887)\]
+#### `refine` <a id="refine"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L899)\]
 
 refine(expr, assums) refines the expression expr with assumptions assums.
 
@@ -5143,7 +5152,7 @@ removeDuplicates(agg) removes duplicate elements.
 - **Signature**: `% -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `replace` <a id="replace"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1096)\]
+#### `replace` <a id="replace"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1108)\]
 
 ##### `replace` : `(%, %) -> %`
 
@@ -5153,25 +5162,25 @@ replace(expr, rule) applies rule(s) to expr.
 
 replace(expr, rule, lev) applies rule to expr with level lev.
 
-#### `replaceAll` <a id="replaceall"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1104)\]
+#### `replaceAll` <a id="replaceall"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1116)\]
 
 replaceAll(expr, rule) applies rule(s) to expr.
 
 - **Signature**: `(%, %) -> %`
 
-#### `replaceAt` <a id="replaceat"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1102)\]
+#### `replaceAt` <a id="replaceat"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1114)\]
 
 replaceAt(expr, part, n) replaces the n-th element of expr using rule(s).
 
 - **Signature**: `(%, %, %) -> %`
 
-#### `replacePart` <a id="replacepart"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1100)\]
+#### `replacePart` <a id="replacepart"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1112)\]
 
 replacePart(expr, part) replaces expr using rule(s) expressing position(s).
 
 - **Signature**: `(%, %) -> %`
 
-#### `replaceRepeated` <a id="replacerepeated"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1106)\]
+#### `replaceRepeated` <a id="replacerepeated"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1118)\]
 
 replaceRepeated(expr, rule) applies rule(s) to expr, but repeatedly.
 
@@ -5191,13 +5200,13 @@ represents([a1, .., an], [v1, .., vn]) returns a1*v1 + ... + an*vn.
 
 - **From**: `FiniteRankAlgebra(R,UP)`
 
-#### `residue` <a id="residue"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L639)\]
+#### `residue` <a id="residue"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L651)\]
 
 residue(expr, x,x0) returns the residue of expr at x0.
 
 - **Signature**: `(%, %) -> %`
 
-#### `residueSum` <a id="residuesum"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L641)\]
+#### `residueSum` <a id="residuesum"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L653)\]
 
 residueSum(expr, var) returns the residue of expr.
 
@@ -5214,13 +5223,13 @@ rest(agg) returns agg without the first element.
 - **Signature**: `% -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `resultant` <a id="resultant"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L770)\]
+#### `resultant` <a id="resultant"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L782)\]
 
 resultant(p1,p2,x) returns the resultant of p1 and p2.
 
 - **Signature**: `(%, %, %) -> %`
 
-#### `retract` <a id="retract"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1120)\]
+#### `retract` <a id="retract"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1132)\]
 
 ##### `retract` : `% -> Expression(Integer)`
 
@@ -5236,7 +5245,7 @@ retract(a) transforms a into an element of S if possible. Error: if a cannot be 
 
 - **From**: `RetractableTo(S)`
 
-#### `retractIfCan` <a id="retractifcan"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1112)\]
+#### `retractIfCan` <a id="retractifcan"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1124)\]
 
 ##### `retractIfCan` : `% -> Union(JLFloat64, "failed")`
 
@@ -5280,19 +5289,19 @@ reverse(agg, levels) reverses the elements of agg using levels.
 
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `riemannSiegelTheta` <a id="riemannsiegeltheta"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L189)\]
+#### `riemannSiegelTheta` <a id="riemannsiegeltheta"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L201)\]
 
 riemannSiegelTheta(t) returns the Riemann-Siegel theta function of t.
 
 - **Signature**: `% -> %`
 
-#### `riemannSiegelZ` <a id="riemannsiegelz"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L191)\]
+#### `riemannSiegelZ` <a id="riemannsiegelz"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L203)\]
 
 riemannSiegelZ(t) computes the Riemann-Siegel Z function of t.
 
 - **Signature**: `% -> %`
 
-#### `riemannZeta` <a id="riemannzeta"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L202)\]
+#### `riemannZeta` <a id="riemannzeta"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L214)\]
 
 ##### `riemannZeta` : `(%, %) -> %`
 
@@ -5359,7 +5368,7 @@ rootOf(p) returns y such that p(y) = 0.
 
 - **From**: `AlgebraicallyClosedField`
 
-#### `rootReduce` <a id="rootreduce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L960)\]
+#### `rootReduce` <a id="rootreduce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L972)\]
 
 rootReduce(expr) reduces root functions.
 
@@ -5404,7 +5413,7 @@ rootsOf(p, z) returns [y1, ..., yn] such that p(yi) = 0; The returned roots cont
 
 - **From**: `AlgebraicallyClosedField`
 
-#### `round` <a id="round"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L74)\]
+#### `round` <a id="round"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L86)\]
 
 round(x) returns the integer closest to x.
 
@@ -5417,7 +5426,7 @@ sample yields a value of type %
 - **Signature**: `() -> %`
 - **From**: `MagmaWithUnit`
 
-#### `scientificForm` <a id="scientificform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1058)\]
+#### `scientificForm` <a id="scientificform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1070)\]
 
 ##### `scientificForm` : `% -> %`
 
@@ -5427,21 +5436,21 @@ scientificForm(x) returns the printed representation of x in scientific form.
 
 scientificForm(x,n) returns the printed representation of x in scientific form with n digits of precision.
 
-#### `sec` <a id="sec"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1394)\]
+#### `sec` <a id="sec"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1389)\]
 
 sec(x) returns the secant of x.
 
 - **Signature**: `% -> %`
 - **From**: `TrigonometricFunctionCategory`
 
-#### `sech` <a id="sech"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1410)\]
+#### `sech` <a id="sech"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1405)\]
 
 sech(x) returns the hyperbolic secant of x.
 
 - **Signature**: `% -> %`
 - **From**: `HyperbolicFunctionCategory`
 
-#### `select` <a id="select"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1108)\]
+#### `select` <a id="select"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1120)\]
 
 ##### `select` : `(%, %) -> %`
 
@@ -5451,7 +5460,7 @@ select(expr, form) selects elements of expr if form(element) is true.
 
 select(expr, form, n) selects the n first elements of expr if form(element) is true.
 
-#### `series` <a id="series"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L407)\]
+#### `series` <a id="series"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L419)\]
 
 series(expr, opt) returns a series from expr.
 
@@ -5486,7 +5495,7 @@ setelt!(l,i,elem) returns l with i-th element replaced by elem.
 - **Signature**: `(%, Integer, %) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `siegelTheta` <a id="siegeltheta"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L353)\]
+#### `siegelTheta` <a id="siegeltheta"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L365)\]
 
 ##### `siegelTheta` : `(%, %) -> %`
 
@@ -5496,14 +5505,14 @@ siegelTheta(tau, s) computes the Siegel theta function.
 
 siegelTheta(nu, tau, s) computes the Siegel theta function.
 
-#### `sign` <a id="sign"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1381)\]
+#### `sign` <a id="sign"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1376)\]
 
 sign(x) returns the sign of x.
 
 - **Signature**: `% -> %`
 - **From**: `SpecialFunctionCategory`
 
-#### `simplify` <a id="simplify"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L868)\]
+#### `simplify` <a id="simplify"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L880)\]
 
 ##### `simplify` : `% -> %`
 
@@ -5521,20 +5530,20 @@ simplify(expr, assumptions) simplifies the expression expr assuming that assumpt
 x:=jWSExpr("x"); simplify(sqrt(x^2), "x>0")
 ```
 
-#### `sin` <a id="sin"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1391)\]
+#### `sin` <a id="sin"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1386)\]
 
 sin(x) returns the sine of x.
 
 - **Signature**: `% -> %`
 - **From**: `TrigonometricFunctionCategory`
 
-#### `sinc` <a id="sinc"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L92)\]
+#### `sinc` <a id="sinc"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L104)\]
 
 sinc(x) computes the unnormalized sinc of x, sin(x)/x and 0 if x = 0.
 
 - **Signature**: `% -> %`
 
-#### `sinh` <a id="sinh"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1407)\]
+#### `sinh` <a id="sinh"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1402)\]
 
 sinh(x) returns the hyperbolic sine of x.
 
@@ -5555,7 +5564,7 @@ smaller?(x, y) is a strict ordering on depending on representatives of elements 
 - **Signature**: `(%, %) -> Boolean`
 - **From**: `ComparableRepresentation`
 
-#### `solve` <a id="solve"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L532)\]
+#### `solve` <a id="solve"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L544)\]
 
 ##### `solve` : `(Equation(%), %) -> WSL(WSL(%))`
 
@@ -5594,37 +5603,37 @@ sorted?(agg) checks whether agg is sorted or not.
 - **Signature**: `% -> Boolean`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `sphericalBesselJ` <a id="sphericalbesselj"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L134)\]
+#### `sphericalBesselJ` <a id="sphericalbesselj"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L146)\]
 
 sphericalBesselJ(n,z) returns the spherical Bessel of the first kind of z.
 
 - **Signature**: `(%, %) -> %`
 
-#### `sphericalBesselY` <a id="sphericalbessely"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L137)\]
+#### `sphericalBesselY` <a id="sphericalbessely"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L149)\]
 
 sphericalBesselY(n,z) returns the spherical Bessel of the second kind of z.
 
 - **Signature**: `(%, %) -> %`
 
-#### `sphericalHankelH1` <a id="sphericalhankelh1"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L140)\]
+#### `sphericalHankelH1` <a id="sphericalhankelh1"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L152)\]
 
 sphericalHankelH1(n,z) returns the spherical Hankel function of the first kind of z.
 
 - **Signature**: `(%, %) -> %`
 
-#### `sphericalHankelH2` <a id="sphericalhankelh2"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L143)\]
+#### `sphericalHankelH2` <a id="sphericalhankelh2"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L155)\]
 
 sphericalHankelH2(n,z) returns the spherical Hankel function of the second kind of z.
 
 - **Signature**: `(%, %) -> %`
 
-#### `sphericalHarmonicY` <a id="sphericalharmonicy"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L249)\]
+#### `sphericalHarmonicY` <a id="sphericalharmonicy"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L261)\]
 
 sphericalHarmonicY(l, m, theta, phi) returns the spherical harmonic Y function or evaluates it.
 
 - **Signature**: `(%, %, %, %) -> %`
 
-#### `sqrt` <a id="sqrt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1385)\]
+#### `sqrt` <a id="sqrt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1380)\]
 
 sqrt(x) returns the square root of x. The branch cut lies along the negative real axis, continuous with quadrant II.
 
@@ -5652,7 +5661,7 @@ squareFreePolynomial(p) returns the square-free factorization of the univariate 
 - **Signature**: `SparseUnivariatePolynomial(%) -> Factored(SparseUnivariatePolynomial(%)) if % has PFECAT`
 - **From**: `PolynomialFactorizationExplicit`
 
-#### `stieltjesGamma` <a id="stieltjesgamma"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L193)\]
+#### `stieltjesGamma` <a id="stieltjesgamma"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L205)\]
 
 ##### `stieltjesGamma` : `% -> %`
 
@@ -5662,28 +5671,28 @@ stieltjesGamma(n) returns the n-th Stieltjes constant.
 
 stieltjesGamma(n,a) returns the generalized n-th Stieltjes constant.
 
-#### `string` <a id="string"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1654)\]
+#### `string` <a id="string"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1649)\]
 
 string(jt) returns the string representation of jt.
 
 - **Signature**: `% -> String`
 - **From**: [`JLType`](JLType.md)
 
-#### `struveH` <a id="struveh"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1505)\]
+#### `struveH` <a id="struveh"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1500)\]
 
 struveH(v, z) is the Struve H function.
 
 - **Signature**: `(%, %) -> %`
 - **From**: `SpecialFunctionCategory`
 
-#### `struveL` <a id="struvel"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1506)\]
+#### `struveL` <a id="struvel"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1501)\]
 
 struveL(v, z) is the Struve L function defined by the formula struveL(v, z) = -%i^exp(-v*%pi*%i/2)*struveH(v, %i*z).
 
 - **Signature**: `(%, %) -> %`
 - **From**: `SpecialFunctionCategory`
 
-#### `subResultants` <a id="subresultants"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L772)\]
+#### `subResultants` <a id="subresultants"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L784)\]
 
 subResultants(p1,p2,x) returns the subresultant of p1 and p2 with respect to x.
 
@@ -5716,7 +5725,7 @@ subtractIfCan(x, y) returns an element z such that z+y=x or "failed" if no such 
 - **Signature**: `(%, %) -> Union(%,"failed")`
 - **From**: `CancellationAbelianMonoid`
 
-#### `sum` <a id="sum"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L414)\]
+#### `sum` <a id="sum"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L426)\]
 
 ##### `sum` : `(%, %) -> %`
 
@@ -5762,13 +5771,13 @@ summation(f(n), n) returns the formal sum S(n) which verifies S(n+1) - S(n) = f(
 
 - **From**: `CombinatorialOpsCategory`
 
-#### `symmetricPolynomial` <a id="symmetricpolynomial"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L742)\]
+#### `symmetricPolynomial` <a id="symmetricpolynomial"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L754)\]
 
 symmetricPolynomial(n,lvars) returns the n-th elementary symmetric polynomial with respect to variables in lvars.
 
 - **Signature**: `(%, WSList(%)) -> %`
 
-#### `symmetricReduction` <a id="symmetricreduction"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L745)\]
+#### `symmetricReduction` <a id="symmetricreduction"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L757)\]
 
 ##### `symmetricReduction` : `(%, WSL(%)) -> WSL(%)`
 
@@ -5789,21 +5798,21 @@ take(l,i) returns the first i elements.
 - **Signature**: `(%, Integer) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `tan` <a id="tan"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1393)\]
+#### `tan` <a id="tan"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1388)\]
 
 tan(x) returns the tangent of x.
 
 - **Signature**: `% -> %`
 - **From**: `TrigonometricFunctionCategory`
 
-#### `tanh` <a id="tanh"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1409)\]
+#### `tanh` <a id="tanh"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1404)\]
 
 tanh(x) returns the hyperbolic tangent of x.
 
 - **Signature**: `% -> %`
 - **From**: `HyperbolicFunctionCategory`
 
-#### `toExpression` <a id="toexpression"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L978)\]
+#### `toExpression` <a id="toexpression"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L990)\]
 
 ##### `toExpression` : `String -> %`
 
@@ -5817,7 +5826,7 @@ toExpression(expr, form) converts expr to a WS expression and evaluates it with 
 
 toExpression(expr, form, h) converts expr to a WS expression and evaluates it with output in the format form but wrapping the head with h. `Hold` for example.
 
-#### `toString` <a id="tostring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L975)\]
+#### `toString` <a id="tostring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L987)\]
 
 ##### `toString` : `(%, %) -> String`
 
@@ -5829,7 +5838,7 @@ toString(obj) returns the string representation of obj.
 
 - **From**: [`WSObject`](WSObject.md)
 
-#### `together` <a id="together"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L925)\]
+#### `together` <a id="together"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L937)\]
 
 together(expr) puts together terms over a common denominator cancelling common factors.
 
@@ -5870,37 +5879,37 @@ traceMatrix([v1, .., vn]) is the n-by-n matrix ( Tr(vi * vj) )
 
 - **From**: `FiniteRankAlgebra(R,UP)`
 
-#### `traditionalForm` <a id="traditionalform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1087)\]
+#### `traditionalForm` <a id="traditionalform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1099)\]
 
 traditionalForm(expr) returns a traditional form of expr i.e. its WS 'TraditionalForm'.
 
 - **Signature**: `% -> %`
 
-#### `trigExpand` <a id="trigexpand"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L947)\]
+#### `trigExpand` <a id="trigexpand"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L959)\]
 
 trigExpand(expr) tries to expand (hyperbolic) trigonometric functions in expr.
 
 - **Signature**: `% -> %`
 
-#### `trigFactor` <a id="trigfactor"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L963)\]
+#### `trigFactor` <a id="trigfactor"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L975)\]
 
 trigFactor(expr) factors (hyperbolic) trigonometric functions in expr.
 
 - **Signature**: `% -> %`
 
-#### `trigFactorList` <a id="trigfactorlist"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L966)\]
+#### `trigFactorList` <a id="trigfactorlist"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L978)\]
 
 trigFactorList(expr) returns a list of factors of (hyperbolic) trigonometric functions in expr.
 
 - **Signature**: `% -> WSList(%)`
 
-#### `trigReduce` <a id="trigreduce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L958)\]
+#### `trigReduce` <a id="trigreduce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L970)\]
 
 trigReduce(expr) reduces power and products of trigonometric functions.
 
 - **Signature**: `% -> %`
 
-#### `trigToExp` <a id="trigtoexp"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L969)\]
+#### `trigToExp` <a id="trigtoexp"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L981)\]
 
 trigToExp(expr) returns expr with (hyperbolic) trigonometric functions converted to, eventually complex, exponentials.
 
@@ -5934,7 +5943,7 @@ unitNormal(x) tries to choose a canonical element from the associate class of x.
 - **Signature**: `% -> Record(unit: %,canonical: %,associate: %)`
 - **From**: `EntireRing`
 
-#### `unitStep` <a id="unitstep"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1456)\]
+#### `unitStep` <a id="unitstep"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1451)\]
 
 unitStep(x) is 0 for x less than 0, 1 for x bigger or equal 0.
 
@@ -5948,13 +5957,13 @@ univariate(f, k) returns f viewed as a univariate fraction in k.
 - **Signature**: `(%, Kernel(%)) -> Fraction(SparseUnivariatePolynomial(%))`
 - **From**: `FunctionSpace2(R,K)`
 
-#### `values` <a id="values"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1021)\]
+#### `values` <a id="values"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1033)\]
 
 values(expr) returns the values elements in expr.
 
 - **Signature**: `% -> %`
 
-#### `variables` <a id="variables"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L695)\]
+#### `variables` <a id="variables"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L707)\]
 
 ##### `variables` : `% -> WSL(%)`
 
@@ -5972,7 +5981,7 @@ variables([f1, ..., fn]) returns the list of all the variables of f1, ..., fn.
 
 - **From**: `FunctionSpace2(R,K)`
 
-#### `weberE` <a id="webere"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L156)\]
+#### `weberE` <a id="webere"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L168)\]
 
 ##### `weberE` : `(%, %, %) -> %`
 
@@ -5984,43 +5993,43 @@ weberE(v, z) is the Weber E function.
 
 - **From**: `SpecialFunctionCategory`
 
-#### `weierstrassP` <a id="weierstrassp"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L168)\]
+#### `weierstrassP` <a id="weierstrassp"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L180)\]
 
 weierstrassP(g2, g3, z) is the Weierstrass P function.
 
 - **Signature**: `(%, %, %) -> %`
 
-#### `weierstrassPInverse` <a id="weierstrasspinverse"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L177)\]
+#### `weierstrassPInverse` <a id="weierstrasspinverse"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L189)\]
 
 weierstrassPInverse(g2, g3, z) is the inverse of Weierstrass P function, defined by the formula WeierstrassP(g2, g3, WeierstrassPInverse(g2, g3, z)) = z.
 
 - **Signature**: `(%, %, %) -> %`
 
-#### `weierstrassPPrime` <a id="weierstrasspprime"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L170)\]
+#### `weierstrassPPrime` <a id="weierstrasspprime"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L182)\]
 
 weierstrassPPrime(g2, g3, z) is the derivative of the Weierstrass P function.
 
 - **Signature**: `(%, %, %) -> %`
 
-#### `weierstrassSigma` <a id="weierstrasssigma"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L173)\]
+#### `weierstrassSigma` <a id="weierstrasssigma"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L185)\]
 
 weierstrassSigma(g2, g3, z) is the Weierstrass sigma function.
 
 - **Signature**: `(%, %, %) -> %`
 
-#### `weierstrassZeta` <a id="weierstrasszeta"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L175)\]
+#### `weierstrassZeta` <a id="weierstrasszeta"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L187)\]
 
 weierstrassZeta(g2, g3, z) is the Weierstrass Zeta function.
 
 - **Signature**: `(%, %, %) -> %`
 
-#### `whittakerM` <a id="whittakerm"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L293)\]
+#### `whittakerM` <a id="whittakerm"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L305)\]
 
 whittakerM(k,m,x) computes the Whittaker function M of x.
 
 - **Signature**: `(%, %, %) -> %`
 
-#### `whittakerW` <a id="whittakerw"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L295)\]
+#### `whittakerW` <a id="whittakerw"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L307)\]
 
 whittakerW(k,m,z) computes the Whittaker function W of z.
 
@@ -6033,13 +6042,13 @@ wilsonW(n, a, b, c, d, z) is the Wilson polynomial.
 - **Signature**: `(%, %, %, %, %, %) -> %`
 - **From**: `SpecialFunctionCategory`
 
-#### `zernikeR` <a id="zerniker"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L275)\]
+#### `zernikeR` <a id="zerniker"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L287)\]
 
 zernikeR(n, m, x) returns the Zernike radial polynomial or evaluates it at x if x is a number.
 
 - **Signature**: `(%, %, %) -> %`
 
-#### `zero?` <a id="zero"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L31)\]
+#### `zero?` <a id="zero"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L43)\]
 
 zero? x tries to determine if x is 0. For example:
 

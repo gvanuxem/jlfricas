@@ -1,6 +1,6 @@
 # WSString
 
-> **Kind**: Domain &nbsp;|&nbsp; \[[Source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L215)\] &nbsp;|&nbsp; **Group**: WS — MathLink
+> **Kind**: Domain &nbsp;|&nbsp; \[[Source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L208)\] &nbsp;|&nbsp; **Group**: WS — MathLink
 
 ## Description
 
@@ -8,7 +8,7 @@ Julia WS strings using the MathLink Julia package.
 
 **WSString is a domain constructor.**  
 **Abbreviation for WSString is WSSTR**  
-**35 names for 46 operations in this domain.**
+**36 names for 47 operations in this domain.**
 
 ## Signatures
 
@@ -27,15 +27,16 @@ Julia WS strings using the MathLink Julia package.
  jlFieldNames : % -> JLObject    jlGetField : (%, JLSymbol) -> JLObject
  jlGetJuliaIndex : % -> String    jlGetProperty : (%, JLSymbol) -> JLObject
  jlHead : % -> WSSymbol    jlId : % -> Integer
- jlObject : () -> String    jlPropertyNames : % -> JLObject
- jlRef : % -> SExpression    jlSymbolic : % -> String
- jlText : (%, String) -> List(String)    jlType : % -> Symbol
- jlimref : String -> %    jlref : String -> %
- latex : % -> String    missing? : % -> Boolean
- mutable? : % -> Boolean    nothing? : % -> Boolean
- numeric : % -> WSExpression    numeric : (%, PositiveInteger) -> WSExpression
- numeric? : % -> Boolean    string : % -> String
- toString : % -> String    ?~=? : (%, %) -> Boolean
+ jlNames : % -> JLObject    jlObject : () -> String
+ jlPropertyNames : % -> JLObject    jlRef : % -> SExpression
+ jlSymbolic : % -> String    jlText : (%, String) -> List(String)
+ jlType : % -> Symbol    jlimref : String -> %
+ jlref : String -> %    latex : % -> String
+ missing? : % -> Boolean    mutable? : % -> Boolean
+ nothing? : % -> Boolean    numeric : % -> WSExpression
+ numeric : (%, PositiveInteger) -> WSExpression    numeric? : % -> Boolean
+ string : % -> String    toString : % -> String
+ ?~=? : (%, %) -> Boolean
 ```
 
 ## Operations
@@ -61,6 +62,7 @@ Julia WS strings using the MathLink Julia package.
 | [`jlGetProperty`](#jlgetproperty) | jlGetProperty(obj, sym) returns the property/element sym of obj. |
 | [`jlHead`](#jlhead) | jlHead(expr) returns the Head type of expr. |
 | [`jlId`](#jlid) | jlId(obj) returns the Julia indexed dictionary index referencing the object obj. |
+| [`jlNames`](#jlnames) | jlNames(obj) returns the names of obj depending of the type of obj. |
 | [`jlObject`](#jlobject) | jlObject() returns the internal Julia name of the Julia module used. For example:... |
 | [`jlPropertyNames`](#jlpropertynames) | jlPropertyNames(obj) returns the property/element names of obj. |
 | [`jlRef`](#jlref) | jlRef(obj) returns the internal Lisp representation of the Julia object obj. |
@@ -81,13 +83,13 @@ Julia WS strings using the MathLink Julia package.
 
 ### Detailed Documentation
 
-#### `characters` <a id="characters"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L226)\]
+#### `characters` <a id="characters"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L220)\]
 
 characters(str) returns the characters of str as a WSList.
 
 - **Signature**: `% -> WSList(%)`
 
-#### `coerce` <a id="coerce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L230)\]
+#### `coerce` <a id="coerce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L224)\]
 
 ##### `coerce` : `% -> String`
 
@@ -115,16 +117,16 @@ coerce(expr) returns the WSExpression representation of expr.
 
 - **From**: [`WSObject`](WSObject.md)
 
-#### `convert` <a id="convert"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L377)\]
+#### `convert` <a id="convert"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L357)\]
 
 convert(a) transforms a into an element of S.
 
 - **Signature**: `% -> String`
 - **From**: `ConvertibleTo(S)`
 
-#### `elt` <a id="elt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L228)\]
+#### `elt` <a id="elt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L222)\]
 
-##### `elt` : `(%, INT) -> %`
+##### `elt` : `(%, Integer) -> %`
 
 elt(str,i) returns the i-th character of str.
 
@@ -162,7 +164,7 @@ jWSInterpret(form1,form2,form3) interprets forms.
 
 - **From**: [`WSObject`](WSObject.md)
 
-#### `jWSString` <a id="jwsstring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L235)\]
+#### `jWSString` <a id="jwsstring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L229)\]
 
 jWSString(str) constructs str as a WSString.
 
@@ -283,6 +285,13 @@ jlId(obj) returns the Julia indexed dictionary index referencing the object obj.
 - **Signature**: `% -> Integer`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
+#### `jlNames` <a id="jlnames"></a>
+
+jlNames(obj) returns the names of obj depending of the type of obj.
+
+- **Signature**: `% -> JLObject`
+- **From**: [`JLObjectType`](JLObjectType.md)
+
 #### `jlObject` <a id="jlobject"></a>
 
 jlObject() returns the internal Julia name of the Julia module used. For example:
@@ -352,7 +361,7 @@ jlimref(str) evaluates the Julia command str and returns the corresponding FriCA
 - **Signature**: `String -> %`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
-#### `jlref` <a id="jlref"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L307)\]
+#### `jlref` <a id="jlref"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L262)\]
 
 ##### `jlref` : `% -> SExpression`
 
@@ -394,7 +403,7 @@ nothing?(obj) checks whether or not obj is nothing.
 - **Signature**: `% -> Boolean`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
-#### `numeric` <a id="numeric"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L482)\]
+#### `numeric` <a id="numeric"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L459)\]
 
 ##### `numeric` : `% -> WSExpression`
 
@@ -415,14 +424,14 @@ numeric?(x) checks whether or not x is or would yield a number.
 - **Signature**: `% -> Boolean`
 - **From**: [`WSObject`](WSObject.md)
 
-#### `string` <a id="string"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L465)\]
+#### `string` <a id="string"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L442)\]
 
 string(jt) returns the string representation of jt.
 
 - **Signature**: `% -> String`
 - **From**: [`JLType`](JLType.md)
 
-#### `toString` <a id="tostring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L751)\]
+#### `toString` <a id="tostring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L719)\]
 
 toString(obj) returns the string representation of obj.
 

@@ -1,6 +1,6 @@
 # WSAPComplex
 
-> **Kind**: Domain &nbsp;|&nbsp; \[[Source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1433)\] &nbsp;|&nbsp; **Group**: WS — MathLink
+> **Kind**: Domain &nbsp;|&nbsp; \[[Source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1381)\] &nbsp;|&nbsp; **Group**: WS — MathLink
 
 ## Description
 
@@ -65,37 +65,38 @@ Julia WS arbitrary precision complex numbers using WS Transport Protocol.
  jlEval : % -> %    jlFieldNames : % -> JLObject
  jlGetField : (%, JLSymbol) -> JLObject    jlGetJuliaIndex : % -> String
  jlGetProperty : (%, JLSymbol) -> JLObject    jlHead : % -> WSSymbol
- jlId : % -> Integer    jlObject : () -> String
- jlPropertyNames : % -> JLObject    jlRef : % -> SExpression
- jlSymbolic : % -> String    jlText : (%, String) -> List(String)
- jlType : % -> Symbol    jlimref : String -> %
- jlref : String -> %    latex : % -> String
- leftPower : (%, PositiveInteger) -> %    leftPower : (%, NonNegativeInteger) -> %
- leftRecip : % -> Union(%,"failed")    li : % -> %
- lift : % -> SparseUnivariatePolynomial(WSAPReal(prec))    log : % -> %
- log10 : % -> %    log2 : % -> %
- map : ((WSAPReal(prec) -> WSAPReal(prec)), %) -> %    missing? : % -> Boolean
- mutable? : % -> Boolean    norm : % -> WSAPReal(prec)
- nothing? : % -> Boolean    numeric : (%, PositiveInteger) -> WSExpression
- numeric : % -> WSExpression    numeric? : % -> Boolean
- one? : % -> Boolean    opposite? : (%, %) -> Boolean
- pi : () -> %    plenaryPower : (%, PositiveInteger) -> %
- random : () -> % if WSAPReal(prec) has FINITE    rank : () -> PositiveInteger
- rational? : % -> Boolean if WSAPReal(prec) has INS    real : % -> WSAPReal(prec)
- recip : % -> Union(%,"failed")    reducedSystem : Matrix(%) -> Matrix(WSAPReal(prec))
- regularRepresentation : % -> Matrix(WSAPReal(prec))    represents : (Vector(WSAPReal(prec)), Vector(%)) -> %
- represents : Vector(WSAPReal(prec)) -> %    retract : % -> WSAPReal(prec)
- retractIfCan : % -> Union(WSAPReal(prec),"failed")    rightPower : (%, PositiveInteger) -> %
- rightPower : (%, NonNegativeInteger) -> %    rightRecip : % -> Union(%,"failed")
- sample : () -> %    sec : % -> %
- sech : % -> %    sin : % -> %
- sinc : % -> %    sinh : % -> %
- string : % -> String    subtractIfCan : (%, %) -> Union(%,"failed")
- tan : % -> %    tanh : % -> %
- toString : (%, WSExpression) -> String    toString : % -> String
- trace : % -> WSAPReal(prec)    traceMatrix : Vector(%) -> Matrix(WSAPReal(prec))
- traceMatrix : () -> Matrix(WSAPReal(prec))    urand01 : () -> %
- zero? : % -> Boolean    ?~=? : (%, %) -> Boolean
+ jlId : % -> Integer    jlNames : % -> JLObject
+ jlObject : () -> String    jlPropertyNames : % -> JLObject
+ jlRef : % -> SExpression    jlSymbolic : % -> String
+ jlText : (%, String) -> List(String)    jlType : % -> Symbol
+ jlimref : String -> %    jlref : String -> %
+ latex : % -> String    leftPower : (%, PositiveInteger) -> %
+ leftPower : (%, NonNegativeInteger) -> %    leftRecip : % -> Union(%,"failed")
+ li : % -> %    lift : % -> SparseUnivariatePolynomial(WSAPReal(prec))
+ log : % -> %    log10 : % -> %
+ log2 : % -> %    map : ((WSAPReal(prec) -> WSAPReal(prec)), %) -> %
+ missing? : % -> Boolean    mutable? : % -> Boolean
+ norm : % -> WSAPReal(prec)    nothing? : % -> Boolean
+ numeric : (%, PositiveInteger) -> WSExpression    numeric : % -> WSExpression
+ numeric? : % -> Boolean    one? : % -> Boolean
+ opposite? : (%, %) -> Boolean    pi : () -> %
+ plenaryPower : (%, PositiveInteger) -> %    random : () -> % if WSAPReal(prec) has FINITE
+ rank : () -> PositiveInteger    rational? : % -> Boolean if WSAPReal(prec) has INS
+ real : % -> WSAPReal(prec)    recip : % -> Union(%,"failed")
+ reducedSystem : Matrix(%) -> Matrix(WSAPReal(prec))    regularRepresentation : % -> Matrix(WSAPReal(prec))
+ represents : (Vector(WSAPReal(prec)), Vector(%)) -> %    represents : Vector(WSAPReal(prec)) -> %
+ retract : % -> WSAPReal(prec)    retractIfCan : % -> Union(WSAPReal(prec),"failed")
+ rightPower : (%, PositiveInteger) -> %    rightPower : (%, NonNegativeInteger) -> %
+ rightRecip : % -> Union(%,"failed")    sample : () -> %
+ sec : % -> %    sech : % -> %
+ sin : % -> %    sinc : % -> %
+ sinh : % -> %    string : % -> String
+ subtractIfCan : (%, %) -> Union(%,"failed")    tan : % -> %
+ tanh : % -> %    toString : (%, WSExpression) -> String
+ toString : % -> String    trace : % -> WSAPReal(prec)
+ traceMatrix : Vector(%) -> Matrix(WSAPReal(prec))    traceMatrix : () -> Matrix(WSAPReal(prec))
+ urand01 : () -> %    zero? : % -> Boolean
+ ?~=? : (%, %) -> Boolean
  ?*? : (%, Integer) -> % if WSAPReal(prec) has LINEXP(INT)
  ?*? : (%, Fraction(Integer)) -> % if % has CHARZ and WSAPReal(prec) has FIELD or % has CHARZ and WSAPReal(prec) has FFIELDC
  ?*? : (Fraction(Integer), %) -> % if % has CHARZ and WSAPReal(prec) has FIELD or % has CHARZ and WSAPReal(prec) has FFIELDC
@@ -310,6 +311,7 @@ Julia WS arbitrary precision complex numbers using WS Transport Protocol.
 | [`jlGetProperty`](#jlgetproperty) | jlGetProperty(obj, sym) returns the property/element sym of obj. |
 | [`jlHead`](#jlhead) | jlHead(expr) returns the Head type of expr. |
 | [`jlId`](#jlid) | jlId(obj) returns the Julia indexed dictionary index referencing the object obj. |
+| [`jlNames`](#jlnames) | jlNames(obj) returns the names of obj depending of the type of obj. |
 | [`jlObject`](#jlobject) | jlObject() returns the internal Julia name of the Julia module used. For example:... |
 | [`jlPropertyNames`](#jlpropertynames) | jlPropertyNames(obj) returns the property/element names of obj. |
 | [`jlRef`](#jlref) | jlRef(obj) returns the internal Lisp representation of the Julia object obj. |
@@ -419,28 +421,28 @@ Operation defined in WSAPComplex.
 
 - **Signature**: `(%, %) -> % if WSAPReal(prec) has FIELD`
 
-#### `0` <a id="0"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1508)\]
+#### `0` <a id="0"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1448)\]
 
 0
 
 - **Signature**: `() -> %`
 - **From**: `Pattern(R)`
 
-#### `1` <a id="1"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1509)\]
+#### `1` <a id="1"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1449)\]
 
 1 returns the unit element, denoted by 1.
 
 - **Signature**: `() -> %`
 - **From**: `MagmaWithUnit`
 
-#### `Chi` <a id="chi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1619)\]
+#### `Chi` <a id="chi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1559)\]
 
 Chi(x) returns the hyperbolic cosine integral of x, i.e. the integral of cosh(x) / x dx.
 
 - **Signature**: `% -> %`
 - **From**: `LiouvillianFunctionCategory`
 
-#### `Ci` <a id="ci"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1618)\]
+#### `Ci` <a id="ci"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1558)\]
 
 Ci(x) returns the cosine integral of x, i.e. the integral of cos(x) / x dx.
 
@@ -473,21 +475,21 @@ D(x, n) returns the n-th derivative of x.
 
 - **From**: `DifferentialRing`
 
-#### `Ei` <a id="ei"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1620)\]
+#### `Ei` <a id="ei"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1560)\]
 
 Ei(x) returns the exponential integral of x, i.e. the integral of exp(x)/x dx.
 
 - **Signature**: `% -> %`
 - **From**: `LiouvillianFunctionCategory`
 
-#### `Shi` <a id="shi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1617)\]
+#### `Shi` <a id="shi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1557)\]
 
 Shi(x) returns the hyperbolic sine integral of x, i.e. the integral of sinh(x) / x dx.
 
 - **Signature**: `% -> %`
 - **From**: `LiouvillianFunctionCategory`
 
-#### `Si` <a id="si"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1616)\]
+#### `Si` <a id="si"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1556)\]
 
 Si(x) returns the sine integral of x, i.e. the integral of sin(x) / x dx.
 
@@ -516,49 +518,49 @@ Operation defined in WSAPComplex.
 
 Operation defined in WSAPComplex.
 
-#### `abs` <a id="abs"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1552)\]
+#### `abs` <a id="abs"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1492)\]
 
 abs(x) returns the absolute value of x = sqrt(norm(x)).
 
 - **Signature**: `% -> WSAPReal(prec) if WSAPReal(prec) has RNS`
 - **From**: `ComplexCategory(R)`
 
-#### `acos` <a id="acos"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1577)\]
+#### `acos` <a id="acos"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1517)\]
 
 acos(x) returns the arc-cosine of x. When evaluated into some subset of the complex numbers, one branch cut for acos lie s along the negative real axis to the left of -1 (inclusive), continuous with the upper half plane, the other along the positive real axis to the right of 1 (inclusive), continuous with the lower half plane.
 
 - **Signature**: `% -> %`
 - **From**: `ArcTrigonometricFunctionCategory`
 
-#### `acosh` <a id="acosh"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1596)\]
+#### `acosh` <a id="acosh"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1536)\]
 
 acosh(x) returns the hyperbolic arc-cosine of x.
 
 - **Signature**: `% -> %`
 - **From**: `ArcHyperbolicFunctionCategory`
 
-#### `acot` <a id="acot"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1586)\]
+#### `acot` <a id="acot"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1526)\]
 
 acot(x) returns the arc-cotangent of x.
 
 - **Signature**: `% -> %`
 - **From**: `ArcTrigonometricFunctionCategory`
 
-#### `acoth` <a id="acoth"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1607)\]
+#### `acoth` <a id="acoth"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1547)\]
 
 acoth(x) returns the hyperbolic arc-cotangent of x.
 
 - **Signature**: `% -> %`
 - **From**: `ArcHyperbolicFunctionCategory`
 
-#### `acsc` <a id="acsc"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1583)\]
+#### `acsc` <a id="acsc"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1523)\]
 
 acsc(x) returns the arc-cosecant of x.
 
 - **Signature**: `% -> %`
 - **From**: `ArcTrigonometricFunctionCategory`
 
-#### `acsch` <a id="acsch"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1604)\]
+#### `acsch` <a id="acsch"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1544)\]
 
 acsch(x) returns the hyperbolic arc-cosecant of x.
 
@@ -579,35 +581,35 @@ antiCommutator(a, b) returns a*b+b*a.
 - **Signature**: `(%, %) -> %`
 - **From**: `NonAssociativeSemiRng`
 
-#### `argument` <a id="argument"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1553)\]
+#### `argument` <a id="argument"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1493)\]
 
 argument(x) returns the angle made by (1, 0) and x.
 
 - **Signature**: `% -> WSAPReal(prec) if WSAPReal(prec) has TRANFUN`
 - **From**: `ComplexCategory(R)`
 
-#### `asec` <a id="asec"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1580)\]
+#### `asec` <a id="asec"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1520)\]
 
 asec(x) returns the arc-secant of x.
 
 - **Signature**: `% -> %`
 - **From**: `ArcTrigonometricFunctionCategory`
 
-#### `asech` <a id="asech"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1601)\]
+#### `asech` <a id="asech"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1541)\]
 
 asech(x) returns the hyperbolic arc-secant of x.
 
 - **Signature**: `% -> %`
 - **From**: `ArcHyperbolicFunctionCategory`
 
-#### `asin` <a id="asin"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1576)\]
+#### `asin` <a id="asin"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1516)\]
 
 asin(x) returns the arc-sine of x. When evaluated into some subset of the complex numbers, one branch cut for asin lies along the negative real axis to the left of -1 (inclusive), continuous with the upper half plane, the other along the po sitive real axis to the right of 1 (inclusive), continuous with the lower half plane.
 
 - **Signature**: `% -> %`
 - **From**: `ArcTrigonometricFunctionCategory`
 
-#### `asinh` <a id="asinh"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1595)\]
+#### `asinh` <a id="asinh"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1535)\]
 
 asinh(x) returns the hyperbolic arc-sine of x.
 
@@ -628,7 +630,7 @@ associator(a, b, c) returns (a*b)*c-a*(b*c).
 - **Signature**: `(%, %, %) -> %`
 - **From**: `NonAssociativeRng`
 
-#### `atan` <a id="atan"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1462)\]
+#### `atan` <a id="atan"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1414)\]
 
 ##### `atan` : `(%, %) -> %`
 
@@ -640,7 +642,7 @@ atan(x) returns the arc-tangent of x. When evaluated into some subset of the com
 
 - **From**: `ArcTrigonometricFunctionCategory`
 
-#### `atanh` <a id="atanh"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1597)\]
+#### `atanh` <a id="atanh"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1537)\]
 
 atanh(x) returns the hyperbolic arc-tangent of x.
 
@@ -678,7 +680,7 @@ Operation defined in WSAPComplex.
 
 Operation defined in WSAPComplex.
 
-#### `coerce` <a id="coerce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1471)\]
+#### `coerce` <a id="coerce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1423)\]
 
 ##### `coerce` : `Integer  -> %`
 
@@ -753,7 +755,7 @@ commutator(a, b) returns a*b-b*a.
 - **Signature**: `(%, %) -> %`
 - **From**: `NonAssociativeRng`
 
-#### `complex` <a id="complex"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1477)\]
+#### `complex` <a id="complex"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1429)\]
 
 ##### `complex` : `(WSAPReal(prec), WSAPReal(prec)) -> %`
 
@@ -771,14 +773,14 @@ Operation defined in WSAPComplex.
 
 - **Signature**: `Matrix(%) -> Union(Vector(%),"failed") if % has CHARNZ and WSAPReal(prec) has EUCDOM and WSAPReal(prec) has PFECAT or % has CHARNZ and WSAPReal(prec) has FFIELDC`
 
-#### `conjugate` <a id="conjugate"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1522)\]
+#### `conjugate` <a id="conjugate"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1462)\]
 
 conjugate(x + %i y) returns x - %i y.
 
 - **Signature**: `% -> %`
 - **From**: `ComplexCategory(R)`
 
-#### `convert` <a id="convert"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1632)\]
+#### `convert` <a id="convert"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1572)\]
 
 ##### `convert` : `UP -> %`
 
@@ -842,28 +844,28 @@ coordinates(a, basis) returns the coordinates of a with respect to the basis bas
 
 - **From**: `FiniteRankAlgebra(R,UP)`
 
-#### `cos` <a id="cos"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1568)\]
+#### `cos` <a id="cos"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1508)\]
 
 cos(x) returns the cosine of x.
 
 - **Signature**: `% -> %`
 - **From**: `TrigonometricFunctionCategory`
 
-#### `cosh` <a id="cosh"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1589)\]
+#### `cosh` <a id="cosh"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1529)\]
 
 cosh(x) returns the hyperbolic cosine of x.
 
 - **Signature**: `% -> %`
 - **From**: `HyperbolicFunctionCategory`
 
-#### `cot` <a id="cot"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1572)\]
+#### `cot` <a id="cot"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1512)\]
 
 cot(x) returns the cotangent of x.
 
 - **Signature**: `% -> %`
 - **From**: `TrigonometricFunctionCategory`
 
-#### `coth` <a id="coth"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1593)\]
+#### `coth` <a id="coth"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1533)\]
 
 coth(x) returns the hyperbolic cotangent of x.
 
@@ -876,14 +878,14 @@ Operation defined in WSAPComplex.
 
 - **Signature**: `() -> % if WSAPReal(prec) has FFIELDC`
 
-#### `csc` <a id="csc"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1571)\]
+#### `csc` <a id="csc"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1511)\]
 
 csc(x) returns the cosecant of x.
 
 - **Signature**: `% -> %`
 - **From**: `TrigonometricFunctionCategory`
 
-#### `csch` <a id="csch"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1592)\]
+#### `csch` <a id="csch"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1532)\]
 
 csch(x) returns the hyperbolic cosecant of x.
 
@@ -930,7 +932,7 @@ differentiate(x, n) returns the n-th derivative of x.
 
 - **From**: `DifferentialRing`
 
-#### `dilog` <a id="dilog"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1624)\]
+#### `dilog` <a id="dilog"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1564)\]
 
 dilog(x) returns the dilogarithm of x, i.e. the integral of log(x) / (1 - x) dx.
 
@@ -1000,7 +1002,7 @@ Operation defined in WSAPComplex.
 
 - **Signature**: `() -> List(%) if WSAPReal(prec) has FINITE`
 
-#### `erf` <a id="erf"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1464)\]
+#### `erf` <a id="erf"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1416)\]
 
 ##### `erf` : `(%, %) -> %`
 
@@ -1012,13 +1014,13 @@ erf(x) returns the error function of x, i.e. 2 / sqrt(%pi) times the integral of
 
 - **From**: `LiouvillianFunctionCategory`
 
-#### `erfc` <a id="erfc"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1466)\]
+#### `erfc` <a id="erfc"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1418)\]
 
 erfc(z) returns the complementary error function of z.
 
 - **Signature**: `% -> %`
 
-#### `erfi` <a id="erfi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1615)\]
+#### `erfi` <a id="erfi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1555)\]
 
 erfi(x) denotes -%i*erf(%i*x)
 
@@ -1058,7 +1060,7 @@ eval(f, [x1 = v1, ..., xn = vn]) replaces xi by vi in f.
 
 - **From**: `Evalable(R)`
 
-#### `exp` <a id="exp"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1454)\]
+#### `exp` <a id="exp"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1406)\]
 
 ##### `exp` : `() -> %`
 
@@ -1136,14 +1138,14 @@ Operation defined in WSAPComplex.
 
 - **Signature**: `() -> List(Record(factor: Integer,exponent: NonNegativeInteger)) if WSAPReal(prec) has FFIELDC`
 
-#### `fresnelC` <a id="fresnelc"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1621)\]
+#### `fresnelC` <a id="fresnelc"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1561)\]
 
 fresnelC(x) is the Fresnel integral C, defined by C(x) = integrate(cos(%pi*t^2/2), t=0..x)
 
 - **Signature**: `% -> %`
 - **From**: `LiouvillianFunctionCategory`
 
-#### `fresnelS` <a id="fresnels"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1622)\]
+#### `fresnelS` <a id="fresnels"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1562)\]
 
 fresnelS(x) is the Fresnel integral S, defined by S(x) = integrate(sin(%pi*t^2/2), t=0..x)
 
@@ -1190,14 +1192,14 @@ Operation defined in WSAPComplex.
 
 - **Signature**: `(HashState, %) -> HashState if WSAPReal(prec) has HASHABL`
 
-#### `imag` <a id="imag"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1520)\]
+#### `imag` <a id="imag"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1460)\]
 
 imag(x) returns imaginary part of x.
 
 - **Signature**: `% -> WSAPReal(prec)`
 - **From**: `ComplexCategory(R)`
 
-#### `imaginary` <a id="imaginary"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1510)\]
+#### `imaginary` <a id="imaginary"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1450)\]
 
 imaginary() = sqrt(-1) = %i.
 
@@ -1237,7 +1239,7 @@ inv x returns the multiplicative inverse of x. Error: if x is 0.
 - **Signature**: `% -> % if WSAPReal(prec) has FIELD`
 - **From**: `DivisionRing`
 
-#### `jWSComplex` <a id="jwscomplex"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1480)\]
+#### `jWSComplex` <a id="jwscomplex"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1432)\]
 
 ##### `jWSComplex` : `WSAPReal(prec) -> %`
 
@@ -1327,7 +1329,7 @@ jlApply(func, obj1, obj2, obj3, obj4, obj5) applies the function func with obj1,
 
 - **From**: [`JLObjectType`](JLObjectType.md)
 
-#### `jlApprox?` <a id="jlapprox"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1449)\]
+#### `jlApprox?` <a id="jlapprox"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1401)\]
 
 jlApprox?(x,y) computes inexact equality comparison with WS default parameters (Equal).
 
@@ -1394,6 +1396,13 @@ jlHead(expr) returns the Head type of expr.
 jlId(obj) returns the Julia indexed dictionary index referencing the object obj.
 
 - **Signature**: `% -> Integer`
+- **From**: [`JLObjectType`](JLObjectType.md)
+
+#### `jlNames` <a id="jlnames"></a>
+
+jlNames(obj) returns the names of obj depending of the type of obj.
+
+- **Signature**: `% -> JLObject`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
 #### `jlObject` <a id="jlobject"></a>
@@ -1465,7 +1474,7 @@ jlimref(str) evaluates the Julia command str and returns the corresponding FriCA
 - **Signature**: `String -> %`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
-#### `jlref` <a id="jlref"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1492)\]
+#### `jlref` <a id="jlref"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1394)\]
 
 ##### `jlref` : `% -> SExpression`
 
@@ -1528,7 +1537,7 @@ leftRecip(a) returns an element, which is a left inverse of a, or "failed" if su
 - **Signature**: `% -> Union(%,"failed")`
 - **From**: `MagmaWithUnit`
 
-#### `li` <a id="li"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1623)\]
+#### `li` <a id="li"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1563)\]
 
 li(x) returns the logarithmic integral of x, i.e. the integral of dx / log(x).
 
@@ -1542,14 +1551,14 @@ lift(z) returns a minimal degree univariate polynomial up such that z=reduce up.
 - **Signature**: `% -> SparseUnivariatePolynomial(WSAPReal(prec))`
 - **From**: `MonogenicAlgebra(R,UP)`
 
-#### `log` <a id="log"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1557)\]
+#### `log` <a id="log"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1497)\]
 
 log(x) returns the natural logarithm of x. When evaluated into some subset of the complex numbers, the branch cut lies a long the negative real axis, continuous with quadrant II. The domain does not contain the origin.
 
 - **Signature**: `% -> %`
 - **From**: `ElementaryFunctionCategory`
 
-#### `log10` <a id="log10"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1460)\]
+#### `log10` <a id="log10"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1412)\]
 
 ##### `log10` : `% -> %`
 
@@ -1561,7 +1570,7 @@ log10() returns ln 10: 2.3025809299....
 
 - **From**: `Float`
 
-#### `log2` <a id="log2"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1458)\]
+#### `log2` <a id="log2"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1410)\]
 
 ##### `log2` : `% -> %`
 
@@ -1693,7 +1702,7 @@ patternMatch(expr, pat, res) matches the pattern pat to the expression expr. res
 - **Signature**: `(%, Pattern(S), PatternMatchResult(S,%)) -> PatternMatchResult(S,%)`
 - **From**: `PatternMatchable(S)`
 
-#### `pi` <a id="pi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1516)\]
+#### `pi` <a id="pi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1456)\]
 
 pi() returns the constant pi.
 
@@ -1792,7 +1801,7 @@ rationalIfCan(x) returns x as a rational number, or "failed" if x is not a ratio
 - **Signature**: `% -> Union(Fraction(Integer),"failed") if WSAPReal(prec) has INS`
 - **From**: `ComplexCategory(R)`
 
-#### `real` <a id="real"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1519)\]
+#### `real` <a id="real"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1459)\]
 
 real(x) returns real part of x.
 
@@ -1917,34 +1926,34 @@ sample yields a value of type %
 - **Signature**: `() -> %`
 - **From**: `MagmaWithUnit`
 
-#### `sec` <a id="sec"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1570)\]
+#### `sec` <a id="sec"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1510)\]
 
 sec(x) returns the secant of x.
 
 - **Signature**: `% -> %`
 - **From**: `TrigonometricFunctionCategory`
 
-#### `sech` <a id="sech"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1591)\]
+#### `sech` <a id="sech"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1531)\]
 
 sech(x) returns the hyperbolic secant of x.
 
 - **Signature**: `% -> %`
 - **From**: `HyperbolicFunctionCategory`
 
-#### `sin` <a id="sin"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1567)\]
+#### `sin` <a id="sin"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1507)\]
 
 sin(x) returns the sine of x.
 
 - **Signature**: `% -> %`
 - **From**: `TrigonometricFunctionCategory`
 
-#### `sinc` <a id="sinc"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1456)\]
+#### `sinc` <a id="sinc"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1408)\]
 
 sinc(z) computes the unnormalized sinc of z, sin(z)/z and 0 if z = 0.
 
 - **Signature**: `% -> %`
 
-#### `sinh` <a id="sinh"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1588)\]
+#### `sinh` <a id="sinh"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1528)\]
 
 sinh(x) returns the hyperbolic sine of x.
 
@@ -1977,7 +1986,7 @@ Operation defined in WSAPComplex.
 
 - **Signature**: `(List(SparseUnivariatePolynomial(%)), SparseUnivariatePolynomial(%)) -> Union(List(SparseUnivariatePolynomial(%)),"failed") if WSAPReal(prec) has EUCDOM and WSAPReal(prec) has PFECAT or WSAPReal(prec) has FFIELDC`
 
-#### `sqrt` <a id="sqrt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1556)\]
+#### `sqrt` <a id="sqrt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1496)\]
 
 sqrt(x) returns the square root of x. The branch cut lies along the negative real axis, continuous with quadrant II.
 
@@ -2004,7 +2013,7 @@ Operation defined in WSAPComplex.
 
 - **Signature**: `SparseUnivariatePolynomial(%) -> Factored(SparseUnivariatePolynomial(%)) if WSAPReal(prec) has EUCDOM and WSAPReal(prec) has PFECAT or WSAPReal(prec) has FFIELDC`
 
-#### `string` <a id="string"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1630)\]
+#### `string` <a id="string"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1570)\]
 
 string(jt) returns the string representation of jt.
 
@@ -2024,21 +2033,21 @@ Operation defined in WSAPComplex.
 
 - **Signature**: `Integer -> Table(PositiveInteger,NonNegativeInteger) if WSAPReal(prec) has FFIELDC`
 
-#### `tan` <a id="tan"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1569)\]
+#### `tan` <a id="tan"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1509)\]
 
 tan(x) returns the tangent of x.
 
 - **Signature**: `% -> %`
 - **From**: `TrigonometricFunctionCategory`
 
-#### `tanh` <a id="tanh"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1590)\]
+#### `tanh` <a id="tanh"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1530)\]
 
 tanh(x) returns the hyperbolic tangent of x.
 
 - **Signature**: `% -> %`
 - **From**: `HyperbolicFunctionCategory`
 
-#### `toString` <a id="tostring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1468)\]
+#### `toString` <a id="tostring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1420)\]
 
 ##### `toString` : `(%, WSExpression) -> String`
 
@@ -2092,13 +2101,13 @@ unitNormal(x) tries to choose a canonical element from the associate class of x.
 - **Signature**: `% -> Record(unit: %,canonical: %,associate: %) if WSAPReal(prec) has EUCDOM and WSAPReal(prec) has PFECAT or WSAPReal(prec) has INTDOM`
 - **From**: `EntireRing`
 
-#### `urand01` <a id="urand01"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1447)\]
+#### `urand01` <a id="urand01"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1399)\]
 
 urand01() returns a unit square random complex number.
 
 - **Signature**: `() -> %`
 
-#### `zero?` <a id="zero"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1581)\]
+#### `zero?` <a id="zero"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1521)\]
 
 zero?(x) tests if x is equal to 0.
 

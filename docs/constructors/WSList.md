@@ -1,6 +1,6 @@
 # WSList
 
-> **Kind**: Domain &nbsp;|&nbsp; \[[Source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L207)\] &nbsp;|&nbsp; **Group**: WS — MathLink
+> **Kind**: Domain &nbsp;|&nbsp; \[[Source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L202)\] &nbsp;|&nbsp; **Group**: WS — MathLink
 
 ## Description
 
@@ -31,28 +31,29 @@ Julia WS lists using the MathLink Julia package.
  jlEval : % -> %    jlFieldNames : % -> JLObject
  jlGetField : (%, JLSymbol) -> JLObject    jlGetJuliaIndex : % -> String
  jlGetProperty : (%, JLSymbol) -> JLObject    jlHead : % -> WSSymbol
- jlId : % -> Integer    jlObject : () -> String
- jlPropertyNames : % -> JLObject    jlRef : % -> SExpression
- jlSymbolic : % -> String    jlText : (%, String) -> List(String)
- jlType : % -> Symbol    jlimref : String -> %
- jlref : String -> %    join : (%, %) -> %
- last : % -> E    latex : % -> String
- length : % -> WSInteger    missing? : % -> Boolean
- mutable? : % -> Boolean    nothing? : % -> Boolean
- numeric : (%, PositiveInteger) -> WSExpression    numeric : % -> WSExpression
- numeric? : % -> Boolean    part : (%, WSInteger) -> E
- prepend : (%, E) -> %    qelt : (%, Integer) -> E
- qsetelt : (%, Integer, E) -> %    qsetelt! : (%, Integer, E) -> %
- removeDuplicates : % -> %    replacePart : (%, %) -> %
- rest : % -> %    reverse : (%, WSList(WSInteger)) -> %
- reverse : (%, WSInteger) -> %    reverse : % -> %
- riffle : (%, %, %) -> %    riffle : (%, %) -> %
- setIntersection : (%, %) -> %    setelt : (%, Integer, E) -> %
- setelt! : (%, Integer, E) -> %    sort : % -> %
- sorted? : % -> Boolean    string : % -> String
- take : (%, WSList(WSInteger)) -> %    take : (%, Integer) -> %
- toString : % -> String    total : % -> E if E has WSNUM
- union : (%, %) -> %    ?~=? : (%, %) -> Boolean
+ jlId : % -> Integer    jlNames : % -> JLObject
+ jlObject : () -> String    jlPropertyNames : % -> JLObject
+ jlRef : % -> SExpression    jlSymbolic : % -> String
+ jlText : (%, String) -> List(String)    jlType : % -> Symbol
+ jlimref : String -> %    jlref : String -> %
+ join : (%, %) -> %    last : % -> E
+ latex : % -> String    length : % -> WSInteger
+ missing? : % -> Boolean    mutable? : % -> Boolean
+ nothing? : % -> Boolean    numeric : (%, PositiveInteger) -> WSExpression
+ numeric : % -> WSExpression    numeric? : % -> Boolean
+ part : (%, WSInteger) -> E    prepend : (%, E) -> %
+ qelt : (%, Integer) -> E    qsetelt : (%, Integer, E) -> %
+ qsetelt! : (%, Integer, E) -> %    removeDuplicates : % -> %
+ replacePart : (%, %) -> %    rest : % -> %
+ reverse : (%, WSList(WSInteger)) -> %    reverse : (%, WSInteger) -> %
+ reverse : % -> %    riffle : (%, %, %) -> %
+ riffle : (%, %) -> %    setIntersection : (%, %) -> %
+ setelt : (%, Integer, E) -> %    setelt! : (%, Integer, E) -> %
+ sort : % -> %    sorted? : % -> Boolean
+ string : % -> String    take : (%, WSList(WSInteger)) -> %
+ take : (%, Integer) -> %    toString : % -> String
+ total : % -> E if E has WSNUM    union : (%, %) -> %
+ ?~=? : (%, %) -> Boolean
 ```
 
 ## Operations
@@ -88,6 +89,7 @@ Julia WS lists using the MathLink Julia package.
 | [`jlGetProperty`](#jlgetproperty) | jlGetProperty(obj, sym) returns the property/element sym of obj. |
 | [`jlHead`](#jlhead) | jlHead(expr) returns the Head type of expr. |
 | [`jlId`](#jlid) | jlId(obj) returns the Julia indexed dictionary index referencing the object obj. |
+| [`jlNames`](#jlnames) | jlNames(obj) returns the names of obj depending of the type of obj. |
 | [`jlObject`](#jlobject) | jlObject() returns the internal Julia name of the Julia module used. For example:... |
 | [`jlPropertyNames`](#jlpropertynames) | jlPropertyNames(obj) returns the property/element names of obj. |
 | [`jlRef`](#jlref) | jlRef(obj) returns the internal Lisp representation of the Julia object obj. |
@@ -150,7 +152,7 @@ append(l, elt) appends elt to the list l.
 - **Signature**: `(%, E) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `coerce` <a id="coerce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L217)\]
+#### `coerce` <a id="coerce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L211)\]
 
 ##### `coerce` : `% -> List(E)`
 
@@ -201,14 +203,14 @@ differences(agg) returns the differences between adjacent elements in agg.
 - **Signature**: `% -> % if E has WSNUM`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `dimensions` <a id="dimensions"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L551)\]
+#### `dimensions` <a id="dimensions"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L531)\]
 
 dimensions(agg) returns dimensions of agg.
 
 - **Signature**: `% -> WSList(WSInteger)`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `elt` <a id="elt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L399)\]
+#### `elt` <a id="elt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L394)\]
 
 ##### `elt` : `(%, List(%)) -> %`
 
@@ -285,7 +287,7 @@ jWSInterpret(form1,form2,form3) interprets forms.
 
 - **From**: [`WSObject`](WSObject.md)
 
-#### `jWSList` <a id="jwslist"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L219)\]
+#### `jWSList` <a id="jwslist"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L213)\]
 
 ##### `jWSList` : `List(E) -> %`
 
@@ -410,6 +412,13 @@ jlId(obj) returns the Julia indexed dictionary index referencing the object obj.
 - **Signature**: `% -> Integer`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
+#### `jlNames` <a id="jlnames"></a>
+
+jlNames(obj) returns the names of obj depending of the type of obj.
+
+- **Signature**: `% -> JLObject`
+- **From**: [`JLObjectType`](JLObjectType.md)
+
 #### `jlObject` <a id="jlobject"></a>
 
 jlObject() returns the internal Julia name of the Julia module used. For example:
@@ -479,7 +488,7 @@ jlimref(str) evaluates the Julia command str and returns the corresponding FriCA
 - **Signature**: `String -> %`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
-#### `jlref` <a id="jlref"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L296)\]
+#### `jlref` <a id="jlref"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L247)\]
 
 ##### `jlref` : `% -> SExpression`
 
@@ -500,14 +509,14 @@ join(agg1, agg2) joins the two aggregates agg1 and agg2.
 - **Signature**: `(%, %) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `last` <a id="last"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L560)\]
+#### `last` <a id="last"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L540)\]
 
 last(agg) returns the last element of agg.
 
 - **Signature**: `% -> E`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `latex` <a id="latex"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L539)\]
+#### `latex` <a id="latex"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L519)\]
 
 latex(s) returns a LaTeX-printable output representation of s.
 
@@ -577,21 +586,21 @@ prepend(l, elt) prepends elt to the list l.
 - **Signature**: `(%, E) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `qelt` <a id="qelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L401)\]
+#### `qelt` <a id="qelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L396)\]
 
 qelt(agg,i) returns the i-th element. No checks are done at the FriCAS level.
 
 - **Signature**: `(%, Integer) -> E`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `qsetelt` <a id="qsetelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L407)\]
+#### `qsetelt` <a id="qsetelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L402)\]
 
 qsetelt(l,i,elem) returns a copy of l with i-th element replaced by the element elem. No checks are done at the FriCAS l evel.
 
 - **Signature**: `(%, Integer, E) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `qsetelt!` <a id="qsetelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L410)\]
+#### `qsetelt!` <a id="qsetelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L405)\]
 
 qsetelt!(l,i,elem) returns l with i-th element replaced by elem. No checks are done at the FriCAS level.
 
@@ -660,14 +669,14 @@ setIntersection(agg1, agg2) is the intersection set operator.
 - **Signature**: `(%, %) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `setelt` <a id="setelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L404)\]
+#### `setelt` <a id="setelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L399)\]
 
 setelt(l,i,elem) returns a copy of l with i-th element replaced by the element elem.
 
 - **Signature**: `(%, Integer, E) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `setelt!` <a id="setelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L599)\]
+#### `setelt!` <a id="setelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L579)\]
 
 setelt!(l,i,elem) returns l with i-th element replaced by elem.
 
@@ -702,7 +711,7 @@ take(l,i) returns the first i elements.
 - **Signature**: `(%, Integer) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `toString` <a id="tostring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L505)\]
+#### `toString` <a id="tostring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L500)\]
 
 toString(obj) returns the string representation of obj.
 

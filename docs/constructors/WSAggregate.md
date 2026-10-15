@@ -30,28 +30,28 @@ Julia WS aggregate (WS list) using the MathLink Julia package.
  jlFieldNames : % -> JLObject    jlGetField : (%, JLSymbol) -> JLObject
  jlGetJuliaIndex : % -> String    jlGetProperty : (%, JLSymbol) -> JLObject
  jlHead : % -> WSSymbol    jlId : % -> Integer
- jlObject : () -> String    jlPropertyNames : % -> JLObject
- jlRef : % -> SExpression    jlSymbolic : % -> String
- jlText : (%, String) -> List(String)    jlType : % -> Symbol
- jlimref : String -> %    jlref : String -> %
- join : (%, %) -> %    last : % -> E
- latex : % -> String    length : % -> WSInteger
- missing? : % -> Boolean    mutable? : % -> Boolean
- nothing? : % -> Boolean    numeric : (%, PositiveInteger) -> WSExpression
- numeric : % -> WSExpression    numeric? : % -> Boolean
- part : (%, WSInteger) -> E    prepend : (%, E) -> %
- qelt : (%, Integer) -> E    qsetelt : (%, Integer, E) -> %
- qsetelt! : (%, Integer, E) -> %    removeDuplicates : % -> %
- replacePart : (%, %) -> %    rest : % -> %
- reverse : (%, WSList(WSInteger)) -> %    reverse : (%, WSInteger) -> %
- reverse : % -> %    riffle : (%, %, %) -> %
- riffle : (%, %) -> %    setIntersection : (%, %) -> %
- setelt : (%, Integer, E) -> %    setelt! : (%, Integer, E) -> %
- sort : % -> %    sorted? : % -> Boolean
- string : % -> String    take : (%, WSList(WSInteger)) -> %
- take : (%, Integer) -> %    toString : % -> String
- total : % -> E if E has WSNUM    union : (%, %) -> %
- ?~=? : (%, %) -> Boolean
+ jlNames : % -> JLObject    jlObject : () -> String
+ jlPropertyNames : % -> JLObject    jlRef : % -> SExpression
+ jlSymbolic : % -> String    jlText : (%, String) -> List(String)
+ jlType : % -> Symbol    jlimref : String -> %
+ jlref : String -> %    join : (%, %) -> %
+ last : % -> E    latex : % -> String
+ length : % -> WSInteger    missing? : % -> Boolean
+ mutable? : % -> Boolean    nothing? : % -> Boolean
+ numeric : (%, PositiveInteger) -> WSExpression    numeric : % -> WSExpression
+ numeric? : % -> Boolean    part : (%, WSInteger) -> E
+ prepend : (%, E) -> %    qelt : (%, Integer) -> E
+ qsetelt : (%, Integer, E) -> %    qsetelt! : (%, Integer, E) -> %
+ removeDuplicates : % -> %    replacePart : (%, %) -> %
+ rest : % -> %    reverse : (%, WSList(WSInteger)) -> %
+ reverse : (%, WSInteger) -> %    reverse : % -> %
+ riffle : (%, %, %) -> %    riffle : (%, %) -> %
+ setIntersection : (%, %) -> %    setelt : (%, Integer, E) -> %
+ setelt! : (%, Integer, E) -> %    sort : % -> %
+ sorted? : % -> Boolean    string : % -> String
+ take : (%, WSList(WSInteger)) -> %    take : (%, Integer) -> %
+ toString : % -> String    total : % -> E if E has WSNUM
+ union : (%, %) -> %    ?~=? : (%, %) -> Boolean
 ```
 
 ## Operations
@@ -86,6 +86,7 @@ Julia WS aggregate (WS list) using the MathLink Julia package.
 | [`jlGetProperty`](#jlgetproperty) | jlGetProperty(obj, sym) returns the property/element sym of obj. |
 | [`jlHead`](#jlhead) | jlHead(expr) returns the Head type of expr. |
 | [`jlId`](#jlid) | jlId(obj) returns the Julia indexed dictionary index referencing the object obj. |
+| [`jlNames`](#jlnames) | jlNames(obj) returns the names of obj depending of the type of obj. |
 | [`jlObject`](#jlobject) | jlObject() returns the internal Julia name of the Julia module used. For example:... |
 | [`jlPropertyNames`](#jlpropertynames) | jlPropertyNames(obj) returns the property/element names of obj. |
 | [`jlRef`](#jlref) | jlRef(obj) returns the internal Lisp representation of the Julia object obj. |
@@ -127,7 +128,7 @@ Julia WS aggregate (WS list) using the MathLink Julia package.
 
 ### Detailed Documentation
 
-#### `#` <a id="op-hash"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L140)\]
+#### `#` <a id="op-hash"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L135)\]
 
 #(agg) returns the length of agg. 0 if it is a scalar, an index for example.
 
@@ -169,7 +170,7 @@ coerce(expr) returns the WSExpression representation of expr.
 
 - **From**: [`WSObject`](WSObject.md)
 
-#### `convert` <a id="convert"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L198)\]
+#### `convert` <a id="convert"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L193)\]
 
 convert(a) transforms a into an element of S.
 
@@ -379,6 +380,13 @@ jlId(obj) returns the Julia indexed dictionary index referencing the object obj.
 - **Signature**: `% -> Integer`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
+#### `jlNames` <a id="jlnames"></a>
+
+jlNames(obj) returns the names of obj depending of the type of obj.
+
+- **Signature**: `% -> JLObject`
+- **From**: [`JLObjectType`](JLObjectType.md)
+
 #### `jlObject` <a id="jlobject"></a>
 
 jlObject() returns the internal Julia name of the Julia module used. For example:
@@ -474,7 +482,7 @@ last(agg) returns the last element of agg.
 
 - **Signature**: `% -> E`
 
-#### `latex` <a id="latex"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L539)\]
+#### `latex` <a id="latex"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L519)\]
 
 latex(s) returns a LaTeX-printable output representation of s.
 
@@ -631,7 +639,7 @@ sorted?(agg) checks whether agg is sorted or not.
 
 - **Signature**: `% -> Boolean`
 
-#### `string` <a id="string"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L197)\]
+#### `string` <a id="string"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L192)\]
 
 string(jt) returns the string representation of jt.
 
@@ -648,7 +656,7 @@ take(l,i) returns the first i elements.
 
 take(l,i) returns the first i elements.
 
-#### `toString` <a id="tostring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L505)\]
+#### `toString` <a id="tostring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L500)\]
 
 toString(obj) returns the string representation of obj.
 

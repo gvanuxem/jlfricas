@@ -27,7 +27,7 @@ jobs:
           sudo apt-get install sbcl libgmp-dev libxpm-dev cl-yason cl-hunchentoot
       - name: install Julia libraries
         run: |
-          julia -e "import Pkg;Pkg.add([\"Nemo\", \"Suppressor\", \"SpecialFunctions\", \"DataFrames\", \"Latexify\", \"LaTeXStrings\", \"Statistics\"])"
+          julia -e "import Pkg;Pkg.add([\"Nemo\", \"Suppressor\", \"SpecialFunctions\", \"DataFrames\", \"RCall\", \"PythonCall\", \"Statistics\"])"
 
       - name: configure
         run: ./configure --with-lisp=sbcl --with-gmp --enable-julia --enable-mcp --enable-mathlink  || cat config.log

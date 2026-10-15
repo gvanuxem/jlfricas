@@ -64,13 +64,13 @@ Julia WS utility functions using the MathLink Julia package.
 
 ### Detailed Documentation
 
-#### `fourierMatrix` <a id="fouriermatrix"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L36)\]
+#### `fourierMatrix` <a id="fouriermatrix"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L42)\]
 
 fourierMatrix(n) returns the n x n Fourier matrix.
 
 - **Signature**: `PositiveInteger -> WSMatrix(WSExpression)`
 
-#### `gaussianMatrix` <a id="gaussianmatrix"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L38)\]
+#### `gaussianMatrix` <a id="gaussianmatrix"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L44)\]
 
 gaussianMatrix(r) returns the Gaussian matrix with radius r. For example:
 
@@ -80,25 +80,25 @@ gaussianMatrix "2.2"
 
 - **Signature**: `WSReal -> WSMatrix(WSReal)`
 
-#### `hankelMatrix` <a id="hankelmatrix"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L31)\]
+#### `hankelMatrix` <a id="hankelmatrix"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L37)\]
 
 hankelMatrix(n) returns the square Hankel matrix with integer coefficients.
 
 - **Signature**: `PositiveInteger -> WSMatrix(WSInteger)`
 
-#### `hilbertMatrix` <a id="hilbertmatrix"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L34)\]
+#### `hilbertMatrix` <a id="hilbertmatrix"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L40)\]
 
 hilbertMatrix(n) returns the square Hilbert matrix.
 
 - **Signature**: `PositiveInteger -> WSMatrix(WSRational)`
 
-#### `identityMatrix` <a id="identitymatrix"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L49)\]
+#### `identityMatrix` <a id="identitymatrix"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L55)\]
 
 identityMatrix(n) returns the identity matrix of size n.
 
 - **Signature**: `PositiveInteger -> WSMatrix(WSInteger)`
 
-#### `jWSDateObject` <a id="jwsdateobject"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L63)\]
+#### `jWSDateObject` <a id="jwsdateobject"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L69)\]
 
 ##### `jWSDateObject` : `() -> WSExpression`
 
@@ -112,7 +112,7 @@ jWSDateObject(expr) returns the WSExpression object of the date from expr.
 
 jWSDateObject(date,type) returns the WSExpression object of the date and type, for example "Month".
 
-#### `jWSRange` <a id="jwsrange"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L54)\]
+#### `jWSRange` <a id="jwsrange"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L60)\]
 
 ##### `jWSRange` : `WSInteger -> WSList(WSInteger)`
 
@@ -134,7 +134,7 @@ jWSRange(n,m) returns a WSList that ranges from n to m.
 
 jWSRange(n,m,d) returns a WSList that ranges from n to m with step d.
 
-#### `jlWSDateString` <a id="jlwsdatestring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L72)\]
+#### `jlWSDateString` <a id="jlwsdatestring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L78)\]
 
 ##### `jlWSDateString` : `() -> WSExpression`
 
@@ -160,7 +160,7 @@ jlWSDateString(expr, form) returns WSExpression string of the date from a WS dat
 jlWSDateString(jWSExpr("Now"), jWSExpr("Entity[_"Language_", _"French::367gk_"]"))
 ```
 
-#### `jlWSDocumentation` <a id="jlwsdocumentation"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L86)\]
+#### `jlWSDocumentation` <a id="jlwsdocumentation"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L92)\]
 
 jlWSDocumentation(sym) prints WS information about the symbol sym. Note that the WS language is preferable. Trivial implementation. For example:
 
@@ -171,7 +171,7 @@ jlWSDocumentation ArcSin
 
 - **Signature**: `Symbol -> WSExpression`
 
-#### `jlWSExport` <a id="jlwsexport"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L115)\]
+#### `jlWSExport` <a id="jlwsexport"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L121)\]
 
 jlWSExport(file.ext, obj) exports the object obj to the file file.ext. The extension ext will determine the saved format. A WS expression for example can be exported in an image file, it will be saved in the WS 'StandardForm' whereas in FriCAS it is displayed in WS 'OutputForm':
 
@@ -181,7 +181,7 @@ x:=jWSExpr(x);jlWSExport("legendreP.png", legendreP(7, x))
 
 - **Signature**: `(String, WSExpression) -> WSExpression`
 
-#### `jlWSExportString` <a id="jlwsexportstring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L125)\]
+#### `jlWSExportString` <a id="jlwsexportstring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L131)\]
 
 jlWSExportString(expr, form) returns the string representation of expr in the specified format. Use toString or string to obtain the FriCAS String. For example:
 
@@ -193,7 +193,7 @@ string jlWSExportString(%,jWSString "TeX")
 
 - **Signature**: `(WSExpression, WSString) -> WSExpression`
 
-#### `jlWSFileFormat` <a id="jlwsfileformat"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L101)\]
+#### `jlWSFileFormat` <a id="jlwsfileformat"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L107)\]
 
 ##### `jlWSFileFormat` : `WSString -> WSExpression`
 
@@ -207,7 +207,7 @@ jlWSFileFormat("examples/customers-100.csv")
 
 jlWSFileFormat(src, list(form)) tries to determine the format of the source src from its content using the list of formats form. Returns WS None if no format is found. Can be used with jWSImport. For example: jlWSFileFormat("examples/customers-100.csv",jWSExpr "_"CSV_",_"TSV_"")
 
-#### `jlWSImport` <a id="jlwsimport"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L92)\]
+#### `jlWSImport` <a id="jlwsimport"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L98)\]
 
 ##### `jlWSImport` : `WSString -> WSExpression`
 
@@ -226,7 +226,7 @@ jlWSImport(myfile, form) imports the file myfile with format form. For example:
 file:=jlWSImport(jWSString("examples/customers-100.csv"), jWSString "CSV");
 ```
 
-#### `jlWSPlot` <a id="jlwsplot"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L133)\]
+#### `jlWSPlot` <a id="jlwsplot"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L139)\]
 
 jlWSPlot(expr, options) is the WS plot function. Since it should be run in a Wolfram notebook or any other supported graphical interfaces, the Wolfram Jupyter "plugin" for example, it is left to the user for testing purposes. The following uses the jlWSExport function:
 
@@ -237,13 +237,13 @@ jlWSExport("sin.png", jlWSPlot(sin(x),opt))
 
 - **Signature**: `(WSExpression, WSExpression) -> WSExpression`
 
-#### `jlWSSeedRandom!` <a id="jlwsseedrandom"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L13)\]
+#### `jlWSSeedRandom!` <a id="jlwsseedrandom"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L19)\]
 
 jlWSSeedRandom!(n) reseeds the random number generator with n as seed. Returns the random generator state.
 
 - **Signature**: `WSInteger -> WSExpression`
 
-#### `jlWSSnippet` <a id="jlwssnippet"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L111)\]
+#### `jlWSSnippet` <a id="jlwssnippet"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L117)\]
 
 jlWSSnippet(expr, n) returns the first (or last) n snippets of the WSExpression expr. For example:
 
@@ -253,7 +253,7 @@ jlWSSnippet(jlWSImport jWSString "http://www.fricas.org/",-2)
 
 - **Signature**: `(WSExpression, WSInteger) -> WSExpression`
 
-#### `urand01Complex` <a id="urand01complex"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L22)\]
+#### `urand01Complex` <a id="urand01complex"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L28)\]
 
 ##### `urand01Complex` : `PositiveInteger -> WSVector(WSComplex)`
 
@@ -267,7 +267,7 @@ urand01Complex(n) returns a Julia WS vector with uniformly distributed random co
 
 urand01Complex(rows,cols) returns a Julia WS matrix with uniformly distributed random complex elements in the unit squar e. Convenience function.
 
-#### `urand01Real` <a id="urand01real"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L16)\]
+#### `urand01Real` <a id="urand01real"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L22)\]
 
 ##### `urand01Real` : `PositiveInteger -> WSVector(WSReal)`
 
@@ -277,7 +277,7 @@ urand01Real(n) returns a Julia WS vector with uniformly distributed random eleme
 
 urand01Real(rows,cols) returns a Julia WS matrix with uniformly distributed random elements in the range 0..1. Convenience function.
 
-#### `vandermondeMatrix` <a id="vandermondematrix"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L42)\]
+#### `vandermondeMatrix` <a id="vandermondematrix"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L48)\]
 
 ##### `vandermondeMatrix` : `WSList(WSExpression) -> WSMatrix(WSExpression)`
 
@@ -291,7 +291,7 @@ vandermondeMatrix(lvars) returns a Vandermonde matrix with nodes from lvars.
 
 vandermondeMatrix(lvars, m) returns a Vandermonde matrix with nodes from lvars and m columns.
 
-#### `zeroMatrix` <a id="zeromatrix"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L51)\]
+#### `zeroMatrix` <a id="zeromatrix"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L57)\]
 
 ##### `zeroMatrix` : `(PositiveInteger, PositiveInteger) ->`
 

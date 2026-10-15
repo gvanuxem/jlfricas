@@ -1,6 +1,6 @@
 # WSNumber
 
-> **Kind**: Category &nbsp;|&nbsp; \[[Source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L105)\] &nbsp;|&nbsp; **Group**: WS — MathLink
+> **Kind**: Category &nbsp;|&nbsp; \[[Source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L104)\] &nbsp;|&nbsp; **Group**: WS — MathLink
 
 ## Description
 
@@ -32,22 +32,22 @@ Julia WS category for numbers using the Wolfram Symbol Transport Protocol.
  jlEval : % -> %    jlFieldNames : % -> JLObject
  jlGetField : (%, JLSymbol) -> JLObject    jlGetJuliaIndex : % -> String
  jlGetProperty : (%, JLSymbol) -> JLObject    jlHead : % -> WSSymbol
- jlId : % -> Integer    jlObject : () -> String
- jlPropertyNames : % -> JLObject    jlRef : % -> SExpression
- jlSymbolic : % -> String    jlText : (%, String) -> List(String)
- jlType : % -> Symbol    jlimref : String -> %
- jlref : String -> %    latex : % -> String
- leftPower : (%, PositiveInteger) -> %    leftPower : (%, NonNegativeInteger) -> %
- leftRecip : % -> Union(%,"failed")    missing? : % -> Boolean
- mutable? : % -> Boolean    nothing? : % -> Boolean
- numeric : (%, PositiveInteger) -> WSExpression    numeric : % -> WSExpression
- numeric? : % -> Boolean    one? : % -> Boolean
- opposite? : (%, %) -> Boolean    recip : % -> Union(%,"failed")
- rightPower : (%, PositiveInteger) -> %    rightPower : (%, NonNegativeInteger) -> %
- rightRecip : % -> Union(%,"failed")    sample : () -> %
- string : % -> String    subtractIfCan : (%, %) -> Union(%,"failed")
- toString : % -> String    zero? : % -> Boolean
- ?~=? : (%, %) -> Boolean
+ jlId : % -> Integer    jlNames : % -> JLObject
+ jlObject : () -> String    jlPropertyNames : % -> JLObject
+ jlRef : % -> SExpression    jlSymbolic : % -> String
+ jlText : (%, String) -> List(String)    jlType : % -> Symbol
+ jlimref : String -> %    jlref : String -> %
+ latex : % -> String    leftPower : (%, PositiveInteger) -> %
+ leftPower : (%, NonNegativeInteger) -> %    leftRecip : % -> Union(%,"failed")
+ missing? : % -> Boolean    mutable? : % -> Boolean
+ nothing? : % -> Boolean    numeric : (%, PositiveInteger) -> WSExpression
+ numeric : % -> WSExpression    numeric? : % -> Boolean
+ one? : % -> Boolean    opposite? : (%, %) -> Boolean
+ recip : % -> Union(%,"failed")    rightPower : (%, PositiveInteger) -> %
+ rightPower : (%, NonNegativeInteger) -> %    rightRecip : % -> Union(%,"failed")
+ sample : () -> %    string : % -> String
+ subtractIfCan : (%, %) -> Union(%,"failed")    toString : % -> String
+ zero? : % -> Boolean    ?~=? : (%, %) -> Boolean
 ```
 
 ## Operations
@@ -80,6 +80,7 @@ Julia WS category for numbers using the Wolfram Symbol Transport Protocol.
 | [`jlGetProperty`](#jlgetproperty) | jlGetProperty(obj, sym) returns the property/element sym of obj. |
 | [`jlHead`](#jlhead) | jlHead(expr) returns the Head type of expr. |
 | [`jlId`](#jlid) | jlId(obj) returns the Julia indexed dictionary index referencing the object obj. |
+| [`jlNames`](#jlnames) | jlNames(obj) returns the names of obj depending of the type of obj. |
 | [`jlObject`](#jlobject) | jlObject() returns the internal Julia name of the Julia module used. For example:... |
 | [`jlPropertyNames`](#jlpropertynames) | jlPropertyNames(obj) returns the property/element names of obj. |
 | [`jlRef`](#jlref) | jlRef(obj) returns the internal Lisp representation of the Julia object obj. |
@@ -138,14 +139,14 @@ Operation defined in WSNumber.
 
 - **Signature**: `(%, %) -> %`
 
-#### `0` <a id="0"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L322)\]
+#### `0` <a id="0"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L302)\]
 
 0 is a distinguished element, in AbelianMonoid it is the additive identity element, in MagmaWithZero it is multiplicativ e zero.
 
 - **Signature**: `() -> %`
 - **From**: `SetWithZero`
 
-#### `1` <a id="1"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L323)\]
+#### `1` <a id="1"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L303)\]
 
 1 returns the unit element, denoted by 1.
 
@@ -223,7 +224,7 @@ commutator(a, b) returns a*b-b*a.
 - **Signature**: `(%, %) -> %`
 - **From**: `NonAssociativeRng`
 
-#### `convert` <a id="convert"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L377)\]
+#### `convert` <a id="convert"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L357)\]
 
 convert(a) transforms a into an element of S.
 
@@ -373,6 +374,13 @@ jlId(obj) returns the Julia indexed dictionary index referencing the object obj.
 - **Signature**: `% -> Integer`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
+#### `jlNames` <a id="jlnames"></a>
+
+jlNames(obj) returns the names of obj depending of the type of obj.
+
+- **Signature**: `% -> JLObject`
+- **From**: [`JLObjectType`](JLObjectType.md)
+
 #### `jlObject` <a id="jlobject"></a>
 
 jlObject() returns the internal Julia name of the Julia module used. For example:
@@ -442,7 +450,7 @@ jlimref(str) evaluates the Julia command str and returns the corresponding FriCA
 - **Signature**: `String -> %`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
-#### `jlref` <a id="jlref"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L307)\]
+#### `jlref` <a id="jlref"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L262)\]
 
 ##### `jlref` : `% -> SExpression`
 
@@ -505,7 +513,7 @@ nothing?(obj) checks whether or not obj is nothing.
 - **Signature**: `% -> Boolean`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
-#### `numeric` <a id="numeric"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L482)\]
+#### `numeric` <a id="numeric"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L459)\]
 
 ##### `numeric` : `% -> WSExpression`
 
@@ -575,7 +583,7 @@ sample yields a value of type %
 - **Signature**: `() -> %`
 - **From**: `MagmaWithUnit`
 
-#### `string` <a id="string"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L465)\]
+#### `string` <a id="string"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L442)\]
 
 string(jt) returns the string representation of jt.
 
@@ -589,14 +597,14 @@ subtractIfCan(x, y) returns an element z such that z+y=x or "failed" if no such 
 - **Signature**: `(%, %) -> Union(%,"failed")`
 - **From**: `CancellationAbelianMonoid`
 
-#### `toString` <a id="tostring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L751)\]
+#### `toString` <a id="tostring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L719)\]
 
 toString(obj) returns the string representation of obj.
 
 - **Signature**: `% -> String`
 - **From**: [`WSObject`](WSObject.md)
 
-#### `zero?` <a id="zero"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L350)\]
+#### `zero?` <a id="zero"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L330)\]
 
 zero?(x) tests if x is equal to 0.
 

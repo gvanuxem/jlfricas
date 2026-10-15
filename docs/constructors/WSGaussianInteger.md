@@ -1,6 +1,6 @@
 # WSGaussianInteger
 
-> **Kind**: Domain &nbsp;|&nbsp; \[[Source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1098)\] &nbsp;|&nbsp; **Group**: WS — MathLink
+> **Kind**: Domain &nbsp;|&nbsp; \[[Source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1055)\] &nbsp;|&nbsp; **Group**: WS — MathLink
 
 ## Description
 
@@ -8,7 +8,7 @@ Julia WS gaussian integers using the MathLink Julia package.
 
 **WSGaussianInteger is a domain constructor.**  
 **Abbreviation for WSGaussianInteger is WSGINT**  
-**108 names for 158 operations in this domain.**
+**109 names for 159 operations in this domain.**
 
 ## Signatures
 
@@ -52,38 +52,39 @@ Julia WS gaussian integers using the MathLink Julia package.
  jlEval : % -> %    jlFieldNames : % -> JLObject
  jlGetField : (%, JLSymbol) -> JLObject    jlGetJuliaIndex : % -> String
  jlGetProperty : (%, JLSymbol) -> JLObject    jlHead : % -> WSSymbol
- jlId : % -> Integer    jlObject : () -> String
- jlPropertyNames : % -> JLObject    jlRef : % -> SExpression
- jlSymbolic : % -> String    jlText : (%, String) -> List(String)
- jlType : % -> Symbol    jlimref : String -> %
- jlref : String -> %    latex : % -> String
- lcm : (%, %) -> %    lcm : List(%) -> %
- leftPower : (%, NonNegativeInteger) -> %    leftPower : (%, PositiveInteger) -> %
- leftRecip : % -> Union(%,"failed")    lift : % -> SparseUnivariatePolynomial(WSInteger)
- map : ((WSInteger -> WSInteger), %) -> %    missing? : % -> Boolean
- mutable? : % -> Boolean    norm : % -> WSInteger
- nothing? : % -> Boolean    numeric : % -> WSExpression
- numeric : (%, PositiveInteger) -> WSExpression    numeric? : % -> Boolean
- one? : % -> Boolean    opposite? : (%, %) -> Boolean
- plenaryPower : (%, PositiveInteger) -> %    prime? : % -> Boolean
- ?quo? : (%, %) -> %    random : WSInteger -> %
- rank : () -> PositiveInteger    rational : % -> Fraction(Integer)
- rational? : % -> Boolean    rationalIfCan : % -> Union(Fraction(Integer),"failed")
- real : % -> WSInteger    recip : % -> Union(%,"failed")
- reduce : SparseUnivariatePolynomial(WSInteger) -> %    reducedSystem : Matrix(%) -> Matrix(WSInteger)
- regularRepresentation : % -> Matrix(WSInteger)    ?rem? : (%, %) -> %
- represents : Vector(WSInteger) -> %    represents : (Vector(WSInteger), Vector(%)) -> %
- retract : % -> Integer    retract : % -> WSInteger
- retractIfCan : % -> Union(Integer,"failed")    retractIfCan : % -> Union(WSInteger,"failed")
- rightPower : (%, NonNegativeInteger) -> %    rightPower : (%, PositiveInteger) -> %
- rightRecip : % -> Union(%,"failed")    sample : () -> %
- sizeLess? : (%, %) -> Boolean    smaller? : (%, %) -> Boolean
- squareFree : % -> Factored(%)    squareFreePart : % -> %
- string : % -> String    subtractIfCan : (%, %) -> Union(%,"failed")
- toString : % -> String    trace : % -> WSInteger
- traceMatrix : () -> Matrix(WSInteger)    traceMatrix : Vector(%) -> Matrix(WSInteger)
- unit? : % -> Boolean    unitCanonical : % -> %
- zero? : % -> Boolean    ?~=? : (%, %) -> Boolean
+ jlId : % -> Integer    jlNames : % -> JLObject
+ jlObject : () -> String    jlPropertyNames : % -> JLObject
+ jlRef : % -> SExpression    jlSymbolic : % -> String
+ jlText : (%, String) -> List(String)    jlType : % -> Symbol
+ jlimref : String -> %    jlref : String -> %
+ latex : % -> String    lcm : (%, %) -> %
+ lcm : List(%) -> %    leftPower : (%, NonNegativeInteger) -> %
+ leftPower : (%, PositiveInteger) -> %    leftRecip : % -> Union(%,"failed")
+ lift : % -> SparseUnivariatePolynomial(WSInteger)    map : ((WSInteger -> WSInteger), %) -> %
+ missing? : % -> Boolean    mutable? : % -> Boolean
+ norm : % -> WSInteger    nothing? : % -> Boolean
+ numeric : % -> WSExpression    numeric : (%, PositiveInteger) -> WSExpression
+ numeric? : % -> Boolean    one? : % -> Boolean
+ opposite? : (%, %) -> Boolean    plenaryPower : (%, PositiveInteger) -> %
+ prime? : % -> Boolean    ?quo? : (%, %) -> %
+ random : WSInteger -> %    rank : () -> PositiveInteger
+ rational : % -> Fraction(Integer)    rational? : % -> Boolean
+ rationalIfCan : % -> Union(Fraction(Integer),"failed")    real : % -> WSInteger
+ recip : % -> Union(%,"failed")    reduce : SparseUnivariatePolynomial(WSInteger) -> %
+ reducedSystem : Matrix(%) -> Matrix(WSInteger)    regularRepresentation : % -> Matrix(WSInteger)
+ ?rem? : (%, %) -> %    represents : Vector(WSInteger) -> %
+ represents : (Vector(WSInteger), Vector(%)) -> %    retract : % -> Integer
+ retract : % -> WSInteger    retractIfCan : % -> Union(Integer,"failed")
+ retractIfCan : % -> Union(WSInteger,"failed")    rightPower : (%, NonNegativeInteger) -> %
+ rightPower : (%, PositiveInteger) -> %    rightRecip : % -> Union(%,"failed")
+ sample : () -> %    sizeLess? : (%, %) -> Boolean
+ smaller? : (%, %) -> Boolean    squareFree : % -> Factored(%)
+ squareFreePart : % -> %    string : % -> String
+ subtractIfCan : (%, %) -> Union(%,"failed")    toString : % -> String
+ trace : % -> WSInteger    traceMatrix : () -> Matrix(WSInteger)
+ traceMatrix : Vector(%) -> Matrix(WSInteger)    unit? : % -> Boolean
+ unitCanonical : % -> %    zero? : % -> Boolean
+ ?~=? : (%, %) -> Boolean
  D : (%, (WSInteger -> WSInteger), NonNegativeInteger) -> %
  characteristicPolynomial : % -> SparseUnivariatePolynomial(WSInteger)
  coordinates : (Vector(%), Vector(%)) -> Matrix(WSInteger)
@@ -154,6 +155,7 @@ Julia WS gaussian integers using the MathLink Julia package.
 | [`jlGetProperty`](#jlgetproperty) | jlGetProperty(obj, sym) returns the property/element sym of obj. |
 | [`jlHead`](#jlhead) | jlHead(expr) returns the Head type of expr. |
 | [`jlId`](#jlid) | jlId(obj) returns the Julia indexed dictionary index referencing the object obj. |
+| [`jlNames`](#jlnames) | jlNames(obj) returns the names of obj depending of the type of obj. |
 | [`jlObject`](#jlobject) | jlObject() returns the internal Julia name of the Julia module used. For example:... |
 | [`jlPropertyNames`](#jlpropertynames) | jlPropertyNames(obj) returns the property/element names of obj. |
 | [`jlRef`](#jlref) | jlRef(obj) returns the internal Lisp representation of the Julia object obj. |
@@ -253,14 +255,14 @@ Operation defined in WSGaussianInteger.
 
 - **Signature**: `(%, %) -> %`
 
-#### `0` <a id="0"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1134)\]
+#### `0` <a id="0"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1089)\]
 
 0 returns the input form corresponding to 0.
 
 - **Signature**: `() -> %`
 - **From**: `InputForm`
 
-#### `1` <a id="1"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1135)\]
+#### `1` <a id="1"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1090)\]
 
 1 returns the input form corresponding to 1.
 
@@ -352,7 +354,7 @@ characteristicPolynomial(a) returns the characteristic polynomial of the regular
 - **Signature**: `% -> SparseUnivariatePolynomial(WSInteger)`
 - **From**: `FiniteRankAlgebra(R,UP)`
 
-#### `coerce` <a id="coerce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1113)\]
+#### `coerce` <a id="coerce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1075)\]
 
 ##### `coerce` : `Integer  -> %`
 
@@ -407,21 +409,21 @@ commutator(a, b) returns a*b-b*a.
 - **Signature**: `(%, %) -> %`
 - **From**: `NonAssociativeRng`
 
-#### `complex` <a id="complex"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1183)\]
+#### `complex` <a id="complex"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1138)\]
 
 complex(x, y) constructs x + %i*y.
 
 - **Signature**: `(WSInteger, WSInteger) -> %`
 - **From**: `ComplexCategory(R)`
 
-#### `conjugate` <a id="conjugate"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1144)\]
+#### `conjugate` <a id="conjugate"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1099)\]
 
 conjugate(x + %i y) returns x - %i y.
 
 - **Signature**: `% -> %`
 - **From**: `ComplexCategory(R)`
 
-#### `convert` <a id="convert"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1177)\]
+#### `convert` <a id="convert"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1132)\]
 
 ##### `convert` : `UP -> %`
 
@@ -635,21 +637,21 @@ generator() returns the generator for this domain.
 - **Signature**: `() -> %`
 - **From**: `MonogenicAlgebra(R,UP)`
 
-#### `imag` <a id="imag"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1142)\]
+#### `imag` <a id="imag"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1097)\]
 
 imag(x) returns imaginary part of x.
 
 - **Signature**: `% -> WSInteger`
 - **From**: `ComplexCategory(R)`
 
-#### `imaginary` <a id="imaginary"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1136)\]
+#### `imaginary` <a id="imaginary"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1091)\]
 
 imaginary() = sqrt(-1) = %i.
 
 - **Signature**: `() -> %`
 - **From**: `ComplexCategory(R)`
 
-#### `jWSGI` <a id="jwsgi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1115)\]
+#### `jWSGI` <a id="jwsgi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1077)\]
 
 jWSGI(re, im) constructs a WSGaussianInteger from real part re and imaginary part im.
 
@@ -798,6 +800,13 @@ jlId(obj) returns the Julia indexed dictionary index referencing the object obj.
 - **Signature**: `% -> Integer`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
+#### `jlNames` <a id="jlnames"></a>
+
+jlNames(obj) returns the names of obj depending of the type of obj.
+
+- **Signature**: `% -> JLObject`
+- **From**: [`JLObjectType`](JLObjectType.md)
+
 #### `jlObject` <a id="jlobject"></a>
 
 jlObject() returns the internal Julia name of the Julia module used. For example:
@@ -867,7 +876,7 @@ jlimref(str) evaluates the Julia command str and returns the corresponding FriCA
 - **Signature**: `String -> %`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
-#### `jlref` <a id="jlref"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1124)\]
+#### `jlref` <a id="jlref"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1068)\]
 
 ##### `jlref` : `% -> SExpression`
 
@@ -1049,7 +1058,7 @@ x quo y is the same as divide(x, y).quotient. See divide from EuclideanDomain.
 - **Signature**: `(%, %) -> %`
 - **From**: `EuclideanDomain`
 
-#### `random` <a id="random"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1110)\]
+#### `random` <a id="random"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1072)\]
 
 ##### `random` : `WSInteger -> %`
 
@@ -1089,7 +1098,7 @@ rationalIfCan(x) returns x as a rational number, or "failed" if x is not a ratio
 - **Signature**: `% -> Union(Fraction(Integer),"failed")`
 - **From**: `ComplexCategory(R)`
 
-#### `real` <a id="real"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1141)\]
+#### `real` <a id="real"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1096)\]
 
 real(x) returns real part of x.
 
@@ -1236,7 +1245,7 @@ squareFreePart(x) returns a product of prime factors of x each taken with multip
 - **Signature**: `% -> %`
 - **From**: `UniqueFactorizationDomain`
 
-#### `string` <a id="string"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1176)\]
+#### `string` <a id="string"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1131)\]
 
 string(jt) returns the string representation of jt.
 
@@ -1250,7 +1259,7 @@ subtractIfCan(x, y) returns an element z such that z+y=x or "failed" if no such 
 - **Signature**: `(%, %) -> Union(%,"failed")`
 - **From**: `CancellationAbelianMonoid`
 
-#### `toString` <a id="tostring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1233)\]
+#### `toString` <a id="tostring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1192)\]
 
 toString(obj) returns the string representation of obj.
 
@@ -1299,7 +1308,7 @@ unitNormal(x) tries to choose a canonical element from the associate class of x.
 - **Signature**: `% -> Record(unit: %,canonical: %,associate: %)`
 - **From**: `EntireRing`
 
-#### `zero?` <a id="zero"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1349)\]
+#### `zero?` <a id="zero"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1297)\]
 
 zero?(x) tests if x is equal to 0.
 
