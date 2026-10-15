@@ -24,7 +24,7 @@ jobs:
       - name: install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install sbcl libgmp-dev libxpm-dev cl-yason cl-hunchentoot
+          sudo apt-get install sbcl libgmp-dev libxpm-dev cl-hunchentoot r-base-core r-base-dev
       - name: install Julia libraries
         run: |
           julia -e "import Pkg;Pkg.add([\"Nemo\", \"Suppressor\", \"SpecialFunctions\", \"DataFrames\", \"RCall\", \"PythonCall\", \"Statistics\"])"
