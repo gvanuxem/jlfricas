@@ -123,7 +123,7 @@ OUTS= algaggr.output   algfacob.output  \
       synonym.output   tanatan.output   \
       test.output      triglim.output   \
       tsetcatbutcher.output tsetcatchemical.output tsetcatvermeer.output  \
-      tree.output      \
+      tree.output      tree3.output \
       tutchap2.output  tutchap3.output  tutchap4.output  \
       tutchap67.output \
       unittest.output \
@@ -149,7 +149,7 @@ REGRESS0 = agcd.output array.output bezout.output bugs2007.output \
       ord.output ore.output \
       pgcd.output polylift.output polop.output psgenfcn.output \
       rsimp.output series3.output ssolve.output \
-      table.output tensor.output vsbasis.output
+      table.output tensor.output tree2.output vsbasis.output
 
 ifdef JULIA_WRAP_SO_TARGET
 REGRESS0 += jf64sf.output jla.output jnpadic.output \
