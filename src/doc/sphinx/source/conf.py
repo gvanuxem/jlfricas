@@ -139,6 +139,7 @@ pygments_style = 'one-dark'
 
 html_css_files = [
     'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap',
+    'style.css',
 ]
 
 # Add any paths that contain custom themes here, relative to this directory.

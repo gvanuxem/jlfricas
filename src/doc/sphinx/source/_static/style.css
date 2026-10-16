@@ -1,3 +1,17 @@
-.spadop {color: magenta;}
-.spadfun {color: red;}
-.spadtype {color: blue;}
+/* Fix inline code / \spad{...} background in dark theme */
+code, tt, code.literal, .docutils.literal {
+    background-color: transparent !important;
+    color: #93c5fd !important;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.95em;
+}
+
+/* Ensure links inside inline code stay legible */
+code a, a code, tt a, a tt {
+    color: #60a5fa !important;
+}
+
+/* FriCAS SPAD roles */
+.spadop { color: #f472b6 !important; }
+.spadfun { color: #38bdf8 !important; }
+.spadtype { color: #a78bfa !important; }
