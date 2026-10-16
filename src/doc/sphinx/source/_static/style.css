@@ -1,5 +1,5 @@
 /* Fix inline code / \spad{...} background in dark theme */
-code, tt, code.literal, .docutils.literal {
+code, tt, code.literal, .docutils.literal, code span.pre {
     background-color: transparent !important;
     color: #93c5fd !important;
     font-family: 'JetBrains Mono', monospace;
