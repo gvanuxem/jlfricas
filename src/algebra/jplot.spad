@@ -87,7 +87,7 @@ JLPlotFunctions() : Exports == Implementation where
     ++ jlContourf!(x,y,mat) draws the contour plot of surface mat
     ++ on the existing graph object. Fill area between contours.
     jlPlotTitle! : String -> Void
-    ++ jlPlotTitle!(title) draws `title' as plot title in the current plot.
+    ++ jlPlotTitle!(title) draws \spad{title} as plot title in the current plot.
     ++ For example:
     ++ \example{jlPlotTitle! "sin(x)"}
     ++ if you have the LaTeXStrings Julia package

@@ -1164,6 +1164,7 @@ ConstructorDocumentationTeXTools(mustDocument?): Exports == Implementation
     tex2rst(s: String): RSTString ==
         s := removeCommaBraces s
         s := formatDoc1(s, "\spad{", spad)
+        s := formatDoc1(s, "\example{", spad)
         s := formatDoc1(s, "\spadop{",   role "spadop")
         s := formatDoc1(s, "\spadfun{",  role "spadfun")
         s := formatDoc1(s, "\spadtype{", constructorRef)
