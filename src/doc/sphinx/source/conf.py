@@ -142,10 +142,6 @@ html_css_files = [
     'style.css',
 ]
 
-html_js_files = [
-    'fricas.js',
-]
-
 # Add any paths that contain custom themes here, relative to this directory.
 html_theme_path = ['_theme']
 
