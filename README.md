@@ -12,7 +12,7 @@ system (CAS).
 
 In this work-in-progress repository, a C wrapper using libjulia is embedded in [FriCAS](https://fricas.github.io/) to call [Julia](https://julialang.org) optimized numerical routines such as **BLAS** and **LAPACK**, and more generally to manipulate Julia objects from within FriCAS.
 
-The build process supports Clozure CL (x86-64) and SBCL (x86-64 and arm64). For SBCL, only Julia 1.10.0, Julia 1.11.* and higher are supported, see [Caveats](#caveat-sbcl). It must not be considered production-ready. An overview of what is added to FriCAS is available [here](https://gvanuxem.github.io/jlfricas.documentation/search.html?q=Julia). [Binary snapshots](https://github.com/gvanuxem/jlfricas/releases) are available.
+The build process supports Clozure CL (x86-64) and SBCL (x86-64 and arm64). It must not be considered production-ready though it can be considered stable. An overview of what is added to FriCAS is available [here](https://gvanuxem.github.io/jlfricas.documentation/search.html?q=Julia). [Binary snapshots](https://github.com/gvanuxem/jlfricas/releases) are available.
 
 A [MCP server](https://github.com/gvanuxem/jlfricas/blob/master/docs/MCP_SERVER_DESIGN.md) is also available in jlFriCAS on Linux, supporting both SBCL and Clozure CL. [Here](https://github.com/gvanuxem/jlfricas/blob/master/examples/Solving_Polynomial.md) is an example of a session. At configure time use the option <code>--enable-mcp</code>
 
@@ -106,6 +106,6 @@ Current development goals:
 
 ## Caveat: SBCL
 
-Julia support for jlFriCAS built with SBCL is/was erratic, depending on the Julia version used and the loaded libraries used by Julia. The 1.10.0 version seems to have solved some issues related to memory management interactions with SBCL, but with Julia 1.10.1 and 1.10.2 some problems occur again. Note that with Julia 1.11.* and later, FriCAS seems to work fine again. More work needs to be done in this regard. So, if you use SBCL to build FriCAS, imperatively use a version of Julia that is known to be compatible. Additionnaly, if you use WS domains/packages through MathLink,
-SBCL is known to crash if you start HyperDoc after loading WS domains/packages. If you need to use
+If you use WS domains/packages through MathLink, SBCL is known to crash
+if you start HyperDoc after loading WS domains/packages. If you need to use
 HyperDoc, start it first with the system command `)hd`.
