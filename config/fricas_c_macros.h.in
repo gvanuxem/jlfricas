@@ -9,55 +9,55 @@
 /* Host has AF_UNIX */
 #undef HAVE_AF_UNIX
 
-/* Define to 1 if you have the declaration of `closedir', and to 0 if you
+/* Define to 1 if you have the declaration of 'closedir', and to 0 if you
    don't. */
 #undef HAVE_DECL_CLOSEDIR
 
-/* Define to 1 if you have the declaration of `dirfd', and to 0 if you don't.
+/* Define to 1 if you have the declaration of 'dirfd', and to 0 if you don't.
    */
 #undef HAVE_DECL_DIRFD
 
-/* Define to 1 if you have the declaration of `fchdir', and to 0 if you don't.
+/* Define to 1 if you have the declaration of 'fchdir', and to 0 if you don't.
    */
 #undef HAVE_DECL_FCHDIR
 
-/* Define to 1 if you have the declaration of `fork', and to 0 if you don't.
+/* Define to 1 if you have the declaration of 'fork', and to 0 if you don't.
    */
 #undef HAVE_DECL_FORK
 
-/* Define to 1 if you have the declaration of `getegid', and to 0 if you
+/* Define to 1 if you have the declaration of 'getegid', and to 0 if you
    don't. */
 #undef HAVE_DECL_GETEGID
 
-/* Define to 1 if you have the declaration of `geteuid', and to 0 if you
+/* Define to 1 if you have the declaration of 'geteuid', and to 0 if you
    don't. */
 #undef HAVE_DECL_GETEUID
 
-/* Define to 1 if you have the declaration of `getgid', and to 0 if you don't.
+/* Define to 1 if you have the declaration of 'getgid', and to 0 if you don't.
    */
 #undef HAVE_DECL_GETGID
 
-/* Define to 1 if you have the declaration of `getuid', and to 0 if you don't.
+/* Define to 1 if you have the declaration of 'getuid', and to 0 if you don't.
    */
 #undef HAVE_DECL_GETUID
 
-/* Define to 1 if you have the declaration of `kill', and to 0 if you don't.
+/* Define to 1 if you have the declaration of 'kill', and to 0 if you don't.
    */
 #undef HAVE_DECL_KILL
 
-/* Define to 1 if you have the declaration of `opendir', and to 0 if you
+/* Define to 1 if you have the declaration of 'opendir', and to 0 if you
    don't. */
 #undef HAVE_DECL_OPENDIR
 
-/* Define to 1 if you have the declaration of `readdir', and to 0 if you
+/* Define to 1 if you have the declaration of 'readdir', and to 0 if you
    don't. */
 #undef HAVE_DECL_READDIR
 
-/* Define to 1 if you have the declaration of `sigaction', and to 0 if you
+/* Define to 1 if you have the declaration of 'sigaction', and to 0 if you
    don't. */
 #undef HAVE_DECL_SIGACTION
 
-/* Define to 1 if you have the declaration of `wait', and to 0 if you don't.
+/* Define to 1 if you have the declaration of 'wait', and to 0 if you don't.
    */
 #undef HAVE_DECL_WAIT
 
@@ -160,7 +160,7 @@
 /* Define to the version of this package. */
 #undef PACKAGE_VERSION
 
-/* Define to 1 if all of the C90 standard headers exist (not just the ones
+/* Define to 1 if all of the C89 standard headers exist (not just the ones
    required in a freestanding environment). This macro is provided for
    backward compatibility; new code need not use it. */
 #undef STDC_HEADERS

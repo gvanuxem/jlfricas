@@ -20,17 +20,16 @@ PACKAGE_VERSION = os.environ.get('PACKAGE_VERSION', '0.0.0')
 PACKAGE_YEAR = os.environ.get('PACKAGE_YEAR', '2026')
 PACKAGE_NAME = os.environ.get('PACKAGE_NAME', 'FriCAS')
 PACKAGE_TARNAME = os.environ.get('PACKAGE_TARNAME', PACKAGE_NAME.lower())
-PACKAGE_BUGREPORT = os.environ.get('PACKAGE_BUGREPORT',
-                                   'fricas-devel@googlegroups.com')
+PACKAGE_BUGREPORT = 'https://github.com/gvanuxem/jlfricas/issues'
 
 # The official place of the documentation.
-PACKAGE_URL = os.environ.get('PACKAGE_URL', 'https://fricas.github.io')
+PACKAGE_URL = 'https://gvanuxem.github.io/jlfricas'
 FRICAS_URL = PACKAGE_URL
 
 # Place of the official code repository.
 # It should be possible to clone the repository from this URL.
-PACKAGE_SOURCE = os.environ.get('PACKAGE_SOURCE',
-                                'https://github.com/fricas/fricas')
+PACKAGE_SOURCE = os.environ.get(
+    'PACKAGE_SOURCE', 'https://github.com/gvanuxem/jlfricas')
 
 # Adding the path to a file to PACKAGE_SOURCE_VIEW should give a URL to
 # show the respective source file.
@@ -102,19 +101,50 @@ master_doc = 'index'
 
 highlight_language = 'none'
 
-# The theme to use for HTML and HTML Help pages.  See the documentation for
+# The theme to use for HTML and HTML Help pages. See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'fricas-theme'
+#html_theme = 'groundwork'
+html_theme = 'default'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
 html_theme_options = {
-#  "stickysidebar": "True",
-#  "externalrefs": "True",
-#  "relbarbgcolor": "green",
+    'sidebarwidth': 300,
+    'collapsiblesidebar': True,
+    'bodyfont': "'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+    'headfont': "'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+    'bgcolor': '#020617',          # slate-950 (docs body background)
+    'textcolor': '#cbd5e1',        # slate-300 (docs body text)
+    'linkcolor': '#60a5fa',        # brand-400 (docs primary link blue)
+    'visitedlinkcolor': '#93c5fd', # brand-300
+    'headbgcolor': '#020617',      # slate-950 (seamless heading background)
+    'headtextcolor': '#f8fafc',    # slate-50 (headings text)
+    'headlinkcolor': '#60a5fa',    # brand-400
+    'sidebarbgcolor': '#0b1120',   # slate-925 (docs sidebar background)
+    'sidebartextcolor': '#cbd5e1', # slate-300
+    'sidebarlinkcolor': '#60a5fa', # brand-400
+    'sidebarbtncolor': '#1e293b',  # slate-800 (docs border / button color)
+    'relbarbgcolor': '#0f172a',    # slate-900 (docs navbar background)
+    'relbartextcolor': '#cbd5e1',  # slate-300
+    'relbarlinkcolor': '#60a5fa',  # brand-400
+    'footerbgcolor': '#020617',    # slate-950
+    'footertextcolor': '#64748b',  # slate-500
+    'codebgcolor': '#0f172a',      # slate-900 (docs code background)
+    'codetextcolor': '#93c5fd',    # brand-300 (docs code text)
 }
+
+pygments_style = 'one-dark'
+
+html_css_files = [
+    'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap',
+    'style.css',
+]
+
+html_js_files = [
+    'fricas.js',
+]
 
 # Add any paths that contain custom themes here, relative to this directory.
 html_theme_path = ['_theme']
@@ -158,7 +188,7 @@ rst_epilog = """
 .. _%s Book: %s
 
 .. |mailing list| replace:: `%s mailing list`_
-.. _%s mailing list: https://groups.google.com/forum/#!forum/fricas-devel
+.. _%s mailing list:
 .. |git repository| replace:: `%s git repository`_
 .. _%s git repository: %s
 .. |home page| replace:: `%s home page`_

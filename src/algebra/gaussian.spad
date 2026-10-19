@@ -577,7 +577,7 @@ ComplexPatternMatch(R, S, CS) : C == T where
 ++ Keywords:
 ++ References:
 ++ Description:
-++ \spadtype {Complex(R)} creates the domain of elements of the form
+++ \spadtype{Complex(R)} creates the domain of elements of the form
 ++ \spad{a + b * i} where \spad{a} and b come from the ring R,
 ++ and i is a new element such that \spad{i^2 = -1}.
 Complex(R : CommutativeRing) : ComplexCategory(R) with

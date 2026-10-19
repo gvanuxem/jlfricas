@@ -1,3 +1,144 @@
-.spadop {color: magenta;}
-.spadfun {color: red;}
-.spadtype {color: blue;}
+/* jlFriCAS Sphinx documentation styling matching docs/index.* and contrib/generate_jldocs.py.
+   Inline code produced by \spad{...} (rendered as :code: / code.docutils.literal) uses light gray text. */
+
+code, tt, code.literal, code.docutils.literal, .docutils.literal {
+    background-color: rgba(30, 41, 59, 0.8) !important;  /* slate-800 background matching docs/index */
+    color: #cbd5e1 !important;                            /* light gray (slate-300) for \spad{...} */
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.9em;
+    padding: 0.15em 0.4em;
+    border: 1px solid rgba(51, 65, 85, 0.5);              /* slate-700 border matching docs/index */
+    border-radius: 4px;
+}
+
+/* Ensure inner pre spans inherit color and remain transparent */
+code span.pre, tt span.pre, .docutils.literal span.pre {
+    background-color: transparent !important;
+    color: inherit !important;
+    padding: 0 !important;
+    border: none !important;
+}
+
+/* Code inside links or headings keeps the link / heading color, no box */
+a code, a code span.pre, code.xref,
+h1 code, h2 code, h3 code, h4 code, h5 code, h6 code {
+    background-color: transparent !important;
+    border: none !important;
+    color: inherit !important;
+    padding: 0 !important;
+}
+
+/* Ensure links inside inline code stay legible with docs/index primary link color */
+code a, a code, tt a, a tt {
+    color: #60a5fa !important;
+}
+
+code a:hover, a:hover code, tt a:hover, a:hover tt {
+    color: #93c5fd !important;
+}
+
+/* FriCAS SPAD roles matching docs/index & generate_jldocs colors */
+.spadop { color: #f472b6 !important; }
+.spadfun { color: #38bdf8 !important; }
+.spadtype { color: #a78bfa !important; }
+
+/* Table headers and field list terms override for dark theme matching docs/index */
+th, dl.field-list > dt {
+    background-color: #1e293b !important;
+    color: #f1f5f9 !important;
+    border-bottom: 1px solid rgba(51, 65, 85, 0.7) !important;
+}
+
+table.docutils td {
+    border-bottom: 1px solid rgba(51, 65, 85, 0.3) !important;
+}
+
+/* FriCAS Example Code Block Styling (\example{...}) */
+div.fricas-example {
+    margin: 1rem 0 !important;
+    background-color: #020617 !important;
+    border: 1px solid rgba(51, 65, 85, 0.7) !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+}
+
+.fricas-example-header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 0.45rem 0.85rem !important;
+    background-color: rgba(15, 23, 42, 0.95) !important;
+    border-bottom: 1px solid rgba(51, 65, 85, 0.6) !important;
+    user-select: none;
+}
+
+.fricas-example-title {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
+    font-size: 0.82rem !important;
+    font-weight: 500 !important;
+    color: #94a3b8 !important;
+    letter-spacing: 0.03em !important;
+}
+
+.fricas-copy-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    padding: 3px 9px !important;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
+    font-size: 0.78rem !important;
+    font-weight: 500 !important;
+    color: #cbd5e1 !important;
+    background-color: rgba(30, 41, 59, 0.6) !important;
+    border: 1px solid rgba(51, 65, 85, 0.8) !important;
+    border-radius: 6px !important;
+    cursor: pointer !important;
+    transition: all 0.15s ease-in-out !important;
+    line-height: 1.4 !important;
+}
+
+.fricas-copy-btn:hover {
+    background-color: rgba(51, 65, 85, 0.8) !important;
+    border-color: rgba(100, 116, 139, 0.9) !important;
+    color: #ffffff !important;
+}
+
+.fricas-copy-btn:active {
+    transform: scale(0.97);
+}
+
+.fricas-copy-btn.copied {
+    color: #34d399 !important;
+    border-color: rgba(52, 211, 153, 0.5) !important;
+    background-color: rgba(6, 78, 59, 0.4) !important;
+}
+
+.fricas-copy-icon {
+    display: inline-block;
+    vertical-align: middle;
+    flex-shrink: 0;
+}
+
+div.fricas-example .highlight,
+div.fricas-example div[class^="highlight"] {
+    background: transparent !important;
+    border: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+div.fricas-example pre {
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    padding: 0.85rem 1rem !important;
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+    font-size: 0.92rem !important;
+    line-height: 1.55 !important;
+    color: #f1f5f9 !important;
+    overflow-x: auto !important;
+    white-space: pre !important;
+}
+

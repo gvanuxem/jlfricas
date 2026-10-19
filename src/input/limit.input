@@ -1,5 +1,6 @@
 )set break resume
 )expose UnittestCount UnittestAux Unittest
+)unexpose WSExpression NMRealBall NMRealField
 
 testsuite "limit"
 

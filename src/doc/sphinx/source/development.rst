@@ -5,14 +5,14 @@ Development is currently driven by the needs and wishes of the various
 contributors.
 
 Bug reports are collected through
-`issues <https://github.com/fricas/fricas/issues>`_
-at github, but can also be sent to the |mailing list|.
+`issues <https://github.com/gvanuxem/jlfricas/issues>`_
+at github.
 
 In fact, almost all public discussion currently happens on that list.
 
 You can get the sources from the |git repository|::
 
-  git clone https://github.com/fricas/fricas.git
+  git clone https://github.com/gvanuxem/jlfricas.git
 
 Better, press the fork button on the |git repository| and send
 an ordinary `Github pull request`_.
