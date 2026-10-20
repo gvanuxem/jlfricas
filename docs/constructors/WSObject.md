@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS Object category using the Wolfram Symbol Transport Protocol.Time: 0.02 (OT) = 0.02 sec
+Julia WS Object category using the Wolfram Symbol Transport Protocol.Time: 0 sec
 
 **WSObject is a category constructor.**  
 **Abbreviation for WSObject is WSO**
@@ -94,12 +94,21 @@ coerce(obj) coerces obj to JLObject. Convenience function.
 
 - **From**: [`JLObjectType`](JLObjectType.md)
 
+##### `coerce` : `% -> OutputForm`
+
+Operation defined in WSObject.
+
 #### `convert` <a id="convert"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L357)\]
+
+##### `convert` : `% -> S`
 
 convert(a) transforms a into an element of S.
 
-- **Signature**: `% -> String`
 - **From**: `ConvertibleTo(S)`
+
+##### `convert` : `% -> String`
+
+Operation defined in WSObject.
 
 #### `jWSInterpret` <a id="jwsinterpret"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L10)\]
 

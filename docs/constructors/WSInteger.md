@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS integers using the MathLink Julia package.Time: 0.02 (OT) = 0.02 sec
+Julia WS integers using the MathLink Julia package.Time: 0.01 sec
 
 **WSInteger is a domain constructor.**  
 **Abbreviation for WSInteger is WSINT**  
@@ -389,7 +389,7 @@ characteristic() returns the characteristic of the ring.
 
 #### `coerce` <a id="coerce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L287)\]
 
-##### `coerce` : `Integer  -> %`
+##### `coerce` : `Integer -> %`
 
 coerce(z) coerces z.
 
@@ -409,12 +409,6 @@ coerce(a) transforms a into an element of %.
 
 - **From**: `CoercibleFrom(S)`
 
-##### `coerce` : `Integer -> %`
-
-coerce(n) coerces the integer n to an element of the ring.
-
-- **From**: `NonAssociativeRing`
-
 ##### `coerce` : `% -> S`
 
 coerce(a) transforms a into an element of S.
@@ -432,6 +426,14 @@ coerce(obj) coerces obj to JLObject. Convenience function.
 coerce(expr) returns the WSExpression representation of expr.
 
 - **From**: [`WSObject`](WSObject.md)
+
+##### `coerce` : `% -> %`
+
+Operation defined in WSInteger.
+
+##### `coerce` : `% -> OutputForm`
+
+Operation defined in WSInteger.
 
 #### `commutator` <a id="commutator"></a>
 
@@ -465,6 +467,30 @@ convert(s) makes s into an input form.
 convert(a) transforms a into an element of S.
 
 - **From**: `ConvertibleTo(S)`
+
+##### `convert` : `% -> DoubleFloat`
+
+Operation defined in WSInteger.
+
+##### `convert` : `% -> Float`
+
+Operation defined in WSInteger.
+
+##### `convert` : `% -> InputForm`
+
+Operation defined in WSInteger.
+
+##### `convert` : `% -> Integer`
+
+Operation defined in WSInteger.
+
+##### `convert` : `% -> Pattern(Integer)`
+
+Operation defined in WSInteger.
+
+##### `convert` : `% -> String`
+
+Operation defined in WSInteger.
 
 #### `copy` <a id="copy"></a>
 
@@ -552,7 +578,7 @@ extendedEuclidean(x, y, z) either returns a record rec where rec.coef1*x+rec.coe
 
 #### `factor` <a id="factor"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L285)\]
 
-##### `factor` : `% -> WSList WSList(%)`
+##### `factor` : `% -> WSList(WSList(%))`
 
 factor(n) returns the WS factorization of n.
 
@@ -1034,10 +1060,15 @@ opposite?(x,y) holds if the sum of x and y is 0.
 
 #### `patternMatch` <a id="patternmatch"></a>
 
+##### `patternMatch` : `(%, Pattern(S), PatternMatchResult(S,%)) -> PatternMatchResult(S,%)`
+
 patternMatch(expr, pat, res) matches the pattern pat to the expression expr. res contains the variables of pat which are already matched and their matches (necessary for recursion). Initially, res is just the result of new which is an empty list of matches.
 
-- **Signature**: `(%, Pattern(Integer), PatternMatchResult(Integer,%)) -> PatternMatchResult(Integer,%)`
 - **From**: `PatternMatchable(S)`
+
+##### `patternMatch` : `(%, Pattern(Integer), PatternMatchResult(Integer,%)) -> PatternMatchResult(Integer,%)`
+
+Operation defined in WSInteger.
 
 #### `permutation` <a id="permutation"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L345)\]
 
@@ -1145,17 +1176,27 @@ x rem y is the same as divide(x, y).remainder. See divide from EuclideanDomain.
 
 #### `retract` <a id="retract"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L444)\]
 
+##### `retract` : `% -> S`
+
 retract(a) transforms a into an element of S if possible. Error: if a cannot be made into an element of S.
 
-- **Signature**: `% -> Integer`
 - **From**: `RetractableTo(S)`
+
+##### `retract` : `% -> Integer`
+
+Operation defined in WSInteger.
 
 #### `retractIfCan` <a id="retractifcan"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L447)\]
 
+##### `retractIfCan` : `% -> Union(S,"failed")`
+
 retractIfCan(a) transforms a into an element of S if possible. Returns "failed" if a cannot be made into an element of S.
 
-- **Signature**: `% -> Union(Integer,"failed")`
 - **From**: `RetractableTo(S)`
+
+##### `retractIfCan` : `% -> Union(Integer,"failed")`
+
+Operation defined in WSInteger.
 
 #### `rightPower` <a id="rightpower"></a>
 

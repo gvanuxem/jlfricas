@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS matrices using the MathLink Julia package.Time: 0.02 (OT) = 0.02 sec
+Julia WS matrices using the MathLink Julia package.Time: 0 sec
 
 **WSMatrix(E: WSRing) is a domain constructor.**  
 **Abbreviation for WSMatrix is WSMAT**
@@ -334,6 +334,10 @@ Julia WS matrices using the MathLink Julia package.Time: 0.02 (OT) = 0.02 sec
 
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
+##### `#` : `% -> NonNegativeInteger if % has ATFINAG`
+
+Operation defined in WSMatrix.
+
 #### `*` <a id="op-mul"></a>
 
 ##### `*` : `(%, %) -> %`
@@ -344,21 +348,29 @@ a * b is the matrix multiplication, not the element-wise multiplication. WS erro
 
 n*a scales the matrix a by n.
 
-##### `*` : `(E,%) -> %`
+##### `*` : `(E, %) -> %`
 
 r*x is the left scalar multiple of the scalar r and the matrix x.
 
-##### `*` : `(%,E) -> %`
+##### `*` : `(%, E) -> %`
 
 x * r is the right scalar multiple of the scalar r and the matrix x.
 
-##### `*` : `(%,WSVector(E)) -> %`
+##### `*` : `(%, WSVector(E)) -> %`
 
 x * c is the product of the matrix x and the column vector c. Error: if the dimensions are incompatible.
 
-##### `*` : `(WSVector(E),%) -> %`
+##### `*` : `(WSVector(E), %) -> %`
 
 r * x is the product of the row vector r and the matrix x. Error: if the dimensions are incompatible.
+
+##### `*` : `(%, WSVector(E)) -> WSVector(E) if E has SRNG`
+
+Operation defined in WSMatrix.
+
+##### `*` : `(WSVector(E), %) -> WSVector(E) if E has SRNG`
+
+Operation defined in WSMatrix.
 
 #### `+` <a id="op-add"></a>
 
@@ -374,10 +386,15 @@ Operation defined in WSMatrix.
 
 #### `Pfaffian` <a id="pfaffian"></a>
 
+##### `Pfaffian` : `% -> R`
+
 Pfaffian(m) returns the Pfaffian of the matrix m. Error: if the matrix is not antisymmetric.
 
-- **Signature**: `% -> E if E has COMRING`
 - **From**: `MatrixCategory(R,Row,Col)`
+
+##### `Pfaffian` : `% -> E if E has COMRING`
+
+Operation defined in WSMatrix.
 
 #### `^` <a id="op-pow"></a>
 
@@ -389,12 +406,21 @@ a^n is the matrix power by the positive integer n.
 
 a^n is the matrix power by the non-negative integer n.
 
+##### `^` : `(%, Integer) -> % if E has FIELD`
+
+Operation defined in WSMatrix.
+
 #### `accumulate` <a id="accumulate"></a>
+
+##### `accumulate` : `% -> %`
 
 accumulate(agg) returns the partial sums of elements in agg.
 
-- **Signature**: `% -> % if WSVector(E) has WSNUM`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
+
+##### `accumulate` : `% -> % if WSVector(E) has WSNUM`
+
+Operation defined in WSMatrix.
 
 #### `adjoint` <a id="adjoint"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L414)\]
 
@@ -416,24 +442,39 @@ antisymmetric?(m) returns true if the matrix m is square and antisymmetric (i.e.
 
 #### `any?` <a id="any"></a>
 
+##### `any?` : `((S -> Boolean), %) -> Boolean`
+
 any?(p, u) tests if p(x) is true for any element x of u. Note: for collections, any?(p, u) = reduce(or, map(p, u), false, true). However, any?(p, u) returns as soon as it finds an element for which p gives true.
 
-- **Signature**: `((E -> Boolean), %) -> Boolean if % has ATFINAG`
 - **From**: `HomogeneousAggregate(S)`
+
+##### `any?` : `((E -> Boolean), %) -> Boolean if % has ATFINAG`
+
+Operation defined in WSMatrix.
 
 #### `append` <a id="append"></a>
 
+##### `append` : `(%, E) -> %`
+
 append(l, elt) appends elt to the list l.
 
-- **Signature**: `(%, WSVector(E)) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
+
+##### `append` : `(%, WSVector(E)) -> %`
+
+Operation defined in WSMatrix.
 
 #### `array2` <a id="array2"></a>
 
+##### `array2` : `List(List(R)) -> %`
+
 array2(ll) constructs a 2-dimensional array, the inner list being the rows.
 
-- **Signature**: `List(List(E)) -> %`
 - **From**: `TwoDimensionalArrayCategory(R,Row,Col)`
+
+##### `array2` : `List(List(E)) -> %`
+
+Operation defined in WSMatrix.
 
 #### `blockConcat` <a id="blockconcat"></a>
 
@@ -458,9 +499,13 @@ blockSplit(a, n, m) splits a into n*m subarrays of equal size row and column wis
 
 #### `cholesky` <a id="cholesky"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L474)\]
 
+##### `cholesky` : `% -> Record(l : %, u : %)`
+
 cholesky(m) computes the Cholesky decomposition of the positive definite/hermitian square matrix m.
 
-- **Signature**: `% -> Record(l: %,u: %)`
+##### `cholesky` : `% -> Record(l: %,u: %)`
+
+Operation defined in WSMatrix.
 
 #### `coerce` <a id="coerce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L701)\]
 
@@ -500,6 +545,18 @@ coerce(v) coerces inplace v to a WS matrix.
 
 - **From**: [`WSVector(E)`](WSVector.md)
 
+##### `coerce` : `WSVector(E) -> %`
+
+Operation defined in WSMatrix.
+
+##### `coerce` : `List(WSVector(E)) -> %`
+
+Operation defined in WSMatrix.
+
+##### `coerce` : `% -> OutputForm`
+
+Operation defined in WSMatrix.
+
 #### `colSlice` <a id="colslice"></a>
 
 colSlice(m) returns a segment s such that for m the access m(i, s) gives the i-th row.
@@ -519,19 +576,33 @@ column(m, j) returns the jth column of m error check to determine if index is in
 
 - **From**: `TwoDimensionalArrayCategory(R,Row,Col)`
 
+##### `column` : `(%, Integer) -> WSVector(E)`
+
+Operation defined in WSMatrix.
+
 #### `columnSpace` <a id="columnspace"></a>
+
+##### `columnSpace` : `% -> List(Col)`
 
 columnSpace(m) returns a sublist of columns of the matrix m forming a basis of its column space.
 
-- **Signature**: `% -> List(WSVector(E)) if E has EUCDOM`
 - **From**: `MatrixOperationsCategory(R,Row,Col)`
+
+##### `columnSpace` : `% -> List(WSVector(E)) if E has EUCDOM`
+
+Operation defined in WSMatrix.
 
 #### `convert` <a id="convert"></a>
 
+##### `convert` : `% -> S`
+
 convert(a) transforms a into an element of S.
 
-- **Signature**: `% -> String`
 - **From**: `ConvertibleTo(S)`
+
+##### `convert` : `% -> String`
+
+Operation defined in WSMatrix.
 
 #### `copy` <a id="copy"></a>
 
@@ -554,6 +625,14 @@ count(p, u) returns the number of elements x in u such that p(x) is true. For co
 
 - **From**: `HomogeneousAggregate(S)`
 
+##### `count` : `((E -> Boolean), %) -> NonNegativeInteger if % has ATFINAG`
+
+Operation defined in WSMatrix.
+
+##### `count` : `(E, %) -> NonNegativeInteger if % has ATFINAG and E has BASTYPE`
+
+Operation defined in WSMatrix.
+
 #### `delete` <a id="delete"></a>
 
 delete(l, inds) deletes element(s) of the list l at index(es) inds.
@@ -563,10 +642,15 @@ delete(l, inds) deletes element(s) of the list l at index(es) inds.
 
 #### `determinant` <a id="determinant"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L670)\]
 
+##### `determinant` : `% -> R`
+
 determinant(m) returns the determinant of the matrix m. Error: if the matrix is not square.
 
-- **Signature**: `% -> E if E has COMRING`
 - **From**: `MatrixCategory(R,Row,Col)`
+
+##### `determinant` : `% -> E if E has COMRING`
+
+Operation defined in WSMatrix.
 
 #### `diagonal` <a id="diagonal"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L429)\]
 
@@ -598,12 +682,21 @@ diagonalMatrix(l) returns a diagonal matrix with the elements of l on the diagon
 
 - **From**: `MatrixCategory(R,Row,Col)`
 
+##### `diagonalMatrix` : `List(E) -> %`
+
+Operation defined in WSMatrix.
+
 #### `differences` <a id="differences"></a>
+
+##### `differences` : `% -> %`
 
 differences(agg) returns the differences between adjacent elements in agg.
 
-- **Signature**: `% -> % if WSVector(E) has WSNUM`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
+
+##### `differences` : `% -> % if WSVector(E) has WSNUM`
+
+Operation defined in WSMatrix.
 
 #### `dimensions` <a id="dimensions"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L531)\]
 
@@ -732,6 +825,14 @@ elt(m, i, j, r) returns the element in the ith row and jth column of the array m
 
 - **From**: `TwoDimensionalArrayCategory(R,Row,Col)`
 
+##### `elt` : `(%, Integer, Integer, E) -> E`
+
+Operation defined in WSMatrix.
+
+##### `elt` : `(%, Integer) -> WSVector(E)`
+
+Operation defined in WSMatrix.
+
 #### `empty` <a id="empty"></a>
 
 empty()$D creates an aggregate of type D with 0 elements. Note: The em $D can be dropped if understood by context, u: D := empty().
@@ -779,12 +880,33 @@ eval(f, [x1 = v1, ..., xn = vn]) replaces xi by vi in f.
 
 - **From**: `Evalable(R)`
 
+##### `eval` : `(%, List(Equation(E))) -> % if E has EVALAB(E) and E has SETCAT`
+
+Operation defined in WSMatrix.
+
+##### `eval` : `(%, Equation(E)) -> % if E has EVALAB(E) and E has SETCAT`
+
+Operation defined in WSMatrix.
+
+##### `eval` : `(%, E, E) -> % if E has EVALAB(E) and E has SETCAT`
+
+Operation defined in WSMatrix.
+
+##### `eval` : `(%, List(E), List(E)) -> % if E has EVALAB(E) and E has SETCAT`
+
+Operation defined in WSMatrix.
+
 #### `every?` <a id="every"></a>
+
+##### `every?` : `((S -> Boolean), %) -> Boolean`
 
 every?(p, u) tests if p(x) is true for all elements x of u. Note: for collections, every?(p, u) = reduce(and, map(p, u), true, false). However, every?(p, u) returns as soon as it finds an element for which p gives false.
 
-- **Signature**: `((E -> Boolean), %) -> Boolean if % has ATFINAG`
 - **From**: `HomogeneousAggregate(S)`
+
+##### `every?` : `((E -> Boolean), %) -> Boolean if % has ATFINAG`
+
+Operation defined in WSMatrix.
 
 #### `exquo` <a id="exquo"></a>
 
@@ -800,6 +922,10 @@ exquo(m, r) computes the exact quotient of the elements of m by r, returning "fa
 
 - **From**: `MatrixOperationsCategory(R,Row,Col)`
 
+##### `exquo` : `(%, E) -> Union(%,"failed") if E has INTDOM`
+
+Operation defined in WSMatrix.
+
 #### `extract` <a id="extract"></a>
 
 extract(agg, parts) extracts parts of agg.
@@ -809,31 +935,51 @@ extract(agg, parts) extracts parts of agg.
 
 #### `fill!` <a id="fill"></a>
 
+##### `fill!` : `(%, R) -> %`
+
 fill!(m, r) fills m with r's
 
-- **Signature**: `(%, E) -> %`
 - **From**: `TwoDimensionalArrayCategory(R,Row,Col)`
+
+##### `fill!` : `(%, E) -> %`
+
+Operation defined in WSMatrix.
 
 #### `first` <a id="first"></a>
 
+##### `first` : `% -> E`
+
 first(agg) returns the first element of agg.
 
-- **Signature**: `% -> WSVector(E)`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
+
+##### `first` : `% -> WSVector(E)`
+
+Operation defined in WSMatrix.
 
 #### `hash` <a id="hash"></a>
 
+##### `hash` : `% -> SingleInteger`
+
 hash(s) calculates a hash code for s.
 
-- **Signature**: `% -> SingleInteger if E has HASHABL`
 - **From**: `Hashable`
+
+##### `hash` : `% -> SingleInteger if E has HASHABL`
+
+Operation defined in WSMatrix.
 
 #### `hashUpdate!` <a id="hashupdate"></a>
 
+##### `hashUpdate!` : `(HashState, %) -> HashState`
+
 hashUpdate!(hs, s) computes new HashState from old and s used for incremental computation of hash values. hashUpdate! might destructively work on its first argument.
 
-- **Signature**: `(HashState, %) -> HashState if E has HASHABL`
 - **From**: `Hashable`
+
+##### `hashUpdate!` : `(HashState, %) -> HashState if E has HASHABL`
+
+Operation defined in WSMatrix.
 
 #### `hermitian?` <a id="hermitian"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L365)\]
 
@@ -843,9 +989,13 @@ hermitian?(m) checks whether or not m is hermitian.
 
 #### `hessenberg` <a id="hessenberg"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L471)\]
 
+##### `hessenberg` : `% -> Record(p : %, h : %)`
+
 hessenberg(m) computes the Hessenberg decomposition of the square matrix m.
 
-- **Signature**: `% -> Record(p: %,h: %)`
+##### `hessenberg` : `% -> Record(p: %,h: %)`
+
+Operation defined in WSMatrix.
 
 #### `horizConcat` <a id="horizconcat"></a>
 
@@ -877,10 +1027,15 @@ horizSplit(a, n) splits a into n arrays of equal size column wise. Error: if num
 
 #### `insert` <a id="insert"></a>
 
+##### `insert` : `(%, E, WSInteger) -> %`
+
 insert(l, elt, ind) inserts elt to the list l at index ind.
 
-- **Signature**: `(%, WSVector(E), WSInteger) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
+
+##### `insert` : `(%, WSVector(E), WSInteger) -> %`
+
+Operation defined in WSMatrix.
 
 #### `intersection` <a id="intersection"></a>
 
@@ -906,18 +1061,31 @@ inverse(m) returns the inverse of the matrix m. If the matrix is not invertible,
 
 - **From**: `MatrixCategory(R,Row,Col)`
 
+##### `inverse` : `% -> Union(%,"failed") if E has FIELD`
+
+Operation defined in WSMatrix.
+
 #### `invertIfCan` <a id="invertifcan"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L437)\]
+
+##### `invertIfCan` : `% -> Union(%,"failed")`
 
 invertIfCan(m) returns the inverse of the matrix m. If the matrix is not invertible, "failed" is returned. Error: if the matrix is not square.
 
-- **Signature**: `% -> Union(%,"failed") if E has INTDOM`
+##### `invertIfCan` : `% -> Union(%,"failed") if E has INTDOM`
+
+Operation defined in WSMatrix.
 
 #### `jWSAggregate` <a id="jwsaggregate"></a>
 
+##### `jWSAggregate` : `List(E) -> %`
+
 jWSAggregate(list) constructs agg to a WSAggregate.
 
-- **Signature**: `List(WSVector(E)) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
+
+##### `jWSAggregate` : `List(WSVector(E)) -> %`
+
+Operation defined in WSMatrix.
 
 #### `jWSInterpret` <a id="jwsinterpret"></a>
 
@@ -1163,9 +1331,13 @@ join(agg1, agg2) joins the two aggregates agg1 and agg2.
 
 #### `jordan` <a id="jordan"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L469)\]
 
+##### `jordan` : `% -> Record(s : %, j : %)`
+
 jordan(m) computes the Jordan decomposition of the square matrix m.
 
-- **Signature**: `% -> Record(s: %,j: %)`
+##### `jordan` : `% -> Record(s: %,j: %)`
+
+Operation defined in WSMatrix.
 
 #### `kroneckerProduct` <a id="kroneckerproduct"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L688)\]
 
@@ -1180,6 +1352,14 @@ kroneckerProduct(a, b) calculates the Kronecker product of the matrices a and b.
 kroneckerProduct([a1, a2, ..., an]) calculates the Kronecker product of the matrices a1, a2, ..., an. This corresponds to tensor product of corresponding operators.
 
 - **From**: `MatrixCategory(R,Row,Col)`
+
+##### `kroneckerProduct` : `(%, %) -> % if E has SRNG`
+
+Operation defined in WSMatrix.
+
+##### `kroneckerProduct` : `List(%) -> % if E has SRNG`
+
+Operation defined in WSMatrix.
 
 #### `kroneckerSum` <a id="kroneckersum"></a>
 
@@ -1197,17 +1377,27 @@ kroneckerSum([a1, a2, ..., an]) calculates the Kronecker sum of the matrices a1,
 
 #### `kronecker_prod1` <a id="kronecker_prod1"></a>
 
+##### `kronecker_prod1` : `(%, Integer, List(List(NonNegativeInteger)), List(%), NonNegativeInteger, NonNegativeInteger, Union(R,one)) -> Void`
+
 Should be local but conditional.
 
-- **Signature**: `(%, Integer, List(List(NonNegativeInteger)), List(%), NonNegativeInteger, NonNegativeInteger, Union(E,one)) -> Void`
 - **From**: `MatrixCategory(R,Row,Col)`
+
+##### `kronecker_prod1` : `(%, Integer, List(List(NonNegativeInteger)), List(%), NonNegativeInteger, NonNegativeInteger, Union(E,one)) -> Void`
+
+Operation defined in WSMatrix.
 
 #### `last` <a id="last"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L540)\]
 
+##### `last` : `% -> E`
+
 last(agg) returns the last element of agg.
 
-- **Signature**: `% -> WSVector(E)`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
+
+##### `last` : `% -> WSVector(E)`
+
+Operation defined in WSMatrix.
 
 #### `latex` <a id="latex"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L519)\]
 
@@ -1238,16 +1428,25 @@ linearSolve(mat, b) finds x, solution of the equation mat * x = b.
 
 #### `listOfLists` <a id="listoflists"></a>
 
+##### `listOfLists` : `% -> List(List(R))`
+
 listOfLists(m) returns the rows of the array m as a list of lists.
 
-- **Signature**: `% -> List(List(E))`
 - **From**: `TwoDimensionalArrayCategory(R,Row,Col)`
+
+##### `listOfLists` : `% -> List(List(E))`
+
+Operation defined in WSMatrix.
 
 #### `lu` <a id="lu"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L477)\]
 
+##### `lu` : `% -> Record(lu : %, p : %, c : %)`
+
 lu(m) computes the LU decomposition of the matrix m.
 
-- **Signature**: `% -> Record(lu: %,p: %,c: %)`
+##### `lu` : `% -> Record(lu: %,p: %,c: %)`
+
+Operation defined in WSMatrix.
 
 #### `map` <a id="map"></a>
 
@@ -1275,6 +1474,18 @@ map(f, u) returns a copy of u with each element x replaced by f(x). For collecti
 
 - **From**: `HomogeneousAggregate(S)`
 
+##### `map` : `((E -> E), %) -> %`
+
+Operation defined in WSMatrix.
+
+##### `map` : `(((E, E) -> E), %, %) -> %`
+
+Operation defined in WSMatrix.
+
+##### `map` : `(((E, E) -> E), %, %, E) -> %`
+
+Operation defined in WSMatrix.
+
 #### `map!` <a id="map"></a>
 
 ##### `map!` : `((R -> R), %) -> %`
@@ -1288,6 +1499,10 @@ map!(f, a) assigns a(i, j) to f(a(i, j)) for all i, j.
 map!(f, u) destructively replaces each element x of u by f(x).
 
 - **From**: `HomogeneousAggregate(S)`
+
+##### `map!` : `((E -> E), %) -> %`
+
+Operation defined in WSMatrix.
 
 #### `matrix` <a id="matrix"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L503)\]
 
@@ -1312,6 +1527,14 @@ matrix(l) converts the list of lists l to a matrix, where the list of lists is v
 matrix(n,m,f) constructs an n * m matrix with the (i,j) entry equal to f(i,j).
 
 - **From**: `MatrixCategory(R,Row,Col)`
+
+##### `matrix` : `List(List(E)) -> %`
+
+Operation defined in WSMatrix.
+
+##### `matrix` : `(NonNegativeInteger, NonNegativeInteger, ((Integer, Integer) -> E)) -> %`
+
+Operation defined in WSMatrix.
 
 #### `matrixFunction` <a id="matrixfunction"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L479)\]
 
@@ -1338,6 +1561,14 @@ max(p, u) returns maximal element of u with respect to total ordering predicate 
 
 - **From**: `HomogeneousAggregate(S)`
 
+##### `max` : `(((E, E) -> Boolean), %) -> E if % has ATFINAG`
+
+Operation defined in WSMatrix.
+
+##### `max` : `% -> E if % has ATFINAG and E has ORDSET`
+
+Operation defined in WSMatrix.
+
 #### `maxColIndex` <a id="maxcolindex"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L557)\]
 
 maxColIndex(m) returns the index of the 'last' column of the array m
@@ -1354,24 +1585,39 @@ maxRowIndex(m) returns the index of the 'last' row of the array m
 
 #### `member?` <a id="member"></a>
 
+##### `member?` : `(S, %) -> Boolean`
+
 member?(x, u) tests if x is a member of u. For collections, member?(x, u) = reduce(or, [x=y for y in u], false). However, member?(x, u) returns as soon as it finds a member.
 
-- **Signature**: `(E, %) -> Boolean if % has ATFINAG and E has BASTYPE`
 - **From**: `HomogeneousAggregate(S)`
+
+##### `member?` : `(E, %) -> Boolean if % has ATFINAG and E has BASTYPE`
+
+Operation defined in WSMatrix.
 
 #### `members` <a id="members"></a>
 
+##### `members` : `% -> List(S)`
+
 members(u) returns a list of the consecutive elements of u. For multisets members gives result with no repetition. See also parts.
 
-- **Signature**: `% -> List(E) if % has ATFINAG`
 - **From**: `HomogeneousAggregate(S)`
+
+##### `members` : `% -> List(E) if % has ATFINAG`
+
+Operation defined in WSMatrix.
 
 #### `min` <a id="min"></a>
 
+##### `min` : `% -> S`
+
 min(u) returns minimal element of u. Error if u is empty.
 
-- **Signature**: `% -> E if % has ATFINAG and E has ORDSET`
 - **From**: `HomogeneousAggregate(S)`
+
+##### `min` : `% -> E if % has ATFINAG and E has ORDSET`
+
+Operation defined in WSMatrix.
 
 #### `minColIndex` <a id="mincolindex"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L554)\]
 
@@ -1389,10 +1635,15 @@ minRowIndex(m) returns the index of the 'first' row of the array m
 
 #### `minordet` <a id="minordet"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L678)\]
 
+##### `minordet` : `% -> R`
+
 minordet(m) computes the determinant of the matrix m using minors. Error: if the matrix is not square.
 
-- **Signature**: `% -> E if E has COMRING`
 - **From**: `MatrixCategory(R,Row,Col)`
+
+##### `minordet` : `% -> E if E has COMRING`
+
+Operation defined in WSMatrix.
 
 #### `minors` <a id="minors"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L448)\]
 
@@ -1434,10 +1685,15 @@ ncols(m) returns the number of columns in the array m
 
 #### `new` <a id="new"></a>
 
+##### `new` : `(NonNegativeInteger, NonNegativeInteger, R) -> %`
+
 new(m, n, r) is an m-by-n array all of whose entries are r
 
-- **Signature**: `(NonNegativeInteger, NonNegativeInteger, E) -> %`
 - **From**: `TwoDimensionalArrayCategory(R,Row,Col)`
+
+##### `new` : `(NonNegativeInteger, NonNegativeInteger, E) -> %`
+
+Operation defined in WSMatrix.
 
 #### `norm` <a id="norm"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L418)\]
 
@@ -1475,12 +1731,21 @@ nullSpace(m) returns a basis for the null space of the matrix m. Note: null spac
 
 - **From**: `MatrixOperationsCategory(R,Row,Col)`
 
+##### `nullSpace` : `% -> List(WSVector(E)) if E has INTDOM`
+
+Operation defined in WSMatrix.
+
 #### `nullity` <a id="nullity"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L674)\]
+
+##### `nullity` : `% -> NonNegativeInteger`
 
 nullity(m) returns the nullity of the matrix m. This is the dimension of the null space of the matrix m.
 
-- **Signature**: `% -> NonNegativeInteger if E has INTDOM`
 - **From**: `MatrixOperationsCategory(R,Row,Col)`
+
+##### `nullity` : `% -> NonNegativeInteger if E has INTDOM`
+
+Operation defined in WSMatrix.
 
 #### `numeric` <a id="numeric"></a>
 
@@ -1505,10 +1770,15 @@ numeric?(x) checks whether or not x is or would yield a number.
 
 #### `part` <a id="part"></a>
 
+##### `part` : `(%, WSInteger) -> E`
+
 part(agg,i) returns the i-th element.
 
-- **Signature**: `(%, WSInteger) -> WSVector(E)`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
+
+##### `part` : `(%, WSInteger) -> WSVector(E)`
+
+Operation defined in WSMatrix.
 
 #### `parts` <a id="parts"></a>
 
@@ -1524,6 +1794,10 @@ parts(u) returns a list of the consecutive elements of u. For finite collections
 
 - **From**: `HomogeneousAggregate(S)`
 
+##### `parts` : `% -> List(E)`
+
+Operation defined in WSMatrix.
+
 #### `permanent` <a id="permanent"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L427)\]
 
 permanent(m) returns the permanent of m.
@@ -1538,17 +1812,27 @@ positiveDefinite?(m) checks whether or not m is positive definite.
 
 #### `positivePower` <a id="positivepower"></a>
 
+##### `positivePower` : `(%, Integer) -> %`
+
 positivePower(x, n) computes a positive integral power of the matrix x. Error: if the matrix is not square.
 
-- **Signature**: `(%, Integer) -> % if E has SRNG`
 - **From**: `MatrixCategory(R,Row,Col)`
+
+##### `positivePower` : `(%, Integer) -> % if E has SRNG`
+
+Operation defined in WSMatrix.
 
 #### `prepend` <a id="prepend"></a>
 
+##### `prepend` : `(%, E) -> %`
+
 prepend(l, elt) prepends elt to the list l.
 
-- **Signature**: `(%, WSVector(E)) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
+
+##### `prepend` : `(%, WSVector(E)) -> %`
+
+Operation defined in WSMatrix.
 
 #### `pseudoInverse` <a id="pseudoinverse"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L441)\]
 
@@ -1574,6 +1858,10 @@ qelt(m, i, j) returns the element in the ith row and jth column of the array m N
 
 - **From**: `TwoDimensionalArrayCategory(R,Row,Col)`
 
+##### `qelt` : `(%, Integer) -> WSVector(E)`
+
+Operation defined in WSMatrix.
+
 #### `qnew` <a id="qnew"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L692)\]
 
 qnew(m, n) is an m-by-n uninitialized array
@@ -1583,9 +1871,13 @@ qnew(m, n) is an m-by-n uninitialized array
 
 #### `qr` <a id="qr"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L467)\]
 
+##### `qr` : `% -> Record(q : %, r : %)`
+
 qr(m) computes the QR decomposition of the matrix m.
 
-- **Signature**: `% -> Record(q: %,r: %)`
+##### `qr` : `% -> Record(q: %,r: %)`
+
+Operation defined in WSMatrix.
 
 #### `qsetelt` <a id="qsetelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L402)\]
 
@@ -1598,6 +1890,10 @@ qsetelt(mat,n,m,elt) returns a new matrix with element (n,m) replaced by the ele
 qsetelt(l,i,elem) returns a copy of l with i-th element replaced by the element elem. No checks are done at the FriCAS level.
 
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
+
+##### `qsetelt` : `(%, Integer, WSVector(E)) -> %`
+
+Operation defined in WSMatrix.
 
 #### `qsetelt!` <a id="qsetelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L405)\]
 
@@ -1616,6 +1912,10 @@ qsetelt!(l,i,elem) returns l with i-th element replaced by elem. No checks are d
 qsetelt!(m, i, j, r) sets the element in the ith row and jth column of m to r NO error check to determine if indices are in proper ranges
 
 - **From**: `TwoDimensionalArrayCategory(R,Row,Col)`
+
+##### `qsetelt!` : `(%, Integer, WSVector(E)) -> %`
+
+Operation defined in WSMatrix.
 
 #### `randomComplexMatrix` <a id="randomcomplexmatrix"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L491)\]
 
@@ -1643,10 +1943,15 @@ randomRealMatrix(range,jWSList("{3,3}")$WSLIST(WSINT))@WSMAT(WSREAL)
 
 #### `rank` <a id="rank"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L621)\]
 
+##### `rank` : `% -> NonNegativeInteger`
+
 rank(m) returns the rank of the matrix m.
 
-- **Signature**: `% -> NonNegativeInteger if E has INTDOM`
 - **From**: `MatrixOperationsCategory(R,Row,Col)`
+
+##### `rank` : `% -> NonNegativeInteger if E has INTDOM`
+
+Operation defined in WSMatrix.
 
 #### `removeDuplicates` <a id="removeduplicates"></a>
 
@@ -1715,12 +2020,21 @@ row(m, i) returns the ith row of m error check to determine if index is in prope
 
 - **From**: `TwoDimensionalArrayCategory(R,Row,Col)`
 
+##### `row` : `(%, Integer) -> WSVector(E)`
+
+Operation defined in WSMatrix.
+
 #### `rowEchelon` <a id="rowechelon"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L619)\]
+
+##### `rowEchelon` : `% -> %`
 
 rowEchelon(m) returns the row echelon form of the matrix m.
 
-- **Signature**: `% -> % if E has EUCDOM`
 - **From**: `MatrixOperationsCategory(R,Row,Col)`
+
+##### `rowEchelon` : `% -> % if E has EUCDOM`
+
+Operation defined in WSMatrix.
 
 #### `rowSlice` <a id="rowslice"></a>
 
@@ -1738,23 +2052,37 @@ sample yields a value of type %
 
 #### `scalarMatrix` <a id="scalarmatrix"></a>
 
+##### `scalarMatrix` : `(NonNegativeInteger, R) -> %`
+
 scalarMatrix(n, r) returns an n-by-n matrix with r's on the diagonal and zeroes elsewhere.
 
-- **Signature**: `(NonNegativeInteger, E) -> %`
 - **From**: `MatrixCategory(R,Row,Col)`
+
+##### `scalarMatrix` : `(NonNegativeInteger, E) -> %`
+
+Operation defined in WSMatrix.
 
 #### `schur` <a id="schur"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L465)\]
 
+##### `schur` : `% -> Record(q : %, t : %)`
+
 schur(m) computes the Schur decomposition of the square matrix m.
 
-- **Signature**: `% -> Record(q: %,t: %)`
+##### `schur` : `% -> Record(q: %,t: %)`
+
+Operation defined in WSMatrix.
 
 #### `setColumn!` <a id="setcolumn"></a>
 
+##### `setColumn!` : `(%, Integer, Col) -> %`
+
 setColumn!(m, j, v) sets to jth column of m to v
 
-- **Signature**: `(%, Integer, WSVector(E)) -> %`
 - **From**: `TwoDimensionalArrayCategory(R,Row,Col)`
+
+##### `setColumn!` : `(%, Integer, WSVector(E)) -> %`
+
+Operation defined in WSMatrix.
 
 #### `setIntersection` <a id="setintersection"></a>
 
@@ -1765,10 +2093,15 @@ setIntersection(agg1, agg2) is the intersection set operator.
 
 #### `setRow!` <a id="setrow"></a>
 
+##### `setRow!` : `(%, Integer, Row) -> %`
+
 setRow!(m, i, v) sets to ith row of m to v
 
-- **Signature**: `(%, Integer, WSVector(E)) -> %`
 - **From**: `TwoDimensionalArrayCategory(R,Row,Col)`
+
+##### `setRow!` : `(%, Integer, WSVector(E)) -> %`
+
+Operation defined in WSMatrix.
 
 #### `setelt` <a id="setelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L399)\]
 
@@ -1781,6 +2114,10 @@ setelt(mat,n,m,elt) returns a new matrix with element (n,m) replaced by the elem
 setelt(l,i,elem) returns a copy of l with i-th element replaced by the element elem.
 
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
+
+##### `setelt` : `(%, Integer, WSVector(E)) -> %`
+
+Operation defined in WSMatrix.
 
 #### `setelt!` <a id="setelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L579)\]
 
@@ -1862,6 +2199,14 @@ setelt!(m, i, j, r) sets the element in the ith row and jth column of m to r err
 
 - **From**: `TwoDimensionalArrayCategory(R,Row,Col)`
 
+##### `setelt!` : `(%, Integer, Integer, E) -> E`
+
+Operation defined in WSMatrix.
+
+##### `setelt!` : `(%, Integer, WSVector(E)) -> %`
+
+Operation defined in WSMatrix.
+
 #### `setsubMatrix!` <a id="setsubmatrix"></a>
 
 setsubMatrix(x, i1, j1, y) destructively alters the array x. Here x(i, j) is set to y(i-i1+1, j-j1+1) for i = i1, ..., i1-1+nrows y and j = j1, ..., j1-1+ncols y.
@@ -1878,10 +2223,15 @@ size?(u, n) tests if u has exactly n elements.
 
 #### `smaller?` <a id="smaller"></a>
 
+##### `smaller?` : `(%, %) -> Boolean`
+
 smaller?(x, y) is a strict ordering on depending on representatives of elements of the set. If % has Comparable then smaller? gives mathematical linear order.
 
-- **Signature**: `(%, %) -> Boolean if E has COMPAR`
 - **From**: `ComparableRepresentation`
+
+##### `smaller?` : `(%, %) -> Boolean if E has COMPAR`
+
+Operation defined in WSMatrix.
 
 #### `sort` <a id="sort"></a>
 
@@ -1926,9 +2276,13 @@ subMatrix(x, i1, i2, j1, j2) extracts the submatrix [x(i, j)] where the index i 
 
 #### `svd` <a id="svd"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L461)\]
 
+##### `svd` : `% -> Record(S : %, sv : %, V : %)`
+
 svd(m) computes the singular value decomposition of the matrix m.
 
-- **Signature**: `% -> Record(S: %,sv: %,V: %)`
+##### `svd` : `% -> Record(S: %,sv: %,V: %)`
+
+Operation defined in WSMatrix.
 
 #### `svdvals` <a id="svdvals"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L463)\]
 
@@ -1958,10 +2312,15 @@ symmetric?(m) returns true if the matrix m is square and symmetric (i.e. m[i, j]
 
 #### `take` <a id="take"></a>
 
+##### `take` : `(%, Integer) -> %`
+
 take(l,i) returns the first i elements.
 
-- **Signature**: `(%, Integer) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
+
+##### `take` : `(%, WSList(WSInteger)) -> %`
+
+Operation defined in WSMatrix.
 
 #### `toString` <a id="tostring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L500)\]
 
@@ -1977,10 +2336,15 @@ toString(obj) returns the string representation of obj.
 
 #### `total` <a id="total"></a>
 
+##### `total` : `% -> E`
+
 total(agg) returns the sum of the elements in agg.
 
-- **Signature**: `% -> WSVector(E) if WSVector(E) has WSNUM`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
+
+##### `total` : `% -> WSVector(E) if WSVector(E) has WSNUM`
+
+Operation defined in WSMatrix.
 
 #### `trace` <a id="trace"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L425)\]
 
@@ -1999,6 +2363,10 @@ transpose(m) returns the transposition of m.
 transpose(r) converts the row r to a row matrix.
 
 - **From**: `MatrixCategory(R,Row,Col)`
+
+##### `transpose` : `WSVector(E) -> %`
+
+Operation defined in WSMatrix.
 
 #### `union` <a id="union"></a>
 
@@ -2044,10 +2412,15 @@ zero(m, n) returns an m-by-n zero matrix.
 
 #### `zero?` <a id="zero"></a>
 
+##### `zero?` : `% -> Boolean`
+
 zero?(m) returns true if m is a zero matrix and false otherwise
 
-- **Signature**: `% -> Boolean if E has ABELMON`
 - **From**: `MatrixOperationsCategory(R,Row,Col)`
+
+##### `zero?` : `% -> Boolean if E has ABELMON`
+
+Operation defined in WSMatrix.
 
 #### `~=` <a id="op-neq"></a>
 

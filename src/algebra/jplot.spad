@@ -18,77 +18,168 @@ JLPlotFunctions() : Exports == Implementation where
     ++ jlSetPlotsBackend!(backend) sets the backend for plotting.
     ++ The available backends are "gr", "gaston", "plotly", "plotlyjs",
     ++ "pythonplot", "pgfplotsx", "unicodeplots" and "inspectdr".
+    ++ Example:
+    ++ \example{jlSetPlotsBackend!("gr")}
     jlClosePlots : Void
     ++ jlClosePlots() closes all plot windows.
+    ++ Example:
+    ++ \example{jlClosePlots()}
     jlPlotPoints : () -> PositiveInteger
     ++ jlPlotPoints() returns the default number of points used for 1D and 2D curves.
+    ++ Example:
+    ++ \example{jlPlotPoints()}
     jlSetPlotPoints! : PositiveInteger -> PositiveInteger
     ++ jlSetPlotPoints!(n) sets the default number of points used for 1D and 2D curves
     ++ and returns the previous value.
+    ++ Example:
+    ++ \example{jlSetPlotPoints!(350)}
     jlPlot3dPoints : () -> PositiveInteger
     ++ jlPlot3dPoints() returns the default number of grid points per axis
     ++ used for 3D surface, wireframe and contour plots.
+    ++ Example:
+    ++ \example{jlPlot3dPoints()}
     jlSetPlot3dPoints! : PositiveInteger -> PositiveInteger
     ++ jlSetPlot3dPoints!(n) sets the default number of grid points per axis
     ++ used for 3D plots and returns the previous value.
+    ++ Example:
+    ++ \example{jlSetPlot3dPoints!(75)}
     jlRange : SEG -> JLFloat64Vector
     ++ jlRange(range) is a utility function that returns a JLFloat64Vector
     ++ with jlPlotPoints() points from \spad{low(range)} to \spad{high(range)}.
+    ++ Example:
+    ++ \example{jlRange(-%pi..%pi)}
     jlRange : (SEG, PositiveInteger) -> JLFloat64Vector
     ++ jlRange(range, n) is a utility function that returns a
     ++ JLFloat64Vector with n points from \spad{low(range)}
     ++ to \spad{high(range)}.
+    ++ Example:
+    ++ \example{jlRange(-%pi..%pi, 100)}
     jlDensity : JF64VEC -> Void
     ++ jlDensity(x) draws a line plot of a kernel density estimate of x.
+    ++ Example:
+    ++ \example{vx := jlRange(-%pi..%pi, 100);}
+    ++ \example{vy := map(x +-> coerce(sin(x pretend DoubleFloat))@JF64, vx);}
+    ++ \example{jlDensity(vy)}
     jlDensity! : JF64VEC -> Void
     ++ jlDensity!(x) draws a line plot of a kernel density estimate of x
     ++ on the existing graph object.
+    ++ Example:
+    ++ \example{vx := jlRange(-%pi..%pi, 100);}
+    ++ \example{vz := map(x +-> coerce(cos(x pretend DoubleFloat))@JF64, vx);}
+    ++ \example{jlDensity!(vz)}
     jlPlot : (JF64VEC, JF64VEC) -> Void
     ++ jlPlot(x,y) draws a plot using elements of x and y.
+    ++ Example:
+    ++ \example{vx := jlRange(-%pi..%pi, 100);}
+    ++ \example{vy := map(x +-> coerce(sin(x pretend DoubleFloat))@JF64, vx);}
+    ++ \example{jlPlot(vx, vy)}
     jlPlot! : (JF64VEC, JF64VEC) -> Void
     ++ jlPlot!(x,y) draws a plot using elements of x and y
     ++ on the existing graph object.
+    ++ Example:
+    ++ \example{vx := jlRange(-%pi..%pi, 100);}
+    ++ \example{vz := map(x +-> coerce(cos(x pretend DoubleFloat))@JF64, vx);}
+    ++ \example{jlPlot!(vx, vz)}
     jlCurves : (JF64VEC, JF64VEC) -> Void
     ++ jlCurves(x,y) draws a Bezier plot curve
     ++ from (x.1,y.1) to (x.end,y.end) with control points (x.2,y.2),...,
     ++ (x.end-1,y.end-1) and draws it.
+    ++ Example:
+    ++ \example{vx := jlRange(-%pi..%pi, 100);}
+    ++ \example{vy := map(x +-> coerce(sin(x pretend DoubleFloat))@JF64, vx);}
+    ++ \example{jlCurves(vx, vy)}
     jlCurves! : (JF64VEC, JF64VEC) -> Void
     ++ jlCurves!(x,y) draws a Bezier plot curve
     ++ from (x.1,y.1) to (x.end,y.end) with control points (x.2,y.2),...,
     ++ (x.end-1,y.end-1) and draws it on the existing graph object.
+    ++ Example:
+    ++ \example{vx := jlRange(-%pi..%pi, 100);}
+    ++ \example{vz := map(x +-> coerce(cos(x pretend DoubleFloat))@JF64, vx);}
+    ++ \example{jlCurves!(vx, vz)}
     jlBar : (JF64VEC, JF64VEC) -> Void
     ++ jlBar(x,y) draws a bar plot of y vs x.
+    ++ Example (Standard Normal Distribution):
+    ++ \example{vx := jlRange(-3.0..3.0, 25);}
+    ++ \example{vy := map(x +-> (t := x pretend DoubleFloat; coerce(exp(-t^2/2.0))@JF64), vx);}
+    ++ \example{jlBar(vx, vy)}
     jlBar! : (JF64VEC, JF64VEC) -> Void
     ++ jlBar!(x,y) draws a bar plot of y vs x on the existing graph object.
+    ++ Example (Shifted Gaussian Distribution):
+    ++ \example{vx := jlRange(-3.0..3.0, 25);}
+    ++ \example{vz := map(x +-> (t := x pretend DoubleFloat; coerce(0.5*exp(-(t-1.0)^2/2.0))@JF64), vx);}
+    ++ \example{jlBar!(vx, vz)}
     jlPlot : (JF64VEC, JF64VEC, JF64VEC) -> Void
     ++ jlPlot(x,y,z) draws a plot using elements of x, y and z.
+    ++ Example:
+    ++ \example{vx := jlRange(-%pi..%pi, 100);}
+    ++ \example{vy := map(x +-> coerce(sin(x pretend DoubleFloat))@JF64, vx);}
+    ++ \example{vz := map(x +-> coerce(cos(x pretend DoubleFloat))@JF64, vx);}
+    ++ \example{jlPlot(vx, vy, vz)}
     jlPlot! : (JF64VEC, JF64VEC, JF64VEC) -> Void
     ++ jlPlot!(x,y,z) draws a plot using elements of x, y and z
     ++ on the existing graph object.
+    ++ Example:
+    ++ \example{vx := jlRange(-%pi..%pi, 100);}
+    ++ \example{vy := map(x +-> coerce(sin(x pretend DoubleFloat))@JF64, vx);}
+    ++ \example{vz := map(x +-> coerce(cos(x pretend DoubleFloat))@JF64, vx);}
+    ++ \example{jlPlot!(vx, vz, vy)}
     jlWireframe : (JF64VEC, JF64VEC, JF64MAT) -> Void
     ++ jlWireframe(x,y,mat) draws the wireframe surface of mat.
+    ++ Example:
+    ++ \example{xGrid := jlRange(-3.0..3.0, 40); yGrid := jlRange(-3.0..3.0, 40);}
+    ++ \example{zMat := qnew(40, 40)$JF64MAT;}
+    ++ \example{jlWireframe(xGrid, yGrid, zMat)}
     jlWireframe! : (JF64VEC, JF64VEC, JF64MAT) -> Void
     ++ jlWireframe!(x,y,mat) draws the wireframe surface of mat
     ++ on the existing graph object.
+    ++ Example:
+    ++ \example{xGrid := jlRange(-3.0..3.0, 40); yGrid := jlRange(-3.0..3.0, 40);}
+    ++ \example{zMat := qnew(40, 40)$JF64MAT;}
+    ++ \example{jlWireframe!(xGrid, yGrid, zMat)}
     jlSurface : (JF64VEC, JF64VEC, JF64MAT) -> Void
     ++ jlSurface(x,y,mat) draws the plot surface of mat.
+    ++ Example:
+    ++ \example{xGrid := jlRange(-3.0..3.0, 40); yGrid := jlRange(-3.0..3.0, 40);}
+    ++ \example{zMat := qnew(40, 40)$JF64MAT;}
+    ++ \example{jlSurface(xGrid, yGrid, zMat)}
     jlSurface! : (JF64VEC, JF64VEC, JF64MAT) -> Void
     ++ jlSurface!(x,y,mat) draws the plot surface of mat
     ++ on the existing graph object.
+    ++ Example:
+    ++ \example{xGrid := jlRange(-3.0..3.0, 40); yGrid := jlRange(-3.0..3.0, 40);}
+    ++ \example{zMat := qnew(40, 40)$JF64MAT;}
+    ++ \example{jlSurface!(xGrid, yGrid, zMat)}
     jlContour : (JF64VEC, JF64VEC, JF64MAT) -> Void
     ++ jlContour(x,y,mat) draws the contour plot of surface mat.
+    ++ Example:
+    ++ \example{xGrid := jlRange(-3.0..3.0, 40); yGrid := jlRange(-3.0..3.0, 40);}
+    ++ \example{zMat := qnew(40, 40)$JF64MAT;}
+    ++ \example{jlContour(xGrid, yGrid, zMat)}
     jlContour! : (JF64VEC, JF64VEC, JF64MAT) -> Void
     ++ jlContour!(x,y,mat) draws the contour plot of surface mat
     ++ on the existing graph object.
+    ++ Example:
+    ++ \example{xGrid := jlRange(-3.0..3.0, 40); yGrid := jlRange(-3.0..3.0, 40);}
+    ++ \example{zMat := qnew(40, 40)$JF64MAT;}
+    ++ \example{jlContour!(xGrid, yGrid, zMat)}
     jlContourf : (JF64VEC, JF64VEC, JF64MAT) -> Void
     ++ jlContourf(x,y,mat) draws the contour plot of surface mat.
     ++ Fill area between contours.
+    ++ Example:
+    ++ \example{xGrid := jlRange(-3.0..3.0, 40); yGrid := jlRange(-3.0..3.0, 40);}
+    ++ \example{zMat := qnew(40, 40)$JF64MAT;}
+    ++ \example{jlContourf(xGrid, yGrid, zMat)}
     jlContourf! : (JF64VEC, JF64VEC, JF64MAT) -> Void
     ++ jlContourf!(x,y,mat) draws the contour plot of surface mat
     ++ on the existing graph object. Fill area between contours.
+    ++ Example:
+    ++ \example{xGrid := jlRange(-3.0..3.0, 40); yGrid := jlRange(-3.0..3.0, 40);}
+    ++ \example{zMat := qnew(40, 40)$JF64MAT;}
+    ++ \example{jlContourf!(xGrid, yGrid, zMat)}
     jlPlotTitle! : String -> Void
     ++ jlPlotTitle!(title) draws \spad{title} as plot title in the current plot.
-    ++ For example:
+    ++ Example:
+    ++ \example{jlPlotTitle!("Exhaustive jlFriCAS Plotting Verification")}
     ++ \example{jlPlotTitle! "sin(x)"}
     ++ if you have the LaTeXStrings Julia package
     ++ \example{jlPlotTitle! jlLatex latex sin(x)}
@@ -100,294 +191,642 @@ JLPlotFunctions() : Exports == Implementation where
     ++ \example{jlPlotTitle! jlLatex "Plot: $sin(x)$"}
     jlPlotXlims! : (JF64, JF64) -> Void
     ++ jlPlotXlims!(x1,x2) sets x plot limits.
+    ++ Example:
+    ++ \example{jlPlotXlims!(-4.0@JF64, 4.0@JF64)}
     jlPlotXlims! : (DF, DF) -> Void
     ++ jlPlotXlims!(x1,x2) sets x plot limits.
+    ++ Example:
+    ++ \example{jlPlotXlims!(-4.0, 4.0)}
     jlPlotXlims! : (Float, Float) -> Void
     ++ jlPlotXlims!(x1,x2) sets x plot limits.
+    ++ Example:
+    ++ \example{jlPlotXlims!(-4.0::Float, 4.0::Float)}
     jlPlotXlims! : SEG -> Void
     ++ jlPlotXlims!(range) sets x plot limits.
+    ++ Example:
+    ++ \example{jlPlotXlims!(-4.0..4.0)}
     jlPlotYlims! : (JF64, JF64) -> Void
     ++ jlPlotYlims!(y1,y2) sets y plot limits.
+    ++ Example:
+    ++ \example{jlPlotYlims!(-4.0@JF64, 4.0@JF64)}
     jlPlotYlims! : (DF, DF) -> Void
     ++ jlPlotYlims!(y1,y2) sets y plot limits.
+    ++ Example:
+    ++ \example{jlPlotYlims!(-4.0, 4.0)}
     jlPlotYlims! : (Float, Float) -> Void
     ++ jlPlotYlims!(y1,y2) sets y plot limits.
+    ++ Example:
+    ++ \example{jlPlotYlims!(-4.0::Float, 4.0::Float)}
     jlPlotYlims! : SEG -> Void
     ++ jlPlotYlims!(range) sets y plot limits.
+    ++ Example:
+    ++ \example{jlPlotYlims!(-4.0..4.0)}
     jlPlotZlims! : (JF64, JF64) -> Void
     ++ jlPlotZlims!(z1,z2) sets z plot limits.
+    ++ Example:
+    ++ \example{jlPlotZlims!(-2.0@JF64, 2.0@JF64)}
     jlPlotZlims! : (DF, DF) -> Void
     ++ jlPlotZlims!(z1,z2) sets z plot limits.
+    ++ Example:
+    ++ \example{jlPlotZlims!(-2.0, 2.0)}
     jlPlotZlims! : (Float, Float) -> Void
     ++ jlPlotZlims!(z1,z2) sets z plot limits.
+    ++ Example:
+    ++ \example{jlPlotZlims!(-2.0::Float, 2.0::Float)}
     jlPlotZlims! : SEG -> Void
     ++ jlPlotZlims!(range) sets z plot limits.
+    ++ Example:
+    ++ \example{jlPlotZlims!(-2.0..2.0)}
     jlPlotXlabel! : String -> Void
     ++ jlPlotXlabel!(str) sets x label.
     ++ See \spadfunFrom{jlPlotTitle}{JLPlotFunctions} for more
     ++ informations on the different supported formats.
+    ++ Example:
+    ++ \example{jlPlotXlabel!("X Axis")}
     jlPlotYlabel! : String -> Void
     ++ jlPlotYlabel!(str) sets y label.
     ++ See \spadfunFrom{jlPlotTitle}{JLPlotFunctions} for more
     ++ informations on the different supported formats.
+    ++ Example:
+    ++ \example{jlPlotYlabel!("Y Axis")}
     jlPlotZlabel! : String -> Void
     ++ jlPlotZlabel!(str) sets z label.
     ++ See \spadfunFrom{jlPlotTitle}{JLPlotFunctions} for more
     ++ informations on the different supported formats.
+    ++ Example:
+    ++ \example{jlPlotZlabel!("Z Axis")}
     jlPlotSize! : (PositiveInteger, PositiveInteger) -> Void
     ++ jlPlotSize!(w, h) sets the plot window dimensions in pixels (width, height).
+    ++ Example:
+    ++ \example{jlPlotSize!(800, 600)}
     jlPlotDpi! : PositiveInteger -> Void
     ++ jlPlotDpi!(dpi) sets the figure rendering resolution in DPI (dots per inch).
+    ++ Example:
+    ++ \example{jlPlotDpi!(150)}
     jlPlotColorMap! : String -> Void
     ++ jlPlotColorMap!(palette) sets the color palette / colormap
     ++ (e.g. "viridis", "plasma", "inferno", "turbo", "coolwarm", "cividis").
+    ++ Example:
+    ++ \example{jlPlotColorMap!("plasma")}
+    ++ \example{jlPlotColorMap!("viridis")}
     jlPlotXscale! : String -> Void
     ++ jlPlotXscale!(scale) sets the x-axis scale ("identity", "log10", "log2", "ln").
+    ++ Example:
+    ++ \example{jlPlotXscale!("identity")}
     jlPlotYscale! : String -> Void
     ++ jlPlotYscale!(scale) sets the y-axis scale ("identity", "log10", "log2", "ln").
+    ++ Example:
+    ++ \example{jlPlotYscale!("identity")}
     jlPlotLegend! : String -> Void
     ++ jlPlotLegend!(pos) sets the legend position
     ++ ("topleft", "topright", "bottomleft", "bottomright", "outertopright", "none", "false").
+    ++ Example:
+    ++ \example{jlPlotLegend!("bottomright")}
+    ++ \example{jlPlotLegend!("topleft")}
+    ++ \example{jlPlotLegend!("none")}
     jlPlotGrid! : Boolean -> Void
     ++ jlPlotGrid!(flag) enables or disables grid lines on the plot.
+    ++ Example:
+    ++ \example{jlPlotGrid!(false)}
+    ++ \example{jlPlotGrid!(true)}
 
     -- Functional plotting functions
     jlPlot : (DF -> DF, SEG) -> Void
     ++ jlPlot(f, a..b) draws the graph of \spad{y = f(x)} as x
     ++ ranges from \spad{min(a, b)} to \spad{max(a, b)}.
-    ++ For example:
-    ++ \example{jlPlot(x+->sinc(x),-15..15)}
+    ++ Example (Witch of Agnesi):
+    ++ \example{f := (t : DoubleFloat) : DoubleFloat +-> 8.0/(t^2 + 4.0);}
+    ++ \example{jlPlot(f, -5.0..5.0)}
     jlPlot : (DF -> DF, SEG, PositiveInteger) -> Void
     ++ jlPlot(f, a..b, n) draws the graph of \spad{y = f(x)} using n points.
+    ++ Example (Runge's Function):
+    ++ \example{f := (t : DoubleFloat) : DoubleFloat +-> 1.0/(1.0 + 25.0*t^2);}
+    ++ \example{jlPlot(f, -1.0..1.0, 100)}
     jlPlot : (DF -> DF, SEG, String) -> Void
     ++ jlPlot(f, a..b, title) draws the graph of \spad{y = f(x)} with title.
+    ++ Example (Mexican Hat Wavelet):
+    ++ \example{f := (t : DoubleFloat) : DoubleFloat +-> (1.0 - t^2)*exp(-t^2/2.0);}
+    ++ \example{jlPlot(f, -4.0..4.0, "Mexican Hat Wavelet")}
     jlPlot : (DF -> DF, SEG, PositiveInteger, String) -> Void
     ++ jlPlot(f, a..b, n, title) draws the graph of \spad{y = f(x)} with title using n points.
+    ++ Example (Damped Harmonic Oscillator):
+    ++ \example{f := (t : DoubleFloat) : DoubleFloat +-> exp(-t/5.0)*cos(2.0*t);}
+    ++ \example{jlPlot(f, 0.0..20.0, 200, "Damped Oscillator (200 pts)")}
     jlPlot! : (DF -> DF, SEG) -> Void
     ++ jlPlot!(f, a..b) adds the graph of \spad{y = f(x)} as x
     ++ ranges from \spad{min(a, b)} to \spad{max(a, b)}
     ++ to the existing graph object.
+    ++ Example (Damped Sine Wave):
+    ++ \example{g := (t : DoubleFloat) : DoubleFloat +-> exp(-t/5.0)*sin(2.0*t);}
+    ++ \example{jlPlot!(g, 0.0..20.0)}
     jlPlot! : (DF -> DF, SEG, PositiveInteger) -> Void
     ++ jlPlot!(f, a..b, n) adds the graph of \spad{y = f(x)} using n points.
+    ++ Example (Exponential Decay Envelope):
+    ++ \example{g := (t : DoubleFloat) : DoubleFloat +-> exp(-t/5.0);}
+    ++ \example{jlPlot!(g, 0.0..20.0, 100)}
     jlPlot! : (DF -> DF, SEG, String) -> Void
     ++ jlPlot!(f, a..b, title) adds the graph of \spad{y = f(x)} with title.
+    ++ Example (Gaussian Bell Curve):
+    ++ \example{g := (t : DoubleFloat) : DoubleFloat +-> exp(-t^2/2.0);}
+    ++ \example{jlPlot!(g, -4.0..4.0, "Gaussian Bell Curve")}
     jlPlot! : (DF -> DF, SEG, PositiveInteger, String) -> Void
     ++ jlPlot!(f, a..b, n, title) adds the graph of \spad{y = f(x)} with title using n points.
+    ++ Example (Modulated Sinc):
+    ++ \example{g := (t : DoubleFloat) : DoubleFloat +-> sin(3.0*t)/(1.0 + t^2);}
+    ++ \example{jlPlot!(g, -6.0..6.0, 150, "Modulated Sinc (150 pts)")}
 
     jlPlot : ((DF, DF) -> DF, SEG, SEG) -> Void
     ++ jlPlot(f, a..b, c..d) draws the graph of \spad{z = f(x, y)} as x
     ++ ranges from \spad{min(a, b)} to \spad{max(a, b)} and y
     ++ ranges from \spad{min(c, d)} to \spad{max(c, d)}.
+    ++ Example (Hyperbolic Paraboloid / Saddle):
+    ++ \example{f := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> u^2 - v^2;}
+    ++ \example{jlPlot(f, -2.0..2.0, -2.0..2.0)}
     jlPlot : ((DF, DF) -> DF, SEG, SEG, PositiveInteger) -> Void
     ++ jlPlot(f, a..b, c..d, n) draws the graph of \spad{z = f(x, y)} using an n by n grid.
+    ++ Example (Monkey Saddle):
+    ++ \example{f := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> u^3 - 3.0*u*v^2;}
+    ++ \example{jlPlot(f, -2.0..2.0, -2.0..2.0, 40)}
     jlPlot : ((DF, DF) -> DF, SEG, SEG, String) -> Void
     ++ jlPlot(f, a..b, c..d, title) draws the graph of \spad{z = f(x, y)} with title.
+    ++ Example (Bivariate Gaussian Bell):
+    ++ \example{f := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> exp(-(u^2 + v^2)/2.0);}
+    ++ \example{jlPlot(f, -3.0..3.0, -3.0..3.0, "Bivariate Gaussian Bell")}
     jlPlot : ((DF, DF) -> DF, SEG, SEG, PositiveInteger, String) -> Void
     ++ jlPlot(f, a..b, c..d, n, title) draws the graph of \spad{z = f(x, y)} with title using an n by n grid.
+    ++ Example (Concentric Circular Waves):
+    ++ \example{f := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> cos(u^2 + v^2);}
+    ++ \example{jlPlot(f, -3.0..3.0, -3.0..3.0, 40, "Concentric Circular Waves (40x40)")}
     jlPlot! : ((DF, DF) -> DF, SEG, SEG) -> Void
     ++ jlPlot!(f, a..b, c..d) adds the graph of \spad{z = f(x, y)} as x
     ++ ranges from \spad{min(a, b)} to \spad{max(a, b)} and y
     ++ ranges from \spad{min(c, d)} to \spad{max(c, d)}
     ++ on the existing graph object.
+    ++ Example (Inverted Gaussian Potential):
+    ++ \example{g := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> -exp(-(u^2 + v^2)/2.0);}
+    ++ \example{jlPlot!(g, -3.0..3.0, -3.0..3.0)}
     jlPlot! : ((DF, DF) -> DF, SEG, SEG, PositiveInteger) -> Void
     ++ jlPlot!(f, a..b, c..d, n) adds the graph of \spad{z = f(x, y)} using an n by n grid.
+    ++ Example (Elliptic Paraboloid Bowl):
+    ++ \example{g := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> (u^2 + v^2)/4.0;}
+    ++ \example{jlPlot!(g, -2.0..2.0, -2.0..2.0, 40)}
     jlPlot! : ((DF, DF) -> DF, SEG, SEG, String) -> Void
     ++ jlPlot!(f, a..b, c..d, title) adds the graph of \spad{z = f(x, y)} with title.
+    ++ Example (Egg Carton Surface):
+    ++ \example{g := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> cos(u) + cos(v);}
+    ++ \example{jlPlot!(g, -5.0..5.0, -5.0..5.0, "Egg Carton Surface")}
     jlPlot! : ((DF, DF) -> DF, SEG, SEG, PositiveInteger, String) -> Void
     ++ jlPlot!(f, a..b, c..d, n, title) adds the graph of \spad{z = f(x, y)} with title using an n by n grid.
+    ++ Example (Chladni Standing Wave):
+    ++ \example{g := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> sin(u)*sin(v);}
+    ++ \example{jlPlot!(g, -4.0..4.0, -4.0..4.0, 40, "Chladni Standing Wave (40x40)")}
 
     jlWireframe : ((DF, DF) -> DF, SEG, SEG) -> Void
     ++ jlWireframe(f, a..b, c..d) draws the wireframe of
     ++ \spad{z = f(x,y)} as x ranges from \spad{min(a, b)}
     ++ to \spad{max(a, b)} and y ranges from \spad{min(c, d)}
     ++ to \spad{max(c, d)}.
+    ++ Example (Monkey Saddle):
+    ++ \example{f := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> u^3 - 3.0*u*v^2;}
+    ++ \example{jlWireframe(f, -2.0..2.0, -2.0..2.0)}
     jlWireframe : ((DF, DF) -> DF, SEG, SEG, PositiveInteger) -> Void
     ++ jlWireframe(f, a..b, c..d, n) draws the wireframe using an n by n grid.
+    ++ Example (2D Mexican Hat Wavelet):
+    ++ \example{f := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> (1.0 - (u^2 + v^2)/2.0)*exp(-(u^2 + v^2)/2.0);}
+    ++ \example{jlWireframe(f, -3.0..3.0, -3.0..3.0, 30)}
     jlWireframe : ((DF, DF) -> DF, SEG, SEG, String) -> Void
     ++ jlWireframe(f, a..b, c..d, title) draws the wireframe with title.
+    ++ Example (Hyperbolic Paraboloid):
+    ++ \example{f := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> u^2 - v^2;}
+    ++ \example{jlWireframe(f, -2.0..2.0, -2.0..2.0, "Hyperbolic Paraboloid")}
     jlWireframe : ((DF, DF) -> DF, SEG, SEG, PositiveInteger, String) -> Void
     ++ jlWireframe(f, a..b, c..d, n, title) draws the wireframe with title using an n by n grid.
+    ++ Example (Circular Ripple Waves):
+    ++ \example{f := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> sin(u^2 + v^2);}
+    ++ \example{jlWireframe(f, -3.0..3.0, -3.0..3.0, 30, "Circular Ripple Waves (30x30)")}
     jlWireframe! : ((DF, DF) -> DF, SEG, SEG) -> Void
     ++ jlWireframe!(f, a..b, c..d) adds the wireframe
     ++ of \spad{z = f(x,y)} as x ranges from \spad{min(a, b)}
     ++ to \spad{max(a, b)} and y ranges from \spad{min(c, d)}
     ++ to \spad{max(c, d)} on the existing graph object.
+    ++ Example (Paraboloid Bowl):
+    ++ \example{g := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> (u^2 + v^2)/2.0;}
+    ++ \example{jlWireframe!(g, -2.0..2.0, -2.0..2.0)}
     jlWireframe! : ((DF, DF) -> DF, SEG, SEG, PositiveInteger) -> Void
     ++ jlWireframe!(f, a..b, c..d, n) adds the wireframe using an n by n grid.
+    ++ Example (Circular Cosine Wave):
+    ++ \example{g := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> cos(sqrt(u^2 + v^2));}
+    ++ \example{jlWireframe!(g, -5.0..5.0, -5.0..5.0, 30)}
     jlWireframe! : ((DF, DF) -> DF, SEG, SEG, String) -> Void
     ++ jlWireframe!(f, a..b, c..d, title) adds the wireframe with title.
+    ++ Example (Cone Surface):
+    ++ \example{g := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> sqrt(u^2 + v^2);}
+    ++ \example{jlWireframe!(g, -3.0..3.0, -3.0..3.0, "Cone Surface")}
     jlWireframe! : ((DF, DF) -> DF, SEG, SEG, PositiveInteger, String) -> Void
     ++ jlWireframe!(f, a..b, c..d, n, title) adds the wireframe with title using an n by n grid.
+    ++ Example (Rosenbrock Banana Valley):
+    ++ \example{g := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> (1.0 - u)^2 + 10.0*(v - u^2)^2;}
+    ++ \example{jlWireframe!(g, -2.0..2.0, -1.0..3.0, 30, "Rosenbrock Banana Valley (30x30)")}
 
     jlSurface : ((DF, DF) -> DF, SEG, SEG) -> Void
     ++ jlSurface(f, a..b, c..d) draws the surface of \spad{z = f(x,y)} as x
     ++ ranges from \spad{min(a, b)} to \spad{max(a, b)} and y
     ++ ranges from \spad{min(c, d)} to \spad{max(c, d)}.
+    ++ Example (Sombrero / Circular Waves):
+    ++ \example{f := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> exp(-(u^2 + v^2)/4.0)*cos(sqrt(u^2 + v^2));}
+    ++ \example{jlSurface(f, -5.0..5.0, -5.0..5.0)}
     jlSurface : ((DF, DF) -> DF, SEG, SEG, PositiveInteger) -> Void
     ++ jlSurface(f, a..b, c..d, n) draws the surface of \spad{z = f(x,y)} using an n by n grid.
+    ++ Example (Monkey Saddle):
+    ++ \example{f := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> u^3 - 3.0*u*v^2;}
+    ++ \example{jlSurface(f, -2.0..2.0, -2.0..2.0, 40)}
     jlSurface : ((DF, DF) -> DF, SEG, SEG, String) -> Void
     ++ jlSurface(f, a..b, c..d, title) draws the surface of \spad{z = f(x,y)} with title.
+    ++ Example (Egg Carton Surface):
+    ++ \example{f := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> sin(u)*cos(v);}
+    ++ \example{jlSurface(f, -4.0..4.0, -4.0..4.0, "Egg Carton Surface")}
     jlSurface : ((DF, DF) -> DF, SEG, SEG, PositiveInteger, String) -> Void
     ++ jlSurface(f, a..b, c..d, n, title) draws the surface of \spad{z = f(x,y)} with title using an n by n grid.
+    ++ Example (Hyperbolic Paraboloid):
+    ++ \example{f := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> u^2 - v^2;}
+    ++ \example{jlSurface(f, -2.0..2.0, -2.0..2.0, 40, "Hyperbolic Paraboloid (40x40)")}
     jlSurface! : ((DF, DF) -> DF, SEG, SEG) -> Void
     ++ jlSurface!(f, a..b, c..d) adds the surface
     ++ of \spad{z = f(x,y)} as x ranges from \spad{min(a, b)}
     ++ to \spad{max(a, b)} and y ranges from \spad{min(c, d)}
     ++ to \spad{max(c, d)} on the existing graph object.
+    ++ Example (Gaussian Hill):
+    ++ \example{g := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> exp(-(u^2 + v^2)/2.0);}
+    ++ \example{jlSurface!(g, -3.0..3.0, -3.0..3.0)}
     jlSurface! : ((DF, DF) -> DF, SEG, SEG, PositiveInteger) -> Void
     ++ jlSurface!(f, a..b, c..d, n) adds the surface of \spad{z = f(x,y)} using an n by n grid.
+    ++ Example (Chladni Nodal Plate):
+    ++ \example{g := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> cos(2.0*u)*cos(3.0*v);}
+    ++ \example{jlSurface!(g, -3.0..3.0, -3.0..3.0, 40)}
     jlSurface! : ((DF, DF) -> DF, SEG, SEG, String) -> Void
     ++ jlSurface!(f, a..b, c..d, title) adds the surface of \spad{z = f(x,y)} with title.
+    ++ Example (Rosenbrock Banana Surface):
+    ++ \example{g := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> (1.0 - u)^2 + 10.0*(v - u^2)^2;}
+    ++ \example{jlSurface!(g, -2.0..2.0, -1.0..3.0, "Rosenbrock Banana Surface")}
     jlSurface! : ((DF, DF) -> DF, SEG, SEG, PositiveInteger, String) -> Void
     ++ jlSurface!(f, a..b, c..d, n, title) adds the surface of \spad{z = f(x,y)} with title using an n by n grid.
+    ++ Example (Damped Ripple Wave):
+    ++ \example{g := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> sin(u^2 + v^2)/(1.0 + u^2 + v^2);}
+    ++ \example{jlSurface!(g, -3.0..3.0, -3.0..3.0, 40, "Damped Ripple Wave (40x40)")}
 
     jlContour : ((DF, DF) -> DF, SEG, SEG) -> Void
     ++ jlContour(f, a..b, c..d) draws the contour plot
     ++ of \spad{z = f(x,y)} as x ranges from \spad{min(a, b)}
     ++ to \spad{max(a, b)} and y ranges from \spad{min(c, d)}
     ++ to \spad{max(c, d)}.
+    ++ Example (Rosenbrock Banana Contours):
+    ++ \example{f := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> (1.0 - u)^2 + 10.0*(v - u^2)^2;}
+    ++ \example{jlContour(f, -2.0..2.0, -1.0..3.0)}
     jlContour : ((DF, DF) -> DF, SEG, SEG, PositiveInteger) -> Void
     ++ jlContour(f, a..b, c..d, n) draws the contour plot using an n by n grid.
+    ++ Example (Concentric Circular Waves):
+    ++ \example{f := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> cos(u^2 + v^2);}
+    ++ \example{jlContour(f, -3.0..3.0, -3.0..3.0, 50)}
     jlContour : ((DF, DF) -> DF, SEG, SEG, String) -> Void
     ++ jlContour(f, a..b, c..d, title) draws the contour plot with title.
+    ++ Example (Monkey Saddle Contours):
+    ++ \example{f := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> u^3 - 3.0*u*v^2;}
+    ++ \example{jlContour(f, -2.0..2.0, -2.0..2.0, "Monkey Saddle Contours")}
     jlContour : ((DF, DF) -> DF, SEG, SEG, PositiveInteger, String) -> Void
     ++ jlContour(f, a..b, c..d, n, title) draws the contour plot with title using an n by n grid.
+    ++ Example (Orthogonal Hyperbolic Contours):
+    ++ \example{f := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> u*v;}
+    ++ \example{jlContour(f, -2.0..2.0, -2.0..2.0, 50, "Hyperbolic Contours (50x50)")}
     jlContour! : ((DF, DF) -> DF, SEG, SEG) -> Void
     ++ jlContour!(f, a..b, c..d) adds the contour plot
     ++ of \spad{z = f(x,y)} as x ranges from \spad{min(a, b)}
     ++ to \spad{max(a, b)} and y ranges from \spad{min(c, d)}
     ++ to \spad{max(c, d)} on the existing graph object.
+    ++ Example (Hyperbolic Paraboloid Contours):
+    ++ \example{g := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> u^2 - v^2;}
+    ++ \example{jlContour!(g, -2.0..2.0, -2.0..2.0)}
     jlContour! : ((DF, DF) -> DF, SEG, SEG, PositiveInteger) -> Void
     ++ jlContour!(f, a..b, c..d, n) adds the contour plot using an n by n grid.
+    ++ Example (Double-well Potential Contours):
+    ++ \example{g := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> (u^2 - 1.0)^2 + v^2;}
+    ++ \example{jlContour!(g, -2.0..2.0, -2.0..2.0, 50)}
     jlContour! : ((DF, DF) -> DF, SEG, SEG, String) -> Void
     ++ jlContour!(f, a..b, c..d, title) adds the contour plot with title.
+    ++ Example (Gaussian Peak Contours):
+    ++ \example{g := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> exp(-u^2 - v^2);}
+    ++ \example{jlContour!(g, -2.0..2.0, -2.0..2.0, "Gaussian Peak Contours")}
     jlContour! : ((DF, DF) -> DF, SEG, SEG, PositiveInteger, String) -> Void
     ++ jlContour!(f, a..b, c..d, n, title) adds the contour plot with title using an n by n grid.
+    ++ Example (Interference Pattern Contours):
+    ++ \example{g := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> cos(2.0*u) + cos(2.0*v);}
+    ++ \example{jlContour!(g, -3.0..3.0, -3.0..3.0, 50, "Interference Pattern Contours (50x50)")}
 
     jlContourf : ((DF, DF) -> DF, SEG, SEG) -> Void
     ++ jlContourf(f, a..b, c..d) draws the filled contour plot
     ++ of \spad{z = f(x,y)} as x ranges from \spad{min(a, b)}
     ++ to \spad{max(a, b)} and y ranges from \spad{min(c, d)}
     ++ to \spad{max(c, d)}. Fill area between contours.
+    ++ Example (2D Mexican Hat Filled Contours):
+    ++ \example{f := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> (1.0 - (u^2 + v^2)/2.0)*exp(-(u^2 + v^2)/2.0);}
+    ++ \example{jlContourf(f, -3.0..3.0, -3.0..3.0)}
     jlContourf : ((DF, DF) -> DF, SEG, SEG, PositiveInteger) -> Void
     ++ jlContourf(f, a..b, c..d, n) draws the filled contour plot using an n by n grid.
+    ++ Example (Rosenbrock Valley Filled Contours):
+    ++ \example{f := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> (1.0 - u)^2 + 10.0*(v - u^2)^2;}
+    ++ \example{jlContourf(f, -2.0..2.0, -1.0..3.0, 50)}
     jlContourf : ((DF, DF) -> DF, SEG, SEG, String) -> Void
     ++ jlContourf(f, a..b, c..d, title) draws the filled contour plot with title.
+    ++ Example (Concentric Circular Waves):
+    ++ \example{f := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> cos(u^2 + v^2);}
+    ++ \example{jlContourf(f, -3.0..3.0, -3.0..3.0, "Concentric Waves")}
     jlContourf : ((DF, DF) -> DF, SEG, SEG, PositiveInteger, String) -> Void
     ++ jlContourf(f, a..b, c..d, n, title) draws the filled contour plot with title using an n by n grid.
+    ++ Example (Wave Interference):
+    ++ \example{f := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> sin(u) + cos(v);}
+    ++ \example{jlContourf(f, -4.0..4.0, -4.0..4.0, 50, "Wave Interference (50x50)")}
     jlContourf! : ((DF, DF) -> DF, SEG, SEG) -> Void
     ++ jlContourf!(f, a..b, c..d) adds the filled contour plot
     ++ of \spad{z = f(x,y)} as x ranges from \spad{min(a, b)}
     ++ to \spad{max(a, b)} and y ranges from \spad{min(c, d)}
     ++ to \spad{max(c, d)} on the existing graph object.
     ++ Fill area between contours.
+    ++ Example (Saddle Surface Filled Contours):
+    ++ \example{g := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> u^2 - v^2;}
+    ++ \example{jlContourf!(g, -2.0..2.0, -2.0..2.0)}
     jlContourf! : ((DF, DF) -> DF, SEG, SEG, PositiveInteger) -> Void
     ++ jlContourf!(f, a..b, c..d, n) adds the filled contour plot using an n by n grid.
+    ++ Example (Monkey Saddle Filled Contours):
+    ++ \example{g := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> u^3 - 3.0*u*v^2;}
+    ++ \example{jlContourf!(g, -2.0..2.0, -2.0..2.0, 50)}
     jlContourf! : ((DF, DF) -> DF, SEG, SEG, String) -> Void
     ++ jlContourf!(f, a..b, c..d, title) adds the filled contour plot with title.
+    ++ Example (Dipole Peaks Filled Contours):
+    ++ \example{g := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> exp(-(u-1.0)^2 - v^2) - exp(-(u+1.0)^2 - v^2);}
+    ++ \example{jlContourf!(g, -3.0..3.0, -2.0..2.0, "Dipole Peaks Filled Contours")}
     jlContourf! : ((DF, DF) -> DF, SEG, SEG, PositiveInteger, String) -> Void
     ++ jlContourf!(f, a..b, c..d, n, title) adds the filled contour plot with title using an n by n grid.
+    ++ Example (Checkerboard Standing Wave):
+    ++ \example{g := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> sin(2.0*u)*sin(2.0*v);}
+    ++ \example{jlContourf!(g, -3.0..3.0, -3.0..3.0, 50, "Checkerboard Standing Wave (50x50)")}
 
     -- Heatmap plotting functions
     jlHeatmap : (JF64VEC, JF64VEC, JF64MAT) -> Void
     ++ jlHeatmap(x, y, mat) draws a heatmap of surface mat.
+    ++ Example:
+    ++ \example{xGrid := jlRange(-3.0..3.0, 40); yGrid := jlRange(-3.0..3.0, 40);}
+    ++ \example{zMat := qnew(40, 40)$JF64MAT;}
+    ++ \example{jlHeatmap(xGrid, yGrid, zMat)}
     jlHeatmap! : (JF64VEC, JF64VEC, JF64MAT) -> Void
     ++ jlHeatmap!(x, y, mat) adds a heatmap of surface mat on existing graphic.
+    ++ Example:
+    ++ \example{xGrid := jlRange(-3.0..3.0, 40); yGrid := jlRange(-3.0..3.0, 40);}
+    ++ \example{zMat := qnew(40, 40)$JF64MAT;}
+    ++ \example{jlHeatmap!(xGrid, yGrid, zMat)}
     jlHeatmap : ((DF, DF) -> DF, SEG, SEG) -> Void
     ++ jlHeatmap(f, a..b, c..d) draws a 2D heatmap of f(x, y).
+    ++ Example (Dipole Twin Peaks Heatmap):
+    ++ \example{f := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> exp(-(u-1.0)^2 - v^2) - exp(-(u+1.0)^2 - v^2);}
+    ++ \example{jlHeatmap(f, -3.0..3.0, -2.0..2.0)}
     jlHeatmap : ((DF, DF) -> DF, SEG, SEG, PositiveInteger) -> Void
     ++ jlHeatmap(f, a..b, c..d, n) draws a 2D heatmap of f(x, y) using an n by n grid.
+    ++ Example (Concentric Waves Heatmap):
+    ++ \example{f := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> sin(u^2 + v^2);}
+    ++ \example{jlHeatmap(f, -3.0..3.0, -3.0..3.0, 60)}
     jlHeatmap : ((DF, DF) -> DF, SEG, SEG, String) -> Void
     ++ jlHeatmap(f, a..b, c..d, title) draws a 2D heatmap with title.
+    ++ Example (Rosenbrock Valley Heatmap):
+    ++ \example{f := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> (1.0 - u)^2 + 10.0*(v - u^2)^2;}
+    ++ \example{jlHeatmap(f, -2.0..2.0, -1.0..3.0, "Rosenbrock Valley Heatmap")}
     jlHeatmap : ((DF, DF) -> DF, SEG, SEG, PositiveInteger, String) -> Void
     ++ jlHeatmap(f, a..b, c..d, n, title) draws a 2D heatmap with title using an n by n grid.
+    ++ Example (Sombrero Heatmap):
+    ++ \example{f := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> exp(-(u^2 + v^2)/4.0)*cos(sqrt(u^2 + v^2));}
+    ++ \example{jlHeatmap(f, -5.0..5.0, -5.0..5.0, 60, "Sombrero Heatmap (60x60)")}
     jlHeatmap! : ((DF, DF) -> DF, SEG, SEG) -> Void
     ++ jlHeatmap!(f, a..b, c..d) adds a 2D heatmap on the existing plot.
+    ++ Example (Saddle Heatmap):
+    ++ \example{g := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> u^2 - v^2;}
+    ++ \example{jlHeatmap!(g, -2.0..2.0, -2.0..2.0)}
     jlHeatmap! : ((DF, DF) -> DF, SEG, SEG, PositiveInteger) -> Void
     ++ jlHeatmap!(f, a..b, c..d, n) adds a 2D heatmap using an n by n grid.
+    ++ Example (Monkey Saddle Heatmap):
+    ++ \example{g := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> u^3 - 3.0*u*v^2;}
+    ++ \example{jlHeatmap!(g, -2.0..2.0, -2.0..2.0, 60)}
     jlHeatmap! : ((DF, DF) -> DF, SEG, SEG, String) -> Void
     ++ jlHeatmap!(f, a..b, c..d, title) adds a 2D heatmap with title.
+    ++ Example (Mexican Hat Heatmap):
+    ++ \example{g := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> (1.0 - (u^2 + v^2)/2.0)*exp(-(u^2 + v^2)/2.0);}
+    ++ \example{jlHeatmap!(g, -3.0..3.0, -3.0..3.0, "Mexican Hat Heatmap")}
     jlHeatmap! : ((DF, DF) -> DF, SEG, SEG, PositiveInteger, String) -> Void
     ++ jlHeatmap!(f, a..b, c..d, n, title) adds a 2D heatmap with title using an n by n grid.
+    ++ Example (Interference Pattern Heatmap):
+    ++ \example{g := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> cos(2.0*u)*cos(2.0*v);}
+    ++ \example{jlHeatmap!(g, -3.0..3.0, -3.0..3.0, 60, "Interference Pattern Heatmap (60x60)")}
 
     -- Parametric plotting functions
     jlParametricPlot : (DF -> DF, DF -> DF, SEG) -> Void
     ++ jlParametricPlot(fx, fy, a..b) draws the 2D parametric curve (fx(t), fy(t)).
+    ++ Example (Astroid Curve):
+    ++ \example{f := (t : DoubleFloat) : DoubleFloat +-> cos(t)^3;}
+    ++ \example{g := (t : DoubleFloat) : DoubleFloat +-> sin(t)^3;}
+    ++ \example{jlParametricPlot(f, g, 0.0..6.283)}
     jlParametricPlot : (DF -> DF, DF -> DF, SEG, PositiveInteger) -> Void
     ++ jlParametricPlot(fx, fy, a..b, n) draws the 2D parametric curve using n points.
+    ++ Example (Lissajous 3:4 Curve):
+    ++ \example{f := (t : DoubleFloat) : DoubleFloat +-> sin(3.0*t);}
+    ++ \example{g := (t : DoubleFloat) : DoubleFloat +-> sin(4.0*t);}
+    ++ \example{jlParametricPlot(f, g, 0.0..6.283, 200)}
     jlParametricPlot : (DF -> DF, DF -> DF, SEG, String) -> Void
     ++ jlParametricPlot(fx, fy, a..b, title) draws the 2D parametric curve with title.
+    ++ Example (Deltoid Curve):
+    ++ \example{f := (t : DoubleFloat) : DoubleFloat +-> 2.0*cos(t) + cos(2.0*t);}
+    ++ \example{g := (t : DoubleFloat) : DoubleFloat +-> 2.0*sin(t) - sin(2.0*t);}
+    ++ \example{jlParametricPlot(f, g, 0.0..6.283, "Deltoid Curve")}
     jlParametricPlot : (DF -> DF, DF -> DF, SEG, PositiveInteger, String) -> Void
     ++ jlParametricPlot(fx, fy, a..b, n, title) draws the 2D parametric curve with title using n points.
+    ++ Example (Trefoil Knot Projection):
+    ++ \example{f := (t : DoubleFloat) : DoubleFloat +-> sin(t) + 2.0*sin(2.0*t);}
+    ++ \example{g := (t : DoubleFloat) : DoubleFloat +-> cos(t) - 2.0*cos(2.0*t);}
+    ++ \example{jlParametricPlot(f, g, 0.0..6.283, 200, "Trefoil Projection (200 pts)")}
     jlParametricPlot! : (DF -> DF, DF -> DF, SEG) -> Void
     ++ jlParametricPlot!(fx, fy, a..b) adds the 2D parametric curve on existing plot.
+    ++ Example (Unit Circle):
+    ++ \example{f := (t : DoubleFloat) : DoubleFloat +-> cos(t);}
+    ++ \example{g := (t : DoubleFloat) : DoubleFloat +-> sin(t);}
+    ++ \example{jlParametricPlot!(f, g, 0.0..6.283)}
     jlParametricPlot! : (DF -> DF, DF -> DF, SEG, PositiveInteger) -> Void
     ++ jlParametricPlot!(fx, fy, a..b, n) adds the 2D parametric curve using n points.
+    ++ Example (Lemniscate of Gerono):
+    ++ \example{f := (t : DoubleFloat) : DoubleFloat +-> sin(t);}
+    ++ \example{g := (t : DoubleFloat) : DoubleFloat +-> sin(t)*cos(t);}
+    ++ \example{jlParametricPlot!(f, g, 0.0..6.283, 150)}
     jlParametricPlot! : (DF -> DF, DF -> DF, SEG, String) -> Void
     ++ jlParametricPlot!(fx, fy, a..b, title) adds the 2D parametric curve with title.
+    ++ Example (Logarithmic Spiral):
+    ++ \example{f := (t : DoubleFloat) : DoubleFloat +-> exp(t/10.0)*cos(t);}
+    ++ \example{g := (t : DoubleFloat) : DoubleFloat +-> exp(t/10.0)*sin(t);}
+    ++ \example{jlParametricPlot!(f, g, 0.0..18.85, "Logarithmic Spiral")}
     jlParametricPlot! : (DF -> DF, DF -> DF, SEG, PositiveInteger, String) -> Void
     ++ jlParametricPlot!(fx, fy, a..b, n, title) adds the 2D parametric curve with title using n points.
+    ++ Example (Lissajous 5:6 Curve):
+    ++ \example{f := (t : DoubleFloat) : DoubleFloat +-> sin(5.0*t);}
+    ++ \example{g := (t : DoubleFloat) : DoubleFloat +-> sin(6.0*t);}
+    ++ \example{jlParametricPlot!(f, g, 0.0..6.283, 300, "Lissajous 5:6 (300 pts)")}
 
     jlParametricPlot : (DF -> DF, DF -> DF, DF -> DF, SEG) -> Void
     ++ jlParametricPlot(fx, fy, fz, a..b) draws the 3D space curve (fx(t), fy(t), fz(t)).
+    ++ Example (Circular Helix):
+    ++ \example{f := (t : DoubleFloat) : DoubleFloat +-> cos(t);}
+    ++ \example{g := (t : DoubleFloat) : DoubleFloat +-> sin(t);}
+    ++ \example{h := (t : DoubleFloat) : DoubleFloat +-> t / 5.0;}
+    ++ \example{jlParametricPlot(f, g, h, 0.0..18.85)}
     jlParametricPlot : (DF -> DF, DF -> DF, DF -> DF, SEG, PositiveInteger) -> Void
     ++ jlParametricPlot(fx, fy, fz, a..b, n) draws the 3D space curve using n points.
+    ++ Example (Trefoil Knot):
+    ++ \example{f := (t : DoubleFloat) : DoubleFloat +-> sin(t) + 2.0*sin(2.0*t);}
+    ++ \example{g := (t : DoubleFloat) : DoubleFloat +-> cos(t) - 2.0*cos(2.0*t);}
+    ++ \example{h := (t : DoubleFloat) : DoubleFloat +-> -sin(3.0*t);}
+    ++ \example{jlParametricPlot(f, g, h, 0.0..6.283, 200)}
     jlParametricPlot : (DF -> DF, DF -> DF, DF -> DF, SEG, String) -> Void
     ++ jlParametricPlot(fx, fy, fz, a..b, title) draws the 3D space curve with title.
+    ++ Example (Viviani's Curve):
+    ++ \example{f := (t : DoubleFloat) : DoubleFloat +-> 1.0 + cos(t);}
+    ++ \example{g := (t : DoubleFloat) : DoubleFloat +-> sin(t);}
+    ++ \example{h := (t : DoubleFloat) : DoubleFloat +-> 2.0*sin(t/2.0);}
+    ++ \example{jlParametricPlot(f, g, h, -6.283..6.283, "Viviani's Curve")}
     jlParametricPlot : (DF -> DF, DF -> DF, DF -> DF, SEG, PositiveInteger, String) -> Void
     ++ jlParametricPlot(fx, fy, fz, a..b, n, title) draws the 3D space curve with title using n points.
+    ++ Example (Toroidal Spiral Knot):
+    ++ \example{f := (t : DoubleFloat) : DoubleFloat +-> (2.0 + cos(10.0*t))*cos(t);}
+    ++ \example{g := (t : DoubleFloat) : DoubleFloat +-> (2.0 + cos(10.0*t))*sin(t);}
+    ++ \example{h := (t : DoubleFloat) : DoubleFloat +-> sin(10.0*t);}
+    ++ \example{jlParametricPlot(f, g, h, 0.0..6.283, 300, "Toroidal Spiral Knot (300 pts)")}
     jlParametricPlot! : (DF -> DF, DF -> DF, DF -> DF, SEG) -> Void
     ++ jlParametricPlot!(fx, fy, fz, a..b) adds the 3D space curve on existing plot.
+    ++ Example (Conical Helix):
+    ++ \example{f := (t : DoubleFloat) : DoubleFloat +-> t*cos(2.0*t);}
+    ++ \example{g := (t : DoubleFloat) : DoubleFloat +-> t*sin(2.0*t);}
+    ++ \example{h := (t : DoubleFloat) : DoubleFloat +-> t;}
+    ++ \example{jlParametricPlot!(f, g, h, 0.0..12.57)}
     jlParametricPlot! : (DF -> DF, DF -> DF, DF -> DF, SEG, PositiveInteger) -> Void
     ++ jlParametricPlot!(fx, fy, fz, a..b, n) adds the 3D space curve using n points.
+    ++ Example (Twisted Cubic Curve):
+    ++ \example{f := (t : DoubleFloat) : DoubleFloat +-> t;}
+    ++ \example{g := (t : DoubleFloat) : DoubleFloat +-> t^2;}
+    ++ \example{h := (t : DoubleFloat) : DoubleFloat +-> t^3;}
+    ++ \example{jlParametricPlot!(f, g, h, -1.5..1.5, 100)}
     jlParametricPlot! : (DF -> DF, DF -> DF, DF -> DF, SEG, String) -> Void
     ++ jlParametricPlot!(fx, fy, fz, a..b, title) adds the 3D space curve with title.
+    ++ Example (Baseball Seam Curve):
+    ++ \example{f := (t : DoubleFloat) : DoubleFloat +-> sin(t) + 0.4*sin(3.0*t);}
+    ++ \example{g := (t : DoubleFloat) : DoubleFloat +-> cos(t) - 0.4*cos(3.0*t);}
+    ++ \example{h := (t : DoubleFloat) : DoubleFloat +-> 0.8*sin(2.0*t);}
+    ++ \example{jlParametricPlot!(f, g, h, 0.0..6.283, "Baseball Seam Curve")}
     jlParametricPlot! : (DF -> DF, DF -> DF, DF -> DF, SEG, PositiveInteger, String) -> Void
     ++ jlParametricPlot!(fx, fy, fz, a..b, n, title) adds the 3D space curve with title using n points.
+    ++ Example (3D Lissajous Knot):
+    ++ \example{f := (t : DoubleFloat) : DoubleFloat +-> cos(2.0*t);}
+    ++ \example{g := (t : DoubleFloat) : DoubleFloat +-> sin(3.0*t);}
+    ++ \example{h := (t : DoubleFloat) : DoubleFloat +-> cos(5.0*t);}
+    ++ \example{jlParametricPlot!(f, g, h, 0.0..6.283, 250, "3D Lissajous Knot (250 pts)")}
 
     -- Polar plotting functions
     jlPolar : (DF -> DF, SEG) -> Void
     ++ jlPolar(f, a..b) draws the polar curve r = f(theta).
+    ++ Example (Cardioid):
+    ++ \example{f := (t : DoubleFloat) : DoubleFloat +-> 1.0 + cos(t);}
+    ++ \example{jlPolar(f, 0.0..6.283)}
     jlPolar : (DF -> DF, SEG, PositiveInteger) -> Void
     ++ jlPolar(f, a..b, n) draws the polar curve r = f(theta) using n points.
+    ++ Example (4-Petal Rose / Rhodonea):
+    ++ \example{f := (t : DoubleFloat) : DoubleFloat +-> cos(2.0*t);}
+    ++ \example{jlPolar(f, 0.0..6.283, 160)}
     jlPolar : (DF -> DF, SEG, String) -> Void
     ++ jlPolar(f, a..b, title) draws the polar curve r = f(theta) with title.
+    ++ Example (Limaçon with Inner Loop):
+    ++ \example{f := (t : DoubleFloat) : DoubleFloat +-> 1.0 + 2.0*cos(t);}
+    ++ \example{jlPolar(f, 0.0..6.283, "Limaçon with Inner Loop")}
     jlPolar : (DF -> DF, SEG, PositiveInteger, String) -> Void
     ++ jlPolar(f, a..b, n, title) draws the polar curve with title using n points.
+    ++ Example (8-Petal Rose):
+    ++ \example{f := (t : DoubleFloat) : DoubleFloat +-> cos(4.0*t);}
+    ++ \example{jlPolar(f, 0.0..6.283, 200, "8-Petal Rose (200 pts)")}
     jlPolar! : (DF -> DF, SEG) -> Void
     ++ jlPolar!(f, a..b) adds the polar curve on existing plot.
+    ++ Example (Dimpled Limaçon):
+    ++ \example{g := (t : DoubleFloat) : DoubleFloat +-> 2.0 + cos(t);}
+    ++ \example{jlPolar!(g, 0.0..6.283)}
     jlPolar! : (DF -> DF, SEG, PositiveInteger) -> Void
     ++ jlPolar!(f, a..b, n) adds the polar curve using n points.
+    ++ Example (Archimedean Spiral):
+    ++ \example{g := (t : DoubleFloat) : DoubleFloat +-> t / 2.0;}
+    ++ \example{jlPolar!(g, 0.0..18.85, 200)}
     jlPolar! : (DF -> DF, SEG, String) -> Void
     ++ jlPolar!(f, a..b, title) adds the polar curve with title.
+    ++ Example (3-Petal Rose / Trifolium):
+    ++ \example{g := (t : DoubleFloat) : DoubleFloat +-> sin(3.0*t);}
+    ++ \example{jlPolar!(g, 0.0..3.142, "3-Petal Rose")}
     jlPolar! : (DF -> DF, SEG, PositiveInteger, String) -> Void
     ++ jlPolar!(f, a..b, n, title) adds the polar curve with title using n points.
+    ++ Example (Logarithmic Spiral):
+    ++ \example{g := (t : DoubleFloat) : DoubleFloat +-> exp(t / 8.0);}
+    ++ \example{jlPolar!(g, 0.0..18.85, 250, "Logarithmic Spiral (250 pts)")}
 
     -- Implicit curve plotting
     jlImplicitPlot : ((DF, DF) -> DF, SEG, SEG) -> Void
     ++ jlImplicitPlot(f, a..b, c..d) draws the 2D implicit curve f(x, y) = 0.
+    ++ Example (Folium of Descartes):
+    ++ \example{f := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> u^3 + v^3 - 3.0*u*v;}
+    ++ \example{jlImplicitPlot(f, -3.0..3.0, -3.0..3.0)}
     jlImplicitPlot : ((DF, DF) -> DF, SEG, SEG, PositiveInteger) -> Void
     ++ jlImplicitPlot(f, a..b, c..d, n) draws the 2D implicit curve f(x, y) = 0 using an n by n grid.
+    ++ Example (Lemniscate of Bernoulli):
+    ++ \example{f := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> (u^2 + v^2)^2 - 2.0*(u^2 - v^2);}
+    ++ \example{jlImplicitPlot(f, -2.0..2.0, -2.0..2.0, 70)}
     jlImplicitPlot : ((DF, DF) -> DF, SEG, SEG, String) -> Void
     ++ jlImplicitPlot(f, a..b, c..d, title) draws the 2D implicit curve with title.
+    ++ Example (Cassini Oval):
+    ++ \example{f := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> (u^2 + v^2)^2 - 2.0*(u^2 - v^2) - 0.5;}
+    ++ \example{jlImplicitPlot(f, -2.0..2.0, -2.0..2.0, "Cassini Oval")}
     jlImplicitPlot : ((DF, DF) -> DF, SEG, SEG, PositiveInteger, String) -> Void
     ++ jlImplicitPlot(f, a..b, c..d, n, title) draws the 2D implicit curve with title using an n by n grid.
+    ++ Example (Heart Curve):
+    ++ \example{f := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> (u^2 + v^2 - 1.0)^3 - u^2 * v^3;}
+    ++ \example{jlImplicitPlot(f, -1.5..1.5, -1.5..1.5, 80, "Heart Curve (80x80)")}
 
     -- 2D Vector field plotting
     jlVectorField : ((DF, DF) -> DF, (DF, DF) -> DF, SEG, SEG) -> Void
     ++ jlVectorField(u, v, a..b, c..d) draws the 2D vector field (u(x, y), v(x, y)).
+    ++ Example (Rotational Vortex / Harmonic Oscillator):
+    ++ \example{f := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> -v;}
+    ++ \example{g := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> u;}
+    ++ \example{jlVectorField(f, g, -2.0..2.0, -2.0..2.0)}
     jlVectorField : ((DF, DF) -> DF, (DF, DF) -> DF, SEG, SEG, PositiveInteger) -> Void
     ++ jlVectorField(u, v, a..b, c..d, n) draws the 2D vector field using an n by n grid.
+    ++ Example (Hyperbolic Saddle Field):
+    ++ \example{f := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> u;}
+    ++ \example{g := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> -v;}
+    ++ \example{jlVectorField(f, g, -2.0..2.0, -2.0..2.0, 20)}
     jlVectorField : ((DF, DF) -> DF, (DF, DF) -> DF, SEG, SEG, String) -> Void
     ++ jlVectorField(u, v, a..b, c..d, title) draws the 2D vector field with title.
+    ++ Example (Van der Pol Oscillator Field):
+    ++ \example{f := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> v;}
+    ++ \example{g := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> (1.0 - u^2)*v - u;}
+    ++ \example{jlVectorField(f, g, -3.0..3.0, -3.0..3.0, "Van der Pol Oscillator")}
     jlVectorField : ((DF, DF) -> DF, (DF, DF) -> DF, SEG, SEG, PositiveInteger, String) -> Void
     ++ jlVectorField(u, v, a..b, c..d, n, title) draws the 2D vector field with title using an n by n grid.
+    ++ Example (Lotka-Volterra Predator-Prey Field):
+    ++ \example{f := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> u*(1.5 - v);}
+    ++ \example{g := (u : DoubleFloat, v : DoubleFloat) : DoubleFloat +-> -v*(3.0 - u);}
+    ++ \example{jlVectorField(f, g, 0.0..5.0, 0.0..5.0, 20, "Lotka-Volterra Field (20x20)")}
 
     jlSavePlot : String -> Void
     ++ jlSavePlot(file) saves the current plot in file.
     ++ Supported formats:
     ++ png (default), PDF, svg and more.
     ++ See https://docs.juliaplots.org/latest/output/#savefig-/-format
+    ++ Example:
+    ++ \example{jlSavePlot("exhaustive_test_result.png")}
   Implementation ==> add
     import from JLUtilityFunctions
     jlInitialize(true)
@@ -929,11 +1368,15 @@ JLDrawFunctions(Ex : Join(ConvertibleTo InputForm, SetCategory)):
       ++ jlPlot(f(x), x = a..b) draws the graph of \spad{y = f(x)} as x
       ++ ranges from \spad{min(a, b)} to \spad{max(a, b)}.
       ++ \spad{f(x)} appears as the title.
+      ++ Example:
+      ++ \example{jlPlot(sin(x), x = -%pi..%pi)}
       jlPlot! : (Ex, BIND) -> Void
       ++ jlPlot!(f(x), x = a..b) adds the graph of \spad{y = f(x)} as x
       ++ ranges from \spad{min(a, b)} to \spad{max(a, b)}
       ++ on the existing graphic window. \spad{f(x)} appears
       ++ as the title.
+      ++ Example:
+      ++ \example{jlPlot!(cos(x), x = -%pi..%pi)}
 
       --% Three Dimensional plotting functions
 
@@ -942,48 +1385,64 @@ JLDrawFunctions(Ex : Join(ConvertibleTo InputForm, SetCategory)):
       ++ \spad{z = f(x, y)} as x ranges from \spad{min(a, b)}
       ++ to \spad{max(a, b)} and y ranges from \spad{min(c, d)}
       ++ to \spad{max(c, d)}. \spad{f(x, y)} appears as the title.
+      ++ Example (Hyperbolic Paraboloid / Saddle):
+      ++ \example{jlPlot(x^2 - y^2, x = -2.0..2.0, y = -2.0..2.0)}
       jlPlot! : (Ex, BIND, BIND) -> Void
       ++ jlPlot!(f(x, y), x = a..b, y = c..d) adds the graph of
       ++ \spad{z = f(x, y)} as x ranges from \spad{min(a, b)}
       ++ to \spad{max(a, b)} and y ranges from \spad{min(c, d)}
       ++ to \spad{max(c, d)} on the existing graph window.
       ++ \spad{f(x, y)} appears as the title.
+      ++ Example (Elliptic Paraboloid Bowl):
+      ++ \example{jlPlot!((x^2 + y^2)/2, x = -2.0..2.0, y = -2.0..2.0)}
 
       jlWireframe : (Ex, BIND, BIND) -> Void
       ++ jlWireframe(f(x, y), x = a..b, y = c..d) draws the wireframe of
       ++ \spad{z = f(x, y)} as x ranges from \spad{min(a, b)}
       ++ to \spad{max(a, b)} and y ranges from \spad{min(c, d)}
       ++ to \spad{max(c, d)}; \spad{f(x, y)} appears as the title.
+      ++ Example (Monkey Saddle Wireframe):
+      ++ \example{jlWireframe(x^3 - 3*x*y^2, x = -2.0..2.0, y = -2.0..2.0)}
       jlWireframe! : (Ex, BIND, BIND) -> Void
       ++ jlWireframe!(f(x, y), x = a..b, y = c..d) adds the wireframe of
       ++ \spad{z = f(x, y)} as x ranges from \spad{min(a, b)}
       ++ to \spad{max(a, b)} and y ranges from \spad{min(c, d)}
       ++ to \spad{max(c, d)} on the existing graph window.
       ++ \spad{f(x, y)} appears as the title.
+      ++ Example (Cone Wireframe):
+      ++ \example{jlWireframe!(sqrt(x^2 + y^2), x = -3.0..3.0, y = -3.0..3.0)}
 
       jlSurface : (Ex, BIND, BIND) -> Void
       ++ jlSurface(f(x, y), x = a..b, y = c..d) draws the surface of
       ++ \spad{z = f(x, y)} as x ranges from \spad{min(a, b)}
       ++ to \spad{max(a, b)} and y ranges from \spad{min(c, d)}
       ++ to \spad{max(c, d)}. \spad{f(x, y)} appears as the title.
+      ++ Example (Sombrero / Circular Waves):
+      ++ \example{jlSurface(exp(-(x^2 + y^2)/4)*cos(sqrt(x^2 + y^2)), x = -5.0..5.0, y = -5.0..5.0)}
       jlSurface! : (Ex, BIND, BIND) -> Void
       ++ jlSurface!(f(x, y), x = a..b, y = c..d) adds the surface of
       ++ \spad{z = f(x, y)} as x ranges from \spad{min(a, b)}
       ++ to \spad{max(a, b)} and y ranges from \spad{min(c, d)}
       ++ to \spad{max(c, d)} on the existing graph window.
       ++ \spad{f(x, y)} appears as the title.
+      ++ Example (Gaussian Bell Hill):
+      ++ \example{jlSurface!(exp(-x^2 - y^2), x = -2.0..2.0, y = -2.0..2.0)}
 
       jlContour : (Ex, BIND, BIND) -> Void
       ++ jlContour(f(x, y), x = a..b, y = c..d) draws the contour plot of
       ++ \spad{z = f(x, y)} as x ranges from \spad{min(a, b)}
       ++ to \spad{max(a, b)} and y ranges from \spad{min(c, d)}
       ++ to \spad{max(c, d)}. \spad{f(x, y)} appears as the title.
+      ++ Example (Rosenbrock Banana Contours):
+      ++ \example{jlContour((1 - x)^2 + 10*(y - x^2)^2, x = -2.0..2.0, y = -1.0..3.0)}
       jlContour! : (Ex, BIND, BIND) -> Void
       ++ jlContour!(f(x, y), x = a..b, y = c..d) adds the contour plot of
       ++ \spad{z = f(x, y)} as x ranges from \spad{min(a, b)}
       ++ to \spad{max(a, b)} and y ranges from \spad{min(c, d)}
       ++ to \spad{max(c, d)} on the existing graph window.
       ++ \spad{f(x, y)} appears as the title.
+      ++ Example (Concentric Circular Waves):
+      ++ \example{jlContour!(cos(x^2 + y^2), x = -3.0..3.0, y = -3.0..3.0)}
 
       jlContourf : (Ex, BIND, BIND) -> Void
       ++ jlContourf(f(x, y), x = a..b, y = c..d) draws the filled contour plot of
@@ -991,6 +1450,8 @@ JLDrawFunctions(Ex : Join(ConvertibleTo InputForm, SetCategory)):
       ++ to \spad{max(a, b)} and y ranges from \spad{min(c, d)}
       ++ to \spad{max(c, d)}. \spad{f(x, y)} appears as the title.
       ++ Fills area between contours.
+      ++ Example (Egg Carton Filled Contours):
+      ++ \example{jlContourf(sin(x)*cos(y), x = -4.0..4.0, y = -4.0..4.0)}
       jlContourf! : (Ex, BIND, BIND) -> Void
       ++ jlContourf!(f(x, y), x = a..b, y = c..d) adds the filled contour plot of
       ++ \spad{z = f(x, y)} as x ranges from \spad{min(a, b)}
@@ -998,49 +1459,77 @@ JLDrawFunctions(Ex : Join(ConvertibleTo InputForm, SetCategory)):
       ++ to \spad{max(c, d)} on the existing graph window.
       ++ \spad{f(x, y)} appears as the title.
       ++ Fills area between contours.
+      ++ Example (Dipole Peaks Filled Contours):
+      ++ \example{jlContourf!(exp(-(x-1)^2 - y^2) - exp(-(x+1)^2 - y^2), x = -3.0..3.0, y = -2.0..2.0)}
 
       --% Multi-Curve plotting from list of expressions
 
       jlPlot : (List Ex, BIND) -> Void
       ++ jlPlot([f1, f2, ...], x = a..b) draws multiple curves on the same plot.
+      ++ Example:
+      ++ \example{jlPlot([sin(x), cos(x), sin(2*x)], x = -%pi..%pi)}
       jlPlot! : (List Ex, BIND) -> Void
       ++ jlPlot!([f1, f2, ...], x = a..b) adds multiple curves on the existing plot.
+      ++ Example:
+      ++ \example{jlPlot!([cos(2*x), sin(3*x)], x = -%pi..%pi)}
 
       --% Heatmap
 
       jlHeatmap : (Ex, BIND, BIND) -> Void
       ++ jlHeatmap(f(x, y), x = a..b, y = c..d) draws a 2D heatmap of f(x, y).
+      ++ Example (Concentric Waves Heatmap):
+      ++ \example{jlHeatmap(sin(x^2 + y^2), x = -3.0..3.0, y = -3.0..3.0)}
       jlHeatmap! : (Ex, BIND, BIND) -> Void
       ++ jlHeatmap!(f(x, y), x = a..b, y = c..d) adds a 2D heatmap on the existing plot.
+      ++ Example (Chladni Interference Heatmap):
+      ++ \example{jlHeatmap!(cos(2*x)*cos(2*y), x = -3.0..3.0, y = -3.0..3.0)}
 
       --% Parametric plotting
 
       jlParametricPlot : (Ex, Ex, BIND) -> Void
       ++ jlParametricPlot(x(t), y(t), t = a..b) draws the 2D parametric curve.
+      ++ Example (Astroid Curve):
+      ++ \example{jlParametricPlot(cos(t)^3, sin(t)^3, t = 0..2*%pi)}
       jlParametricPlot! : (Ex, Ex, BIND) -> Void
       ++ jlParametricPlot!(x(t), y(t), t = a..b) adds the 2D parametric curve on existing plot.
+      ++ Example (Lissajous 3:4 Curve):
+      ++ \example{jlParametricPlot!(sin(3*t), sin(4*t), t = 0..2*%pi)}
 
       jlParametricPlot : (Ex, Ex, Ex, BIND) -> Void
       ++ jlParametricPlot(x(t), y(t), z(t), t = a..b) draws the 3D space curve.
+      ++ Example (Circular Helix):
+      ++ \example{jlParametricPlot(cos(t), sin(t), t/5, t = 0..4*%pi)}
       jlParametricPlot! : (Ex, Ex, Ex, BIND) -> Void
       ++ jlParametricPlot!(x(t), y(t), z(t), t = a..b) adds the 3D space curve on existing plot.
+      ++ Example (Trefoil Knot):
+      ++ \example{jlParametricPlot!(sin(t) + 2*sin(2*t), cos(t) - 2*cos(2*t), -sin(3*t), t = 0..2*%pi)}
 
       --% Polar plotting
 
       jlPolar : (Ex, BIND) -> Void
       ++ jlPolar(r(theta), theta = a..b) draws the polar curve r = f(theta).
+      ++ Example (Cardioid):
+      ++ \example{jlPolar(1 + cos(t), t = 0..2*%pi)}
       jlPolar! : (Ex, BIND) -> Void
       ++ jlPolar!(r(theta), theta = a..b) adds the polar curve on existing plot.
+      ++ Example (4-Petal Rose):
+      ++ \example{jlPolar!(sin(2*t), t = 0..2*%pi)}
 
       --% Implicit curve plotting
 
       jlImplicitPlot : (Ex, BIND, BIND) -> Void
       ++ jlImplicitPlot(f(x, y), x = a..b, y = c..d) draws the 2D implicit curve f(x, y) = 0.
+      ++ Example (Folium of Descartes and Lemniscate of Bernoulli):
+      ++ \example{jlImplicitPlot(x^3 + y^3 - 3*x*y, x = -3.0..3.0, y = -3.0..3.0)}
+      ++ \example{jlImplicitPlot((x^2 + y^2)^2 - 2*(x^2 - y^2), x = -2.0..2.0, y = -2.0..2.0)}
 
       --% 2D Vector fields
 
       jlVectorField : (Ex, Ex, BIND, BIND) -> Void
       ++ jlVectorField(u(x, y), v(x, y), x = a..b, y = c..d) draws the 2D vector field.
+      ++ Example (Rotational Vortex and Hyperbolic Saddle):
+      ++ \example{jlVectorField(-y, x, x = -2.0..2.0, y = -2.0..2.0)}
+      ++ \example{jlVectorField(x, -y, x = -2.0..2.0, y = -2.0..2.0)}
 
     Implementation ==> add
       import from JLPlotFunctions

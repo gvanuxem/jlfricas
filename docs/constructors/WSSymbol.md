@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS symbols using the MathLink Julia package.Time: 0.02 (OT) = 0.02 sec
+Julia WS symbols using the MathLink Julia package.Time: 0 sec
 
 **WSSymbol is a domain constructor.**  
 **Abbreviation for WSSymbol is WSSYM**  
@@ -67,10 +67,10 @@ Julia WS symbols using the MathLink Julia package.Time: 0.02 (OT) = 0.02 sec
 | [`WString`](#wstring) | WString() returns the WS String symbol. |
 | [`WSymbol`](#wsymbol) | WSymbol() returns the WS Symbol symbol. |
 | [`WTrue`](#wtrue) | WTrue() returns the WS True symbol. |
-| [`coerce`](#coerce) | coerce(sym) coerces sym to a FriCAS Boolean. Sym must be a Julia WS boolean |
+| [`coerce`](#coerce) | coerce(bool) coerces bool to a Julia WS boolean. |
 | [`convert`](#convert) | convert(a) transforms a into an element of S. |
 | [`jWSInterpret`](#jwsinterpret) | jWSInterpret(form) interprets form. |
-| [`jWSSym`](#jwssym) | jWSSym(sym) constructs sym as a WSSymbol. |
+| [`jWSSym`](#jwssym) | jWSSym(str) constructs str as a WSSymbol. |
 | [`jlAbout`](#jlabout) | jlAbout(obj) displays Julia information about obj if you have About.jl installed in Julia.... |
 | [`jlApply`](#jlapply) | jlApply(func, obj) applies the function func with obj as parameter and returns the result ... |
 | [`jlDisplay`](#jldisplay) | jlDisplay(v) pretty prints v (à la Julia). |
@@ -189,10 +189,6 @@ WTrue() returns the WS True symbol.
 
 #### `coerce` <a id="coerce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L154)\]
 
-##### `coerce` : `% -> Boolean`
-
-coerce(sym) coerces sym to a FriCAS Boolean. Sym must be a Julia WS boolean
-
 ##### `coerce` : `Boolean -> %`
 
 coerce(bool) coerces bool to a Julia WS boolean.
@@ -205,15 +201,15 @@ coerce(str) is a convenience function to coerce a String.
 
 coerce(sym) is a convenience function to coerce a Symbol.
 
-##### `coerce` : `% -> Symbol`
-
-coerce(sym) is a convenience function to coerce sym to a FriCAS Symbol.
-
 ##### `coerce` : `% -> S`
 
 coerce(a) transforms a into an element of S.
 
 - **From**: `CoercibleTo(S)`
+
+##### `coerce` : `% -> Boolean`
+
+coerce(sym) coerces sym to a FriCAS Boolean. Sym must be a Julia WS boolean
 
 ##### `coerce` : `% -> JLObject`
 
@@ -221,18 +217,31 @@ coerce(obj) coerces obj to JLObject. Convenience function.
 
 - **From**: [`JLObjectType`](JLObjectType.md)
 
+##### `coerce` : `% -> Symbol`
+
+coerce(sym) is a convenience function to coerce sym to a FriCAS Symbol.
+
 ##### `coerce` : `% -> WSExpression`
 
 coerce(expr) returns the WSExpression representation of expr.
 
 - **From**: [`WSObject`](WSObject.md)
 
+##### `coerce` : `% -> OutputForm`
+
+Operation defined in WSSymbol.
+
 #### `convert` <a id="convert"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L357)\]
+
+##### `convert` : `% -> S`
 
 convert(a) transforms a into an element of S.
 
-- **Signature**: `% -> String`
 - **From**: `ConvertibleTo(S)`
+
+##### `convert` : `% -> String`
+
+Operation defined in WSSymbol.
 
 #### `jWSInterpret` <a id="jwsinterpret"></a>
 
@@ -263,13 +272,13 @@ jWSInterpret(form1,form2,form3) interprets forms.
 
 #### `jWSSym` <a id="jwssym"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L166)\]
 
-##### `jWSSym` : `Symbol -> %`
-
-jWSSym(sym) constructs sym as a WSSymbol.
-
 ##### `jWSSym` : `String -> %`
 
 jWSSym(str) constructs str as a WSSymbol.
+
+##### `jWSSym` : `Symbol -> %`
+
+jWSSym(sym) constructs sym as a WSSymbol.
 
 #### `jlAbout` <a id="jlabout"></a>
 

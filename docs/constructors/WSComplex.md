@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS complex numbers using the MathLink Julia package.Time: 0.02 (OT) = 0.02 sec
+Julia WS complex numbers using the MathLink Julia package.Time: 0 sec
 
 **WSComplex is a domain constructor.**  
 **Abbreviation for WSComplex is WSCPLX**  
@@ -297,9 +297,45 @@ Julia WS complex numbers using the MathLink Julia package.Time: 0.02 (OT) = 0.02
 
 #### `*` <a id="op-mul"></a>
 
+##### `*` : `(WSInteger, %) -> %`
+
 n * x multiplies n by x.
 
-- **Signature**: `(WSInteger, %) -> %`
+##### `*` : `(%, %) -> %`
+
+Operation defined in WSComplex.
+
+##### `*` : `(%, Fraction(Integer)) -> %`
+
+Operation defined in WSComplex.
+
+##### `*` : `(%, WSReal) -> %`
+
+Operation defined in WSComplex.
+
+##### `*` : `(Fraction(Integer), %) -> %`
+
+Operation defined in WSComplex.
+
+##### `*` : `(Integer, %) -> %`
+
+Operation defined in WSComplex.
+
+##### `*` : `(NonNegativeInteger, %) -> %`
+
+Operation defined in WSComplex.
+
+##### `*` : `(PositiveInteger, %) -> %`
+
+Operation defined in WSComplex.
+
+##### `*` : `(WSReal, %) -> %`
+
+Operation defined in WSComplex.
+
+##### `*` : `(NMInteger, %) -> JLObject`
+
+Operation defined in WSComplex.
 
 #### `+` <a id="op-add"></a>
 
@@ -367,6 +403,14 @@ D(x, n) returns the n-th derivative of x.
 
 - **From**: `DifferentialRing`
 
+##### `D` : `(%, (WSReal -> WSReal)) -> %`
+
+Operation defined in WSComplex.
+
+##### `D` : `(%, (WSReal -> WSReal), NonNegativeInteger) -> %`
+
+Operation defined in WSComplex.
+
 #### `Ei` <a id="ei"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1336)\]
 
 Ei(x) returns the exponential integral of x, the integral of exp(x)/x dx.
@@ -412,10 +456,15 @@ Operation defined in WSComplex.
 
 #### `abs` <a id="abs"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1268)\]
 
+##### `abs` : `% -> R`
+
 abs(x) returns the absolute value of x = sqrt(norm(x)).
 
-- **Signature**: `% -> WSReal`
 - **From**: `ComplexCategory(R)`
+
+##### `abs` : `% -> WSReal`
+
+Operation defined in WSComplex.
 
 #### `acos` <a id="acos"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1293)\]
 
@@ -475,10 +524,15 @@ antiCommutator(a, b) returns a*b+b*a.
 
 #### `argument` <a id="argument"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1269)\]
 
+##### `argument` : `% -> R`
+
 argument(x) returns the angle made by (1, 0) and x.
 
-- **Signature**: `% -> WSReal`
 - **From**: `ComplexCategory(R)`
+
+##### `argument` : `% -> WSReal`
+
+Operation defined in WSComplex.
 
 #### `asec` <a id="asec"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1296)\]
 
@@ -557,10 +611,15 @@ characteristic() returns the characteristic of the ring.
 
 #### `characteristicPolynomial` <a id="characteristicpolynomial"></a>
 
+##### `characteristicPolynomial` : `% -> UP`
+
 characteristicPolynomial(a) returns the characteristic polynomial of the regular representation of a with respect to any basis.
 
-- **Signature**: `% -> SparseUnivariatePolynomial(WSReal)`
 - **From**: `FiniteRankAlgebra(R,UP)`
+
+##### `characteristicPolynomial` : `% -> SparseUnivariatePolynomial(WSReal)`
+
+Operation defined in WSComplex.
 
 #### `coerce` <a id="coerce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1195)\]
 
@@ -572,7 +631,7 @@ coerce(z) coerces z to a FriCAS Complex(DoubleFloat).
 
 coerce(z) coerces z to a FriCAS Complex(JLFloat64).
 
-##### `coerce` : `Integer  -> %`
+##### `coerce` : `Integer -> %`
 
 coerce(int): coerces int. Convenience function.
 
@@ -580,7 +639,7 @@ coerce(int): coerces int. Convenience function.
 
 coerce(z) coerce z. Convenience function. -- %i operations for example
 
-##### `coerce` : `WSInteger  -> %`
+##### `coerce` : `WSInteger -> %`
 
 coerce(int): coerces int. Convenience function.
 
@@ -601,12 +660,6 @@ coerce(a) transforms a into an element of %.
 coerce(x) converts x to a WSReal.
 
 - **From**: [`WSReal`](WSReal.md)
-
-##### `coerce` : `Integer -> %`
-
-coerce(n) coerces the integer n to an element of the ring.
-
-- **From**: `NonAssociativeRing`
 
 ##### `coerce` : `String -> %`
 
@@ -649,6 +702,22 @@ coerce(obj) coerces obj to JLObject. Convenience function.
 coerce(expr) returns the WSExpression representation of expr.
 
 - **From**: [`WSObject`](WSObject.md)
+
+##### `coerce` : `% -> %`
+
+Operation defined in WSComplex.
+
+##### `coerce` : `Fraction(Integer) -> %`
+
+Operation defined in WSComplex.
+
+##### `coerce` : `WSReal -> %`
+
+Operation defined in WSComplex.
+
+##### `coerce` : `% -> OutputForm`
+
+Operation defined in WSComplex.
 
 #### `commutator` <a id="commutator"></a>
 
@@ -714,6 +783,38 @@ convert(a) returns the coordinates of a with respect to the fixed R-module basis
 
 - **From**: `FramedModule(R)`
 
+##### `convert` : `SparseUnivariatePolynomial(WSReal) -> %`
+
+Operation defined in WSComplex.
+
+##### `convert` : `Vector(WSReal) -> %`
+
+Operation defined in WSComplex.
+
+##### `convert` : `% -> Complex(DoubleFloat)`
+
+Operation defined in WSComplex.
+
+##### `convert` : `% -> Complex(Float)`
+
+Operation defined in WSComplex.
+
+##### `convert` : `% -> Pattern(Float)`
+
+Operation defined in WSComplex.
+
+##### `convert` : `% -> SparseUnivariatePolynomial(WSReal)`
+
+Operation defined in WSComplex.
+
+##### `convert` : `% -> String`
+
+Operation defined in WSComplex.
+
+##### `convert` : `% -> Vector(WSReal)`
+
+Operation defined in WSComplex.
+
 #### `coordinates` <a id="coordinates"></a>
 
 ##### `coordinates` : `Vector(%) -> Matrix(R)`
@@ -739,6 +840,22 @@ coordinates(a) returns the coordinates of a with respect to the fixed R-module b
 coordinates(a, basis) returns the coordinates of a with respect to the basis basis.
 
 - **From**: `FiniteRankAlgebra(R,UP)`
+
+##### `coordinates` : `Vector(%) -> Matrix(WSReal)`
+
+Operation defined in WSComplex.
+
+##### `coordinates` : `(Vector(%), Vector(%)) -> Matrix(WSReal)`
+
+Operation defined in WSComplex.
+
+##### `coordinates` : `% -> Vector(WSReal)`
+
+Operation defined in WSComplex.
+
+##### `coordinates` : `(%, Vector(%)) -> Vector(WSReal)`
+
+Operation defined in WSComplex.
 
 #### `cos` <a id="cos"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1284)\]
 
@@ -784,17 +901,27 @@ csch(x) returns the hyperbolic cosecant of x.
 
 #### `definingPolynomial` <a id="definingpolynomial"></a>
 
+##### `definingPolynomial` : `() -> UP`
+
 definingPolynomial() returns the minimal polynomial which generator() satisfies.
 
-- **Signature**: `() -> SparseUnivariatePolynomial(WSReal)`
 - **From**: `MonogenicAlgebra(R,UP)`
+
+##### `definingPolynomial` : `() -> SparseUnivariatePolynomial(WSReal)`
+
+Operation defined in WSComplex.
 
 #### `derivationCoordinates` <a id="derivationcoordinates"></a>
 
+##### `derivationCoordinates` : `(Vector(%), (R -> R)) -> Matrix(R)`
+
 derivationCoordinates(b, ') returns M such that b' = M b.
 
-- **Signature**: `(Vector(%), (WSReal -> WSReal)) -> Matrix(WSReal)`
 - **From**: `MonogenicAlgebra(R,UP)`
+
+##### `derivationCoordinates` : `(Vector(%), (WSReal -> WSReal)) -> Matrix(WSReal)`
+
+Operation defined in WSComplex.
 
 #### `differentiate` <a id="differentiate"></a>
 
@@ -822,6 +949,14 @@ differentiate(x, n) returns the n-th derivative of x.
 
 - **From**: `DifferentialRing`
 
+##### `differentiate` : `(%, (WSReal -> WSReal)) -> %`
+
+Operation defined in WSComplex.
+
+##### `differentiate` : `(%, (WSReal -> WSReal), NonNegativeInteger) -> %`
+
+Operation defined in WSComplex.
+
 #### `dilog` <a id="dilog"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1340)\]
 
 dilog(x) returns the dilogarithm of x, the integral of log(x) / (1 - x) dx.
@@ -842,6 +977,14 @@ discriminant() = determinant(traceMatrix()).
 discriminant([v1, .., vn]) returns determinant(traceMatrix([v1, .., vn])).
 
 - **From**: `FiniteRankAlgebra(R,UP)`
+
+##### `discriminant` : `() -> WSReal`
+
+Operation defined in WSComplex.
+
+##### `discriminant` : `Vector(%) -> WSReal`
+
+Operation defined in WSComplex.
 
 #### `divide` <a id="divide"></a>
 
@@ -921,6 +1064,10 @@ exquo(x, r) returns the exact quotient of x by r, or "failed" if r does not divi
 
 - **From**: `ComplexCategory(R)`
 
+##### `exquo` : `(%, WSReal) -> Union(%,"failed")`
+
+Operation defined in WSComplex.
+
 #### `extendedEuclidean` <a id="extendedeuclidean"></a>
 
 ##### `extendedEuclidean` : `(%, %) -> Record(coef1: %,coef2: %,generator: %)`
@@ -986,10 +1133,15 @@ generator() returns the generator for this domain.
 
 #### `imag` <a id="imag"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1236)\]
 
+##### `imag` : `% -> R`
+
 imag(x) returns imaginary part of x.
 
-- **Signature**: `% -> WSReal`
 - **From**: `ComplexCategory(R)`
+
+##### `imag` : `% -> WSReal`
+
+Operation defined in WSComplex.
 
 #### `imaginary` <a id="imaginary"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1226)\]
 
@@ -1322,10 +1474,15 @@ li(x) returns the logarithmic integral of x, the integral of dx / log(x).
 
 #### `lift` <a id="lift"></a>
 
+##### `lift` : `% -> UP`
+
 lift(z) returns a minimal degree univariate polynomial up such that z=reduce up.
 
-- **Signature**: `% -> SparseUnivariatePolynomial(WSReal)`
 - **From**: `MonogenicAlgebra(R,UP)`
+
+##### `lift` : `% -> SparseUnivariatePolynomial(WSReal)`
+
+Operation defined in WSComplex.
 
 #### `log` <a id="log"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1273)\]
 
@@ -1360,17 +1517,27 @@ log2() returns ln 2, 0.6931471805....
 
 #### `map` <a id="map"></a>
 
+##### `map` : `((R -> R), %) -> %`
+
 map(f, ex) evaluates ex, applying f to values of type R in ex.
 
-- **Signature**: `((WSReal -> WSReal), %) -> %`
 - **From**: `FullyEvalableOver(R)`
+
+##### `map` : `((WSReal -> WSReal), %) -> %`
+
+Operation defined in WSComplex.
 
 #### `minimalPolynomial` <a id="minimalpolynomial"></a>
 
+##### `minimalPolynomial` : `% -> UP`
+
 minimalPolynomial(a) returns the minimal polynomial of a.
 
-- **Signature**: `% -> SparseUnivariatePolynomial(WSReal)`
 - **From**: `FiniteRankAlgebra(R,UP)`
+
+##### `minimalPolynomial` : `% -> SparseUnivariatePolynomial(WSReal)`
+
+Operation defined in WSComplex.
 
 #### `missing?` <a id="missing"></a>
 
@@ -1395,10 +1562,15 @@ mutable?(obj) checks whether or not obj is mutable.
 
 #### `norm` <a id="norm"></a>
 
+##### `norm` : `% -> R`
+
 norm(x) returns x * conjugate(x)
 
-- **Signature**: `% -> WSReal`
 - **From**: `ComplexCategory(R)`
+
+##### `norm` : `% -> WSReal`
+
+Operation defined in WSComplex.
 
 #### `nothing?` <a id="nothing"></a>
 
@@ -1451,10 +1623,15 @@ opposite?(x,y) holds if the sum of x and y is 0.
 
 #### `patternMatch` <a id="patternmatch"></a>
 
+##### `patternMatch` : `(%, Pattern(S), PatternMatchResult(S,%)) -> PatternMatchResult(S,%)`
+
 patternMatch(expr, pat, res) matches the pattern pat to the expression expr. res contains the variables of pat which are already matched and their matches (necessary for recursion). Initially, res is just the result of new which is an empty list of matches.
 
-- **Signature**: `(%, Pattern(Float), PatternMatchResult(Float,%)) -> PatternMatchResult(Float,%)`
 - **From**: `PatternMatchable(S)`
+
+##### `patternMatch` : `(%, Pattern(Float), PatternMatchResult(Float,%)) -> PatternMatchResult(Float,%)`
+
+Operation defined in WSComplex.
 
 #### `pi` <a id="pi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1232)\]
 
@@ -1472,10 +1649,15 @@ plenaryPower(a, n) is recursively defined to be plenaryPower(a, n-1)*plenaryPowe
 
 #### `polarCoordinates` <a id="polarcoordinates"></a>
 
+##### `polarCoordinates` : `% -> Record(r: R,phi: R)`
+
 polarCoordinates(x) returns (r, phi) such that x = r * exp(%i * phi).
 
-- **Signature**: `% -> Record(r: WSReal,phi: WSReal)`
 - **From**: `ComplexCategory(R)`
+
+##### `polarCoordinates` : `% -> Record(r: WSReal,phi: WSReal)`
+
+Operation defined in WSComplex.
 
 #### `prime?` <a id="prime"></a>
 
@@ -1507,10 +1689,15 @@ rank() returns the rank of the algebra.
 
 #### `real` <a id="real"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1235)\]
 
+##### `real` : `% -> R`
+
 real(x) returns real part of x.
 
-- **Signature**: `% -> WSReal`
 - **From**: `ComplexCategory(R)`
+
+##### `real` : `% -> WSReal`
+
+Operation defined in WSComplex.
 
 #### `recip` <a id="recip"></a>
 
@@ -1533,6 +1720,14 @@ reduce(frac) converts the fraction frac to an algebra element.
 
 - **From**: `MonogenicAlgebra(R,UP)`
 
+##### `reduce` : `SparseUnivariatePolynomial(WSReal) -> %`
+
+Operation defined in WSComplex.
+
+##### `reduce` : `Fraction(SparseUnivariatePolynomial(WSReal)) -> Union(%,"failed")`
+
+Operation defined in WSComplex.
+
 #### `reducedSystem` <a id="reducedsystem"></a>
 
 ##### `reducedSystem` : `Matrix(%) -> Matrix(R)`
@@ -1547,6 +1742,14 @@ reducedSystem(A, v) returns a matrix B and a vector w such that A x = v and B x 
 
 - **From**: `LinearlyExplicitOver(R)`
 
+##### `reducedSystem` : `Matrix(%) -> Matrix(WSReal)`
+
+Operation defined in WSComplex.
+
+##### `reducedSystem` : `(Matrix(%), Vector(%)) -> Record(mat: Matrix(WSReal),vec: Vector(WSReal))`
+
+Operation defined in WSComplex.
+
 #### `regularRepresentation` <a id="regularrepresentation"></a>
 
 ##### `regularRepresentation` : `% -> Matrix(R)`
@@ -1560,6 +1763,14 @@ regularRepresentation(a) returns the matrix m of the linear map defined by left 
 regularRepresentation(a, basis) returns the matrix m of the linear map defined by left multiplication by a with respect to the basis basis. That is for all x we have coordinates(a*x, basis) = m*coordinates(x, basis).
 
 - **From**: `FiniteRankAlgebra(R,UP)`
+
+##### `regularRepresentation` : `% -> Matrix(WSReal)`
+
+Operation defined in WSComplex.
+
+##### `regularRepresentation` : `(%, Vector(%)) -> Matrix(WSReal)`
+
+Operation defined in WSComplex.
 
 #### `rem` <a id="rem"></a>
 
@@ -1582,19 +1793,53 @@ represents([a1, .., an], [v1, .., vn]) returns a1*v1 + ... + an*vn.
 
 - **From**: `FiniteRankAlgebra(R,UP)`
 
+##### `represents` : `Vector(WSReal) -> %`
+
+Operation defined in WSComplex.
+
+##### `represents` : `(Vector(WSReal), Vector(%)) -> %`
+
+Operation defined in WSComplex.
+
 #### `retract` <a id="retract"></a>
+
+##### `retract` : `% -> S`
 
 retract(a) transforms a into an element of S if possible. Error: if a cannot be made into an element of S.
 
-- **Signature**: `% -> S`
 - **From**: `RetractableTo(S)`
+
+##### `retract` : `% -> Fraction(Integer)`
+
+Operation defined in WSComplex.
+
+##### `retract` : `% -> Integer`
+
+Operation defined in WSComplex.
+
+##### `retract` : `% -> WSReal`
+
+Operation defined in WSComplex.
 
 #### `retractIfCan` <a id="retractifcan"></a>
 
+##### `retractIfCan` : `% -> Union(S,"failed")`
+
 retractIfCan(a) transforms a into an element of S if possible. Returns "failed" if a cannot be made into an element of S.
 
-- **Signature**: `% -> Union(S,"failed")`
 - **From**: `RetractableTo(S)`
+
+##### `retractIfCan` : `% -> Union(Fraction(Integer),"failed")`
+
+Operation defined in WSComplex.
+
+##### `retractIfCan` : `% -> Union(Integer,"failed")`
+
+Operation defined in WSComplex.
+
+##### `retractIfCan` : `% -> Union(WSReal,"failed")`
+
+Operation defined in WSComplex.
 
 #### `rightPower` <a id="rightpower"></a>
 
@@ -1735,10 +1980,15 @@ toString(obj) returns the string representation of obj.
 
 #### `trace` <a id="trace"></a>
 
+##### `trace` : `% -> R`
+
 trace(a) returns the trace of the regular representation of a with respect to any basis.
 
-- **Signature**: `% -> WSReal`
 - **From**: `FiniteRankAlgebra(R,UP)`
+
+##### `trace` : `% -> WSReal`
+
+Operation defined in WSComplex.
 
 #### `traceMatrix` <a id="tracematrix"></a>
 
@@ -1753,6 +2003,14 @@ traceMatrix() is the n-by-n matrix ( Tr(vi * vj) ), where v1, ..., vn are the el
 traceMatrix([v1, .., vn]) is the n-by-n matrix ( Tr(vi * vj) )
 
 - **From**: `FiniteRankAlgebra(R,UP)`
+
+##### `traceMatrix` : `() -> Matrix(WSReal)`
+
+Operation defined in WSComplex.
+
+##### `traceMatrix` : `Vector(%) -> Matrix(WSReal)`
+
+Operation defined in WSComplex.
 
 #### `unit?` <a id="unit"></a>
 

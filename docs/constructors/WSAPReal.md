@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS arbitrary precision real numbers using WS Transport Protocol.Time: 0.02 (OT) = 0.02 sec
+Julia WS arbitrary precision real numbers using WS Transport Protocol.Time: 0 sec
 
 **WSAPReal(prec: PositiveInteger) is a domain constructor.**  
 **Abbreviation for WSAPReal is WSAPR**
@@ -450,10 +450,15 @@ Operation defined in WSAPReal.
 
 #### `abs` <a id="abs"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L896)\]
 
+##### `abs` : `% -> %`
+
 abs(x) returns the absolute value of x.
 
-- **Signature**: `% -> % if % has ABELGRP`
 - **From**: `OrderedAbelianSemiGroup`
+
+##### `abs` : `% -> % if % has ABELGRP`
+
+Operation defined in WSAPReal.
 
 #### `acos` <a id="acos"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L944)\]
 
@@ -593,6 +598,10 @@ bits(n) set the precision from FloatingPointSystem to n bits.
 
 - **From**: `FloatingPointSystem`
 
+##### `bits` : `PositiveInteger -> PositiveInteger if % has ATARBPR`
+
+Operation defined in WSAPReal.
+
 #### `ceiling` <a id="ceiling"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L894)\]
 
 ceiling x returns the small integer >= x.
@@ -617,11 +626,11 @@ coerce(x) converts x as a JLFloat.
 
 coerce(str) constructs str as a WSAPReal.
 
-##### `coerce` : `Float  -> %`
+##### `coerce` : `Float -> %`
 
 coerce(x) converts x as a WSAPReal.
 
-##### `coerce` : `JLFloat  -> %`
+##### `coerce` : `JLFloat -> %`
 
 coerce(x) converts x as a WSAPReal.
 
@@ -661,6 +670,18 @@ coerce(expr) returns the WSExpression representation of expr.
 
 - **From**: [`WSObject`](WSObject.md)
 
+##### `coerce` : `% -> %`
+
+Operation defined in WSAPReal.
+
+##### `coerce` : `Fraction(Integer) -> %`
+
+Operation defined in WSAPReal.
+
+##### `coerce` : `% -> OutputForm`
+
+Operation defined in WSAPReal.
+
 #### `commutator` <a id="commutator"></a>
 
 commutator(a, b) returns a*b-b*a.
@@ -687,6 +708,22 @@ convert([a1, ..., an]) returns the pattern [a1, ..., an].
 convert(a) transforms a into an element of S.
 
 - **From**: `ConvertibleTo(S)`
+
+##### `convert` : `% -> Float`
+
+Operation defined in WSAPReal.
+
+##### `convert` : `% -> DoubleFloat`
+
+Operation defined in WSAPReal.
+
+##### `convert` : `% -> Pattern(Float)`
+
+Operation defined in WSAPReal.
+
+##### `convert` : `% -> String`
+
+Operation defined in WSAPReal.
 
 #### `cos` <a id="cos"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L934)\]
 
@@ -732,10 +769,15 @@ csch(x) returns the hyperbolic cosecant of x.
 
 #### `decreasePrecision` <a id="decreaseprecision"></a>
 
+##### `decreasePrecision` : `Integer -> PositiveInteger`
+
 decreasePrecision(n) decreases the current precision from FloatingPointSystem precision by n decimal digits.
 
-- **Signature**: `Integer -> PositiveInteger if % has ATARBPR`
 - **From**: `FloatingPointSystem`
+
+##### `decreasePrecision` : `Integer -> PositiveInteger if % has ATARBPR`
+
+Operation defined in WSAPReal.
 
 #### `differentiate` <a id="differentiate"></a>
 
@@ -764,6 +806,10 @@ digits() returns ceiling's precision in decimal digits.
 digits(d) set the precision from FloatingPointSystem to d digits.
 
 - **From**: `FloatingPointSystem`
+
+##### `digits` : `PositiveInteger -> PositiveInteger if % has ATARBPR`
+
+Operation defined in WSAPReal.
 
 #### `dilog` <a id="dilog"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L996)\]
 
@@ -937,10 +983,15 @@ gcdPolynomial(p, q) returns the greatest common divisor (gcd) of univariate poly
 
 #### `increasePrecision` <a id="increaseprecision"></a>
 
+##### `increasePrecision` : `Integer -> PositiveInteger`
+
 increasePrecision(n) increases the current precision from FloatingPointSystem by n decimal digits.
 
-- **Signature**: `Integer -> PositiveInteger if % has ATARBPR`
 - **From**: `FloatingPointSystem`
+
+##### `increasePrecision` : `Integer -> PositiveInteger if % has ATARBPR`
+
+Operation defined in WSAPReal.
 
 #### `integerPart` <a id="integerpart"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L791)\]
 
@@ -1338,6 +1389,10 @@ max(x,y) returns the maximum of x and y relative to "<".
 
 - **From**: `OrderedSet`
 
+##### `max` : `() -> % if not % has ATARBEX and not % has ATARBPR`
+
+Operation defined in WSAPReal.
+
 #### `min` <a id="min"></a>
 
 ##### `min` : `() -> %`
@@ -1351,6 +1406,10 @@ min() returns the minimum floating point number.
 min(x,y) returns the minimum of x and y relative to "<".
 
 - **From**: `OrderedSet`
+
+##### `min` : `() -> % if not % has ATARBEX and not % has ATARBPR`
+
+Operation defined in WSAPReal.
 
 #### `missing?` <a id="missing"></a>
 
@@ -1375,10 +1434,15 @@ mutable?(obj) checks whether or not obj is mutable.
 
 #### `negative?` <a id="negative"></a>
 
+##### `negative?` : `% -> Boolean`
+
 negative?(x) tests whether x is strictly less than 0.
 
-- **Signature**: `% -> Boolean if % has SETCATZ`
 - **From**: `OrderedSet`
+
+##### `negative?` : `% -> Boolean if % has SETCATZ`
+
+Operation defined in WSAPReal.
 
 #### `norm` <a id="norm"></a>
 
@@ -1445,10 +1509,15 @@ order x is the order of magnitude of x. Note: base ^ order x <= |x| < base ^ (1 
 
 #### `patternMatch` <a id="patternmatch"></a>
 
+##### `patternMatch` : `(%, Pattern(S), PatternMatchResult(S,%)) -> PatternMatchResult(S,%)`
+
 patternMatch(expr, pat, res) matches the pattern pat to the expression expr. res contains the variables of pat which are already matched and their matches (necessary for recursion). Initially, res is just the result of new which is an empty list of matches.
 
-- **Signature**: `(%, Pattern(Float), PatternMatchResult(Float,%)) -> PatternMatchResult(Float,%)`
 - **From**: `PatternMatchable(S)`
+
+##### `patternMatch` : `(%, Pattern(Float), PatternMatchResult(Float,%)) -> PatternMatchResult(Float,%)`
+
+Operation defined in WSAPReal.
 
 #### `pi` <a id="pi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L855)\]
 
@@ -1466,10 +1535,15 @@ plenaryPower(a, n) is recursively defined to be plenaryPower(a, n-1)*plenaryPowe
 
 #### `positive?` <a id="positive"></a>
 
+##### `positive?` : `% -> Boolean`
+
 positive?(x) tests whether x is strictly greater than 0.
 
-- **Signature**: `% -> Boolean if % has SETCATZ`
 - **From**: `OrderedSet`
+
+##### `positive?` : `% -> Boolean if % has SETCATZ`
+
+Operation defined in WSAPReal.
 
 #### `precision` <a id="precision"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L877)\]
 
@@ -1484,6 +1558,10 @@ precision() returns the precision in digits base.
 precision(n) set the precision in the base to n decimal digits.
 
 - **From**: `FloatingPointSystem`
+
+##### `precision` : `PositiveInteger -> PositiveInteger if % has ATARBPR`
+
+Operation defined in WSAPReal.
 
 #### `prime?` <a id="prime"></a>
 
@@ -1544,17 +1622,35 @@ x rem y is the same as divide(x, y).remainder. See divide from EuclideanDomain.
 
 #### `retract` <a id="retract"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L908)\]
 
+##### `retract` : `% -> S`
+
 retract(a) transforms a into an element of S if possible. Error: if a cannot be made into an element of S.
 
-- **Signature**: `% -> S`
 - **From**: `RetractableTo(S)`
+
+##### `retract` : `% -> Integer`
+
+Operation defined in WSAPReal.
+
+##### `retract` : `% -> Fraction(Integer)`
+
+Operation defined in WSAPReal.
 
 #### `retractIfCan` <a id="retractifcan"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L905)\]
 
+##### `retractIfCan` : `% -> Union(S,"failed")`
+
 retractIfCan(a) transforms a into an element of S if possible. Returns "failed" if a cannot be made into an element of S.
 
-- **Signature**: `% -> Union(S,"failed")`
 - **From**: `RetractableTo(S)`
+
+##### `retractIfCan` : `% -> Union(Integer,"failed")`
+
+Operation defined in WSAPReal.
+
+##### `retractIfCan` : `% -> Union(Fraction(Integer),"failed")`
+
+Operation defined in WSAPReal.
 
 #### `rightPower` <a id="rightpower"></a>
 
@@ -1607,10 +1703,15 @@ sech(x) returns the hyperbolic secant of x.
 
 #### `sign` <a id="sign"></a>
 
+##### `sign` : `% -> Integer`
+
 sign(x) is 1 if x is positive, -1 if x is negative, 0 if x equals 0.
 
-- **Signature**: `% -> Integer if % has SETCATZ`
 - **From**: `OrderedSet`
+
+##### `sign` : `% -> Integer if % has SETCATZ`
+
+Operation defined in WSAPReal.
 
 #### `sin` <a id="sin"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L933)\]
 

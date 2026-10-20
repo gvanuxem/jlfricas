@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS arbitrary precision complex numbers using WS Transport Protocol.Time: 0.02 (OT) = 0.02 sec
+Julia WS arbitrary precision complex numbers using WS Transport Protocol.Time: 0 sec
 
 **WSAPComplex(prec: PositiveInteger) is a domain constructor.**  
 **Abbreviation for WSAPComplex is WSAPCPX**
@@ -350,9 +350,49 @@ Julia WS arbitrary precision complex numbers using WS Transport Protocol.Time: 0
 
 #### `*` <a id="op-mul"></a>
 
+##### `*` : `(WSInteger, %) -> %`
+
 n * z multiplies n by z.
 
-- **Signature**: `(WSInteger, %) -> %`
+##### `*` : `(WSAPReal(prec), %) -> %`
+
+Operation defined in WSAPComplex.
+
+##### `*` : `(%, WSAPReal(prec)) -> %`
+
+Operation defined in WSAPComplex.
+
+##### `*` : `(%, Integer) -> % if WSAPReal(prec) has LINEXP(INT)`
+
+Operation defined in WSAPComplex.
+
+##### `*` : `(%, Fraction(Integer)) -> % if % has CHARZ and WSAPReal(prec) has FIELD or % has CHARZ and WSAPReal(prec) has FFIELDC`
+
+Operation defined in WSAPComplex.
+
+##### `*` : `(Fraction(Integer), %) -> % if % has CHARZ and WSAPReal(prec) has FIELD or % has CHARZ and WSAPReal(prec) has FFIELDC`
+
+Operation defined in WSAPComplex.
+
+##### `*` : `(PositiveInteger, %) -> %`
+
+Operation defined in WSAPComplex.
+
+##### `*` : `(%, %) -> %`
+
+Operation defined in WSAPComplex.
+
+##### `*` : `(Integer, %) -> %`
+
+Operation defined in WSAPComplex.
+
+##### `*` : `(NonNegativeInteger, %) -> %`
+
+Operation defined in WSAPComplex.
+
+##### `*` : `(NMInteger, %) -> JLObject`
+
+Operation defined in WSAPComplex.
 
 #### `+` <a id="op-add"></a>
 
@@ -420,6 +460,38 @@ D(x, n) returns the n-th derivative of x.
 
 - **From**: `DifferentialRing`
 
+##### `D` : `% -> % if WSAPReal(prec) has DIFRING`
+
+Operation defined in WSAPComplex.
+
+##### `D` : `(%, NonNegativeInteger) -> % if WSAPReal(prec) has DIFRING`
+
+Operation defined in WSAPComplex.
+
+##### `D` : `(%, Symbol) -> % if WSAPReal(prec) has PDRING(SYMBOL)`
+
+Operation defined in WSAPComplex.
+
+##### `D` : `(%, List(Symbol)) -> % if WSAPReal(prec) has PDRING(SYMBOL)`
+
+Operation defined in WSAPComplex.
+
+##### `D` : `(%, Symbol, NonNegativeInteger) -> % if WSAPReal(prec) has PDRING(SYMBOL)`
+
+Operation defined in WSAPComplex.
+
+##### `D` : `(%, List(Symbol), List(NonNegativeInteger)) -> % if WSAPReal(prec) has PDRING(SYMBOL)`
+
+Operation defined in WSAPComplex.
+
+##### `D` : `(%, (WSAPReal(prec) -> WSAPReal(prec)), NonNegativeInteger) -> %`
+
+Operation defined in WSAPComplex.
+
+##### `D` : `(%, (WSAPReal(prec) -> WSAPReal(prec))) -> %`
+
+Operation defined in WSAPComplex.
+
 #### `Ei` <a id="ei"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1560)\]
 
 Ei(x) returns the exponential integral of x, the integral of exp(x)/x dx.
@@ -465,10 +537,15 @@ Operation defined in WSAPComplex.
 
 #### `abs` <a id="abs"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1492)\]
 
+##### `abs` : `% -> R`
+
 abs(x) returns the absolute value of x = sqrt(norm(x)).
 
-- **Signature**: `% -> WSAPReal(prec) if WSAPReal(prec) has RNS`
 - **From**: `ComplexCategory(R)`
+
+##### `abs` : `% -> WSAPReal(prec) if WSAPReal(prec) has RNS`
+
+Operation defined in WSAPComplex.
 
 #### `acos` <a id="acos"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1517)\]
 
@@ -528,10 +605,15 @@ antiCommutator(a, b) returns a*b+b*a.
 
 #### `argument` <a id="argument"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1493)\]
 
+##### `argument` : `% -> R`
+
 argument(x) returns the angle made by (1, 0) and x.
 
-- **Signature**: `% -> WSAPReal(prec) if WSAPReal(prec) has TRANFUN`
 - **From**: `ComplexCategory(R)`
+
+##### `argument` : `% -> WSAPReal(prec) if WSAPReal(prec) has TRANFUN`
+
+Operation defined in WSAPComplex.
 
 #### `asec` <a id="asec"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1520)\]
 
@@ -563,10 +645,15 @@ asinh(x) returns the hyperbolic arc-sine of x.
 
 #### `associates?` <a id="associates"></a>
 
+##### `associates?` : `(%, %) -> Boolean`
+
 associates?(x, y) tests whether x and y are associates, differ by a unit factor.
 
-- **Signature**: `(%, %) -> Boolean if WSAPReal(prec) has EUCDOM and WSAPReal(prec) has PFECAT or WSAPReal(prec) has INTDOM`
 - **From**: `EntireRing`
+
+##### `associates?` : `(%, %) -> Boolean if WSAPReal(prec) has EUCDOM and WSAPReal(prec) has PFECAT or WSAPReal(prec) has INTDOM`
+
+Operation defined in WSAPComplex.
 
 #### `associator` <a id="associator"></a>
 
@@ -610,10 +697,15 @@ characteristic() returns the characteristic of the ring.
 
 #### `characteristicPolynomial` <a id="characteristicpolynomial"></a>
 
+##### `characteristicPolynomial` : `% -> UP`
+
 characteristicPolynomial(a) returns the characteristic polynomial of the regular representation of a with respect to any basis.
 
-- **Signature**: `% -> SparseUnivariatePolynomial(WSAPReal(prec))`
 - **From**: `FiniteRankAlgebra(R,UP)`
+
+##### `characteristicPolynomial` : `% -> SparseUnivariatePolynomial(WSAPReal(prec))`
+
+Operation defined in WSAPComplex.
 
 #### `charthRoot` <a id="charthroot"></a>
 
@@ -627,7 +719,7 @@ Operation defined in WSAPComplex.
 
 #### `coerce` <a id="coerce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1423)\]
 
-##### `coerce` : `Integer  -> %`
+##### `coerce` : `Integer -> %`
 
 coerce(i): convenience function.
 
@@ -635,7 +727,7 @@ coerce(i): convenience function.
 
 coerce(gi) coerces gi. Convenience function.
 
-##### `coerce` : `WSInteger  -> %`
+##### `coerce` : `WSInteger -> %`
 
 coerce(int): coerces int. Convenience function.
 
@@ -656,12 +748,6 @@ coerce(a) transforms a into an element of %.
 coerce(x) converts x as a WSAPReal.
 
 - **From**: [`WSAPReal(prec)`](WSAPReal.md)
-
-##### `coerce` : `Integer -> %`
-
-coerce(n) coerces the integer n to an element of the ring.
-
-- **From**: `NonAssociativeRing`
 
 ##### `coerce` : `String -> %`
 
@@ -692,6 +778,26 @@ coerce(obj) coerces obj to JLObject. Convenience function.
 coerce(expr) returns the WSExpression representation of expr.
 
 - **From**: [`WSObject`](WSObject.md)
+
+##### `coerce` : `Complex(Integer) -> %`
+
+Operation defined in WSAPComplex.
+
+##### `coerce` : `WSAPReal(prec) -> %`
+
+Operation defined in WSAPComplex.
+
+##### `coerce` : `% -> %`
+
+Operation defined in WSAPComplex.
+
+##### `coerce` : `Fraction(Integer) -> % if % has CHARZ and WSAPReal(prec) has FIELD or % has CHARZ and WSAPReal(prec) has FFIELDC or WSAPReal(prec) has RETRACT(FRAC(INT))`
+
+Operation defined in WSAPComplex.
+
+##### `coerce` : `% -> OutputForm`
+
+Operation defined in WSAPComplex.
 
 #### `commutator` <a id="commutator"></a>
 
@@ -763,6 +869,46 @@ convert(a) returns the coordinates of a with respect to the fixed R-module basis
 
 - **From**: `FramedModule(R)`
 
+##### `convert` : `Vector(WSAPReal(prec)) -> %`
+
+Operation defined in WSAPComplex.
+
+##### `convert` : `% -> Vector(WSAPReal(prec))`
+
+Operation defined in WSAPComplex.
+
+##### `convert` : `% -> SparseUnivariatePolynomial(WSAPReal(prec))`
+
+Operation defined in WSAPComplex.
+
+##### `convert` : `SparseUnivariatePolynomial(WSAPReal(prec)) -> %`
+
+Operation defined in WSAPComplex.
+
+##### `convert` : `% -> Pattern(Integer) if WSAPReal(prec) has KONVERT(PATTERN(INT))`
+
+Operation defined in WSAPComplex.
+
+##### `convert` : `% -> Pattern(Float) if WSAPReal(prec) has KONVERT(PATTERN(FLOAT))`
+
+Operation defined in WSAPComplex.
+
+##### `convert` : `% -> Complex(Float) if WSAPReal(prec) has REAL`
+
+Operation defined in WSAPComplex.
+
+##### `convert` : `% -> Complex(DoubleFloat) if WSAPReal(prec) has REAL`
+
+Operation defined in WSAPComplex.
+
+##### `convert` : `% -> InputForm if WSAPReal(prec) has KONVERT(INFORM)`
+
+Operation defined in WSAPComplex.
+
+##### `convert` : `% -> String`
+
+Operation defined in WSAPComplex.
+
 #### `coordinates` <a id="coordinates"></a>
 
 ##### `coordinates` : `Vector(%) -> Matrix(R)`
@@ -788,6 +934,22 @@ coordinates(a) returns the coordinates of a with respect to the fixed R-module b
 coordinates(a, basis) returns the coordinates of a with respect to the basis basis.
 
 - **From**: `FiniteRankAlgebra(R,UP)`
+
+##### `coordinates` : `(%, Vector(%)) -> Vector(WSAPReal(prec))`
+
+Operation defined in WSAPComplex.
+
+##### `coordinates` : `(Vector(%), Vector(%)) -> Matrix(WSAPReal(prec))`
+
+Operation defined in WSAPComplex.
+
+##### `coordinates` : `Vector(%) -> Matrix(WSAPReal(prec))`
+
+Operation defined in WSAPComplex.
+
+##### `coordinates` : `% -> Vector(WSAPReal(prec))`
+
+Operation defined in WSAPComplex.
 
 #### `cos` <a id="cos"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1508)\]
 
@@ -839,17 +1001,27 @@ csch(x) returns the hyperbolic cosecant of x.
 
 #### `definingPolynomial` <a id="definingpolynomial"></a>
 
+##### `definingPolynomial` : `() -> UP`
+
 definingPolynomial() returns the minimal polynomial which generator() satisfies.
 
-- **Signature**: `() -> SparseUnivariatePolynomial(WSAPReal(prec))`
 - **From**: `MonogenicAlgebra(R,UP)`
+
+##### `definingPolynomial` : `() -> SparseUnivariatePolynomial(WSAPReal(prec))`
+
+Operation defined in WSAPComplex.
 
 #### `derivationCoordinates` <a id="derivationcoordinates"></a>
 
+##### `derivationCoordinates` : `(Vector(%), (R -> R)) -> Matrix(R)`
+
 derivationCoordinates(b, ') returns M such that b' = M b.
 
-- **Signature**: `(Vector(%), (WSAPReal(prec) -> WSAPReal(prec))) -> Matrix(WSAPReal(prec)) if WSAPReal(prec) has FIELD`
 - **From**: `MonogenicAlgebra(R,UP)`
+
+##### `derivationCoordinates` : `(Vector(%), (WSAPReal(prec) -> WSAPReal(prec))) -> Matrix(WSAPReal(prec)) if WSAPReal(prec) has FIELD`
+
+Operation defined in WSAPComplex.
 
 #### `differentiate` <a id="differentiate"></a>
 
@@ -876,6 +1048,38 @@ differentiate(x, deriv, n) differentiate x n times using a derivation which exte
 differentiate(x, n) returns the n-th derivative of x.
 
 - **From**: `DifferentialRing`
+
+##### `differentiate` : `% -> % if WSAPReal(prec) has DIFRING`
+
+Operation defined in WSAPComplex.
+
+##### `differentiate` : `(%, NonNegativeInteger) -> % if WSAPReal(prec) has DIFRING`
+
+Operation defined in WSAPComplex.
+
+##### `differentiate` : `(%, Symbol) -> % if WSAPReal(prec) has PDRING(SYMBOL)`
+
+Operation defined in WSAPComplex.
+
+##### `differentiate` : `(%, List(Symbol)) -> % if WSAPReal(prec) has PDRING(SYMBOL)`
+
+Operation defined in WSAPComplex.
+
+##### `differentiate` : `(%, Symbol, NonNegativeInteger) -> % if WSAPReal(prec) has PDRING(SYMBOL)`
+
+Operation defined in WSAPComplex.
+
+##### `differentiate` : `(%, List(Symbol), List(NonNegativeInteger)) -> % if WSAPReal(prec) has PDRING(SYMBOL)`
+
+Operation defined in WSAPComplex.
+
+##### `differentiate` : `(%, (WSAPReal(prec) -> WSAPReal(prec)), NonNegativeInteger) -> %`
+
+Operation defined in WSAPComplex.
+
+##### `differentiate` : `(%, (WSAPReal(prec) -> WSAPReal(prec))) -> %`
+
+Operation defined in WSAPComplex.
 
 #### `dilog` <a id="dilog"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1564)\]
 
@@ -908,12 +1112,25 @@ discriminant([v1, .., vn]) returns determinant(traceMatrix([v1, .., vn])).
 
 - **From**: `FiniteRankAlgebra(R,UP)`
 
+##### `discriminant` : `Vector(%) -> WSAPReal(prec)`
+
+Operation defined in WSAPComplex.
+
+##### `discriminant` : `() -> WSAPReal(prec)`
+
+Operation defined in WSAPComplex.
+
 #### `divide` <a id="divide"></a>
+
+##### `divide` : `(%, %) -> Record(quotient: %,remainder: %)`
 
 divide(x, y) divides x by y producing a record containing a quotient and remainder, where the remainder is smaller (see sizeLess? from EuclideanDomain) than the divisor y.
 
-- **Signature**: `(%, %) -> Record(quotient: %,remainder: %) if WSAPReal(prec) has FIELD or WSAPReal(prec) has INS`
 - **From**: `EuclideanDomain`
+
+##### `divide` : `(%, %) -> Record(quotient: %,remainder: %) if WSAPReal(prec) has FIELD or WSAPReal(prec) has INS`
+
+Operation defined in WSAPComplex.
 
 #### `elt` <a id="elt"></a>
 
@@ -940,6 +1157,10 @@ elt(op, [a1, ..., an]) returns op(a1, ..., an).
 elt(u, i) (also written: u.i) returns the element of u indexed by i. Error: if i is not an index of u.
 
 - **From**: `Eltable(D,I)`
+
+##### `elt` : `(%, WSAPReal(prec)) -> % if WSAPReal(prec) has ELTAB(WSAPR(prec),WSAPR(prec))`
+
+Operation defined in WSAPComplex.
 
 #### `enumerate` <a id="enumerate"></a>
 
@@ -974,10 +1195,15 @@ erfi(x) denotes -%i*erf(%i*x)
 
 #### `euclideanSize` <a id="euclideansize"></a>
 
+##### `euclideanSize` : `% -> NonNegativeInteger`
+
 euclideanSize(x) returns the euclidean size of the element x. Error: if x is zero.
 
-- **Signature**: `% -> NonNegativeInteger if WSAPReal(prec) has FIELD or WSAPReal(prec) has INS`
 - **From**: `EuclideanDomain`
+
+##### `euclideanSize` : `% -> NonNegativeInteger if WSAPReal(prec) has FIELD or WSAPReal(prec) has INS`
+
+Operation defined in WSAPComplex.
 
 #### `eval` <a id="eval"></a>
 
@@ -1005,6 +1231,30 @@ eval(f, [x1 = v1, ..., xn = vn]) replaces xi by vi in f.
 
 - **From**: `Evalable(R)`
 
+##### `eval` : `(%, List(WSAPReal(prec)), List(WSAPReal(prec))) -> % if WSAPReal(prec) has EVALAB(WSAPR(prec))`
+
+Operation defined in WSAPComplex.
+
+##### `eval` : `(%, WSAPReal(prec), WSAPReal(prec)) -> % if WSAPReal(prec) has EVALAB(WSAPR(prec))`
+
+Operation defined in WSAPComplex.
+
+##### `eval` : `(%, Equation(WSAPReal(prec))) -> % if WSAPReal(prec) has EVALAB(WSAPR(prec))`
+
+Operation defined in WSAPComplex.
+
+##### `eval` : `(%, List(Equation(WSAPReal(prec)))) -> % if WSAPReal(prec) has EVALAB(WSAPR(prec))`
+
+Operation defined in WSAPComplex.
+
+##### `eval` : `(%, List(Symbol), List(WSAPReal(prec))) -> % if WSAPReal(prec) has IEVALAB(SYMBOL,WSAPR(prec))`
+
+Operation defined in WSAPComplex.
+
+##### `eval` : `(%, Symbol, WSAPReal(prec)) -> % if WSAPReal(prec) has IEVALAB(SYMBOL,WSAPR(prec))`
+
+Operation defined in WSAPComplex.
+
 #### `exp` <a id="exp"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1406)\]
 
 ##### `exp` : `() -> %`
@@ -1019,10 +1269,15 @@ exp(x) returns %e to the power x.
 
 #### `expressIdealMember` <a id="expressidealmember"></a>
 
+##### `expressIdealMember` : `(List(%), %) -> Union(List(%),"failed")`
+
 expressIdealMember([f1, ..., fn], h) returns a representation of h as a linear combination of the fi or "failed" if h is not in the ideal generated by the fi.
 
-- **Signature**: `(List(%), %) -> Union(List(%),"failed") if WSAPReal(prec) has FIELD or WSAPReal(prec) has INS`
 - **From**: `PrincipalIdealDomain`
+
+##### `expressIdealMember` : `(List(%), %) -> Union(List(%),"failed") if WSAPReal(prec) has FIELD or WSAPReal(prec) has INS`
+
+Operation defined in WSAPComplex.
 
 #### `exquo` <a id="exquo"></a>
 
@@ -1044,6 +1299,14 @@ exquo(x, r) returns the exact quotient of x by r, or "failed" if r does not divi
 
 - **From**: `ComplexCategory(R)`
 
+##### `exquo` : `(%, WSAPReal(prec)) -> Union(%,"failed") if WSAPReal(prec) has INTDOM`
+
+Operation defined in WSAPComplex.
+
+##### `exquo` : `(%, %) -> Union(%,"failed") if WSAPReal(prec) has EUCDOM and WSAPReal(prec) has PFECAT or WSAPReal(prec) has INTDOM`
+
+Operation defined in WSAPComplex.
+
 #### `extendedEuclidean` <a id="extendedeuclidean"></a>
 
 ##### `extendedEuclidean` : `(%, %) -> Record(coef1: %,coef2: %,generator: %)`
@@ -1058,12 +1321,25 @@ extendedEuclidean(x, y, z) either returns a record rec where rec.coef1*x+rec.coe
 
 - **From**: `EuclideanDomain`
 
+##### `extendedEuclidean` : `(%, %, %) -> Union(Record(coef1: %,coef2: %),"failed") if WSAPReal(prec) has FIELD or WSAPReal(prec) has INS`
+
+Operation defined in WSAPComplex.
+
+##### `extendedEuclidean` : `(%, %) -> Record(coef1: %,coef2: %,generator: %) if WSAPReal(prec) has FIELD or WSAPReal(prec) has INS`
+
+Operation defined in WSAPComplex.
+
 #### `factor` <a id="factor"></a>
+
+##### `factor` : `% -> Factored(%)`
 
 factor(x) returns the factorization of x into irreducibles.
 
-- **Signature**: `% -> Factored(%) if WSAPReal(prec) has EUCDOM and WSAPReal(prec) has PFECAT or WSAPReal(prec) has FIELD or WSAPReal(prec) has INS`
 - **From**: `UniqueFactorizationDomain`
+
+##### `factor` : `% -> Factored(%) if WSAPReal(prec) has EUCDOM and WSAPReal(prec) has PFECAT or WSAPReal(prec) has FIELD or WSAPReal(prec) has INS`
+
+Operation defined in WSAPComplex.
 
 #### `factorPolynomial` <a id="factorpolynomial"></a>
 
@@ -1111,12 +1387,25 @@ gcd(l) returns the common gcd of the elements in the list l.
 
 - **From**: `GcdDomain`
 
+##### `gcd` : `List(%) -> % if WSAPReal(prec) has EUCDOM and WSAPReal(prec) has PFECAT or WSAPReal(prec) has FIELD or WSAPReal(prec) has INS`
+
+Operation defined in WSAPComplex.
+
+##### `gcd` : `(%, %) -> % if WSAPReal(prec) has EUCDOM and WSAPReal(prec) has PFECAT or WSAPReal(prec) has FIELD or WSAPReal(prec) has INS`
+
+Operation defined in WSAPComplex.
+
 #### `gcdPolynomial` <a id="gcdpolynomial"></a>
+
+##### `gcdPolynomial` : `(SparseUnivariatePolynomial(%), SparseUnivariatePolynomial(%)) -> SparseUnivariatePolynomial(%)`
 
 gcdPolynomial(p, q) returns the greatest common divisor (gcd) of univariate polynomials over the domain
 
-- **Signature**: `(SparseUnivariatePolynomial(%), SparseUnivariatePolynomial(%)) -> SparseUnivariatePolynomial(%) if WSAPReal(prec) has EUCDOM and WSAPReal(prec) has PFECAT or WSAPReal(prec) has FIELD or WSAPReal(prec) has INS`
 - **From**: `GcdDomain`
+
+##### `gcdPolynomial` : `(SparseUnivariatePolynomial(%), SparseUnivariatePolynomial(%)) -> SparseUnivariatePolynomial(%) if WSAPReal(prec) has EUCDOM and WSAPReal(prec) has PFECAT or WSAPReal(prec) has FIELD or WSAPReal(prec) has INS`
+
+Operation defined in WSAPComplex.
 
 #### `generator` <a id="generator"></a>
 
@@ -1139,10 +1428,15 @@ Operation defined in WSAPComplex.
 
 #### `imag` <a id="imag"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1460)\]
 
+##### `imag` : `% -> R`
+
 imag(x) returns imaginary part of x.
 
-- **Signature**: `% -> WSAPReal(prec)`
 - **From**: `ComplexCategory(R)`
+
+##### `imag` : `% -> WSAPReal(prec)`
+
+Operation defined in WSAPComplex.
 
 #### `imaginary` <a id="imaginary"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1450)\]
 
@@ -1179,10 +1473,15 @@ integral(f, x) returns the formal integral of f dx.
 
 #### `inv` <a id="inv"></a>
 
+##### `inv` : `% -> %`
+
 inv x returns the multiplicative inverse of x. Error: if x is 0.
 
-- **Signature**: `% -> % if WSAPReal(prec) has FIELD`
 - **From**: `DivisionRing`
+
+##### `inv` : `% -> % if WSAPReal(prec) has FIELD`
+
+Operation defined in WSAPComplex.
 
 #### `jWSComplex` <a id="jwscomplex"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1432)\]
 
@@ -1450,12 +1749,25 @@ lcm(l) returns the least common multiple of the elements of the list l.
 
 - **From**: `GcdDomain`
 
+##### `lcm` : `List(%) -> % if WSAPReal(prec) has EUCDOM and WSAPReal(prec) has PFECAT or WSAPReal(prec) has FIELD or WSAPReal(prec) has INS`
+
+Operation defined in WSAPComplex.
+
+##### `lcm` : `(%, %) -> % if WSAPReal(prec) has EUCDOM and WSAPReal(prec) has PFECAT or WSAPReal(prec) has FIELD or WSAPReal(prec) has INS`
+
+Operation defined in WSAPComplex.
+
 #### `lcmCoef` <a id="lcmcoef"></a>
+
+##### `lcmCoef` : `(%, %) -> Record(llcm_res: %,coeff1: %,coeff2: %)`
 
 lcmCoef(c1, c2) computes (llcm_res, coeff1, coeff2) such that llcm_res is least left common multiple of c1 and c2 and llcm_res = coeff1*c1 = coeff2*c2
 
-- **Signature**: `(%, %) -> Record(llcm_res: %,coeff1: %,coeff2: %) if WSAPReal(prec) has EUCDOM and WSAPReal(prec) has PFECAT or WSAPReal(prec) has FIELD or WSAPReal(prec) has INS`
 - **From**: `LeftOreRing`
+
+##### `lcmCoef` : `(%, %) -> Record(llcm_res: %,coeff1: %,coeff2: %) if WSAPReal(prec) has EUCDOM and WSAPReal(prec) has PFECAT or WSAPReal(prec) has FIELD or WSAPReal(prec) has INS`
+
+Operation defined in WSAPComplex.
 
 #### `leftPower` <a id="leftpower"></a>
 
@@ -1487,10 +1799,15 @@ li(x) returns the logarithmic integral of x, the integral of dx / log(x).
 
 #### `lift` <a id="lift"></a>
 
+##### `lift` : `% -> UP`
+
 lift(z) returns a minimal degree univariate polynomial up such that z=reduce up.
 
-- **Signature**: `% -> SparseUnivariatePolynomial(WSAPReal(prec))`
 - **From**: `MonogenicAlgebra(R,UP)`
+
+##### `lift` : `% -> SparseUnivariatePolynomial(WSAPReal(prec))`
+
+Operation defined in WSAPComplex.
 
 #### `log` <a id="log"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1497)\]
 
@@ -1531,17 +1848,27 @@ Operation defined in WSAPComplex.
 
 #### `map` <a id="map"></a>
 
+##### `map` : `((R -> R), %) -> %`
+
 map(f, ex) evaluates ex, applying f to values of type R in ex.
 
-- **Signature**: `((WSAPReal(prec) -> WSAPReal(prec)), %) -> %`
 - **From**: `FullyEvalableOver(R)`
+
+##### `map` : `((WSAPReal(prec) -> WSAPReal(prec)), %) -> %`
+
+Operation defined in WSAPComplex.
 
 #### `minimalPolynomial` <a id="minimalpolynomial"></a>
 
+##### `minimalPolynomial` : `% -> UP`
+
 minimalPolynomial(a) returns the minimal polynomial of a.
 
-- **Signature**: `% -> SparseUnivariatePolynomial(WSAPReal(prec)) if WSAPReal(prec) has FIELD`
 - **From**: `FiniteRankAlgebra(R,UP)`
+
+##### `minimalPolynomial` : `% -> SparseUnivariatePolynomial(WSAPReal(prec)) if WSAPReal(prec) has FIELD`
+
+Operation defined in WSAPComplex.
 
 #### `missing?` <a id="missing"></a>
 
@@ -1552,10 +1879,15 @@ missing?(obj) checks whether or not obj is missing.
 
 #### `multiEuclidean` <a id="multieuclidean"></a>
 
+##### `multiEuclidean` : `(List(%), %) -> Union(List(%),"failed")`
+
 multiEuclidean([f1, ..., fn], z) returns a list of coefficients [a1, ..., an] such that z / prod fi = sum aj/fj. If no such list of coefficients exists, "failed" is returned.
 
-- **Signature**: `(List(%), %) -> Union(List(%),"failed") if WSAPReal(prec) has FIELD or WSAPReal(prec) has INS`
 - **From**: `EuclideanDomain`
+
+##### `multiEuclidean` : `(List(%), %) -> Union(List(%),"failed") if WSAPReal(prec) has FIELD or WSAPReal(prec) has INS`
+
+Operation defined in WSAPComplex.
 
 #### `mutable?` <a id="mutable"></a>
 
@@ -1572,10 +1904,15 @@ Operation defined in WSAPComplex.
 
 #### `norm` <a id="norm"></a>
 
+##### `norm` : `% -> R`
+
 norm(x) returns x * conjugate(x)
 
-- **Signature**: `% -> WSAPReal(prec)`
 - **From**: `ComplexCategory(R)`
+
+##### `norm` : `% -> WSAPReal(prec)`
+
+Operation defined in WSAPComplex.
 
 #### `nothing?` <a id="nothing"></a>
 
@@ -1586,10 +1923,15 @@ nothing?(obj) checks whether or not obj is nothing.
 
 #### `nthRoot` <a id="nthroot"></a>
 
+##### `nthRoot` : `(%, Integer) -> %`
+
 nthRoot(x, n) returns the nth root of x.
 
-- **Signature**: `(%, Integer) -> % if WSAPReal(prec) has RADCAT and WSAPReal(prec) has TRANFUN`
 - **From**: `RadicalCategory`
+
+##### `nthRoot` : `(%, Integer) -> % if WSAPReal(prec) has RADCAT and WSAPReal(prec) has TRANFUN`
+
+Operation defined in WSAPComplex.
 
 #### `numeric` <a id="numeric"></a>
 
@@ -1638,10 +1980,19 @@ Operation defined in WSAPComplex.
 
 #### `patternMatch` <a id="patternmatch"></a>
 
+##### `patternMatch` : `(%, Pattern(S), PatternMatchResult(S,%)) -> PatternMatchResult(S,%)`
+
 patternMatch(expr, pat, res) matches the pattern pat to the expression expr. res contains the variables of pat which are already matched and their matches (necessary for recursion). Initially, res is just the result of new which is an empty list of matches.
 
-- **Signature**: `(%, Pattern(S), PatternMatchResult(S,%)) -> PatternMatchResult(S,%)`
 - **From**: `PatternMatchable(S)`
+
+##### `patternMatch` : `(%, Pattern(Integer), PatternMatchResult(Integer,%)) -> PatternMatchResult(Integer,%) if WSAPReal(prec) has PATMAB(INT)`
+
+Operation defined in WSAPComplex.
+
+##### `patternMatch` : `(%, Pattern(Float), PatternMatchResult(Float,%)) -> PatternMatchResult(Float,%) if WSAPReal(prec) has PATMAB(FLOAT)`
+
+Operation defined in WSAPComplex.
 
 #### `pi` <a id="pi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1456)\]
 
@@ -1659,17 +2010,27 @@ plenaryPower(a, n) is recursively defined to be plenaryPower(a, n-1)*plenaryPowe
 
 #### `polarCoordinates` <a id="polarcoordinates"></a>
 
+##### `polarCoordinates` : `% -> Record(r: R,phi: R)`
+
 polarCoordinates(x) returns (r, phi) such that x = r * exp(%i * phi).
 
-- **Signature**: `% -> Record(r: WSAPReal(prec),phi: WSAPReal(prec)) if WSAPReal(prec) has RNS and WSAPReal(prec) has TRANFUN`
 - **From**: `ComplexCategory(R)`
+
+##### `polarCoordinates` : `% -> Record(r: WSAPReal(prec),phi: WSAPReal(prec)) if WSAPReal(prec) has RNS and WSAPReal(prec) has TRANFUN`
+
+Operation defined in WSAPComplex.
 
 #### `prime?` <a id="prime"></a>
 
+##### `prime?` : `% -> Boolean`
+
 prime?(x) tests if x can never be written as the product of two non-units of the ring, x is an irreducible element.
 
-- **Signature**: `% -> Boolean if WSAPReal(prec) has EUCDOM and WSAPReal(prec) has PFECAT or WSAPReal(prec) has FIELD or WSAPReal(prec) has INS`
 - **From**: `UniqueFactorizationDomain`
+
+##### `prime?` : `% -> Boolean if WSAPReal(prec) has EUCDOM and WSAPReal(prec) has PFECAT or WSAPReal(prec) has FIELD or WSAPReal(prec) has INS`
+
+Operation defined in WSAPComplex.
 
 #### `primeFrobenius` <a id="primefrobenius"></a>
 
@@ -1695,24 +2056,39 @@ Operation defined in WSAPComplex.
 
 #### `principalIdeal` <a id="principalideal"></a>
 
+##### `principalIdeal` : `List(%) -> Record(coef: List(%),generator: %)`
+
 principalIdeal([f1, ..., fn]) returns a record whose generator component is a generator of the ideal generated by [f1, ..., fn] whose coef component satisfies generator = sum (input.i * coef.i)
 
-- **Signature**: `List(%) -> Record(coef: List(%),generator: %) if WSAPReal(prec) has FIELD or WSAPReal(prec) has INS`
 - **From**: `PrincipalIdealDomain`
+
+##### `principalIdeal` : `List(%) -> Record(coef: List(%),generator: %) if WSAPReal(prec) has FIELD or WSAPReal(prec) has INS`
+
+Operation defined in WSAPComplex.
 
 #### `quo` <a id="quo"></a>
 
+##### `quo` : `(%, %) -> %`
+
 x quo y is the same as divide(x, y).quotient. See divide from EuclideanDomain.
 
-- **Signature**: `(%, %) -> % if WSAPReal(prec) has FIELD or WSAPReal(prec) has INS`
 - **From**: `EuclideanDomain`
+
+##### `quo` : `(%, %) -> % if WSAPReal(prec) has FIELD or WSAPReal(prec) has INS`
+
+Operation defined in WSAPComplex.
 
 #### `random` <a id="random"></a>
 
+##### `random` : `% -> %`
+
 random(n) returns a random integer from 0 to n-1.
 
-- **Signature**: `() -> % if WSAPReal(prec) has FINITE`
 - **From**: `Integer`
+
+##### `random` : `() -> % if WSAPReal(prec) has FINITE`
+
+Operation defined in WSAPComplex.
 
 #### `rank` <a id="rank"></a>
 
@@ -1723,31 +2099,51 @@ rank() returns the rank of the algebra.
 
 #### `rational` <a id="rational"></a>
 
+##### `rational` : `% -> Fraction(Integer)`
+
 rational(x) returns x as a rational number. Error: if x is not a rational number.
 
-- **Signature**: `% -> Fraction(Integer) if WSAPReal(prec) has INS`
 - **From**: `ComplexCategory(R)`
+
+##### `rational` : `% -> Fraction(Integer) if WSAPReal(prec) has INS`
+
+Operation defined in WSAPComplex.
 
 #### `rational?` <a id="rational"></a>
 
+##### `rational?` : `% -> Boolean`
+
 rational?(x) tests if x is a rational number.
 
-- **Signature**: `% -> Boolean if WSAPReal(prec) has INS`
 - **From**: `ComplexCategory(R)`
+
+##### `rational?` : `% -> Boolean if WSAPReal(prec) has INS`
+
+Operation defined in WSAPComplex.
 
 #### `rationalIfCan` <a id="rationalifcan"></a>
 
+##### `rationalIfCan` : `% -> Union(Fraction(Integer),"failed")`
+
 rationalIfCan(x) returns x as a rational number, or "failed" if x is not a rational number.
 
-- **Signature**: `% -> Union(Fraction(Integer),"failed") if WSAPReal(prec) has INS`
 - **From**: `ComplexCategory(R)`
+
+##### `rationalIfCan` : `% -> Union(Fraction(Integer),"failed") if WSAPReal(prec) has INS`
+
+Operation defined in WSAPComplex.
 
 #### `real` <a id="real"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1459)\]
 
+##### `real` : `% -> R`
+
 real(x) returns real part of x.
 
-- **Signature**: `% -> WSAPReal(prec)`
 - **From**: `ComplexCategory(R)`
+
+##### `real` : `% -> WSAPReal(prec)`
+
+Operation defined in WSAPComplex.
 
 #### `recip` <a id="recip"></a>
 
@@ -1770,6 +2166,14 @@ reduce(frac) converts the fraction frac to an algebra element.
 
 - **From**: `MonogenicAlgebra(R,UP)`
 
+##### `reduce` : `SparseUnivariatePolynomial(WSAPReal(prec)) -> %`
+
+Operation defined in WSAPComplex.
+
+##### `reduce` : `Fraction(SparseUnivariatePolynomial(WSAPReal(prec))) -> Union(%,"failed") if WSAPReal(prec) has FIELD`
+
+Operation defined in WSAPComplex.
+
 #### `reducedSystem` <a id="reducedsystem"></a>
 
 ##### `reducedSystem` : `Matrix(%) -> Matrix(R)`
@@ -1783,6 +2187,22 @@ reducedSystem(A) returns a matrix B such that A x = 0 and B x = 0 have the same 
 reducedSystem(A, v) returns a matrix B and a vector w such that A x = v and B x = w have the same solutions in R.
 
 - **From**: `LinearlyExplicitOver(R)`
+
+##### `reducedSystem` : `Matrix(%) -> Matrix(Integer) if WSAPReal(prec) has LINEXP(INT)`
+
+Operation defined in WSAPComplex.
+
+##### `reducedSystem` : `(Matrix(%), Vector(%)) -> Record(mat: Matrix(Integer),vec: Vector(Integer)) if WSAPReal(prec) has LINEXP(INT)`
+
+Operation defined in WSAPComplex.
+
+##### `reducedSystem` : `(Matrix(%), Vector(%)) -> Record(mat: Matrix(WSAPReal(prec)),vec: Vector(WSAPReal(prec)))`
+
+Operation defined in WSAPComplex.
+
+##### `reducedSystem` : `Matrix(%) -> Matrix(WSAPReal(prec))`
+
+Operation defined in WSAPComplex.
 
 #### `regularRepresentation` <a id="regularrepresentation"></a>
 
@@ -1798,12 +2218,25 @@ regularRepresentation(a, basis) returns the matrix m of the linear map defined b
 
 - **From**: `FiniteRankAlgebra(R,UP)`
 
+##### `regularRepresentation` : `(%, Vector(%)) -> Matrix(WSAPReal(prec))`
+
+Operation defined in WSAPComplex.
+
+##### `regularRepresentation` : `% -> Matrix(WSAPReal(prec))`
+
+Operation defined in WSAPComplex.
+
 #### `rem` <a id="rem"></a>
+
+##### `rem` : `(%, %) -> %`
 
 x rem y is the same as divide(x, y).remainder. See divide from EuclideanDomain.
 
-- **Signature**: `(%, %) -> % if WSAPReal(prec) has FIELD or WSAPReal(prec) has INS`
 - **From**: `EuclideanDomain`
+
+##### `rem` : `(%, %) -> % if WSAPReal(prec) has FIELD or WSAPReal(prec) has INS`
+
+Operation defined in WSAPComplex.
 
 #### `representationType` <a id="representationtype"></a>
 
@@ -1825,19 +2258,53 @@ represents([a1, .., an], [v1, .., vn]) returns a1*v1 + ... + an*vn.
 
 - **From**: `FiniteRankAlgebra(R,UP)`
 
+##### `represents` : `(Vector(WSAPReal(prec)), Vector(%)) -> %`
+
+Operation defined in WSAPComplex.
+
+##### `represents` : `Vector(WSAPReal(prec)) -> %`
+
+Operation defined in WSAPComplex.
+
 #### `retract` <a id="retract"></a>
+
+##### `retract` : `% -> S`
 
 retract(a) transforms a into an element of S if possible. Error: if a cannot be made into an element of S.
 
-- **Signature**: `% -> S`
 - **From**: `RetractableTo(S)`
+
+##### `retract` : `% -> Integer if WSAPReal(prec) has RETRACT(INT)`
+
+Operation defined in WSAPComplex.
+
+##### `retract` : `% -> Fraction(Integer) if WSAPReal(prec) has RETRACT(FRAC(INT))`
+
+Operation defined in WSAPComplex.
+
+##### `retract` : `% -> WSAPReal(prec)`
+
+Operation defined in WSAPComplex.
 
 #### `retractIfCan` <a id="retractifcan"></a>
 
+##### `retractIfCan` : `% -> Union(S,"failed")`
+
 retractIfCan(a) transforms a into an element of S if possible. Returns "failed" if a cannot be made into an element of S.
 
-- **Signature**: `% -> Union(S,"failed")`
 - **From**: `RetractableTo(S)`
+
+##### `retractIfCan` : `% -> Union(Integer,"failed") if WSAPReal(prec) has RETRACT(INT)`
+
+Operation defined in WSAPComplex.
+
+##### `retractIfCan` : `% -> Union(Fraction(Integer),"failed") if WSAPReal(prec) has RETRACT(FRAC(INT))`
+
+Operation defined in WSAPComplex.
+
+##### `retractIfCan` : `% -> Union(WSAPReal(prec),"failed")`
+
+Operation defined in WSAPComplex.
 
 #### `rightPower` <a id="rightpower"></a>
 
@@ -1909,17 +2376,27 @@ Operation defined in WSAPComplex.
 
 #### `sizeLess?` <a id="sizeless"></a>
 
+##### `sizeLess?` : `(%, %) -> Boolean`
+
 sizeLess?(x, y) tests whether x is strictly smaller than y with respect to the euclideanSize from EuclideanDomain. Note: zero is considered smaller than every nonzero element.
 
-- **Signature**: `(%, %) -> Boolean if WSAPReal(prec) has FIELD or WSAPReal(prec) has INS`
 - **From**: `EuclideanDomain`
+
+##### `sizeLess?` : `(%, %) -> Boolean if WSAPReal(prec) has FIELD or WSAPReal(prec) has INS`
+
+Operation defined in WSAPComplex.
 
 #### `smaller?` <a id="smaller"></a>
 
+##### `smaller?` : `(%, %) -> Boolean`
+
 smaller?(x, y) is a strict ordering on depending on representatives of elements of the set. If % has Comparable then smaller? gives mathematical linear order.
 
-- **Signature**: `(%, %) -> Boolean if WSAPReal(prec) has COMPARR`
 - **From**: `ComparableRepresentation`
+
+##### `smaller?` : `(%, %) -> Boolean if WSAPReal(prec) has COMPARR`
+
+Operation defined in WSAPComplex.
 
 #### `solveLinearPolynomialEquation` <a id="solvelinearpolynomialequation"></a>
 
@@ -1929,24 +2406,39 @@ Operation defined in WSAPComplex.
 
 #### `sqrt` <a id="sqrt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1496)\]
 
+##### `sqrt` : `% -> %`
+
 sqrt(x) returns the square root of x. The branch cut lies along the negative real axis, continuous with quadrant II.
 
-- **Signature**: `% -> % if WSAPReal(prec) has FIELD and WSAPReal(prec) has ORDRING and WSAPReal(prec) has RADCAT or WSAPReal(prec) has RADCAT and WSAPReal(prec) has TRANFUN`
 - **From**: `ComplexCategory(R)`
+
+##### `sqrt` : `% -> % if WSAPReal(prec) has FIELD and WSAPReal(prec) has ORDRING and WSAPReal(prec) has RADCAT or WSAPReal(prec) has RADCAT and WSAPReal(prec) has TRANFUN`
+
+Operation defined in WSAPComplex.
 
 #### `squareFree` <a id="squarefree"></a>
 
+##### `squareFree` : `% -> Factored(%)`
+
 squareFree(x) returns the square-free factorization of x such that the factors are pairwise relatively prime and each has multiple prime factors.
 
-- **Signature**: `% -> Factored(%) if WSAPReal(prec) has EUCDOM and WSAPReal(prec) has PFECAT or WSAPReal(prec) has FIELD or WSAPReal(prec) has INS`
 - **From**: `UniqueFactorizationDomain`
+
+##### `squareFree` : `% -> Factored(%) if WSAPReal(prec) has EUCDOM and WSAPReal(prec) has PFECAT or WSAPReal(prec) has FIELD or WSAPReal(prec) has INS`
+
+Operation defined in WSAPComplex.
 
 #### `squareFreePart` <a id="squarefreepart"></a>
 
+##### `squareFreePart` : `% -> %`
+
 squareFreePart(x) returns a product of prime factors of x each taken with multiplicity one.
 
-- **Signature**: `% -> % if WSAPReal(prec) has EUCDOM and WSAPReal(prec) has PFECAT or WSAPReal(prec) has FIELD or WSAPReal(prec) has INS`
 - **From**: `UniqueFactorizationDomain`
+
+##### `squareFreePart` : `% -> % if WSAPReal(prec) has EUCDOM and WSAPReal(prec) has PFECAT or WSAPReal(prec) has FIELD or WSAPReal(prec) has INS`
+
+Operation defined in WSAPComplex.
 
 #### `squareFreePolynomial` <a id="squarefreepolynomial"></a>
 
@@ -2002,10 +2494,15 @@ toString(obj) returns the string representation of obj.
 
 #### `trace` <a id="trace"></a>
 
+##### `trace` : `% -> R`
+
 trace(a) returns the trace of the regular representation of a with respect to any basis.
 
-- **Signature**: `% -> WSAPReal(prec)`
 - **From**: `FiniteRankAlgebra(R,UP)`
+
+##### `trace` : `% -> WSAPReal(prec)`
+
+Operation defined in WSAPComplex.
 
 #### `traceMatrix` <a id="tracematrix"></a>
 
@@ -2021,26 +2518,49 @@ traceMatrix([v1, .., vn]) is the n-by-n matrix ( Tr(vi * vj) )
 
 - **From**: `FiniteRankAlgebra(R,UP)`
 
+##### `traceMatrix` : `Vector(%) -> Matrix(WSAPReal(prec))`
+
+Operation defined in WSAPComplex.
+
+##### `traceMatrix` : `() -> Matrix(WSAPReal(prec))`
+
+Operation defined in WSAPComplex.
+
 #### `unit?` <a id="unit"></a>
+
+##### `unit?` : `% -> Boolean`
 
 unit?(x) tests whether x is a unit, is invertible.
 
-- **Signature**: `% -> Boolean if WSAPReal(prec) has EUCDOM and WSAPReal(prec) has PFECAT or WSAPReal(prec) has INTDOM`
 - **From**: `EntireRing`
+
+##### `unit?` : `% -> Boolean if WSAPReal(prec) has EUCDOM and WSAPReal(prec) has PFECAT or WSAPReal(prec) has INTDOM`
+
+Operation defined in WSAPComplex.
 
 #### `unitCanonical` <a id="unitcanonical"></a>
 
+##### `unitCanonical` : `% -> %`
+
 unitCanonical(x) returns unitNormal(x).canonical.
 
-- **Signature**: `% -> % if WSAPReal(prec) has EUCDOM and WSAPReal(prec) has PFECAT or WSAPReal(prec) has INTDOM`
 - **From**: `EntireRing`
+
+##### `unitCanonical` : `% -> % if WSAPReal(prec) has EUCDOM and WSAPReal(prec) has PFECAT or WSAPReal(prec) has INTDOM`
+
+Operation defined in WSAPComplex.
 
 #### `unitNormal` <a id="unitnormal"></a>
 
+##### `unitNormal` : `% -> Record(unit: %,canonical: %,associate: %)`
+
 unitNormal(x) tries to choose a canonical element from the associate class of x. The attribute canonicalUnitNormal, if asserted, means that the "canonical" element is the same across all associates of x if unitNormal(x) = [u, c, a] then u*c = x, a*u = 1.
 
-- **Signature**: `% -> Record(unit: %,canonical: %,associate: %) if WSAPReal(prec) has EUCDOM and WSAPReal(prec) has PFECAT or WSAPReal(prec) has INTDOM`
 - **From**: `EntireRing`
+
+##### `unitNormal` : `% -> Record(unit: %,canonical: %,associate: %) if WSAPReal(prec) has EUCDOM and WSAPReal(prec) has PFECAT or WSAPReal(prec) has INTDOM`
+
+Operation defined in WSAPComplex.
 
 #### `urand01` <a id="urand01"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1399)\]
 

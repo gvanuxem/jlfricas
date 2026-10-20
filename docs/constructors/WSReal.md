@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS real numbers using the MathLink Julia package.Time: 0.02 (OT) = 0.02 sec
+Julia WS real numbers using the MathLink Julia package.Time: 0 sec
 
 **WSReal is a domain constructor.**  
 **Abbreviation for WSReal is WSREAL**  
@@ -623,19 +623,19 @@ coerce(x) converts x to a JLFloat.
 
 coerce(str) constructs str as a WSReal.
 
-##### `coerce` : `JLFloat64  -> %`
+##### `coerce` : `JLFloat64 -> %`
 
 coerce(x) converts x to a WSReal.
 
-##### `coerce` : `DoubleFloat  -> %`
+##### `coerce` : `DoubleFloat -> %`
 
 coerce(x) converts x to a WSReal.
 
-##### `coerce` : `Float  -> %`
+##### `coerce` : `Float -> %`
 
 coerce(x) converts x to a WSReal.
 
-##### `coerce` : `JLFloat  -> %`
+##### `coerce` : `JLFloat -> %`
 
 coerce(x) converts x to a WSReal.
 
@@ -675,6 +675,18 @@ coerce(expr) returns the WSExpression representation of expr.
 
 - **From**: [`WSObject`](WSObject.md)
 
+##### `coerce` : `% -> %`
+
+Operation defined in WSReal.
+
+##### `coerce` : `Fraction(Integer) -> %`
+
+Operation defined in WSReal.
+
+##### `coerce` : `% -> OutputForm`
+
+Operation defined in WSReal.
+
 #### `commutator` <a id="commutator"></a>
 
 commutator(a, b) returns a*b-b*a.
@@ -701,6 +713,22 @@ convert([a1, ..., an]) returns the pattern [a1, ..., an].
 convert(a) transforms a into an element of S.
 
 - **From**: `ConvertibleTo(S)`
+
+##### `convert` : `% -> DoubleFloat`
+
+Operation defined in WSReal.
+
+##### `convert` : `% -> Float`
+
+Operation defined in WSReal.
+
+##### `convert` : `% -> Pattern(Float)`
+
+Operation defined in WSReal.
+
+##### `convert` : `% -> String`
+
+Operation defined in WSReal.
 
 #### `cos` <a id="cos"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L652)\]
 
@@ -1334,6 +1362,10 @@ max(x,y) returns the maximum of x and y relative to "<".
 
 - **From**: `OrderedSet`
 
+##### `max` : `() -> % if not % has ATARBEX and not % has ATARBPR`
+
+Operation defined in WSReal.
+
 #### `min` <a id="min"></a>
 
 ##### `min` : `() -> %`
@@ -1347,6 +1379,10 @@ min() returns the minimum floating point number.
 min(x,y) returns the minimum of x and y relative to "<".
 
 - **From**: `OrderedSet`
+
+##### `min` : `() -> % if not % has ATARBEX and not % has ATARBPR`
+
+Operation defined in WSReal.
 
 #### `missing?` <a id="missing"></a>
 
@@ -1441,10 +1477,15 @@ order x is the order of magnitude of x. Note: base ^ order x <= |x| < base ^ (1 
 
 #### `patternMatch` <a id="patternmatch"></a>
 
+##### `patternMatch` : `(%, Pattern(S), PatternMatchResult(S,%)) -> PatternMatchResult(S,%)`
+
 patternMatch(expr, pat, res) matches the pattern pat to the expression expr. res contains the variables of pat which are already matched and their matches (necessary for recursion). Initially, res is just the result of new which is an empty list of matches.
 
-- **Signature**: `(%, Pattern(Float), PatternMatchResult(Float,%)) -> PatternMatchResult(Float,%)`
 - **From**: `PatternMatchable(S)`
+
+##### `patternMatch` : `(%, Pattern(Float), PatternMatchResult(Float,%)) -> PatternMatchResult(Float,%)`
+
+Operation defined in WSReal.
 
 #### `pi` <a id="pi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L569)\]
 
@@ -1540,17 +1581,35 @@ x rem y is the same as divide(x, y).remainder. See divide from EuclideanDomain.
 
 #### `retract` <a id="retract"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L626)\]
 
+##### `retract` : `% -> S`
+
 retract(a) transforms a into an element of S if possible. Error: if a cannot be made into an element of S.
 
-- **Signature**: `% -> S`
 - **From**: `RetractableTo(S)`
+
+##### `retract` : `% -> Fraction(Integer)`
+
+Operation defined in WSReal.
+
+##### `retract` : `% -> Integer`
+
+Operation defined in WSReal.
 
 #### `retractIfCan` <a id="retractifcan"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L623)\]
 
+##### `retractIfCan` : `% -> Union(S,"failed")`
+
 retractIfCan(a) transforms a into an element of S if possible. Returns "failed" if a cannot be made into an element of S.
 
-- **Signature**: `% -> Union(S,"failed")`
 - **From**: `RetractableTo(S)`
+
+##### `retractIfCan` : `% -> Union(Fraction(Integer),"failed")`
+
+Operation defined in WSReal.
+
+##### `retractIfCan` : `% -> Union(Integer,"failed")`
+
+Operation defined in WSReal.
 
 #### `rightPower` <a id="rightpower"></a>
 

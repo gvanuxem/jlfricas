@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS lists using the MathLink Julia package.Time: 0.03 (OT) = 0.03 sec
+Julia WS lists using the MathLink Julia package.Time: 0 sec
 
 **WSList(E: WSObject) is a domain constructor.**  
 **Abbreviation for WSList is WSLIST**
@@ -65,7 +65,7 @@ Julia WS lists using the MathLink Julia package.Time: 0.03 (OT) = 0.03 sec
 | [`#`](#op-hash) | #(agg) returns the length of agg. 0 if it is a scalar, an index for example. |
 | [`accumulate`](#accumulate) | accumulate(agg) returns the partial sums of elements in agg. |
 | [`append`](#append) | append(l, elt) appends elt to the list l. |
-| [`coerce`](#coerce) | coerce(l) coerces l to a FriCAS List. |
+| [`coerce`](#coerce) | coerce(list) tries to coerce list to a WSAggregate. |
 | [`convert`](#convert) | convert(a) transforms a into an element of S. |
 | [`delete`](#delete) | delete(l, inds) deletes element(s) of the list l at index(es) inds. |
 | [`differences`](#differences) | differences(agg) returns the differences between adjacent elements in agg. |
@@ -140,10 +140,15 @@ Julia WS lists using the MathLink Julia package.Time: 0.03 (OT) = 0.03 sec
 
 #### `accumulate` <a id="accumulate"></a>
 
+##### `accumulate` : `% -> %`
+
 accumulate(agg) returns the partial sums of elements in agg.
 
-- **Signature**: `% -> % if E has WSNUM`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
+
+##### `accumulate` : `% -> % if E has WSNUM`
+
+Operation defined in WSList.
 
 #### `append` <a id="append"></a>
 
@@ -153,10 +158,6 @@ append(l, elt) appends elt to the list l.
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
 #### `coerce` <a id="coerce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L211)\]
-
-##### `coerce` : `% -> List(E)`
-
-coerce(l) coerces l to a FriCAS List.
 
 ##### `coerce` : `List(E) -> %`
 
@@ -176,18 +177,33 @@ coerce(obj) coerces obj to JLObject. Convenience function.
 
 - **From**: [`JLObjectType`](JLObjectType.md)
 
+##### `coerce` : `% -> List(E)`
+
+coerce(l) coerces l to a FriCAS List.
+
+- **From**: [`WSList(E)`](WSList.md)
+
 ##### `coerce` : `% -> WSExpression`
 
 coerce(expr) returns the WSExpression representation of expr.
 
 - **From**: [`WSObject`](WSObject.md)
 
+##### `coerce` : `% -> OutputForm`
+
+Operation defined in WSList.
+
 #### `convert` <a id="convert"></a>
+
+##### `convert` : `% -> S`
 
 convert(a) transforms a into an element of S.
 
-- **Signature**: `% -> String`
 - **From**: `ConvertibleTo(S)`
+
+##### `convert` : `% -> String`
+
+Operation defined in WSList.
 
 #### `delete` <a id="delete"></a>
 
@@ -198,10 +214,15 @@ delete(l, inds) deletes element(s) of the list l at index(es) inds.
 
 #### `differences` <a id="differences"></a>
 
+##### `differences` : `% -> %`
+
 differences(agg) returns the differences between adjacent elements in agg.
 
-- **Signature**: `% -> % if E has WSNUM`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
+
+##### `differences` : `% -> % if E has WSNUM`
+
+Operation defined in WSList.
 
 #### `dimensions` <a id="dimensions"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L531)\]
 
@@ -292,9 +313,13 @@ jWSInterpret(form1,form2,form3) interprets forms.
 
 jWSList(list) constructs list as a WSList.
 
+- **From**: [`WSList(E)`](WSList.md)
+
 ##### `jWSList` : `String -> %`
 
 jWSList(str) constructs str as a WSList. str must be in the WS language.
+
+- **From**: [`WSList(E)`](WSList.md)
 
 #### `jlAbout` <a id="jlabout"></a>
 
@@ -702,10 +727,15 @@ string(jt) returns the string representation of jt.
 
 #### `take` <a id="take"></a>
 
+##### `take` : `(%, Integer) -> %`
+
 take(l,i) returns the first i elements.
 
-- **Signature**: `(%, Integer) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
+
+##### `take` : `(%, WSList(WSInteger)) -> %`
+
+Operation defined in WSList.
 
 #### `toString` <a id="tostring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L500)\]
 
@@ -716,10 +746,15 @@ toString(obj) returns the string representation of obj.
 
 #### `total` <a id="total"></a>
 
+##### `total` : `% -> E`
+
 total(agg) returns the sum of the elements in agg.
 
-- **Signature**: `% -> E if E has WSNUM`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
+
+##### `total` : `% -> E if E has WSNUM`
+
+Operation defined in WSList.
 
 #### `union` <a id="union"></a>
 

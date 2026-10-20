@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS category for numbers using the Wolfram Symbol Transport Protocol.Time: 0.02 (OT) = 0.02 sec
+Julia WS category for numbers using the Wolfram Symbol Transport Protocol.Time: 0 sec
 
 **WSNumber is a category constructor.**  
 **Abbreviation for WSNumber is WSNUM**
@@ -217,6 +217,10 @@ coerce(expr) returns the WSExpression representation of expr.
 
 - **From**: [`WSObject`](WSObject.md)
 
+##### `coerce` : `% -> OutputForm`
+
+Operation defined in WSNumber.
+
 #### `commutator` <a id="commutator"></a>
 
 commutator(a, b) returns a*b-b*a.
@@ -226,10 +230,15 @@ commutator(a, b) returns a*b-b*a.
 
 #### `convert` <a id="convert"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L357)\]
 
+##### `convert` : `% -> S`
+
 convert(a) transforms a into an element of S.
 
-- **Signature**: `% -> String`
 - **From**: `ConvertibleTo(S)`
+
+##### `convert` : `% -> String`
+
+Operation defined in WSNumber.
 
 #### `jWSInterpret` <a id="jwsinterpret"></a>
 

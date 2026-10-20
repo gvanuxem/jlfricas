@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS utility functions using the MathLink Julia package.Time: 0.02 (OT) = 0.02 sec
+Julia WS utility functions using the MathLink Julia package.Time: 0 sec
 
 **WSUtilityFunctions is a package constructor.**  
 **Abbreviation for WSUtilityFunctions is WSUF**

@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS expressions using the MathLink Julia package. It supports the Eltable category (interface) so, for example using Fibonacci polynomials fibonacci(12,jWSExpr x) => 3 75 77 79 411 6 x + 35 x 2+ 56 x 2+ 36 x 2+ 10 x 2+ x %.5 => 10*x^9Time: 0.02 (OT) = 0.02 sec
+Julia WS expressions using the MathLink Julia package. It supports the Eltable category (interface) so, for example using Fibonacci polynomials fibonacci(12,jWSExpr x) => 3 75 77 79 411 6 x + 35 x 2+ 56 x 2+ 36 x 2+ 10 x 2+ x %.5 => 10*x^9Time: 0 sec
 
 **WSExpression is a domain constructor.**  
 **Abbreviation for WSExpression is WSEXPR**  
@@ -1106,6 +1106,46 @@ D(x, deriv, n) differentiate x n times using a derivation which extends deriv on
 
 - **From**: `DifferentialExtension(R)`
 
+##### `D` : `(%, %) -> %`
+
+Operation defined in WSExpression.
+
+##### `D` : `(%, %, NonNegativeInteger) -> %`
+
+Operation defined in WSExpression.
+
+##### `D` : `(%, List(%)) -> %`
+
+Operation defined in WSExpression.
+
+##### `D` : `(%, List(%), List(NonNegativeInteger)) -> %`
+
+Operation defined in WSExpression.
+
+##### `D` : `(%, List(Symbol)) -> %`
+
+Operation defined in WSExpression.
+
+##### `D` : `(%, List(Symbol), List(NonNegativeInteger)) -> %`
+
+Operation defined in WSExpression.
+
+##### `D` : `(%, (% -> %)) -> %`
+
+Operation defined in WSExpression.
+
+##### `D` : `(%, (% -> %), NonNegativeInteger) -> %`
+
+Operation defined in WSExpression.
+
+##### `D` : `(%, Symbol) -> %`
+
+Operation defined in WSExpression.
+
+##### `D` : `(%, Symbol, NonNegativeInteger) -> %`
+
+Operation defined in WSExpression.
+
 #### `Ei` <a id="ei"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1425)\]
 
 Ei(x) returns the exponential integral of x, the integral of exp(x)/x dx.
@@ -1153,9 +1193,29 @@ Si(x) returns the sine integral of x, the integral of sin(x) / x dx.
 
 #### `^` <a id="op-pow"></a>
 
+##### `^` : `(%, WSRational) -> %`
+
 ^ is the exponentiation by a rational.
 
-- **Signature**: `(%, WSRational) -> %`
+##### `^` : `(%, %) -> %`
+
+Operation defined in WSExpression.
+
+##### `^` : `(%, Fraction(Integer)) -> %`
+
+Operation defined in WSExpression.
+
+##### `^` : `(%, Integer) -> %`
+
+Operation defined in WSExpression.
+
+##### `^` : `(%, NonNegativeInteger) -> %`
+
+Operation defined in WSExpression.
+
+##### `^` : `(%, PositiveInteger) -> %`
+
+Operation defined in WSExpression.
 
 #### `abs` <a id="abs"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1374)\]
 
@@ -1285,6 +1345,14 @@ algtower([f1, ..., fn]) returns list of kernels [ak1, ..., akl] such that each t
 
 - **From**: `FunctionSpace2(R,K)`
 
+##### `algtower` : `% -> List(Kernel(%))`
+
+Operation defined in WSExpression.
+
+##### `algtower` : `List(%) -> List(Kernel(%))`
+
+Operation defined in WSExpression.
+
 #### `angerJ` <a id="angerj"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L132)\]
 
 ##### `angerJ` : `(%, %, %) -> %`
@@ -1323,10 +1391,15 @@ apart(expr, vars) converts a rational expression as a sum of terms as the one ar
 
 #### `append` <a id="append"></a>
 
+##### `append` : `(%, E) -> %`
+
 append(l, elt) appends elt to the list l.
 
-- **Signature**: `(%, %) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
+
+##### `append` : `(%, %) -> %`
+
+Operation defined in WSExpression.
 
 #### `applyQuote` <a id="applyquote"></a>
 
@@ -1362,10 +1435,15 @@ applyQuote(foo, [x1, ..., xn]) returns 'foo(x1, ..., xn).
 
 #### `argument` <a id="argument"></a>
 
+##### `argument` : `% -> R`
+
 argument(x) returns the angle made by (1, 0) and x.
 
-- **Signature**: `% -> %`
 - **From**: `ComplexCategory(R)`
+
+##### `argument` : `% -> %`
+
+Operation defined in WSExpression.
 
 #### `asec` <a id="asec"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1398)\]
 
@@ -1547,10 +1625,15 @@ characteristic() returns the characteristic of the ring.
 
 #### `characteristicPolynomial` <a id="characteristicpolynomial"></a>
 
+##### `characteristicPolynomial` : `% -> UP`
+
 characteristicPolynomial(a) returns the characteristic polynomial of the regular representation of a with respect to any basis.
 
-- **Signature**: `% -> SparseUnivariatePolynomial(%)`
 - **From**: `FiniteRankAlgebra(R,UP)`
+
+##### `characteristicPolynomial` : `% -> SparseUnivariatePolynomial(%)`
+
+Operation defined in WSExpression.
 
 #### `charlierC` <a id="charlierc"></a>
 
@@ -1604,7 +1687,7 @@ coefficientRules(p,vars) returns the coefficients and exponents of p with respec
 
 #### `coerce` <a id="coerce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1140)\]
 
-##### `coerce` : `Integer  -> %`
+##### `coerce` : `Integer -> %`
 
 coerce(z) coerces the integer z to a WSExpression. Convenience function.
 
@@ -1612,11 +1695,11 @@ coerce(z) coerces the integer z to a WSExpression. Convenience function.
 
 coerce(gi) coerces gi to a WSExpression. Convenience function.
 
-##### `coerce` : `Fraction(Integer)  -> %`
+##### `coerce` : `Fraction(Integer) -> %`
 
 coerce(q) coerces the rational q to a WSExpression. Convenience function.
 
-##### `coerce` : `Float  -> %`
+##### `coerce` : `Float -> %`
 
 coerce(f) coerces the floating point number f to a WSExpression. Convenience function.
 
@@ -1624,7 +1707,7 @@ coerce(f) coerces the floating point number f to a WSExpression. Convenience fun
 
 coerce(eq) coerces the equation eq to a WSExpression equation.
 
-##### `coerce` : `String  -> %`
+##### `coerce` : `String -> %`
 
 coerce(str) coerces the string str to a WSExpression evaluating str as a WS Language Expression. For example:
 
@@ -1676,12 +1759,6 @@ coerce(f) returns f as an element of %.
 
 - **From**: `FunctionSpace2(R,K)`
 
-##### `coerce` : `Integer -> %`
-
-coerce(n) coerces the integer n to an element of the ring.
-
-- **From**: `NonAssociativeRing`
-
 ##### `coerce` : `List(E) -> %`
 
 coerce(list) tries to coerce list to a WSAggregate.
@@ -1693,12 +1770,6 @@ coerce(list) tries to coerce list to a WSAggregate.
 coerce(p) returns p as an element of %.
 
 - **From**: `FunctionSpace2(R,K)`
-
-##### `coerce` : `String -> %`
-
-coerce(s) converts the string s to a symbol.
-
-- **From**: `Symbol`
 
 ##### `coerce` : `% -> S`
 
@@ -1718,13 +1789,53 @@ coerce(expr) returns the WSExpression representation of expr.
 
 - **From**: [`WSObject`](WSObject.md)
 
+##### `coerce` : `% -> %`
+
+Operation defined in WSExpression.
+
+##### `coerce` : `Complex(Integer) -> %`
+
+Operation defined in WSExpression.
+
+##### `coerce` : `Fraction(%) -> %`
+
+Operation defined in WSExpression.
+
+##### `coerce` : `Fraction(Polynomial(%)) -> %`
+
+Operation defined in WSExpression.
+
+##### `coerce` : `Fraction(Polynomial(Fraction(%))) -> %`
+
+Operation defined in WSExpression.
+
+##### `coerce` : `Kernel(%) -> %`
+
+Operation defined in WSExpression.
+
+##### `coerce` : `Polynomial(%) -> %`
+
+Operation defined in WSExpression.
+
+##### `coerce` : `Polynomial(Fraction(%)) -> %`
+
+Operation defined in WSExpression.
+
+##### `coerce` : `SparseMultivariatePolynomial(%,Kernel(%)) -> %`
+
+Operation defined in WSExpression.
+
+##### `coerce` : `% -> OutputForm`
+
+Operation defined in WSExpression.
+
 #### `collect` <a id="collect"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L916)\]
 
 ##### `collect` : `(%, %) -> %`
 
 collect(expr, var) collects same power terms with respect to variable var.
 
-##### `collect` : `(%, WSL(%)) -> %`
+##### `collect` : `(%, WSList(%)) -> %`
 
 collect(expr, vars) collects same power terms with respect to variables in vars.
 
@@ -1737,10 +1848,15 @@ commutator(a, b) returns a*b-b*a.
 
 #### `complex` <a id="complex"></a>
 
+##### `complex` : `(R, R) -> %`
+
 complex(x, y) constructs x + %i*y.
 
-- **Signature**: `(%, %) -> %`
 - **From**: `ComplexCategory(R)`
+
+##### `complex` : `(%, %) -> %`
+
+Operation defined in WSExpression.
 
 #### `complexExpand` <a id="complexexpand"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L954)\]
 
@@ -1803,6 +1919,26 @@ convert(a) returns the coordinates of a with respect to the fixed R-module basis
 
 - **From**: `FramedModule(R)`
 
+##### `convert` : `SparseUnivariatePolynomial(%) -> %`
+
+Operation defined in WSExpression.
+
+##### `convert` : `Vector(%) -> %`
+
+Operation defined in WSExpression.
+
+##### `convert` : `% -> SparseUnivariatePolynomial(%)`
+
+Operation defined in WSExpression.
+
+##### `convert` : `% -> String`
+
+Operation defined in WSExpression.
+
+##### `convert` : `% -> Vector(%)`
+
+Operation defined in WSExpression.
+
 #### `coordinates` <a id="coordinates"></a>
 
 ##### `coordinates` : `Vector(%) -> Matrix(R)`
@@ -1828,6 +1964,22 @@ coordinates(a) returns the coordinates of a with respect to the fixed R-module b
 coordinates(a, basis) returns the coordinates of a with respect to the basis basis.
 
 - **From**: `FiniteRankAlgebra(R,UP)`
+
+##### `coordinates` : `Vector(%) -> Matrix(%)`
+
+Operation defined in WSExpression.
+
+##### `coordinates` : `(Vector(%), Vector(%)) -> Matrix(%)`
+
+Operation defined in WSExpression.
+
+##### `coordinates` : `% -> Vector(%)`
+
+Operation defined in WSExpression.
+
+##### `coordinates` : `(%, Vector(%)) -> Vector(%)`
+
+Operation defined in WSExpression.
 
 #### `cos` <a id="cos"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1387)\]
 
@@ -1908,7 +2060,7 @@ fprimex:=derivative(operator('f),1,x)
 dSolve(jWSEqual(fprimex + fx , a *sin(x)),fx,x)
 ```
 
-##### `dSolve` : `(Equation(%), %, %)  -> %`
+##### `dSolve` : `(Equation(%), %, %) -> %`
 
 dSolve(eq, func,var) solves the differential equation eq for the function(s) funcs with independent variable(s) vars.
 
@@ -1934,7 +2086,7 @@ fprimex:=derivative(operator('f),1,x)
 dSolveValue(jWSExpr([jWSEqual(fprimex + fx , a *sin(x)/cos(x)), jWSEqual(f0,0)]),f,x)
 ```
 
-##### `dSolveValue` : `(Equation(%), %, %)  -> %`
+##### `dSolveValue` : `(Equation(%), %, %) -> %`
 
 dSolveValue(eq, func,var) returns the value determined by the differential equation eq for the function func with independent variable var.
 
@@ -1986,6 +2138,10 @@ definingPolynomial() returns the minimal polynomial which generator() satisfies.
 
 - **From**: `MonogenicAlgebra(R,UP)`
 
+##### `definingPolynomial` : `() -> SparseUnivariatePolynomial(%)`
+
+Operation defined in WSExpression.
+
 #### `degree` <a id="degree"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L94)\]
 
 degree() returns conversion factor from degrees to radians, π/180.
@@ -2001,10 +2157,15 @@ delete(l, inds) deletes element(s) of the list l at index(es) inds.
 
 #### `denom` <a id="denom"></a>
 
+##### `denom` : `% -> SparseMultivariatePolynomial(R,K)`
+
 denom(f) returns the denominator of f viewed as a polynomial in the kernels over R.
 
-- **Signature**: `% -> SparseMultivariatePolynomial(%,Kernel(%))`
 - **From**: `FunctionSpace2(R,K)`
+
+##### `denom` : `% -> SparseMultivariatePolynomial(%,Kernel(%))`
+
+Operation defined in WSExpression.
 
 #### `denominator` <a id="denominator"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L684)\]
 
@@ -2014,10 +2175,15 @@ denominator(expr) returns the denominator of expr.
 
 #### `derivationCoordinates` <a id="derivationcoordinates"></a>
 
+##### `derivationCoordinates` : `(Vector(%), (R -> R)) -> Matrix(R)`
+
 derivationCoordinates(b, ') returns M such that b' = M b.
 
-- **Signature**: `(Vector(%), (% -> %)) -> Matrix(%)`
 - **From**: `MonogenicAlgebra(R,UP)`
+
+##### `derivationCoordinates` : `(Vector(%), (% -> %)) -> Matrix(%)`
+
+Operation defined in WSExpression.
 
 #### `derivative` <a id="derivative"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L590)\]
 
@@ -2082,6 +2248,46 @@ differentiate(f, n) creates a form for the nth derivative of f, f', f'', f''', "
 
 - **From**: `OutputForm`
 
+##### `differentiate` : `(%, %) -> %`
+
+Operation defined in WSExpression.
+
+##### `differentiate` : `(%, %, NonNegativeInteger) -> %`
+
+Operation defined in WSExpression.
+
+##### `differentiate` : `(%, List(%)) -> %`
+
+Operation defined in WSExpression.
+
+##### `differentiate` : `(%, List(%), List(NonNegativeInteger)) -> %`
+
+Operation defined in WSExpression.
+
+##### `differentiate` : `(%, List(Symbol)) -> %`
+
+Operation defined in WSExpression.
+
+##### `differentiate` : `(%, List(Symbol), List(NonNegativeInteger)) -> %`
+
+Operation defined in WSExpression.
+
+##### `differentiate` : `(%, (% -> %)) -> %`
+
+Operation defined in WSExpression.
+
+##### `differentiate` : `(%, (% -> %), NonNegativeInteger) -> %`
+
+Operation defined in WSExpression.
+
+##### `differentiate` : `(%, Symbol) -> %`
+
+Operation defined in WSExpression.
+
+##### `differentiate` : `(%, Symbol, NonNegativeInteger) -> %`
+
+Operation defined in WSExpression.
+
 #### `digamma` <a id="digamma"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L138)\]
 
 ##### `digamma` : `(%, %) -> %`
@@ -2145,6 +2351,14 @@ discriminant([v1, .., vn]) returns determinant(traceMatrix([v1, .., vn])).
 
 - **From**: `FiniteRankAlgebra(R,UP)`
 
+##### `discriminant` : `() -> %`
+
+Operation defined in WSExpression.
+
+##### `discriminant` : `Vector(%) -> %`
+
+Operation defined in WSExpression.
+
 #### `distribute` <a id="distribute"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L940)\]
 
 ##### `distribute` : `% -> %`
@@ -2172,15 +2386,9 @@ divide(x, y) divides x by y producing a record containing a quotient and remaind
 
 ellipticE(x) computes the complete elliptic integral of the second kind.
 
-##### `ellipticE` : `(%, %)-> %`
-
-ellipticE(phi,m) computes the elliptic integral of the second kind.
-
 ##### `ellipticE` : `(%, %) -> %`
 
-ellipticE(z, m) is the incomplete elliptic integral of the second kind: ellipticE(z, m) = integrate(sqrt(1-m*t^2)/sqrt(1-t^2), t = 0..z).
-
-- **From**: `SpecialFunctionCategory`
+ellipticE(phi,m) computes the elliptic integral of the second kind.
 
 #### `ellipticF` <a id="ellipticf"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L372)\]
 
@@ -2196,19 +2404,13 @@ ellipticK(m) computes the complete elliptic integral of the first kind.
 
 #### `ellipticPi` <a id="ellipticpi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L378)\]
 
-##### `ellipticPi` : `(%, %)-> %`
+##### `ellipticPi` : `(%, %) -> %`
 
 ellipticPi(n,m) computes the complete elliptic integral of the third kind.
 
-##### `ellipticPi` : `(%, %, %)-> %`
-
-ellipticPi(n,phi,m) computes the elliptic integral of the third kind.
-
 ##### `ellipticPi` : `(%, %, %) -> %`
 
-ellipticPi(z, n, m) is the incomplete elliptic integral of the third kind: ellipticPi(z, n, m) = integrate(1/((1-n*t^2)*sqrt((1-t^2)*(1-m*t^2))), t = 0..z).
-
-- **From**: `SpecialFunctionCategory`
+ellipticPi(n,phi,m) computes the elliptic integral of the third kind.
 
 #### `ellipticTheta` <a id="elliptictheta"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L359)\]
 
@@ -2302,6 +2504,10 @@ elt(agg,i) returns the i-th element.
 
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
+##### `elt` : `(%, Integer) -> %`
+
+Operation defined in WSExpression.
+
 #### `engineeringForm` <a id="engineeringform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1076)\]
 
 ##### `engineeringForm` : `% -> %`
@@ -2350,7 +2556,7 @@ euclideanSize(x) returns the euclidean size of the element x. Error: if x is zer
 
 eulerE(n) returns the Euler number En.
 
-##### `eulerE` : `(WSInteger , %) -> %`
+##### `eulerE` : `(WSInteger, %) -> %`
 
 eulerE(n,z) returns the Euler E polynomial of degree n.
 
@@ -2451,6 +2657,78 @@ eval(x, s, n, f) replaces every s(a)^n in x by f(a) for any a.
 eval(x, s, n, f) replaces every s(a1, ..., am)^n in x by f(a1, ..., am) for any a1, ..., am.
 
 - **From**: `FunctionSpace2(R,K)`
+
+##### `eval` : `(%, %, %) -> %`
+
+Operation defined in WSExpression.
+
+##### `eval` : `(%, BasicOperator, (% -> %)) -> %`
+
+Operation defined in WSExpression.
+
+##### `eval` : `(%, BasicOperator, (List(%) -> %)) -> %`
+
+Operation defined in WSExpression.
+
+##### `eval` : `(%, Equation(%)) -> %`
+
+Operation defined in WSExpression.
+
+##### `eval` : `(%, Kernel(%), %) -> %`
+
+Operation defined in WSExpression.
+
+##### `eval` : `(%, List(%), List(%)) -> %`
+
+Operation defined in WSExpression.
+
+##### `eval` : `(%, List(BasicOperator), List((% -> %))) -> %`
+
+Operation defined in WSExpression.
+
+##### `eval` : `(%, List(BasicOperator), List((List(%) -> %))) -> %`
+
+Operation defined in WSExpression.
+
+##### `eval` : `(%, List(Equation(%))) -> %`
+
+Operation defined in WSExpression.
+
+##### `eval` : `(%, List(Kernel(%)), List(%)) -> %`
+
+Operation defined in WSExpression.
+
+##### `eval` : `(%, List(Symbol), List((% -> %))) -> %`
+
+Operation defined in WSExpression.
+
+##### `eval` : `(%, List(Symbol), List((List(%) -> %))) -> %`
+
+Operation defined in WSExpression.
+
+##### `eval` : `(%, List(Symbol), List(NonNegativeInteger), List((% -> %))) -> %`
+
+Operation defined in WSExpression.
+
+##### `eval` : `(%, List(Symbol), List(NonNegativeInteger), List((List(%) -> %))) -> %`
+
+Operation defined in WSExpression.
+
+##### `eval` : `(%, Symbol, (% -> %)) -> %`
+
+Operation defined in WSExpression.
+
+##### `eval` : `(%, Symbol, (List(%) -> %)) -> %`
+
+Operation defined in WSExpression.
+
+##### `eval` : `(%, Symbol, NonNegativeInteger, (% -> %)) -> %`
+
+Operation defined in WSExpression.
+
+##### `eval` : `(%, Symbol, NonNegativeInteger, (List(%) -> %)) -> %`
+
+Operation defined in WSExpression.
 
 #### `exactNumber?` <a id="exactnumber"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L63)\]
 
@@ -2645,6 +2923,10 @@ factorPolynomial(p) returns the factorization into irreducibles of the univariat
 
 - **From**: `PolynomialFactorizationExplicit`
 
+##### `factorPolynomial` : `SparseUnivariatePolynomial(%) -> Factored(SparseUnivariatePolynomial(%)) if % has PFECAT`
+
+Operation defined in WSExpression.
+
 #### `factorSquareFree` <a id="factorsquarefree"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L816)\]
 
 factorSquareFree(expr) factors the expression or polynomial expr in square free factors.
@@ -2659,10 +2941,15 @@ factorSquareFreeList(expr) factors the expression or polynomial expr in square f
 
 #### `factorSquareFreePolynomial` <a id="factorsquarefreepolynomial"></a>
 
+##### `factorSquareFreePolynomial` : `SparseUnivariatePolynomial(%) -> Factored(SparseUnivariatePolynomial(%))`
+
 factorSquareFreePolynomial(p) factors the univariate polynomial p into irreducibles where p is known to be square free and primitive with respect to its main variable.
 
-- **Signature**: `SparseUnivariatePolynomial(%) -> Factored(SparseUnivariatePolynomial(%)) if % has PFECAT`
 - **From**: `PolynomialFactorizationExplicit`
+
+##### `factorSquareFreePolynomial` : `SparseUnivariatePolynomial(%) -> Factored(SparseUnivariatePolynomial(%)) if % has PFECAT`
+
+Operation defined in WSExpression.
 
 #### `factorTerms` <a id="factorterms"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L819)\]
 
@@ -2674,7 +2961,7 @@ factorTerms(p) factors out numerical factors of the expression or polynomial exp
 
 factorTerms(p, var) factors out numerical factors of the expression or polynomial expr without those related to var.
 
-##### `factorTerms` : `(%, WSL(%)) -> %`
+##### `factorTerms` : `(%, WSList(%)) -> %`
 
 factorTerms(p, vars) factors the expression or polynomial expr by pulling out numerical factors without those related to var(s).
 
@@ -2717,27 +3004,27 @@ fibonacci(n, x) returns the Fibonacci polynomial or evaluates it at x if x is a 
 
 #### `findInstance` <a id="findinstance"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L664)\]
 
-##### `findInstance` : `(Equation(%), %) -> WSL(WSL(%))`
+##### `findInstance` : `(Equation(%), %) -> WSList(WSList(%))`
 
 findInstance(expr,lvars) tries to find an instance of the equation in expr.
 
-##### `findInstance` : `(%, %) -> WSL(WSL(%))`
+##### `findInstance` : `(%, %) -> WSList(WSList(%))`
 
 findInstance(expr,lvars) tries to find an instance of the (in)equation in expr.
 
-##### `findInstance` : `(Equation(%), %, %) -> WSL(WSL(%))`
+##### `findInstance` : `(Equation(%), %, %) -> WSList(WSList(%))`
 
 findInstance(expr,lvars,dom) tries to find an instance of the equation in expr.
 
-##### `findInstance` : `(Equation(%), %, %, %) -> WSL(WSL(%))`
+##### `findInstance` : `(Equation(%), %, %, %) -> WSList(WSList(%))`
 
 findInstance(expr,lvars,dom,n) tries to find n instance(s) to the equation in expr.
 
-##### `findInstance` : `(%, %, %) -> WSL(WSL(%))`
+##### `findInstance` : `(%, %, %) -> WSList(WSList(%))`
 
 findInstance(expr,lvars,dom) tries to find an instance to the equation in expr.
 
-##### `findInstance` : `(%, %, %, %) -> WSL(WSL(%))`
+##### `findInstance` : `(%, %, %, %) -> WSList(WSList(%))`
 
 findInstance(expr,lvars,dom, n) tries to find n instance(s) to the (in)equation in expr.
 
@@ -2754,10 +3041,15 @@ findRoot(sin(x) + cos(x), "{x, 0}")
 
 #### `first` <a id="first"></a>
 
+##### `first` : `% -> E`
+
 first(agg) returns the first element of agg.
 
-- **Signature**: `% -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
+
+##### `first` : `% -> %`
+
+Operation defined in WSExpression.
 
 #### `floor` <a id="floor"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L88)\]
 
@@ -2775,13 +3067,17 @@ fourier(expr) returns the discrete Fourier transform from a list of numbers.
 
 fourier(expr, pos) returns the elements of the discrete Fourier transform from a list of numbers with position(s) in the list pos.
 
-##### `fourier` : `WSL(%) -> WSL(%)`
+##### `fourier` : `WSList(%) -> WSList(%)`
 
 fourier(list) returns the discrete Fourier transform from the list of numbers.
 
-##### `fourier` : `(WSL(%), WSL(%)) ->WSL(%)`
+##### `fourier` : `(WSList(%), WSList(%)) ->WSList(%)`
 
 fourier(list, lpos) returns the elements of the discrete Fourier transform from a list of numbers with position(s) in the list lpos.
+
+##### `fourier` : `(WSList(%), WSList(%)) -> WSList(%)`
+
+Operation defined in WSExpression.
 
 #### `fractionPart` <a id="fractionpart"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1375)\]
 
@@ -2896,20 +3192,25 @@ goldenRatio() returns the golden ratio.
 
 #### `groebnerBasis` <a id="groebnerbasis"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L789)\]
 
-##### `groebnerBasis` : `(%, %) -> WSL(%)`
+##### `groebnerBasis` : `(%, %) -> WSList(%)`
 
 groebnerBasis(lpoly, lvar) computes a Groebner basis from the list of polynomials lpoly relative to the list of vars lvars.
 
-##### `groebnerBasis` : `(%, %, %) -> WSL(%)`
+##### `groebnerBasis` : `(%, %, %) -> WSList(%)`
 
 groebnerBasis(lpoly, lvar, opt) computes a Groebner basis from the list of polynomials lpoly relative to the list of variables in lvars without variables in opt. Opt can also give the modulus to compute it: "Modulus -> p".
 
 #### `ground` <a id="ground"></a>
 
+##### `ground` : `% -> R`
+
 ground(f) returns f as an element of R. An error occurs if f is not an element of R.
 
-- **Signature**: `% -> %`
 - **From**: `FunctionSpace2(R,K)`
+
+##### `ground` : `% -> %`
+
+Operation defined in WSExpression.
 
 #### `ground?` <a id="ground"></a>
 
@@ -3085,10 +3386,15 @@ hypergeometricU(a,b,z) is the confluent hypergeometric function U.
 
 #### `imag` <a id="imag"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1311)\]
 
+##### `imag` : `% -> R`
+
 imag(x) returns imaginary part of x.
 
-- **Signature**: `% -> %`
 - **From**: `ComplexCategory(R)`
+
+##### `imag` : `% -> %`
+
+Operation defined in WSExpression.
 
 #### `imaginary` <a id="imaginary"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1300)\]
 
@@ -3099,10 +3405,15 @@ imaginary() = sqrt(-1) = %i.
 
 #### `insert` <a id="insert"></a>
 
+##### `insert` : `(%, E, WSInteger) -> %`
+
 insert(l, elt, ind) inserts elt to the list l at index ind.
 
-- **Signature**: `(%, %, WSInteger) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
+
+##### `insert` : `(%, %, WSInteger) -> %`
+
+Operation defined in WSExpression.
 
 #### `integer?` <a id="integer"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L54)\]
 
@@ -3200,11 +3511,11 @@ inverseFourier(expr) returns the discrete inverse Fourier transform from a list 
 
 inverseFourier(expr, pos) returns the elements of the discrete inverse Fourier transform from a list of numbers with position(s) in the list pos.
 
-##### `inverseFourier` : `WSL(%) -> %`
+##### `inverseFourier` : `WSList(%) -> %`
 
 inverseFourier(expr) returns the discrete inverse Fourier transform from a list of numbers.
 
-##### `inverseFourier` : `(WSL(%), WSL(%)) -> WSL(%)`
+##### `inverseFourier` : `(WSList(%), WSList(%)) -> WSList(%)`
 
 inverseFourier(list, lpos) returns the elements of the discrete inverse Fourier transform from a list of numbers with position(s) in the list lpos.
 
@@ -3282,12 +3593,29 @@ isExpt(p, f) returns [x, n] if p = x^n and n ~= 0 and x = f(a).
 
 - **From**: `FunctionSpace2(R,K)`
 
+##### `isExpt` : `% -> Union(Record(var: Kernel(%),exponent: Integer),"failed")`
+
+Operation defined in WSExpression.
+
+##### `isExpt` : `(%, BasicOperator) -> Union(Record(var: Kernel(%),exponent: Integer),"failed")`
+
+Operation defined in WSExpression.
+
+##### `isExpt` : `(%, Symbol) -> Union(Record(var: Kernel(%),exponent: Integer),"failed")`
+
+Operation defined in WSExpression.
+
 #### `isMult` <a id="ismult"></a>
+
+##### `isMult` : `% -> Union(Record(coef: Integer,var: K),"failed")`
 
 isMult(p) returns [n, x] if p = n * x and n ~= 0.
 
-- **Signature**: `% -> Union(Record(coef: Integer,var: Kernel(%)),"failed")`
 - **From**: `FunctionSpace2(R,K)`
+
+##### `isMult` : `% -> Union(Record(coef: Integer,var: Kernel(%)),"failed")`
+
+Operation defined in WSExpression.
 
 #### `isPlus` <a id="isplus"></a>
 
@@ -3312,10 +3640,15 @@ isTimes(p) returns [a1, ..., an] if p = a1*...*an and n > 1.
 
 #### `jWSAggregate` <a id="jwsaggregate"></a>
 
+##### `jWSAggregate` : `List(E) -> %`
+
 jWSAggregate(list) constructs agg to a WSAggregate.
 
-- **Signature**: `List(%) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
+
+##### `jWSAggregate` : `List(%) -> %`
+
+Operation defined in WSExpression.
 
 #### `jWSAssociation` <a id="jwsassociation"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1201)\]
 
@@ -3369,7 +3702,7 @@ jWSExpr(sym) coerces sym to a WSExpression. For example: x := jWSExpr x
 
 jWSExpr(z) returns the Integer z as a WSExpression.
 
-##### `jWSExpr` : `Fraction Integer -> %`
+##### `jWSExpr` : `Fraction(Integer) -> %`
 
 jWSExpr(q) returns the Fraction(Integer) q as a WSExpression.
 
@@ -3482,7 +3815,7 @@ jWSQuantity(1.2, jWSString "Meter")
 
 #### `jWSRule` <a id="jwsrule"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1208)\]
 
-##### `jWSRule` : `(%,  %) -> %`
+##### `jWSRule` : `(%, %) -> %`
 
 jWSRule(lhs,rhs) returns the Julia WS rule lhs->rhs.
 
@@ -3553,15 +3886,9 @@ jacobiTheta(z, m) is the Jacobi Theta function in Jacobi notation.
 
 #### `jacobiZeta` <a id="jacobizeta"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L383)\]
 
-##### `jacobiZeta` : `(%, %)-> %`
-
 jacobiZeta(ϕ,m) computes the Jacobi Zeta function.
 
-##### `jacobiZeta` : `(%, %) -> %`
-
-jacobiZeta(z, m) is the Jacobi elliptic zeta function, defined by D(jacobiZeta(z, m), z) = jacobiDn(z, m)^2 - ellipticE(m)/ellipticK(m) and jacobiZeta(0, m) = 0.
-
-- **From**: `SpecialFunctionCategory`
+- **Signature**: `(%, %) -> %`
 
 #### `jlAbout` <a id="jlabout"></a>
 
@@ -3907,6 +4234,14 @@ kernels([f1,...,fn]) returns the list of all the top-level kernels appearing in 
 
 - **From**: `ExpressionSpace2(K)`
 
+##### `kernels` : `% -> List(Kernel(%))`
+
+Operation defined in WSExpression.
+
+##### `kernels` : `List(%) -> List(Kernel(%))`
+
+Operation defined in WSExpression.
+
 #### `key?` <a id="key"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L73)\]
 
 key?(assoc,key) checks whether or not key exists in the association assoc.
@@ -3974,10 +4309,15 @@ lambertW(z) = w is the principal branch of the solution to the equation we^w = z
 
 #### `last` <a id="last"></a>
 
+##### `last` : `% -> E`
+
 last(agg) returns the last element of agg.
 
-- **Signature**: `% -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
+
+##### `last` : `% -> %`
+
+Operation defined in WSExpression.
 
 #### `latex` <a id="latex"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1352)\]
 
@@ -4072,11 +4412,11 @@ lerchPhi(z,s,a) returns Lerch's transcendent phi of arguments.
 
 #### `level` <a id="level"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1024)\]
 
-##### `level` : `(%, %) -> WSL(%)`
+##### `level` : `(%, %) -> WSList(%)`
 
 level(expr, lev) returns the list of expression expr at level lev.
 
-##### `level` : `(%, %, Boolean) -> WSL(%)`
+##### `level` : `(%, %, Boolean) -> WSList(%)`
 
 level(expr, lev, head) returns the list of expression expr at level lev with heads if head is true.
 
@@ -4089,10 +4429,15 @@ li(x) returns the logarithmic integral of x, the integral of dx / log(x).
 
 #### `lift` <a id="lift"></a>
 
+##### `lift` : `% -> UP`
+
 lift(z) returns a minimal degree univariate polynomial up such that z=reduce up.
 
-- **Signature**: `% -> SparseUnivariatePolynomial(%)`
 - **From**: `MonogenicAlgebra(R,UP)`
+
+##### `lift` : `% -> SparseUnivariatePolynomial(%)`
+
+Operation defined in WSExpression.
 
 #### `limit` <a id="limit"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L532)\]
 
@@ -4167,10 +4512,15 @@ machineNumber?(expr) checks whether or not expr is a CPU/GPU supported number.
 
 #### `mainKernel` <a id="mainkernel"></a>
 
+##### `mainKernel` : `% -> Union(K,"failed")`
+
 mainKernel(f) returns a kernel of f with maximum nesting level, or "failed" if f has no kernels ( f is a constant).
 
-- **Signature**: `% -> Union(Kernel(%),"failed")`
 - **From**: `ExpressionSpace2(K)`
+
+##### `mainKernel` : `% -> Union(Kernel(%),"failed")`
+
+Operation defined in WSExpression.
 
 #### `map` <a id="map"></a>
 
@@ -4185,6 +4535,14 @@ map(f, k) returns op(f(x1), ..., f(xn)) where k = op(x1, ..., xn).
 map(f, ex) evaluates ex, applying f to values of type R in ex.
 
 - **From**: `FullyEvalableOver(R)`
+
+##### `map` : `((% -> %), %) -> %`
+
+Operation defined in WSExpression.
+
+##### `map` : `((% -> %), Kernel(%)) -> %`
+
+Operation defined in WSExpression.
 
 #### `mathieuC` <a id="mathieuc"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L334)\]
 
@@ -4282,10 +4640,15 @@ minLimit(expr, params) returns the min limit, eventually nested or multivariate,
 
 #### `minPoly` <a id="minpoly"></a>
 
+##### `minPoly` : `K -> SparseUnivariatePolynomial(%)`
+
 minPoly(k) returns p such that p(k) = 0.
 
-- **Signature**: `Kernel(%) -> SparseUnivariatePolynomial(%)`
 - **From**: `ExpressionSpace2(K)`
+
+##### `minPoly` : `Kernel(%) -> SparseUnivariatePolynomial(%)`
+
+Operation defined in WSExpression.
 
 #### `minimalPolynomial` <a id="minimalpolynomial"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L855)\]
 
@@ -4302,6 +4665,10 @@ minimalPolynomial(expr,var, elem) returns the minimal polynomial in the variable
 minimalPolynomial(a) returns the minimal polynomial of a.
 
 - **From**: `FiniteRankAlgebra(R,UP)`
+
+##### `minimalPolynomial` : `% -> SparseUnivariatePolynomial(%)`
+
+Operation defined in WSExpression.
 
 #### `minimize` <a id="minimize"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L459)\]
 
@@ -4357,10 +4724,15 @@ negative?(expr) checks whether or not expr is negative.
 
 #### `norm` <a id="norm"></a>
 
+##### `norm` : `% -> R`
+
 norm(x) returns x * conjugate(x)
 
-- **Signature**: `% -> %`
 - **From**: `ComplexCategory(R)`
+
+##### `norm` : `% -> %`
+
+Operation defined in WSExpression.
 
 #### `normal` <a id="normal"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L869)\]
 
@@ -4410,10 +4782,15 @@ numberForm(x, expr) returns the approximate printed representation of x with exp
 
 #### `numer` <a id="numer"></a>
 
+##### `numer` : `% -> SparseMultivariatePolynomial(R,K)`
+
 numer(f) returns the numerator of f viewed as a polynomial in the kernels over R if R is an integral domain. If not, then numer(f) = f viewed as a polynomial in the kernels over R.
 
-- **Signature**: `% -> SparseMultivariatePolynomial(%,Kernel(%))`
 - **From**: `FunctionSpace2(R,K)`
+
+##### `numer` : `% -> SparseMultivariatePolynomial(%,Kernel(%))`
+
+Operation defined in WSExpression.
 
 #### `numerDenom` <a id="numerdenom"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L686)\]
 
@@ -4618,10 +4995,15 @@ paren(lf) creates the form separating the elements of lf by commas and encloses 
 
 #### `part` <a id="part"></a>
 
+##### `part` : `(%, WSInteger) -> E`
+
 part(agg,i) returns the i-th element.
 
-- **Signature**: `(%, WSInteger) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
+
+##### `part` : `(%, WSInteger) -> %`
+
+Operation defined in WSExpression.
 
 #### `percentForm` <a id="percentform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1082)\]
 
@@ -4689,7 +5071,7 @@ polylog(s, x) is the polylogarithm of order s at x.
 
 polynomial?(p,x) checks whether or not p is a polynomial in x.
 
-##### `polynomial?` : `(%, WSL(%)) -> Boolean`
+##### `polynomial?` : `(%, WSList(%)) -> Boolean`
 
 polynomial?(p,vlist) checks whether or not p is a polynomial in the list of variables vlist.
 
@@ -4699,7 +5081,7 @@ polynomial?(p,vlist) checks whether or not p is a polynomial in the list of vari
 
 polynomialExpression?(p,x) checks whether or not p is a polynomial expression in x.
 
-##### `polynomialExpression?` : `(%, WSL(%)) -> Boolean`
+##### `polynomialExpression?` : `(%, WSList(%)) -> Boolean`
 
 polynomialExpression?(p,vlist) checks whether or not p is a polynomial expression in the list of variables vlist.
 
@@ -4783,10 +5165,15 @@ powerExpand(expr, sym) expands powers in expr with respect to sym, assuming no b
 
 #### `prepend` <a id="prepend"></a>
 
+##### `prepend` : `(%, E) -> %`
+
 prepend(l, elt) prepends elt to the list l.
 
-- **Signature**: `(%, %) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
+
+##### `prepend` : `(%, %) -> %`
+
+Operation defined in WSExpression.
 
 #### `prime?` <a id="prime"></a>
 
@@ -4858,7 +5245,7 @@ qPochhammer(x,q,n) returns the q-Pochhammer symbol of x.
 
 #### `qPolyGamma` <a id="qpolygamma"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L329)\]
 
-##### `qPolyGamma` : `(%, %)-> %`
+##### `qPolyGamma` : `(%, %) -> %`
 
 qPolyGamma(x,q) returns the q-Digamma of x.
 
@@ -4868,24 +5255,39 @@ qPolyGamma(n,x,q) returns the n-th derivative of the q-digamma function of x.
 
 #### `qelt` <a id="qelt"></a>
 
+##### `qelt` : `(%, Integer) -> E`
+
 qelt(agg,i) returns the i-th element. No checks are done at the FriCAS level.
 
-- **Signature**: `(%, Integer) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
+
+##### `qelt` : `(%, Integer) -> %`
+
+Operation defined in WSExpression.
 
 #### `qsetelt` <a id="qsetelt"></a>
 
+##### `qsetelt` : `(%, Integer, E) -> %`
+
 qsetelt(l,i,elem) returns a copy of l with i-th element replaced by the element elem. No checks are done at the FriCAS level.
 
-- **Signature**: `(%, Integer, %) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
+
+##### `qsetelt` : `(%, Integer, %) -> %`
+
+Operation defined in WSExpression.
 
 #### `qsetelt!` <a id="qsetelt"></a>
 
+##### `qsetelt!` : `(%, Integer, E) -> %`
+
 qsetelt!(l,i,elem) returns l with i-th element replaced by elem. No checks are done at the FriCAS level.
 
-- **Signature**: `(%, Integer, %) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
+
+##### `qsetelt!` : `(%, Integer, %) -> %`
+
+Operation defined in WSExpression.
 
 #### `quantityForm` <a id="quantityform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1102)\]
 
@@ -4893,7 +5295,7 @@ qsetelt!(l,i,elem) returns l with i-th element replaced by elem. No checks are d
 
 quantityForm(expr,form) returns expr as a quantity with format form.
 
-##### `quantityForm` : `(%, WSL(%)) -> %`
+##### `quantityForm` : `(%, WSList(%)) -> %`
 
 quantityForm(expr,lform) returns expr as a quantity with a list of formats lform.
 
@@ -4976,16 +5378,21 @@ rationalApproximation(expr, dx) tries to find a rational approximation of the ex
 
 rationalExpression?(p,x) checks whether or not p is a rational expression in x.
 
-##### `rationalExpression?` : `(%, WSL(%)) -> Boolean`
+##### `rationalExpression?` : `(%, WSList(%)) -> Boolean`
 
 rationalExpression?(p,vlist) checks whether or not p is a rational expression in the list of variables vlist.
 
 #### `real` <a id="real"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1310)\]
 
+##### `real` : `% -> R`
+
 real(x) returns real part of x.
 
-- **Signature**: `% -> %`
 - **From**: `ComplexCategory(R)`
+
+##### `real` : `% -> %`
+
+Operation defined in WSExpression.
 
 #### `real?` <a id="real"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L49)\]
 
@@ -5046,6 +5453,14 @@ reduce(frac) converts the fraction frac to an algebra element.
 
 - **From**: `MonogenicAlgebra(R,UP)`
 
+##### `reduce` : `SparseUnivariatePolynomial(%) -> %`
+
+Operation defined in WSExpression.
+
+##### `reduce` : `Fraction(SparseUnivariatePolynomial(%)) -> Union(%,"failed")`
+
+Operation defined in WSExpression.
+
 #### `reducedSystem` <a id="reducedsystem"></a>
 
 ##### `reducedSystem` : `Matrix(%) -> Matrix(R)`
@@ -5059,6 +5474,14 @@ reducedSystem(A) returns a matrix B such that A x = 0 and B x = 0 have the same 
 reducedSystem(A, v) returns a matrix B and a vector w such that A x = v and B x = w have the same solutions in R.
 
 - **From**: `LinearlyExplicitOver(R)`
+
+##### `reducedSystem` : `Matrix(%) -> Matrix(%)`
+
+Operation defined in WSExpression.
+
+##### `reducedSystem` : `(Matrix(%), Vector(%)) -> Record(mat: Matrix(%),vec: Vector(%))`
+
+Operation defined in WSExpression.
 
 #### `refine` <a id="refine"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L899)\]
 
@@ -5079,6 +5502,14 @@ regularRepresentation(a) returns the matrix m of the linear map defined by left 
 regularRepresentation(a, basis) returns the matrix m of the linear map defined by left multiplication by a with respect to the basis basis. That is for all x we have coordinates(a*x, basis) = m*coordinates(x, basis).
 
 - **From**: `FiniteRankAlgebra(R,UP)`
+
+##### `regularRepresentation` : `% -> Matrix(%)`
+
+Operation defined in WSExpression.
+
+##### `regularRepresentation` : `(%, Vector(%)) -> Matrix(%)`
+
+Operation defined in WSExpression.
 
 #### `rem` <a id="rem"></a>
 
@@ -5142,6 +5573,14 @@ represents([a1, .., an], [v1, .., vn]) returns a1*v1 + ... + an*vn.
 
 - **From**: `FiniteRankAlgebra(R,UP)`
 
+##### `represents` : `Vector(%) -> %`
+
+Operation defined in WSExpression.
+
+##### `represents` : `(Vector(%), Vector(%)) -> %`
+
+Operation defined in WSExpression.
+
 #### `residue` <a id="residue"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L651)\]
 
 residue(expr, x,x0) returns the residue of expr at x0.
@@ -5187,21 +5626,45 @@ retract(a) transforms a into an element of S if possible. Error: if a cannot be 
 
 - **From**: `RetractableTo(S)`
 
+##### `retract` : `% -> %`
+
+Operation defined in WSExpression.
+
+##### `retract` : `% -> Fraction(Integer) if % has RETRACT(FRAC(INT))`
+
+Operation defined in WSExpression.
+
+##### `retract` : `% -> Fraction(Polynomial(%))`
+
+Operation defined in WSExpression.
+
+##### `retract` : `% -> Kernel(%)`
+
+Operation defined in WSExpression.
+
+##### `retract` : `% -> Polynomial(%)`
+
+Operation defined in WSExpression.
+
+##### `retract` : `% -> Symbol`
+
+Operation defined in WSExpression.
+
 #### `retractIfCan` <a id="retractifcan"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1124)\]
 
-##### `retractIfCan` : `% -> Union(JLFloat64, "failed")`
+##### `retractIfCan` : `% -> Union(JLFloat64,"failed")`
 
 retractIfCan(expr) retracts expr to a JLFloat64 if it can be retracted to a 64 bits machine float.
 
-##### `retractIfCan` : `% -> Union(DoubleFloat, "failed")`
+##### `retractIfCan` : `% -> Union(DoubleFloat,"failed")`
 
 retractIfCan(expr) retracts expr to a DoubleFloat if it can be retracted to a Lisp machine float.
 
-##### `retractIfCan` : `% -> Union(Expression(Integer), "failed")`
+##### `retractIfCan` : `% -> Union(Expression(Integer),"failed")`
 
 retractIfCan(expr) tries to retract expr to an Expression(Integer).
 
-##### `retractIfCan` : `% -> Union(Expression(Float), "failed")`
+##### `retractIfCan` : `% -> Union(Expression(Float),"failed")`
 
 retractIfCan(expr) tries to retract expr to an Expression(Float).
 
@@ -5210,6 +5673,30 @@ retractIfCan(expr) tries to retract expr to an Expression(Float).
 retractIfCan(a) transforms a into an element of S if possible. Returns "failed" if a cannot be made into an element of S.
 
 - **From**: `RetractableTo(S)`
+
+##### `retractIfCan` : `% -> Union(%,"failed")`
+
+Operation defined in WSExpression.
+
+##### `retractIfCan` : `% -> Union(Fraction(Integer),"failed") if % has RETRACT(FRAC(INT))`
+
+Operation defined in WSExpression.
+
+##### `retractIfCan` : `% -> Union(Fraction(Polynomial(%)),"failed")`
+
+Operation defined in WSExpression.
+
+##### `retractIfCan` : `% -> Union(Kernel(%),"failed")`
+
+Operation defined in WSExpression.
+
+##### `retractIfCan` : `% -> Union(Polynomial(%),"failed")`
+
+Operation defined in WSExpression.
+
+##### `retractIfCan` : `% -> Union(Symbol,"failed")`
+
+Operation defined in WSExpression.
 
 #### `reverse` <a id="reverse"></a>
 
@@ -5309,6 +5796,14 @@ rootOf(p, y) returns y such that p(y) = 0. The object returned displays as 'y.
 rootOf(p) returns y such that p(y) = 0.
 
 - **From**: `AlgebraicallyClosedField`
+
+##### `rootOf` : `Polynomial(%) -> %`
+
+Operation defined in WSExpression.
+
+##### `rootOf` : `(SparseUnivariatePolynomial(%), Symbol) -> %`
+
+Operation defined in WSExpression.
 
 #### `rootReduce` <a id="rootreduce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L972)\]
 
@@ -5425,17 +5920,27 @@ setIntersection(agg1, agg2) is the intersection set operator.
 
 #### `setelt` <a id="setelt"></a>
 
+##### `setelt` : `(%, Integer, E) -> %`
+
 setelt(l,i,elem) returns a copy of l with i-th element replaced by the element elem.
 
-- **Signature**: `(%, Integer, %) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
+
+##### `setelt` : `(%, Integer, %) -> %`
+
+Operation defined in WSExpression.
 
 #### `setelt!` <a id="setelt"></a>
 
+##### `setelt!` : `(%, Integer, E) -> %`
+
 setelt!(l,i,elem) returns l with i-th element replaced by elem.
 
-- **Signature**: `(%, Integer, %) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
+
+##### `setelt!` : `(%, Integer, %) -> %`
+
+Operation defined in WSExpression.
 
 #### `siegelTheta` <a id="siegeltheta"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L365)\]
 
@@ -5508,28 +6013,33 @@ smaller?(x, y) is a strict ordering on depending on representatives of elements 
 
 #### `solve` <a id="solve"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L544)\]
 
-##### `solve` : `(Equation(%), %) -> WSL(WSL(%))`
+##### `solve` : `(Equation(%), %) -> WSList(WSList(%))`
 
 solve(eq, vars) tries to solve the equation eq.
 
-##### `solve` : `(%, %) -> WSL(WSL(%))`
+##### `solve` : `(%, %) -> WSList(WSList(%))`
 
 solve(expr, vars) tries to solve the expression expr.
 
-##### `solve` : `(Equation(%), %, %) -> WSL(WSL(%))`
+##### `solve` : `(Equation(%), %, %) -> WSList(WSList(%))`
 
 solve(expr, vars, dom) tries to solve the expression expr.
 
-##### `solve` : `(%, %, %) -> WSL(WSL(%))`
+##### `solve` : `(%, %, %) -> WSList(WSList(%))`
 
 solve(expr, vars, dom) tries to solve the expression expr.
 
 #### `solveLinearPolynomialEquation` <a id="solvelinearpolynomialequation"></a>
 
+##### `solveLinearPolynomialEquation` : `(List(SparseUnivariatePolynomial(%)), SparseUnivariatePolynomial(%)) -> Union(List(SparseUnivariatePolynomial(%)),"failed")`
+
 solveLinearPolynomialEquation([f1, ..., fn], g) (where the fi are relatively prime to each other) returns a list of ai such that g/prod fi = sum ai/fi or returns "failed" if no such list of ai's exists.
 
-- **Signature**: `(List(SparseUnivariatePolynomial(%)), SparseUnivariatePolynomial(%)) -> Union(List(SparseUnivariatePolynomial(%)),"failed") if % has PFECAT`
 - **From**: `PolynomialFactorizationExplicit`
+
+##### `solveLinearPolynomialEquation` : `(List(SparseUnivariatePolynomial(%)), SparseUnivariatePolynomial(%)) -> Union(List(SparseUnivariatePolynomial(%)),"failed") if % has PFECAT`
+
+Operation defined in WSExpression.
 
 #### `sort` <a id="sort"></a>
 
@@ -5598,10 +6108,15 @@ squareFreePart(x) returns a product of prime factors of x each taken with multip
 
 #### `squareFreePolynomial` <a id="squarefreepolynomial"></a>
 
+##### `squareFreePolynomial` : `SparseUnivariatePolynomial(%) -> Factored(SparseUnivariatePolynomial(%))`
+
 squareFreePolynomial(p) returns the square-free factorization of the univariate polynomial p.
 
-- **Signature**: `SparseUnivariatePolynomial(%) -> Factored(SparseUnivariatePolynomial(%)) if % has PFECAT`
 - **From**: `PolynomialFactorizationExplicit`
+
+##### `squareFreePolynomial` : `SparseUnivariatePolynomial(%) -> Factored(SparseUnivariatePolynomial(%)) if % has PFECAT`
+
+Operation defined in WSExpression.
 
 #### `stieltjesGamma` <a id="stieltjesgamma"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L205)\]
 
@@ -5659,6 +6174,10 @@ subst(f, [k1..., kn], [g1, ..., gn]) replaces the kernels k1, ..., kn by g1, ...
 subst(f, [k1 = g1, ..., kn = gn]) replaces the kernels k1, ..., kn by g1, ..., gn formally in f.
 
 - **From**: `ExpressionSpace2(K)`
+
+##### `subst` : `(%, List(Kernel(%)), List(%)) -> %`
+
+Operation defined in WSExpression.
 
 #### `subtractIfCan` <a id="subtractifcan"></a>
 
@@ -5721,20 +6240,25 @@ symmetricPolynomial(n,lvars) returns the n-th elementary symmetric polynomial wi
 
 #### `symmetricReduction` <a id="symmetricreduction"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L757)\]
 
-##### `symmetricReduction` : `(%, WSL(%)) -> WSL(%)`
+##### `symmetricReduction` : `(%, WSList(%)) -> WSList(%)`
 
 symmetricReduction(f,lvars) returns a pair of polynomials representing f = p+q where p is a symmetric polynomial, q the remainder.
 
-##### `symmetricReduction` : `(%, WSL(%), WSL(%)) -> WSL(%)`
+##### `symmetricReduction` : `(%, WSList(%), WSList(%)) -> WSList(%)`
 
 symmetricReduction(f, lvars, replnt) returns a pair of polynomials representing f = p+q where p is a symmetric polynomial, q the remainder where variables in p replaced by the ones in replnt.
 
 #### `take` <a id="take"></a>
 
+##### `take` : `(%, Integer) -> %`
+
 take(l,i) returns the first i elements.
 
-- **Signature**: `(%, Integer) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
+
+##### `take` : `(%, WSList(WSInteger)) -> %`
+
+Operation defined in WSExpression.
 
 #### `tan` <a id="tan"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1388)\]
 
@@ -5796,12 +6320,25 @@ tower([f1,...,fn]) returns all the kernels appearing in f1, ..., fn no matter wh
 
 - **From**: `ExpressionSpace2(K)`
 
+##### `tower` : `% -> List(Kernel(%))`
+
+Operation defined in WSExpression.
+
+##### `tower` : `List(%) -> List(Kernel(%))`
+
+Operation defined in WSExpression.
+
 #### `trace` <a id="trace"></a>
+
+##### `trace` : `% -> R`
 
 trace(a) returns the trace of the regular representation of a with respect to any basis.
 
-- **Signature**: `% -> %`
 - **From**: `FiniteRankAlgebra(R,UP)`
+
+##### `trace` : `% -> %`
+
+Operation defined in WSExpression.
 
 #### `traceMatrix` <a id="tracematrix"></a>
 
@@ -5816,6 +6353,14 @@ traceMatrix() is the n-by-n matrix ( Tr(vi * vj) ), where v1, ..., vn are the el
 traceMatrix([v1, .., vn]) is the n-by-n matrix ( Tr(vi * vj) )
 
 - **From**: `FiniteRankAlgebra(R,UP)`
+
+##### `traceMatrix` : `() -> Matrix(%)`
+
+Operation defined in WSExpression.
+
+##### `traceMatrix` : `Vector(%) -> Matrix(%)`
+
+Operation defined in WSExpression.
 
 #### `traditionalForm` <a id="traditionalform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1099)\]
 
@@ -5890,10 +6435,15 @@ unitStep(x) is 0 for x less than 0, 1 for x bigger or equal 0.
 
 #### `univariate` <a id="univariate"></a>
 
+##### `univariate` : `(%, K) -> Fraction(SparseUnivariatePolynomial(%))`
+
 univariate(f, k) returns f viewed as a univariate fraction in k.
 
-- **Signature**: `(%, Kernel(%)) -> Fraction(SparseUnivariatePolynomial(%))`
 - **From**: `FunctionSpace2(R,K)`
+
+##### `univariate` : `(%, Kernel(%)) -> Fraction(SparseUnivariatePolynomial(%))`
+
+Operation defined in WSExpression.
 
 #### `values` <a id="values"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1033)\]
 
@@ -5903,7 +6453,7 @@ values(expr) returns the values elements in expr.
 
 #### `variables` <a id="variables"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L707)\]
 
-##### `variables` : `% -> WSL(%)`
+##### `variables` : `% -> WSList(%)`
 
 variables(p) returns the list of variables in p.
 
@@ -6053,6 +6603,10 @@ zerosOf(p) returns [y1, ..., yn] such that p(yi) = 0. The yi's are expressed in 
 zerosOf(p) returns [y1, ..., yn] such that p(yi) = 0. The yi's are expressed in radicals if possible. Otherwise they are implicit algebraic quantities containing new symbols. The new symbols are bound in the interpreter to the respective values.
 
 - **From**: `AlgebraicallyClosedField`
+
+##### `zerosOf` : `(SparseUnivariatePolynomial(%), Symbol) -> List(%)`
+
+Operation defined in WSExpression.
 
 #### `~=` <a id="op-neq"></a>
 

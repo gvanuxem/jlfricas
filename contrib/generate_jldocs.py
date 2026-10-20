@@ -553,6 +553,32 @@ def get_origin_base(from_str: str) -> str:
     m = re.match(r"^\s*([A-Za-z0-9_]+)", from_str)
     return m.group(1) if m else from_str.strip()
 
+def expand_spad_macros(sig: str, macros: dict[str, str]) -> str:
+    """Expand local SPAD macros in signature strings."""
+    if not macros or not sig:
+        return sig
+    changed = True
+    passes = 0
+    while changed and passes < 5:
+        changed = False
+        passes += 1
+        for k in sorted(macros.keys(), key=lambda x: -len(x)):
+            new_sig = re.sub(r"\b" + re.escape(k) + r"\b", macros[k], sig)
+            if new_sig != sig:
+                sig = new_sig
+                changed = True
+    return sig
+
+def normalize_sig_for_match(sig: str, macros: dict[str, str] = None) -> str:
+    """Normalize signature string for fuzzy matching across macro-expanded and show formats."""
+    if not sig:
+        return ""
+    if macros:
+        sig = expand_spad_macros(sig, macros)
+    s = re.sub(r"[\(\),]", " ", sig)
+    s = re.sub(r"\s+", " ", s).strip()
+    return s
+
 def parse_spad_operations(spad_path: str, start_line: int) -> dict[str, list[dict]]:
     """Extract operations and signatures defined directly in SPAD source code."""
     if not os.path.exists(spad_path):
@@ -565,11 +591,18 @@ def parse_spad_operations(spad_path: str, start_line: int) -> dict[str, list[dic
 
         i = start_line
         in_with = False
+        macros = {}
         while i < len(lines):
             line = lines[i]
             # Stop if another constructor starts or if implementation block starts (not 'Implementation where')
             if i > start_line and (line.strip().startswith(")abbrev") or re.match(r"^\s*Implementation\s*==[=>]?", line)):
                 break
+
+            m_mac = re.match(r"^\s*([A-Za-z0-9_]+)\s*==>\s*(.+)$", line)
+            if m_mac:
+                macros[m_mac.group(1).strip()] = m_mac.group(2).strip()
+                i += 1
+                continue
 
             if not in_with:
                 if re.search(r"\bwith\b", line):
@@ -581,13 +614,14 @@ def parse_spad_operations(spad_path: str, start_line: int) -> dict[str, list[dic
             m = re.match(r"^\s*([a-zA-Z0-9_?+*\-^/<=>~!]+|\"[^\"]+\")\s*:\s*(.+)$", line)
             if m:
                 tok = m.group(1).strip().strip('"')
-                sig = m.group(2).strip()
+                raw_sig = m.group(2).strip()
                 # Skip macro definitions, assignments, or constructor headers
-                if sig.startswith("=") or sig.startswith(":=") or tok.endswith("==") or tok in ("Exports", "Implementation"):
+                if raw_sig.startswith("=") or raw_sig.startswith(":=") or tok.endswith("==") or tok in ("Exports", "Implementation"):
                     i += 1
                     continue
 
                 op_name = clean_op_token(tok)
+                sig = expand_spad_macros(raw_sig, macros)
 
                 # Read docstring: check following lines first (++ doc below op : sig), otherwise preceding lines
                 doc_lines = []
@@ -772,28 +806,42 @@ def fetch_constructor_doc(name: str, fallback_meta: dict) -> dict:
                     if valid_v:
                         doc_blocks[k] = valid_v
 
-    # Merge operations with exact signatures and matched docstrings
+    # Merge operations with exact/normalized signatures and matched docstrings
     for op in op_names:
         ops[op] = []
+        concrete_sigs = show_sigs.get(op, [])
+
         if op in spad_ops:
             for s_op in spad_ops[op]:
-                ops[op].append(s_op)
+                entry = dict(s_op)
+                norm_s = normalize_sig_for_match(entry.get("signature", ""))
+                # Prefer canonical concrete signature formatting from )show if matched
+                for csig in concrete_sigs:
+                    if norm_s == normalize_sig_for_match(csig):
+                        entry["signature"] = csig
+                        break
+                ops[op].append(entry)
 
         if op in doc_blocks:
             for b in doc_blocks[op]:
-                if not any((e.get("description") and e.get("description") == b.get("description")) or (e.get("signature") and e.get("signature") == b.get("signature")) for e in ops[op]):
+                b_sig_norm = normalize_sig_for_match(b.get("signature", ""))
+                matched = any(
+                    (e.get("description") and e.get("description") == b.get("description")) or
+                    (normalize_sig_for_match(e.get("signature", "")) == b_sig_norm)
+                    for e in ops[op]
+                )
+                if not matched:
                     ops[op].append(dict(b))
 
-        concrete_sigs = show_sigs.get(op, [])
-        if not ops[op]:
-            for sig in concrete_sigs:
+        # Check for any remaining concrete signatures from )show that were never added
+        for csig in concrete_sigs:
+            csig_norm = normalize_sig_for_match(csig)
+            if not any(normalize_sig_for_match(e.get("signature", "")) == csig_norm for e in ops[op]):
                 ops[op].append({
-                    "signature": sig,
+                    "signature": csig,
                     "description": "",
                     "from": ""
                 })
-        elif len(ops[op]) == 1 and len(concrete_sigs) == 1:
-            ops[op][0]["signature"] = concrete_sigs[0]
 
     return {
         "description": description,

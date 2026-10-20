@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS strings using the MathLink Julia package.Time: 0.02 (OT) = 0.02 sec
+Julia WS strings using the MathLink Julia package.Time: 0 sec
 
 **WSString is a domain constructor.**  
 **Abbreviation for WSString is WSSTR**  
@@ -46,7 +46,7 @@ Julia WS strings using the MathLink Julia package.Time: 0.02 (OT) = 0.02 sec
 | Operation | Summary |
 | :--- | :--- |
 | [`characters`](#characters) | characters(str) returns the characters of str as a WSList. |
-| [`coerce`](#coerce) | coerce(str) coerces str to a FriCAS String. str must be a Julia WS string |
+| [`coerce`](#coerce) | coerce(str) coerces str to a Julia WS string. |
 | [`convert`](#convert) | convert(a) transforms a into an element of S. |
 | [`elt`](#elt) | elt(str,i) returns the i-th character of str. |
 | [`jWSInterpret`](#jwsinterpret) | jWSInterpret(form) interprets form. |
@@ -91,10 +91,6 @@ characters(str) returns the characters of str as a WSList.
 
 #### `coerce` <a id="coerce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L224)\]
 
-##### `coerce` : `% -> String`
-
-coerce(str) coerces str to a FriCAS String. str must be a Julia WS string
-
 ##### `coerce` : `String -> %`
 
 coerce(str) coerces str to a Julia WS string.
@@ -111,18 +107,31 @@ coerce(obj) coerces obj to JLObject. Convenience function.
 
 - **From**: [`JLObjectType`](JLObjectType.md)
 
+##### `coerce` : `% -> String`
+
+coerce(str) coerces str to a FriCAS String. str must be a Julia WS string
+
 ##### `coerce` : `% -> WSExpression`
 
 coerce(expr) returns the WSExpression representation of expr.
 
 - **From**: [`WSObject`](WSObject.md)
 
+##### `coerce` : `% -> OutputForm`
+
+Operation defined in WSString.
+
 #### `convert` <a id="convert"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L357)\]
+
+##### `convert` : `% -> S`
 
 convert(a) transforms a into an element of S.
 
-- **Signature**: `% -> String`
 - **From**: `ConvertibleTo(S)`
+
+##### `convert` : `% -> String`
+
+Operation defined in WSString.
 
 #### `elt` <a id="elt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L222)\]
 

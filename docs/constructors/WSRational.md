@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS rational numbers using the MathLink Julia package.Time: 0.02 (OT) = 0.02 sec
+Julia WS rational numbers using the MathLink Julia package.Time: 0 sec
 
 **WSRational is a domain constructor.**  
 **Abbreviation for WSRational is WSRAT**  
@@ -253,9 +253,13 @@ Operation defined in WSRational.
 
 #### `/` <a id="op-div"></a>
 
+##### `/` : `(WSInteger, WSInteger) -> %`
+
 a/b returns the Julia WS rational a/b.
 
-- **Signature**: `(WSInteger, WSInteger) -> %`
+##### `/` : `(%, %) -> %`
+
+Operation defined in WSRational.
 
 #### `0` <a id="0"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L405)\]
 
@@ -321,6 +325,14 @@ D(x, n) returns the n-th derivative of x.
 
 - **From**: `DifferentialRing`
 
+##### `D` : `(%, (WSInteger -> WSInteger)) -> %`
+
+Operation defined in WSRational.
+
+##### `D` : `(%, (WSInteger -> WSInteger), NonNegativeInteger) -> %`
+
+Operation defined in WSRational.
+
 #### `^` <a id="op-pow"></a>
 
 ##### `^` : `(%, Integer) -> %`
@@ -372,10 +384,15 @@ associator(a, b, c) returns (a*b)*c-a*(b*c).
 
 #### `ceiling` <a id="ceiling"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L605)\]
 
+##### `ceiling` : `% -> S`
+
 ceiling(x) returns the smallest integral element above x.
 
-- **Signature**: `% -> WSInteger`
 - **From**: `QuotientFieldCategory(S)`
+
+##### `ceiling` : `% -> WSInteger`
+
+Operation defined in WSRational.
 
 #### `characteristic` <a id="characteristic"></a>
 
@@ -386,7 +403,7 @@ characteristic() returns the characteristic of the ring.
 
 #### `coerce` <a id="coerce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L386)\]
 
-##### `coerce` : `Integer  -> %`
+##### `coerce` : `Integer -> %`
 
 coerce(z) coerces z. Convenience function.
 
@@ -401,12 +418,6 @@ coerce(r) maps the ring element r to a member of the algebra.
 coerce(a) transforms a into an element of %.
 
 - **From**: `CoercibleFrom(S)`
-
-##### `coerce` : `Integer -> %`
-
-coerce(n) coerces the integer n to an element of the ring.
-
-- **From**: `NonAssociativeRing`
 
 ##### `coerce` : `% -> S`
 
@@ -431,6 +442,22 @@ coerce(expr) returns the WSExpression representation of expr.
 coerce(z) coerces z.
 
 - **From**: [`WSInteger`](WSInteger.md)
+
+##### `coerce` : `% -> %`
+
+Operation defined in WSRational.
+
+##### `coerce` : `Fraction(Integer) -> %`
+
+Operation defined in WSRational.
+
+##### `coerce` : `WSInteger -> %`
+
+Operation defined in WSRational.
+
+##### `coerce` : `% -> OutputForm`
+
+Operation defined in WSRational.
 
 #### `commutator` <a id="commutator"></a>
 
@@ -469,12 +496,37 @@ convert(a) transforms a into an element of S.
 
 - **From**: `ConvertibleTo(S)`
 
+##### `convert` : `% -> DoubleFloat`
+
+Operation defined in WSRational.
+
+##### `convert` : `% -> Float`
+
+Operation defined in WSRational.
+
+##### `convert` : `% -> InputForm`
+
+Operation defined in WSRational.
+
+##### `convert` : `% -> Pattern(Integer)`
+
+Operation defined in WSRational.
+
+##### `convert` : `% -> String`
+
+Operation defined in WSRational.
+
 #### `denom` <a id="denom"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L423)\]
+
+##### `denom` : `% -> S`
 
 denom(x) returns the denominator of the fraction x.
 
-- **Signature**: `% -> WSInteger`
 - **From**: `QuotientFieldCategory(S)`
+
+##### `denom` : `% -> WSInteger`
+
+Operation defined in WSRational.
 
 #### `denominator` <a id="denominator"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L426)\]
 
@@ -508,6 +560,14 @@ differentiate(x, deriv, n) differentiate x n times using a derivation which exte
 differentiate(x, n) returns the n-th derivative of x.
 
 - **From**: `DifferentialRing`
+
+##### `differentiate` : `(%, (WSInteger -> WSInteger)) -> %`
+
+Operation defined in WSRational.
+
+##### `differentiate` : `(%, (WSInteger -> WSInteger), NonNegativeInteger) -> %`
+
+Operation defined in WSRational.
 
 #### `divide` <a id="divide"></a>
 
@@ -574,10 +634,15 @@ factor(n) returns the WS factorization of n.
 
 #### `floor` <a id="floor"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L606)\]
 
+##### `floor` : `% -> S`
+
 floor(x) returns the largest integral element below x.
 
-- **Signature**: `% -> WSInteger`
 - **From**: `QuotientFieldCategory(S)`
+
+##### `floor` : `% -> WSInteger`
+
+Operation defined in WSRational.
 
 #### `fractionPart` <a id="fractionpart"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L621)\]
 
@@ -907,10 +972,15 @@ leftRecip(a) returns an element, which is a left inverse of a, or "failed" if su
 
 #### `map` <a id="map"></a>
 
+##### `map` : `((R -> R), %) -> %`
+
 map(f, ex) evaluates ex, applying f to values of type R in ex.
 
-- **Signature**: `((WSInteger -> WSInteger), %) -> %`
 - **From**: `FullyEvalableOver(R)`
+
+##### `map` : `((WSInteger -> WSInteger), %) -> %`
+
+Operation defined in WSRational.
 
 #### `max` <a id="max"></a>
 
@@ -970,10 +1040,15 @@ nothing?(obj) checks whether or not obj is nothing.
 
 #### `numer` <a id="numer"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L422)\]
 
+##### `numer` : `% -> S`
+
 numer(x) returns the numerator of the fraction x.
 
-- **Signature**: `% -> WSInteger`
 - **From**: `QuotientFieldCategory(S)`
+
+##### `numer` : `% -> WSInteger`
+
+Operation defined in WSRational.
 
 #### `numerator` <a id="numerator"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L424)\]
 
@@ -1019,10 +1094,15 @@ opposite?(x,y) holds if the sum of x and y is 0.
 
 #### `patternMatch` <a id="patternmatch"></a>
 
+##### `patternMatch` : `(%, Pattern(S), PatternMatchResult(S,%)) -> PatternMatchResult(S,%)`
+
 patternMatch(expr, pat, res) matches the pattern pat to the expression expr. res contains the variables of pat which are already matched and their matches (necessary for recursion). Initially, res is just the result of new which is an empty list of matches.
 
-- **Signature**: `(%, Pattern(Integer), PatternMatchResult(Integer,%)) -> PatternMatchResult(Integer,%)`
 - **From**: `PatternMatchable(S)`
+
+##### `patternMatch` : `(%, Pattern(Integer), PatternMatchResult(Integer,%)) -> PatternMatchResult(Integer,%)`
+
+Operation defined in WSRational.
 
 #### `plenaryPower` <a id="plenarypower"></a>
 
@@ -1080,6 +1160,14 @@ reducedSystem(A, v) returns a matrix B and a vector w such that A x = v and B x 
 
 - **From**: `LinearlyExplicitOver(R)`
 
+##### `reducedSystem` : `Matrix(%) -> Matrix(WSInteger)`
+
+Operation defined in WSRational.
+
+##### `reducedSystem` : `(Matrix(%), Vector(%)) -> Record(mat: Matrix(WSInteger),vec: Vector(WSInteger))`
+
+Operation defined in WSRational.
+
 #### `rem` <a id="rem"></a>
 
 x rem y is the same as divide(x, y).remainder. See divide from EuclideanDomain.
@@ -1089,17 +1177,43 @@ x rem y is the same as divide(x, y).remainder. See divide from EuclideanDomain.
 
 #### `retract` <a id="retract"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L444)\]
 
+##### `retract` : `% -> S`
+
 retract(a) transforms a into an element of S if possible. Error: if a cannot be made into an element of S.
 
-- **Signature**: `% -> S`
 - **From**: `RetractableTo(S)`
+
+##### `retract` : `% -> Fraction(Integer)`
+
+Operation defined in WSRational.
+
+##### `retract` : `% -> Integer`
+
+Operation defined in WSRational.
+
+##### `retract` : `% -> WSInteger`
+
+Operation defined in WSRational.
 
 #### `retractIfCan` <a id="retractifcan"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L447)\]
 
+##### `retractIfCan` : `% -> Union(S,"failed")`
+
 retractIfCan(a) transforms a into an element of S if possible. Returns "failed" if a cannot be made into an element of S.
 
-- **Signature**: `% -> Union(S,"failed")`
 - **From**: `RetractableTo(S)`
+
+##### `retractIfCan` : `% -> Union(Fraction(Integer),"failed")`
+
+Operation defined in WSRational.
+
+##### `retractIfCan` : `% -> Union(Integer,"failed")`
+
+Operation defined in WSRational.
+
+##### `retractIfCan` : `% -> Union(WSInteger,"failed")`
+
+Operation defined in WSRational.
 
 #### `rightPower` <a id="rightpower"></a>
 
@@ -1208,10 +1322,15 @@ unitNormal(x) tries to choose a canonical element from the associate class of x.
 
 #### `wholePart` <a id="wholepart"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L620)\]
 
+##### `wholePart` : `% -> S`
+
 wholePart(x) returns the whole part of the fraction x the truncated quotient of the numerator by the denominator.
 
-- **Signature**: `% -> WSInteger`
 - **From**: `QuotientFieldCategory(S)`
+
+##### `wholePart` : `% -> WSInteger`
+
+Operation defined in WSRational.
 
 #### `zero?` <a id="zero"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L639)\]
 

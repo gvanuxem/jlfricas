@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS aggregate (WS list) using the MathLink Julia package.Time: 0.02 (OT) = 0.02 sec
+Julia WS aggregate (WS list) using the MathLink Julia package.Time: 0 sec
 
 **WSAggregate(E: WSObject) is a category constructor.**  
 **Abbreviation for WSAggregate is WSAGG**
@@ -136,9 +136,13 @@ Julia WS aggregate (WS list) using the MathLink Julia package.Time: 0.02 (OT) = 
 
 #### `accumulate` <a id="accumulate"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L77)\]
 
+##### `accumulate` : `% -> %`
+
 accumulate(agg) returns the partial sums of elements in agg.
 
-- **Signature**: `% -> % if E has WSNUM`
+##### `accumulate` : `% -> % if E has WSNUM`
+
+Operation defined in WSAggregate.
 
 #### `append` <a id="append"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L34)\]
 
@@ -170,12 +174,21 @@ coerce(expr) returns the WSExpression representation of expr.
 
 - **From**: [`WSObject`](WSObject.md)
 
+##### `coerce` : `% -> OutputForm`
+
+Operation defined in WSAggregate.
+
 #### `convert` <a id="convert"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L193)\]
+
+##### `convert` : `% -> S`
 
 convert(a) transforms a into an element of S.
 
-- **Signature**: `% -> String`
 - **From**: `ConvertibleTo(S)`
+
+##### `convert` : `% -> String`
+
+Operation defined in WSAggregate.
 
 #### `delete` <a id="delete"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L47)\]
 
@@ -185,9 +198,13 @@ delete(l, inds) deletes element(s) of the list l at index(es) inds.
 
 #### `differences` <a id="differences"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L74)\]
 
+##### `differences` : `% -> %`
+
 differences(agg) returns the differences between adjacent elements in agg.
 
-- **Signature**: `% -> % if E has WSNUM`
+##### `differences` : `% -> % if E has WSNUM`
+
+Operation defined in WSAggregate.
 
 #### `dimensions` <a id="dimensions"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L18)\]
 
@@ -661,9 +678,13 @@ toString(obj) returns the string representation of obj.
 
 #### `total` <a id="total"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L72)\]
 
+##### `total` : `% -> E`
+
 total(agg) returns the sum of the elements in agg.
 
-- **Signature**: `% -> E if E has WSNUM`
+##### `total` : `% -> E if E has WSNUM`
+
+Operation defined in WSAggregate.
 
 #### `union` <a id="union"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L51)\]
 

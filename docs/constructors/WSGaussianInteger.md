@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS gaussian integers using the MathLink Julia package.Time: 0.02 (OT) = 0.02 sec
+Julia WS gaussian integers using the MathLink Julia package.Time: 0 sec
 
 **WSGaussianInteger is a domain constructor.**  
 **Abbreviation for WSGaussianInteger is WSGINT**  
@@ -114,7 +114,7 @@ Julia WS gaussian integers using the MathLink Julia package.Time: 0.02 (OT) = 0.
 | [`basis`](#basis) | basis() returns the fixed R-module basis. |
 | [`characteristic`](#characteristic) | characteristic() returns the characteristic of the ring. |
 | [`characteristicPolynomial`](#characteristicpolynomial) | characteristicPolynomial(a) returns the characteristic polynomial of the regular represent... |
-| [`coerce`](#coerce) | coerce(x): convenience function. |
+| [`coerce`](#coerce) | coerce(r) maps the ring element r to a member of the algebra. |
 | [`commutator`](#commutator) | commutator(a, b) returns a*b-b*a. |
 | [`complex`](#complex) | complex(x, y) constructs x + %i*y. |
 | [`conjugate`](#conjugate) | conjugate(x + %i y) returns x - %i y. |
@@ -177,7 +177,7 @@ Julia WS gaussian integers using the MathLink Julia package.Time: 0.02 (OT) = 0.
 | [`prime?`](#prime) | prime?(x) tests if x can never be written as the product of two non-units of the ring, x i... |
 | [`principalIdeal`](#principalideal) | principalIdeal([f1, ..., fn]) returns a record whose generator component is a generator of... |
 | [`quo`](#quo) | x quo y is the same as divide(x, y).quotient. See divide from EuclideanDomain. |
-| [`random`](#random) | random(n) returns a gaussian integer where real part is in the range 0..n as the imaginary... |
+| [`random`](#random) | random(n) returns a random integer from 0 to n-1. |
 | [`rank`](#rank) | rank() returns the rank of the algebra. |
 | [`rational`](#rational) | rational(x) returns x as a rational number. Error: if x is not a rational number. |
 | [`rational?`](#rational) | rational?(x) tests if x is a rational number. |
@@ -287,6 +287,14 @@ D(x, n) returns the n-th derivative of x.
 
 - **From**: `DifferentialRing`
 
+##### `D` : `(%, (WSInteger -> WSInteger)) -> %`
+
+Operation defined in WSGaussianInteger.
+
+##### `D` : `(%, (WSInteger -> WSInteger), NonNegativeInteger) -> %`
+
+Operation defined in WSGaussianInteger.
+
 #### `^` <a id="op-pow"></a>
 
 ##### `^` : `(%, NonNegativeInteger) -> %`
@@ -341,16 +349,17 @@ characteristic() returns the characteristic of the ring.
 
 #### `characteristicPolynomial` <a id="characteristicpolynomial"></a>
 
+##### `characteristicPolynomial` : `% -> UP`
+
 characteristicPolynomial(a) returns the characteristic polynomial of the regular representation of a with respect to any basis.
 
-- **Signature**: `% -> SparseUnivariatePolynomial(WSInteger)`
 - **From**: `FiniteRankAlgebra(R,UP)`
 
+##### `characteristicPolynomial` : `% -> SparseUnivariatePolynomial(WSInteger)`
+
+Operation defined in WSGaussianInteger.
+
 #### `coerce` <a id="coerce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1075)\]
-
-##### `coerce` : `Integer  -> %`
-
-coerce(x): convenience function.
 
 ##### `coerce` : `R -> %`
 
@@ -394,6 +403,18 @@ coerce(z) coerces z.
 
 - **From**: [`WSInteger`](WSInteger.md)
 
+##### `coerce` : `% -> %`
+
+Operation defined in WSGaussianInteger.
+
+##### `coerce` : `WSInteger -> %`
+
+Operation defined in WSGaussianInteger.
+
+##### `coerce` : `% -> OutputForm`
+
+Operation defined in WSGaussianInteger.
+
 #### `commutator` <a id="commutator"></a>
 
 commutator(a, b) returns a*b-b*a.
@@ -403,10 +424,15 @@ commutator(a, b) returns a*b-b*a.
 
 #### `complex` <a id="complex"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1138)\]
 
+##### `complex` : `(R, R) -> %`
+
 complex(x, y) constructs x + %i*y.
 
-- **Signature**: `(WSInteger, WSInteger) -> %`
 - **From**: `ComplexCategory(R)`
+
+##### `complex` : `(WSInteger, WSInteger) -> %`
+
+Operation defined in WSGaussianInteger.
 
 #### `conjugate` <a id="conjugate"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1099)\]
 
@@ -459,6 +485,42 @@ convert(a) returns the coordinates of a with respect to the fixed R-module basis
 
 - **From**: `FramedModule(R)`
 
+##### `convert` : `SparseUnivariatePolynomial(WSInteger) -> %`
+
+Operation defined in WSGaussianInteger.
+
+##### `convert` : `Vector(WSInteger) -> %`
+
+Operation defined in WSGaussianInteger.
+
+##### `convert` : `% -> Complex(DoubleFloat)`
+
+Operation defined in WSGaussianInteger.
+
+##### `convert` : `% -> Complex(Float)`
+
+Operation defined in WSGaussianInteger.
+
+##### `convert` : `% -> InputForm`
+
+Operation defined in WSGaussianInteger.
+
+##### `convert` : `% -> Pattern(Integer)`
+
+Operation defined in WSGaussianInteger.
+
+##### `convert` : `% -> SparseUnivariatePolynomial(WSInteger)`
+
+Operation defined in WSGaussianInteger.
+
+##### `convert` : `% -> String`
+
+Operation defined in WSGaussianInteger.
+
+##### `convert` : `% -> Vector(WSInteger)`
+
+Operation defined in WSGaussianInteger.
+
 #### `coordinates` <a id="coordinates"></a>
 
 ##### `coordinates` : `Vector(%) -> Matrix(R)`
@@ -485,12 +547,33 @@ coordinates(a, basis) returns the coordinates of a with respect to the basis bas
 
 - **From**: `FiniteRankAlgebra(R,UP)`
 
+##### `coordinates` : `Vector(%) -> Matrix(WSInteger)`
+
+Operation defined in WSGaussianInteger.
+
+##### `coordinates` : `(Vector(%), Vector(%)) -> Matrix(WSInteger)`
+
+Operation defined in WSGaussianInteger.
+
+##### `coordinates` : `% -> Vector(WSInteger)`
+
+Operation defined in WSGaussianInteger.
+
+##### `coordinates` : `(%, Vector(%)) -> Vector(WSInteger)`
+
+Operation defined in WSGaussianInteger.
+
 #### `definingPolynomial` <a id="definingpolynomial"></a>
+
+##### `definingPolynomial` : `() -> UP`
 
 definingPolynomial() returns the minimal polynomial which generator() satisfies.
 
-- **Signature**: `() -> SparseUnivariatePolynomial(WSInteger)`
 - **From**: `MonogenicAlgebra(R,UP)`
+
+##### `definingPolynomial` : `() -> SparseUnivariatePolynomial(WSInteger)`
+
+Operation defined in WSGaussianInteger.
 
 #### `differentiate` <a id="differentiate"></a>
 
@@ -518,6 +601,14 @@ differentiate(x, n) returns the n-th derivative of x.
 
 - **From**: `DifferentialRing`
 
+##### `differentiate` : `(%, (WSInteger -> WSInteger)) -> %`
+
+Operation defined in WSGaussianInteger.
+
+##### `differentiate` : `(%, (WSInteger -> WSInteger), NonNegativeInteger) -> %`
+
+Operation defined in WSGaussianInteger.
+
 #### `discriminant` <a id="discriminant"></a>
 
 ##### `discriminant` : `() -> R`
@@ -531,6 +622,14 @@ discriminant() = determinant(traceMatrix()).
 discriminant([v1, .., vn]) returns determinant(traceMatrix([v1, .., vn])).
 
 - **From**: `FiniteRankAlgebra(R,UP)`
+
+##### `discriminant` : `() -> WSInteger`
+
+Operation defined in WSGaussianInteger.
+
+##### `discriminant` : `Vector(%) -> WSInteger`
+
+Operation defined in WSGaussianInteger.
 
 #### `divide` <a id="divide"></a>
 
@@ -572,6 +671,10 @@ exquo(a, b) either returns an element c such that c*b=a or "failed" if no such e
 exquo(x, r) returns the exact quotient of x by r, or "failed" if r does not divide x exactly.
 
 - **From**: `ComplexCategory(R)`
+
+##### `exquo` : `(%, WSInteger) -> Union(%,"failed")`
+
+Operation defined in WSGaussianInteger.
 
 #### `extendedEuclidean` <a id="extendedeuclidean"></a>
 
@@ -631,10 +734,15 @@ generator() returns the generator for this domain.
 
 #### `imag` <a id="imag"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1097)\]
 
+##### `imag` : `% -> R`
+
 imag(x) returns imaginary part of x.
 
-- **Signature**: `% -> WSInteger`
 - **From**: `ComplexCategory(R)`
+
+##### `imag` : `% -> WSInteger`
+
+Operation defined in WSGaussianInteger.
 
 #### `imaginary` <a id="imaginary"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1091)\]
 
@@ -929,17 +1037,27 @@ leftRecip(a) returns an element, which is a left inverse of a, or "failed" if su
 
 #### `lift` <a id="lift"></a>
 
+##### `lift` : `% -> UP`
+
 lift(z) returns a minimal degree univariate polynomial up such that z=reduce up.
 
-- **Signature**: `% -> SparseUnivariatePolynomial(WSInteger)`
 - **From**: `MonogenicAlgebra(R,UP)`
+
+##### `lift` : `% -> SparseUnivariatePolynomial(WSInteger)`
+
+Operation defined in WSGaussianInteger.
 
 #### `map` <a id="map"></a>
 
+##### `map` : `((R -> R), %) -> %`
+
 map(f, ex) evaluates ex, applying f to values of type R in ex.
 
-- **Signature**: `((WSInteger -> WSInteger), %) -> %`
 - **From**: `FullyEvalableOver(R)`
+
+##### `map` : `((WSInteger -> WSInteger), %) -> %`
+
+Operation defined in WSGaussianInteger.
 
 #### `missing?` <a id="missing"></a>
 
@@ -964,10 +1082,15 @@ mutable?(obj) checks whether or not obj is mutable.
 
 #### `norm` <a id="norm"></a>
 
+##### `norm` : `% -> R`
+
 norm(x) returns x * conjugate(x)
 
-- **Signature**: `% -> WSInteger`
 - **From**: `ComplexCategory(R)`
+
+##### `norm` : `% -> WSInteger`
+
+Operation defined in WSGaussianInteger.
 
 #### `nothing?` <a id="nothing"></a>
 
@@ -1013,10 +1136,15 @@ opposite?(x,y) holds if the sum of x and y is 0.
 
 #### `patternMatch` <a id="patternmatch"></a>
 
+##### `patternMatch` : `(%, Pattern(S), PatternMatchResult(S,%)) -> PatternMatchResult(S,%)`
+
 patternMatch(expr, pat, res) matches the pattern pat to the expression expr. res contains the variables of pat which are already matched and their matches (necessary for recursion). Initially, res is just the result of new which is an empty list of matches.
 
-- **Signature**: `(%, Pattern(Integer), PatternMatchResult(Integer,%)) -> PatternMatchResult(Integer,%)`
 - **From**: `PatternMatchable(S)`
+
+##### `patternMatch` : `(%, Pattern(Integer), PatternMatchResult(Integer,%)) -> PatternMatchResult(Integer,%)`
+
+Operation defined in WSGaussianInteger.
 
 #### `plenaryPower` <a id="plenarypower"></a>
 
@@ -1048,15 +1176,15 @@ x quo y is the same as divide(x, y).quotient. See divide from EuclideanDomain.
 
 #### `random` <a id="random"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1072)\]
 
-##### `random` : `WSInteger -> %`
-
-random(n) returns a gaussian integer where real part is in the range 0..n as the imaginary part.
-
 ##### `random` : `% -> %`
 
 random(n) returns a random integer from 0 to n-1.
 
 - **From**: `Integer`
+
+##### `random` : `WSInteger -> %`
+
+random(n) returns a gaussian integer where real part is in the range 0..n as the imaginary part.
 
 #### `rank` <a id="rank"></a>
 
@@ -1088,10 +1216,15 @@ rationalIfCan(x) returns x as a rational number, or "failed" if x is not a ratio
 
 #### `real` <a id="real"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1096)\]
 
+##### `real` : `% -> R`
+
 real(x) returns real part of x.
 
-- **Signature**: `% -> WSInteger`
 - **From**: `ComplexCategory(R)`
+
+##### `real` : `% -> WSInteger`
+
+Operation defined in WSGaussianInteger.
 
 #### `recip` <a id="recip"></a>
 
@@ -1114,6 +1247,10 @@ reduce(frac) converts the fraction frac to an algebra element.
 
 - **From**: `MonogenicAlgebra(R,UP)`
 
+##### `reduce` : `SparseUnivariatePolynomial(WSInteger) -> %`
+
+Operation defined in WSGaussianInteger.
+
 #### `reducedSystem` <a id="reducedsystem"></a>
 
 ##### `reducedSystem` : `Matrix(%) -> Matrix(R)`
@@ -1128,6 +1265,14 @@ reducedSystem(A, v) returns a matrix B and a vector w such that A x = v and B x 
 
 - **From**: `LinearlyExplicitOver(R)`
 
+##### `reducedSystem` : `Matrix(%) -> Matrix(WSInteger)`
+
+Operation defined in WSGaussianInteger.
+
+##### `reducedSystem` : `(Matrix(%), Vector(%)) -> Record(mat: Matrix(WSInteger),vec: Vector(WSInteger))`
+
+Operation defined in WSGaussianInteger.
+
 #### `regularRepresentation` <a id="regularrepresentation"></a>
 
 ##### `regularRepresentation` : `% -> Matrix(R)`
@@ -1141,6 +1286,14 @@ regularRepresentation(a) returns the matrix m of the linear map defined by left 
 regularRepresentation(a, basis) returns the matrix m of the linear map defined by left multiplication by a with respect to the basis basis. That is for all x we have coordinates(a*x, basis) = m*coordinates(x, basis).
 
 - **From**: `FiniteRankAlgebra(R,UP)`
+
+##### `regularRepresentation` : `% -> Matrix(WSInteger)`
+
+Operation defined in WSGaussianInteger.
+
+##### `regularRepresentation` : `(%, Vector(%)) -> Matrix(WSInteger)`
+
+Operation defined in WSGaussianInteger.
 
 #### `rem` <a id="rem"></a>
 
@@ -1163,19 +1316,45 @@ represents([a1, .., an], [v1, .., vn]) returns a1*v1 + ... + an*vn.
 
 - **From**: `FiniteRankAlgebra(R,UP)`
 
+##### `represents` : `Vector(WSInteger) -> %`
+
+Operation defined in WSGaussianInteger.
+
+##### `represents` : `(Vector(WSInteger), Vector(%)) -> %`
+
+Operation defined in WSGaussianInteger.
+
 #### `retract` <a id="retract"></a>
+
+##### `retract` : `% -> S`
 
 retract(a) transforms a into an element of S if possible. Error: if a cannot be made into an element of S.
 
-- **Signature**: `% -> S`
 - **From**: `RetractableTo(S)`
+
+##### `retract` : `% -> Integer`
+
+Operation defined in WSGaussianInteger.
+
+##### `retract` : `% -> WSInteger`
+
+Operation defined in WSGaussianInteger.
 
 #### `retractIfCan` <a id="retractifcan"></a>
 
+##### `retractIfCan` : `% -> Union(S,"failed")`
+
 retractIfCan(a) transforms a into an element of S if possible. Returns "failed" if a cannot be made into an element of S.
 
-- **Signature**: `% -> Union(S,"failed")`
 - **From**: `RetractableTo(S)`
+
+##### `retractIfCan` : `% -> Union(Integer,"failed")`
+
+Operation defined in WSGaussianInteger.
+
+##### `retractIfCan` : `% -> Union(WSInteger,"failed")`
+
+Operation defined in WSGaussianInteger.
 
 #### `rightPower` <a id="rightpower"></a>
 
@@ -1256,10 +1435,15 @@ toString(obj) returns the string representation of obj.
 
 #### `trace` <a id="trace"></a>
 
+##### `trace` : `% -> R`
+
 trace(a) returns the trace of the regular representation of a with respect to any basis.
 
-- **Signature**: `% -> WSInteger`
 - **From**: `FiniteRankAlgebra(R,UP)`
+
+##### `trace` : `% -> WSInteger`
+
+Operation defined in WSGaussianInteger.
 
 #### `traceMatrix` <a id="tracematrix"></a>
 
@@ -1274,6 +1458,14 @@ traceMatrix() is the n-by-n matrix ( Tr(vi * vj) ), where v1, ..., vn are the el
 traceMatrix([v1, .., vn]) is the n-by-n matrix ( Tr(vi * vj) )
 
 - **From**: `FiniteRankAlgebra(R,UP)`
+
+##### `traceMatrix` : `() -> Matrix(WSInteger)`
+
+Operation defined in WSGaussianInteger.
+
+##### `traceMatrix` : `Vector(%) -> Matrix(WSInteger)`
+
+Operation defined in WSGaussianInteger.
 
 #### `unit?` <a id="unit"></a>
 

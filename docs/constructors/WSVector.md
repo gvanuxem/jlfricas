@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS vectors using the MathLink Julia package.Time: 0.02 (OT) = 0.02 sec
+Julia WS vectors using the MathLink Julia package.Time: 0 sec
 
 **WSVector(E: WSObject) is a domain constructor.**  
 **Abbreviation for WSVector is WSVEC**
@@ -113,8 +113,8 @@ Julia WS vectors using the MathLink Julia package.Time: 0.02 (OT) = 0.02 sec
 | Operation | Summary |
 | :--- | :--- |
 | [`#`](#op-hash) | #(u) returns the number of elements in u. |
-| [`*`](#op-mul) | n*a scales the vector a by n. |
-| [`+`](#op-add) | a + b is the vector addition. WS error if dimensions are incompatible. |
+| [`*`](#op-mul) | Operation defined in WSVector |
+| [`+`](#op-add) | Operation defined in WSVector |
 | [`<`](#op-lt) | Operation defined in WSVector |
 | [`<=`](#op-le) | Operation defined in WSVector |
 | [`>`](#op-gt) | Operation defined in WSVector |
@@ -122,18 +122,18 @@ Julia WS vectors using the MathLink Julia package.Time: 0.02 (OT) = 0.02 sec
 | [`accumulate`](#accumulate) | accumulate(agg) returns the partial sums of elements in agg. |
 | [`any?`](#any) | any?(p, u) tests if p(x) is true for any element x of u. Note: for collections, any?(p, u)... |
 | [`append`](#append) | append(l, elt) appends elt to the list l. |
-| [`coerce`](#coerce) | coerce(v) coerces inplace v to a WS matrix. |
+| [`coerce`](#coerce) | coerce(list) tries to coerce list to a WSAggregate. |
 | [`concat`](#concat) | concat(u, v) returns an aggregate consisting of the elements of u followed by the elements... |
 | [`construct`](#construct) | construct([x, y, ..., z]) returns the collection of elements x, y, ..., z ordered as given... |
 | [`convert`](#convert) | convert(s) makes s into an input form. |
 | [`copy`](#copy) | copy(u) returns a top-level (non-recursive) copy of u. Note: for collections, copy(u) = [x... |
 | [`copyInto!`](#copyinto) | copyInto!(u, v, i) returns aggregate u containing a copy of v inserted at element i. |
 | [`count`](#count) | count(x, u) returns the number of occurrences of x in u. For collections, count(x, u) = re... |
-| [`cross`](#cross) | cross(v1,v2) computes the vector cross product of v1 and v2. |
+| [`cross`](#cross) | cross(u, v) constructs the cross product of u and v. Error: if u and v are not of length 3... |
 | [`delete`](#delete) | delete(u, i) returns a copy of u with the ith element deleted. Note: delete(u, i) = concat... |
 | [`differences`](#differences) | differences(agg) returns the differences between adjacent elements in agg. |
 | [`dimensions`](#dimensions) | dimensions(agg) returns dimensions of agg. |
-| [`dot`](#dot) | dot(v1, v2) is the dot product of v1 and v2. |
+| [`dot`](#dot) | dot(f) creates the form with one dot overhead. |
 | [`elt`](#elt) | elt(op, l) creates a form for application of op to list of arguments l. |
 | [`empty`](#empty) | empty()$D creates an aggregate of type D with 0 elements. Note: The em $D can be dropped i... |
 | [`empty?`](#empty) | empty?(u) tests if u has 0 elements. |
@@ -258,23 +258,31 @@ Julia WS vectors using the MathLink Julia package.Time: 0.02 (OT) = 0.02 sec
 
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
+##### `#` : `% -> NonNegativeInteger if % has ATFINAG`
+
+Operation defined in WSVector.
+
 #### `*` <a id="op-mul"></a>
+
+##### `*` : `(%, E) -> %`
+
+Operation defined in WSVector.
+
+##### `*` : `(E, %) -> %`
+
+Operation defined in WSVector.
 
 ##### `*` : `(WSInteger, %) -> %`
 
-n*a scales the vector a by n.
+Operation defined in WSVector.
 
-##### `*` : `(E,%) -> %`
+##### `*` : `(Integer, %) -> % if E has ABELGRP`
 
-r*x is the left scalar multiple of the scalar r and the vector x.
-
-##### `*` : `(%,E) -> %`
-
-x * r is the right scalar multiple of the scalar r and the vector x.
+Operation defined in WSVector.
 
 #### `+` <a id="op-add"></a>
 
-a + b is the vector addition. WS error if dimensions are incompatible.
+Operation defined in WSVector.
 
 - **Signature**: `(%, %) -> %`
 
@@ -304,17 +312,27 @@ Operation defined in WSVector.
 
 #### `accumulate` <a id="accumulate"></a>
 
+##### `accumulate` : `% -> %`
+
 accumulate(agg) returns the partial sums of elements in agg.
 
-- **Signature**: `% -> % if E has WSNUM`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
+
+##### `accumulate` : `% -> % if E has WSNUM`
+
+Operation defined in WSVector.
 
 #### `any?` <a id="any"></a>
 
+##### `any?` : `((S -> Boolean), %) -> Boolean`
+
 any?(p, u) tests if p(x) is true for any element x of u. Note: for collections, any?(p, u) = reduce(or, map(p, u), false, true). However, any?(p, u) returns as soon as it finds an element for which p gives true.
 
-- **Signature**: `((E -> Boolean), %) -> Boolean if % has ATFINAG`
 - **From**: `HomogeneousAggregate(S)`
+
+##### `any?` : `((E -> Boolean), %) -> Boolean if % has ATFINAG`
+
+Operation defined in WSVector.
 
 #### `append` <a id="append"></a>
 
@@ -324,10 +342,6 @@ append(l, elt) appends elt to the list l.
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
 #### `coerce` <a id="coerce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L281)\]
-
-##### `coerce` : `% -> WSMatrix(E)`
-
-coerce(v) coerces inplace v to a WS matrix.
 
 ##### `coerce` : `List(E) -> %`
 
@@ -359,6 +373,20 @@ coerce(expr) returns the WSExpression representation of expr.
 
 - **From**: [`WSObject`](WSObject.md)
 
+##### `coerce` : `% -> WSMatrix(E)`
+
+coerce(v) coerces inplace v to a WS matrix.
+
+- **From**: [`WSVector(E)`](WSVector.md)
+
+##### `coerce` : `% -> WSMatrix(E) if E has WSRING`
+
+Operation defined in WSVector.
+
+##### `coerce` : `% -> OutputForm`
+
+Operation defined in WSVector.
+
 #### `concat` <a id="concat"></a>
 
 ##### `concat` : `(%, %) -> %`
@@ -385,12 +413,25 @@ concat(u), where u is a list of aggregates [a, b, ..., c], returns a single aggr
 
 - **From**: `LinearAggregate(S)`
 
+##### `concat` : `(%, E) -> %`
+
+Operation defined in WSVector.
+
+##### `concat` : `(E, %) -> %`
+
+Operation defined in WSVector.
+
 #### `construct` <a id="construct"></a>
+
+##### `construct` : `List(S) -> %`
 
 construct([x, y, ..., z]) returns the collection of elements x, y, ..., z ordered as given. Equivalently written as [x, y, ..., z]$D, where D is the domain. D may be omitted for those of type List.
 
-- **Signature**: `List(E) -> %`
 - **From**: `Collection(S)`
+
+##### `construct` : `List(E) -> %`
+
+Operation defined in WSVector.
 
 #### `convert` <a id="convert"></a>
 
@@ -406,6 +447,14 @@ convert(a) transforms a into an element of S.
 
 - **From**: `ConvertibleTo(S)`
 
+##### `convert` : `% -> InputForm if E has KONVERT(INFORM)`
+
+Operation defined in WSVector.
+
+##### `convert` : `% -> String`
+
+Operation defined in WSVector.
+
 #### `copy` <a id="copy"></a>
 
 copy(u) returns a top-level (non-recursive) copy of u. Note: for collections, copy(u) = [x for x in u].
@@ -415,10 +464,15 @@ copy(u) returns a top-level (non-recursive) copy of u. Note: for collections, co
 
 #### `copyInto!` <a id="copyinto"></a>
 
+##### `copyInto!` : `(%, %, Integer) -> %`
+
 copyInto!(u, v, i) returns aggregate u containing a copy of v inserted at element i.
 
-- **Signature**: `(%, %, Integer) -> % if % has ATFINAG and % has ATSHMUT`
 - **From**: `LinearAggregate(S)`
+
+##### `copyInto!` : `(%, %, Integer) -> % if % has ATFINAG and % has ATSHMUT`
+
+Operation defined in WSVector.
 
 #### `count` <a id="count"></a>
 
@@ -434,16 +488,19 @@ count(p, u) returns the number of elements x in u such that p(x) is true. For co
 
 - **From**: `HomogeneousAggregate(S)`
 
+##### `count` : `((E -> Boolean), %) -> NonNegativeInteger if % has ATFINAG`
+
+Operation defined in WSVector.
+
+##### `count` : `(E, %) -> NonNegativeInteger if % has ATFINAG and E has BASTYPE`
+
+Operation defined in WSVector.
+
 #### `cross` <a id="cross"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L270)\]
-
-##### `cross` : `(%,%) -> %`
-
-cross(v1,v2) computes the vector cross product of v1 and v2.
-
-##### `cross` : `(%, %) -> %`
 
 cross(u, v) constructs the cross product of u and v. Error: if u and v are not of length 3.
 
+- **Signature**: `(%, %) -> %`
 - **From**: `VectorCategory(R)`
 
 #### `delete` <a id="delete"></a>
@@ -468,10 +525,15 @@ delete(l, inds) deletes element(s) of the list l at index(es) inds.
 
 #### `differences` <a id="differences"></a>
 
+##### `differences` : `% -> %`
+
 differences(agg) returns the differences between adjacent elements in agg.
 
-- **Signature**: `% -> % if E has WSNUM`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
+
+##### `differences` : `% -> % if E has WSNUM`
+
+Operation defined in WSVector.
 
 #### `dimensions` <a id="dimensions"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L531)\]
 
@@ -481,10 +543,6 @@ dimensions(agg) returns dimensions of agg.
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
 #### `dot` <a id="dot"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L266)\]
-
-##### `dot` : `(%, %) -> E`
-
-dot(v1, v2) is the dot product of v1 and v2.
 
 ##### `dot` : `% -> %`
 
@@ -497,6 +555,12 @@ dot(f) creates the form with one dot overhead.
 dot(f, n) creates the form f with n dots overhead.
 
 - **From**: `OutputForm`
+
+##### `dot` : `(%, %) -> E`
+
+dot(v1, v2) is the dot product of v1 and v2.
+
+- **From**: [`WSVector(E)`](WSVector.md)
 
 ##### `dot` : `(%, %) -> R`
 
@@ -530,6 +594,14 @@ elt(u, x, y) applies u to x if x is in the domain of u, and returns y otherwise.
 
 - **From**: `EltableAggregate(Dom,Im)`
 
+##### `elt` : `(%, Integer, E) -> E`
+
+Operation defined in WSVector.
+
+##### `elt` : `(%, UniversalSegment(Integer)) -> %`
+
+Operation defined in WSVector.
+
 #### `empty` <a id="empty"></a>
 
 empty()$D creates an aggregate of type D with 0 elements. Note: The em $D can be dropped if understood by context, u: D := empty().
@@ -546,17 +618,27 @@ empty?(u) tests if u has 0 elements.
 
 #### `entries` <a id="entries"></a>
 
+##### `entries` : `% -> List(Entry)`
+
 entries(u) returns a list of all the entries of aggregate u in no assumed order.
 
-- **Signature**: `% -> List(E)`
 - **From**: `IndexedAggregate(Index,Entry)`
+
+##### `entries` : `% -> List(E)`
+
+Operation defined in WSVector.
 
 #### `entry?` <a id="entry"></a>
 
+##### `entry?` : `(Entry, %) -> Boolean`
+
 entry?(x, u) tests if x equals u . i for some index i.
 
-- **Signature**: `(E, %) -> Boolean if % has ATFINAG and E has BASTYPE`
 - **From**: `IndexedAggregate(Index,Entry)`
+
+##### `entry?` : `(E, %) -> Boolean if % has ATFINAG and E has BASTYPE`
+
+Operation defined in WSVector.
 
 #### `eq?` <a id="eq"></a>
 
@@ -591,12 +673,33 @@ eval(f, [x1 = v1, ..., xn = vn]) replaces xi by vi in f.
 
 - **From**: `Evalable(R)`
 
+##### `eval` : `(%, List(Equation(E))) -> % if E has EVALAB(E) and E has SETCAT`
+
+Operation defined in WSVector.
+
+##### `eval` : `(%, Equation(E)) -> % if E has EVALAB(E) and E has SETCAT`
+
+Operation defined in WSVector.
+
+##### `eval` : `(%, E, E) -> % if E has EVALAB(E) and E has SETCAT`
+
+Operation defined in WSVector.
+
+##### `eval` : `(%, List(E), List(E)) -> % if E has EVALAB(E) and E has SETCAT`
+
+Operation defined in WSVector.
+
 #### `every?` <a id="every"></a>
+
+##### `every?` : `((S -> Boolean), %) -> Boolean`
 
 every?(p, u) tests if p(x) is true for all elements x of u. Note: for collections, every?(p, u) = reduce(and, map(p, u), true, false). However, every?(p, u) returns as soon as it finds an element for which p gives false.
 
-- **Signature**: `((E -> Boolean), %) -> Boolean if % has ATFINAG`
 - **From**: `HomogeneousAggregate(S)`
+
+##### `every?` : `((E -> Boolean), %) -> Boolean if % has ATFINAG`
+
+Operation defined in WSVector.
 
 #### `extract` <a id="extract"></a>
 
@@ -607,17 +710,27 @@ extract(agg, parts) extracts parts of agg.
 
 #### `fill!` <a id="fill"></a>
 
+##### `fill!` : `(%, Entry) -> %`
+
 fill!(u, x) replaces each entry in aggregate u by x. The modified u is returned as value.
 
-- **Signature**: `(%, E) -> % if % has ATSHMUT`
 - **From**: `IndexedAggregate(Index,Entry)`
+
+##### `fill!` : `(%, E) -> % if % has ATSHMUT`
+
+Operation defined in WSVector.
 
 #### `find` <a id="find"></a>
 
+##### `find` : `((S -> Boolean), %) -> Union(S,"failed")`
+
 find(p, u) returns the first x in u such that p(x) is true, and "failed" otherwise.
 
-- **Signature**: `((E -> Boolean), %) -> Union(E,"failed")`
 - **From**: `Collection(S)`
+
+##### `find` : `((E -> Boolean), %) -> Union(E,"failed")`
+
+Operation defined in WSVector.
 
 #### `first` <a id="first"></a>
 
@@ -641,31 +754,51 @@ first(u) returns the first element x of u. Note: for collections, first([x, y, .
 
 #### `hash` <a id="hash"></a>
 
+##### `hash` : `% -> SingleInteger`
+
 hash(s) calculates a hash code for s.
 
-- **Signature**: `% -> SingleInteger if % has ATFINAG and E has HASHABL`
 - **From**: `Hashable`
+
+##### `hash` : `% -> SingleInteger if % has ATFINAG and E has HASHABL`
+
+Operation defined in WSVector.
 
 #### `hashUpdate!` <a id="hashupdate"></a>
 
+##### `hashUpdate!` : `(HashState, %) -> HashState`
+
 hashUpdate!(hs, s) computes new HashState from old and s used for incremental computation of hash values. hashUpdate! might destructively work on its first argument.
 
-- **Signature**: `(HashState, %) -> HashState if % has ATFINAG and E has HASHABL`
 - **From**: `Hashable`
+
+##### `hashUpdate!` : `(HashState, %) -> HashState if % has ATFINAG and E has HASHABL`
+
+Operation defined in WSVector.
 
 #### `index?` <a id="index"></a>
 
+##### `index?` : `(Index, %) -> Boolean`
+
 index?(i, u) tests if i is an index of aggregate u.
 
-- **Signature**: `(Integer, %) -> Boolean`
 - **From**: `IndexedAggregate(Index,Entry)`
+
+##### `index?` : `(Integer, %) -> Boolean`
+
+Operation defined in WSVector.
 
 #### `indices` <a id="indices"></a>
 
+##### `indices` : `% -> List(Index)`
+
 indices(u) returns a list of indices of aggregate u in no particular order.
 
-- **Signature**: `% -> List(Integer)`
 - **From**: `IndexedAggregate(Index,Entry)`
+
+##### `indices` : `% -> List(Integer)`
+
+Operation defined in WSVector.
 
 #### `insert` <a id="insert"></a>
 
@@ -686,6 +819,10 @@ insert(l, elt, ind) inserts elt to the list l at index ind.
 insert(x, u, i) returns a copy of u having x as its ith element. Note: insert(x, u, i) = concat(u(minIndex(u)..i-1), concat(x, u(i..))).
 
 - **From**: `LinearAggregate(S)`
+
+##### `insert` : `(E, %, Integer) -> %`
+
+Operation defined in WSVector.
 
 #### `intersection` <a id="intersection"></a>
 
@@ -734,9 +871,13 @@ jWSInterpret(form1,form2,form3) interprets forms.
 
 jWSVector(list) constructs list as a WSVector.
 
+- **From**: [`WSVector(E)`](WSVector.md)
+
 ##### `jWSVector` : `String -> %`
 
 jWSVector(str) constructs str as a WSVector. str must be in the WS language (list).
+
+- **From**: [`WSVector(E)`](WSVector.md)
 
 #### `jlAbout` <a id="jlabout"></a>
 
@@ -963,10 +1104,15 @@ latex(s) returns a LaTeX-printable output representation of s.
 
 #### `leftTrim` <a id="lefttrim"></a>
 
+##### `leftTrim` : `(%, S) -> %`
+
 leftTrim(u, x) returns a copy of u with all leading x deleted. For example, leftTrim(" abc ", char " ") returns "abc ".
 
-- **Signature**: `(%, E) -> % if % has ATFINAG and E has BASTYPE`
 - **From**: `LinearAggregate(S)`
+
+##### `leftTrim` : `(%, E) -> % if % has ATFINAG and E has BASTYPE`
+
+Operation defined in WSVector.
 
 #### `length` <a id="length"></a>
 
@@ -981,6 +1127,10 @@ length(v) computes the sqrt(dot(v, v)), the euclidean length
 length(agg) returns the length of agg. 0 if it is a scalar, an index for example.
 
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
+
+##### `length` : `% -> E if E has RADCAT and E has RING`
+
+Operation defined in WSVector.
 
 #### `less?` <a id="less"></a>
 
@@ -1003,12 +1153,25 @@ map(f, u, v) returns a new aggregate w with elements z = f(x, y) for correspondi
 
 - **From**: `LinearAggregate(S)`
 
+##### `map` : `((E -> E), %) -> %`
+
+Operation defined in WSVector.
+
+##### `map` : `(((E, E) -> E), %, %) -> %`
+
+Operation defined in WSVector.
+
 #### `map!` <a id="map"></a>
+
+##### `map!` : `((S -> S), %) -> %`
 
 map!(f, u) destructively replaces each element x of u by f(x).
 
-- **Signature**: `((E -> E), %) -> % if % has ATSHMUT`
 - **From**: `HomogeneousAggregate(S)`
+
+##### `map!` : `((E -> E), %) -> % if % has ATSHMUT`
+
+Operation defined in WSVector.
 
 #### `max` <a id="max"></a>
 
@@ -1030,26 +1193,53 @@ max(p, u) returns maximal element of u with respect to total ordering predicate 
 
 - **From**: `HomogeneousAggregate(S)`
 
+##### `max` : `(((E, E) -> Boolean), %) -> E if % has ATFINAG`
+
+Operation defined in WSVector.
+
+##### `max` : `% -> E if % has ATFINAG and E has ORDSET`
+
+Operation defined in WSVector.
+
+##### `max` : `(%, %) -> % if % has ATFINAG and E has ORDSET`
+
+Operation defined in WSVector.
+
 #### `maxIndex` <a id="maxindex"></a>
+
+##### `maxIndex` : `% -> Index`
 
 maxIndex(u) returns the maximum index i of aggregate u. Note: in general, maxIndex(u) = reduce(max, indices u); for List, maxIndex(u) = #u.
 
-- **Signature**: `% -> Integer if Integer has ORDSET`
 - **From**: `IndexedAggregate(Index,Entry)`
+
+##### `maxIndex` : `% -> Integer if Integer has ORDSET`
+
+Operation defined in WSVector.
 
 #### `member?` <a id="member"></a>
 
+##### `member?` : `(S, %) -> Boolean`
+
 member?(x, u) tests if x is a member of u. For collections, member?(x, u) = reduce(or, [x=y for y in u], false). However, member?(x, u) returns as soon as it finds a member.
 
-- **Signature**: `(E, %) -> Boolean if % has ATFINAG and E has BASTYPE`
 - **From**: `HomogeneousAggregate(S)`
+
+##### `member?` : `(E, %) -> Boolean if % has ATFINAG and E has BASTYPE`
+
+Operation defined in WSVector.
 
 #### `members` <a id="members"></a>
 
+##### `members` : `% -> List(S)`
+
 members(u) returns a list of the consecutive elements of u. For multisets members gives result with no repetition. See also parts.
 
-- **Signature**: `% -> List(E) if % has ATFINAG`
 - **From**: `HomogeneousAggregate(S)`
+
+##### `members` : `% -> List(E) if % has ATFINAG`
+
+Operation defined in WSVector.
 
 #### `merge` <a id="merge"></a>
 
@@ -1065,12 +1255,25 @@ merge(p, a, b) returns an aggregate c which merges a and b. The result is produc
 
 - **From**: `LinearAggregate(S)`
 
+##### `merge` : `(((E, E) -> Boolean), %, %) -> % if % has ATFINAG`
+
+Operation defined in WSVector.
+
+##### `merge` : `(%, %) -> % if % has ATFINAG and E has ORDSET`
+
+Operation defined in WSVector.
+
 #### `merge_unique` <a id="merge_unique"></a>
+
+##### `merge_unique` : `(((S, S) -> Boolean), %, %) -> %`
 
 merge_unique(p, a, b) returns an aggregate c which merges a and b uniquely. p is a binary predicate and aggregates a and b are assumed to be ordered under p and without duplicates. The result aggregate c is also ordered under p, and contains all elements from a and b, also without duplicates. For example, merge_unique(<, [1, 3, 5], [3, 5, 6]) returns [1, 3, 5, 6].
 
-- **Signature**: `(((E, E) -> Boolean), %, %) -> % if % has ATFINAG and E has BASTYPE`
 - **From**: `LinearAggregate(S)`
+
+##### `merge_unique` : `(((E, E) -> Boolean), %, %) -> % if % has ATFINAG and E has BASTYPE`
+
+Operation defined in WSVector.
 
 #### `min` <a id="min"></a>
 
@@ -1086,12 +1289,25 @@ min(u) returns minimal element of u. Error if u is empty.
 
 - **From**: `HomogeneousAggregate(S)`
 
+##### `min` : `% -> E if % has ATFINAG and E has ORDSET`
+
+Operation defined in WSVector.
+
+##### `min` : `(%, %) -> % if % has ATFINAG and E has ORDSET`
+
+Operation defined in WSVector.
+
 #### `minIndex` <a id="minindex"></a>
+
+##### `minIndex` : `% -> Index`
 
 minIndex(u) returns the minimum index i of aggregate u. Note: in general, minIndex(a) = reduce(min, indices a); for List, minIndex(a) = 1.
 
-- **Signature**: `% -> Integer if Integer has ORDSET`
 - **From**: `IndexedAggregate(Index,Entry)`
+
+##### `minIndex` : `% -> Integer if Integer has ORDSET`
+
+Operation defined in WSVector.
 
 #### `missing?` <a id="missing"></a>
 
@@ -1116,23 +1332,34 @@ mutable?(obj) checks whether or not obj is mutable.
 
 #### `negative?` <a id="negative"></a>
 
+##### `negative?` : `% -> Boolean`
+
 negative?(x) tests whether x is strictly less than 0.
 
-- **Signature**: `% -> Boolean if % has SETCATZ and % has ATFINAG and E has ORDSET`
 - **From**: `OrderedSet`
+
+##### `negative?` : `% -> Boolean if % has SETCATZ and % has ATFINAG and E has ORDSET`
+
+Operation defined in WSVector.
 
 #### `new` <a id="new"></a>
 
+##### `new` : `(NonNegativeInteger, S) -> %`
+
 new(n, x) returns a new aggregate of size n all of whose entries are x.
 
-- **Signature**: `(NonNegativeInteger, E) -> %`
 - **From**: `LinearAggregate(S)`
+
+##### `new` : `(NonNegativeInteger, E) -> %`
+
+Operation defined in WSVector.
 
 #### `norm` <a id="norm"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L268)\]
 
 norm(v) computes the norm of the vector v.
 
 - **Signature**: `% -> E`
+- **From**: [`WSVector(E)`](WSVector.md)
 
 #### `nothing?` <a id="nothing"></a>
 
@@ -1164,10 +1391,15 @@ numeric?(x) checks whether or not x is or would yield a number.
 
 #### `outerProduct` <a id="outerproduct"></a>
 
+##### `outerProduct` : `(%, %) -> Matrix(R)`
+
 outerProduct(u, v) constructs the matrix whose (i, j)'th element is u(i)*v(j).
 
-- **Signature**: `(%, %) -> Matrix(E) if E has RING`
 - **From**: `VectorCategory(R)`
+
+##### `outerProduct` : `(%, %) -> Matrix(E) if E has RING`
+
+Operation defined in WSVector.
 
 #### `part` <a id="part"></a>
 
@@ -1178,10 +1410,15 @@ part(agg,i) returns the i-th element.
 
 #### `parts` <a id="parts"></a>
 
+##### `parts` : `% -> List(S)`
+
 parts(u) returns a list of the consecutive elements of u. For finite collections, construct(parts(u)) = u.
 
-- **Signature**: `% -> List(E) if % has ATFINAG`
 - **From**: `HomogeneousAggregate(S)`
+
+##### `parts` : `% -> List(E) if % has ATFINAG`
+
+Operation defined in WSVector.
 
 #### `position` <a id="position"></a>
 
@@ -1203,12 +1440,29 @@ position(p, a) returns the index i of the first x in a such that p(x) is true, a
 
 - **From**: `LinearAggregate(S)`
 
+##### `position` : `((E -> Boolean), %) -> Integer if % has ATFINAG`
+
+Operation defined in WSVector.
+
+##### `position` : `(E, %) -> Integer if % has ATFINAG and E has BASTYPE`
+
+Operation defined in WSVector.
+
+##### `position` : `(E, %, Integer) -> Integer if % has ATFINAG and E has BASTYPE`
+
+Operation defined in WSVector.
+
 #### `positive?` <a id="positive"></a>
+
+##### `positive?` : `% -> Boolean`
 
 positive?(x) tests whether x is strictly greater than 0.
 
-- **Signature**: `% -> Boolean if % has SETCATZ and % has ATFINAG and E has ORDSET`
 - **From**: `OrderedSet`
+
+##### `positive?` : `% -> Boolean if % has SETCATZ and % has ATFINAG and E has ORDSET`
+
+Operation defined in WSVector.
 
 #### `prepend` <a id="prepend"></a>
 
@@ -1252,6 +1506,10 @@ qsetelt!(u, x, y) sets the image of x to be y under u, without checking that x i
 
 - **From**: `EltableAggregate(Dom,Im)`
 
+##### `qsetelt!` : `(%, Integer, E) -> E if % has ATSHMUT`
+
+Operation defined in WSVector.
+
 #### `reduce` <a id="reduce"></a>
 
 ##### `reduce` : `(((S, S) -> S), %) -> S`
@@ -1272,6 +1530,18 @@ reduce(f, u, x, z) reduces the binary operation f across u, stopping when an "ab
 
 - **From**: `Collection(S)`
 
+##### `reduce` : `(((E, E) -> E), %, E, E) -> E if % has ATFINAG and E has BASTYPE`
+
+Operation defined in WSVector.
+
+##### `reduce` : `(((E, E) -> E), %, E) -> E if % has ATFINAG`
+
+Operation defined in WSVector.
+
+##### `reduce` : `(((E, E) -> E), %) -> E if % has ATFINAG`
+
+Operation defined in WSVector.
+
 #### `remove` <a id="remove"></a>
 
 ##### `remove` : `(S, %) -> %`
@@ -1285,6 +1555,14 @@ remove(x, u) returns a copy of u with all elements equal to x removed. Note: rem
 remove(p, u) returns a copy of u removing all elements x such that p(x) is true. Note: remove(p, u) = [x for x in u | not p(x)].
 
 - **From**: `Collection(S)`
+
+##### `remove` : `(E, %) -> % if % has ATFINAG and E has BASTYPE`
+
+Operation defined in WSVector.
+
+##### `remove` : `((E -> Boolean), %) -> % if % has ATFINAG`
+
+Operation defined in WSVector.
 
 #### `removeDuplicates` <a id="removeduplicates"></a>
 
@@ -1329,10 +1607,15 @@ reverse(agg, levels) reverses the elements of agg using levels.
 
 #### `reverse!` <a id="reverse"></a>
 
+##### `reverse!` : `% -> %`
+
 reverse!(u) returns u with its elements in reverse order.
 
-- **Signature**: `% -> % if % has ATFINAG and % has ATSHMUT`
 - **From**: `LinearAggregate(S)`
+
+##### `reverse!` : `% -> % if % has ATFINAG and % has ATSHMUT`
+
+Operation defined in WSVector.
 
 #### `riffle` <a id="riffle"></a>
 
@@ -1350,10 +1633,15 @@ riffle(agg, elts, inds) riffles (interleaves) element(s) elts inserts them. If i
 
 #### `rightTrim` <a id="righttrim"></a>
 
+##### `rightTrim` : `(%, S) -> %`
+
 rightTrim(u, x) returns a copy of u with all trailing occurrences of x deleted. For example, rightTrim(" abc ", char " ") returns " abc".
 
-- **Signature**: `(%, E) -> % if % has ATFINAG and E has BASTYPE`
 - **From**: `LinearAggregate(S)`
+
+##### `rightTrim` : `(%, E) -> % if % has ATFINAG and E has BASTYPE`
+
+Operation defined in WSVector.
 
 #### `sample` <a id="sample"></a>
 
@@ -1364,10 +1652,15 @@ sample yields a value of type %
 
 #### `select` <a id="select"></a>
 
+##### `select` : `((S -> Boolean), %) -> %`
+
 select(p, u) returns a copy of u containing only those elements such p(x) is true. Note: select(p, u) = [x for x in u | p(x)].
 
-- **Signature**: `((E -> Boolean), %) -> % if % has ATFINAG`
 - **From**: `Collection(S)`
+
+##### `select` : `((E -> Boolean), %) -> % if % has ATFINAG`
+
+Operation defined in WSVector.
 
 #### `setIntersection` <a id="setintersection"></a>
 
@@ -1403,12 +1696,25 @@ setelt!(u, i..j, x) (also written: u(i..j) := x) destructively replaces each ele
 
 - **From**: `LinearAggregate(S)`
 
+##### `setelt!` : `(%, Integer, E) -> E if % has ATSHMUT`
+
+Operation defined in WSVector.
+
+##### `setelt!` : `(%, UniversalSegment(Integer), E) -> E if % has ATSHMUT`
+
+Operation defined in WSVector.
+
 #### `sign` <a id="sign"></a>
+
+##### `sign` : `% -> Integer`
 
 sign(x) is 1 if x is positive, -1 if x is negative, 0 if x equals 0.
 
-- **Signature**: `% -> Integer if % has SETCATZ and % has ATFINAG and E has ORDSET`
 - **From**: `OrderedSet`
+
+##### `sign` : `% -> Integer if % has SETCATZ and % has ATFINAG and E has ORDSET`
+
+Operation defined in WSVector.
 
 #### `size?` <a id="size"></a>
 
@@ -1419,10 +1725,15 @@ size?(u, n) tests if u has exactly n elements.
 
 #### `smaller?` <a id="smaller"></a>
 
+##### `smaller?` : `(%, %) -> Boolean`
+
 smaller?(x, y) is a strict ordering on depending on representatives of elements of the set. If % has Comparable then smaller? gives mathematical linear order.
 
-- **Signature**: `(%, %) -> Boolean if % has ATFINAG and E has COMPAR or % has ATFINAG and E has ORDSET`
 - **From**: `ComparableRepresentation`
+
+##### `smaller?` : `(%, %) -> Boolean if % has ATFINAG and E has COMPAR or % has ATFINAG and E has ORDSET`
+
+Operation defined in WSVector.
 
 #### `sort` <a id="sort"></a>
 
@@ -1438,6 +1749,10 @@ sort(p, a) returns a copy of a sorted using total ordering predicate p.
 
 - **From**: `LinearAggregate(S)`
 
+##### `sort` : `(((E, E) -> Boolean), %) -> % if % has ATFINAG`
+
+Operation defined in WSVector.
+
 #### `sort!` <a id="sort"></a>
 
 ##### `sort!` : `% -> %`
@@ -1451,6 +1766,14 @@ sort!(u) returns u with its elements in ascending order.
 sort!(p, u) returns u with its elements ordered by p.
 
 - **From**: `LinearAggregate(S)`
+
+##### `sort!` : `(((E, E) -> Boolean), %) -> % if % has ATFINAG and % has ATSHMUT`
+
+Operation defined in WSVector.
+
+##### `sort!` : `% -> % if % has ATFINAG and % has ATSHMUT and E has ORDSET`
+
+Operation defined in WSVector.
 
 #### `sorted?` <a id="sorted"></a>
 
@@ -1466,6 +1789,10 @@ sorted?(p, a) tests if a is sorted according to predicate p.
 
 - **From**: `LinearAggregate(S)`
 
+##### `sorted?` : `(((E, E) -> Boolean), %) -> Boolean if % has ATFINAG`
+
+Operation defined in WSVector.
+
 #### `string` <a id="string"></a>
 
 string(jt) returns the string representation of jt.
@@ -1475,17 +1802,27 @@ string(jt) returns the string representation of jt.
 
 #### `swap!` <a id="swap"></a>
 
+##### `swap!` : `(%, Index, Index) -> Void`
+
 swap!(u, i, j) interchanges elements i and j of aggregate u. No meaningful value is returned.
 
-- **Signature**: `(%, Integer, Integer) -> Void if % has ATSHMUT`
 - **From**: `IndexedAggregate(Index,Entry)`
+
+##### `swap!` : `(%, Integer, Integer) -> Void if % has ATSHMUT`
+
+Operation defined in WSVector.
 
 #### `take` <a id="take"></a>
 
+##### `take` : `(%, Integer) -> %`
+
 take(l,i) returns the first i elements.
 
-- **Signature**: `(%, Integer) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
+
+##### `take` : `(%, WSList(WSInteger)) -> %`
+
+Operation defined in WSVector.
 
 #### `toString` <a id="tostring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L500)\]
 
@@ -1496,23 +1833,34 @@ toString(obj) returns the string representation of obj.
 
 #### `total` <a id="total"></a>
 
+##### `total` : `% -> E`
+
 total(agg) returns the sum of the elements in agg.
 
-- **Signature**: `% -> E if E has WSNUM`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
+
+##### `total` : `% -> E if E has WSNUM`
+
+Operation defined in WSVector.
 
 #### `transpose` <a id="transpose"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L272)\]
 
 transpose(v) transposes v. For esoteric purpose, and if you know what you are doing. There is only one type of vector in the Wolfram language. Should not be used, and for normal purpose, does nothing.
 
 - **Signature**: `% -> %`
+- **From**: [`WSVector(E)`](WSVector.md)
 
 #### `trim` <a id="trim"></a>
 
+##### `trim` : `(%, S) -> %`
+
 trim(u, x) returns a copy of u with all occurrences of x deleted from right and left ends. For example, trim(" abc ", char " ") returns "abc".
 
-- **Signature**: `(%, E) -> % if % has ATFINAG and E has BASTYPE`
 - **From**: `LinearAggregate(S)`
+
+##### `trim` : `(%, E) -> % if % has ATFINAG and E has BASTYPE`
+
+Operation defined in WSVector.
 
 #### `union` <a id="union"></a>
 
@@ -1530,20 +1878,31 @@ vector(range(5)
 ```
 
 - **Signature**: `WSList(E) -> %`
+- **From**: [`WSVector(E)`](WSVector.md)
 
 #### `zero` <a id="zero"></a>
 
+##### `zero` : `NonNegativeInteger -> %`
+
 zero(n) creates a zero vector of length n.
 
-- **Signature**: `NonNegativeInteger -> % if E has ABELMON`
 - **From**: `VectorCategory(R)`
+
+##### `zero` : `NonNegativeInteger -> % if E has ABELMON`
+
+Operation defined in WSVector.
 
 #### `zero?` <a id="zero"></a>
 
+##### `zero?` : `% -> Boolean`
+
 zero?(x) returns true if x is a zero vector, false otherwise.
 
-- **Signature**: `% -> Boolean if E has ABELMON`
 - **From**: `VectorCategory(R)`
+
+##### `zero?` : `% -> Boolean if E has ABELMON`
+
+Operation defined in WSVector.
 
 #### `~=` <a id="op-neq"></a>
 
