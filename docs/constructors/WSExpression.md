@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS expressions using the MathLink Julia package. It supports the Eltable category (interface) so, for example using Fibonacci polynomials fibonacci(12,jWSExpr x) => 3 75 77 79 411 6 x + 35 x 2+ 56 x 2+ 36 x 2+ 10 x 2+ x %.5 => 10*x^9Time: 0 sec
+Julia WS expressions using the MathLink Julia package. It supports the Eltable category (interface) so, for example using Fibonacci polynomials fibonacci(12,jWSExpr x) => 3 75 77 79 411 6 x + 35 x 2+ 56 x 2+ 36 x 2+ 10 x 2+ x %.5 => 10*x^9Time: 0.02 (OT) = 0.02 sec
 
 **WSExpression is a domain constructor.**  
 **Abbreviation for WSExpression is WSEXPR**  
@@ -6059,5 +6059,7 @@ zerosOf(p) returns [y1, ..., yn] such that p(yi) = 0. The yi's are expressed in 
 Operation defined in WSExpression.
 
 - **Signature**: `(%, %) -> Boolean`
+
 ---
+
 [Back to Index](../index.md)

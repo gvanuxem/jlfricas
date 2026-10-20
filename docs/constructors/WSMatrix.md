@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS matrices using the MathLink Julia package.Time: 0 sec
+Julia WS matrices using the MathLink Julia package.Time: 0.02 (OT) = 0.02 sec
 
 **WSMatrix(E: WSRing) is a domain constructor.**  
 **Abbreviation for WSMatrix is WSMAT**
@@ -2054,5 +2054,7 @@ zero?(m) returns true if m is a zero matrix and false otherwise
 Operation defined in WSMatrix.
 
 - **Signature**: `(%, %) -> Boolean`
+
 ---
+
 [Back to Index](../index.md)

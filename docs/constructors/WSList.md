@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS lists using the MathLink Julia package.Time: 0 sec
+Julia WS lists using the MathLink Julia package.Time: 0.03 (OT) = 0.03 sec
 
 **WSList(E: WSObject) is a domain constructor.**  
 **Abbreviation for WSList is WSLIST**
@@ -733,5 +733,7 @@ union(agg1, agg2) is the union set operator. Elements are sorted on output.
 Operation defined in WSList.
 
 - **Signature**: `(%, %) -> Boolean`
+
 ---
+
 [Back to Index](../index.md)

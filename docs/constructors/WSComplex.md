@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS complex numbers using the MathLink Julia package.Time: 0 sec
+Julia WS complex numbers using the MathLink Julia package.Time: 0.02 (OT) = 0.02 sec
 
 **WSComplex is a domain constructor.**  
 **Abbreviation for WSComplex is WSCPLX**  
@@ -1793,5 +1793,7 @@ zero?(x) tests if x is equal to 0.
 Operation defined in WSComplex.
 
 - **Signature**: `(%, %) -> Boolean`
+
 ---
+
 [Back to Index](../index.md)

@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS integers using the MathLink Julia package.Time: 0 sec
+Julia WS integers using the MathLink Julia package.Time: 0.02 (OT) = 0.02 sec
 
 **WSInteger is a domain constructor.**  
 **Abbreviation for WSInteger is WSINT**  
@@ -1322,5 +1322,7 @@ zero?(x) tests if x is equal to 0.
 Operation defined in WSInteger.
 
 - **Signature**: `(%, %) -> Boolean`
+
 ---
+
 [Back to Index](../index.md)

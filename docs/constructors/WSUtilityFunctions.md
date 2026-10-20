@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS utility functions using the MathLink Julia package.Time: 0 sec
+Julia WS utility functions using the MathLink Julia package.Time: 0.02 (OT) = 0.02 sec
 
 **WSUtilityFunctions is a package constructor.**  
 **Abbreviation for WSUtilityFunctions is WSUF**
@@ -295,5 +295,7 @@ identityMatrix(n) returns the identity matrix of size n.
 ##### `zeroMatrix` : `(PositiveInteger, PositiveInteger) -> WSMatrix(WSInteger)`
 
 zeroMatrix(m, n) returns an m-by-n zero matrix.
+
 ---
+
 [Back to Index](../index.md)

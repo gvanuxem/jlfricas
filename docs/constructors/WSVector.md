@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS vectors using the MathLink Julia package.Time: 0 sec
+Julia WS vectors using the MathLink Julia package.Time: 0.02 (OT) = 0.02 sec
 
 **WSVector(E: WSObject) is a domain constructor.**  
 **Abbreviation for WSVector is WSVEC**
@@ -1550,5 +1550,7 @@ zero?(x) returns true if x is a zero vector, false otherwise.
 Operation defined in WSVector.
 
 - **Signature**: `(%, %) -> Boolean`
+
 ---
+
 [Back to Index](../index.md)

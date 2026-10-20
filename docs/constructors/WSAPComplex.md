@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS arbitrary precision complex numbers using WS Transport Protocol.Time: 0 sec
+Julia WS arbitrary precision complex numbers using WS Transport Protocol.Time: 0.02 (OT) = 0.02 sec
 
 **WSAPComplex(prec: PositiveInteger) is a domain constructor.**  
 **Abbreviation for WSAPComplex is WSAPCPX**
@@ -2060,5 +2060,7 @@ zero?(x) tests if x is equal to 0.
 Operation defined in WSAPComplex.
 
 - **Signature**: `(%, %) -> Boolean`
+
 ---
+
 [Back to Index](../index.md)

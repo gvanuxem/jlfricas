@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS real numbers using the MathLink Julia package.Time: 0 sec
+Julia WS real numbers using the MathLink Julia package.Time: 0.02 (OT) = 0.02 sec
 
 **WSReal is a domain constructor.**  
 **Abbreviation for WSReal is WSREAL**  
@@ -1758,5 +1758,7 @@ zero?(x) tests if x is equal to 0.
 Operation defined in WSReal.
 
 - **Signature**: `(%, %) -> Boolean`
+
 ---
+
 [Back to Index](../index.md)

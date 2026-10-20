@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS symbols using the MathLink Julia package.Time: 0 sec
+Julia WS symbols using the MathLink Julia package.Time: 0.02 (OT) = 0.02 sec
 
 **WSSymbol is a domain constructor.**  
 **Abbreviation for WSSymbol is WSSYM**  
@@ -541,5 +541,7 @@ toString(obj) returns the string representation of obj.
 Operation defined in WSSymbol.
 
 - **Signature**: `(%, %) -> Boolean`
+
 ---
+
 [Back to Index](../index.md)

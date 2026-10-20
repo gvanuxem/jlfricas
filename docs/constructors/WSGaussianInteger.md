@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS gaussian integers using the MathLink Julia package.Time: 0 sec
+Julia WS gaussian integers using the MathLink Julia package.Time: 0.02 (OT) = 0.02 sec
 
 **WSGaussianInteger is a domain constructor.**  
 **Abbreviation for WSGaussianInteger is WSGINT**  
@@ -1308,5 +1308,7 @@ zero?(x) tests if x is equal to 0.
 Operation defined in WSGaussianInteger.
 
 - **Signature**: `(%, %) -> Boolean`
+
 ---
+
 [Back to Index](../index.md)

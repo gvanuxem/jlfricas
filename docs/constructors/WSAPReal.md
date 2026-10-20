@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS arbitrary precision real numbers using WS Transport Protocol.Time: 0 sec
+Julia WS arbitrary precision real numbers using WS Transport Protocol.Time: 0.02 (OT) = 0.02 sec
 
 **WSAPReal(prec: PositiveInteger) is a domain constructor.**  
 **Abbreviation for WSAPReal is WSAPR**
@@ -1762,5 +1762,7 @@ zero?(x) tests if x is equal to 0.
 Operation defined in WSAPReal.
 
 - **Signature**: `(%, %) -> Boolean`
+
 ---
+
 [Back to Index](../index.md)

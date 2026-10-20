@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS rational numbers using the MathLink Julia package.Time: 0 sec
+Julia WS rational numbers using the MathLink Julia package.Time: 0.02 (OT) = 0.02 sec
 
 **WSRational is a domain constructor.**  
 **Abbreviation for WSRational is WSRAT**  
@@ -1225,5 +1225,7 @@ zero?(x) tests if x is equal to 0.
 Operation defined in WSRational.
 
 - **Signature**: `(%, %) -> Boolean`
+
 ---
+
 [Back to Index](../index.md)

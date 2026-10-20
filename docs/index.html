@@ -755,6 +755,21 @@
       { name: "WSUtilityFunctions", abbrev: "WSUF", kind: "Package", group: "WS", group_name: "MathLink", file: "jwsutils.spad", line: 1, doc: "Utility routines for MathLink kernel communication." }
     ];
 
+    // Order constructors: JL -> NM -> WS, Category -> Domain -> Package, and lexicographically by name
+    const GROUP_ORDER = { 'JL': 1, 'NM': 2, 'WS': 3 };
+    const KIND_ORDER = { 'Category': 1, 'Domain': 2, 'Package': 3 };
+    CONSTRUCTORS.sort((a, b) => {
+      const gA = GROUP_ORDER[a.group] || 99;
+      const gB = GROUP_ORDER[b.group] || 99;
+      if (gA !== gB) return gA - gB;
+
+      const kA = KIND_ORDER[a.kind] || 99;
+      const kB = KIND_ORDER[b.kind] || 99;
+      if (kA !== kB) return kA - kB;
+
+      return a.name.localeCompare(b.name);
+    });
+
     // State Variables
     let currentSubsystem = 'ALL';
     let currentSearchFilter = '';

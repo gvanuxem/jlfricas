@@ -342,6 +342,10 @@ def discover_all_constructors():
         except Exception as err:
             print(f"Error reading {fname}: {err}", file=sys.stderr)
 
+    group_order = {"JL": 1, "NM": 2, "WS": 3}
+    kind_order = {"Category": 1, "Domain": 2, "Package": 3}
+    constructors.sort(key=lambda c: (group_order.get(c[3], 99), kind_order.get(c[1], 99), c[0]))
+
     return constructors
 
 ALL_DISCOVERED = discover_all_constructors()
@@ -817,6 +821,9 @@ def sanitize_existing_ws_docs():
                 new_content = new_content.replace("Julia Wolfram Symbolic", "Julia WS")
                 new_content = new_content.replace("Wolfram Symbolic", "WS")
 
+                # Ensure horizontal rule --- has a blank line before it
+                new_content = re.sub(r"([^\n])\n---", r"\1\n\n---", new_content)
+
                 new_content = re.sub(r"\n{3,}", "\n\n", new_content)
                 if new_content != content:
                     with open(fpath, "w", encoding="utf-8") as f:
@@ -968,10 +975,10 @@ def render_md(name: str, kind: str, group: str, info: dict, source_meta: dict) -
                             lines.append(f"- **From**: `{from_c}`")
                     lines.append("")
 
-        if lines and lines[-1] == "":
-            lines.pop()
+    while lines and lines[-1] == "":
+        lines.pop()
 
-    lines += ["---", "[Back to Index](../index.md)", ""]
+    lines += ["", "---", "", "[Back to Index](../index.md)", ""]
     return "\n".join(lines)
 
 # ── Main Execution Loop ───────────────────────────────────────────────────────

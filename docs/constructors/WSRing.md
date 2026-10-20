@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS category for rings using the Wolfram Symbol Transport Protocol.Time: 0 sec
+Julia WS category for rings using the Wolfram Symbol Transport Protocol.Time: 0.02 (OT) = 0.02 sec
 
 **WSRing is a category constructor.**  
 **Abbreviation for WSRing is WSRING**
@@ -612,5 +612,7 @@ zero?(x) tests if x is equal to 0.
 Operation defined in WSRing.
 
 - **Signature**: `(%, %) -> Boolean`
+
 ---
+
 [Back to Index](../index.md)

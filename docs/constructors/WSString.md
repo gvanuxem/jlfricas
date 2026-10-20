@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS strings using the MathLink Julia package.Time: 0 sec
+Julia WS strings using the MathLink Julia package.Time: 0.02 (OT) = 0.02 sec
 
 **WSString is a domain constructor.**  
 **Abbreviation for WSString is WSSTR**  
@@ -439,5 +439,7 @@ toString(obj) returns the string representation of obj.
 Operation defined in WSString.
 
 - **Signature**: `(%, %) -> Boolean`
+
 ---
+
 [Back to Index](../index.md)

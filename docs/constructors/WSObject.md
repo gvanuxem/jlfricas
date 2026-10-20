@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS Object category using the Wolfram Symbol Transport Protocol.Time: 0 sec
+Julia WS Object category using the Wolfram Symbol Transport Protocol.Time: 0.02 (OT) = 0.02 sec
 
 **WSObject is a category constructor.**  
 **Abbreviation for WSObject is WSO**
@@ -383,5 +383,7 @@ toString(obj) returns the string representation of obj.
 Operation defined in WSObject.
 
 - **Signature**: `(%, %) -> Boolean`
+
 ---
+
 [Back to Index](../index.md)

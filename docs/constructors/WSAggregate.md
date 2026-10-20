@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS aggregate (WS list) using the MathLink Julia package.Time: 0 sec
+Julia WS aggregate (WS list) using the MathLink Julia package.Time: 0.02 (OT) = 0.02 sec
 
 **WSAggregate(E: WSObject) is a category constructor.**  
 **Abbreviation for WSAggregate is WSAGG**
@@ -676,5 +676,7 @@ union(agg1, agg2) is the union set operator. Elements are sorted on output.
 Operation defined in WSAggregate.
 
 - **Signature**: `(%, %) -> Boolean`
+
 ---
+
 [Back to Index](../index.md)

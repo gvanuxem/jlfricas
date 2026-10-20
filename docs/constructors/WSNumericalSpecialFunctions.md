@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS numerical special functions using the MathLink Julia package.Time: 0 sec
+Julia WS numerical special functions using the MathLink Julia package.Time: 0.02 (OT) = 0.02 sec
 
 **WSNumericalSpecialFunctions(R: WSNumber) is a package constructor.**  
 **Abbreviation for WSNumericalSpecialFunctions is WSNSF**
@@ -1081,5 +1081,7 @@ whittakerW(k,m,z) computes the Whittaker function W of z.
 zernikeR(n, m, z) evaluates the Zernike radial polynomial at z.
 
 - **Signature**: `(R, R, R) -> R`
+
 ---
+
 [Back to Index](../index.md)
