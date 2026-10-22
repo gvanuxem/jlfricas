@@ -46,12 +46,11 @@ in your shell first.
 For general installation instructions see INSTALL. For general documentation
 consult <https://fricas.github.io>.
 
-To build FriCAS with Julia support, the <code>julia</code> executable needs to be available in your PATH, and a simple <code>./configure --enable-julia && make && sudo make install</code> should do the trick. We require Julia 1.10 or higher. Please see https://julialang.org/downloads/ for instructions on how to obtain Julia for your system. The required Julia packages are (see the Julia package manager or if you install them later using `jlAddPackage` restart jlFriCAS):
+To build FriCAS with Julia support, the <code>julia</code> executable needs to be available in your PATH, and a simple <code>./configure --enable-julia && make && sudo make install</code> should do the trick. We require Julia 1.11 or higher. Please see https://julialang.org/downloads/ for instructions on how to obtain Julia for your system. The required Julia packages are (see the Julia package manager):
  - [Nemo](https://nemocas.github.io/Nemo.jl/stable/) (must be installed)
  - [Suppressor](https://github.com/JuliaIO/Suppressor.jl) (must be installed)
  - [SpecialFunctions](https://specialfunctions.juliamath.org/stable/) 
- - [StyledStrings](https://julialang.github.io/StyledStrings.jl/dev/) (if it is not already installed in Julia by default)
-
+ 
  And optionnally:
   - [MathLink](https://github.com/JuliaInterop/MathLink.jl) (use the option `--enable-mathlink` at configure time)
   - [PythonCall](https://juliapy.github.io/PythonCall.jl/stable/) (and CondaPkg if you want to install some Python® packages, use Julia for this)
@@ -68,7 +67,7 @@ If you want to visualize your data using Julia, small support is provided using 
 
 If you want to use [jFriCAS](https://jfricas.readthedocs.io/en/latest/) i.e. Jupyter support for FriCAS built with SBCL, make sure [hunchentoot](https://edicl.github.io/hunchentoot/) is installed. On a Debian like system you can add `hunchentoot` with <code>sudo apt install cl-hunchentoot</code> and issue, for example, <code>./configure --enable-gmp --enable-julia --enable-hunchentoot</code>.
 
-If you want to build and install the HTML documentation,
+If you want to build and install the local HTML documentation,
 you need to install [Sphinx](https://www.sphinx-doc.org/en/master/). On a Debian like system, to add it, issue in a
 terminal <code>sudo apt install python3-sphinx</code>.
 After building jlFriCAS, and before the installation, issue in your terminal <code>make htmldoc</code>.

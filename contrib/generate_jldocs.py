@@ -5,7 +5,7 @@ generate_jldocs.py – Build Markdown documentation for jlFriCAS constructors an
 Strategy
 --------
 1. Scans `src/algebra/*.spad` to discover all Julia-extension constructors
-   (Categories, Domains, Packages with JL*, NM*, WS*, JFriCAS* prefixes).
+   (Categories, Domains, Packages with JL*, NM*, WS* prefixes).
 2. For each constructor, queries FriCAS in batch mode (or extracts from SPAD):
    - constructorDocumentation('Name)$SpadDoc → Description
    - )show Name → Signatures
