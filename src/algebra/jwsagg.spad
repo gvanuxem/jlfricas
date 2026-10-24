@@ -125,7 +125,7 @@ WSAggregate(E : WSObject) : Category == WSObject with
     x = y  == jbinbop("==", x, y)
     x ~= y == jbinbop("!=", x, y)
     part(agg, i) == jbinfunc("W_"Part_"(", agg, i)
-    take(agg : %, i : Integer) == jbinfunc("W_"Take_"(", agg, jWSExpr(i))
+    take(agg : %, i : Integer) == jbinfunc("W_"Take_"(", agg, jWSExpression(i))
     take(agg : %, elems : WSList(WSInteger)) ==
       jbinfunc("W_"Take_"(", agg, elems)
     extract(agg : %, elems) == jbinfunc("W_"Extract_"(", agg, elems)
@@ -166,10 +166,10 @@ WSAggregate(E : WSObject) : Category == WSObject with
     qelt(agg, i) == jbinfunc("W_"Part_"(", agg, jWSInteger(i))
     setelt(agg, i, elem) ==
       i > integer length(agg) => error "setelt: index too large"
-      jbinfunc("W_"ReplacePart_"(", agg, jWSRule(jWSExpr(i),
+      jbinfunc("W_"ReplacePart_"(", agg, jWSRule(jWSExpression(i),
         elem pretend WSExpression))
     qsetelt(agg, i, elem) ==
-      jbinfunc("W_"ReplacePart_"(", agg, jWSRule(jWSExpr(i),
+      jbinfunc("W_"ReplacePart_"(", agg, jWSRule(jWSExpression(i),
         elem pretend WSExpression))
 
     -- TODO
@@ -177,13 +177,13 @@ WSAggregate(E : WSObject) : Category == WSObject with
     setelt!(agg,i,elem) ==
       i > integer length(agg) => error "setelt!: index too large"
       cmd := concat(["weval(W_"ReplacePart_"(", getind(agg), ",",
-        getind(jWSRule(jWSExpr(i), elem pretend WSExpression)),"))"])
+        getind(jWSRule(jWSExpression(i), elem pretend WSExpression)),"))"])
       ret : Integer := jl_setindex_wrap_eval_string(jlId(agg), cmd)$Lisp
       if ret = 0 then error "setelt!: bad element in input"
       agg
     qsetelt!(agg,i,elem) ==
       cmd := concat(["weval(W_"ReplacePart_"(", getind(agg), ",",
-        getind(jWSRule(jWSExpr(i), elem pretend WSExpression)),"))"])
+        getind(jWSRule(jWSExpression(i), elem pretend WSExpression)),"))"])
       ret : Integer := jl_setindex_wrap_eval_string(jlId(agg),cmd)$Lisp
       if ret = 0 then error "setelt!: bad element in input"
       agg
@@ -599,9 +599,9 @@ WSMatrix(E : WSRing) : Exports == Implementation where
     elt(m, i) ==
       i > integer last(dimensions(m)) =>
         error "elt$WSMatrix: index is too large"
-      jbinfunc("W_"Extract_"", m, jWSExpr(concat(["{All,", string(i),"}("])))
+      jbinfunc("W_"Extract_"", m, jWSExpression(concat(["{All,", string(i),"}("])))
     qelt(m, i) ==
-      jbinfunc("W_"Extract_"", m, jWSExpr(concat(["{All,", string(i),"}("])))
+      jbinfunc("W_"Extract_"", m, jWSExpression(concat(["{All,", string(i),"}("])))
     row(m, i) ==
       i > integer first(dimensions(m)) =>
         error "row$WSMatrix: index is too large"
@@ -609,7 +609,7 @@ WSMatrix(E : WSRing) : Exports == Implementation where
     column(m, i) ==
       i > integer last(dimensions(m)) =>
         error "column$WSMatrix: index is too large"
-      jbinfunc("W_"Extract_"", m, jWSExpr(concat(["{All,", string(i),"}("])))
+      jbinfunc("W_"Extract_"", m, jWSExpression(concat(["{All,", string(i),"}("])))
 
     transpose(mat) == junfunc("W_"Transpose_"(", mat)
     adjoint(mat) == junfunc("W_"ConjugateTranspose_"(", mat)

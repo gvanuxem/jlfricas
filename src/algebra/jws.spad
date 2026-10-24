@@ -17,7 +17,7 @@ WSObject() : Category == JLObjectType() with
     ++ \example{jWSInterpret("Number","3.2")@WSREAL}
     ++ \example{jWSInterpret("Real","3.2")@WSREAL}
     ++ \example{jWSInterpret("Location","Lille")$WSEXPR}
-    ++ See jWSExpr "\$InterpreterTypes"
+    ++ See jWSExpression "\$InterpreterTypes"
     jWSInterpret : (String, String, String) -> %
     ++ jWSInterpret(form1,form2,form3) interprets forms.
     jlEval  : % -> %
@@ -348,7 +348,9 @@ WSInteger() : Exports == Implementation where
     stirling1(n,m) == jbinfunc("W_"StirlingS1_"(", n, m)
     stirling2(n,m) == jbinfunc("W_"StirlingS2_"(", n, m)
     -- TODO: factor jWSInteger 70421676397833365421106577172389167104000000000000
-    factor(n)         == junfunc("W_"FactorInteger_"(", n)
+    factor(n) : Factored(%) ==
+      error "factor is not implemented for WSInteger, use factor@WSList(WSList(WSInteger)) or factorInteger$WSExpression instead" 
+    factor(n) : WSList WSList(%) == junfunc("W_"FactorInteger_"(", n)
 
     prime?(z) == junfunc("W_"PrimeQ_"(", z) = WT
 
@@ -566,8 +568,8 @@ WSReal() : Exports == Implementation where
 
     0     == jlref("WReal(_"0_")")
     1     == jlref("WReal(_"1_")")
-    pi()  == jWSExpr("N[Pi]")$WSExpression pretend %
-    exp() == jWSExpr("N[E]")$WSExpression pretend %
+    pi()  == jWSExpression("N[Pi]")$WSExpression pretend %
+    exp() == jWSExpression("N[E]")$WSExpression pretend %
     WT : WSSymbol := WTrue()
     --catalan()
     --goldenRatio()
@@ -715,7 +717,7 @@ WSReal() : Exports == Implementation where
     dilog(x)    == jbinfunc("W_"PolyLog_"(", coerce(2)@WSInteger, x)
     differentiate x == 0
 
-    urand01() == jlEval(jWSExpr("RandomReal[]")) pretend %
+    urand01() == jlEval(jWSExpression("RandomReal[]")) pretend %
 
     toString(x, p : NonNegativeInteger) ==
       n := # string integerPart x
@@ -854,9 +856,9 @@ WSAPReal(prec : PositiveInteger) : Exports == Implementation where
     WT : WSSymbol := WTrue()
 
     pi()  ==
-      jWSExpr(concat(["N[Pi,", string(prec),"]"]))$WSExpression pretend %
+      jWSExpression(concat(["N[Pi,", string(prec),"]"]))$WSExpression pretend %
     exp() ==
-      jWSExpr(concat(["N[E,", string(prec),"]"]))$WSExpression pretend %
+      jWSExpression(concat(["N[E,", string(prec),"]"]))$WSExpression pretend %
 
     -- redefine constructors?
     -- string, floats...
@@ -998,10 +1000,10 @@ WSAPReal(prec : PositiveInteger) : Exports == Implementation where
     differentiate x == 0
 
     urand01() ==
-      jlEval jWSExpr(concat(["RandomReal[WorkingPrecision->",
+      jlEval jWSExpression(concat(["RandomReal[WorkingPrecision->",
         string(prec pretend Integer),"]"])) pretend %
     string(x) : String ==
-      toString(x pretend WSExpression, jWSExpr("OutputForm"))
+      toString(x pretend WSExpression, jWSExpression("OutputForm"))
     convert(obj) : String == string obj
     toString(x) ==
       str := toString(x pretend WSExpression)
@@ -1344,7 +1346,7 @@ WSComplex() : Exports == Implementation where
       jbinfunc("W_"PolyLog_"(", two, z)
     differentiate x == 0
 
-    urand01() == jWSExpr("RandomComplex[]") pretend %
+    urand01() == jWSExpression("RandomComplex[]") pretend %
     string(z) == toString z
     convert(z) : String == string z
     toString(z, form) == string jbinfunc("W_"ToString_"(", z, form)
@@ -1442,7 +1444,7 @@ WSAPComplex(prec : PositiveInteger) : Exports == Implementation where
     import from WSExpression
     jlInitialize(true)
 
-    error1(msg, f) ==> error concat [msg, " ", toString(f, jWSExpr "OutputForm")]
+    error1(msg, f) ==> error concat [msg, " ", toString(f, jWSExpression "OutputForm")]
     bool(a) ==> coerce(a)$WSSymbol
 
     if not jlUsing("MathLink") then
@@ -1570,9 +1572,9 @@ WSAPComplex(prec : PositiveInteger) : Exports == Implementation where
     differentiate x == 0
 
     urand01() ==
-      jWSExpr(concat(["RandomComplex[WorkingPrecision->",
+      jWSExpression(concat(["RandomComplex[WorkingPrecision->",
         string(prec),"]"])) pretend %
-    string(z) == toString(z pretend WSExpression, jWSExpr("OutputForm"))
+    string(z) == toString(z pretend WSExpression, jWSExpression("OutputForm"))
     convert(obj) : String == string obj
     toString(z, form) == string jbinfunc("W_"ToString_"(", z, form)
     coerce(z : %) : WSExpression == z pretend WSExpression

@@ -6,7 +6,7 @@
 ++  Julia Wolfram Symbolic expressions using the MathLink Julia package.
 ++ It supports the Eltable category (interface) so, for example
 ++ using Fibonacci polynomials
-++ fibonacci(12,jWSExpr x) =>
+++ fibonacci(12,jWSExpression x) =>
 ++             3       5       7       9    11
 ++   6 x + 35 x  + 56 x  + 36 x  + 10 x  + x
 ++ %.5 => 10*x^9
@@ -251,7 +251,7 @@ WSExpression() : Exports == Implementation where
     legendreQ : (%, %) -> %
     ++ legendreQ(n, x) returns the Legendre function
     ++ of the second kind or evaluates it at x if x is a number.
-    ++ \example{legendreQ(3,jWSExpr x)}
+    ++ \example{legendreQ(3,jWSExpression x)}
     legendreP  : (%, %, %) -> %
     ++ legendreP(n, m, x) returns the associated Legendre polynomial
     ++ of the first type or evaluates it at x if x is a number.
@@ -280,7 +280,7 @@ WSExpression() : Exports == Implementation where
     ++ laguerreL(n, x) returns the Laguerre polynomial or evaluates
     ++ it at x if x is a number.
     ++ For example:
-    ++ \example{laguerreL(5, jWSExpr x)}
+    ++ \example{laguerreL(5, jWSExpression x)}
     laguerreL : (%, %, %) -> %
     ++ laguerreL(n, a, x) returns the generalized Laguerre polynomial
     ++ or evaluates it at x if x is a number.
@@ -402,30 +402,30 @@ WSExpression() : Exports == Implementation where
     ++ the list of coefficients l. Or from the list of lists l (list of pairs as list
     ++ (n-th, coef-th)).
     ++ For example:
-    ++ \example{guessGeneratingFunction(jWSExpr("{1,2,4,8}"),x)}
+    ++ \example{guessGeneratingFunction(jWSExpression("{1,2,4,8}"),x)}
     guessSequenceFunction : WSList(WSInteger) -> %
     ++ guessSequenceFunction(l) finds the sequence from the list of coefficients l.
     ++ For example:
-    ++ \example{guessSequenceFunction(jWSExpr("{1,2,4,8}"))}
+    ++ \example{guessSequenceFunction(jWSExpression("{1,2,4,8}"))}
     guessSequenceFunction : % -> %
     ++ guessSequenceFunction(l) finds the sequence from the list of coefficients l
     ++ Or from the list of lists l (list of pairs as list (n-th, coef-th)).
     ++ For example:
-    ++ \example{guessSequenceFunction(jWSExpr("{1,2,4,8}"))}
+    ++ \example{guessSequenceFunction(jWSExpression("{1,2,4,8}"))}
     guessSequenceFunction : (%, %) -> %
     ++ guessSequenceFunction(l,x) finds the sequence function applied to x from the
     ++ list of coefficients l. For example:
     ++ \example{guessSequenceFunction([1,2,4,jWSInteger 8]::WSList(WSInteger),x)}
     series : (%, %) -> %
     ++ series(expr, opt) returns a series from expr.
-    ++ \example{x:=jWSExpr(x);a:=jWSExpr(a);}
+    ++ \example{x:=jWSExpression(x);a:=jWSExpression(a);}
     ++ \example{opt:=jWSList [x,pi()$WSEXPR/4,7]}
     ++ \example{series(sin(a*x),opt)}
     ++ \example{series(cos(x),"\{x, 0, 12\}")}
     ++ \example{series(inverseErfc(x),"\{x,0,3\}")}
     sum : (%, %) -> %
     ++ sum(f(n),range) returns the sum f(imin) + ... + f(imax) defined
-    ++ by the list range, for example \example{jWSExpr("\{i, imin, imax\}")}.
+    ++ by the list range, for example \example{jWSExpression("\{i, imin, imax\}")}.
     ++ See Wolfram Language specifications.
     sum : (%, %, Segment(Integer)) -> %
     ++ sum(f(n),n, a..b) returns the sum f(a) + ... + f(b).
@@ -433,7 +433,7 @@ WSExpression() : Exports == Implementation where
     ++ sum(f(n),n) returns the indefinite sum of f(n).
     product : (%, %) -> %
     ++ product(f(n),range) returns the product f(imin) * ... * f(imax) defined
-    ++ by the list range, for example \example{jWSExpr("\{i, imin, imax\}")}.
+    ++ by the list range, for example \example{jWSExpression("\{i, imin, imax\}")}.
     ++ See Wolfram language specifications.
     product : (%, %, Segment(Integer)) -> %
     ++ product(f(n),n, a..b) returns the product f(a) * ... * f(b).
@@ -442,7 +442,7 @@ WSExpression() : Exports == Implementation where
     numericSum : (%, %) -> %
     ++ numericSum(f(n),range) returns an evaluated numerical approximation of
     ++ the sum f(imin) + ... + f(imax) defined by the list range,
-    ++ for example \example{jWSExpr("\{i, imin, imax\}")}.
+    ++ for example \example{jWSExpression("\{i, imin, imax\}")}.
     ++ See Wolfram language specifications.
     numericSum     : (%, %, Segment(Integer)) -> %
     ++ numericSum(f(n),n, a..b) returns an evaluated numerical approximation of the
@@ -450,7 +450,7 @@ WSExpression() : Exports == Implementation where
     numericProduct : (%, %) -> %
     ++ numericProduct(f(n),range) returns an evaluated numerical approximation of
     ++ the sum f(imin) + ... + f(imax) defined by the list range,
-    ++ for example \example{jWSExpr("\{i, imin, imax\}")}.
+    ++ for example \example{jWSExpression("\{i, imin, imax\}")}.
     ++ See Wolfram language specifications.
     numericProduct : (%, %, Segment(Integer)) -> %
     ++ numericProduct(f(n),n, a..b) returns an evaluated numerical approximation of the
@@ -473,7 +473,7 @@ WSExpression() : Exports == Implementation where
     ++ numericMinimize(expr, vars) minimizes numerically the expression
     ++ function expr with respect to vars. For example,
     ++ global optimization from the SIAM 100 digits challenge:
-    ++ \example{x := jWSExpr(x);y:=jWSExpr y;}
+    ++ \example{x := jWSExpression(x);y:=jWSExpression y;}
     ++ \example{expr := exp(sin(50*x))+sin(60*exp(y))+ sin(70*sin(x))+
     ++ sin(sin(80*y))-sin(10*(x+y))+(x^2+y^2)/4}
     ++ \example{numericMinimize(expr, jWSList [x,y])}
@@ -511,7 +511,7 @@ WSExpression() : Exports == Implementation where
     integrate : (%, %) -> %
     ++ integrate(expr, opts|var) integrates expr with respect to opt or var
     ++ as options. For example:
-    ++ \example{x:=jWSExpr x;integrate(1/(x^4-1),x)}
+    ++ \example{x:=jWSExpression x;integrate(1/(x^4-1),x)}
     ++ \example{opt:=jWSList [x,-1,1]}
     ++ \example{integrate(cos(x),opt)}
     ++ => 2 sin(1)
@@ -533,7 +533,7 @@ WSExpression() : Exports == Implementation where
     ++ limit(expr, params) returns the limit, eventually nested or
     ++ multivariate, of expr.
     ++ For example:
-    ++ \example{x:=jWSExpr x; limit(sin(x)-sin(x-1/x),"x->Infinity")}
+    ++ \example{x:=jWSExpression x; limit(sin(x)-sin(x-1/x),"x->Infinity")}
     minLimit : (%, %) -> %
     ++ minLimit(expr, params) returns the min limit, eventually nested or
     ++ multivariate, of expr.
@@ -593,19 +593,19 @@ WSExpression() : Exports == Implementation where
     derivative : (BasicOperator, %, %) -> %
     ++ derivative(func, n, var) returns the derivative of order n of func
     ++ applied to var.
-    ++ \example{x := jWSExpr x}
+    ++ \example{x := jWSExpression x}
     ++ \example{fprimex:=derivative(operator('f),1,x)}
     dSolve : (%, %, %) -> %
     ++ dSolve(expr, funcs, vars) solves the (list of) differential equation(s)
     ++ expr for the function(s) funcs with independent variable(s) vars.
-    ++ \example{x:=jWSExpr x;}
+    ++ \example{x:=jWSExpression x;}
     ++ \example{fx:=derivative(operator('f),0,x)}
     ++ \example{fprimex:=derivative(operator('f),1,x)}
     ++ \example{dSolve(jWSEqual(fprimex + fx , a *sin(x)),fx,x)}
     dSolve : (Equation(%), %, %)  -> %
     ++ dSolve(eq, func,var) solves the differential equation eq
     ++ for the function(s) funcs with independent variable(s) vars.
-    ++ \example{x:=jWSExpr x;}
+    ++ \example{x:=jWSExpression x;}
     ++ \example{fx:=derivative(operator('f),0,x)}
     ++ \example{fprimex:=derivative(operator('f),1,x)}
     ++ \example{dSolve(fprimex + fx = a * sin(x)/cos(x),fx,x)}
@@ -613,12 +613,12 @@ WSExpression() : Exports == Implementation where
     ++ dSolveValue(expr,funcs, vars) returns the value determined by the
     ++ differential equation(s) in expr for the function(s) funcs
     ++ with independent variable(s) vars.
-    ++ \example{x:=jWSExpr x;}
+    ++ \example{x:=jWSExpression x;}
     ++ \example{f:=derivative(operator('f),0)}
     ++ \example{f0:=derivative(operator('f),0,0)}
     ++ \example{fx:=derivative(operator('f),0,x)}
     ++ \example{fprimex:=derivative(operator('f),1,x)}
-    ++ \example{dSolveValue(jWSExpr([jWSEqual(fprimex + fx , a *sin(x)/cos(x)), jWSEqual(f0,0)]),f,x)}
+    ++ \example{dSolveValue(jWSExpression([jWSEqual(fprimex + fx , a *sin(x)/cos(x)), jWSEqual(f0,0)]),f,x)}
     dSolveValue : (Equation(%), %, %)  -> %
     ++ dSolveValue(eq, func,var) returns the value determined by the
     ++ differential equation eq for the function func
@@ -708,18 +708,18 @@ WSExpression() : Exports == Implementation where
     ++ variables(p) returns the list of variables in p.
     exponent  : (%, %) -> %
     ++ exponent(p,expr) returns the maximum exponent of p for expr.
-    ++ \example{x:= jWSExpr x;y := jWSExpr y}
+    ++ \example{x:= jWSExpression x;y := jWSExpression y}
     ++ \example{p:=(x^2-2)^3*(y*x^3+x^11*y^7)*(y^5+x*y^2+x^11+y)}
     ++ \example{exponent(%,(x^2-2))}
     exponent  : (%, %, %) -> %
     ++ exponent(p, expr, map) applies map to the exponents related to expr
     ++ and returns it. By default map = "Max".
-    ++ \example{x:= jWSExpr x;y := jWSExpr y}
+    ++ \example{x:= jWSExpression x;y := jWSExpression y}
     ++ \example{p:=expand((x^2-2)^3*(y*x^3+x^11*y^7)*(y^5+x*y^2+x^11+y))}
     ++ \example{exponent(p,x,"Min")}
     coefficient : (%, %) -> %
     ++ coefficient(p,expr) returns the coefficient of expr in p.
-    ++ \example{x:= jWSExpr x}
+    ++ \example{x:= jWSExpression x}
     ++ \example{coefficient((x - y)^4, x * y^3)}
     coefficient : (%, %, %) -> %
     ++ coefficient(p, expr, n) returns the coefficient of expr^n in p.
@@ -734,9 +734,9 @@ WSExpression() : Exports == Implementation where
     fromCoefficientRules : (%, %) -> %
     ++ fromCoefficientRules(list, vars) constructs the polynomial
     ++ from the list of coefficients and exponents rules.
-    ++ \example{x:= jWSExpr x;y := jWSExpr y}
-    ++ \example{coefficientRules((x + y)^2+x^11,jWSExpr [x,y])}
-    ++ \example{fromCoefficientRules(%, jWSExpr [x,y])}
+    ++ \example{x:= jWSExpression x;y := jWSExpression y}
+    ++ \example{coefficientRules((x + y)^2+x^11,jWSExpression [x,y])}
+    ++ \example{fromCoefficientRules(%, jWSExpression [x,y])}
     monomialList : % -> %
     ++ monomialList(p) returns the list of monomials in p.
 
@@ -799,19 +799,23 @@ WSExpression() : Exports == Implementation where
     ++ the polynomial poly in terms of the polynomial list lpoly with
     ++ respect to the list of variables lvar.
 
+    factorInteger : % -> % 
+    ++ factorInteger(n) factorizes the integer n into its prime factors.
+    ++ For example:
+    ++ \example{n := jWSExpression 70421676397833365421106577172389167104000000000000}
+    ++ \example{factorInteger n}
     factorPolynomial : % -> %
     ++ factorPolynomial(p) factorizes the polynomial p.
     ++ For example:
-    ++ \example{x := jWSExpr x}
+    ++ \example{x := jWSExpression x}
     ++ \example{p:=expand(chebyshevT(7,x)* chebyshevU(9,x))}
     ++ \example{factorPolynomial p}
-    -- TODO: factor jWSExpr 70421676397833365421106577172389167104000000000000
     factor : % -> %
     ++ factor(expr) factors the expression or polynomial expr.
     factor : (%, %) -> %
     ++ factor(expr, opt) factors the expression or polynomial expr.
     ++ For example:
-    ++ \example{x := jWSExpr x;}
+    ++ \example{x := jWSExpression x;}
     ++ \example{factor(1 + x^2, "GaussianIntegers -> True")}
     factorSquareFree : % -> %
     ++ factorSquareFree(expr) factors the expression or polynomial expr in square
@@ -860,7 +864,7 @@ WSExpression() : Exports == Implementation where
     ++ in the variable var of the expression expr.
     findRoot : (%, %) -> %
     ++ findRoot(expr,start) tries to find the root of expr starting at start.
-    ++ \example{x:= jWSExpr x}
+    ++ \example{x:= jWSExpression x}
     ++ \example{findRoot(sin(x) + cos(x), "\{x, 0\}")}
 
     --finiteField : (%, %) -> %
@@ -870,8 +874,8 @@ WSExpression() : Exports == Implementation where
     ++ normal(expr) converts expr to a normal expression from different
     ++ expression types. Can be applied to a power series for example.
     ++ For example:
-    ++ \example{x:=jWSExpr x}
-    ++ \example{s:=series(exp(x),jWSExpr "\{x,0,10\}")}
+    ++ \example{x:=jWSExpression x}
+    ++ \example{s:=series(exp(x),jWSExpression "\{x,0,10\}")}
     ++ \example{normal(s)::EXPR INT}
     normal   : (%, %) -> %
     ++ normal(expr, list(Head)||Head) converts objects in expr to a normal
@@ -879,16 +883,16 @@ WSExpression() : Exports == Implementation where
     ++ list of Head-s.
     simplify : % -> %
     ++ simplify(expr) simplifies the expr.
-    ++ \example{x:=jWSExpr("x"); simplify(sqrt(x^2)^2)}
+    ++ \example{x:=jWSExpression("x"); simplify(sqrt(x^2)^2)}
     simplify : (%, %) -> %
     ++ simplify(expr, assumptions) simplifies the expression expr
     ++ assuming that assumptions are satisfied.
     ++ For example:
-    ++ \example{x:=jWSExpr("x"); simplify(sqrt(x^2), "x>0")}
+    ++ \example{x:=jWSExpression("x"); simplify(sqrt(x^2), "x>0")}
     extendedSimplify : % -> %
     ++ extendedSimplify(expr) is the extended version of simplify.
     ++ This is the full version of simplify.
-    ++ \example{x:= jWSExpr x}
+    ++ \example{x:= jWSExpression x}
     ++ \example{expr := Gamma(x)/Gamma(x-1)}
     ++ Compare with simplify(expr).
     ++ \example{extendedSimplify(expr)}
@@ -940,7 +944,7 @@ WSExpression() : Exports == Implementation where
     distribute : % -> %
     ++ distribute(expr) distributes expr over addition.
     ++ For illustration:
-    ++ \example{distribute(jWSExpr "(x + y) * (a + b + c)")}
+    ++ \example{distribute(jWSExpression "(x + y) * (a + b + c)")}
     distribute : (%, %) -> %
     ++ distribute(f,g) distributes f over g.
     hornerForm : (%, %) -> %
@@ -1008,12 +1012,12 @@ WSExpression() : Exports == Implementation where
     ++ jlEval(expr, param) evaluates expression expr with param as parameter(s).
     ++ See also `eval` or `replaceAll`.
     ++ For example:
-    ++ \example{x:=jWSExpr("x");jlEval(sqrt(x),"x=2.0")}
+    ++ \example{x:=jWSExpression("x");jlEval(sqrt(x),"x=2.0")}
     jlEval    : (%, String, String) -> %
     ++ jlEval(expr, param1, param2) evaluates expression expr
     ++ with param1 and param2 as parameters.
     ++ See also `eval` or `replaceAll`.
-    ++ \example{a:=jWSExpr("a");b:=jWSExpr("b");}
+    ++ \example{a:=jWSExpression("a");b:=jWSExpression("b");}
     ++ \example{jlEval(sqrt(a^2+b^2),"a=1.0","b=1.0")}
     jlEval    : (%, String, String, String) -> %
     ++ jlEval(expr, param11, param2, param3) evaluates expression expr
@@ -1045,7 +1049,7 @@ WSExpression() : Exports == Implementation where
     jlDisplay : WSExpression -> WSExpression
     ++ jlDisplay(expr) returns the traditional form of expr.
     ++ This is equivalent to:
-    ++ jWSExpr "Format[Sin[x]]" => sin(x)
+    ++ jWSExpression "Format[Sin[x]]" => sin(x)
     jlDisplay : (WSExpression, WSExpression) -> WSExpression
     ++ jlDisplay(expr, form) returns the `form` form of expr
     ++ resulting for example in: "Format[Sin[x], TeXForm]" => \sin x
@@ -1083,7 +1087,7 @@ WSExpression() : Exports == Implementation where
     ++ percentForm(x) returns the printed representation
     ++ of x in percent form.
     ++ For example:
-    ++ \example{percentForm jWSExpr 0.50}
+    ++ \example{percentForm jWSExpression 0.50}
     percentForm : (%, %) -> %
     ++ percentForm(x,n) returns the printed representation
     ++ of x in percent with n digits of precision.
@@ -1210,9 +1214,9 @@ WSExpression() : Exports == Implementation where
     jWSRule : Equation(%) -> %
     ++ jWSRule(eq) returns the Julia WS rule lhs->rhs for the equation eq.
     ++ For example:
-    ++ \example{x := jWSExpr x}
+    ++ \example{x := jWSExpression x}
     ++ \example{p := 1/2 * legendreQ(5,x)}
-    ++ \example{replaceAll(p, jWSRule(x = jWSExpr "1.55555556444883838383833777333333333"))}
+    ++ \example{replaceAll(p, jWSRule(x = jWSExpression "1.55555556444883838383833777333333333"))}
     jWSEqual : (%,  %) -> %
     ++ jWSEqual(lhs,rhs) returns the Julia WS equality lhs == rhs.
     jWSNotEqual : (%,  %) -> %
@@ -1233,34 +1237,34 @@ WSExpression() : Exports == Implementation where
     ++ jWSQuantity(x,jWSString(u)) returns quantity unit u of x.
     ++ For example:
     ++ \example{jWSQuantity(1.2, jWSString "Meter")}
-    jWSExpr : Symbol -> %
-    ++ jWSExpr(sym) coerces sym to a WSExpression.
+    jWSExpression : Symbol -> %
+    ++ jWSExpression(sym) coerces sym to a WSExpression.
     ++ For example:
-    ++ x := jWSExpr x
-    jWSExpr : Integer -> %
-    ++ jWSExpr(z) returns the Integer z as a WSExpression.
-    jWSExpr : Fraction Integer -> %
-    ++ jWSExpr(q)  returns the Fraction(Integer) q as a WSExpression.
-    jWSExpr : DoubleFloat -> %
-    ++ jWSExpr(r)  returns the DoubleFloat as a WSExpression.
-    jWSExpr : JLFloat64 -> %
-    ++ jWSExpr(r)  returns the JLFloat64  as a WSExpression.
-    jWSExpr : Float -> %
-    ++ jWSExpr(r)  returns the Float r as a WSExpression.
-    jWSExpr : JLFloat -> %
-    ++ jWSExpr(r)  returns the JLFloat r as a WSExpression.
-    jWSExpr : List(%) -> %
-    ++ jWSExpr(list) returns the list of WSExpression
+    ++ x := jWSExpression x
+    jWSExpression : Integer -> %
+    ++ jWSExpression(z) returns the Integer z as a WSExpression.
+    jWSExpression : Fraction Integer -> %
+    ++ jWSExpression(q)  returns the Fraction(Integer) q as a WSExpression.
+    jWSExpression : DoubleFloat -> %
+    ++ jWSExpression(r)  returns the DoubleFloat as a WSExpression.
+    jWSExpression : JLFloat64 -> %
+    ++ jWSExpression(r)  returns the JLFloat64  as a WSExpression.
+    jWSExpression : Float -> %
+    ++ jWSExpression(r)  returns the Float r as a WSExpression.
+    jWSExpression : JLFloat -> %
+    ++ jWSExpression(r)  returns the JLFloat r as a WSExpression.
+    jWSExpression : List(%) -> %
+    ++ jWSExpression(list) returns the list of WSExpression
     ++ as a WSExpression.
-    jWSExpr : String -> %
-    ++ jWSExpr(str) constructs str as a WSExpression evaluating
+    jWSExpression : String -> %
+    ++ jWSExpression(str) constructs str as a WSExpression evaluating
     ++ str as a Wolfram Symbolic Language expression.
     ++ For example:
-    ++ \example{jWSExpr "Factorial[5]"}
-    ++ \example{jWSExpr "3.14159"}
-    ++ \example{jlWSDateString(jWSExpr "Tomorrow")}
-    ++ \example{toString jWSExpr "TextSentences[WikipediaData[_"Sun_"]][[;; 40]]"}
-    ++ Example: jWSExpr "Probability[x < 1, x \[Distributed] NormalDistribution[]]"
+    ++ \example{jWSExpression "Factorial[5]"}
+    ++ \example{jWSExpression "3.14159"}
+    ++ \example{jlWSDateString(jWSExpression "Tomorrow")}
+    ++ \example{toString jWSExpression "TextSentences[WikipediaData[_"Sun_"]][[;; 40]]"}
+    ++ Example: jWSExpression "Probability[x < 1, x \[Distributed] NormalDistribution[]]"
   Implementation ==> JLObject add
     import from JLUtilityFunctions
     import from JLStringUtilities
@@ -1314,6 +1318,7 @@ WSExpression() : Exports == Implementation where
     WL : WSSymbol := WList()
     WT : WSSymbol := WTrue()
     WF : WSSymbol := WFalse()
+    WI : WSSymbol := WInteger()
     WRat : WSSymbol := WRational()
     WR : WSSymbol := WReal()
     WC : WSSymbol := WComplex()
@@ -1355,9 +1360,9 @@ WSExpression() : Exports == Implementation where
     x - y == jbinop("-", x, y)
     - x   == junfunc("-(", x)
     x : % * y : % == jbinop("*", x, y)
-    x : Integer * y : % == jbinop("*", jWSExpr(x), y)
-    x : PositiveInteger * y : % == jbinop("*", jWSExpr(x), y)
-    x : NonNegativeInteger * y : % == jbinop("*", jWSExpr(x), y)
+    x : Integer * y : % == jbinop("*", jWSExpression(x), y)
+    x : PositiveInteger * y : % == jbinop("*", jWSExpression(x), y)
+    x : NonNegativeInteger * y : % == jbinop("*", jWSExpression(x), y)
     x : % * y : Fraction(Integer) == jbinop("*", x, coerce(y)@WSRational)
     x : Fraction(Integer) * y : % == jbinop("*", coerce(x)@WSRational, y)
     x : % / y : % == jbinop("/", x, y)
@@ -1428,7 +1433,7 @@ WSExpression() : Exports == Implementation where
     fresnelS(x) == junfunc("W_"FresnelS_"(",x)
     li(x)       == junfunc("W_"LogIntegral_"(",x)
     dilog(x)    ==
-      two := jWSExpr("2")
+      two := jWSExpression("2")
       jbinfunc("W_"PolyLog_"(", two, x)
     dawson(x)   == junfunc("W_"DawsonF_"(",x)
 
@@ -1629,10 +1634,10 @@ WSExpression() : Exports == Implementation where
 
 
     D(expr : %, sym : Symbol) ==
-      jbinfunc("W_"D_"(", expr, jWSExpr(string(sym)))
+      jbinfunc("W_"D_"(", expr, jWSExpression(string(sym)))
     differentiate(expr : %, args : %) == jbinfunc("W_"D_"(", expr, args)
     differentiate(expr : %, sym : Symbol) ==
-      jbinfunc("W_"D_"(", expr, jWSExpr(string(sym)))
+      jbinfunc("W_"D_"(", expr, jWSExpression(string(sym)))
     D(expr : %, sym : Symbol, i : NonNegativeInteger) ==
       arg : % := jlref(concat(["W_`List[", string(sym), ",", string(i),"]_`"]))
       jbinfunc("W_"D_"(", expr, arg)
@@ -1643,7 +1648,7 @@ WSExpression() : Exports == Implementation where
 
     integrate(expr, range : %) == jbinfunc("W_"Integrate_"(", expr, range)
     integrate(expr : %, sym : Symbol) ==
-      jbinfunc("W_"Integrate_"(", expr, jWSExpr(string(sym)))
+      jbinfunc("W_"Integrate_"(", expr, jWSExpression(string(sym)))
     integrate(expr, sym, range: Segment(Integer)) ==
       arg : % := jlref(concat(["W_`List[", string(sym), ",",
         string(low(range)), ",", string(high(range)),"]_`"]))
@@ -1663,7 +1668,7 @@ WSExpression() : Exports == Implementation where
         string(low(range)), ",", string(high(range)),"]_`"]))
       jbinfunc("W_"Sum_"(", expr, arg)
     sum(expr, sym : Symbol) == jbinfunc("W_"Sum_"(",
-      expr, jWSExpr(string(sym)))
+      expr, jWSExpression(string(sym)))
     numericSum(expr, range : %) == jbinfunc("W_"NSum_"(",
       expr, range)
     numericSum(expr, sym, range: Segment(Integer)) ==
@@ -1676,7 +1681,7 @@ WSExpression() : Exports == Implementation where
         string(low(range)), ",", string(high(range)),"]_`"]))
       jbinfunc("W_"Product_"(", expr, arg)
     product(expr, sym : Symbol) == jbinfunc("W_"Product_"(",
-      expr, jWSExpr(string(sym)))
+      expr, jWSExpression(string(sym)))
     numericProduct(expr, range : %) == jbinfunc("W_"NProduct_"(", expr, range)
     numericProduct(expr, sym, range: Segment(Integer)) ==
       arg : % := jlref(concat(["W_`List[", string(sym), ",",
@@ -1685,25 +1690,25 @@ WSExpression() : Exports == Implementation where
 
     minimize(expr, vars : %) == jbinfunc("W_"Minimize_"(", expr, vars)
     minimize(expr : %, sym : Symbol) ==
-      jbinfunc("W_"Minimize_"(", expr, jWSExpr(string(sym)))
+      jbinfunc("W_"Minimize_"(", expr, jWSExpression(string(sym)))
     minimize(expr, vars : %, dom : %) ==
       jterfunc("W_"Minimize_"(", expr, vars, dom)
 
     numericMinimize(expr, vars : %) == jbinfunc("W_"NMinimize_"(", expr, vars)
     numericMinimize(expr : %, sym : Symbol) ==
-      jbinfunc("W_"NMinimize_"(", expr, jWSExpr(string(sym)))
+      jbinfunc("W_"NMinimize_"(", expr, jWSExpression(string(sym)))
     numericMinimize(expr, vars : %, dom :%) ==
       jterfunc("W_"NMinimize_"(", expr, vars, dom)
 
     maximize(expr, vars : %) == jbinfunc("W_"Maximize_"(", expr, vars)
     maximize(expr : %, sym : Symbol) ==
-      jbinfunc("W_"Maximize_"(", expr, jWSExpr(string(sym)))
+      jbinfunc("W_"Maximize_"(", expr, jWSExpression(string(sym)))
     maximize(expr, vars : %, dom : %) ==
       jterfunc("W_"Maximize_"(", expr, vars, dom)
 
     numericMaximize(expr, vars : %) == jbinfunc("W_"NMaximize_"(", expr, vars)
     numericMaximize(expr : %, sym : Symbol) ==
-      jbinfunc("W_"NMaximize_"(", expr, jWSExpr(string(sym)))
+      jbinfunc("W_"NMaximize_"(", expr, jWSExpression(string(sym)))
     numericMaximize(expr, vars : %, dom : %) ==
       jterfunc("W_"NMaximize_"(", expr, vars, dom)
 
@@ -1726,9 +1731,9 @@ WSExpression() : Exports == Implementation where
       jbinfunc("W_"NSolve_"(", expr, vars)
     realNumericSolve(eq : Equation(%), vars : %) ==
       expr := jWSEqual(lhs eq, rhs eq)
-      jterfunc("W_"NSolve_"(", expr, vars, jWSExpr("Reals"))
+      jterfunc("W_"NSolve_"(", expr, vars, jWSExpression("Reals"))
     realNumericSolve(expr : %, vars : %) ==
-      jterfunc("W_"NSolve_"(", expr, vars, jWSExpr("Reals"))
+      jterfunc("W_"NSolve_"(", expr, vars, jWSExpression("Reals"))
 
     fourier(expr : %) == junfunc("W_"Fourier_"(", expr)
     fourier(expr : %, lpos : %) == jbinfunc("W_"Fourier_"(", expr, lpos)
@@ -1746,12 +1751,12 @@ WSExpression() : Exports == Implementation where
     derivative(op, n) ==
       d := string name op
       expr : String := concat(["Derivative[", toString(n),"][", d,"]"])
-      jWSExpr expr
+      jWSExpression expr
     derivative(op, n, var) ==
       d:= string name op
       expr : String := concat(["Derivative[",
         toString(n),"][", d,"][", toString(var),"]"])
-      jWSExpr expr
+      jWSExpression expr
     dSolve(expr : %, u : %, var : %) == jterfunc("W_"DSolve_"(", expr, u, var)
     dSolve(eq : Equation(%), u : %, var : %) ==
       expr := jWSEqual(lhs eq, rhs eq)
@@ -1868,8 +1873,11 @@ WSExpression() : Exports == Implementation where
     polynomialReduce(poly,lpoly,lvar) ==
       jterfunc("W_"PolynomialReduce_"(",poly,lpoly,lvar)
 
+    factorInteger(n) == junfunc("W_"FactorInteger_"(", n)
     factorPolynomial(p) == junfunc("W_"Factor_"(", p)
-    factor(p) == junfunc("W_"Factor_"(", p)
+    factor(expr : %) ==
+      jlHead(expr) = WI => junfunc("W_"FactorInteger_"(", expr)
+      junfunc("W_"Factor_"(", expr)
     factor(p, opt) == jbinfunc("W_"Factor_"(", p, opt)
     factorTerms(p) == junfunc("W_"FactorTerms_"(", p)
     factorTerms(p, var : %) == jbinfunc("W_"FactorTerms_"(", p, var)
@@ -1956,10 +1964,10 @@ WSExpression() : Exports == Implementation where
     eval(expr : %, param : Equation(%)) == replaceAll(expr, jWSRule param)
 
     length(expr) == junfunc("W_"Length_"(", expr)
-    extract(expr, i) == jbinfunc("W_"Extract_"(", expr, jWSExpr(string(i)))
+    extract(expr, i) == jbinfunc("W_"Extract_"(", expr, jWSExpression(string(i)))
     level(expr, level) == jbinfunc("W_"Level_"(", expr, level)
     level(expr, level, head) ==
-      if head then jterfunc("W_"Level_"(", expr, level, jWSExpr "Heads -> True")
+      if head then jterfunc("W_"Level_"(", expr, level, jWSExpression "Heads -> True")
       else jbinfunc("W_"Level_"(", expr, level)
     lookup(assocs,keys) == jbinfunc("W_"Lookup_"(",assocs,keys)
     lookup(assocs,keys,def) == jterfunc("W_"Lookup_"(",assocs,keys,def)
@@ -1982,7 +1990,7 @@ WSExpression() : Exports == Implementation where
     replaceAll(expr, rule) == jbinfunc("W_"ReplaceAll_"(", expr, rule)
     replaceRepeated(expr, rule) == jbinfunc("W_"ReplaceRepeated_"(", expr, rule)
     -- HERE: operator form
-    --jWSExpr concat(["ReplaceAll[", toString(rule),"][", toString(expr), "]"])
+    --jWSExpression concat(["ReplaceAll[", toString(rule),"][", toString(expr), "]"])
     select(expr, form) == jbinfunc("W_"Select_"(", expr, form)
     select(expr, form, n) == jterfunc("W_"Select_"(", expr, form, n)
     jlWSPrecision(expr) == junfunc("W_"Precision_"(", expr)
@@ -1992,7 +2000,7 @@ WSExpression() : Exports == Implementation where
     jlWSSetOptions(arg1, arg2) == jbinfunc("W_"SetOptions_"(", arg1, arg2)
     jlDisplay(expr) == junfunc("W_"Format_"(", expr)
     jlDisplay(expr, form) == jbinfunc("W_"Format_"(", expr, form)
-    jWSData() == jWSExpr "WolframLanguageData[]"
+    jWSData() == jWSExpression "WolframLanguageData[]"
     jWSData(ents : String) ==
       junfunc("W_"WolframLanguageData_"(", jWSString(ents))
     jWSData(ent : String, prop : String) ==
@@ -2021,28 +2029,33 @@ WSExpression() : Exports == Implementation where
     jWSGreaterEqual(lhs, rhs) == jbinfunc("W_"GreaterEqual_"(", lhs, rhs)
     jWSQuantity(u) == junfunc("W_"Quantity_"(", u)
     jWSQuantity(m,u) == jbinfunc("W_"Quantity_"(", m, u)
-    jWSExpr(i : Integer) == jlref(concat(["WInteger(_"", string(i), "_")"]))
-    jWSExpr(q : Fraction(Integer)) == jWSRational(q)$WSRational pretend %
-    jWSExpr(r : DoubleFloat) == jWSReal(r)$WSReal pretend %
-    jWSExpr(r : JLFloat64) == jWSReal(r)$WSReal pretend %
-    jWSExpr(r : Float) == jWSReal(r)$WSReal pretend %
-    jWSExpr(r : JLFloat) == jWSExpr(string(r))
-    jWSExpr(sym : Symbol) : % == jlref(concat(["weval(W_`", string(sym),  "_`)"]))
-    jWSExpr(str : String) : % == jlref(concat(["weval(W_`", str, "_`)"]))
-    jWSExpr(l : List(%)) : % == coerce(l)
+    jWSExpression(i : Integer) == jlref(concat(["WInteger(_"", string(i), "_")"]))
+    jWSExpression(q : Fraction(Integer)) == jWSRational(q)$WSRational pretend %
+    jWSExpression(r : DoubleFloat) == jWSReal(r)$WSReal pretend %
+    jWSExpression(r : JLFloat64) == jWSReal(r)$WSReal pretend %
+    jWSExpression(r : Float) ==
+      tmp := outputSpacing(0)$Float
+      try
+        jlref(concat(["weval(W_`", toString(r),  "_`)"]))
+      finally
+        outputSpacing(tmp)$Float
+    jWSExpression(r : JLFloat) == jlref(concat(["weval(W_`", string(r),  "_`)"]))
+    jWSExpression(sym : Symbol) : % == jlref(concat(["weval(W_`", string(sym),  "_`)"]))
+    jWSExpression(str : String) : % == jlref(concat(["weval(W_`", str, "_`)"]))
+    jWSExpression(l : List(%)) : % == coerce(l)
     toString(expr, form) == string jbinfunc("W_"ToString_"(", expr, form)
     toExpression(expr) == junfunc("W_"ToExpression_"(", jWSString expr)
     toExpression(expr, form) == jbinfunc("W_"ToExpression_"(", jWSString(expr), form)
     toExpression(expr, form, h) == jterfunc("W_"ToExpression_"(", jWSString(expr), form, h)
     retractIfCan(expr : %) : Union(JLFloat64, "failed") ==
-      jlType(expr) = 'Float64 => jlEvalString(getind(expr))
+      machineNumber?(expr) => jlEvalString(string(expr))@JF64
       "failed"
     retractIfCan(expr : %) : Union(DoubleFloat, "failed") ==
-      jlType(expr) = 'Float64 => jlEvalString(getind(expr))@JF64 pretend DoubleFloat
+      machineNumber?(expr)=> jlEvalString(string(expr))@JF64 pretend DoubleFloat
       "failed"
     retractIfCan(expr) : Union(Expression(Integer), "failed") == --TODO: weberE etc.
       str : String := jlEvalString(concat(["replace(_"",
-        toString(expr, jWSExpr "InputForm"),
+        toString(expr, jWSExpression "InputForm"),
         "_", '[' => '(', ']' => ')', _"Pi_"=>_"%pi_", _"ArcS_" => _"as_", _"ArcC_" => _"ac_",",
         " _"ArcT_" => _"at_" , _"E_" => _"%e_" ,r_"\b[A-Z][a-z]{2}_" => x -> lowercase(x))"]))
       jlRegexMatch?(str,jlRegex("[0-9]\.|0-9]")) => "failed"
@@ -2055,7 +2068,7 @@ WSExpression() : Exports == Implementation where
       out
     retractIfCan(expr : %) : Union(Expression(Float), "failed") == --TODO: weberE etc.
       str : String := jlEvalString(concat(["replace(_"",
-        toString(expr, jWSExpr "InputForm"),
+        toString(expr, jWSExpression "InputForm"),
         "_", '[' => '(', ']' => ')', _"Pi_" => _"%pi_", _"ArcS_" => _"as_", _"ArcC_" => _"ac_",",
         " _"ArcT_" => _"at_" , _"E_" => _"%e_", r_"\b[A-Z][a-z]{2}_" => x -> lowercase(x))"]))
       -- TODO: to be improved `
@@ -2077,7 +2090,12 @@ WSExpression() : Exports == Implementation where
         getind(coerce(real(z))@WSInteger),",",
           getind(coerce(imag(z))@WSInteger),"))"]))
     coerce(q : Fraction(Integer)) == jWSRational(q)$WSRational pretend %
-    coerce(r : Float) == jWSReal(r)$WSReal pretend %
+    coerce(r : Float) ==
+      tmp := outputSpacing(0)$Float
+      try
+        jlref(concat(["weval(W_`", toString(r),  "_`)"]))
+      finally
+        outputSpacing(tmp)$Float
     coerce(str : String) == jlref(concat(["W_`", str, "_`"]))
     coerce(l : List(%)) : % ==
       -- Temporary (and dirty) hack
@@ -2096,13 +2114,13 @@ WSExpression() : Exports == Implementation where
     coerce(eq : Equation(%)) == jWSEqual(lhs(eq), rhs(eq))
 
     convert(p: Polynomial(Integer)) ==
-      jWSExpr(first(lines formatExpression(p::OutputForm)$Format1D))
+      jWSExpression(first(lines formatExpression(p::OutputForm)$Format1D))
     convert(p: Polynomial(Fraction(Integer))) ==
-      jWSExpr(first(lines formatExpression(p::OutputForm)$Format1D))
+      jWSExpression(first(lines formatExpression(p::OutputForm)$Format1D))
     convert(p: Polynomial(Float)) ==
       tmp := outputSpacing(0)$Float
       try
-        jWSExpr(first(lines formatExpression(p::OutputForm)$Format1D))
+        jWSExpression(first(lines formatExpression(p::OutputForm)$Format1D))
       finally
         outputSpacing(tmp)$Float
 
@@ -2154,13 +2172,14 @@ WSExpression() : Exports == Implementation where
     coerce(expr) : OutputForm ==
       head := jlHead expr
       head = WS => message(string(expr))
+      head = WI => message(string(expr))
       (head = WR and machineNumber?(expr)) => coerce(expr pretend WSReal)$WSReal
       (head = WC and machineNumber?(real expr) and machineNumber?(imag expr)) =>
         coerce(expr pretend WSComplex)$WSComplex
       head = WRat => coerce(expr pretend WSRational)$WSRational
       head = WFormat => message(string(expr))
       pagew := string(_$LINELENGTH$Lisp pretend Integer - 2)
-      sexpr := toString(expr, jWSExpr concat("PageWidth -> ", pagew))
+      sexpr := toString(expr, jWSExpression concat("PageWidth -> ", pagew))
       str : String := jlEvalString(concat(["replace(raw_"", sexpr,
         "_", '[' => '(', ']' => ')', r_"\bI\b_" => _"%i_" , r_"\b[A-Z][a-z]{2}_" => x -> lowercase(x))"]))
       l := split(str, newline())

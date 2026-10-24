@@ -5,15 +5,15 @@
 testsuite "Julia WSEXPR"
 
 testcase "Basic"
-x := jWSExpr "x"
+x := jWSExpression "x"
 testTrue("((x + x = 2*x)@Boolean)")
 testTrue("((x * x = x^2)@Boolean)")
 testTrue("zero?(x - x)")
-testTrue("integer?(jWSExpr 123)")
-testTrue("not integer?(jWSExpr 1.23)")
+testTrue("integer?(jWSExpression 123)")
+testTrue("not integer?(jWSExpression 1.23)")
 
 testcase "Calculus"
-x := jWSExpr "x"
+x := jWSExpression "x"
 testTrue("((D(sin(x), x) = cos(x))@Boolean)")
 testTrue("((integrate(cos(x), x) = sin(x))@Boolean)")
 testTrue("zero?(limit(sin(x)/x, jWSRule(x, 0)) - 1)")
@@ -21,30 +21,30 @@ resInt := integrate(sin(x), jWSList([x, 0, pi()$WSExpression])@WSList(WSExpressi
 testTrue("zero?(resInt - 2)")
 
 testcase "Simplification"
-x := jWSExpr "x"
+x := jWSExpression "x"
 testTrue("((expand((x + 1)^2) = x^2 + 2*x + 1)@Boolean)")
 testTrue("((simplify(x^2 + 2*x + 1) = (x + 1)^2)@Boolean)")
 testTrue("zero?(simplify(sin(x)^2 + cos(x)^2) - 1)")
 
 testcase "Trigonometry"
-x := jWSExpr "x"
+x := jWSExpression "x"
 testTrue("((trigExpand(sin(2*x)) = 2*sin(x)*cos(x))@Boolean)")
 testTrue("((trigReduce(sin(x)*cos(x)) = (1/2)*sin(2*x))@Boolean)")
 
 testcase "Rational"
-x := jWSExpr "x"
+x := jWSExpression "x"
 testTrue("((together(1/x + 1/(x+1)) = (2*x + 1)/(x*(x + 1)))@Boolean)")
 testTrue("((apart((2*x + 1)/(x^2 + x)) = 1/x + 1/(x+1))@Boolean)")
 
 testcase "Polynomials"
-x := jWSExpr "x"
+x := jWSExpression "x"
 testTrue("((gcd(x^2 - 1, x - 1) = x - 1)@Boolean)")
 testTrue("zero?(lcm(x^2 - 1, x - 1) - (x^2 - 1))")
 testTrue("((factor(x^2 - 1) = (x - 1)*(x + 1))@Boolean)")
 
 testcase "Sum and Product"
-i := jWSExpr "i"
-n := jWSExpr "n"
+i := jWSExpression "i"
+n := jWSExpression "n"
 s1 := sum(i, jWSList([i, 1, n])@WSList(WSExpression))
 testTrue("zero?(simplify(s1 - (n*(n+1))/2))")
 p1 := product(i, jWSList([i, 1, n])@WSList(WSExpression))
@@ -53,7 +53,7 @@ testTrue("zero?(simplify(p1 - fn))")
 
 -- TODO
 --testcase "Solving"
---x := jWSExpr "x"
+--x := jWSExpression "x"
 --sol := solve(x^2 - 1, x)
 --testTrue("((integer(length(sol)) = 2)@Boolean)")
 
@@ -62,19 +62,19 @@ testTrue("zero?(sin(pi()$WSExpression))")
 testTrue("zero?(Gamma(3::WSExpression) - 2)")
 
 testcase "Special Functions Numerical"
-testTrue("jlApprox?(erf(jWSExpr 0.7) pretend WSReal, jWSReal(_"0.6778011938374184_"))")
-testTrue("jlApprox?(lambertW(jWSExpr 1.0) pretend WSReal, jWSReal(_"0.5671432904097838_"))")
-testTrue("jlApprox?(airyAi(jWSExpr 0.7) pretend WSReal, jWSReal(_"0.18916240039815_"))")
-testTrue("jlApprox?(besselJ(0::WSExpression, jWSExpr 1.0) pretend WSReal, jWSReal(_"0.7651976865579666_"))")
+testTrue("jlApprox?(erf(jWSExpression 0.7) pretend WSReal, jWSReal(_"0.6778011938374184_"))")
+testTrue("jlApprox?(lambertW(jWSExpression 1.0) pretend WSReal, jWSReal(_"0.5671432904097838_"))")
+testTrue("jlApprox?(airyAi(jWSExpression 0.7) pretend WSReal, jWSReal(_"0.18916240039815_"))")
+testTrue("jlApprox?(besselJ(0::WSExpression, jWSExpression 1.0) pretend WSReal, jWSReal(_"0.7651976865579666_"))")
 
 testcase "Special Functions More"
-x := jWSExpr "x"
+x := jWSExpression "x"
 testTrue("zero?(simplify(Beta(2::WSExpression, 3::WSExpression)) - 1/12)")
 testTrue("zero?(simplify(Beta(1/2::WSExpression, 1/2::WSExpression)) - pi()$WSExpression)")
 testTrue("zero?(simplify(D(erf(x), x) - 2*exp(-x^2)/sqrt(pi()$WSExpression)))")
 
 testcase "Orthogonal Polynomials"
-x := jWSExpr "x"
+x := jWSExpression "x"
 testTrue("zero?(hermiteH(0, x) - 1)")
 testTrue("zero?(hermiteH(1, x) - 2*x)")
 testTrue("zero?(chebyshevT(0, x) - 1)")

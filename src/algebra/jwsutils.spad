@@ -83,12 +83,12 @@ WSUtilityFunctions() : Exports == Implementation where
     ++ jlWSDateString(expr) returns the WSExpression string of the date
     ++ from a WS date object.
     ++ For example:
-    ++ \example{jlWSDateString jWSExpr "Tomorrow"}
+    ++ \example{jlWSDateString jWSExpression "Tomorrow"}
     jlWSDateString : (WSExpression, WSExpression) -> WSExpression
     ++ jlWSDateString(expr, form) returns WSExpression string of the date
     ++ from a WS date object with WS format form.
     ++ For example:
-    ++ \example{jlWSDateString(jWSExpr("Now"), jWSExpr("Entity[_"Language_", _"French::367gk_"]"))}
+    ++ \example{jlWSDateString(jWSExpression("Now"), jWSExpression("Entity[_"Language_", _"French::367gk_"]"))}
     jlWSDocumentation : Symbol -> WSExpression
     ++ jlWSDocumentation(sym) prints WS information about the symbol sym.
     ++ Note that the WS language is preferable. Trivial implementation.
@@ -113,7 +113,7 @@ WSUtilityFunctions() : Exports == Implementation where
     ++ jlWSFileFormat(src, list(form)) tries to determine the format of the source src
     ++ from its content using the list of formats form. Returns WS None if no format is found.
     ++ Can be used with jWSImport.
-    ++ For example: \spad{jlWSFileFormat("examples/customers-100.csv",jWSExpr "{_"CSV_",_"TSV_"}")}
+    ++ For example: \spad{jlWSFileFormat("examples/customers-100.csv",jWSExpression "{_"CSV_",_"TSV_"}")}
     jlWSSnippet : (WSExpression, WSInteger) -> WSExpression
     ++ jlWSSnippet(expr, n) returns the first (or last) n snippets of the WSExpression expr.
     ++ For example:
@@ -123,7 +123,7 @@ WSUtilityFunctions() : Exports == Implementation where
     ++ The extension ext will determine the saved format. A WS expression for
     ++ example can be exported in an image file, it will be saved in the WS
     ++ 'StandardForm' whereas in FriCAS it is displayed in WS 'OutputForm':
-    ++ \example{x:=jWSExpr(x);jlWSExport("legendreP.png", legendreP(7, x))}
+    ++ \example{x:=jWSExpression(x);jlWSExport("legendreP.png", legendreP(7, x))}
     --inputForm() -- jRule NumberMarks > False||True
     --outputForm
     --*Form
@@ -133,15 +133,15 @@ WSUtilityFunctions() : Exports == Implementation where
     ++ representation of expr in the specified format. Use toString or string
     ++ to obtain the FriCAS String.
     ++ For example:
-    ++ \example{jWSExpr \"Probability[x < 0, x \\[Distributed] NormalDistribution[]]\"}
-    ++ \example{jWSExpr \"Probability[x < 1, x \\[Distributed] NormalDistribution[]]\"}
+    ++ \example{jWSExpression \"Probability[x < 0, x \\[Distributed] NormalDistribution[]]\"}
+    ++ \example{jWSExpression \"Probability[x < 1, x \\[Distributed] NormalDistribution[]]\"}
     ++ \example{string jlWSExportString(%,jWSString "TeX")}
     jlWSPlot : (WSExpression, WSExpression) -> WSExpression
     ++ jlWSPlot(expr, options) is the WS plot function. Since it should be run
     ++ in a Wolfram notebook or any other supported graphical interfaces,
     ++ the Wolfram Jupyter "plugin" for example, it is left to the user for
     ++ testing purposes. The following uses the jlWSExport function:
-    ++ \example{x:=jWSExpr(x);opt:=jWSList [x,-5,5]}
+    ++ \example{x:=jWSExpression(x);opt:=jWSList [x,-5,5]}
     ++ \example{jlWSExport("sin.png", jlWSPlot(sin(x),opt))}
   Implementation ==> add
     import from JLUtilityFunctions
@@ -152,10 +152,10 @@ WSUtilityFunctions() : Exports == Implementation where
       error "The Julia MathLink package is not installed."
     jlWSSeedRandom!(n) == junfunc("W_"SeedRandom_"(", n)
 
-    jWSDateObject() == jWSExpr "DateObject[]"
+    jWSDateObject() == jWSExpression "DateObject[]"
     jWSDateObject(expr) == junfunc("W_"DateObject_"(", expr)
     jWSDateObject(expr, type) == jbinfunc("W_"DateObject_"(", expr, type)
-    jlWSDateString() == jWSExpr "DateString[]"
+    jlWSDateString() == jWSExpression "DateString[]"
     jlWSDateString(expr) == junfunc("W_"DateString_"(", expr)
     jlWSDateString(expr, form) == jbinfunc("W_"DateString_"(", expr, form)
     jlWSSnippet(expr, n) == jbinfunc("W_"Snippet_"(", expr, n)
@@ -209,5 +209,5 @@ WSUtilityFunctions() : Exports == Implementation where
     jlWSDocumentation(sym) ==
       str : String := string(sym)
       setelt!(str,1, upperCase str.1)
-      jWSExpr(concat ["Information[", str,"]"])$WSExpression
+      jWSExpression(concat ["Information[", str,"]"])$WSExpression
 
