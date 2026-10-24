@@ -2,7 +2,7 @@
 ++ Author: G. Vanuxem
 ++ Date Created: march, 2026
 ++ Description: This package provides simple
-++ Spad documentation for use in the interpreter and
+++ Spad documentation for the interpreter and
 ++ the MCP server.
 SpadDoc : Exports == Implementation where
   OPDOC ==> Record(origin: String, signature: String, doc: String)

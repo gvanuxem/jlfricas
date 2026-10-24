@@ -63,7 +63,7 @@ The server extends the standard MCP specification with custom methods and notifi
 *   `display`: Real-time streaming notification delivering MIME-typed output (SVG, PNG, or HTML) produced by plot routines directly to the client.
 
 ## 📊 Plotting & Resource Management
-High-resolution plots (SVG/PNG) generated via `jlPlot` and FriCAS graphics routines are handled through a dedicated pipeline:
+High-resolution plots (SVG/PNG) generated via `jlPlot` graphics routines are handled through a dedicated pipeline:
 1.  **Notification**: The server sends a `display` notification containing the MIME type and raw payload (e.g., SVG XML or Base64 PNG).
 2.  **History**: All plots generated during a session are stored in an in-memory session history list.
 3.  **Resources**: All plots are exposed as standard MCP Resources via `plot://<index>` URIs.

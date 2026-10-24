@@ -396,6 +396,7 @@ NMArbField(p: PositiveInteger) : Exports == Implementation where
       jlref(concat ["lindep(", getind(vec), ",", string(prec), ")"])$JLVector(NMInteger)
 
     simplestRational(x) == junfunc("simplest_rational_inside",x)
+    differentiate x == 0
 
     guess(a, deg) ==
       jlref(concat(["guess(QQBar,", getind(a), ",",
@@ -891,7 +892,7 @@ NMAcbField(p: PositiveInteger) : Exports == Implementation where
       jlref(concat ["lindep(", getind(vec), ",", string(prec), ")"])$JLVector(NMInteger)
     linearDependence(mat : JLMatrix(%), prec) ==
       jlref(concat ["lindep(", getind(mat), ",", string(prec), ")"])$JLVector(NMInteger)
-
+    differentiate x == 0
     rootOfUnity(n) ==
       jlref(concat(["root_of_unity(", NACB, ",", string(n),")"]))
 
@@ -1255,10 +1256,10 @@ NMRealField() : Exports == Implementation where
       jlref(concat(["rising_factorial(", getind(x), ",", string(n), ")"]))
 
     agm(x,y) == jbinfunc("agm",x,y)
-    nthRoot(x, n) ==
-      nonNegative?(x) =>
-        jlref(concat(["root(",getind(x),",",string(n),")"]))
-      error "nthRoot$NMArbField: argument must be non-negative"
+    --nthRoot(x, n) ==
+    --  nonNegative?(x) =>
+    --    jlref(concat(["root(",getind(x),",",string(n),")"]))
+    --  error "nthRoot$NMArbField: argument must be non-negative"
     sqrt(x)  == junfunc("√",x)
     rsqrt(x) == junfunc("rsqrt",x)
     sqrt1pm1(x) == junfunc("sqrt1pm1",x)
@@ -1317,6 +1318,7 @@ NMRealField() : Exports == Implementation where
       jlref(concat ["lindep(", getind(vec), ",", string(prec), ")"])$JLVector(NMInteger)
 
     simplestRational(x) == junfunc("simplest_rational_inside",x)
+    differentiate x == 0
 
     guess(a, deg) ==
       jlref(concat(["guess(QQBar,", getind(a), ",",
@@ -1799,6 +1801,7 @@ NMComplexField() : Exports == Implementation where
       jlref(concat ["lindep(", getind(vec), ",", string(prec), ")"])$JLVector(NMInteger)
     linearDependence(mat : JLMatrix(%), prec) ==
       jlref(concat ["lindep(", getind(mat), ",", string(prec), ")"])$JLVector(NMInteger)
+    differentiate x == 0
 
     guess(a, deg) ==
       jlref(concat(["guess(QQBar,", getind(a), ",",

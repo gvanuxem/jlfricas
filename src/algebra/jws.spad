@@ -713,6 +713,7 @@ WSReal() : Exports == Implementation where
     fresnelS(x) == junfunc("W_"FresnelS_"(",x)
     li(x)       == junfunc("W_"LogIntegral_"(",x)
     dilog(x)    == jbinfunc("W_"PolyLog_"(", coerce(2)@WSInteger, x)
+    differentiate x == 0
 
     urand01() == jlEval(jWSExpr("RandomReal[]")) pretend %
 
@@ -994,6 +995,7 @@ WSAPReal(prec : PositiveInteger) : Exports == Implementation where
     fresnelS(x) == junfunc("W_"FresnelS_"(",x)
     li(x)       == junfunc("W_"LogIntegral_"(",x)
     dilog(x)    == jbinfunc("W_"PolyLog_"(", coerce(2)@WSInteger, x)
+    differentiate x == 0
 
     urand01() ==
       jlEval jWSExpr(concat(["RandomReal[WorkingPrecision->",
@@ -1340,6 +1342,7 @@ WSComplex() : Exports == Implementation where
     dilog(z)    ==
       two := jWSReal("2")$WSReal
       jbinfunc("W_"PolyLog_"(", two, z)
+    differentiate x == 0
 
     urand01() == jWSExpr("RandomComplex[]") pretend %
     string(z) == toString z
@@ -1564,6 +1567,7 @@ WSAPComplex(prec : PositiveInteger) : Exports == Implementation where
     dilog(z)    ==
       two := jWSReal("2")$WSAPReal(prec)
       jbinfunc("W_"PolyLog_"(", two, z)
+    differentiate x == 0
 
     urand01() ==
       jWSExpr(concat(["RandomComplex[WorkingPrecision->",
