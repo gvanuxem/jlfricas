@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS arbitrary precision complex numbers using WS Transport Protocol.Time: 0 sec
+Julia WS arbitrary precision complex numbers using WS Transport Protocol.
 
 **WSAPComplex(prec: PositiveInteger) is a domain constructor.**  
 **Abbreviation for WSAPComplex is WSAPCPX**

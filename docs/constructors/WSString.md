@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS strings using the MathLink Julia package.Time: 0 sec
+Julia WS strings using the MathLink Julia package.
 
 **WSString is a domain constructor.**  
 **Abbreviation for WSString is WSSTR**  

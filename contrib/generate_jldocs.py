@@ -178,7 +178,10 @@ def format_spad_docstring(doc_lines_or_text) -> str:
 
     # Clean FriCAS output noise
     raw_text = re.sub(r"(?m)^\s*Value\s*=.*$", "", raw_text)
-    raw_text = re.sub(r"\s*Type:\s*Void\s*", "", raw_text)
+    raw_text = re.sub(r"(?m)^\s*Type:\s*.*$", "", raw_text)
+    raw_text = re.sub(r"(?m)^\s*Time:.*$", "", raw_text)
+    raw_text = re.sub(r"\s*Type:\s*Void\s*", "\n", raw_text)
+    raw_text = re.sub(r"\s*Time:\s*[\d\.]+\s*(?:\([^)]+\)\s*[\+\=]?\s*[\d\.]*\s*)*sec", "", raw_text)
     raw_text = re.sub(r"(?m)^\s*\)[a-zA-Z].*$", "", raw_text)
     raw_text = re.sub(r"(?m)^\s*(?:constructorDocumentation|operationDocumentation)\(.*$", "", raw_text)
     raw_text = re.sub(r"(?m)^\s*\(\d+\)\s*->.*$", "", raw_text)
@@ -383,7 +386,10 @@ def run_fricas_evals(evals: list[str], timeout: int = 60) -> str:
     """Run FriCAS in batch mode using a temporary input file and capture output."""
     if not HAS_FRICAS:
         return "<<FRICAS_UNAVAILABLE>>"
-    all_evals = [')lisp (progn (setf (symbol-value (find-symbol "$LINELENGTH" "BOOT")) 2000) (values))'] + evals + [')quit']
+    all_evals = [
+        ')set message time off',
+        ')lisp (progn (setf (symbol-value (find-symbol "$LINELENGTH" "BOOT")) 2000) (values))'
+    ] + evals + [')quit']
 
     with tempfile.NamedTemporaryFile(mode="w", suffix=".input", delete=False) as tf:
         for e in all_evals:
@@ -663,7 +669,7 @@ def parse_delimited_op_blocks(raw_text: str) -> dict[str, list[dict]]:
         lines = op_body.splitlines()
         current_block = []
         for line in lines:
-            if "Type: Void" in line or re.match(r"^\s*Value\s*=", line) or "operationDocumentation(" in line or re.match(r"^\s*\(\d+\)\s*->", line):
+            if "Type: Void" in line or re.match(r"^\s*Value\s*=", line) or re.match(r"^\s*Time:.*$", line) or "operationDocumentation(" in line or re.match(r"^\s*\(\d+\)\s*->", line):
                 continue
             current_block.append(line)
             m = re.search(r"From:\s*(.+)", line)
@@ -770,6 +776,7 @@ def fetch_constructor_doc(name: str, fallback_meta: dict) -> dict:
 
     description = clean(description_raw, unwrap=True)
     description = re.sub(r"\s*Type:\s*Void\s*", "", description).strip()
+    description = re.sub(r"\s*Time:\s*[\d\.]+\s*(?:\([^)]+\)\s*[\+\=]?\s*[\d\.]*\s*)*sec", "", description).strip()
     if not description and fallback_meta.get("doc"):
         description = fallback_meta["doc"]
 
@@ -868,6 +875,9 @@ def sanitize_existing_ws_docs():
                 new_content = new_content.replace("Wolfram/MathLink", "MathLink")
                 new_content = new_content.replace("Julia Wolfram Symbolic", "Julia WS")
                 new_content = new_content.replace("Wolfram Symbolic", "WS")
+
+                # Remove Time: ... sec glitches
+                new_content = re.sub(r"\s*Time:\s*[\d\.]+\s*(?:\([^)]+\)\s*[\+\=]?\s*[\d\.]*\s*)*sec", "", new_content)
 
                 # Ensure horizontal rule --- has a blank line before it
                 new_content = re.sub(r"([^\n])\n---", r"\1\n\n---", new_content)

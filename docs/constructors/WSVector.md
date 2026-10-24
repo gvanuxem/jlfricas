@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS vectors using the MathLink Julia package.Time: 0 sec
+Julia WS vectors using the MathLink Julia package.
 
 **WSVector(E: WSObject) is a domain constructor.**  
 **Abbreviation for WSVector is WSVEC**

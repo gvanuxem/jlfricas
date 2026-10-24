@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS complex numbers using the MathLink Julia package.Time: 0 sec
+Julia WS complex numbers using the MathLink Julia package.
 
 **WSComplex is a domain constructor.**  
 **Abbreviation for WSComplex is WSCPLX**  

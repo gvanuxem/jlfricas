@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS real numbers using the MathLink Julia package.Time: 0 sec
+Julia WS real numbers using the MathLink Julia package.
 
 **WSReal is a domain constructor.**  
 **Abbreviation for WSReal is WSREAL**  

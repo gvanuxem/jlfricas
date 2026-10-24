@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS gaussian integers using the MathLink Julia package.Time: 0 sec
+Julia WS gaussian integers using the MathLink Julia package.
 
 **WSGaussianInteger is a domain constructor.**  
 **Abbreviation for WSGaussianInteger is WSGINT**  

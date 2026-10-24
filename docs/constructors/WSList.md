@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS lists using the MathLink Julia package.Time: 0 sec
+Julia WS lists using the MathLink Julia package.
 
 **WSList(E: WSObject) is a domain constructor.**  
 **Abbreviation for WSList is WSLIST**

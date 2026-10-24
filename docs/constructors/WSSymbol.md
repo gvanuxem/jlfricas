@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS symbols using the MathLink Julia package.Time: 0 sec
+Julia WS symbols using the MathLink Julia package.
 
 **WSSymbol is a domain constructor.**  
 **Abbreviation for WSSymbol is WSSYM**  

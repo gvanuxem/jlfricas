@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS category for numbers using the Wolfram Symbol Transport Protocol.Time: 0 sec
+Julia WS category for numbers using the Wolfram Symbol Transport Protocol.
 
 **WSNumber is a category constructor.**  
 **Abbreviation for WSNumber is WSNUM**

@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS aggregate (WS list) using the MathLink Julia package.Time: 0 sec
+Julia WS aggregate (WS list) using the MathLink Julia package.
 
 **WSAggregate(E: WSObject) is a category constructor.**  
 **Abbreviation for WSAggregate is WSAGG**

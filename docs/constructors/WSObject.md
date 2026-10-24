@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS Object category using the Wolfram Symbol Transport Protocol.Time: 0 sec
+Julia WS Object category using the Wolfram Symbol Transport Protocol.
 
 **WSObject is a category constructor.**  
 **Abbreviation for WSObject is WSO**

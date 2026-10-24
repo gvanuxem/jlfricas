@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS rational numbers using the MathLink Julia package.Time: 0 sec
+Julia WS rational numbers using the MathLink Julia package.
 
 **WSRational is a domain constructor.**  
 **Abbreviation for WSRational is WSRAT**  

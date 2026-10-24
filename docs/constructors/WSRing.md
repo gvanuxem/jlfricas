@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS category for rings using the Wolfram Symbol Transport Protocol.Time: 0 sec
+Julia WS category for rings using the Wolfram Symbol Transport Protocol.
 
 **WSRing is a category constructor.**  
 **Abbreviation for WSRing is WSRING**

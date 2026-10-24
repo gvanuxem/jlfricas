@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS matrices using the MathLink Julia package.Time: 0 sec
+Julia WS matrices using the MathLink Julia package.
 
 **WSMatrix(E: WSRing) is a domain constructor.**  
 **Abbreviation for WSMatrix is WSMAT**

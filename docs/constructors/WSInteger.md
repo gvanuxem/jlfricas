@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS integers using the MathLink Julia package.Time: 0.01 sec
+Julia WS integers using the MathLink Julia package.
 
 **WSInteger is a domain constructor.**  
 **Abbreviation for WSInteger is WSINT**  

@@ -4,7 +4,7 @@
 
 ## Description
 
-Julia WS numerical special functions using the MathLink Julia package.Time: 0 sec
+Julia WS numerical special functions using the MathLink Julia package.
 
 **WSNumericalSpecialFunctions(R: WSNumber) is a package constructor.**  
 **Abbreviation for WSNumericalSpecialFunctions is WSNSF**
