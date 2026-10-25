@@ -60,7 +60,7 @@ Julia WS aggregate (WS list) using the MathLink Julia package.
 
 | Operation | Summary |
 | :--- | :--- |
-| [`#`](#op-hash) | #(agg) returns the length of agg. 0 if it is a scalar, an index for example. |
+| [`#`](#op-hash) | #(agg) returns the length of agg. 0 if it is a scalar. |
 | [`accumulate`](#accumulate) | accumulate(agg) returns the partial sums of elements in agg. |
 | [`append`](#append) | append(l, elt) appends elt to the list l. |
 | [`coerce`](#coerce) | coerce(list) tries to coerce list to a WSAggregate. |
@@ -98,7 +98,7 @@ Julia WS aggregate (WS list) using the MathLink Julia package.
 | [`join`](#join) | join(agg1, agg2) joins the two aggregates agg1 and agg2. |
 | [`last`](#last) | last(agg) returns the last element of agg. |
 | [`latex`](#latex) | latex(s) returns a LaTeX-printable output representation of s. |
-| [`length`](#length) | length(agg) returns the length of agg. 0 if it is a scalar, an index for example. |
+| [`length`](#length) | length(agg) returns the length of agg. 0 if it is a scalar. |
 | [`missing?`](#missing) | missing?(obj) checks whether or not obj is missing. |
 | [`mutable?`](#mutable) | mutable?(obj) checks whether or not obj is mutable. |
 | [`nothing?`](#nothing) | nothing?(obj) checks whether or not obj is nothing. |
@@ -128,13 +128,13 @@ Julia WS aggregate (WS list) using the MathLink Julia package.
 
 ### Detailed Documentation
 
-#### `#` <a id="op-hash"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L135)\]
+#### `#` <a id="op-hash"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L133)\]
 
-#(agg) returns the length of agg. 0 if it is a scalar, an index for example.
+#(agg) returns the length of agg. 0 if it is a scalar.
 
 - **Signature**: `% -> WSInteger`
 
-#### `accumulate` <a id="accumulate"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L77)\]
+#### `accumulate` <a id="accumulate"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L75)\]
 
 ##### `accumulate` : `% -> %`
 
@@ -144,13 +144,13 @@ accumulate(agg) returns the partial sums of elements in agg.
 
 Operation defined in WSAggregate.
 
-#### `append` <a id="append"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L34)\]
+#### `append` <a id="append"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L32)\]
 
 append(l, elt) appends elt to the list l.
 
 - **Signature**: `(%, E) -> %`
 
-#### `coerce` <a id="coerce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L100)\]
+#### `coerce` <a id="coerce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L98)\]
 
 ##### `coerce` : `List(E) -> %`
 
@@ -178,7 +178,7 @@ coerce(expr) returns the WSExpression representation of expr.
 
 Operation defined in WSAggregate.
 
-#### `convert` <a id="convert"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L193)\]
+#### `convert` <a id="convert"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L191)\]
 
 ##### `convert` : `% -> S`
 
@@ -190,13 +190,13 @@ convert(a) transforms a into an element of S.
 
 Operation defined in WSAggregate.
 
-#### `delete` <a id="delete"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L47)\]
+#### `delete` <a id="delete"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L45)\]
 
 delete(l, inds) deletes element(s) of the list l at index(es) inds.
 
 - **Signature**: `(%, WSList(WSInteger)) -> %`
 
-#### `differences` <a id="differences"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L74)\]
+#### `differences` <a id="differences"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L72)\]
 
 ##### `differences` : `% -> %`
 
@@ -206,49 +206,43 @@ differences(agg) returns the differences between adjacent elements in agg.
 
 Operation defined in WSAggregate.
 
-#### `dimensions` <a id="dimensions"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L18)\]
+#### `dimensions` <a id="dimensions"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L16)\]
 
 dimensions(agg) returns dimensions of agg.
 
 - **Signature**: `% -> WSList(WSInteger)`
 
-#### `elt` <a id="elt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L82)\]
-
-##### `elt` : `(%, Integer) -> E`
+#### `elt` <a id="elt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L80)\]
 
 elt(agg,i) returns the i-th element.
 
-##### `elt` : `(%, List(%)) -> %`
+- **Signature**: `(%, Integer) -> E`
 
-elt(op, l) creates a form for application of op to list of arguments l.
-
-- **From**: `OutputForm`
-
-#### `extract` <a id="extract"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L26)\]
+#### `extract` <a id="extract"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L24)\]
 
 extract(agg, parts) extracts parts of agg.
 
 - **Signature**: `(%, WSExpression) -> %`
 
-#### `first` <a id="first"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L28)\]
+#### `first` <a id="first"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L26)\]
 
 first(agg) returns the first element of agg.
 
 - **Signature**: `% -> E`
 
-#### `insert` <a id="insert"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L45)\]
+#### `insert` <a id="insert"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L43)\]
 
 insert(l, elt, ind) inserts elt to the list l at index ind.
 
 - **Signature**: `(%, E, WSInteger) -> %`
 
-#### `intersection` <a id="intersection"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L53)\]
+#### `intersection` <a id="intersection"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L51)\]
 
 intersection(agg1, agg2) is the intersection operator.
 
 - **Signature**: `(%, %) -> %`
 
-#### `jWSAggregate` <a id="jwsaggregate"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L102)\]
+#### `jWSAggregate` <a id="jwsaggregate"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L100)\]
 
 jWSAggregate(list) constructs agg to a WSAggregate.
 
@@ -270,7 +264,7 @@ jWSInterpret(Type|Form, Expr) interprets Expr to be of type Type or Form using t
 jWSInterpret("Number","3.2")@WSREAL
 jWSInterpret("Real","3.2")@WSREAL
 jWSInterpret("Location","Lille")$WSEXPR
-See jWSExpr "$InterpreterTypes"
+See jWSExpression "$InterpreterTypes"
 ```
 
 - **From**: [`WSObject`](WSObject.md)
@@ -469,7 +463,7 @@ jlimref(str) evaluates the Julia command str and returns the corresponding FriCA
 - **Signature**: `String -> %`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
-#### `jlref` <a id="jlref"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L113)\]
+#### `jlref` <a id="jlref"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L111)\]
 
 ##### `jlref` : `% -> SExpression`
 
@@ -483,28 +477,28 @@ jlref(str) evaluates the Julia command str and returns the corresponding FriCAS 
 
 - **From**: [`JLObjectType`](JLObjectType.md)
 
-#### `join` <a id="join"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L49)\]
+#### `join` <a id="join"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L47)\]
 
 join(agg1, agg2) joins the two aggregates agg1 and agg2.
 
 - **Signature**: `(%, %) -> %`
 
-#### `last` <a id="last"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L30)\]
+#### `last` <a id="last"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L28)\]
 
 last(agg) returns the last element of agg.
 
 - **Signature**: `% -> E`
 
-#### `latex` <a id="latex"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L519)\]
+#### `latex` <a id="latex"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L517)\]
 
 latex(s) returns a LaTeX-printable output representation of s.
 
 - **Signature**: `% -> String`
 - **From**: `SetCategory`
 
-#### `length` <a id="length"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L15)\]
+#### `length` <a id="length"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L14)\]
 
-length(agg) returns the length of agg. 0 if it is a scalar, an index for example.
+length(agg) returns the length of agg. 0 if it is a scalar.
 
 - **Signature**: `% -> WSInteger`
 
@@ -550,55 +544,55 @@ numeric?(x) checks whether or not x is or would yield a number.
 - **Signature**: `% -> Boolean`
 - **From**: [`WSObject`](WSObject.md)
 
-#### `part` <a id="part"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L20)\]
+#### `part` <a id="part"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L18)\]
 
 part(agg,i) returns the i-th element.
 
 - **Signature**: `(%, WSInteger) -> E`
 
-#### `prepend` <a id="prepend"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L40)\]
+#### `prepend` <a id="prepend"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L38)\]
 
 prepend(l, elt) prepends elt to the list l.
 
 - **Signature**: `(%, E) -> %`
 
-#### `qelt` <a id="qelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L84)\]
+#### `qelt` <a id="qelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L82)\]
 
 qelt(agg,i) returns the i-th element. No checks are done at the FriCAS level.
 
 - **Signature**: `(%, Integer) -> E`
 
-#### `qsetelt` <a id="qsetelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L90)\]
+#### `qsetelt` <a id="qsetelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L88)\]
 
 qsetelt(l,i,elem) returns a copy of l with i-th element replaced by the element elem. No checks are done at the FriCAS level.
 
 - **Signature**: `(%, Integer, E) -> %`
 
-#### `qsetelt!` <a id="qsetelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L95)\]
+#### `qsetelt!` <a id="qsetelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L93)\]
 
 qsetelt!(l,i,elem) returns l with i-th element replaced by elem. No checks are done at the FriCAS level.
 
 - **Signature**: `(%, Integer, E) -> %`
 
-#### `removeDuplicates` <a id="removeduplicates"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L62)\]
+#### `removeDuplicates` <a id="removeduplicates"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L60)\]
 
 removeDuplicates(agg) removes duplicate elements.
 
 - **Signature**: `% -> %`
 
-#### `replacePart` <a id="replacepart"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L98)\]
+#### `replacePart` <a id="replacepart"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L96)\]
 
 replacePart(expr, part) replaces expr using rule(s) expressing position(s).
 
 - **Signature**: `(%, %) -> %`
 
-#### `rest` <a id="rest"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L32)\]
+#### `rest` <a id="rest"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L30)\]
 
 rest(agg) returns agg without the first element.
 
 - **Signature**: `% -> %`
 
-#### `reverse` <a id="reverse"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L64)\]
+#### `reverse` <a id="reverse"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L62)\]
 
 ##### `reverse` : `% -> %`
 
@@ -612,7 +606,7 @@ reverse(agg, lev) reverses the elements of agg at level lev.
 
 reverse(agg, levels) reverses the elements of agg using levels.
 
-#### `riffle` <a id="riffle"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L57)\]
+#### `riffle` <a id="riffle"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L55)\]
 
 ##### `riffle` : `(%, %) -> %`
 
@@ -622,25 +616,25 @@ riffle(agg, elts) riffles (interleaves) element(s) elts i.e. inserts them.
 
 riffle(agg, elts, inds) riffles (interleaves) element(s) elts i.e. inserts them. If inds is min, max, n inserts at position min, min+n, min+2n..max.
 
-#### `setIntersection` <a id="setintersection"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L55)\]
+#### `setIntersection` <a id="setintersection"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L53)\]
 
 setIntersection(agg1, agg2) is the intersection set operator.
 
 - **Signature**: `(%, %) -> %`
 
-#### `setelt` <a id="setelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L87)\]
+#### `setelt` <a id="setelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L85)\]
 
 setelt(l,i,elem) returns a copy of l with i-th element replaced by the element elem.
 
 - **Signature**: `(%, Integer, E) -> %`
 
-#### `setelt!` <a id="setelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L93)\]
+#### `setelt!` <a id="setelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L91)\]
 
 setelt!(l,i,elem) returns l with i-th element replaced by elem.
 
 - **Signature**: `(%, Integer, E) -> %`
 
-#### `sort` <a id="sort"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L68)\]
+#### `sort` <a id="sort"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L66)\]
 
 sort(agg) returns agg in sorted order. For complex numbers, sorts them by their real part first.
 
@@ -652,14 +646,14 @@ sorted?(agg) checks whether agg is sorted or not.
 
 - **Signature**: `% -> Boolean`
 
-#### `string` <a id="string"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L192)\]
+#### `string` <a id="string"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L190)\]
 
 string(jt) returns the string representation of jt.
 
 - **Signature**: `% -> String`
 - **From**: [`JLType`](JLType.md)
 
-#### `take` <a id="take"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L22)\]
+#### `take` <a id="take"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L20)\]
 
 ##### `take` : `(%, Integer) -> %`
 
@@ -669,14 +663,14 @@ take(l,i) returns the first i elements.
 
 take(l,i) returns the first i elements.
 
-#### `toString` <a id="tostring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L500)\]
+#### `toString` <a id="tostring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L498)\]
 
 toString(obj) returns the string representation of obj.
 
 - **Signature**: `% -> String`
 - **From**: [`WSObject`](WSObject.md)
 
-#### `total` <a id="total"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L72)\]
+#### `total` <a id="total"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L70)\]
 
 ##### `total` : `% -> E`
 
@@ -686,7 +680,7 @@ total(agg) returns the sum of the elements in agg.
 
 Operation defined in WSAggregate.
 
-#### `union` <a id="union"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L51)\]
+#### `union` <a id="union"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L49)\]
 
 union(agg1, agg2) is the union set operator. Elements are sorted on output.
 

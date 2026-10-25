@@ -144,7 +144,7 @@ toString jlWSDateString()
 jlWSDateString(expr) returns the WSExpression string of the date from a WS date object. For example:
 
 ```fricas
-jlWSDateString jWSExpr "Tomorrow"
+jlWSDateString jWSExpression "Tomorrow"
 ```
 
 ##### `jlWSDateString` : `(WSExpression, WSExpression) -> WSExpression`
@@ -152,7 +152,7 @@ jlWSDateString jWSExpr "Tomorrow"
 jlWSDateString(expr, form) returns WSExpression string of the date from a WS date object with WS format form. For example:
 
 ```fricas
-jlWSDateString(jWSExpr("Now"), jWSExpr("Entity[_"Language_", _"French::367gk_"]"))
+jlWSDateString(jWSExpression("Now"), jWSExpression("Entity[_"Language_", _"French::367gk_"]"))
 ```
 
 #### `jlWSDocumentation` <a id="jlwsdocumentation"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L92)\]
@@ -171,7 +171,7 @@ jlWSDocumentation ArcSin
 jlWSExport(file.ext, obj) exports the object obj to the file file.ext. The extension ext will determine the saved format. A WS expression for example can be exported in an image file, it will be saved in the WS 'StandardForm' whereas in FriCAS it is displayed in WS 'OutputForm':
 
 ```fricas
-x:=jWSExpr(x);jlWSExport("legendreP.png", legendreP(7, x))
+x:=jWSExpression(x);jlWSExport("legendreP.png", legendreP(7, x))
 ```
 
 - **Signature**: `(String, WSExpression) -> WSExpression`
@@ -181,8 +181,8 @@ x:=jWSExpr(x);jlWSExport("legendreP.png", legendreP(7, x))
 jlWSExportString(expr, form) returns the string representation of expr in the specified format. Use toString or string to obtain the FriCAS String. For example:
 
 ```fricas
-jWSExpr "Probability[x < 0, x \\[Distributed] NormalDistribution[]]"
-jWSExpr "Probability[x < 1, x \\[Distributed] NormalDistribution[]]"
+jWSExpression "Probability[x < 0, x \\[Distributed] NormalDistribution[]]"
+jWSExpression "Probability[x < 1, x \\[Distributed] NormalDistribution[]]"
 string jlWSExportString(%,jWSString "TeX")
 ```
 
@@ -200,7 +200,7 @@ jlWSFileFormat("examples/customers-100.csv")
 
 ##### `jlWSFileFormat` : `(WSString, WSExpression) -> WSExpression`
 
-jlWSFileFormat(src, list(form)) tries to determine the format of the source src from its content using the list of formats form. Returns WS None if no format is found. Can be used with jWSImport. For example: jlWSFileFormat("examples/customers-100.csv",jWSExpr "_"CSV_",_"TSV_"")
+jlWSFileFormat(src, list(form)) tries to determine the format of the source src from its content using the list of formats form. Returns WS None if no format is found. Can be used with jWSImport. For example: jlWSFileFormat("examples/customers-100.csv",jWSExpression "_"CSV_",_"TSV_"")
 
 #### `jlWSImport` <a id="jlwsimport"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L98)\]
 
@@ -226,7 +226,7 @@ file:=jlWSImport(jWSString("examples/customers-100.csv"), jWSString "CSV");
 jlWSPlot(expr, options) is the WS plot function. Since it should be run in a Wolfram notebook or any other supported graphical interfaces, the Wolfram Jupyter "plugin" for example, it is left to the user for testing purposes. The following uses the jlWSExport function:
 
 ```fricas
-x:=jWSExpr(x);opt:=jWSList [x,-5,5]
+x:=jWSExpression(x);opt:=jWSList [x,-5,5]
 jlWSExport("sin.png", jlWSPlot(sin(x),opt))
 ```
 

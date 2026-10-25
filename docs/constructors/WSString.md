@@ -121,7 +121,7 @@ coerce(expr) returns the WSExpression representation of expr.
 
 Operation defined in WSString.
 
-#### `convert` <a id="convert"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L357)\]
+#### `convert` <a id="convert"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L359)\]
 
 ##### `convert` : `% -> S`
 
@@ -135,15 +135,9 @@ Operation defined in WSString.
 
 #### `elt` <a id="elt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L222)\]
 
-##### `elt` : `(%, Integer) -> %`
-
 elt(str,i) returns the i-th character of str.
 
-##### `elt` : `(%, List(%)) -> %`
-
-elt(op, l) creates a form for application of op to list of arguments l.
-
-- **From**: `OutputForm`
+- **Signature**: `(%, Integer) -> %`
 
 #### `jWSInterpret` <a id="jwsinterpret"></a>
 
@@ -161,7 +155,7 @@ jWSInterpret(Type|Form, Expr) interprets Expr to be of type Type or Form using t
 jWSInterpret("Number","3.2")@WSREAL
 jWSInterpret("Real","3.2")@WSREAL
 jWSInterpret("Location","Lille")$WSEXPR
-See jWSExpr "$InterpreterTypes"
+See jWSExpression "$InterpreterTypes"
 ```
 
 - **From**: [`WSObject`](WSObject.md)
@@ -408,7 +402,7 @@ nothing?(obj) checks whether or not obj is nothing.
 - **Signature**: `% -> Boolean`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
-#### `numeric` <a id="numeric"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L459)\]
+#### `numeric` <a id="numeric"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L461)\]
 
 ##### `numeric` : `% -> WSExpression`
 
@@ -429,14 +423,14 @@ numeric?(x) checks whether or not x is or would yield a number.
 - **Signature**: `% -> Boolean`
 - **From**: [`WSObject`](WSObject.md)
 
-#### `string` <a id="string"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L442)\]
+#### `string` <a id="string"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L444)\]
 
 string(jt) returns the string representation of jt.
 
 - **Signature**: `% -> String`
 - **From**: [`JLType`](JLType.md)
 
-#### `toString` <a id="tostring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L719)\]
+#### `toString` <a id="tostring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L722)\]
 
 toString(obj) returns the string representation of obj.
 

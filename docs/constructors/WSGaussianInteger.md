@@ -1,6 +1,6 @@
 # WSGaussianInteger
 
-> **Kind**: Domain &nbsp;|&nbsp; \[[Source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1055)\] &nbsp;|&nbsp; **Group**: WS — MathLink
+> **Kind**: Domain &nbsp;|&nbsp; \[[Source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1059)\] &nbsp;|&nbsp; **Group**: WS — MathLink
 
 ## Description
 
@@ -103,8 +103,8 @@ Julia WS gaussian integers using the MathLink Julia package.
 | :--- | :--- |
 | [`*`](#op-mul) | Operation defined in WSGaussianInteger |
 | [`+`](#op-add) | Operation defined in WSGaussianInteger |
-| [`0`](#0) | 0 returns the input form corresponding to 0. |
-| [`1`](#1) | 1 returns the input form corresponding to 1. |
+| [`0`](#0) | 0 is a distinguished element, in AbelianMonoid it is the additive identity element, in Mag... |
+| [`1`](#1) | 1 returns the unit element, denoted by 1. |
 | [`D`](#d) | D(x) returns the derivative of x. This function is a simple differential operator where no... |
 | [`^`](#op-pow) | Operation defined in WSGaussianInteger |
 | [`annihilate?`](#annihilate) | annihilate?(x,y) holds when the product of x and y is 0. |
@@ -126,7 +126,7 @@ Julia WS gaussian integers using the MathLink Julia package.
 | [`divide`](#divide) | divide(x, y) divides x by y producing a record containing a quotient and remainder, where ... |
 | [`euclideanSize`](#euclideansize) | euclideanSize(x) returns the euclidean size of the element x. Error: if x is zero. |
 | [`expressIdealMember`](#expressidealmember) | expressIdealMember([f1, ..., fn], h) returns a representation of h as a linear combination... |
-| [`exquo`](#exquo) | exquo(f, g) creates the equivalent infix form. |
+| [`exquo`](#exquo) | exquo(a, b) either returns an element c such that c*b=a or "failed" if no such element can... |
 | [`extendedEuclidean`](#extendedeuclidean) | extendedEuclidean(x, y) returns a record rec where rec.coef1*x+rec.coef2*y = rec.generator... |
 | [`factor`](#factor) | factor(x) returns the factorization of x into irreducibles. |
 | [`gcd`](#gcd) | gcd(x, y) returns the greatest common divisor of x and y. |
@@ -177,7 +177,7 @@ Julia WS gaussian integers using the MathLink Julia package.
 | [`prime?`](#prime) | prime?(x) tests if x can never be written as the product of two non-units of the ring, x i... |
 | [`principalIdeal`](#principalideal) | principalIdeal([f1, ..., fn]) returns a record whose generator component is a generator of... |
 | [`quo`](#quo) | x quo y is the same as divide(x, y).quotient. See divide from EuclideanDomain. |
-| [`random`](#random) | random(n) returns a random integer from 0 to n-1. |
+| [`random`](#random) | random(n) returns a gaussian integer where real part is in the range 0..n as the imaginary... |
 | [`rank`](#rank) | rank() returns the rank of the algebra. |
 | [`rational`](#rational) | rational(x) returns x as a rational number. Error: if x is not a rational number. |
 | [`rational?`](#rational) | rational?(x) tests if x is a rational number. |
@@ -247,19 +247,19 @@ Operation defined in WSGaussianInteger.
 
 - **Signature**: `(%, %) -> %`
 
-#### `0` <a id="0"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1089)\]
+#### `0` <a id="0"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1093)\]
 
-0 returns the input form corresponding to 0.
-
-- **Signature**: `() -> %`
-- **From**: `InputForm`
-
-#### `1` <a id="1"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1090)\]
-
-1 returns the input form corresponding to 1.
+0 is a distinguished element, in AbelianMonoid it is the additive identity element, in MagmaWithZero it is multiplicative zero.
 
 - **Signature**: `() -> %`
-- **From**: `InputForm`
+- **From**: `SetWithZero`
+
+#### `1` <a id="1"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1094)\]
+
+1 returns the unit element, denoted by 1.
+
+- **Signature**: `() -> %`
+- **From**: `MagmaWithUnit`
 
 #### `D` <a id="d"></a>
 
@@ -359,7 +359,7 @@ characteristicPolynomial(a) returns the characteristic polynomial of the regular
 
 Operation defined in WSGaussianInteger.
 
-#### `coerce` <a id="coerce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1075)\]
+#### `coerce` <a id="coerce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1079)\]
 
 ##### `coerce` : `R -> %`
 
@@ -397,12 +397,6 @@ coerce(expr) returns the WSExpression representation of expr.
 
 - **From**: [`WSObject`](WSObject.md)
 
-##### `coerce` : `% -> WSRational`
-
-coerce(z) coerces z.
-
-- **From**: [`WSInteger`](WSInteger.md)
-
 ##### `coerce` : `% -> %`
 
 Operation defined in WSGaussianInteger.
@@ -422,7 +416,7 @@ commutator(a, b) returns a*b-b*a.
 - **Signature**: `(%, %) -> %`
 - **From**: `NonAssociativeRng`
 
-#### `complex` <a id="complex"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1138)\]
+#### `complex` <a id="complex"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1142)\]
 
 ##### `complex` : `(R, R) -> %`
 
@@ -434,38 +428,20 @@ complex(x, y) constructs x + %i*y.
 
 Operation defined in WSGaussianInteger.
 
-#### `conjugate` <a id="conjugate"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1099)\]
+#### `conjugate` <a id="conjugate"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1103)\]
 
 conjugate(x + %i y) returns x - %i y.
 
 - **Signature**: `% -> %`
 - **From**: `ComplexCategory(R)`
 
-#### `convert` <a id="convert"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1132)\]
+#### `convert` <a id="convert"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1136)\]
 
 ##### `convert` : `UP -> %`
 
 convert(up) converts the univariate polynomial up to an algebra element, reducing by the definingPolynomial() if necessary.
 
 - **From**: `MonogenicAlgebra(R,UP)`
-
-##### `convert` : `DoubleFloat -> %`
-
-convert(x) converts a DoubleFloat x to a Float.
-
-- **From**: `Float`
-
-##### `convert` : `List(%) -> %`
-
-convert([a1, ..., an]) returns the pattern [a1, ..., an].
-
-- **From**: `Pattern(R)`
-
-##### `convert` : `SExpression -> %`
-
-convert(s) makes s into an input form.
-
-- **From**: `InputForm`
 
 ##### `convert` : `Vector(R) -> %`
 
@@ -654,12 +630,6 @@ expressIdealMember([f1, ..., fn], h) returns a representation of h as a linear c
 
 #### `exquo` <a id="exquo"></a>
 
-##### `exquo` : `(%, %) -> %`
-
-exquo(f, g) creates the equivalent infix form.
-
-- **From**: `OutputForm`
-
 ##### `exquo` : `(%, %) -> Union(%,"failed")`
 
 exquo(a, b) either returns an element c such that c*b=a or "failed" if no such element can be found.
@@ -692,17 +662,10 @@ extendedEuclidean(x, y, z) either returns a record rec where rec.coef1*x+rec.coe
 
 #### `factor` <a id="factor"></a>
 
-##### `factor` : `% -> Factored(%)`
-
 factor(x) returns the factorization of x into irreducibles.
 
+- **Signature**: `% -> Factored(%)`
 - **From**: `UniqueFactorizationDomain`
-
-##### `factor` : `% -> WSList(WSList(%))`
-
-factor(n) returns the WS factorization of n.
-
-- **From**: [`WSInteger`](WSInteger.md)
 
 #### `gcd` <a id="gcd"></a>
 
@@ -732,7 +695,7 @@ generator() returns the generator for this domain.
 - **Signature**: `() -> %`
 - **From**: `MonogenicAlgebra(R,UP)`
 
-#### `imag` <a id="imag"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1097)\]
+#### `imag` <a id="imag"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1101)\]
 
 ##### `imag` : `% -> R`
 
@@ -744,14 +707,14 @@ imag(x) returns imaginary part of x.
 
 Operation defined in WSGaussianInteger.
 
-#### `imaginary` <a id="imaginary"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1091)\]
+#### `imaginary` <a id="imaginary"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1095)\]
 
 imaginary() = sqrt(-1) = %i.
 
 - **Signature**: `() -> %`
 - **From**: `ComplexCategory(R)`
 
-#### `jWSGI` <a id="jwsgi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1077)\]
+#### `jWSGI` <a id="jwsgi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1081)\]
 
 jWSGI(re, im) constructs a WSGaussianInteger from real part re and imaginary part im.
 
@@ -773,7 +736,7 @@ jWSInterpret(Type|Form, Expr) interprets Expr to be of type Type or Form using t
 jWSInterpret("Number","3.2")@WSREAL
 jWSInterpret("Real","3.2")@WSREAL
 jWSInterpret("Location","Lille")$WSEXPR
-See jWSExpr "$InterpreterTypes"
+See jWSExpression "$InterpreterTypes"
 ```
 
 - **From**: [`WSObject`](WSObject.md)
@@ -972,7 +935,7 @@ jlimref(str) evaluates the Julia command str and returns the corresponding FriCA
 - **Signature**: `String -> %`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
-#### `jlref` <a id="jlref"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1068)\]
+#### `jlref` <a id="jlref"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1072)\]
 
 ##### `jlref` : `% -> SExpression`
 
@@ -1174,17 +1137,11 @@ x quo y is the same as divide(x, y).quotient. See divide from EuclideanDomain.
 - **Signature**: `(%, %) -> %`
 - **From**: `EuclideanDomain`
 
-#### `random` <a id="random"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1072)\]
-
-##### `random` : `% -> %`
-
-random(n) returns a random integer from 0 to n-1.
-
-- **From**: `Integer`
-
-##### `random` : `WSInteger -> %`
+#### `random` <a id="random"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1076)\]
 
 random(n) returns a gaussian integer where real part is in the range 0..n as the imaginary part.
+
+- **Signature**: `WSInteger -> %`
 
 #### `rank` <a id="rank"></a>
 
@@ -1214,7 +1171,7 @@ rationalIfCan(x) returns x as a rational number, or "failed" if x is not a ratio
 - **Signature**: `% -> Union(Fraction(Integer),"failed")`
 - **From**: `ComplexCategory(R)`
 
-#### `real` <a id="real"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1096)\]
+#### `real` <a id="real"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1100)\]
 
 ##### `real` : `% -> R`
 
@@ -1412,7 +1369,7 @@ squareFreePart(x) returns a product of prime factors of x each taken with multip
 - **Signature**: `% -> %`
 - **From**: `UniqueFactorizationDomain`
 
-#### `string` <a id="string"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1131)\]
+#### `string` <a id="string"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1135)\]
 
 string(jt) returns the string representation of jt.
 
@@ -1426,7 +1383,7 @@ subtractIfCan(x, y) returns an element z such that z+y=x or "failed" if no such 
 - **Signature**: `(%, %) -> Union(%,"failed")`
 - **From**: `CancellationAbelianMonoid`
 
-#### `toString` <a id="tostring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1192)\]
+#### `toString` <a id="tostring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1196)\]
 
 toString(obj) returns the string representation of obj.
 
@@ -1488,7 +1445,7 @@ unitNormal(x) tries to choose a canonical element from the associate class of x.
 - **Signature**: `% -> Record(unit: %,canonical: %,associate: %)`
 - **From**: `EntireRing`
 
-#### `zero?` <a id="zero"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1297)\]
+#### `zero?` <a id="zero"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1301)\]
 
 zero?(x) tests if x is equal to 0.
 

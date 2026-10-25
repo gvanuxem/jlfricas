@@ -545,7 +545,14 @@ def get_constructor_ancestors(name: str) -> set[str]:
     """Fetch ancestor constructor names for a given constructor."""
     if not HAS_FRICAS:
         return {name}
-    raw = run_fricas_evals([f")lisp (|ancestorsOf| '(|{name}|) NIL)"])
+    lisp_cmd = (
+        f")lisp (let ((form (or (|getConstructorForm| '|{name}|) '(|{name}|)))) "
+        f"(remove-duplicates (mapcan (lambda (x) "
+        f"(let ((c (car x))) "
+        f"(cond ((consp c) (list (car c))) ((symbolp c) (list c)) (t nil)))) "
+        f"(|ancestorsOf| form nil))))"
+    )
+    raw = run_fricas_evals([lisp_cmd])
     if "<<ERROR" in raw or "<<TIMEOUT>>" in raw or "<<FRICAS_UNAVAILABLE>>" in raw:
         return {name}
     symbols = set(re.findall(r"\|([A-Za-z0-9_]+)\|", raw))

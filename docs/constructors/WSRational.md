@@ -1,6 +1,6 @@
 # WSRational
 
-> **Kind**: Domain &nbsp;|&nbsp; \[[Source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L368)\] &nbsp;|&nbsp; **Group**: WS — MathLink
+> **Kind**: Domain &nbsp;|&nbsp; \[[Source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L370)\] &nbsp;|&nbsp; **Group**: WS — MathLink
 
 ## Description
 
@@ -101,8 +101,8 @@ Julia WS rational numbers using the MathLink Julia package.
 | [`*`](#op-mul) | Operation defined in WSRational |
 | [`+`](#op-add) | Operation defined in WSRational |
 | [`/`](#op-div) | a/b returns the Julia WS rational a/b. |
-| [`0`](#0) | 0 returns the input form corresponding to 0. |
-| [`1`](#1) | 1 returns the input form corresponding to 1. |
+| [`0`](#0) | 0 is a distinguished element, in AbelianMonoid it is the additive identity element, in Mag... |
+| [`1`](#1) | 1 returns the unit element, denoted by 1. |
 | [`<`](#op-lt) | Operation defined in WSRational |
 | [`<=`](#op-le) | Operation defined in WSRational |
 | [`>`](#op-gt) | Operation defined in WSRational |
@@ -125,7 +125,7 @@ Julia WS rational numbers using the MathLink Julia package.
 | [`divide`](#divide) | divide(x, y) divides x by y producing a record containing a quotient and remainder, where ... |
 | [`euclideanSize`](#euclideansize) | euclideanSize(x) returns the euclidean size of the element x. Error: if x is zero. |
 | [`expressIdealMember`](#expressidealmember) | expressIdealMember([f1, ..., fn], h) returns a representation of h as a linear combination... |
-| [`exquo`](#exquo) | exquo(f, g) creates the equivalent infix form. |
+| [`exquo`](#exquo) | exquo(a, b) either returns an element c such that c*b=a or "failed" if no such element can... |
 | [`extendedEuclidean`](#extendedeuclidean) | extendedEuclidean(x, y) returns a record rec where rec.coef1*x+rec.coef2*y = rec.generator... |
 | [`factor`](#factor) | factor(x) returns the factorization of x into irreducibles. |
 | [`floor`](#floor) | floor(x) returns the largest integral element below x. |
@@ -261,19 +261,19 @@ a/b returns the Julia WS rational a/b.
 
 Operation defined in WSRational.
 
-#### `0` <a id="0"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L405)\]
+#### `0` <a id="0"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L407)\]
 
-0 returns the input form corresponding to 0.
-
-- **Signature**: `() -> %`
-- **From**: `InputForm`
-
-#### `1` <a id="1"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L406)\]
-
-1 returns the input form corresponding to 1.
+0 is a distinguished element, in AbelianMonoid it is the additive identity element, in MagmaWithZero it is multiplicative zero.
 
 - **Signature**: `() -> %`
-- **From**: `InputForm`
+- **From**: `SetWithZero`
+
+#### `1` <a id="1"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L408)\]
+
+1 returns the unit element, denoted by 1.
+
+- **Signature**: `() -> %`
+- **From**: `MagmaWithUnit`
 
 #### `<` <a id="op-lt"></a>
 
@@ -347,7 +347,7 @@ Operation defined in WSRational.
 
 Operation defined in WSRational.
 
-#### `abs` <a id="abs"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L607)\]
+#### `abs` <a id="abs"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L609)\]
 
 abs(x) returns the absolute value of x.
 
@@ -382,7 +382,7 @@ associator(a, b, c) returns (a*b)*c-a*(b*c).
 - **Signature**: `(%, %, %) -> %`
 - **From**: `NonAssociativeRng`
 
-#### `ceiling` <a id="ceiling"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L605)\]
+#### `ceiling` <a id="ceiling"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L607)\]
 
 ##### `ceiling` : `% -> S`
 
@@ -401,7 +401,7 @@ characteristic() returns the characteristic of the ring.
 - **Signature**: `() -> NonNegativeInteger`
 - **From**: `NonAssociativeRing`
 
-#### `coerce` <a id="coerce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L386)\]
+#### `coerce` <a id="coerce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L388)\]
 
 ##### `coerce` : `Integer -> %`
 
@@ -437,12 +437,6 @@ coerce(expr) returns the WSExpression representation of expr.
 
 - **From**: [`WSObject`](WSObject.md)
 
-##### `coerce` : `% -> WSRational`
-
-coerce(z) coerces z.
-
-- **From**: [`WSInteger`](WSInteger.md)
-
 ##### `coerce` : `% -> %`
 
 Operation defined in WSRational.
@@ -466,29 +460,11 @@ commutator(a, b) returns a*b-b*a.
 - **Signature**: `(%, %) -> %`
 - **From**: `NonAssociativeRng`
 
-#### `convert` <a id="convert"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L392)\]
+#### `convert` <a id="convert"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L394)\]
 
 ##### `convert` : `% -> Fraction(Integer)`
 
 convert(q) returns q as a Fraction(Integer).
-
-##### `convert` : `DoubleFloat -> %`
-
-convert(x) converts a DoubleFloat x to a Float.
-
-- **From**: `Float`
-
-##### `convert` : `List(%) -> %`
-
-convert([a1, ..., an]) returns the pattern [a1, ..., an].
-
-- **From**: `Pattern(R)`
-
-##### `convert` : `SExpression -> %`
-
-convert(s) makes s into an input form.
-
-- **From**: `InputForm`
 
 ##### `convert` : `% -> S`
 
@@ -516,7 +492,7 @@ Operation defined in WSRational.
 
 Operation defined in WSRational.
 
-#### `denom` <a id="denom"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L423)\]
+#### `denom` <a id="denom"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L425)\]
 
 ##### `denom` : `% -> S`
 
@@ -528,7 +504,7 @@ denom(x) returns the denominator of the fraction x.
 
 Operation defined in WSRational.
 
-#### `denominator` <a id="denominator"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L426)\]
+#### `denominator` <a id="denominator"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L428)\]
 
 denominator(x) is the denominator of the fraction x converted to %.
 
@@ -592,16 +568,9 @@ expressIdealMember([f1, ..., fn], h) returns a representation of h as a linear c
 
 #### `exquo` <a id="exquo"></a>
 
-##### `exquo` : `(%, %) -> %`
-
-exquo(f, g) creates the equivalent infix form.
-
-- **From**: `OutputForm`
-
-##### `exquo` : `(%, %) -> Union(%,"failed")`
-
 exquo(a, b) either returns an element c such that c*b=a or "failed" if no such element can be found.
 
+- **Signature**: `(%, %) -> Union(%,"failed")`
 - **From**: `EntireRing`
 
 #### `extendedEuclidean` <a id="extendedeuclidean"></a>
@@ -620,19 +589,12 @@ extendedEuclidean(x, y, z) either returns a record rec where rec.coef1*x+rec.coe
 
 #### `factor` <a id="factor"></a>
 
-##### `factor` : `% -> Factored(%)`
-
 factor(x) returns the factorization of x into irreducibles.
 
+- **Signature**: `% -> Factored(%)`
 - **From**: `UniqueFactorizationDomain`
 
-##### `factor` : `% -> WSList(WSList(%))`
-
-factor(n) returns the WS factorization of n.
-
-- **From**: [`WSInteger`](WSInteger.md)
-
-#### `floor` <a id="floor"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L606)\]
+#### `floor` <a id="floor"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L608)\]
 
 ##### `floor` : `% -> S`
 
@@ -644,7 +606,7 @@ floor(x) returns the largest integral element below x.
 
 Operation defined in WSRational.
 
-#### `fractionPart` <a id="fractionpart"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L621)\]
+#### `fractionPart` <a id="fractionpart"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L623)\]
 
 fractionPart(x) returns the fractional part of x. x = wholePart(x) + fractionPart(x)
 
@@ -702,7 +664,7 @@ jWSInterpret(Type|Form, Expr) interprets Expr to be of type Type or Form using t
 jWSInterpret("Number","3.2")@WSREAL
 jWSInterpret("Real","3.2")@WSREAL
 jWSInterpret("Location","Lille")$WSEXPR
-See jWSExpr "$InterpreterTypes"
+See jWSExpression "$InterpreterTypes"
 ```
 
 - **From**: [`WSObject`](WSObject.md)
@@ -713,7 +675,7 @@ jWSInterpret(form1,form2,form3) interprets forms.
 
 - **From**: [`WSObject`](WSObject.md)
 
-#### `jWSRational` <a id="jwsrational"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L394)\]
+#### `jWSRational` <a id="jwsrational"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L396)\]
 
 jWSRational(q) constructs q as a WSRational.
 
@@ -907,7 +869,7 @@ jlimref(str) evaluates the Julia command str and returns the corresponding FriCA
 - **Signature**: `String -> %`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
-#### `jlref` <a id="jlref"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L380)\]
+#### `jlref` <a id="jlref"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L382)\]
 
 ##### `jlref` : `% -> SExpression`
 
@@ -1038,7 +1000,7 @@ nothing?(obj) checks whether or not obj is nothing.
 - **Signature**: `% -> Boolean`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
-#### `numer` <a id="numer"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L422)\]
+#### `numer` <a id="numer"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L424)\]
 
 ##### `numer` : `% -> S`
 
@@ -1050,14 +1012,14 @@ numer(x) returns the numerator of the fraction x.
 
 Operation defined in WSRational.
 
-#### `numerator` <a id="numerator"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L424)\]
+#### `numerator` <a id="numerator"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L426)\]
 
 numerator(x) is the numerator of the fraction x converted to %.
 
 - **Signature**: `% -> %`
 - **From**: `QuotientFieldCategory(S)`
 
-#### `numeric` <a id="numeric"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L459)\]
+#### `numeric` <a id="numeric"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L461)\]
 
 ##### `numeric` : `% -> WSExpression`
 
@@ -1175,7 +1137,7 @@ x rem y is the same as divide(x, y).remainder. See divide from EuclideanDomain.
 - **Signature**: `(%, %) -> %`
 - **From**: `EuclideanDomain`
 
-#### `retract` <a id="retract"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L444)\]
+#### `retract` <a id="retract"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L446)\]
 
 ##### `retract` : `% -> S`
 
@@ -1195,7 +1157,7 @@ Operation defined in WSRational.
 
 Operation defined in WSRational.
 
-#### `retractIfCan` <a id="retractifcan"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L447)\]
+#### `retractIfCan` <a id="retractifcan"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L449)\]
 
 ##### `retractIfCan` : `% -> Union(S,"failed")`
 
@@ -1278,7 +1240,7 @@ squareFreePart(x) returns a product of prime factors of x each taken with multip
 - **Signature**: `% -> %`
 - **From**: `UniqueFactorizationDomain`
 
-#### `string` <a id="string"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L442)\]
+#### `string` <a id="string"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L444)\]
 
 string(jt) returns the string representation of jt.
 
@@ -1292,7 +1254,7 @@ subtractIfCan(x, y) returns an element z such that z+y=x or "failed" if no such 
 - **Signature**: `(%, %) -> Union(%,"failed")`
 - **From**: `CancellationAbelianMonoid`
 
-#### `toString` <a id="tostring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L719)\]
+#### `toString` <a id="tostring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L722)\]
 
 toString(obj) returns the string representation of obj.
 
@@ -1320,7 +1282,7 @@ unitNormal(x) tries to choose a canonical element from the associate class of x.
 - **Signature**: `% -> Record(unit: %,canonical: %,associate: %)`
 - **From**: `EntireRing`
 
-#### `wholePart` <a id="wholepart"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L620)\]
+#### `wholePart` <a id="wholepart"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L622)\]
 
 ##### `wholePart` : `% -> S`
 
@@ -1332,7 +1294,7 @@ wholePart(x) returns the whole part of the fraction x the truncated quotient of 
 
 Operation defined in WSRational.
 
-#### `zero?` <a id="zero"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L639)\]
+#### `zero?` <a id="zero"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L641)\]
 
 zero?(x) tests if x is equal to 0.
 

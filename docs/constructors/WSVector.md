@@ -1,6 +1,6 @@
 # WSVector
 
-> **Kind**: Domain &nbsp;|&nbsp; \[[Source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L235)\] &nbsp;|&nbsp; **Group**: WS — MathLink
+> **Kind**: Domain &nbsp;|&nbsp; \[[Source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L233)\] &nbsp;|&nbsp; **Group**: WS — MathLink
 
 ## Description
 
@@ -125,7 +125,7 @@ Julia WS vectors using the MathLink Julia package.
 | [`coerce`](#coerce) | coerce(list) tries to coerce list to a WSAggregate. |
 | [`concat`](#concat) | concat(u, v) returns an aggregate consisting of the elements of u followed by the elements... |
 | [`construct`](#construct) | construct([x, y, ..., z]) returns the collection of elements x, y, ..., z ordered as given... |
-| [`convert`](#convert) | convert(s) makes s into an input form. |
+| [`convert`](#convert) | convert(a) transforms a into an element of S. |
 | [`copy`](#copy) | copy(u) returns a top-level (non-recursive) copy of u. Note: for collections, copy(u) = [x... |
 | [`copyInto!`](#copyinto) | copyInto!(u, v, i) returns aggregate u containing a copy of v inserted at element i. |
 | [`count`](#count) | count(x, u) returns the number of occurrences of x in u. For collections, count(x, u) = re... |
@@ -133,8 +133,8 @@ Julia WS vectors using the MathLink Julia package.
 | [`delete`](#delete) | delete(u, i) returns a copy of u with the ith element deleted. Note: delete(u, i) = concat... |
 | [`differences`](#differences) | differences(agg) returns the differences between adjacent elements in agg. |
 | [`dimensions`](#dimensions) | dimensions(agg) returns dimensions of agg. |
-| [`dot`](#dot) | dot(f) creates the form with one dot overhead. |
-| [`elt`](#elt) | elt(op, l) creates a form for application of op to list of arguments l. |
+| [`dot`](#dot) | dot(v1, v2) is the dot product of v1 and v2. |
+| [`elt`](#elt) | elt(agg,i) returns the i-th element. |
 | [`empty`](#empty) | empty()$D creates an aggregate of type D with 0 elements. Note: The em $D can be dropped i... |
 | [`empty?`](#empty) | empty?(u) tests if u has 0 elements. |
 | [`entries`](#entries) | entries(u) returns a list of all the entries of aggregate u in no assumed order. |
@@ -254,7 +254,7 @@ Julia WS vectors using the MathLink Julia package.
 
 ##### `#` : `% -> WSInteger`
 
-#(agg) returns the length of agg. 0 if it is a scalar, an index for example.
+#(agg) returns the length of agg. 0 if it is a scalar.
 
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
@@ -341,19 +341,13 @@ append(l, elt) appends elt to the list l.
 - **Signature**: `(%, E) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `coerce` <a id="coerce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L281)\]
+#### `coerce` <a id="coerce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L279)\]
 
 ##### `coerce` : `List(E) -> %`
 
 coerce(list) tries to coerce list to a WSAggregate.
 
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
-
-##### `coerce` : `Segment(S) -> %`
-
-coerce(x) allows Segment values to be used as %.
-
-- **From**: `UniversalSegment(S)`
 
 ##### `coerce` : `% -> S`
 
@@ -435,12 +429,6 @@ Operation defined in WSVector.
 
 #### `convert` <a id="convert"></a>
 
-##### `convert` : `SExpression -> %`
-
-convert(s) makes s into an input form.
-
-- **From**: `InputForm`
-
 ##### `convert` : `% -> S`
 
 convert(a) transforms a into an element of S.
@@ -496,7 +484,7 @@ Operation defined in WSVector.
 
 Operation defined in WSVector.
 
-#### `cross` <a id="cross"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L270)\]
+#### `cross` <a id="cross"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L268)\]
 
 cross(u, v) constructs the cross product of u and v. Error: if u and v are not of length 3.
 
@@ -535,26 +523,14 @@ differences(agg) returns the differences between adjacent elements in agg.
 
 Operation defined in WSVector.
 
-#### `dimensions` <a id="dimensions"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L531)\]
+#### `dimensions` <a id="dimensions"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L529)\]
 
 dimensions(agg) returns dimensions of agg.
 
 - **Signature**: `% -> WSList(WSInteger)`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `dot` <a id="dot"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L266)\]
-
-##### `dot` : `% -> %`
-
-dot(f) creates the form with one dot overhead.
-
-- **From**: `OutputForm`
-
-##### `dot` : `(%, NonNegativeInteger) -> %`
-
-dot(f, n) creates the form f with n dots overhead.
-
-- **From**: `OutputForm`
+#### `dot` <a id="dot"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L264)\]
 
 ##### `dot` : `(%, %) -> E`
 
@@ -568,13 +544,7 @@ dot(x, y) computes the inner product of the two vectors x and y. Error: if x and
 
 - **From**: `VectorCategory(R)`
 
-#### `elt` <a id="elt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L394)\]
-
-##### `elt` : `(%, List(%)) -> %`
-
-elt(op, l) creates a form for application of op to list of arguments l.
-
-- **From**: `OutputForm`
+#### `elt` <a id="elt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L392)\]
 
 ##### `elt` : `(%, Integer) -> E`
 
@@ -854,7 +824,7 @@ jWSInterpret(Type|Form, Expr) interprets Expr to be of type Type or Form using t
 jWSInterpret("Number","3.2")@WSREAL
 jWSInterpret("Real","3.2")@WSREAL
 jWSInterpret("Location","Lille")$WSEXPR
-See jWSExpr "$InterpreterTypes"
+See jWSExpression "$InterpreterTypes"
 ```
 
 - **From**: [`WSObject`](WSObject.md)
@@ -865,7 +835,7 @@ jWSInterpret(form1,form2,form3) interprets forms.
 
 - **From**: [`WSObject`](WSObject.md)
 
-#### `jWSVector` <a id="jwsvector"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L283)\]
+#### `jWSVector` <a id="jwsvector"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L281)\]
 
 ##### `jWSVector` : `List(E) -> %`
 
@@ -1067,7 +1037,7 @@ jlimref(str) evaluates the Julia command str and returns the corresponding FriCA
 - **Signature**: `String -> %`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
-#### `jlref` <a id="jlref"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L247)\]
+#### `jlref` <a id="jlref"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L245)\]
 
 ##### `jlref` : `% -> SExpression`
 
@@ -1088,14 +1058,14 @@ join(agg1, agg2) joins the two aggregates agg1 and agg2.
 - **Signature**: `(%, %) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `last` <a id="last"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L540)\]
+#### `last` <a id="last"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L538)\]
 
 last(agg) returns the last element of agg.
 
 - **Signature**: `% -> E`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `latex` <a id="latex"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L519)\]
+#### `latex` <a id="latex"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L517)\]
 
 latex(s) returns a LaTeX-printable output representation of s.
 
@@ -1124,7 +1094,7 @@ length(v) computes the sqrt(dot(v, v)), the euclidean length
 
 ##### `length` : `% -> WSInteger`
 
-length(agg) returns the length of agg. 0 if it is a scalar, an index for example.
+length(agg) returns the length of agg. 0 if it is a scalar.
 
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
@@ -1354,7 +1324,7 @@ new(n, x) returns a new aggregate of size n all of whose entries are x.
 
 Operation defined in WSVector.
 
-#### `norm` <a id="norm"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L268)\]
+#### `norm` <a id="norm"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L266)\]
 
 norm(v) computes the norm of the vector v.
 
@@ -1471,7 +1441,7 @@ prepend(l, elt) prepends elt to the list l.
 - **Signature**: `(%, E) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `qelt` <a id="qelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L396)\]
+#### `qelt` <a id="qelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L394)\]
 
 ##### `qelt` : `(%, Integer) -> E`
 
@@ -1485,14 +1455,14 @@ qelt(u, x) applies u to x without checking whether x is in the domain of u. If x
 
 - **From**: `EltableAggregate(Dom,Im)`
 
-#### `qsetelt` <a id="qsetelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L402)\]
+#### `qsetelt` <a id="qsetelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L400)\]
 
 qsetelt(l,i,elem) returns a copy of l with i-th element replaced by the element elem. No checks are done at the FriCAS level.
 
 - **Signature**: `(%, Integer, E) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `qsetelt!` <a id="qsetelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L405)\]
+#### `qsetelt!` <a id="qsetelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L403)\]
 
 ##### `qsetelt!` : `(%, Integer, E) -> %`
 
@@ -1669,14 +1639,14 @@ setIntersection(agg1, agg2) is the intersection set operator.
 - **Signature**: `(%, %) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `setelt` <a id="setelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L399)\]
+#### `setelt` <a id="setelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L397)\]
 
 setelt(l,i,elem) returns a copy of l with i-th element replaced by the element elem.
 
 - **Signature**: `(%, Integer, E) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `setelt!` <a id="setelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L579)\]
+#### `setelt!` <a id="setelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L577)\]
 
 ##### `setelt!` : `(%, Integer, E) -> %`
 
@@ -1824,7 +1794,7 @@ take(l,i) returns the first i elements.
 
 Operation defined in WSVector.
 
-#### `toString` <a id="tostring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L500)\]
+#### `toString` <a id="tostring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L498)\]
 
 toString(obj) returns the string representation of obj.
 
@@ -1843,7 +1813,7 @@ total(agg) returns the sum of the elements in agg.
 
 Operation defined in WSVector.
 
-#### `transpose` <a id="transpose"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L272)\]
+#### `transpose` <a id="transpose"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L270)\]
 
 transpose(v) transposes v. For esoteric purpose, and if you know what you are doing. There is only one type of vector in the Wolfram language. Should not be used, and for normal purpose, does nothing.
 
@@ -1869,7 +1839,7 @@ union(agg1, agg2) is the union set operator. Elements are sorted on output.
 - **Signature**: `(%, %) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `vector` <a id="vector"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L276)\]
+#### `vector` <a id="vector"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L274)\]
 
 vector(list) returns list as a vector. Inplace coercion.
 

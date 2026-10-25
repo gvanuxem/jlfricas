@@ -98,7 +98,7 @@ coerce(obj) coerces obj to JLObject. Convenience function.
 
 Operation defined in WSObject.
 
-#### `convert` <a id="convert"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L357)\]
+#### `convert` <a id="convert"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L359)\]
 
 ##### `convert` : `% -> S`
 
@@ -126,7 +126,7 @@ jWSInterpret("Real","3.2")@WSREAL
 jWSInterpret("Location","Lille")$WSEXPR
 ```
 
-See jWSExpr "$InterpreterTypes"
+See jWSExpression "$InterpreterTypes"
 
 ##### `jWSInterpret` : `(String, String, String) -> %`
 

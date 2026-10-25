@@ -4,11 +4,11 @@
 
 ## Description
 
-Julia WS expressions using the MathLink Julia package. It supports the Eltable category (interface) so, for example using Fibonacci polynomials fibonacci(12,jWSExpr x) => 3 75 77 79 411 6 x + 35 x 2+ 56 x 2+ 36 x 2+ 10 x 2+ x %.5 => 10*x^9
+Julia WS expressions using the MathLink Julia package. It supports the Eltable category (interface) so, for example using Fibonacci polynomials fib:=fibonacci(12,jWSExpression x) => 3 75 77 79 411 6 x + 35 x 2+ 56 x 2+ 36 x 2+ 10 x 2+ x fib.5 => 10*x^9
 
 **WSExpression is a domain constructor.**  
 **Abbreviation for WSExpression is WSEXPR**  
-**521 names for 827 operations in this domain.**
+**522 names for 828 operations in this domain.**
 
 ## Signatures
 
@@ -151,282 +151,282 @@ Julia WS expressions using the MathLink Julia package. It supports the Eltable c
  extendedSimplify : % -> %    extendedSimplify : (%, %) -> %
  extract : (%, NonNegativeInteger) -> %    extract : (%, WSExpression) -> %
  factor : % -> %    factor : (%, %) -> %
- factor : % -> Factored(%)    factorList : % -> WSList(WSList(%))
- factorPolynomial : % -> %    factorPolynomial : SparseUnivariatePolynomial(%) -> Factored(SparseUnivariatePolynomial(%)) if % has PFECAT
- factorSquareFree : % -> %    factorSquareFreeList : % -> WSList(WSList(%))
- factorSquareFreePolynomial : SparseUnivariatePolynomial(%) -> Factored(SparseUnivariatePolynomial(%)) if % has PFECAT    factorTerms : % -> %
- factorTerms : (%, %) -> %    factorTerms : (%, WSList(%)) -> %
- factorTermsList : % -> WSList(%)    factorTermsList : (%, %) -> WSList(%)
- factorial : % -> %    factorials : % -> %
- factorials : (%, Symbol) -> %    fibonacci : (%, %) -> %
- findInstance : (%, %) -> WSList(WSList(%))    findInstance : (%, %, %) -> WSList(WSList(%))
- findInstance : (%, %, %, %) -> WSList(WSList(%))    findInstance : (Equation(%), %) -> WSList(WSList(%))
- findInstance : (Equation(%), %, %) -> WSList(WSList(%))    findInstance : (Equation(%), %, %, %) -> WSList(WSList(%))
- findRoot : (%, %) -> %    first : % -> %
- floor : % -> %    fourier : % -> %
- fourier : (%, %) -> %    fourier : WSList(%) -> WSList(%)
- fourier : (WSList(%), WSList(%)) -> WSList(%)    fractionPart : % -> %
- freeOf? : (%, %) -> Boolean    freeOf? : (%, Symbol) -> Boolean
- fresnelC : % -> %    fresnelS : % -> %
- fromCoefficientRules : (%, %) -> %    functionExpand : % -> %
- functionExpand : (%, %) -> %    gammaRegularized : (%, %) -> %
- gcd : (%, %) -> %    gcd : List(%) -> %
- gcdPolynomial : (SparseUnivariatePolynomial(%), SparseUnivariatePolynomial(%)) -> SparseUnivariatePolynomial(%)    gegenbauerC : (%, %) -> %
- gegenbauerC : (%, %, %) -> %    generator : () -> %
- goldenRatio : () -> %    groebnerBasis : (%, %) -> WSList(%)
- groebnerBasis : (%, %, %) -> WSList(%)    ground : % -> %
- ground? : % -> Boolean    gudermannian : % -> %
- guessGeneratingFunction : (%, %) -> %    guessGeneratingFunction : (WSList(%), %) -> %
- guessSequenceFunction : % -> %    guessSequenceFunction : (%, %) -> %
- guessSequenceFunction : WSList(WSInteger) -> %    hahnQ : (%, %, %, %, %) -> %
- hahnR : (%, %, %, %, %) -> %    hahnS : (%, %, %, %, %) -> %
- hahn_p : (%, %, %, %, %, %) -> %    hankelH1 : (%, %) -> %
- hankelH2 : (%, %) -> %    haversine : % -> %
- height : % -> NonNegativeInteger    hermiteH : (%, %) -> %
- hornerForm : (%, %) -> %    hurwitzLerchPhi : (%, %, %) -> %
- hurwitzZeta : (%, %) -> %    hyperFactorial : % -> %
- hypergeometric0F1 : (%, %) -> %    hypergeometric0F1Regularized : (%, %) -> %
- hypergeometric1F1 : (%, %, %) -> %    hypergeometric1F1Regularized : (%, %, %) -> %
- hypergeometricU : (%, %, %) -> %    imag : % -> %
- imaginary : () -> %    insert : (%, %, WSInteger) -> %
- integer? : % -> Boolean    integral : (%, SegmentBinding(%)) -> %
- integral : (%, Symbol) -> %    integrate : (%, %) -> %
- integrate : (%, %, Segment(Integer)) -> %    integrate : (%, Symbol) -> %
- interpolatingPolynomial : (%, %) -> %    intersection : (%, %) -> %
- inv : % -> %    inverseBetaRegularized : (%, %, %) -> %
- inverseErf : % -> %    inverseErfc : % -> %
- inverseFourier : % -> %    inverseFourier : (%, %) -> %
- inverseFourier : WSList(%) -> %    inverseFourier : (WSList(%), WSList(%)) -> WSList(%)
- inverseGammaRegularized : (%, %) -> %    inverseGudermannian : % -> %
- inverseHaversine : % -> %    inverseJacobiCn : (%, %) -> %
- inverseJacobiSn : (%, %) -> %    irreducible? : % -> Boolean
- irreducible? : (%, %) -> Boolean    is? : (%, BasicOperator) -> Boolean
- is? : (%, Symbol) -> Boolean    isExpt : % -> Union(Record(var: Kernel(%),exponent: Integer),"failed")
- isExpt : (%, BasicOperator) -> Union(Record(var: Kernel(%),exponent: Integer),"failed")    isExpt : (%, Symbol) -> Union(Record(var: Kernel(%),exponent: Integer),"failed")
- isMult : % -> Union(Record(coef: Integer,var: Kernel(%)),"failed")    isPlus : % -> Union(List(%),"failed")
- isPower : % -> Union(Record(val: %,exponent: Integer),"failed")    isTimes : % -> Union(List(%),"failed")
- jWSAggregate : List(%) -> %    jWSAssociation : WSList(%) -> %
- jWSData : () -> %    jWSData : % -> %
- jWSData : (%, %) -> %    jWSData : (%, %, %) -> %
- jWSData : String -> %    jWSData : (String, String) -> %
- jWSData : (String, String, String) -> %    jWSEqual : (%, %) -> %
- jWSExpr : DoubleFloat -> %    jWSExpr : Float -> %
- jWSExpr : Fraction(Integer) -> %    jWSExpr : Integer -> %
- jWSExpr : JLFloat -> %    jWSExpr : JLFloat64 -> %
- jWSExpr : List(%) -> %    jWSExpr : String -> %
- jWSExpr : Symbol -> %    jWSGreater : (%, %) -> %
- jWSGreaterEqual : (%, %) -> %    jWSInterpret : String -> %
- jWSInterpret : (String, String) -> %    jWSInterpret : (String, String, String) -> %
- jWSLess : (%, %) -> %    jWSLessEqual : (%, %) -> %
- jWSNotEqual : (%, %) -> %    jWSQuantity : % -> %
- jWSQuantity : (%, %) -> %    jWSRule : (%, %) -> %
- jWSRule : Equation(%) -> %    jWSTable : (%, %) -> WSList(%)
- jWSTable : (%, %, %) -> WSList(WSList(%))    jacobiAmplitude : (%, %) -> %
- jacobiCn : (%, %) -> %    jacobiDn : (%, %) -> %
- jacobiP : (%, %, %, %) -> %    jacobiSn : (%, %) -> %
- jacobiTheta : (%, %) -> %    jacobiTheta : (WSInteger, %, %) -> %
- jacobiZeta : (%, %) -> %    jlAbout : % -> Void
- jlApply : (String, %) -> JLObject    jlApply : (String, %, %) -> JLObject
- jlApply : (String, %, %, %) -> JLObject    jlApply : (String, %, %, %, %) -> JLObject
- jlApply : (String, %, %, %, %, %) -> JLObject    jlDisplay : % -> Void
- jlDisplay : WSExpression -> WSExpression    jlDisplay : (WSExpression, WSExpression) -> WSExpression
- jlDump : JLObject -> Void    jlEval : % -> %
- jlEval : (%, String) -> %    jlEval : (%, String, String) -> %
- jlEval : (%, String, String, String) -> %    jlFieldNames : % -> JLObject
- jlGetField : (%, JLSymbol) -> JLObject    jlGetJuliaIndex : % -> String
- jlGetProperty : (%, JLSymbol) -> JLObject    jlGreedyEval : Boolean -> Void
+ factor : % -> Factored(%)    factorInteger : % -> %
+ factorList : % -> WSList(WSList(%))    factorPolynomial : % -> %
+ factorPolynomial : SparseUnivariatePolynomial(%) -> Factored(SparseUnivariatePolynomial(%)) if % has PFECAT    factorSquareFree : % -> %
+ factorSquareFreeList : % -> WSList(WSList(%))    factorSquareFreePolynomial : SparseUnivariatePolynomial(%) -> Factored(SparseUnivariatePolynomial(%)) if % has PFECAT
+ factorTerms : % -> %    factorTerms : (%, %) -> %
+ factorTerms : (%, WSList(%)) -> %    factorTermsList : % -> WSList(%)
+ factorTermsList : (%, %) -> WSList(%)    factorial : % -> %
+ factorials : % -> %    factorials : (%, Symbol) -> %
+ fibonacci : (%, %) -> %    findInstance : (%, %) -> WSList(WSList(%))
+ findInstance : (%, %, %) -> WSList(WSList(%))    findInstance : (%, %, %, %) -> WSList(WSList(%))
+ findInstance : (Equation(%), %) -> WSList(WSList(%))    findInstance : (Equation(%), %, %) -> WSList(WSList(%))
+ findInstance : (Equation(%), %, %, %) -> WSList(WSList(%))    findRoot : (%, %) -> %
+ first : % -> %    floor : % -> %
+ fourier : % -> %    fourier : (%, %) -> %
+ fourier : WSList(%) -> WSList(%)    fourier : (WSList(%), WSList(%)) -> WSList(%)
+ fractionPart : % -> %    freeOf? : (%, %) -> Boolean
+ freeOf? : (%, Symbol) -> Boolean    fresnelC : % -> %
+ fresnelS : % -> %    fromCoefficientRules : (%, %) -> %
+ functionExpand : % -> %    functionExpand : (%, %) -> %
+ gammaRegularized : (%, %) -> %    gcd : (%, %) -> %
+ gcd : List(%) -> %    gcdPolynomial : (SparseUnivariatePolynomial(%), SparseUnivariatePolynomial(%)) -> SparseUnivariatePolynomial(%)
+ gegenbauerC : (%, %) -> %    gegenbauerC : (%, %, %) -> %
+ generator : () -> %    goldenRatio : () -> %
+ groebnerBasis : (%, %) -> WSList(%)    groebnerBasis : (%, %, %) -> WSList(%)
+ ground : % -> %    ground? : % -> Boolean
+ gudermannian : % -> %    guessGeneratingFunction : (%, %) -> %
+ guessGeneratingFunction : (WSList(%), %) -> %    guessSequenceFunction : % -> %
+ guessSequenceFunction : (%, %) -> %    guessSequenceFunction : WSList(WSInteger) -> %
+ hahnQ : (%, %, %, %, %) -> %    hahnR : (%, %, %, %, %) -> %
+ hahnS : (%, %, %, %, %) -> %    hahn_p : (%, %, %, %, %, %) -> %
+ hankelH1 : (%, %) -> %    hankelH2 : (%, %) -> %
+ haversine : % -> %    height : % -> NonNegativeInteger
+ hermiteH : (%, %) -> %    hornerForm : (%, %) -> %
+ hurwitzLerchPhi : (%, %, %) -> %    hurwitzZeta : (%, %) -> %
+ hyperFactorial : % -> %    hypergeometric0F1 : (%, %) -> %
+ hypergeometric0F1Regularized : (%, %) -> %    hypergeometric1F1 : (%, %, %) -> %
+ hypergeometric1F1Regularized : (%, %, %) -> %    hypergeometricU : (%, %, %) -> %
+ imag : % -> %    imaginary : () -> %
+ insert : (%, %, WSInteger) -> %    integer? : % -> Boolean
+ integral : (%, SegmentBinding(%)) -> %    integral : (%, Symbol) -> %
+ integrate : (%, %) -> %    integrate : (%, %, Segment(Integer)) -> %
+ integrate : (%, Symbol) -> %    interpolatingPolynomial : (%, %) -> %
+ intersection : (%, %) -> %    inv : % -> %
+ inverseBetaRegularized : (%, %, %) -> %    inverseErf : % -> %
+ inverseErfc : % -> %    inverseFourier : % -> %
+ inverseFourier : (%, %) -> %    inverseFourier : WSList(%) -> %
+ inverseFourier : (WSList(%), WSList(%)) -> WSList(%)    inverseGammaRegularized : (%, %) -> %
+ inverseGudermannian : % -> %    inverseHaversine : % -> %
+ inverseJacobiCn : (%, %) -> %    inverseJacobiSn : (%, %) -> %
+ irreducible? : % -> Boolean    irreducible? : (%, %) -> Boolean
+ is? : (%, BasicOperator) -> Boolean    is? : (%, Symbol) -> Boolean
+ isExpt : % -> Union(Record(var: Kernel(%),exponent: Integer),"failed")    isExpt : (%, BasicOperator) -> Union(Record(var: Kernel(%),exponent: Integer),"failed")
+ isExpt : (%, Symbol) -> Union(Record(var: Kernel(%),exponent: Integer),"failed")    isMult : % -> Union(Record(coef: Integer,var: Kernel(%)),"failed")
+ isPlus : % -> Union(List(%),"failed")    isPower : % -> Union(Record(val: %,exponent: Integer),"failed")
+ isTimes : % -> Union(List(%),"failed")    jWSAggregate : List(%) -> %
+ jWSAssociation : WSList(%) -> %    jWSData : () -> %
+ jWSData : % -> %    jWSData : (%, %) -> %
+ jWSData : (%, %, %) -> %    jWSData : String -> %
+ jWSData : (String, String) -> %    jWSData : (String, String, String) -> %
+ jWSEqual : (%, %) -> %    jWSExpression : DoubleFloat -> %
+ jWSExpression : Float -> %    jWSExpression : Fraction(Integer) -> %
+ jWSExpression : Integer -> %    jWSExpression : JLFloat -> %
+ jWSExpression : JLFloat64 -> %    jWSExpression : List(%) -> %
+ jWSExpression : String -> %    jWSExpression : Symbol -> %
+ jWSGreater : (%, %) -> %    jWSGreaterEqual : (%, %) -> %
+ jWSInterpret : String -> %    jWSInterpret : (String, String) -> %
+ jWSInterpret : (String, String, String) -> %    jWSLess : (%, %) -> %
+ jWSLessEqual : (%, %) -> %    jWSNotEqual : (%, %) -> %
+ jWSQuantity : % -> %    jWSQuantity : (%, %) -> %
+ jWSRule : (%, %) -> %    jWSRule : Equation(%) -> %
+ jWSTable : (%, %) -> WSList(%)    jWSTable : (%, %, %) -> WSList(WSList(%))
+ jacobiAmplitude : (%, %) -> %    jacobiCn : (%, %) -> %
+ jacobiDn : (%, %) -> %    jacobiP : (%, %, %, %) -> %
+ jacobiSn : (%, %) -> %    jacobiTheta : (%, %) -> %
+ jacobiTheta : (WSInteger, %, %) -> %    jacobiZeta : (%, %) -> %
+ jlAbout : % -> Void    jlApply : (String, %) -> JLObject
+ jlApply : (String, %, %) -> JLObject    jlApply : (String, %, %, %) -> JLObject
+ jlApply : (String, %, %, %, %) -> JLObject    jlApply : (String, %, %, %, %, %) -> JLObject
+ jlDisplay : % -> Void    jlDisplay : WSExpression -> WSExpression
+ jlDisplay : (WSExpression, WSExpression) -> WSExpression    jlDump : JLObject -> Void
+ jlEval : % -> %    jlEval : (%, String) -> %
+ jlEval : (%, String, String) -> %    jlEval : (%, String, String, String) -> %
+ jlFieldNames : % -> JLObject    jlGetField : (%, JLSymbol) -> JLObject
+ jlGetJuliaIndex : % -> String    jlGetProperty : (%, JLSymbol) -> JLObject
  jlHead : % -> WSSymbol    jlId : % -> Integer
  jlNames : % -> JLObject    jlObject : () -> String
  jlPropertyNames : % -> JLObject    jlRef : % -> SExpression
  jlSymbolic : % -> String    jlText : (%, String) -> List(String)
  jlType : % -> Symbol    jlWSAccuracy : % -> %
- jlWSDefined? : String -> Boolean    jlWSPrecision : % -> %
- jlWSSetAccuracy : (%, %) -> %    jlWSSetOptions : (%, %) -> %
- jlWSSetPrecision : (%, %) -> %    jlimref : String -> %
- jlref : String -> %    join : (%, %) -> %
- kelvinBei : (%, %) -> %    kelvinBer : (%, %) -> %
- kelvinKei : (%, %) -> %    kelvinKer : (%, %) -> %
- kernel : (BasicOperator, %) -> %    kernel : (BasicOperator, List(%)) -> %
- kernels : % -> List(Kernel(%))    kernels : List(%) -> List(Kernel(%))
- key? : (%, %) -> Boolean    keys : % -> %
- kleinInvariantJ : % -> %    krawtchoukK : (%, %, %, %) -> %
- kummerM : (%, %, %) -> %    kummerU : (%, %, %) -> %
- laguerreL : (%, %) -> %    laguerreL : (%, %, %) -> %
- lambertW : % -> %    lambertW : (WSInteger, %) -> %
- last : % -> %    latex : % -> String
- lcm : (%, %) -> %    lcm : List(%) -> %
- lcmCoef : (%, %) -> Record(llcm_res: %,coeff1: %,coeff2: %)    leftPower : (%, NonNegativeInteger) -> %
- leftPower : (%, PositiveInteger) -> %    leftRecip : % -> Union(%,"failed")
- legendreP : (%, %) -> %    legendreP : (%, %, %) -> %
- legendreQ : (%, %) -> %    legendreQ : (%, %, %) -> %
- length : % -> %    length : % -> WSInteger
- lerchPhi : (%, %, %) -> %    level : (%, %) -> WSList(%)
- level : (%, %, Boolean) -> WSList(%)    li : % -> %
- lift : % -> SparseUnivariatePolynomial(%)    limit : (%, %) -> %
- log : % -> %    log10 : % -> %
- log2 : % -> %    logBarnesG : % -> %
- logGamma : % -> %    lommelS1 : (%, %, %) -> %
- lommelS2 : (%, %, %) -> %    lookup : (%, %) -> %
- lookup : (%, %, %) -> %    machineNumber? : % -> Boolean
- mainKernel : % -> Union(Kernel(%),"failed")    map : ((% -> %), %) -> %
- map : ((% -> %), Kernel(%)) -> %    mathieuC : (%, %, %) -> %
- mathieuCPrime : (%, %, %) -> %    mathieuCharacteristicA : (%, %) -> %
- mathieuCharacteristicB : (%, %) -> %    mathieuCharacteristicExponent : (%, %) -> %
- mathieuS : (%, %, %) -> %    mathieuSPrime : (%, %, %) -> %
- matrixForm : % -> %    maxLimit : (%, %) -> %
- maximize : (%, %) -> %    maximize : (%, %, %) -> %
- maximize : (%, Symbol) -> %    meixnerM : (%, %, %, %) -> %
- meixnerP : (%, %, %, %) -> %    member? : (%, %) -> Boolean
- minLimit : (%, %) -> %    minPoly : Kernel(%) -> SparseUnivariatePolynomial(%)
- minimalPolynomial : (%, %) -> %    minimalPolynomial : (%, %, %) -> %
- minimalPolynomial : % -> SparseUnivariatePolynomial(%)    minimize : (%, %) -> %
- minimize : (%, %, %) -> %    minimize : (%, Symbol) -> %
- missing? : % -> Boolean    modularLambda : % -> %
- monomialList : % -> %    multiEuclidean : (List(%), %) -> Union(List(%),"failed")
- mutable? : % -> Boolean    negative? : % -> Boolean
- norm : % -> %    normal : % -> %
- normal : (%, %) -> %    nothing? : % -> Boolean
- nthRoot : (%, Integer) -> %    number? : % -> Boolean
- numberForm : % -> %    numberForm : (%, %) -> %
- numer : % -> SparseMultivariatePolynomial(%,Kernel(%))    numerDenom : % -> WSList(%)
- numerator : % -> %    numeric : % -> WSExpression
- numeric : (%, PositiveInteger) -> WSExpression    numeric? : % -> Boolean
- numericDSolve : (%, %, %) -> %    numericDSolve : (%, %, %, %) -> %
- numericDSolve : (Equation(%), %, %) -> %    numericDSolveValue : (%, %, %) -> %
- numericDSolveValue : (%, %, %, %) -> %    numericDSolveValue : (Equation(%), %, %) -> %
- numericIntegrate : (%, %) -> %    numericIntegrate : (%, %, Segment(Integer)) -> %
- numericMaximize : (%, %) -> %    numericMaximize : (%, %, %) -> %
- numericMaximize : (%, Symbol) -> %    numericMinimize : (%, %) -> %
- numericMinimize : (%, %, %) -> %    numericMinimize : (%, Symbol) -> %
- numericProduct : (%, %) -> %    numericProduct : (%, %, Segment(Integer)) -> %
- numericSolve : (%, %) -> %    numericSolve : (Equation(%), %) -> %
- numericSum : (%, %) -> %    numericSum : (%, %, Segment(Integer)) -> %
- one? : % -> Boolean    operator : BasicOperator -> BasicOperator
- operators : % -> List(BasicOperator)    opposite? : (%, %) -> Boolean
- padeApproximant : (%, %) -> %    parabolicCylinderD : (%, %) -> %
- paren : % -> %    part : (%, WSInteger) -> %
- percentForm : % -> %    percentForm : (%, %) -> %
- permutation : (%, %) -> %    pi : () -> %
- plenaryPower : (%, PositiveInteger) -> %    pochhammer : (%, %) -> %
- polygamma : (%, %) -> %    polylog : (%, %) -> %
- polylog : (%, %, %) -> %    polynomial? : (%, %) -> Boolean
- polynomial? : (%, WSList(%)) -> Boolean    polynomialExpression? : (%, %) -> Boolean
- polynomialExpression? : (%, WSList(%)) -> Boolean    polynomialExtendedGCD : (%, %, %) -> %
- polynomialGCD : (%, %) -> %    polynomialGCD : (%, %, %) -> %
- polynomialLCM : (%, %) -> %    polynomialLCM : (%, %, %) -> %
- polynomialMod : (%, %) -> %    polynomialQuotient : (%, %, %) -> %
- polynomialQuotientRemainder : (%, %, %) -> WSList(%)    polynomialReduce : (%, %, %) -> %
- polynomialRemainder : (%, %, %) -> %    positive? : % -> Boolean
- positiveInfinity : () -> %    powerExpand : % -> %
- powerExpand : (%, %) -> %    prepend : (%, %) -> %
- prime? : % -> Boolean    principalIdeal : List(%) -> Record(coef: List(%),generator: %)
- product : (%, %) -> %    product : (%, %, Segment(Integer)) -> %
- product : (%, SegmentBinding(%)) -> %    product : (%, Symbol) -> %
- qBinomial : (%, %, %) -> %    qFactorial : (%, %) -> %
- qGamma : (%, %) -> %    qPochhammer : (%, %) -> %
- qPochhammer : (%, %, %) -> %    qPolyGamma : (%, %) -> %
- qPolyGamma : (%, %, %) -> %    qelt : (%, Integer) -> %
- qsetelt : (%, Integer, %) -> %    qsetelt! : (%, Integer, %) -> %
- quantityForm : (%, %) -> %    quantityForm : (%, WSList(%)) -> %
- quantityMagnitude : % -> %    quantityUnit : % -> %
- ?quo? : (%, %) -> %    racahR : (%, %, %, %, %, %) -> %
- ramanujanTau : % -> %    ramanujanTauL : % -> %
- ramanujanTauTheta : % -> %    ramanujanTauZ : % -> %
- rank : () -> PositiveInteger    rational? : % -> Boolean
- rationalApproximation : % -> %    rationalApproximation : (%, %) -> %
- rationalExpression? : (%, %) -> Boolean    rationalExpression? : (%, WSList(%)) -> Boolean
- real : % -> %    real? : % -> Boolean
- realNumeric? : % -> Boolean    realNumericSolve : (%, %) -> %
- realNumericSolve : (Equation(%), %) -> %    recip : % -> Union(%,"failed")
- reduce : (%, %) -> %    reduce : (%, %, %) -> %
- reduce : (Equation(%), %) -> %    reduce : (Equation(%), %, %) -> %
- reduce : SparseUnivariatePolynomial(%) -> %    reduce : Fraction(SparseUnivariatePolynomial(%)) -> Union(%,"failed")
- reducedSystem : Matrix(%) -> Matrix(%)    reducedSystem : (Matrix(%), Vector(%)) -> Record(mat: Matrix(%),vec: Vector(%))
- refine : (%, %) -> %    regularRepresentation : % -> Matrix(%)
- regularRepresentation : (%, Vector(%)) -> Matrix(%)    ?rem? : (%, %) -> %
- removeDuplicates : % -> %    replace : (%, %) -> %
- replace : (%, %, %) -> %    replaceAll : (%, %) -> %
- replaceAt : (%, %, %) -> %    replacePart : (%, %) -> %
- replaceRepeated : (%, %) -> %    represents : Vector(%) -> %
- represents : (Vector(%), Vector(%)) -> %    residue : (%, %) -> %
- residueSum : (%, %) -> %    rest : % -> %
- resultant : (%, %, %) -> %    retract : % -> %
- retract : % -> Expression(Float)    retract : % -> Expression(Integer)
- retract : % -> Fraction(Integer) if % has RETRACT(FRAC(INT))    retract : % -> Fraction(Polynomial(%))
- retract : % -> Kernel(%)    retract : % -> Polynomial(%)
- retract : % -> Symbol    retractIfCan : % -> Union(%,"failed")
- retractIfCan : % -> Union(DoubleFloat,"failed")    retractIfCan : % -> Union(Expression(Float),"failed")
- retractIfCan : % -> Union(Expression(Integer),"failed")    retractIfCan : % -> Union(Fraction(Integer),"failed") if % has RETRACT(FRAC(INT))
- retractIfCan : % -> Union(Fraction(Polynomial(%)),"failed")    retractIfCan : % -> Union(JLFloat64,"failed")
- retractIfCan : % -> Union(Kernel(%),"failed")    retractIfCan : % -> Union(Polynomial(%),"failed")
- retractIfCan : % -> Union(Symbol,"failed")    reverse : % -> %
- reverse : (%, WSInteger) -> %    reverse : (%, WSList(WSInteger)) -> %
- riemannSiegelTheta : % -> %    riemannSiegelZ : % -> %
- riemannZeta : % -> %    riemannZeta : (%, %) -> %
- riffle : (%, %) -> %    riffle : (%, %, %) -> %
- rightPower : (%, NonNegativeInteger) -> %    rightPower : (%, PositiveInteger) -> %
- rightRecip : % -> Union(%,"failed")    rootOf : % -> %
- rootOf : (%, Symbol) -> %    rootOf : Polynomial(%) -> %
- rootOf : SparseUnivariatePolynomial(%) -> %    rootOf : (SparseUnivariatePolynomial(%), Symbol) -> %
- rootReduce : % -> %    rootSum : (%, SparseUnivariatePolynomial(%), Symbol) -> %
- rootsOf : % -> List(%)    rootsOf : (%, Symbol) -> List(%)
- rootsOf : Polynomial(%) -> List(%)    rootsOf : SparseUnivariatePolynomial(%) -> List(%)
- rootsOf : (SparseUnivariatePolynomial(%), Symbol) -> List(%)    round : % -> %
- sample : () -> %    scientificForm : % -> %
- scientificForm : (%, %) -> %    sec : % -> %
- sech : % -> %    select : (%, %) -> %
- select : (%, %, %) -> %    series : (%, %) -> %
- setIntersection : (%, %) -> %    setelt : (%, Integer, %) -> %
- setelt! : (%, Integer, %) -> %    siegelTheta : (%, %) -> %
- siegelTheta : (%, %, %) -> %    sign : % -> %
- simplify : % -> %    simplify : (%, %) -> %
- sin : % -> %    sinc : % -> %
- sinh : % -> %    sizeLess? : (%, %) -> Boolean
- smaller? : (%, %) -> Boolean    solve : (%, %) -> WSList(WSList(%))
- solve : (%, %, %) -> WSList(WSList(%))    solve : (Equation(%), %) -> WSList(WSList(%))
- solve : (Equation(%), %, %) -> WSList(WSList(%))    solveLinearPolynomialEquation : (List(SparseUnivariatePolynomial(%)), SparseUnivariatePolynomial(%)) -> Union(List(SparseUnivariatePolynomial(%)),"failed") if % has PFECAT
- sort : % -> %    sorted? : % -> Boolean
- sphericalBesselJ : (%, %) -> %    sphericalBesselY : (%, %) -> %
- sphericalHankelH1 : (%, %) -> %    sphericalHankelH2 : (%, %) -> %
- sphericalHarmonicY : (%, %, %, %) -> %    sqrt : % -> %
- squareFree : % -> Factored(%)    squareFreePart : % -> %
- squareFreePolynomial : SparseUnivariatePolynomial(%) -> Factored(SparseUnivariatePolynomial(%)) if % has PFECAT    stieltjesGamma : % -> %
- stieltjesGamma : (%, %) -> %    string : % -> String
- struveH : (%, %) -> %    struveL : (%, %) -> %
- subResultants : (%, %, %) -> %    subst : (%, Equation(%)) -> %
- subst : (%, List(Equation(%))) -> %    subst : (%, List(Kernel(%)), List(%)) -> %
- subtractIfCan : (%, %) -> Union(%,"failed")    sum : (%, %) -> %
- sum : (%, %, Segment(Integer)) -> %    sum : (%, Symbol) -> %
- summation : (%, SegmentBinding(%)) -> %    summation : (%, Symbol) -> %
- symmetricPolynomial : (%, WSList(%)) -> %    symmetricReduction : (%, WSList(%)) -> WSList(%)
- symmetricReduction : (%, WSList(%), WSList(%)) -> WSList(%)    take : (%, Integer) -> %
- take : (%, WSList(WSInteger)) -> %    tan : % -> %
- tanh : % -> %    toExpression : String -> %
- toExpression : (String, %) -> %    toExpression : (String, %, %) -> %
- toString : % -> String    toString : (%, %) -> String
- together : % -> %    tower : % -> List(Kernel(%))
- tower : List(%) -> List(Kernel(%))    trace : % -> %
- traceMatrix : () -> Matrix(%)    traceMatrix : Vector(%) -> Matrix(%)
- traditionalForm : % -> %    trigExpand : % -> %
- trigFactor : % -> %    trigFactorList : % -> WSList(%)
- trigReduce : % -> %    trigToExp : % -> %
- union : (%, %) -> %    unit? : % -> Boolean
- unitCanonical : % -> %    unitNormal : % -> Record(unit: %,canonical: %,associate: %)
- unitStep : % -> %    univariate : (%, Kernel(%)) -> Fraction(SparseUnivariatePolynomial(%))
- values : % -> %    variables : % -> List(Symbol)
- variables : List(%) -> List(Symbol)    variables : % -> WSList(%)
- weberE : (%, %) -> %    weberE : (%, %, %) -> %
- weierstrassP : (%, %, %) -> %    weierstrassPInverse : (%, %, %) -> %
- weierstrassPPrime : (%, %, %) -> %    weierstrassSigma : (%, %, %) -> %
- weierstrassZeta : (%, %, %) -> %    whittakerM : (%, %, %) -> %
- whittakerW : (%, %, %) -> %    wilsonW : (%, %, %, %, %, %) -> %
- zernikeR : (%, %, %) -> %    zero? : % -> Boolean
- zeroOf : % -> %    zeroOf : (%, Symbol) -> %
- zeroOf : Polynomial(%) -> %    zeroOf : SparseUnivariatePolynomial(%) -> %
- zeroOf : (SparseUnivariatePolynomial(%), Symbol) -> %    zerosOf : % -> List(%)
- zerosOf : (%, Symbol) -> List(%)    zerosOf : Polynomial(%) -> List(%)
- zerosOf : SparseUnivariatePolynomial(%) -> List(%)    zerosOf : (SparseUnivariatePolynomial(%), Symbol) -> List(%)
- ?~=? : (%, %) -> Boolean
+ jlWSDefined? : String -> Boolean    jlWSGreedyEval : Boolean -> Void
+ jlWSPrecision : % -> %    jlWSSetAccuracy : (%, %) -> %
+ jlWSSetOptions : (%, %) -> %    jlWSSetPrecision : (%, %) -> %
+ jlimref : String -> %    jlref : String -> %
+ join : (%, %) -> %    kelvinBei : (%, %) -> %
+ kelvinBer : (%, %) -> %    kelvinKei : (%, %) -> %
+ kelvinKer : (%, %) -> %    kernel : (BasicOperator, %) -> %
+ kernel : (BasicOperator, List(%)) -> %    kernels : % -> List(Kernel(%))
+ kernels : List(%) -> List(Kernel(%))    key? : (%, %) -> Boolean
+ keys : % -> %    kleinInvariantJ : % -> %
+ krawtchoukK : (%, %, %, %) -> %    kummerM : (%, %, %) -> %
+ kummerU : (%, %, %) -> %    laguerreL : (%, %) -> %
+ laguerreL : (%, %, %) -> %    lambertW : % -> %
+ lambertW : (WSInteger, %) -> %    last : % -> %
+ latex : % -> String    lcm : (%, %) -> %
+ lcm : List(%) -> %    lcmCoef : (%, %) -> Record(llcm_res: %,coeff1: %,coeff2: %)
+ leftPower : (%, NonNegativeInteger) -> %    leftPower : (%, PositiveInteger) -> %
+ leftRecip : % -> Union(%,"failed")    legendreP : (%, %) -> %
+ legendreP : (%, %, %) -> %    legendreQ : (%, %) -> %
+ legendreQ : (%, %, %) -> %    length : % -> %
+ length : % -> WSInteger    lerchPhi : (%, %, %) -> %
+ level : (%, %) -> WSList(%)    level : (%, %, Boolean) -> WSList(%)
+ li : % -> %    lift : % -> SparseUnivariatePolynomial(%)
+ limit : (%, %) -> %    log : % -> %
+ log10 : % -> %    log2 : % -> %
+ logBarnesG : % -> %    logGamma : % -> %
+ lommelS1 : (%, %, %) -> %    lommelS2 : (%, %, %) -> %
+ lookup : (%, %) -> %    lookup : (%, %, %) -> %
+ machineNumber? : % -> Boolean    mainKernel : % -> Union(Kernel(%),"failed")
+ map : ((% -> %), %) -> %    map : ((% -> %), Kernel(%)) -> %
+ mathieuC : (%, %, %) -> %    mathieuCPrime : (%, %, %) -> %
+ mathieuCharacteristicA : (%, %) -> %    mathieuCharacteristicB : (%, %) -> %
+ mathieuCharacteristicExponent : (%, %) -> %    mathieuS : (%, %, %) -> %
+ mathieuSPrime : (%, %, %) -> %    matrixForm : % -> %
+ maxLimit : (%, %) -> %    maximize : (%, %) -> %
+ maximize : (%, %, %) -> %    maximize : (%, Symbol) -> %
+ meixnerM : (%, %, %, %) -> %    meixnerP : (%, %, %, %) -> %
+ member? : (%, %) -> Boolean    minLimit : (%, %) -> %
+ minPoly : Kernel(%) -> SparseUnivariatePolynomial(%)    minimalPolynomial : (%, %) -> %
+ minimalPolynomial : (%, %, %) -> %    minimalPolynomial : % -> SparseUnivariatePolynomial(%)
+ minimize : (%, %) -> %    minimize : (%, %, %) -> %
+ minimize : (%, Symbol) -> %    missing? : % -> Boolean
+ modularLambda : % -> %    monomialList : % -> %
+ multiEuclidean : (List(%), %) -> Union(List(%),"failed")    mutable? : % -> Boolean
+ negative? : % -> Boolean    norm : % -> %
+ normal : % -> %    normal : (%, %) -> %
+ nothing? : % -> Boolean    nthRoot : (%, Integer) -> %
+ number? : % -> Boolean    numberForm : % -> %
+ numberForm : (%, %) -> %    numer : % -> SparseMultivariatePolynomial(%,Kernel(%))
+ numerDenom : % -> WSList(%)    numerator : % -> %
+ numeric : % -> WSExpression    numeric : (%, PositiveInteger) -> WSExpression
+ numeric? : % -> Boolean    numericDSolve : (%, %, %) -> %
+ numericDSolve : (%, %, %, %) -> %    numericDSolve : (Equation(%), %, %) -> %
+ numericDSolveValue : (%, %, %) -> %    numericDSolveValue : (%, %, %, %) -> %
+ numericDSolveValue : (Equation(%), %, %) -> %    numericIntegrate : (%, %) -> %
+ numericIntegrate : (%, %, Segment(Integer)) -> %    numericMaximize : (%, %) -> %
+ numericMaximize : (%, %, %) -> %    numericMaximize : (%, Symbol) -> %
+ numericMinimize : (%, %) -> %    numericMinimize : (%, %, %) -> %
+ numericMinimize : (%, Symbol) -> %    numericProduct : (%, %) -> %
+ numericProduct : (%, %, Segment(Integer)) -> %    numericSolve : (%, %) -> %
+ numericSolve : (Equation(%), %) -> %    numericSum : (%, %) -> %
+ numericSum : (%, %, Segment(Integer)) -> %    one? : % -> Boolean
+ operator : BasicOperator -> BasicOperator    operators : % -> List(BasicOperator)
+ opposite? : (%, %) -> Boolean    padeApproximant : (%, %) -> %
+ parabolicCylinderD : (%, %) -> %    paren : % -> %
+ part : (%, WSInteger) -> %    percentForm : % -> %
+ percentForm : (%, %) -> %    permutation : (%, %) -> %
+ pi : () -> %    plenaryPower : (%, PositiveInteger) -> %
+ pochhammer : (%, %) -> %    polygamma : (%, %) -> %
+ polylog : (%, %) -> %    polylog : (%, %, %) -> %
+ polynomial? : (%, %) -> Boolean    polynomial? : (%, WSList(%)) -> Boolean
+ polynomialExpression? : (%, %) -> Boolean    polynomialExpression? : (%, WSList(%)) -> Boolean
+ polynomialExtendedGCD : (%, %, %) -> %    polynomialGCD : (%, %) -> %
+ polynomialGCD : (%, %, %) -> %    polynomialLCM : (%, %) -> %
+ polynomialLCM : (%, %, %) -> %    polynomialMod : (%, %) -> %
+ polynomialQuotient : (%, %, %) -> %    polynomialQuotientRemainder : (%, %, %) -> WSList(%)
+ polynomialReduce : (%, %, %) -> %    polynomialRemainder : (%, %, %) -> %
+ positive? : % -> Boolean    positiveInfinity : () -> %
+ powerExpand : % -> %    powerExpand : (%, %) -> %
+ prepend : (%, %) -> %    prime? : % -> Boolean
+ principalIdeal : List(%) -> Record(coef: List(%),generator: %)    product : (%, %) -> %
+ product : (%, %, Segment(Integer)) -> %    product : (%, SegmentBinding(%)) -> %
+ product : (%, Symbol) -> %    qBinomial : (%, %, %) -> %
+ qFactorial : (%, %) -> %    qGamma : (%, %) -> %
+ qPochhammer : (%, %) -> %    qPochhammer : (%, %, %) -> %
+ qPolyGamma : (%, %) -> %    qPolyGamma : (%, %, %) -> %
+ qelt : (%, Integer) -> %    qsetelt : (%, Integer, %) -> %
+ qsetelt! : (%, Integer, %) -> %    quantityForm : (%, %) -> %
+ quantityForm : (%, WSList(%)) -> %    quantityMagnitude : % -> %
+ quantityUnit : % -> %    ?quo? : (%, %) -> %
+ racahR : (%, %, %, %, %, %) -> %    ramanujanTau : % -> %
+ ramanujanTauL : % -> %    ramanujanTauTheta : % -> %
+ ramanujanTauZ : % -> %    rank : () -> PositiveInteger
+ rational? : % -> Boolean    rationalApproximation : % -> %
+ rationalApproximation : (%, %) -> %    rationalExpression? : (%, %) -> Boolean
+ rationalExpression? : (%, WSList(%)) -> Boolean    real : % -> %
+ real? : % -> Boolean    realNumeric? : % -> Boolean
+ realNumericSolve : (%, %) -> %    realNumericSolve : (Equation(%), %) -> %
+ recip : % -> Union(%,"failed")    reduce : (%, %) -> %
+ reduce : (%, %, %) -> %    reduce : (Equation(%), %) -> %
+ reduce : (Equation(%), %, %) -> %    reduce : SparseUnivariatePolynomial(%) -> %
+ reduce : Fraction(SparseUnivariatePolynomial(%)) -> Union(%,"failed")    reducedSystem : Matrix(%) -> Matrix(%)
+ reducedSystem : (Matrix(%), Vector(%)) -> Record(mat: Matrix(%),vec: Vector(%))    refine : (%, %) -> %
+ regularRepresentation : % -> Matrix(%)    regularRepresentation : (%, Vector(%)) -> Matrix(%)
+ ?rem? : (%, %) -> %    removeDuplicates : % -> %
+ replace : (%, %) -> %    replace : (%, %, %) -> %
+ replaceAll : (%, %) -> %    replaceAt : (%, %, %) -> %
+ replacePart : (%, %) -> %    replaceRepeated : (%, %) -> %
+ represents : Vector(%) -> %    represents : (Vector(%), Vector(%)) -> %
+ residue : (%, %) -> %    residueSum : (%, %) -> %
+ rest : % -> %    resultant : (%, %, %) -> %
+ retract : % -> %    retract : % -> Expression(Float)
+ retract : % -> Expression(Integer)    retract : % -> Fraction(Integer) if % has RETRACT(FRAC(INT))
+ retract : % -> Fraction(Polynomial(%))    retract : % -> Kernel(%)
+ retract : % -> Polynomial(%)    retract : % -> Symbol
+ retractIfCan : % -> Union(%,"failed")    retractIfCan : % -> Union(DoubleFloat,"failed")
+ retractIfCan : % -> Union(Expression(Float),"failed")    retractIfCan : % -> Union(Expression(Integer),"failed")
+ retractIfCan : % -> Union(Fraction(Integer),"failed") if % has RETRACT(FRAC(INT))    retractIfCan : % -> Union(Fraction(Polynomial(%)),"failed")
+ retractIfCan : % -> Union(JLFloat64,"failed")    retractIfCan : % -> Union(Kernel(%),"failed")
+ retractIfCan : % -> Union(Polynomial(%),"failed")    retractIfCan : % -> Union(Symbol,"failed")
+ reverse : % -> %    reverse : (%, WSInteger) -> %
+ reverse : (%, WSList(WSInteger)) -> %    riemannSiegelTheta : % -> %
+ riemannSiegelZ : % -> %    riemannZeta : % -> %
+ riemannZeta : (%, %) -> %    riffle : (%, %) -> %
+ riffle : (%, %, %) -> %    rightPower : (%, NonNegativeInteger) -> %
+ rightPower : (%, PositiveInteger) -> %    rightRecip : % -> Union(%,"failed")
+ rootOf : % -> %    rootOf : (%, Symbol) -> %
+ rootOf : Polynomial(%) -> %    rootOf : SparseUnivariatePolynomial(%) -> %
+ rootOf : (SparseUnivariatePolynomial(%), Symbol) -> %    rootReduce : % -> %
+ rootSum : (%, SparseUnivariatePolynomial(%), Symbol) -> %    rootsOf : % -> List(%)
+ rootsOf : (%, Symbol) -> List(%)    rootsOf : Polynomial(%) -> List(%)
+ rootsOf : SparseUnivariatePolynomial(%) -> List(%)    rootsOf : (SparseUnivariatePolynomial(%), Symbol) -> List(%)
+ round : % -> %    sample : () -> %
+ scientificForm : % -> %    scientificForm : (%, %) -> %
+ sec : % -> %    sech : % -> %
+ select : (%, %) -> %    select : (%, %, %) -> %
+ series : (%, %) -> %    setIntersection : (%, %) -> %
+ setelt : (%, Integer, %) -> %    setelt! : (%, Integer, %) -> %
+ siegelTheta : (%, %) -> %    siegelTheta : (%, %, %) -> %
+ sign : % -> %    simplify : % -> %
+ simplify : (%, %) -> %    sin : % -> %
+ sinc : % -> %    sinh : % -> %
+ sizeLess? : (%, %) -> Boolean    smaller? : (%, %) -> Boolean
+ solve : (%, %) -> WSList(WSList(%))    solve : (%, %, %) -> WSList(WSList(%))
+ solve : (Equation(%), %) -> WSList(WSList(%))    solve : (Equation(%), %, %) -> WSList(WSList(%))
+ solveLinearPolynomialEquation : (List(SparseUnivariatePolynomial(%)), SparseUnivariatePolynomial(%)) -> Union(List(SparseUnivariatePolynomial(%)),"failed") if % has PFECAT    sort : % -> %
+ sorted? : % -> Boolean    sphericalBesselJ : (%, %) -> %
+ sphericalBesselY : (%, %) -> %    sphericalHankelH1 : (%, %) -> %
+ sphericalHankelH2 : (%, %) -> %    sphericalHarmonicY : (%, %, %, %) -> %
+ sqrt : % -> %    squareFree : % -> Factored(%)
+ squareFreePart : % -> %    squareFreePolynomial : SparseUnivariatePolynomial(%) -> Factored(SparseUnivariatePolynomial(%)) if % has PFECAT
+ stieltjesGamma : % -> %    stieltjesGamma : (%, %) -> %
+ string : % -> String    struveH : (%, %) -> %
+ struveL : (%, %) -> %    subResultants : (%, %, %) -> %
+ subst : (%, Equation(%)) -> %    subst : (%, List(Equation(%))) -> %
+ subst : (%, List(Kernel(%)), List(%)) -> %    subtractIfCan : (%, %) -> Union(%,"failed")
+ sum : (%, %) -> %    sum : (%, %, Segment(Integer)) -> %
+ sum : (%, Symbol) -> %    summation : (%, SegmentBinding(%)) -> %
+ summation : (%, Symbol) -> %    symmetricPolynomial : (%, WSList(%)) -> %
+ symmetricReduction : (%, WSList(%)) -> WSList(%)    symmetricReduction : (%, WSList(%), WSList(%)) -> WSList(%)
+ take : (%, Integer) -> %    take : (%, WSList(WSInteger)) -> %
+ tan : % -> %    tanh : % -> %
+ toExpression : String -> %    toExpression : (String, %) -> %
+ toExpression : (String, %, %) -> %    toString : % -> String
+ toString : (%, %) -> String    together : % -> %
+ tower : % -> List(Kernel(%))    tower : List(%) -> List(Kernel(%))
+ trace : % -> %    traceMatrix : () -> Matrix(%)
+ traceMatrix : Vector(%) -> Matrix(%)    traditionalForm : % -> %
+ trigExpand : % -> %    trigFactor : % -> %
+ trigFactorList : % -> WSList(%)    trigReduce : % -> %
+ trigToExp : % -> %    union : (%, %) -> %
+ unit? : % -> Boolean    unitCanonical : % -> %
+ unitNormal : % -> Record(unit: %,canonical: %,associate: %)    unitStep : % -> %
+ univariate : (%, Kernel(%)) -> Fraction(SparseUnivariatePolynomial(%))    values : % -> %
+ variables : % -> List(Symbol)    variables : List(%) -> List(Symbol)
+ variables : % -> WSList(%)    weberE : (%, %) -> %
+ weberE : (%, %, %) -> %    weierstrassP : (%, %, %) -> %
+ weierstrassPInverse : (%, %, %) -> %    weierstrassPPrime : (%, %, %) -> %
+ weierstrassSigma : (%, %, %) -> %    weierstrassZeta : (%, %, %) -> %
+ whittakerM : (%, %, %) -> %    whittakerW : (%, %, %) -> %
+ wilsonW : (%, %, %, %, %, %) -> %    zernikeR : (%, %, %) -> %
+ zero? : % -> Boolean    zeroOf : % -> %
+ zeroOf : (%, Symbol) -> %    zeroOf : Polynomial(%) -> %
+ zeroOf : SparseUnivariatePolynomial(%) -> %    zeroOf : (SparseUnivariatePolynomial(%), Symbol) -> %
+ zerosOf : % -> List(%)    zerosOf : (%, Symbol) -> List(%)
+ zerosOf : Polynomial(%) -> List(%)    zerosOf : SparseUnivariatePolynomial(%) -> List(%)
+ zerosOf : (SparseUnivariatePolynomial(%), Symbol) -> List(%)    ?~=? : (%, %) -> Boolean
 ```
 
 ## Operations
@@ -435,7 +435,7 @@ Julia WS expressions using the MathLink Julia package. It supports the Eltable c
 
 | Operation | Summary |
 | :--- | :--- |
-| [`#`](#op-hash) | #(agg) returns the length of agg. 0 if it is a scalar, an index for example. |
+| [`#`](#op-hash) | #(agg) returns the length of agg. 0 if it is a scalar. |
 | [`*`](#op-mul) | Operation defined in WSExpression |
 | [`+`](#op-add) | Operation defined in WSExpression |
 | [`/`](#op-div) | Operation defined in WSExpression |
@@ -558,7 +558,7 @@ Julia WS expressions using the MathLink Julia package. It supports the Eltable c
 | [`ellipticPi`](#ellipticpi) | ellipticPi(n,m) computes the complete elliptic integral of the third kind. |
 | [`ellipticTheta`](#elliptictheta) | ellipticTheta(a, u, q) computes the theta function, a ranges from 1 to 4. |
 | [`ellipticThetaPrime`](#ellipticthetaprime) | ellipticThetaPrime(a, u, q) computes the derivative of the theta function, a ranges from 1... |
-| [`elt`](#elt) | elt(op, l) creates a form for application of op to list of arguments l. |
+| [`elt`](#elt) | elt(op, x) or op(x) applies the unary operator op to x. |
 | [`engineeringForm`](#engineeringform) | engineeringForm(x) returns the printed representation of x in engineering form. |
 | [`erf`](#erf) | erf(x,x1) computes the generalized error function. |
 | [`erfc`](#erfc) | erfc(x) computes the complementary error function. |
@@ -576,12 +576,13 @@ Julia WS expressions using the MathLink Julia package. It supports the Eltable c
 | [`expandNumerator`](#expandnumerator) | expandNumerator(expr) expands numerators of rational expression expr. |
 | [`exponent`](#exponent) | exponent(p,expr) returns the maximum exponent of p for expr.... |
 | [`expressIdealMember`](#expressidealmember) | expressIdealMember([f1, ..., fn], h) returns a representation of h as a linear combination... |
-| [`exquo`](#exquo) | exquo(f, g) creates the equivalent infix form. |
+| [`exquo`](#exquo) | exquo(a, b) either returns an element c such that c*b=a or "failed" if no such element can... |
 | [`extendedEuclidean`](#extendedeuclidean) | extendedEuclidean(x, y) returns a record rec where rec.coef1*x+rec.coef2*y = rec.generator... |
 | [`extendedExpand`](#extendedexpand) | extendedExpand(expr) puts out all products and positive powers of integers. |
 | [`extendedSimplify`](#extendedsimplify) | extendedSimplify(expr) is the extended version of simplify. This is the full version of si... |
 | [`extract`](#extract) | extract(expr,i) returns the i-th element of expr seen as a list. |
 | [`factor`](#factor) | factor(expr) factors the expression or polynomial expr. |
+| [`factorInteger`](#factorinteger) | factorInteger(n) factorizes the integer n into its prime factors. For example:... |
 | [`factorList`](#factorlist) | factorList(expr) factors the expression or polynomial expr, but returns the result as a li... |
 | [`factorPolynomial`](#factorpolynomial) | factorPolynomial(p) factorizes the polynomial p. For example:... |
 | [`factorSquareFree`](#factorsquarefree) | factorSquareFree(expr) factors the expression or polynomial expr in square free factors. |
@@ -662,7 +663,7 @@ Julia WS expressions using the MathLink Julia package. It supports the Eltable c
 | [`jWSAssociation`](#jwsassociation) | jWSAssociation(rules) returns the associations (key->value) created from the rules. |
 | [`jWSData`](#jwsdata) | jWSData() returns the list of WS symbols. Note: Currently unprintable. |
 | [`jWSEqual`](#jwsequal) | jWSEqual(lhs,rhs) returns the Julia WS equality lhs == rhs. |
-| [`jWSExpr`](#jwsexpr) | jWSExpr(sym) coerces sym to a WSExpression. For example: x := jWSExpr x |
+| [`jWSExpression`](#jwsexpression) | jWSExpression(sym) coerces sym to a WSExpression. For example: x := jWSExpression x |
 | [`jWSGreater`](#jwsgreater) | jWSGreater(lhs,rhs) returns the Julia WS inequality lhs > rhs. |
 | [`jWSGreaterEqual`](#jwsgreaterequal) | jWSGreaterEqual(lhs,rhs) returns the Julia WS inequality lhs >= rhs. |
 | [`jWSInterpret`](#jwsinterpret) | jWSInterpret(form) interprets form. |
@@ -681,14 +682,13 @@ Julia WS expressions using the MathLink Julia package. It supports the Eltable c
 | [`jacobiZeta`](#jacobizeta) | jacobiZeta(ϕ,m) computes the Jacobi Zeta function. |
 | [`jlAbout`](#jlabout) | jlAbout(obj) displays Julia information about obj if you have About.jl installed in Julia.... |
 | [`jlApply`](#jlapply) | jlApply(func, obj) applies the function func with obj as parameter and returns the result ... |
-| [`jlDisplay`](#jldisplay) | jlDisplay(expr) returns the traditional form of expr. This is equivalent to: jWSExpr "Form... |
+| [`jlDisplay`](#jldisplay) | jlDisplay(expr) returns the traditional form of expr. This is equivalent to: jWSExpression... |
 | [`jlDump`](#jldump) | jlDump(obj) dumps (shows) the Julia object (internal structure with type). |
 | [`jlEval`](#jleval) | jlEval(expr, param) evaluates expression expr with param as parameter(s). See also `eval` ... |
 | [`jlFieldNames`](#jlfieldnames) | jlFieldNames(obj) returns the field names of obj. |
 | [`jlGetField`](#jlgetfield) | jlGetField(obj, sym) returns the property/element sym of obj. |
 | [`jlGetJuliaIndex`](#jlgetjuliaindex) | jlGetJuliaIndex(obj) returns the string that allows access to the Julia indexed dictionary... |
 | [`jlGetProperty`](#jlgetproperty) | jlGetProperty(obj, sym) returns the property/element sym of obj. |
-| [`jlGreedyEval`](#jlgreedyeval) | jlGreedyEval(bool) toggles automatic arithmetic operations. Plus[a, a] can become Times[2,... |
 | [`jlHead`](#jlhead) | jlHead(expr) returns the Head type of expr. |
 | [`jlId`](#jlid) | jlId(obj) returns the Julia indexed dictionary index referencing the object obj. |
 | [`jlNames`](#jlnames) | jlNames(obj) returns the names of obj depending of the type of obj. |
@@ -700,6 +700,7 @@ Julia WS expressions using the MathLink Julia package. It supports the Eltable c
 | [`jlType`](#jltype) | jlType(obj) returns the Julia type of obj. |
 | [`jlWSAccuracy`](#jlwsaccuracy) | jlWSAccuracy(expr) get accuracy of expr. |
 | [`jlWSDefined?`](#jlwsdefined) | jlWSDefined?(sym) checks whether or not the symbol sym is defined in the WS language. For ... |
+| [`jlWSGreedyEval`](#jlwsgreedyeval) | jlWSGreedyEval(bool) toggles automatic arithmetic operations. Plus[a, a] can become Times[... |
 | [`jlWSPrecision`](#jlwsprecision) | jlWSPrecision get precision of expr. |
 | [`jlWSSetAccuracy`](#jlwssetaccuracy) | jlWSSetAccuracy(expr, acc) sets accuracy of expr to acc. |
 | [`jlWSSetOptions`](#jlwssetoptions) | jlWSSetOptions(type, opts) sets some internal engine options. |
@@ -887,7 +888,7 @@ Julia WS expressions using the MathLink Julia package. It supports the Eltable c
 | [`setelt!`](#setelt) | setelt!(l,i,elem) returns l with i-th element replaced by elem. |
 | [`siegelTheta`](#siegeltheta) | siegelTheta(tau, s) computes the Siegel theta function. |
 | [`sign`](#sign) | sign(x) returns the sign of x. |
-| [`simplify`](#simplify) | simplify(expr) simplifies the expr. |
+| [`simplify`](#simplify) | simplify(expr) simplifies the expr.... |
 | [`sin`](#sin) | sin(x) returns the sine of x. |
 | [`sinc`](#sinc) | sinc(x) computes the unnormalized sinc of x, sin(x)/x and 0 if x = 0. |
 | [`sinh`](#sinh) | sinh(x) returns the hyperbolic sine of x. |
@@ -959,7 +960,7 @@ Julia WS expressions using the MathLink Julia package. It supports the Eltable c
 
 #### `#` <a id="op-hash"></a>
 
-#(agg) returns the length of agg. 0 if it is a scalar, an index for example.
+#(agg) returns the length of agg. 0 if it is a scalar.
 
 - **Signature**: `% -> WSInteger`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
@@ -1002,14 +1003,14 @@ Operation defined in WSExpression.
 
 Operation defined in WSExpression.
 
-#### `0` <a id="0"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1298)\]
+#### `0` <a id="0"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1302)\]
 
 0 is a distinguished element, in AbelianMonoid it is the additive identity element, in MagmaWithZero it is multiplicative zero.
 
 - **Signature**: `() -> %`
 - **From**: `SetWithZero`
 
-#### `1` <a id="1"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1299)\]
+#### `1` <a id="1"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1303)\]
 
 1 returns the unit element, denoted by 1.
 
@@ -1040,7 +1041,7 @@ Operation defined in WSExpression.
 
 - **Signature**: `(%, %) -> Boolean`
 
-#### `Beta` <a id="beta"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1529)\]
+#### `Beta` <a id="beta"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1536)\]
 
 ##### `Beta` : `(%, %) -> %`
 
@@ -1054,21 +1055,21 @@ Beta(x, a, b) is the incomplete Beta function.
 
 - **From**: `SpecialFunctionCategory`
 
-#### `Chi` <a id="chi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1424)\]
+#### `Chi` <a id="chi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1431)\]
 
 Chi(x) returns the hyperbolic cosine integral of x, the integral of cosh(x) / x dx.
 
 - **Signature**: `% -> %`
 - **From**: `LiouvillianFunctionCategory`
 
-#### `Ci` <a id="ci"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1423)\]
+#### `Ci` <a id="ci"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1430)\]
 
 Ci(x) returns the cosine integral of x, the integral of cos(x) / x dx.
 
 - **Signature**: `% -> %`
 - **From**: `LiouvillianFunctionCategory`
 
-#### `D` <a id="d"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1631)\]
+#### `D` <a id="d"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1638)\]
 
 ##### `D` : `(%, S) -> %`
 
@@ -1146,7 +1147,7 @@ Operation defined in WSExpression.
 
 Operation defined in WSExpression.
 
-#### `Ei` <a id="ei"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1425)\]
+#### `Ei` <a id="ei"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1432)\]
 
 Ei(x) returns the exponential integral of x, the integral of exp(x)/x dx.
 
@@ -1177,14 +1178,14 @@ Gamma(a, x) is the incomplete Gamma function.
 
 - **From**: `SpecialFunctionCategory`
 
-#### `Shi` <a id="shi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1422)\]
+#### `Shi` <a id="shi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1429)\]
 
 Shi(x) returns the hyperbolic sine integral of x, the integral of sinh(x) / x dx.
 
 - **Signature**: `% -> %`
 - **From**: `LiouvillianFunctionCategory`
 
-#### `Si` <a id="si"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1421)\]
+#### `Si` <a id="si"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1428)\]
 
 Si(x) returns the sine integral of x, the integral of sin(x) / x dx.
 
@@ -1217,7 +1218,7 @@ Operation defined in WSExpression.
 
 Operation defined in WSExpression.
 
-#### `abs` <a id="abs"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1374)\]
+#### `abs` <a id="abs"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1381)\]
 
 ##### `abs` : `% -> %`
 
@@ -1231,7 +1232,7 @@ abs(x) returns the absolute value of x = sqrt(norm(x)).
 
 - **From**: `ComplexCategory(R)`
 
-#### `accountingForm` <a id="accountingform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1090)\]
+#### `accountingForm` <a id="accountingform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1094)\]
 
 ##### `accountingForm` : `% -> %`
 
@@ -1241,56 +1242,56 @@ accountingForm(x,n) returns the accounting printed representation of x.
 
 accountingForm(x,n) returns the accounting printed representation of x with n digits of precision.
 
-#### `acos` <a id="acos"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1395)\]
+#### `acos` <a id="acos"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1402)\]
 
 acos(x) returns the arc-cosine of x. When evaluated into some subset of the complex numbers, one branch cut for acos lies along the negative real axis to the left of -1 (inclusive), continuous with the upper half plane, the other along the positive real axis to the right of 1 (inclusive), continuous with the lower half plane.
 
 - **Signature**: `% -> %`
 - **From**: `ArcTrigonometricFunctionCategory`
 
-#### `acosh` <a id="acosh"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1410)\]
+#### `acosh` <a id="acosh"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1417)\]
 
 acosh(x) returns the hyperbolic arc-cosine of x.
 
 - **Signature**: `% -> %`
 - **From**: `ArcHyperbolicFunctionCategory`
 
-#### `acot` <a id="acot"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1400)\]
+#### `acot` <a id="acot"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1407)\]
 
 acot(x) returns the arc-cotangent of x.
 
 - **Signature**: `% -> %`
 - **From**: `ArcTrigonometricFunctionCategory`
 
-#### `acoth` <a id="acoth"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1414)\]
+#### `acoth` <a id="acoth"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1421)\]
 
 acoth(x) returns the hyperbolic arc-cotangent of x.
 
 - **Signature**: `% -> %`
 - **From**: `ArcHyperbolicFunctionCategory`
 
-#### `acsc` <a id="acsc"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1399)\]
+#### `acsc` <a id="acsc"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1406)\]
 
 acsc(x) returns the arc-cosecant of x.
 
 - **Signature**: `% -> %`
 - **From**: `ArcTrigonometricFunctionCategory`
 
-#### `acsch` <a id="acsch"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1413)\]
+#### `acsch` <a id="acsch"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1420)\]
 
 acsch(x) returns the hyperbolic arc-cosecant of x.
 
 - **Signature**: `% -> %`
 - **From**: `ArcHyperbolicFunctionCategory`
 
-#### `airyAi` <a id="airyai"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1469)\]
+#### `airyAi` <a id="airyai"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1476)\]
 
 airyAi(x) is the Airy function Ai(x).
 
 - **Signature**: `% -> %`
 - **From**: `SpecialFunctionCategory`
 
-#### `airyAiPrime` <a id="airyaiprime"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1475)\]
+#### `airyAiPrime` <a id="airyaiprime"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1482)\]
 
 airyAiPrime(x) is the derivative of the Airy function Ai(x).
 
@@ -1307,14 +1308,14 @@ airyAiZero(n) is the n-th zero of the Airy function Ai(z).
 
 airyAiZero(n,x) is the n-th zero of the Airy function Ai(z) less than x.
 
-#### `airyBi` <a id="airybi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1472)\]
+#### `airyBi` <a id="airybi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1479)\]
 
 airyBi(x) is the Airy function Bi(x).
 
 - **Signature**: `% -> %`
 - **From**: `SpecialFunctionCategory`
 
-#### `airyBiPrime` <a id="airybiprime"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1476)\]
+#### `airyBiPrime` <a id="airybiprime"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1483)\]
 
 airyBiPrime(x) is the derivative of the Airy function Bi(x).
 
@@ -1379,7 +1380,7 @@ antiCommutator(a, b) returns a*b+b*a.
 - **Signature**: `(%, %) -> %`
 - **From**: `NonAssociativeSemiRng`
 
-#### `apart` <a id="apart"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L922)\]
+#### `apart` <a id="apart"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L926)\]
 
 ##### `apart` : `% -> %`
 
@@ -1445,28 +1446,28 @@ argument(x) returns the angle made by (1, 0) and x.
 
 Operation defined in WSExpression.
 
-#### `asec` <a id="asec"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1398)\]
+#### `asec` <a id="asec"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1405)\]
 
 asec(x) returns the arc-secant of x.
 
 - **Signature**: `% -> %`
 - **From**: `ArcTrigonometricFunctionCategory`
 
-#### `asech` <a id="asech"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1412)\]
+#### `asech` <a id="asech"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1419)\]
 
 asech(x) returns the hyperbolic arc-secant of x.
 
 - **Signature**: `% -> %`
 - **From**: `ArcHyperbolicFunctionCategory`
 
-#### `asin` <a id="asin"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1394)\]
+#### `asin` <a id="asin"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1401)\]
 
 asin(x) returns the arc-sine of x. When evaluated into some subset of the complex numbers, one branch cut for asin lies along the negative real axis to the left of -1 (inclusive), continuous with the upper half plane, the other along the positive real axis to the right of 1 (inclusive), continuous with the lower half plane.
 
 - **Signature**: `% -> %`
 - **From**: `ArcTrigonometricFunctionCategory`
 
-#### `asinh` <a id="asinh"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1409)\]
+#### `asinh` <a id="asinh"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1416)\]
 
 asinh(x) returns the hyperbolic arc-sine of x.
 
@@ -1487,7 +1488,7 @@ associator(a, b, c) returns (a*b)*c-a*(b*c).
 - **Signature**: `(%, %, %) -> %`
 - **From**: `NonAssociativeRng`
 
-#### `assuming` <a id="assuming"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L902)\]
+#### `assuming` <a id="assuming"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L906)\]
 
 assuming(assumption(s), expr) uses the assumptions for use of expr with refine, simplify and integrate for example. The assumption(s) are not always supported by MathLink. Use assumptions with 'refine' etc. directly instead.
 
@@ -1505,7 +1506,7 @@ atan(x) returns the arc-tangent of x. When evaluated into some subset of the com
 
 - **From**: `ArcTrigonometricFunctionCategory`
 
-#### `atanh` <a id="atanh"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1411)\]
+#### `atanh` <a id="atanh"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1418)\]
 
 atanh(x) returns the hyperbolic arc-tangent of x.
 
@@ -1518,7 +1519,7 @@ barnesG(z) computes the Barnes G-function of z.
 
 - **Signature**: `% -> %`
 
-#### `baseForm` <a id="baseform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1053)\]
+#### `baseForm` <a id="baseform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1057)\]
 
 baseForm(x, n) returns the printed representation of x in base b.
 
@@ -1538,14 +1539,14 @@ belong?(op) tests if % accepts op as applicable to its elements.
 - **Signature**: `BasicOperator -> Boolean`
 - **From**: `ExpressionSpace2(K)`
 
-#### `besselI` <a id="besseli"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1484)\]
+#### `besselI` <a id="besseli"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1491)\]
 
 besselI(v, z) is the modified Bessel function of the first kind.
 
 - **Signature**: `(%, %) -> %`
 - **From**: `SpecialFunctionCategory`
 
-#### `besselJ` <a id="besselj"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1480)\]
+#### `besselJ` <a id="besselj"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1487)\]
 
 besselJ(v, z) is the Bessel function of the first kind.
 
@@ -1558,14 +1559,14 @@ besselJZero(n,x) returns the n-th zero of the Bessel J n-th function.
 
 - **Signature**: `(%, %) -> %`
 
-#### `besselK` <a id="besselk"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1485)\]
+#### `besselK` <a id="besselk"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1492)\]
 
 besselK(v, z) is the modified Bessel function of the second kind.
 
 - **Signature**: `(%, %) -> %`
 - **From**: `SpecialFunctionCategory`
 
-#### `besselY` <a id="bessely"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1482)\]
+#### `besselY` <a id="bessely"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1489)\]
 
 besselY(v, z) is the Bessel function of the second kind.
 
@@ -1584,7 +1585,7 @@ betaRegularized(x,a,b) computes the regularized incomplete Beta function.
 
 - **Signature**: `(%, %, %) -> %`
 
-#### `binomial` <a id="binomial"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1528)\]
+#### `binomial` <a id="binomial"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1535)\]
 
 binomial(n, r) returns the (n, r) binomial coefficient (often denoted in the literature by C(n, r)). Note: C(n, r) = n!/(r!(n-r)!) where n >= r >= 0.
 
@@ -1598,7 +1599,7 @@ box(f) returns f with a 'box' around it that prevents f from being evaluated whe
 - **Signature**: `% -> %`
 - **From**: `ExpressionSpace2(K)`
 
-#### `cancel` <a id="cancel"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L934)\]
+#### `cancel` <a id="cancel"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L938)\]
 
 cancel(expr) cancels common factors in numerators and denominators of the rational expression expr.
 
@@ -1661,7 +1662,7 @@ chebyshevU(n, x) returns Chebyshev polynomial of the second kind or evaluates it
 coefficient(p,expr) returns the coefficient of expr in p.
 
 ```fricas
-x:= jWSExpr x
+x:= jWSExpression x
 coefficient((x - y)^4, x * y^3)
 ```
 
@@ -1685,7 +1686,7 @@ coefficientRules(p) returns the coefficients and exponents of p as WS rules.
 
 coefficientRules(p,vars) returns the coefficients and exponents of p with respect to var(s) as WS rules.
 
-#### `coerce` <a id="coerce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1140)\]
+#### `coerce` <a id="coerce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1144)\]
 
 ##### `coerce` : `Integer -> %`
 
@@ -1829,7 +1830,7 @@ Operation defined in WSExpression.
 
 Operation defined in WSExpression.
 
-#### `collect` <a id="collect"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L916)\]
+#### `collect` <a id="collect"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L920)\]
 
 ##### `collect` : `(%, %) -> %`
 
@@ -1846,7 +1847,7 @@ commutator(a, b) returns a*b-b*a.
 - **Signature**: `(%, %) -> %`
 - **From**: `NonAssociativeRng`
 
-#### `complex` <a id="complex"></a>
+#### `complex` <a id="complex"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1327)\]
 
 ##### `complex` : `(R, R) -> %`
 
@@ -1858,7 +1859,7 @@ complex(x, y) constructs x + %i*y.
 
 Operation defined in WSExpression.
 
-#### `complexExpand` <a id="complexexpand"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L954)\]
+#### `complexExpand` <a id="complexexpand"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L958)\]
 
 ##### `complexExpand` : `% -> %`
 
@@ -1868,14 +1869,14 @@ complexExpand(expr) expands expr assuming variables are real.
 
 complexExpand(expr, cvars) expands expr assuming all but cvars variables are real.
 
-#### `conjugate` <a id="conjugate"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1377)\]
+#### `conjugate` <a id="conjugate"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1384)\]
 
 conjugate(x + %i y) returns x - %i y.
 
 - **Signature**: `% -> %`
 - **From**: `ComplexCategory(R)`
 
-#### `convert` <a id="convert"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1169)\]
+#### `convert` <a id="convert"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1173)\]
 
 ##### `convert` : `Polynomial(Integer) -> %`
 
@@ -1981,28 +1982,28 @@ Operation defined in WSExpression.
 
 Operation defined in WSExpression.
 
-#### `cos` <a id="cos"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1387)\]
+#### `cos` <a id="cos"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1394)\]
 
 cos(x) returns the cosine of x.
 
 - **Signature**: `% -> %`
 - **From**: `TrigonometricFunctionCategory`
 
-#### `cosh` <a id="cosh"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1403)\]
+#### `cosh` <a id="cosh"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1410)\]
 
 cosh(x) returns the hyperbolic cosine of x.
 
 - **Signature**: `% -> %`
 - **From**: `HyperbolicFunctionCategory`
 
-#### `cot` <a id="cot"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1391)\]
+#### `cot` <a id="cot"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1398)\]
 
 cot(x) returns the cotangent of x.
 
 - **Signature**: `% -> %`
 - **From**: `TrigonometricFunctionCategory`
 
-#### `coth` <a id="coth"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1407)\]
+#### `coth` <a id="coth"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1414)\]
 
 coth(x) returns the hyperbolic cotangent of x.
 
@@ -2033,14 +2034,14 @@ coulombH2(l,eta,ro) is the incoming irregular Coulomb wave function H^(-).
 
 - **Signature**: `(%, %, %) -> %`
 
-#### `csc` <a id="csc"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1390)\]
+#### `csc` <a id="csc"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1397)\]
 
 csc(x) returns the cosecant of x.
 
 - **Signature**: `% -> %`
 - **From**: `TrigonometricFunctionCategory`
 
-#### `csch` <a id="csch"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1406)\]
+#### `csch` <a id="csch"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1413)\]
 
 csch(x) returns the hyperbolic cosecant of x.
 
@@ -2054,7 +2055,7 @@ csch(x) returns the hyperbolic cosecant of x.
 dSolve(expr, funcs, vars) solves the (list of) differential equation(s) expr for the function(s) funcs with independent variable(s) vars.
 
 ```fricas
-x:=jWSExpr x;
+x:=jWSExpression x;
 fx:=derivative(operator('f),0,x)
 fprimex:=derivative(operator('f),1,x)
 dSolve(jWSEqual(fprimex + fx , a *sin(x)),fx,x)
@@ -2065,7 +2066,7 @@ dSolve(jWSEqual(fprimex + fx , a *sin(x)),fx,x)
 dSolve(eq, func,var) solves the differential equation eq for the function(s) funcs with independent variable(s) vars.
 
 ```fricas
-x:=jWSExpr x;
+x:=jWSExpression x;
 fx:=derivative(operator('f),0,x)
 fprimex:=derivative(operator('f),1,x)
 dSolve(fprimex + fx = a * sin(x)/cos(x),fx,x)
@@ -2078,12 +2079,12 @@ dSolve(fprimex + fx = a * sin(x)/cos(x),fx,x)
 dSolveValue(expr,funcs, vars) returns the value determined by the differential equation(s) in expr for the function(s) funcs with independent variable(s) vars.
 
 ```fricas
-x:=jWSExpr x;
+x:=jWSExpression x;
 f:=derivative(operator('f),0)
 f0:=derivative(operator('f),0,0)
 fx:=derivative(operator('f),0,x)
 fprimex:=derivative(operator('f),1,x)
-dSolveValue(jWSExpr([jWSEqual(fprimex + fx , a *sin(x)/cos(x)), jWSEqual(f0,0)]),f,x)
+dSolveValue(jWSExpression([jWSEqual(fprimex + fx , a *sin(x)/cos(x)), jWSEqual(f0,0)]),f,x)
 ```
 
 ##### `dSolveValue` : `(Equation(%), %, %) -> %`
@@ -2096,7 +2097,7 @@ dawson(x) computes the Dawson integral of x.
 
 - **Signature**: `% -> %`
 
-#### `decimalForm` <a id="decimalform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1062)\]
+#### `decimalForm` <a id="decimalform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1066)\]
 
 ##### `decimalForm` : `% -> %`
 
@@ -2106,7 +2107,7 @@ decimalForm(x) returns the printed representation of x in decimal form i.e. with
 
 decimalForm(x, expr) returns the printed representation of x in decimal form with expr as specification (number of digits of precision or a 2-list of number of digits and the number of digits after the decimal point).
 
-#### `decompose` <a id="decompose"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L848)\]
+#### `decompose` <a id="decompose"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L852)\]
 
 decompose(poly, x) is a polynomial decomposition function, here, related to x.
 
@@ -2200,11 +2201,11 @@ fprime:=derivative(operator('f),1)
 derivative(func, n, var) returns the derivative of order n of func applied to var.
 
 ```fricas
-x := jWSExpr x
+x := jWSExpression x
 fprimex:=derivative(operator('f),1,x)
 ```
 
-#### `differentiate` <a id="differentiate"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1633)\]
+#### `differentiate` <a id="differentiate"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1640)\]
 
 ##### `differentiate` : `(%, S) -> %`
 
@@ -2241,12 +2242,6 @@ differentiate(x, deriv) differentiates x extending the derivation deriv on R.
 differentiate(x, deriv, n) differentiate x n times using a derivation which extends deriv on R.
 
 - **From**: `DifferentialExtension(R)`
-
-##### `differentiate` : `(%, NonNegativeInteger) -> %`
-
-differentiate(f, n) creates a form for the nth derivative of f, f', f'', f''', "f super iv".
-
-- **From**: `OutputForm`
 
 ##### `differentiate` : `(%, %) -> %`
 
@@ -2300,7 +2295,7 @@ digamma(x) is the logarithmic derivative of Gamma(x) (often written psi(x) in th
 
 - **From**: `SpecialFunctionCategory`
 
-#### `dilog` <a id="dilog"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1430)\]
+#### `dilog` <a id="dilog"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1437)\]
 
 dilog(x) returns the dilogarithm of x, the integral of log(x) / (1 - x) dx.
 
@@ -2314,7 +2309,7 @@ dimensions(agg) returns dimensions of agg.
 - **Signature**: `% -> WSList(WSInteger)`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `diracDelta` <a id="diracdelta"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1507)\]
+#### `diracDelta` <a id="diracdelta"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1514)\]
 
 diracDelta(x) is unit mass at zeros of x.
 
@@ -2359,14 +2354,14 @@ Operation defined in WSExpression.
 
 Operation defined in WSExpression.
 
-#### `distribute` <a id="distribute"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L940)\]
+#### `distribute` <a id="distribute"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L944)\]
 
 ##### `distribute` : `% -> %`
 
 distribute(expr) distributes expr over addition. For illustration:
 
 ```fricas
-distribute(jWSExpr "(x + y) * (a + b + c)")
+distribute(jWSExpression "(x + y) * (a + b + c)")
 ```
 
 ##### `distribute` : `(%, %) -> %`
@@ -2425,18 +2420,6 @@ ellipticThetaPrime(a, u, q) computes the derivative of the theta function, a ran
 - **Signature**: `(%, %, %) -> %`
 
 #### `elt` <a id="elt"></a>
-
-##### `elt` : `(%, List(%)) -> %`
-
-elt(op, l) creates a form for application of op to list of arguments l.
-
-- **From**: `OutputForm`
-
-##### `elt` : `(%, List(OutputForm)) -> %`
-
-elt(s, [a1, ..., an]) or s([a1, ..., an]) returns s subscripted by [a1, ..., an].
-
-- **From**: `Symbol`
 
 ##### `elt` : `(BasicOperator, %) -> %`
 
@@ -2508,7 +2491,7 @@ elt(agg,i) returns the i-th element.
 
 Operation defined in WSExpression.
 
-#### `engineeringForm` <a id="engineeringform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1076)\]
+#### `engineeringForm` <a id="engineeringform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1080)\]
 
 ##### `engineeringForm` : `% -> %`
 
@@ -2536,7 +2519,7 @@ erfc(x) computes the complementary error function.
 
 - **Signature**: `% -> %`
 
-#### `erfi` <a id="erfi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1419)\]
+#### `erfi` <a id="erfi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1426)\]
 
 erfi(x) denotes -%i*erf(%i*x)
 
@@ -2572,7 +2555,7 @@ eulerPhi(n) is the totient function, i.e. the number of integers that are relati
 
 - **Signature**: `WSInteger -> %`
 
-#### `eval` <a id="eval"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1956)\]
+#### `eval` <a id="eval"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1966)\]
 
 ##### `eval` : `(%, A, B) -> %`
 
@@ -2748,13 +2731,13 @@ exp(x) returns %e to the power x.
 
 - **From**: `ElementaryFunctionCategory`
 
-#### `expToTrig` <a id="exptotrig"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L984)\]
+#### `expToTrig` <a id="exptotrig"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L988)\]
 
 expToTrig(expr) returns expr with exponentials converted to (hyperbolic) trigonometric functions.
 
 - **Signature**: `% -> %`
 
-#### `expand` <a id="expand"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L907)\]
+#### `expand` <a id="expand"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L911)\]
 
 ##### `expand` : `% -> %`
 
@@ -2764,13 +2747,13 @@ expand(expr) puts out products and positive powers of integers of the expression
 
 expand(expr, opt) is the expand version with excluded pattern-s or any other options available (for example "Modulus->p").
 
-#### `expandDenominator` <a id="expanddenominator"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L931)\]
+#### `expandDenominator` <a id="expanddenominator"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L935)\]
 
 expandDenominator(expr) expands denominators of rational expression expr.
 
 - **Signature**: `% -> %`
 
-#### `expandNumerator` <a id="expandnumerator"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L929)\]
+#### `expandNumerator` <a id="expandnumerator"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L933)\]
 
 expandNumerator(expr) expands numerators of rational expression expr.
 
@@ -2783,7 +2766,7 @@ expandNumerator(expr) expands numerators of rational expression expr.
 exponent(p,expr) returns the maximum exponent of p for expr.
 
 ```fricas
-x:= jWSExpr x;y := jWSExpr y
+x:= jWSExpression x;y := jWSExpression y
 p:=(x^2-2)^3*(y*x^3+x^11*y^7)*(y^5+x*y^2+x^11+y)
 exponent(%,(x^2-2))
 ```
@@ -2793,7 +2776,7 @@ exponent(%,(x^2-2))
 exponent(p, expr, map) applies map to the exponents related to expr and returns it. By default map = "Max".
 
 ```fricas
-x:= jWSExpr x;y := jWSExpr y
+x:= jWSExpression x;y := jWSExpression y
 p:=expand((x^2-2)^3*(y*x^3+x^11*y^7)*(y^5+x*y^2+x^11+y))
 exponent(p,x,"Min")
 ```
@@ -2806,12 +2789,6 @@ expressIdealMember([f1, ..., fn], h) returns a representation of h as a linear c
 - **From**: `PrincipalIdealDomain`
 
 #### `exquo` <a id="exquo"></a>
-
-##### `exquo` : `(%, %) -> %`
-
-exquo(f, g) creates the equivalent infix form.
-
-- **From**: `OutputForm`
 
 ##### `exquo` : `(%, %) -> Union(%,"failed")`
 
@@ -2839,20 +2816,20 @@ extendedEuclidean(x, y, z) either returns a record rec where rec.coef1*x+rec.coe
 
 - **From**: `EuclideanDomain`
 
-#### `extendedExpand` <a id="extendedexpand"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L913)\]
+#### `extendedExpand` <a id="extendedexpand"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L917)\]
 
 extendedExpand(expr) puts out all products and positive powers of integers.
 
 - **Signature**: `% -> %`
 
-#### `extendedSimplify` <a id="extendedsimplify"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L888)\]
+#### `extendedSimplify` <a id="extendedsimplify"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L892)\]
 
 ##### `extendedSimplify` : `% -> %`
 
 extendedSimplify(expr) is the extended version of simplify. This is the full version of simplify.
 
 ```fricas
-x:= jWSExpr x
+x:= jWSExpression x
 expr := Gamma(x)/Gamma(x-1)
 ```
 
@@ -2866,7 +2843,7 @@ extendedSimplify(expr)
 
 extendedSimplify(expr, assumptions) is the extended version of simplify with respect to assumptions or ExcludedForms. This is the full version.
 
-#### `extract` <a id="extract"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1029)\]
+#### `extract` <a id="extract"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1033)\]
 
 ##### `extract` : `(%, NonNegativeInteger) -> %`
 
@@ -2878,7 +2855,7 @@ extract(agg, parts) extracts parts of agg.
 
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `factor` <a id="factor"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L809)\]
+#### `factor` <a id="factor"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L813)\]
 
 ##### `factor` : `% -> %`
 
@@ -2889,7 +2866,7 @@ factor(expr) factors the expression or polynomial expr.
 factor(expr, opt) factors the expression or polynomial expr. For example:
 
 ```fricas
-x := jWSExpr x;
+x := jWSExpression x;
 factor(1 + x^2, "GaussianIntegers -> True")
 ```
 
@@ -2899,20 +2876,31 @@ factor(x) returns the factorization of x into irreducibles.
 
 - **From**: `UniqueFactorizationDomain`
 
-#### `factorList` <a id="factorlist"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L835)\]
+#### `factorInteger` <a id="factorinteger"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L802)\]
+
+factorInteger(n) factorizes the integer n into its prime factors. For example:
+
+```fricas
+n := jWSExpression 70421676397833365421106577172389167104000000000000
+factorInteger n
+```
+
+- **Signature**: `% -> %`
+
+#### `factorList` <a id="factorlist"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L839)\]
 
 factorList(expr) factors the expression or polynomial expr, but returns the result as a list of pairs (factor, exponent).
 
 - **Signature**: `% -> WSList(WSList(%))`
 
-#### `factorPolynomial` <a id="factorpolynomial"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L802)\]
+#### `factorPolynomial` <a id="factorpolynomial"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L807)\]
 
 ##### `factorPolynomial` : `% -> %`
 
 factorPolynomial(p) factorizes the polynomial p. For example:
 
 ```fricas
-x := jWSExpr x
+x := jWSExpression x
 p:=expand(chebyshevT(7,x)* chebyshevU(9,x))
 factorPolynomial p
 ```
@@ -2927,13 +2915,13 @@ factorPolynomial(p) returns the factorization into irreducibles of the univariat
 
 Operation defined in WSExpression.
 
-#### `factorSquareFree` <a id="factorsquarefree"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L816)\]
+#### `factorSquareFree` <a id="factorsquarefree"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L820)\]
 
 factorSquareFree(expr) factors the expression or polynomial expr in square free factors.
 
 - **Signature**: `% -> %`
 
-#### `factorSquareFreeList` <a id="factorsquarefreelist"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L838)\]
+#### `factorSquareFreeList` <a id="factorsquarefreelist"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L842)\]
 
 factorSquareFreeList(expr) factors the expression or polynomial expr in square free factors but returns the result as a list of pairs (factor, exponent).
 
@@ -2951,7 +2939,7 @@ factorSquareFreePolynomial(p) factors the univariate polynomial p into irreducib
 
 Operation defined in WSExpression.
 
-#### `factorTerms` <a id="factorterms"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L819)\]
+#### `factorTerms` <a id="factorterms"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L823)\]
 
 ##### `factorTerms` : `% -> %`
 
@@ -2965,7 +2953,7 @@ factorTerms(p, var) factors out numerical factors of the expression or polynomia
 
 factorTerms(p, vars) factors the expression or polynomial expr by pulling out numerical factors without those related to var(s).
 
-#### `factorTermsList` <a id="factortermslist"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L828)\]
+#### `factorTermsList` <a id="factortermslist"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L832)\]
 
 ##### `factorTermsList` : `% -> WSList(%)`
 
@@ -2975,7 +2963,7 @@ factorTermsList(expr) is the counterpart of factorTerms but here returned as a l
 
 factorTermsList(expr, vars) is the counterpart of factorTerms but here returned as a list of pairs (numerical factor, polynomial factor). The numerical factors related to var(s) are not factored.
 
-#### `factorial` <a id="factorial"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1567)\]
+#### `factorial` <a id="factorial"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1574)\]
 
 factorial(n) computes the factorial of n (denoted in the literature by n!) Note: n! = n (n-1)! when n > 0; also, 0! = 1.
 
@@ -3028,12 +3016,12 @@ findInstance(expr,lvars,dom) tries to find an instance to the equation in expr.
 
 findInstance(expr,lvars,dom, n) tries to find n instance(s) to the (in)equation in expr.
 
-#### `findRoot` <a id="findroot"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L861)\]
+#### `findRoot` <a id="findroot"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L865)\]
 
 findRoot(expr,start) tries to find the root of expr starting at start.
 
 ```fricas
-x:= jWSExpr x
+x:= jWSExpression x
 findRoot(sin(x) + cos(x), "{x, 0}")
 ```
 
@@ -3079,7 +3067,7 @@ fourier(list, lpos) returns the elements of the discrete Fourier transform from 
 
 Operation defined in WSExpression.
 
-#### `fractionPart` <a id="fractionpart"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1375)\]
+#### `fractionPart` <a id="fractionpart"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1382)\]
 
 fractionPart(x) returns the fractional part of x. Note: fractionPart(x) = x - floor(x).
 
@@ -3100,14 +3088,14 @@ freeOf?(x, s) tests if x does not contain any operator whose name is s.
 
 - **From**: `ExpressionSpace2(K)`
 
-#### `fresnelC` <a id="fresnelc"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1427)\]
+#### `fresnelC` <a id="fresnelc"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1434)\]
 
 fresnelC(x) is the Fresnel integral C, defined by C(x) = integrate(cos(%pi*t^2/2), t=0..x)
 
 - **Signature**: `% -> %`
 - **From**: `LiouvillianFunctionCategory`
 
-#### `fresnelS` <a id="fresnels"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1428)\]
+#### `fresnelS` <a id="fresnels"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1435)\]
 
 fresnelS(x) is the Fresnel integral S, defined by S(x) = integrate(sin(%pi*t^2/2), t=0..x)
 
@@ -3119,14 +3107,14 @@ fresnelS(x) is the Fresnel integral S, defined by S(x) = integrate(sin(%pi*t^2/2
 fromCoefficientRules(list, vars) constructs the polynomial from the list of coefficients and exponents rules.
 
 ```fricas
-x:= jWSExpr x;y := jWSExpr y
-coefficientRules((x + y)^2+x^11,jWSExpr [x,y])
-fromCoefficientRules(%, jWSExpr [x,y])
+x:= jWSExpression x;y := jWSExpression y
+coefficientRules((x + y)^2+x^11,jWSExpression [x,y])
+fromCoefficientRules(%, jWSExpression [x,y])
 ```
 
 - **Signature**: `(%, %) -> %`
 
-#### `functionExpand` <a id="functionexpand"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L962)\]
+#### `functionExpand` <a id="functionexpand"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L966)\]
 
 ##### `functionExpand` : `% -> %`
 
@@ -3146,7 +3134,7 @@ gammaRegularized(a,x) computes the regularized incomplete Gamma function.
 
 - **Signature**: `(%, %) -> %`
 
-#### `gcd` <a id="gcd"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1890)\]
+#### `gcd` <a id="gcd"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1900)\]
 
 ##### `gcd` : `(%, %) -> %`
 
@@ -3240,7 +3228,7 @@ guessGeneratingFunction([1,2,4,8],x)
 guessGeneratingFunction(l,x) finds the generating function applied to x from the list of coefficients l. Or from the list of lists l (list of pairs as list (n-th, coef-th)). For example:
 
 ```fricas
-guessGeneratingFunction(jWSExpr("{1,2,4,8}"),x)
+guessGeneratingFunction(jWSExpression("{1,2,4,8}"),x)
 ```
 
 #### `guessSequenceFunction` <a id="guesssequencefunction"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L406)\]
@@ -3250,7 +3238,7 @@ guessGeneratingFunction(jWSExpr("{1,2,4,8}"),x)
 guessSequenceFunction(l) finds the sequence from the list of coefficients l. For example:
 
 ```fricas
-guessSequenceFunction(jWSExpr("{1,2,4,8}"))
+guessSequenceFunction(jWSExpression("{1,2,4,8}"))
 ```
 
 ##### `guessSequenceFunction` : `% -> %`
@@ -3258,7 +3246,7 @@ guessSequenceFunction(jWSExpr("{1,2,4,8}"))
 guessSequenceFunction(l) finds the sequence from the list of coefficients l Or from the list of lists l (list of pairs as list (n-th, coef-th)). For example:
 
 ```fricas
-guessSequenceFunction(jWSExpr("{1,2,4,8}"))
+guessSequenceFunction(jWSExpression("{1,2,4,8}"))
 ```
 
 ##### `guessSequenceFunction` : `(%, %) -> %`
@@ -3297,14 +3285,14 @@ hahn_p(n, a, b, bar_a, bar_b, z) is the continuous Hahn polynomial.
 - **Signature**: `(%, %, %, %, %, %) -> %`
 - **From**: `SpecialFunctionCategory`
 
-#### `hankelH1` <a id="hankelh1"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1490)\]
+#### `hankelH1` <a id="hankelh1"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1497)\]
 
 hankelH1(v, z) is first Hankel function (Bessel function of the third kind).
 
 - **Signature**: `(%, %) -> %`
 - **From**: `SpecialFunctionCategory`
 
-#### `hankelH2` <a id="hankelh2"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1491)\]
+#### `hankelH2` <a id="hankelh2"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1498)\]
 
 hankelH2(v, z) is the second Hankel function (Bessel function of the third kind).
 
@@ -3330,7 +3318,7 @@ hermiteH(n, x) returns the Hermite polynomial or evaluates it at x if x is a num
 
 - **Signature**: `(%, %) -> %`
 
-#### `hornerForm` <a id="hornerform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L946)\]
+#### `hornerForm` <a id="hornerform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L950)\]
 
 hornerForm(expr, x) returns the Horner form of expr (minimizing multiplications).
 
@@ -3384,7 +3372,7 @@ hypergeometricU(a,b,z) is the confluent hypergeometric function U.
 
 - **Signature**: `(%, %, %) -> %`
 
-#### `imag` <a id="imag"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1311)\]
+#### `imag` <a id="imag"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1315)\]
 
 ##### `imag` : `% -> R`
 
@@ -3396,7 +3384,7 @@ imag(x) returns imaginary part of x.
 
 Operation defined in WSExpression.
 
-#### `imaginary` <a id="imaginary"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1300)\]
+#### `imaginary` <a id="imaginary"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1304)\]
 
 imaginary() = sqrt(-1) = %i.
 
@@ -3442,7 +3430,7 @@ integral(f, x) returns the formal integral of f dx.
 integrate(expr, opts|var) integrates expr with respect to opt or var as options. For example:
 
 ```fricas
-x:=jWSExpr x;integrate(1/(x^4-1),x)
+x:=jWSExpression x;integrate(1/(x^4-1),x)
 opt:=jWSList [x,-1,1]
 integrate(cos(x),opt)
 ```
@@ -3463,7 +3451,7 @@ integrate(expr, var, seg) is the definite integration of expr with respect to va
 
 integrate(expr, var) is the indefinite integration of expr with respect to var.
 
-#### `interpolatingPolynomial` <a id="interpolatingpolynomial"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L851)\]
+#### `interpolatingPolynomial` <a id="interpolatingpolynomial"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L855)\]
 
 interpolatingPolynomial(lpoly,x) interpolates the list of polynomials lpoly with respect to x.
 
@@ -3549,7 +3537,7 @@ inverseJacobiSn(nu, m) computes the inverse Jacobi SN elliptic function.
 
 - **Signature**: `(%, %) -> %`
 
-#### `irreducible?` <a id="irreducible"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L842)\]
+#### `irreducible?` <a id="irreducible"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L846)\]
 
 ##### `irreducible?` : `% -> Boolean`
 
@@ -3650,13 +3638,13 @@ jWSAggregate(list) constructs agg to a WSAggregate.
 
 Operation defined in WSExpression.
 
-#### `jWSAssociation` <a id="jwsassociation"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1201)\]
+#### `jWSAssociation` <a id="jwsassociation"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1205)\]
 
 jWSAssociation(rules) returns the associations (key->value) created from the rules.
 
 - **Signature**: `WSList(%) -> %`
 
-#### `jWSData` <a id="jwsdata"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1186)\]
+#### `jWSData` <a id="jwsdata"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1190)\]
 
 ##### `jWSData` : `() -> %`
 
@@ -3686,65 +3674,65 @@ jWSData(sym, prop) returns the property of sym.
 
 jWSData(sym, prop, ann) returns the annotation for the property of sym.
 
-#### `jWSEqual` <a id="jwsequal"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1216)\]
+#### `jWSEqual` <a id="jwsequal"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1220)\]
 
 jWSEqual(lhs,rhs) returns the Julia WS equality lhs == rhs.
 
 - **Signature**: `(%, %) -> %`
 
-#### `jWSExpr` <a id="jwsexpr"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1236)\]
+#### `jWSExpression` <a id="jwsexpression"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1240)\]
 
-##### `jWSExpr` : `Symbol -> %`
+##### `jWSExpression` : `Symbol -> %`
 
-jWSExpr(sym) coerces sym to a WSExpression. For example: x := jWSExpr x
+jWSExpression(sym) coerces sym to a WSExpression. For example: x := jWSExpression x
 
-##### `jWSExpr` : `Integer -> %`
+##### `jWSExpression` : `Integer -> %`
 
-jWSExpr(z) returns the Integer z as a WSExpression.
+jWSExpression(z) returns the Integer z as a WSExpression.
 
-##### `jWSExpr` : `Fraction(Integer) -> %`
+##### `jWSExpression` : `Fraction(Integer) -> %`
 
-jWSExpr(q) returns the Fraction(Integer) q as a WSExpression.
+jWSExpression(q) returns the Fraction(Integer) q as a WSExpression.
 
-##### `jWSExpr` : `DoubleFloat -> %`
+##### `jWSExpression` : `DoubleFloat -> %`
 
-jWSExpr(r) returns the DoubleFloat as a WSExpression.
+jWSExpression(r) returns the DoubleFloat as a WSExpression.
 
-##### `jWSExpr` : `JLFloat64 -> %`
+##### `jWSExpression` : `JLFloat64 -> %`
 
-jWSExpr(r) returns the JLFloat64 as a WSExpression.
+jWSExpression(r) returns the JLFloat64 as a WSExpression.
 
-##### `jWSExpr` : `Float -> %`
+##### `jWSExpression` : `Float -> %`
 
-jWSExpr(r) returns the Float r as a WSExpression.
+jWSExpression(r) returns the Float r as a WSExpression.
 
-##### `jWSExpr` : `JLFloat -> %`
+##### `jWSExpression` : `JLFloat -> %`
 
-jWSExpr(r) returns the JLFloat r as a WSExpression.
+jWSExpression(r) returns the JLFloat r as a WSExpression.
 
-##### `jWSExpr` : `List(%) -> %`
+##### `jWSExpression` : `List(%) -> %`
 
-jWSExpr(list) returns the list of WSExpression as a WSExpression.
+jWSExpression(list) returns the list of WSExpression as a WSExpression.
 
-##### `jWSExpr` : `String -> %`
+##### `jWSExpression` : `String -> %`
 
-jWSExpr(str) constructs str as a WSExpression evaluating str as a WS Language expression. For example:
+jWSExpression(str) constructs str as a WSExpression evaluating str as a WS Language expression. For example:
 
 ```fricas
-jWSExpr "Factorial[5]"
-jWSExpr "3.14159"
-jlWSDateString(jWSExpr "Tomorrow")
-toString jWSExpr "TextSentences[WikipediaData[_"Sun_"]][[;; 40]]"
-jWSExpr "Probability[x < 1, x \[Distributed] NormalDistribution[]]"
+jWSExpression "Factorial[5]"
+jWSExpression "3.14159"
+jlWSDateString(jWSExpression "Tomorrow")
+toString jWSExpression "TextSentences[WikipediaData[_"Sun_"]][[;; 40]]"
+jWSExpression "Probability[x < 1, x \[Distributed] NormalDistribution[]]"
 ```
 
-#### `jWSGreater` <a id="jwsgreater"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1224)\]
+#### `jWSGreater` <a id="jwsgreater"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1228)\]
 
 jWSGreater(lhs,rhs) returns the Julia WS inequality lhs > rhs.
 
 - **Signature**: `(%, %) -> %`
 
-#### `jWSGreaterEqual` <a id="jwsgreaterequal"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1226)\]
+#### `jWSGreaterEqual` <a id="jwsgreaterequal"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1230)\]
 
 jWSGreaterEqual(lhs,rhs) returns the Julia WS inequality lhs >= rhs.
 
@@ -3766,7 +3754,7 @@ jWSInterpret(Type|Form, Expr) interprets Expr to be of type Type or Form using t
 jWSInterpret("Number","3.2")@WSREAL
 jWSInterpret("Real","3.2")@WSREAL
 jWSInterpret("Location","Lille")$WSEXPR
-See jWSExpr "$InterpreterTypes"
+See jWSExpression "$InterpreterTypes"
 ```
 
 - **From**: [`WSObject`](WSObject.md)
@@ -3777,25 +3765,25 @@ jWSInterpret(form1,form2,form3) interprets forms.
 
 - **From**: [`WSObject`](WSObject.md)
 
-#### `jWSLess` <a id="jwsless"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1220)\]
+#### `jWSLess` <a id="jwsless"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1224)\]
 
 jWSLess(lhs,rhs) returns the Julia WS inequality lhs < rhs.
 
 - **Signature**: `(%, %) -> %`
 
-#### `jWSLessEqual` <a id="jwslessequal"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1222)\]
+#### `jWSLessEqual` <a id="jwslessequal"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1226)\]
 
 jWSLessEqual(lhs,rhs) returns the Julia WS inequality lhs <= rhs.
 
 - **Signature**: `(%, %) -> %`
 
-#### `jWSNotEqual` <a id="jwsnotequal"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1218)\]
+#### `jWSNotEqual` <a id="jwsnotequal"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1222)\]
 
 jWSNotEqual(lhs,rhs) returns the Julia WS inequality lhs != rhs.
 
 - **Signature**: `(%, %) -> %`
 
-#### `jWSQuantity` <a id="jwsquantity"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1228)\]
+#### `jWSQuantity` <a id="jwsquantity"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1232)\]
 
 ##### `jWSQuantity` : `% -> %`
 
@@ -3813,7 +3801,7 @@ jWSQuantity(x,jWSString(u)) returns quantity unit u of x. For example:
 jWSQuantity(1.2, jWSString "Meter")
 ```
 
-#### `jWSRule` <a id="jwsrule"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1208)\]
+#### `jWSRule` <a id="jwsrule"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1212)\]
 
 ##### `jWSRule` : `(%, %) -> %`
 
@@ -3824,12 +3812,12 @@ jWSRule(lhs,rhs) returns the Julia WS rule lhs->rhs.
 jWSRule(eq) returns the Julia WS rule lhs->rhs for the equation eq. For example:
 
 ```fricas
-x := jWSExpr x
+x := jWSExpression x
 p := 1/2 * legendreQ(5,x)
-replaceAll(p, jWSRule(x = jWSExpr "1.55555556444883838383833777333333333"))
+replaceAll(p, jWSRule(x = jWSExpression "1.55555556444883838383833777333333333"))
 ```
 
-#### `jWSTable` <a id="jwstable"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1204)\]
+#### `jWSTable` <a id="jwstable"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1208)\]
 
 ##### `jWSTable` : `(%, %) -> WSList(%)`
 
@@ -3845,14 +3833,14 @@ jacobiAmplitude(u,m) computes the amplitude function am.
 
 - **Signature**: `(%, %) -> %`
 
-#### `jacobiCn` <a id="jacobicn"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1607)\]
+#### `jacobiCn` <a id="jacobicn"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1614)\]
 
 jacobiCn(z, m) is the Jacobi elliptic cn function, defined by jacobiCn(z, m)^2 + jacobiSn(z, m)^2 = 1 and jacobiCn(0, m) = 1.
 
 - **Signature**: `(%, %) -> %`
 - **From**: `SpecialFunctionCategory`
 
-#### `jacobiDn` <a id="jacobidn"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1608)\]
+#### `jacobiDn` <a id="jacobidn"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1615)\]
 
 jacobiDn(z, m) is the Jacobi elliptic dn function, defined by jacobiDn(z, m)^2 + m*jacobiSn(z, m)^2 = 1 and jacobiDn(0, m) = 1.
 
@@ -3865,7 +3853,7 @@ jacobiP(n, a, b, x) returns the Jacobi polynomial or evaluates it at x if x is a
 
 - **Signature**: `(%, %, %, %) -> %`
 
-#### `jacobiSn` <a id="jacobisn"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1606)\]
+#### `jacobiSn` <a id="jacobisn"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1613)\]
 
 jacobiSn(z, m) is the Jacobi elliptic sn function, defined by the formula jacobiSn(ellipticF(z, m), m) = z.
 
@@ -3940,11 +3928,11 @@ jlApply(func, obj1, obj2, obj3, obj4, obj5) applies the function func with obj1,
 
 - **From**: [`JLObjectType`](JLObjectType.md)
 
-#### `jlDisplay` <a id="jldisplay"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1045)\]
+#### `jlDisplay` <a id="jldisplay"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1049)\]
 
 ##### `jlDisplay` : `WSExpression -> WSExpression`
 
-jlDisplay(expr) returns the traditional form of expr. This is equivalent to: jWSExpr "Format[Sin[x]]" => sin(x)
+jlDisplay(expr) returns the traditional form of expr. This is equivalent to: jWSExpression "Format[Sin[x]]" => sin(x)
 
 ##### `jlDisplay` : `(WSExpression, WSExpression) -> WSExpression`
 
@@ -3963,14 +3951,14 @@ jlDump(obj) dumps (shows) the Julia object (internal structure with type).
 - **Signature**: `JLObject -> Void`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
-#### `jlEval` <a id="jleval"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1007)\]
+#### `jlEval` <a id="jleval"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1011)\]
 
 ##### `jlEval` : `(%, String) -> %`
 
 jlEval(expr, param) evaluates expression expr with param as parameter(s). See also `eval` or `replaceAll`. For example:
 
 ```fricas
-x:=jWSExpr("x");jlEval(sqrt(x),"x=2.0")
+x:=jWSExpression("x");jlEval(sqrt(x),"x=2.0")
 ```
 
 ##### `jlEval` : `(%, String, String) -> %`
@@ -3978,7 +3966,7 @@ x:=jWSExpr("x");jlEval(sqrt(x),"x=2.0")
 jlEval(expr, param1, param2) evaluates expression expr with param1 and param2 as parameters. See also `eval` or `replaceAll`.
 
 ```fricas
-a:=jWSExpr("a");b:=jWSExpr("b");
+a:=jWSExpression("a");b:=jWSExpression("b");
 jlEval(sqrt(a^2+b^2),"a=1.0","b=1.0")
 ```
 
@@ -4020,13 +4008,7 @@ jlGetProperty(obj, sym) returns the property/element sym of obj.
 - **Signature**: `(%, JLSymbol) -> JLObject`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
-#### `jlGreedyEval` <a id="jlgreedyeval"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1004)\]
-
-jlGreedyEval(bool) toggles automatic arithmetic operations. Plus[a, a] can become Times[2, a] using or not Julia `weval`.
-
-- **Signature**: `Boolean -> Void`
-
-#### `jlHead` <a id="jlhead"></a>
+#### `jlHead` <a id="jlhead"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1881)\]
 
 jlHead(expr) returns the Head type of expr.
 
@@ -4101,14 +4083,14 @@ jlText(df, "latex")
 - **Signature**: `(%, String) -> List(String)`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
-#### `jlType` <a id="jltype"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L2038)\]
+#### `jlType` <a id="jltype"></a>
 
 jlType(obj) returns the Julia type of obj.
 
 - **Signature**: `% -> Symbol`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
-#### `jlWSAccuracy` <a id="jlwsaccuracy"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1177)\]
+#### `jlWSAccuracy` <a id="jlwsaccuracy"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1181)\]
 
 jlWSAccuracy(expr) get accuracy of expr.
 
@@ -4126,25 +4108,31 @@ jlWSDefined? "Sin"
 
 - **Signature**: `String -> Boolean`
 
-#### `jlWSPrecision` <a id="jlwsprecision"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1175)\]
+#### `jlWSGreedyEval` <a id="jlwsgreedyeval"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1008)\]
+
+jlWSGreedyEval(bool) toggles automatic arithmetic operations. Plus[a, a] can become Times[2, a] using or not Julia `weval`.
+
+- **Signature**: `Boolean -> Void`
+
+#### `jlWSPrecision` <a id="jlwsprecision"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1179)\]
 
 jlWSPrecision get precision of expr.
 
 - **Signature**: `% -> %`
 
-#### `jlWSSetAccuracy` <a id="jlwssetaccuracy"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1181)\]
+#### `jlWSSetAccuracy` <a id="jlwssetaccuracy"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1185)\]
 
 jlWSSetAccuracy(expr, acc) sets accuracy of expr to acc.
 
 - **Signature**: `(%, %) -> %`
 
-#### `jlWSSetOptions` <a id="jlwssetoptions"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1183)\]
+#### `jlWSSetOptions` <a id="jlwssetoptions"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1187)\]
 
 jlWSSetOptions(type, opts) sets some internal engine options.
 
 - **Signature**: `(%, %) -> %`
 
-#### `jlWSSetPrecision` <a id="jlwssetprecision"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1179)\]
+#### `jlWSSetPrecision` <a id="jlwssetprecision"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1183)\]
 
 jlWSSetPrecision(expr, prec) sets precision of expr to prec.
 
@@ -4178,28 +4166,28 @@ join(agg1, agg2) joins the two aggregates agg1 and agg2.
 - **Signature**: `(%, %) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `kelvinBei` <a id="kelvinbei"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1487)\]
+#### `kelvinBei` <a id="kelvinbei"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1494)\]
 
 kelvinBei(v, z) is the Kelvin bei function defined by equality kelvinBei(v, z) = imag(besselJ(v, exp(3*%pi*%i/4)*z)) for z and v real.
 
 - **Signature**: `(%, %) -> %`
 - **From**: `SpecialFunctionCategory`
 
-#### `kelvinBer` <a id="kelvinber"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1486)\]
+#### `kelvinBer` <a id="kelvinber"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1493)\]
 
 kelvinBer(v, z) is the Kelvin ber function defined by equality kelvinBer(v, z) = real(besselJ(v, exp(3*%pi*%i/4)*z)) for z and v real.
 
 - **Signature**: `(%, %) -> %`
 - **From**: `SpecialFunctionCategory`
 
-#### `kelvinKei` <a id="kelvinkei"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1489)\]
+#### `kelvinKei` <a id="kelvinkei"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1496)\]
 
 kelvinKei(v, z) is the Kelvin kei function defined by equality kelvinKei(v, z) = imag(exp(-v*%pi*%i/2)*besselK(v, exp(%pi*%i/4)*z)) for z and v real.
 
 - **Signature**: `(%, %) -> %`
 - **From**: `SpecialFunctionCategory`
 
-#### `kelvinKer` <a id="kelvinker"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1488)\]
+#### `kelvinKer` <a id="kelvinker"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1495)\]
 
 kelvinKer(v, z) is the Kelvin kei function defined by equality kelvinKer(v, z) = real(exp(-v*%pi*%i/2)*besselK(v, exp(%pi*%i/4)*z)) for z and v real.
 
@@ -4248,7 +4236,7 @@ key?(assoc,key) checks whether or not key exists in the association assoc.
 
 - **Signature**: `(%, %) -> Boolean`
 
-#### `keys` <a id="keys"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1031)\]
+#### `keys` <a id="keys"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1035)\]
 
 keys(expr) returns the key elements in expr if any.
 
@@ -4288,7 +4276,7 @@ kummerU(mu, nu, z) is the Kummer U function.
 laguerreL(n, x) returns the Laguerre polynomial or evaluates it at x if x is a number. For example:
 
 ```fricas
-laguerreL(5, jWSExpr x)
+laguerreL(5, jWSExpression x)
 ```
 
 ##### `laguerreL` : `(%, %, %) -> %`
@@ -4319,14 +4307,14 @@ last(agg) returns the last element of agg.
 
 Operation defined in WSExpression.
 
-#### `latex` <a id="latex"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1352)\]
+#### `latex` <a id="latex"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1359)\]
 
 latex(s) returns a LaTeX-printable output representation of s.
 
 - **Signature**: `% -> String`
 - **From**: `SetCategory`
 
-#### `lcm` <a id="lcm"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1891)\]
+#### `lcm` <a id="lcm"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1901)\]
 
 ##### `lcm` : `(%, %) -> %`
 
@@ -4385,14 +4373,14 @@ legendreP(n, m, x) returns the associated Legendre polynomial of the first type 
 legendreQ(n, x) returns the Legendre function of the second kind or evaluates it at x if x is a number.
 
 ```fricas
-legendreQ(3,jWSExpr x)
+legendreQ(3,jWSExpression x)
 ```
 
 ##### `legendreQ` : `(%, %, %) -> %`
 
 legendreQ(n, m, x) returns the associated Legendre function of the second kind or evaluates it at x if x is a number.
 
-#### `length` <a id="length"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1022)\]
+#### `length` <a id="length"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1026)\]
 
 ##### `length` : `% -> %`
 
@@ -4400,7 +4388,7 @@ length(expr) returns the length of expr seen as a list.
 
 ##### `length` : `% -> WSInteger`
 
-length(agg) returns the length of agg. 0 if it is a scalar, an index for example.
+length(agg) returns the length of agg. 0 if it is a scalar.
 
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
@@ -4410,7 +4398,7 @@ lerchPhi(z,s,a) returns Lerch's transcendent phi of arguments.
 
 - **Signature**: `(%, %, %) -> %`
 
-#### `level` <a id="level"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1024)\]
+#### `level` <a id="level"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1028)\]
 
 ##### `level` : `(%, %) -> WSList(%)`
 
@@ -4420,7 +4408,7 @@ level(expr, lev) returns the list of expression expr at level lev.
 
 level(expr, lev, head) returns the list of expression expr at level lev with heads if head is true.
 
-#### `li` <a id="li"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1429)\]
+#### `li` <a id="li"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1436)\]
 
 li(x) returns the logarithmic integral of x, the integral of dx / log(x).
 
@@ -4444,12 +4432,12 @@ Operation defined in WSExpression.
 limit(expr, params) returns the limit, eventually nested or multivariate, of expr. For example:
 
 ```fricas
-x:=jWSExpr x; limit(sin(x)-sin(x-1/x),"x->Infinity")
+x:=jWSExpression x; limit(sin(x)-sin(x-1/x),"x->Infinity")
 ```
 
 - **Signature**: `(%, %) -> %`
 
-#### `log` <a id="log"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1381)\]
+#### `log` <a id="log"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1388)\]
 
 log(x) returns the natural logarithm of x. When evaluated into some subset of the complex numbers, the branch cut lies along the negative real axis, continuous with quadrant II. The domain does not contain the origin.
 
@@ -4480,21 +4468,21 @@ logGamma(z) returns the log-Gamma of z.
 
 - **Signature**: `% -> %`
 
-#### `lommelS1` <a id="lommels1"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1493)\]
+#### `lommelS1` <a id="lommels1"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1500)\]
 
 lommelS1(mu, nu, z) is the Lommel s function.
 
 - **Signature**: `(%, %, %) -> %`
 - **From**: `SpecialFunctionCategory`
 
-#### `lommelS2` <a id="lommels2"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1494)\]
+#### `lommelS2` <a id="lommels2"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1501)\]
 
 lommelS2(mu, nu, z) is the Lommel S function.
 
 - **Signature**: `(%, %, %) -> %`
 - **From**: `SpecialFunctionCategory`
 
-#### `lookup` <a id="lookup"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1035)\]
+#### `lookup` <a id="lookup"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1039)\]
 
 ##### `lookup` : `(%, %) -> %`
 
@@ -4586,7 +4574,7 @@ mathieuSPrime(b,q,z) is the derivative of the odd Mathieu function.
 
 - **Signature**: `(%, %, %) -> %`
 
-#### `matrixForm` <a id="matrixform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1096)\]
+#### `matrixForm` <a id="matrixform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1100)\]
 
 matrixForm(mat) returns a pretty-printable form of mat i.e. its WS 'MatrixForm'.
 
@@ -4650,7 +4638,7 @@ minPoly(k) returns p such that p(k) = 0.
 
 Operation defined in WSExpression.
 
-#### `minimalPolynomial` <a id="minimalpolynomial"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L855)\]
+#### `minimalPolynomial` <a id="minimalpolynomial"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L859)\]
 
 ##### `minimalPolynomial` : `(%, %) -> %`
 
@@ -4734,15 +4722,15 @@ norm(x) returns x * conjugate(x)
 
 Operation defined in WSExpression.
 
-#### `normal` <a id="normal"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L869)\]
+#### `normal` <a id="normal"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L873)\]
 
 ##### `normal` : `% -> %`
 
 normal(expr) converts expr to a normal expression from different expression types. Can be applied to a power series for example. For example:
 
 ```fricas
-x:=jWSExpr x
-s:=series(exp(x),jWSExpr "{x,0,10}")
+x:=jWSExpression x
+s:=series(exp(x),jWSExpression "{x,0,10}")
 normal(s)::EXPR INT
 ```
 
@@ -4770,7 +4758,7 @@ number?(expr) checks whether or not expr is a number.
 
 - **Signature**: `% -> Boolean`
 
-#### `numberForm` <a id="numberform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1055)\]
+#### `numberForm` <a id="numberform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1059)\]
 
 ##### `numberForm` : `% -> %`
 
@@ -4883,7 +4871,7 @@ numericMaximize(expr, vars, dom) maximizes numerically the expression function e
 numericMinimize(expr, vars) minimizes numerically the expression function expr with respect to vars. For example, global optimization from the SIAM 100 digits challenge:
 
 ```fricas
-x := jWSExpr(x);y:=jWSExpr y;
+x := jWSExpression(x);y:=jWSExpression y;
 expr := exp(sin(50*x))+sin(60*exp(y))+ sin(70*sin(x))+
 sin(sin(80*y))-sin(10*(x+y))+(x^2+y^2)/4
 numericMinimize(expr, jWSList [x,y])
@@ -4904,7 +4892,7 @@ numericMinimize(expr, vars, dom) minimizes numerically the expression function e
 numericProduct(f(n),range) returns an evaluated numerical approximation of the sum f(imin) + ... + f(imax) defined by the list range, for example
 
 ```fricas
-jWSExpr("{i, imin, imax}")
+jWSExpression("{i, imin, imax}")
 ```
 
 . See Wolfram language specifications.
@@ -4930,7 +4918,7 @@ numericSolve(expr, vars) returns the solution(s) to the expression expr.
 numericSum(f(n),range) returns an evaluated numerical approximation of the sum f(imin) + ... + f(imax) defined by the list range, for example
 
 ```fricas
-jWSExpr("{i, imin, imax}")
+jWSExpression("{i, imin, imax}")
 ```
 
 . See Wolfram language specifications.
@@ -4981,17 +4969,10 @@ parabolicCylinderD(nu,x) computes the parabolic cylinder function D of x.
 
 #### `paren` <a id="paren"></a>
 
-##### `paren` : `% -> %`
-
 paren(f) returns (f). This prevents f from being evaluated when operators are applied to it. For example, log(1) returns 0, but log(paren 1) returns the formal kernel log((1)).
 
+- **Signature**: `% -> %`
 - **From**: `ExpressionSpace2(K)`
-
-##### `paren` : `List(%) -> %`
-
-paren(lf) creates the form separating the elements of lf by commas and encloses the result in parentheses.
-
-- **From**: `OutputForm`
 
 #### `part` <a id="part"></a>
 
@@ -5005,14 +4986,14 @@ part(agg,i) returns the i-th element.
 
 Operation defined in WSExpression.
 
-#### `percentForm` <a id="percentform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1082)\]
+#### `percentForm` <a id="percentform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1086)\]
 
 ##### `percentForm` : `% -> %`
 
 percentForm(x) returns the printed representation of x in percent form. For example:
 
 ```fricas
-percentForm jWSExpr 0.50
+percentForm jWSExpression 0.50
 ```
 
 ##### `percentForm` : `(%, %) -> %`
@@ -5026,7 +5007,7 @@ permutation(n, m) returns the number of permutations of n objects taken m at a t
 - **Signature**: `(%, %) -> %`
 - **From**: `CombinatorialFunctionCategory`
 
-#### `pi` <a id="pi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1302)\]
+#### `pi` <a id="pi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1306)\]
 
 pi() returns the constant pi.
 
@@ -5046,7 +5027,7 @@ pochhammer(a,n) returns the Pochhammer symbol.
 
 - **Signature**: `(%, %) -> %`
 
-#### `polygamma` <a id="polygamma"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1462)\]
+#### `polygamma` <a id="polygamma"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1469)\]
 
 polygamma(k, x) is the k-th derivative of digamma(x), (often written psi(k, x) in the literature).
 
@@ -5153,7 +5134,7 @@ positiveInfinity() returns positive infinity (∞).
 
 - **Signature**: `() -> %`
 
-#### `powerExpand` <a id="powerexpand"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L949)\]
+#### `powerExpand` <a id="powerexpand"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L953)\]
 
 ##### `powerExpand` : `% -> %`
 
@@ -5196,7 +5177,7 @@ principalIdeal([f1, ..., fn]) returns a record whose generator component is a ge
 product(f(n),range) returns the product f(imin) * ... * f(imax) defined by the list range, for example
 
 ```fricas
-jWSExpr("{i, imin, imax}")
+jWSExpression("{i, imin, imax}")
 ```
 
 . See Wolfram language specifications.
@@ -5289,7 +5270,7 @@ qsetelt!(l,i,elem) returns l with i-th element replaced by elem. No checks are d
 
 Operation defined in WSExpression.
 
-#### `quantityForm` <a id="quantityform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1102)\]
+#### `quantityForm` <a id="quantityform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1106)\]
 
 ##### `quantityForm` : `(%, %) -> %`
 
@@ -5299,13 +5280,13 @@ quantityForm(expr,form) returns expr as a quantity with format form.
 
 quantityForm(expr,lform) returns expr as a quantity with a list of formats lform.
 
-#### `quantityMagnitude` <a id="quantitymagnitude"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1042)\]
+#### `quantityMagnitude` <a id="quantitymagnitude"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1046)\]
 
 quantityMagnitude(val) returns magnitude of val.
 
 - **Signature**: `% -> %`
 
-#### `quantityUnit` <a id="quantityunit"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1040)\]
+#### `quantityUnit` <a id="quantityunit"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1044)\]
 
 quantityUnit(val) returns unit of val.
 
@@ -5362,7 +5343,7 @@ rational?(q) checks whether or not q is a rational number.
 
 - **Signature**: `% -> Boolean`
 
-#### `rationalApproximation` <a id="rationalapproximation"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L998)\]
+#### `rationalApproximation` <a id="rationalapproximation"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1002)\]
 
 ##### `rationalApproximation` : `% -> %`
 
@@ -5382,7 +5363,7 @@ rationalExpression?(p,x) checks whether or not p is a rational expression in x.
 
 rationalExpression?(p,vlist) checks whether or not p is a rational expression in the list of variables vlist.
 
-#### `real` <a id="real"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1310)\]
+#### `real` <a id="real"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1314)\]
 
 ##### `real` : `% -> R`
 
@@ -5483,7 +5464,7 @@ Operation defined in WSExpression.
 
 Operation defined in WSExpression.
 
-#### `refine` <a id="refine"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L899)\]
+#### `refine` <a id="refine"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L903)\]
 
 refine(expr, assums) refines the expression expr with assumptions assums.
 
@@ -5525,7 +5506,7 @@ removeDuplicates(agg) removes duplicate elements.
 - **Signature**: `% -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `replace` <a id="replace"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1108)\]
+#### `replace` <a id="replace"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1112)\]
 
 ##### `replace` : `(%, %) -> %`
 
@@ -5535,25 +5516,25 @@ replace(expr, rule) applies rule(s) to expr.
 
 replace(expr, rule, lev) applies rule to expr with level lev.
 
-#### `replaceAll` <a id="replaceall"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1116)\]
+#### `replaceAll` <a id="replaceall"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1120)\]
 
 replaceAll(expr, rule) applies rule(s) to expr.
 
 - **Signature**: `(%, %) -> %`
 
-#### `replaceAt` <a id="replaceat"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1114)\]
+#### `replaceAt` <a id="replaceat"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1118)\]
 
 replaceAt(expr, part, n) replaces the n-th element of expr using rule(s).
 
 - **Signature**: `(%, %, %) -> %`
 
-#### `replacePart` <a id="replacepart"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1112)\]
+#### `replacePart` <a id="replacepart"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1116)\]
 
 replacePart(expr, part) replaces expr using rule(s) expressing position(s).
 
 - **Signature**: `(%, %) -> %`
 
-#### `replaceRepeated` <a id="replacerepeated"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1118)\]
+#### `replaceRepeated` <a id="replacerepeated"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1122)\]
 
 replaceRepeated(expr, rule) applies rule(s) to expr, but repeatedly.
 
@@ -5610,7 +5591,7 @@ resultant(p1,p2,x) returns the resultant of p1 and p2.
 
 - **Signature**: `(%, %, %) -> %`
 
-#### `retract` <a id="retract"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1132)\]
+#### `retract` <a id="retract"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1136)\]
 
 ##### `retract` : `% -> Expression(Integer)`
 
@@ -5650,7 +5631,7 @@ Operation defined in WSExpression.
 
 Operation defined in WSExpression.
 
-#### `retractIfCan` <a id="retractifcan"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1124)\]
+#### `retractIfCan` <a id="retractifcan"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1128)\]
 
 ##### `retractIfCan` : `% -> Union(JLFloat64,"failed")`
 
@@ -5805,7 +5786,7 @@ Operation defined in WSExpression.
 
 Operation defined in WSExpression.
 
-#### `rootReduce` <a id="rootreduce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L972)\]
+#### `rootReduce` <a id="rootreduce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L976)\]
 
 rootReduce(expr) reduces root functions.
 
@@ -5863,7 +5844,7 @@ sample yields a value of type %
 - **Signature**: `() -> %`
 - **From**: `MagmaWithUnit`
 
-#### `scientificForm` <a id="scientificform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1070)\]
+#### `scientificForm` <a id="scientificform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1074)\]
 
 ##### `scientificForm` : `% -> %`
 
@@ -5873,21 +5854,21 @@ scientificForm(x) returns the printed representation of x in scientific form.
 
 scientificForm(x,n) returns the printed representation of x in scientific form with n digits of precision.
 
-#### `sec` <a id="sec"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1389)\]
+#### `sec` <a id="sec"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1396)\]
 
 sec(x) returns the secant of x.
 
 - **Signature**: `% -> %`
 - **From**: `TrigonometricFunctionCategory`
 
-#### `sech` <a id="sech"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1405)\]
+#### `sech` <a id="sech"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1412)\]
 
 sech(x) returns the hyperbolic secant of x.
 
 - **Signature**: `% -> %`
 - **From**: `HyperbolicFunctionCategory`
 
-#### `select` <a id="select"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1120)\]
+#### `select` <a id="select"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1124)\]
 
 ##### `select` : `(%, %) -> %`
 
@@ -5902,7 +5883,7 @@ select(expr, form, n) selects the n first elements of expr if form(element) is t
 series(expr, opt) returns a series from expr.
 
 ```fricas
-x:=jWSExpr(x);a:=jWSExpr(a);
+x:=jWSExpression(x);a:=jWSExpression(a);
 opt:=jWSList [x,pi()$WSEXPR/4,7]
 series(sin(a*x),opt)
 series(cos(x),"{x, 0, 12}")
@@ -5952,21 +5933,21 @@ siegelTheta(tau, s) computes the Siegel theta function.
 
 siegelTheta(nu, tau, s) computes the Siegel theta function.
 
-#### `sign` <a id="sign"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1376)\]
+#### `sign` <a id="sign"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1383)\]
 
 sign(x) returns the sign of x.
 
 - **Signature**: `% -> %`
 - **From**: `SpecialFunctionCategory`
 
-#### `simplify` <a id="simplify"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L880)\]
+#### `simplify` <a id="simplify"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L884)\]
 
 ##### `simplify` : `% -> %`
 
 simplify(expr) simplifies the expr.
 
 ```fricas
-x:=jWSExpr("x"); simplify(sqrt(x^2)^2)
+x:=jWSExpression("x"); simplify(sqrt(x^2)^2)
 ```
 
 ##### `simplify` : `(%, %) -> %`
@@ -5974,10 +5955,10 @@ x:=jWSExpr("x"); simplify(sqrt(x^2)^2)
 simplify(expr, assumptions) simplifies the expression expr assuming that assumptions are satisfied. For example:
 
 ```fricas
-x:=jWSExpr("x"); simplify(sqrt(x^2), "x>0")
+x:=jWSExpression("x"); simplify(sqrt(x^2), "x>0")
 ```
 
-#### `sin` <a id="sin"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1386)\]
+#### `sin` <a id="sin"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1393)\]
 
 sin(x) returns the sine of x.
 
@@ -5990,7 +5971,7 @@ sinc(x) computes the unnormalized sinc of x, sin(x)/x and 0 if x = 0.
 
 - **Signature**: `% -> %`
 
-#### `sinh` <a id="sinh"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1402)\]
+#### `sinh` <a id="sinh"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1409)\]
 
 sinh(x) returns the hyperbolic sine of x.
 
@@ -6085,7 +6066,7 @@ sphericalHarmonicY(l, m, theta, phi) returns the spherical harmonic Y function o
 
 - **Signature**: `(%, %, %, %) -> %`
 
-#### `sqrt` <a id="sqrt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1380)\]
+#### `sqrt` <a id="sqrt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1387)\]
 
 sqrt(x) returns the square root of x. The branch cut lies along the negative real axis, continuous with quadrant II.
 
@@ -6128,21 +6109,21 @@ stieltjesGamma(n) returns the n-th Stieltjes constant.
 
 stieltjesGamma(n,a) returns the generalized n-th Stieltjes constant.
 
-#### `string` <a id="string"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1649)\]
+#### `string` <a id="string"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1656)\]
 
 string(jt) returns the string representation of jt.
 
 - **Signature**: `% -> String`
 - **From**: [`JLType`](JLType.md)
 
-#### `struveH` <a id="struveh"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1500)\]
+#### `struveH` <a id="struveh"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1507)\]
 
 struveH(v, z) is the Struve H function.
 
 - **Signature**: `(%, %) -> %`
 - **From**: `SpecialFunctionCategory`
 
-#### `struveL` <a id="struvel"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1501)\]
+#### `struveL` <a id="struvel"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1508)\]
 
 struveL(v, z) is the Struve L function defined by the formula struveL(v, z) = -%i^exp(-v*%pi*%i/2)*struveH(v, %i*z).
 
@@ -6193,7 +6174,7 @@ subtractIfCan(x, y) returns an element z such that z+y=x or "failed" if no such 
 sum(f(n),range) returns the sum f(imin) + ... + f(imax) defined by the list range, for example
 
 ```fricas
-jWSExpr("{i, imin, imax}")
+jWSExpression("{i, imin, imax}")
 ```
 
 . See Wolfram Language specifications.
@@ -6205,18 +6186,6 @@ sum(f(n),n, a..b) returns the sum f(a) + ... + f(b).
 ##### `sum` : `(%, Symbol) -> %`
 
 sum(f(n),n) returns the indefinite sum of f(n).
-
-##### `sum` : `% -> %`
-
-sum(expr) creates the form prefixing expr by a capital sigma.
-
-- **From**: `OutputForm`
-
-##### `sum` : `(%, %, %) -> %`
-
-sum(expr, lowerlimit, upperlimit) creates the form prefixing expr by a capital sigma with both a lowerlimit and upperlimit.
-
-- **From**: `OutputForm`
 
 #### `summation` <a id="summation"></a>
 
@@ -6260,21 +6229,21 @@ take(l,i) returns the first i elements.
 
 Operation defined in WSExpression.
 
-#### `tan` <a id="tan"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1388)\]
+#### `tan` <a id="tan"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1395)\]
 
 tan(x) returns the tangent of x.
 
 - **Signature**: `% -> %`
 - **From**: `TrigonometricFunctionCategory`
 
-#### `tanh` <a id="tanh"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1404)\]
+#### `tanh` <a id="tanh"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1411)\]
 
 tanh(x) returns the hyperbolic tangent of x.
 
 - **Signature**: `% -> %`
 - **From**: `HyperbolicFunctionCategory`
 
-#### `toExpression` <a id="toexpression"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L990)\]
+#### `toExpression` <a id="toexpression"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L994)\]
 
 ##### `toExpression` : `String -> %`
 
@@ -6288,7 +6257,7 @@ toExpression(expr, form) converts expr to a WS expression and evaluates it with 
 
 toExpression(expr, form, h) converts expr to a WS expression and evaluates it with output in the format form but wrapping the head with h. `Hold` for example.
 
-#### `toString` <a id="tostring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L987)\]
+#### `toString` <a id="tostring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L991)\]
 
 ##### `toString` : `(%, %) -> String`
 
@@ -6300,7 +6269,7 @@ toString(obj) returns the string representation of obj.
 
 - **From**: [`WSObject`](WSObject.md)
 
-#### `together` <a id="together"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L937)\]
+#### `together` <a id="together"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L941)\]
 
 together(expr) puts together terms over a common denominator cancelling common factors.
 
@@ -6362,37 +6331,37 @@ Operation defined in WSExpression.
 
 Operation defined in WSExpression.
 
-#### `traditionalForm` <a id="traditionalform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1099)\]
+#### `traditionalForm` <a id="traditionalform"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1103)\]
 
 traditionalForm(expr) returns a traditional form of expr i.e. its WS 'TraditionalForm'.
 
 - **Signature**: `% -> %`
 
-#### `trigExpand` <a id="trigexpand"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L959)\]
+#### `trigExpand` <a id="trigexpand"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L963)\]
 
 trigExpand(expr) tries to expand (hyperbolic) trigonometric functions in expr.
 
 - **Signature**: `% -> %`
 
-#### `trigFactor` <a id="trigfactor"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L975)\]
+#### `trigFactor` <a id="trigfactor"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L979)\]
 
 trigFactor(expr) factors (hyperbolic) trigonometric functions in expr.
 
 - **Signature**: `% -> %`
 
-#### `trigFactorList` <a id="trigfactorlist"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L978)\]
+#### `trigFactorList` <a id="trigfactorlist"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L982)\]
 
 trigFactorList(expr) returns a list of factors of (hyperbolic) trigonometric functions in expr.
 
 - **Signature**: `% -> WSList(%)`
 
-#### `trigReduce` <a id="trigreduce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L970)\]
+#### `trigReduce` <a id="trigreduce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L974)\]
 
 trigReduce(expr) reduces power and products of trigonometric functions.
 
 - **Signature**: `% -> %`
 
-#### `trigToExp` <a id="trigtoexp"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L981)\]
+#### `trigToExp` <a id="trigtoexp"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L985)\]
 
 trigToExp(expr) returns expr with (hyperbolic) trigonometric functions converted to, eventually complex, exponentials.
 
@@ -6426,7 +6395,7 @@ unitNormal(x) tries to choose a canonical element from the associate class of x.
 - **Signature**: `% -> Record(unit: %,canonical: %,associate: %)`
 - **From**: `EntireRing`
 
-#### `unitStep` <a id="unitstep"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1451)\]
+#### `unitStep` <a id="unitstep"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1458)\]
 
 unitStep(x) is 0 for x less than 0, 1 for x bigger or equal 0.
 
@@ -6445,7 +6414,7 @@ univariate(f, k) returns f viewed as a univariate fraction in k.
 
 Operation defined in WSExpression.
 
-#### `values` <a id="values"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1033)\]
+#### `values` <a id="values"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1037)\]
 
 values(expr) returns the values elements in expr.
 
