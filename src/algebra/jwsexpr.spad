@@ -1963,7 +1963,11 @@ WSExpression() : Exports == Implementation where
       jlref(concat(["weval(", getind(expr), ",",
         param1 ",", param2, ",", param3, ")"]))
 
-    eval(expr : %, param : Equation(%)) == replaceAll(expr, jWSRule param)
+    eval(expr : %, param : Equation(%)) ==
+      jbinfunc("W_"ReplaceAll_"(", expr, jWSRule param)
+    eval(expr : %, params : List(Equation(%))) ==
+      args := jWSList(map(jWSRule, params)$ListFunctions2(Equation(%), %))$WSList(%)
+      jbinfunc("W_"ReplaceAll_"(", expr, args)
 
     length(expr) == junfunc("W_"Length_"(", expr)
     extract(expr, i) == jbinfunc("W_"Extract_"(", expr, jWSExpression(string(i)))

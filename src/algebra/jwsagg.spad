@@ -10,11 +10,9 @@ WSAggregate(E : WSObject) : Category == WSObject with
     sorted? : % -> Boolean
     ++ sorted?(agg) checks whether agg is sorted or not.
     "#" : % -> WSInteger
-    ++ #(agg) returns the length of agg. 0 if it is a scalar, an index for
-    ++ example.
+    ++ #(agg) returns the length of agg. 0 if it is a scalar.
     length : % -> WSInteger
-    ++ length(agg) returns the length of agg. 0 if it is a scalar, an index for
-    ++ example.
+    ++ length(agg) returns the length of agg. 0 if it is a scalar.
     dimensions : % -> WSList(WSInteger)
     ++ dimensions(agg) returns dimensions of agg.
     part : (%, WSInteger) -> E
