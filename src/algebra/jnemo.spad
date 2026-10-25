@@ -154,6 +154,22 @@ NMInteger() : Exports == Implementation where
     ++ divisorSigma(n,k) returns the divisor sigma function of n and k.
     random : Segment(Integer) -> %
     ++ random(seg) returns a random Nemo integer in the range seg.
+    bin : % -> String
+    ++ bin(n) returns a string representation of n in base 2
+    ++ (binary string).
+    oct : % -> String
+    ++ oct(n) returns a string representation of n in base 8
+    ++ (octal string).
+    hex : % -> String
+    ++ hex(n) returns a string representation of n in base 16
+    ++ (hexadecimal string).
+    base : (%, PositiveInteger) -> String
+    ++ base(n,b) returns a string representation of n in base b
+    ++ (2 ≤ b ≤ 62).
+    numberOfDigits : (%, PositiveInteger) -> NonNegativeInteger
+    ++ numberOfDigits(n,b) returns the number of digits of n in base b.
+    numberOfBits : % -> NonNegativeInteger
+    ++ numberOfBits(n) returns the number of bits of n.
     convert : % -> JLObjBigInt
     ++ convert(i) converts i.
     coerce : JI64 -> %
@@ -267,6 +283,16 @@ NMInteger() : Exports == Implementation where
     divide(a,b) : Record(quotient : %, remainder : %) ==
       ret : JLObjTuple := jbinfunc("divrem",a,b)
       [ret.1 pretend %, ret.2 pretend %]
+    
+    bin(n : %) == jlEvalString(concat ["bin(", getind(n), ")"])
+    oct(n : %) == jlEvalString(concat ["oct(", getind(n), ")"])
+    hex(n : %) == jlEvalString(concat ["hex(", getind(n), ")"])
+    base(n : %, b : PositiveInteger) ==
+      jlEvalString(concat ["base(", getind(n), ",", string(b), ")"])
+    numberOfDigits(n : %, b : PositiveInteger) ==
+      jlEvalString(concat ["number_of_digits(", getind(n), ",", string(b), ")"])
+    numberOfBits(n : %) ==
+      jlEvalString(concat ["nbits(", getind(n), ")"])
 
     convert(i) : JLObjBigInt == jlref(concat ["BigInt(", getind(i), ")"])
     coerce(jsi : %) : JI64 ==
