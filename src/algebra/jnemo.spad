@@ -35,18 +35,12 @@ NMRing() : Category == Join(NMType, JLObjectRing) with
       ++ For example:
       ++ \example{jlNMRing()$NMPadicInteger(17)}
     add
-      import from JLUtilityFunctions
-
-      jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
-      junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
-      jbinbfunc(op,a,b) ==> jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
-
-      exact?(x) == junbfunc("is_exact_type",x)
-      unit?(x) == junbfunc("is_unit",x)
-      equal?(x,y) == jbinbfunc("==",x,y)
-      irreducible?(x) == junbfunc("is_irreducible",x)
-      exactDivide(x,y) == jbinfunc("divexact",x,y)
-      latex(x: %) == 
+      exact?(x) == jl_call1_bool_wrapped_index("is_exact_type",jlId(x))$Lisp
+      unit?(x) == jl_call1_bool_wrapped_index("is_unit",jlId(x))$Lisp
+      equal?(x,y) == jl_call2_bool_wrapped_index("==",jlId(x),jlId(y))$Lisp
+      irreducible?(x) == jl_call1_bool_wrapped_index("is_irreducible",jlId(x))$Lisp
+      exactDivide(x,y) == make_jlref_wcall2("divexact",x,y)$Lisp
+      latex(x) == 
         a: List String :=jl_stringify_wrapped_index("show", "_"text/latex_"", jlId(x))$Lisp
         qelt(a,1)
       
@@ -101,7 +95,7 @@ NMInteger() : Exports == Implementation where
     ++ primePower?(n) checks whether or not n is a prime power.
     primePowerWithData? : % -> JLObjTuple
     ++ primePowerWithData(n) checks whether or not n is a prime power.
-    ++ It returns a (JLObjBool, JLOBjInt64, NMInteger) JLObjTuple,
+    ++ It returns a (bool:JLObjBool, e:JLOBjInt64, r:NMInteger) JLObjTuple,
     ++ true if n is a prime power and n = r^e for r prime, and false otherwise.
     "*" : (%, Integer) -> %
     ++ x*n is the product of x by the integer n.

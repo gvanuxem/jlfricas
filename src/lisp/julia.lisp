@@ -117,8 +117,6 @@
 )
 )
 
-#+sbcl
-(progn
 (defmacro boot::|jl_bool_eval_string| (str)
     `(if (eq (jl_bool_eval_string ,str)  1) t nil))
 (defmacro boot::|jl_bool_function_flt_flt| (func arg1 arg2)
@@ -129,20 +127,9 @@
     `(if (eq (jl_call1_bool_wrapped_index ,func ,index) 1) t nil))
 (defmacro boot::|jl_call2_bool_wrapped_index| (func index1 index2)
     `(if (eq (jl_call2_bool_wrapped_index ,func ,index1 ,index2) 1) t nil))
-)
 
 #+:openmcl
 (progn
-(defmacro boot::|jl_bool_eval_string| (str)
-    `(if (eq (jl_bool_eval_string ,str)  1) t nil))
-(defmacro boot::|jl_bool_function_flt_flt| (func arg1 arg2)
-    `(if (eq (jl_bool_function_flt_flt ,func ,arg1 ,arg2)  1) t nil))
-(defmacro boot::|jl_bool_function_dbl_dbl| (func arg1 arg2)
-    `(if (eq (jl_bool_function_dbl_dbl ,func ,arg1 ,arg2)  1) t nil))
-(defmacro boot::|jl_call1_bool_wrapped_index| (func index)
-    `(if (eq (jl_call1_bool_wrapped_index ,func ,index) 1) t nil))
-(defmacro boot::|jl_call2_bool_wrapped_index| (func index1 index2)
-    `(if (eq (jl_call2_bool_wrapped_index ,func ,index1 ,index2) 1) t nil))
 (defmacro boot::|jl_string_eval_string| (str)
     `(ccl::%get-utf-8-cstring (jl_string_eval_string ,str)))
 (defmacro boot::|jl_string_function_flt| (func  flt)
