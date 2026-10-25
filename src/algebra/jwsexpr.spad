@@ -1005,8 +1005,8 @@ WSExpression() : Exports == Implementation where
     rationalApproximation : (%, %) -> %
     ++ rationalApproximation(expr, dx) tries to find a rational approximation
     ++ of the expression expr within tolerance dx.
-    jlGreedyEval : Boolean -> Void
-    ++ jlGreedyEval(bool) toggles automatic arithmetic operations.
+    jlWSGreedyEval : Boolean -> Void
+    ++ jlWSGreedyEval(bool) toggles automatic arithmetic operations.
     ++ Plus[a, a] can become Times[2, a] using or not Julia `weval`.
     jlEval    : (%, String) -> %
     ++ jlEval(expr, param) evaluates expression expr with param as parameter(s).
@@ -1293,7 +1293,7 @@ WSExpression() : Exports == Implementation where
       retractIfCan(av)$AnyFunctions1(Expression(Float))
 
     jlEvalString "set_GreedyEval(true)"
-    jlGreedyEval(bool) ==
+    jlWSGreedyEval(bool) ==
       if bool then
         jlEvalString "set_GreedyEval(true)"
       else
@@ -1323,6 +1323,8 @@ WSExpression() : Exports == Implementation where
     WR : WSSymbol := WReal()
     WC : WSSymbol := WComplex()
     WFormat : WSSymbol := WFormat()
+
+    complex(re,im) == jbinfunc("W_"Complex_"(", re, im)
 
     defined?(x) == junfunc("W_"NameQ_"(", x) = WT
     member?(list, expr) == jbinfunc("W_"MemberQ_"(", list, expr) = WT
@@ -2171,13 +2173,11 @@ WSExpression() : Exports == Implementation where
       jbinfunc("W_"QuantityForm_"(", expr, form)
     coerce(expr) : OutputForm ==
       head := jlHead expr
-      head = WS => message(string(expr))
-      head = WI => message(string(expr))
+      head = WS or head = WI or head = WFormat => message(string(expr))
       (head = WR and machineNumber?(expr)) => coerce(expr pretend WSReal)$WSReal
       (head = WC and machineNumber?(real expr) and machineNumber?(imag expr)) =>
         coerce(expr pretend WSComplex)$WSComplex
       head = WRat => coerce(expr pretend WSRational)$WSRational
-      head = WFormat => message(string(expr))
       pagew := string(_$LINELENGTH$Lisp pretend Integer - 2)
       sexpr := toString(expr, jWSExpression concat("PageWidth -> ", pagew))
       str : String := jlEvalString(concat(["replace(raw_"", sexpr,

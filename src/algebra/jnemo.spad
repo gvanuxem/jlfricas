@@ -46,7 +46,10 @@ NMRing() : Category == Join(NMType, JLObjectRing) with
       equal?(x,y) == jbinbfunc("==",x,y)
       irreducible?(x) == junbfunc("is_irreducible",x)
       exactDivide(x,y) == jbinfunc("divexact",x,y)
-
+      latex(x: %) == 
+        a: List String :=jl_stringify_wrapped_index("show", "_"text/latex_"", jlId(x))$Lisp
+        qelt(a,1)
+      
 )abbrev category NCRING NMCommutativeRing
 ++ Category for Nemo commutative ring domains.
 ++ Author: G.Vanuxem
@@ -79,11 +82,27 @@ NMInteger() : Exports == Implementation where
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
   junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
   jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+  jterfunc(func,a,b,c) ==> make_jlref_wcall3(func,a,b,c)$Lisp
   junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
   jbinbfunc(op,a,b) ==>
     jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
   Exports ==> Join(NMCommutativeRing, IntegerNumberSystem,
       PolynomialFactorizationExplicit, Canonical, canonicalsClosed) with
+    divisibleBy? : (%, %) -> Boolean
+    ++ divisibleBy?(x,y) checks whether or not x is divisible by y.
+    square? : % -> Boolean
+    ++ square?(n) checks whether or not n is a perfect square.
+    ++ For example:
+    ++\example{square?(ZZ(4))}
+    ++\example{square?(ZZ(5))}
+    perfectPower? : % -> Boolean
+    ++ perfectPower?(n) checks whether or not n is a perfect power.
+    primePower? : % -> Boolean
+    ++ primePower?(n) checks whether or not n is a prime power.
+    primePowerWithData? : % -> JLObjTuple
+    ++ primePowerWithData(n) checks whether or not n is a prime power.
+    ++ It returns a (JLObjBool, JLOBjInt64, NMInteger) JLObjTuple,
+    ++ true if n is a prime power and n = r^e for r prime, and false otherwise.
     "*" : (%, Integer) -> %
     ++ x*n is the product of x by the integer n.
     abs2 : % -> %
@@ -92,6 +111,53 @@ NMInteger() : Exports == Implementation where
     ++ probablePrime?(n) checks whether or not n is a probable prime
     ++ using a Baillie-PSW probable prime test with parameters chosen
     ++ by Selfridge’s method. See https://flintlib.org/.
+    partition : % -> %
+    ++ partition(n) returns the number of partitions of n.
+    factorInteger : % -> NMFactored(%)
+    ++ factorInteger(n) returns the factorization of n.
+    sqrtmod : (%, %) -> % 
+    ++ sqrtmod(a,p) returns sqrt(a) mod p (p must be prime).
+    flog : (%, %) -> %
+    ++ flog(a,b) returns floor of the logarithm of a base b.
+    clog : (%, %) -> %
+    ++ clog(a,b) returns ceiling of the logarithm of a base b.
+    isqrt : % -> % 
+    ++ isqrt(n) returns the floor of the square root of n.
+    isqrtRemainder : % -> JLObjTuple
+     ++ isqrtRemainder(n) Return a NMInteger tuple (s,r) consisting of the floor
+     ++ of the square root of n and the remainder r, i.e. such that n = s^2 + r.
+     ++ n >= 0.
+    nthRoot : (%, PositiveInteger) -> %
+    ++ nthRoot(x,n) returns the n n-the root of x (x ≥ 0 if n is even).
+    ++ By default the function tests whether the input was a perfect
+    ++ n-th power and if not raises an exception.
+    integerRoot : (%, PositiveInteger) -> %
+    ++ integerRoot(x,n) returns the integer truncation of the n-the root of x
+    ++ (round towards zero and x ≥ 0 if n is even).
+    eulerPhi : % -> %
+    ++ eulerPhi(n) returns Euler phi function of n.
+    mobiusMu : % -> %
+    ++ mobiusMu(n) returns Mobius mu function of n.
+    divisorLenstra : (%, %, %) -> %
+    ++ divisorLenstra(n, r, m) returns a divisor of n in the range [r, m].
+    ++ gcd(r, m) must be 1, and this condition is not checked.
+    risingFactorial : (%, PositiveInteger) -> %
+    ++ risingFactorial(n, k) computes the rising factorial
+    ++ (or Pochhammer symbol) n^(k).
+    primorial : % -> %
+    ++ primorial(n) returns the product of the first n primes.
+    fibonacci : % -> %
+    ++ fibonacci(n) returns the n-th Fibonacci number.
+    bell : % -> %
+    ++ bell(n) returns the n-th Bell number.
+    binomial : (%, %) -> %
+    ++ binomial(n,k) returns the binomial coefficient n choose k.
+    jacobiSymbol : (%, %) -> %
+    ++ jacobiSymbol(a,b) returns the Jacobi symbol of a and b.
+    kroneckerSymbol : (%, %) -> %
+    ++ kroneckerSymbol(a,b) returns the Kronecker symbol of a and b.
+    divisorSigma : (%, %) -> %
+    ++ divisorSigma(n,k) returns the divisor sigma function of n and k.
     random : Segment(Integer) -> %
     ++ random(seg) returns a random Nemo integer in the range seg.
     convert : % -> JLObjBigInt
@@ -131,11 +197,21 @@ NMInteger() : Exports == Implementation where
     x <= y == jbinbfunc("<=",x,y)
     odd? x == junbfunc("isodd",x)
     even? x == junbfunc("iseven",x)
+    positive? x == junbfunc("ispositive", x)
+    negative? x == junbfunc("isnegative", x)
+    divisibleBy?(x,y) == jbinbfunc("is_divisible_by",x, y)
     prime? x == junbfunc("is_prime",x)
     probablePrime? x == junbfunc("is_probable_prime", x)
+    square? x == junbfunc("is_square", x)
+    perfectPower? x == junbfunc("is_perfect_power", x)
+    primePower? x == junbfunc("is_prime_power", x)
+    primePowerWithData? x == junbfunc("is_prime_power_with_data", x)
+
     x  * y : Integer == jlref(concat([getind(x), "*", string(y)]))
     abs(x) == junfunc("abs", x)
     abs2(x) == junfunc("abs2", x)
+    flog(a,b) == jbinfunc("flog", a, b)
+    clog(a,b) == jbinfunc("clog", a, b)
 
     length(x) == coerce(jlEvalString(concat(["nbits(", getind(x),")"]))@Integer)
     shift(a, sh) ==
@@ -154,8 +230,19 @@ NMInteger() : Exports == Implementation where
     powmod(a, b, p) ==
       jlref(concat(["powermod(", getind(a), ",", string(b), ",", getind(p), ")"]))
     invmod(a, p) == jbinfunc("invmod", a, p)
+    sqrtmod(a,p) == jbinfunc("sqrtmod", a, p)
+    isqrt(a) == junfunc("isqrt", a)
+    isqrtRemainder(a) == junfunc("isqrtrem", a)
+    nthRoot(a, n : PositiveInteger) == jlref(concat(["root(", getind(a), ",", string(n), ")"]))
+    integerRoot(a, n : PositiveInteger) == jlref(concat(["iroot(", getind(a), ",", string(n), ")"]))
+
+    eulerPhi x == junfunc("euler_phi", x)
+    mobiusMu x == junfunc("moebius_mu", x)
+    divisorLenstra(n, r, m) == jterfunc("divisor_lenstra", n, r, m)
+
 
     factor(a : %) : Factored(%) == factor(a)$NMFactored(%)
+    factorInteger(a) : NMFactored(%) == factor(a)$NMFactored(%)
     -- TODO: Temporary
     squareFree(a) ==
       sfree := squareFree(convert(a)@Z)$IntegerFactorizationPackage(Z)
@@ -163,7 +250,15 @@ NMInteger() : Exports == Implementation where
 
     factorial(a)      == junfunc("factorial", a)
     binomial(a, b)    == jbinfunc("binomial", a, b)
+    primorial(a) == junfunc("primorial", a)
+    fibonacci(a) == junfunc("fibonacci", a)
+    bell(a) == junfunc("bell", a)
+    jacobiSymbol(a, b) == jbinfunc("jacobi_symbol", a, b)
+    kroneckerSymbol(a, b) == jbinfunc("kronecker_symbol", a, b)
+    divisorSigma(n, k) == jbinfunc("divisor_sigma", n, k)
     permutation(n, m) == permutation(n, m)$IntegerCombinatoricFunctions(%)
+    partition(n) == junfunc("number_of_partitions", n)
+    risingFactorial(a, n) == jlref(concat["rising_factorial(", getind(a), ",", string(n), ")"])
 
     -- x quo y == jbinfunc("div", x, y)
     x quo y == jbinfunc("÷", x, y)
@@ -194,7 +289,7 @@ NMInteger() : Exports == Implementation where
     jninteger(i : Integer) : % == coerce(i)
 
 )abbrev domain NAN NMAlgebraicNumber
-++ Domain for Nemo algebraic numbers
+++ Domain for Nemo Algebraic closure of rational field
 ++ Author: G. Vanuxem
 ++ Date Created: March, 2023
 ++ Last Modified: Jun, 2025
@@ -1976,6 +2071,8 @@ NMFraction(R : Join(NMCommutativeRing, IntegralDomain)) :
       x > y  == jbinbfunc(">",x,y)
       x >= y == jbinbfunc(">=",x,y)
       x <= y == jbinbfunc("<=",x,y)
+      positive? x == junbfunc("ispositive", x)
+      negative? x == junbfunc("isnegative", x)
 
     a : R * b : % == jbinfunc("*",a,b)
     a :% * b : R == jbinfunc("*",a,b)

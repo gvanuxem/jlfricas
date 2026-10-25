@@ -190,17 +190,18 @@ JLObjectAggregate() : Category == Join(JLObjectType, Aggregate, finiteAggregate)
     elt : (%, JLSymbol) -> JLObject
     ++ elt(obj, sym) returns the property/element sym of obj.
     ++ For example:
-    ++ \example{ret := jlApply("svd", jobject("rand(4,4)")); ret.U}
+    ++ \example{ret := jlApply("svd", jobject("rand(4,4)"));}
+    ++ \example{(ret.U,ret.S,ret.Vt)}
     qelt : (%, JLSymbol) -> JLObject
     ++ qelt(obj, sym) returns the property/element sym of obj. No checks are done
     ++ regarding the existence of the sym property. If it does not exist,
     ++ Julia throws an error.
     elt : (%, Integer) -> JLObject
     ++ elt(obj, ind) returns the element at index ind of obj.
-    ++ It can be used, for example, with a Tuple or a Vector.
+    ++ It can be used, for example, with a JLObjTuple or a JLVector.
     qelt : (%, Integer) -> JLObject
     ++ qelt(obj, ind) returns the element at index ind of obj.
-    ++ It can be used, for example, with a Tuple or a Vector.
+    ++ It can be used, for example, with a JLObjTuple or a JLVector.
   add
     import from JLUtilityFunctions
     import from JLSymbol
@@ -242,8 +243,8 @@ JLObjectRing() : Category == Join(JLObjectType, JLRing) with
 
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
-    junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
     jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+    junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
 
     zero?(x) == junbfunc("iszero", x)
     one?(x) == junbfunc("isone", x)
@@ -251,7 +252,7 @@ JLObjectRing() : Category == Join(JLObjectType, JLRing) with
     x - y == jbinfunc("-", x, y)
     - x   == junfunc("-", x)
     x : % * y : % == jbinfunc("*", x, y)
-    x : NMInteger * y : % == jbinfunc("*", x, y)
+    x : NMInteger * y : % == jlref(concat([string(x), "*", getind(y)]))
     x : Integer * y : % == jlref(concat([string(x), "*", getind(y)]))
     x : PositiveInteger * y : % == jlref(concat([string(x), "*", getind(y)]))
     x : NonNegativeInteger * y : % == jlref(concat([string(x), "*", getind(y)]))
@@ -454,10 +455,10 @@ JLObjDict() : Exports == Implementation where
     ++ key does not exist.
     elt : (%, JLObject) -> JLObject
     ++ elt(dict, ind) returns the element at index ind of dict.
-    ++ It can be used, for example, with a Tuple or a Vector.
+    ++ It can be used, for example, with a JLObjTuple or a JLVector.
     qelt : (%, JLObject) -> JLObject
     ++ qelt(dict, ind) returns the element at index ind of dict.
-    ++ It can be used, for example, with a Tuple or a Vector.
+    ++ It can be used, for example, with a JLObjTuple or a JLVector.
     setelt! : (%, Any, JLObject) -> %
     ++ setelt!(dict, key, val) sets the val to the key of dict.
     ++ If the key does not exist it will be created.
@@ -537,7 +538,7 @@ JLObjDict() : Exports == Implementation where
 ++ Description:
 ++  Convenience domain for Julia Python objects that are used
 ++ within Julia, and not directly by the underlying FriCAS Common Lisp.
-++ The PythonCall package has to be installed in Julia.
+++ The PythonCall package must be installed in Julia.
 ++ Note that the PythonCall Julia package uses a similar scheme for Julia
 ++ Python objects to the one of jlFriCAS for JLObjectType references.
 ++ Trademark(s): Python is a registered trademark of the Python
@@ -548,18 +549,14 @@ JLObjPy() : Exports == Implementation where
   Exports ==> Join(JLObjectType, JLObjectAggregate) with
     elt : (%, JLSymbol) -> %
     ++ elt(obj, sym) returns the property/element sym of obj.
-    ++ For example:
-    ++ \example{ret := jlApply("svd", jobject("rand(4,4)")); ret.U}
     qelt : (%, JLSymbol) -> %
     ++ qelt(obj, sym) returns the property/element sym of obj. No checks are done
     ++ regarding the existence of the sym property. If it does not exist,
     ++ Julia throws an error.
     elt : (%, Integer) -> %
     ++ elt(obj, ind) returns the element at index ind of obj.
-    ++ It can be used, for example, with a Tuple or a Vector.
     qelt : (%, Integer) -> %
     ++ qelt(obj, ind) returns the element at index ind of obj.
-    ++ It can be used, for example, with a Tuple or a Vector.
     jlPyApply : (String, %) -> %
     ++ jlPyApply(func, pyobj) applies the Python function func
     ++ form the module __main__ to the Python object pyobj.
@@ -741,18 +738,14 @@ JLObjR() : Exports == Implementation where
   Exports ==> Join(JLObjectType, JLObjectAggregate) with
     elt : (%, JLSymbol) -> %
     ++ elt(obj, sym) returns the property/element sym of obj.
-    ++ For example:
-    ++ \example{ret := jlApply("svd", jobject("rand(4,4)")); ret.U}
     qelt : (%, JLSymbol) -> %
     ++ qelt(obj, sym) returns the property/element sym of obj. No checks are done
     ++ regarding the existence of the sym property. If it does not exist,
     ++ Julia throws an error.
     elt : (%, Integer) -> %
     ++ elt(obj, ind) returns the element at index ind of obj.
-    ++ It can be used, for example, with a Tuple or a Vector.
     qelt : (%, Integer) -> %
     ++ qelt(obj, ind) returns the element at index ind of obj.
-    ++ It can be used, for example, with a Tuple or a Vector.
     jlRApply : (String, %) -> %
     ++ jlRApply(func, robj) applies the R function func
     ++ form the module __main__ to the R object robj.

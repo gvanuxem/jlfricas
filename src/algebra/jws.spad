@@ -1371,17 +1371,18 @@ WSComplex() : Exports == Implementation where
       jlref(concat(["weval(W_"Complex_"(", getind(re), "," , getind(0), "))"]))
     jWSComplex(re : WSReal, im : WSReal) : % ==
       jlref(concat(["weval(W_"Complex_"(", getind(re), "," , getind(im), "))"]))
-    coerce(z) : OutputForm == --coerce(z pretend WSExpression)
-      re := (r := real z)::OutputForm
-      ie := (i := imag z)::OutputForm
-      zero? i => re
-      outi := '%i::OutputForm
-      ip :=
-        (i = 1) => outi
-        ((-i) = 1) => -outi
-        ie * outi
-      zero? r => ip
-      re + ip
+    coerce(z) : OutputForm == message(toString z)
+      -- Too expensive
+      -- re := (r := real z)::OutputForm
+      -- ie := (i := imag z)::OutputForm
+      -- zero? i => re
+      -- outi := '%i::OutputForm
+      -- ip :=
+      --   (i = 1) => outi
+      --   ((-i) = 1) => -outi
+      --   ie * outi
+      -- zero? r => ip
+      -- re + ip
 
 )abbrev domain WSAPCPX WSAPComplex
 ++ Generic domain for Julia WS arbitrary precision complex numbers
@@ -1595,14 +1596,15 @@ WSAPComplex(prec : PositiveInteger) : Exports == Implementation where
       jlref(concat(["weval(W_"Complex_"(", getind(re), "," , getind(0), "))"]))
     jWSComplex(re : WSAPReal(prec), im : WSAPReal(prec)) : % ==
       jlref(concat(["weval(W_"Complex_"(", getind(re), "," , getind(im), "))"]))
-    coerce(z) : OutputForm ==
-      re := (r := real z)::OutputForm
-      ie := (i := imag z)::OutputForm
-      zero? i => re
-      outi := '%i::OutputForm
-      ip :=
-        (i = 1) => outi
-        ((-i) = 1) => -outi
-        ie * outi
-      zero? r => ip
-      re + ip
+    coerce(z) : OutputForm == message(toString z)
+      -- Too expensive
+      -- re := (r := real z)::OutputForm
+      -- ie := (i := imag z)::OutputForm
+      -- zero? i => re
+      -- outi := '%i::OutputForm
+      -- ip :=
+      --   (i = 1) => outi
+      --   ((-i) = 1) => -outi
+      --   ie * outi
+      -- zero? r => ip
+      -- re + ip
