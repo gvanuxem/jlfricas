@@ -192,9 +192,17 @@ parseAndEvalStr string ==
   parseAndEvalStr1 string
 
 parseAndEvalStr1 string ==
+  #string = 0 => nil
   string.0 = char '")" =>
     doSystemCommand SUBSEQ(string, 1)
+  $ncMsgList : local := nil
+  $lastPos   : local := $nopos
+  $current_parse_lines : local := nil
   sform := ncParseFromString1(string)
+  # $ncMsgList ~= 0 =>
+    processMsgList($ncMsgList, $current_parse_lines)
+    THROW('top_level, 'restart)
+  null sform => nil
   $QuietCommand : local := $QuietCommand_tmp
   processInteractive(sform, NIL)
 

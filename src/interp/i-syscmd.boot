@@ -3072,6 +3072,7 @@ parseFromString(s) ==
    s := next(function ncloopParse,
         next(function lineoftoks,incString s))
    StreamNull s => nil
+   $current_parse_lines := first first s
    pf2Sex macroExpanded first rest first s
 
 ncParseFromString1(s) ==

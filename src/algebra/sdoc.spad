@@ -132,6 +132,8 @@ SpadDoc : Exports == Implementation where
               res := concat(res, " ")
             else if mac = "undocumented" then
               res := concat(res, "is undocumented")
+            else if mac = "Language" then
+              res := concat(res, "FriCAS")
             else if mac = "LaTeX" then
               res := concat(res, "LaTeX")
             else if mac = "TeX" then
