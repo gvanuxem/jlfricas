@@ -75,9 +75,6 @@ JLObjectType() : Category == JLType() with
     jlAbout : % -> Void
     ++ jlAbout(obj) displays Julia information about obj
     ++ if you have About.jl installed in Julia.
-    ++ In the Julia interpreter, enter in the package management mode
-    ++ with ']', and issue:
-    ++ pkg> add "https://github.com/tecosaur/About.jl"
     jlNames : % -> JLObject
     ++ jlNames(obj) returns the names of obj depending of the type
     ++ of obj.
