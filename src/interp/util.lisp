@@ -220,6 +220,12 @@ After this function is called the image is clean and can be saved.
   ;; executable; if nil, FriCAS will be saved as a Lisp core file.
   (setq |$SpadServer| nil)
   (setq $openServerIfTrue t)
+  (when (boundp '*julia-initialized*)
+    (setq *julia-initialized* nil))
+  (when (boundp '*next-jlindex*)
+    (setq *next-jlindex* 1))
+  (when (boundp '*free-jlindices*)
+    (setq *free-jlindices* nil))
   (FRICAS-LISP::save-core-restart
          (if save-exec save-file (strconc save-file ".core"))
          (if do-restart #'boot::|fricas_restart| nil) save-exec)

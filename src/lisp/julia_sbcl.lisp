@@ -868,9 +868,13 @@
                         (dpointer vec2)
                         (dpointer array) m n))))
 
+(declaim (special *next-jlindex* *free-jlindices*))
+
 (defun |init_julia_env| ()
     (if (not *julia-initialized*)
         (progn
+            (setf *next-jlindex* 1)
+            (setf *free-jlindices* nil)
             (sb-alien:alien-funcall
                 (sb-alien:extern-alien "jl_init_env"
                     (sb-alien:function sb-alien:void)))
@@ -880,6 +884,8 @@
 (defun |clear_julia_env| ()
     (if *julia-initialized*
       (progn
+          (setf *next-jlindex* 1)
+          (setf *free-jlindices* nil)
           (sb-alien:alien-funcall
               (sb-alien:extern-alien "jl_clear_env"
                 (sb-alien:function sb-alien:void)))

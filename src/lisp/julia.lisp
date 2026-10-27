@@ -3,6 +3,15 @@
 #+(or :sbcl :openmcl)
 (progn
 
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (let ((so-path (or (and (probe-file "/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/julia_wrap.so")
+                          "/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/julia_wrap.so")
+                     (and (probe-file "/home/greg/.local/lib/fricas/target/x86_64-linux-gnu/lib/julia_wrap.so")
+                          "/home/greg/.local/lib/fricas/target/x86_64-linux-gnu/lib/julia_wrap.so"))))
+    (when so-path
+      #+:sbcl (sb-alien:load-shared-object so-path)
+      #+:openmcl (ccl:open-shared-library so-path))))
+
 (foreign-defs
 (fricas-foreign-call boot::|jl_gc_collect| "jl_gc_collect" void)
 (fricas-foreign-call boot::|jl_eval_string| "jl_eval_str" void
@@ -23,6 +32,60 @@
 (fricas-foreign-call boot::|jl_call5_wrapped_index| "jl_call5_wrapped_index" long
         (func c-string) (index long) (ind1 long) (ind2 long) (ind3 long)
             (ind4 long) (ind5 long))
+(fricas-foreign-call boot::|jl_weval1_wrapped_index| "jl_weval1_wrapped_index" long
+        (func c-string) (index long) (ind long))
+(fricas-foreign-call boot::|jl_weval2_wrapped_index| "jl_weval2_wrapped_index" long
+        (func c-string) (index long) (ind1 long) (ind2 long))
+(fricas-foreign-call boot::|jl_weval3_wrapped_index| "jl_weval3_wrapped_index" long
+        (func c-string) (index long) (ind1 long) (ind2 long) (ind3 long))
+(fricas-foreign-call boot::|jl_weval4_wrapped_index| "jl_weval4_wrapped_index" long
+        (func c-string) (index long) (ind1 long) (ind2 long) (ind3 long)
+            (ind4 long))
+(fricas-foreign-call boot::|jl_weval5_wrapped_index| "jl_weval5_wrapped_index" long
+        (func c-string) (index long) (ind1 long) (ind2 long) (ind3 long)
+            (ind4 long) (ind5 long))
+(fricas-foreign-call boot::|jl_weval_list_wrapped_index| "jl_weval_list_wrapped_index" long
+        (func c-string) (index long) (list-ind long))
+(fricas-foreign-call boot::|jl_wapply_list_wrapped_index| "jl_wapply_list_wrapped_index" long
+        (sym c-string) (index long) (list-ind long))
+(fricas-foreign-call boot::|jl_weval_binop_wrapped_index| "jl_weval_binop_wrapped_index" long
+        (op c-string) (index long) (ind1 long) (ind2 long))
+(fricas-foreign-call boot::|jl_wapply1_wrapped_index| "jl_wapply1_wrapped_index" long
+        (sym c-string) (index long) (ind long))
+(fricas-foreign-call boot::|jl_wapply2_wrapped_index| "jl_wapply2_wrapped_index" long
+        (sym c-string) (index long) (ind1 long) (ind2 long))
+(fricas-foreign-call boot::|jl_wapply3_wrapped_index| "jl_wapply3_wrapped_index" long
+        (sym c-string) (index long) (ind1 long) (ind2 long) (ind3 long))
+(fricas-foreign-call boot::|jl_wapply4_wrapped_index| "jl_wapply4_wrapped_index" long
+        (sym c-string) (index long) (ind1 long) (ind2 long) (ind3 long)
+            (ind4 long))
+(fricas-foreign-call boot::|jl_wapply5_wrapped_index| "jl_wapply5_wrapped_index" long
+        (sym c-string) (index long) (ind1 long) (ind2 long) (ind3 long)
+            (ind4 long) (ind5 long))
+(fricas-foreign-call boot::|jl_length_wrapped_index| "jl_length_wrapped_index" long
+        (varind long))
+(fricas-foreign-call boot::|jl_size_wrapped_index| "jl_size_wrapped_index" long
+        (varind long) (dim long))
+(fricas-foreign-call boot::|jl_getproperty_wrapped_index| "jl_getproperty_wrapped_index" long
+        (index long) (varind long) (prop c-string))
+(fricas-foreign-call boot::|jl_getfield_wrapped_index| "jl_getfield_wrapped_index" long
+        (index long) (varind long) (field c-string))
+(fricas-foreign-call boot::|jl_getindex_int64_wrapped_index| "jl_getindex_int64_wrapped_index" long
+        (index long) (varind long) (i long))
+(fricas-foreign-call boot::|jl_setindex_int64_wrapped_index| "jl_setindex_int64_wrapped_index" void
+        (varind long) (valind long) (i long))
+(fricas-foreign-call boot::|jl_getindex2_int64_wrapped_index| "jl_getindex2_int64_wrapped_index" long
+        (index long) (varind long) (i long) (j long))
+(fricas-foreign-call boot::|jl_setindex2_int64_wrapped_index| "jl_setindex2_int64_wrapped_index" void
+        (varind long) (valind long) (i long) (j long))
+(fricas-foreign-call boot::|jl_call1_int64_wrapped_index| "jl_call1_int64_wrapped_index" long
+        (func c-string) (varind long))
+(fricas-foreign-call boot::|jl_call2_wrapped_index_int64| "jl_call2_wrapped_index_int64" long
+        (func c-string) (index long) (varind long) (arg2 long))
+(fricas-foreign-call boot::|jl_call2_int64_wrapped_index| "jl_call2_int64_wrapped_index" long
+        (func c-string) (index long) (arg1 long) (varind long))
+(fricas-foreign-call boot::|jl_call1_void_wrapped_index| "jl_call1_void_wrapped_index" void
+        (func c-string) (varind long))
 (fricas-foreign-call boot::|jl_setindex_mwrap_eval_string| "jl_setindex_mwrap_eval_string"
     long (index long) (command c-string))
 (fricas-foreign-call boot::|jl_setindex_imwrap_eval_string| "jl_setindex_imwrap_eval_string"
@@ -84,6 +147,8 @@
     jbool (func c-string) (arg1 long))
 (fricas-foreign-call jl_call2_bool_wrapped_index "jl_call2_bool_wrapped_index"
     jbool (func c-string) (arg1 long) (arg2 long))
+(fricas-foreign-call jl_weval_binbop_wrapped_index "jl_weval_binbop_wrapped_index"
+    jbool (op c-string) (arg1 long) (arg2 long))
 (fricas-foreign-call boot::|jl_string_eval_string| "jl_string_eval_string"
     c-string (command c-string))
 (fricas-foreign-call boot::|jl_string_function_flt| "jl_call_string_function_flt"
@@ -92,6 +157,10 @@
     c-string (func c-string) (arg double))
 (fricas-foreign-call boot::|jl_string_getindex| "jl_stringify_wrapped_index"
     c-string (index long))
+(fricas-foreign-call jl_hasproperty_wrapped_index "jl_hasproperty_wrapped_index"
+    jbool (varind long) (prop c-string))
+(fricas-foreign-call boot::|jl_typeof_wrapped_index| "jl_typeof_wrapped_index"
+    c-string (varind long))
 )
 
 #+:openmcl
@@ -114,6 +183,12 @@
         (func c-string) (arg1 long))
 (fricas-foreign-call jl_call2_bool_wrapped_index "jl_call2_bool_wrapped_index" jbool
         (func c-string) (arg1 long) (arg2 long))
+(fricas-foreign-call jl_weval_binbop_wrapped_index "jl_weval_binbop_wrapped_index" jbool
+        (op c-string) (arg1 long) (arg2 long))
+(fricas-foreign-call jl_hasproperty_wrapped_index "jl_hasproperty_wrapped_index" jbool
+        (varind long) (prop c-string))
+(fricas-foreign-call jl_typeof_wrapped_index "jl_typeof_wrapped_index" c-string
+        (varind long))
 )
 )
 
@@ -127,6 +202,10 @@
     `(if (eq (jl_call1_bool_wrapped_index ,func ,index) 1) t nil))
 (defmacro boot::|jl_call2_bool_wrapped_index| (func index1 index2)
     `(if (eq (jl_call2_bool_wrapped_index ,func ,index1 ,index2) 1) t nil))
+(defmacro boot::|jl_weval_binbop_wrapped_index| (op index1 index2)
+    `(if (eq (jl_weval_binbop_wrapped_index ,op ,index1 ,index2) 1) t nil))
+(defmacro boot::|jl_hasproperty_wrapped_index| (varind prop)
+    `(if (eq (jl_hasproperty_wrapped_index ,varind ,prop) 1) t nil))
 
 #+:openmcl
 (progn
@@ -138,6 +217,8 @@
     `(ccl::%get-utf-8-cstring (jl_string_function_dbl ,func ,dbl)))
 (defmacro boot::|jl_string_getindex| (index)
     `(ccl::%get-utf-8-cstring (jl_stringify_wrapped_index ,index)))
+(defmacro boot::|jl_typeof_wrapped_index| (varind)
+    `(ccl::%get-utf-8-cstring (jl_typeof_wrapped_index ,varind)))
 )
 )
 
@@ -146,15 +227,31 @@
 (locally
   (declare (optimize (speed 3) (safety 0) (debug 0)))
 
-(defun make-jlindex()
-    (loop for n from 1 upto most-positive-fixnum
-        when (not (|jl_bool_eval_string|
-            (concatenate 'string "haskey(refs," (princ-to-string n) ")")))
-            return n))
+(declaim (special *next-jlindex* *free-jlindices*))
+(defvar *next-jlindex* 1)
+(defvar *free-jlindices* nil)
+
+(defun make-jlindex ()
+  #+:sbcl
+  (when (and (null *free-jlindices*) (not (sb-concurrency:queue-empty-p *jqueue*)))
+    (jgc))
+  #+:openmcl
+  (when (and (null *free-jlindices*) (> (queues:qsize *jqueue*) 0))
+    (jgc))
+  (if *free-jlindices*
+      (pop *free-jlindices*)
+      (let ((idx *next-jlindex*))
+        (incf *next-jlindex*)
+        idx)))
 
 (defclass jlref ()
     ((id  :reader jlrefId   :initarg :id))
     (:default-initargs :id nil))
+
+(defmethod jlrefId ((obj integer))
+  (let ((idx (make-jlindex)))
+    (|jl_setindex_mwrap_eval_string| idx (format nil "Main.MathLink.WInteger(~D)" obj))
+    idx))
 
 (defmethod print-object((obj jlref) stream)
     (print-unreadable-object (obj stream :type t :identity t)
@@ -240,6 +337,232 @@
                         (sb-concurrency:enqueue index *jqueue*)))
                 ret)
             (error "Invalid command given to Julia"))))
+
+(defun |make_jlref_weval1| (func var1)
+    (let* ((index (or (make-jlindex)
+        (error "Amount of Julia references excedeed")))
+            (id (|jl_weval1_wrapped_index| func index (jlrefId var1))))
+        (if (not (zerop id))
+            (let ((ret (make-instance 'jlref :id id)))
+                    #+:sbcl (sb-ext:finalize ret (lambda ()
+                        (sb-concurrency:enqueue index *jqueue*)))
+                ret)
+            (error "Invalid command given to Julia"))))
+
+(defun |make_jlref_weval2| (func var1 var2)
+    (let* ((index (or (make-jlindex)
+        (error "Amount of Julia references excedeed")))
+            (id (|jl_weval2_wrapped_index| func index (jlrefId var1) (jlrefId var2))))
+        (if (not (zerop id))
+            (let ((ret (make-instance 'jlref :id id)))
+                    #+:sbcl (sb-ext:finalize ret (lambda ()
+                        (sb-concurrency:enqueue index *jqueue*)))
+                ret)
+            (error "Invalid command given to Julia"))))
+
+(defun |make_jlref_weval3| (func var1 var2 var3)
+    (let* ((index (or (make-jlindex)
+        (error "Amount of Julia references excedeed")))
+            (id (|jl_weval3_wrapped_index| func index
+                (jlrefId var1) (jlrefId var2) (jlrefId var3))))
+        (if (not (zerop id))
+            (let ((ret (make-instance 'jlref :id id)))
+                    #+:sbcl (sb-ext:finalize ret (lambda ()
+                        (sb-concurrency:enqueue index *jqueue*)))
+                ret)
+            (error "Invalid command given to Julia"))))
+
+(defun |make_jlref_weval4| (func var1 var2 var3 var4)
+    (let* ((index (or (make-jlindex)
+        (error "Amount of Julia references excedeed")))
+            (id (|jl_weval4_wrapped_index| func index
+                (jlrefId var1) (jlrefId var2) (jlrefId var3) (jlrefId var4))))
+        (if (not (zerop id))
+            (let ((ret (make-instance 'jlref :id id)))
+                    #+:sbcl (sb-ext:finalize ret (lambda ()
+                        (sb-concurrency:enqueue index *jqueue*)))
+                ret)
+            (error "Invalid command given to Julia"))))
+
+(defun |make_jlref_weval5| (func var1 var2 var3 var4 var5)
+    (let* ((index (or (make-jlindex)
+        (error "Amount of Julia references excedeed")))
+            (id (|jl_weval5_wrapped_index| func index
+                (jlrefId var1) (jlrefId var2) (jlrefId var3)
+                (jlrefId var4) (jlrefId var5))))
+        (if (not (zerop id))
+            (let ((ret (make-instance 'jlref :id id)))
+                    #+:sbcl (sb-ext:finalize ret (lambda ()
+                        (sb-concurrency:enqueue index *jqueue*)))
+                ret)
+            (error "Invalid command given to Julia"))))
+
+(defun |make_jlref_weval_list| (func list)
+    (let* ((index (or (make-jlindex)
+        (error "Amount of Julia references excedeed")))
+            (id (|jl_weval_list_wrapped_index| func index (jlrefId list))))
+        (if (not (zerop id))
+            (let ((ret (make-instance 'jlref :id id)))
+                    #+:sbcl (sb-ext:finalize ret (lambda ()
+                        (sb-concurrency:enqueue index *jqueue*)))
+                ret)
+            (error "Invalid command given to Julia"))))
+
+(defun |make_jlref_weval_binop| (op var1 var2)
+    (let* ((index (or (make-jlindex)
+        (error "Amount of Julia references excedeed")))
+            (id (|jl_weval_binop_wrapped_index| op index (jlrefId var1) (jlrefId var2))))
+        (if (not (zerop id))
+            (let ((ret (make-instance 'jlref :id id)))
+                    #+:sbcl (sb-ext:finalize ret (lambda ()
+                        (sb-concurrency:enqueue index *jqueue*)))
+                ret)
+            (error "Invalid command given to Julia"))))
+
+(defun |make_jlref_wapply1| (sym var1)
+    (let* ((index (or (make-jlindex)
+        (error "Amount of Julia references excedeed")))
+            (id (|jl_wapply1_wrapped_index| sym index (jlrefId var1))))
+        (if (not (zerop id))
+            (let ((ret (make-instance 'jlref :id id)))
+                    #+:sbcl (sb-ext:finalize ret (lambda ()
+                        (sb-concurrency:enqueue index *jqueue*)))
+                ret)
+            (error "Invalid command given to Julia"))))
+
+(defun |make_jlref_wapply2| (sym var1 var2)
+    (let* ((index (or (make-jlindex)
+        (error "Amount of Julia references excedeed")))
+            (id (|jl_wapply2_wrapped_index| sym index (jlrefId var1) (jlrefId var2))))
+        (if (not (zerop id))
+            (let ((ret (make-instance 'jlref :id id)))
+                    #+:sbcl (sb-ext:finalize ret (lambda ()
+                        (sb-concurrency:enqueue index *jqueue*)))
+                ret)
+            (error "Invalid command given to Julia"))))
+
+(defun |make_jlref_wapply3| (sym var1 var2 var3)
+    (let* ((index (or (make-jlindex)
+        (error "Amount of Julia references excedeed")))
+            (id (|jl_wapply3_wrapped_index| sym index
+                (jlrefId var1) (jlrefId var2) (jlrefId var3))))
+        (if (not (zerop id))
+            (let ((ret (make-instance 'jlref :id id)))
+                    #+:sbcl (sb-ext:finalize ret (lambda ()
+                        (sb-concurrency:enqueue index *jqueue*)))
+                ret)
+            (error "Invalid command given to Julia"))))
+
+(defun |make_jlref_wapply4| (sym var1 var2 var3 var4)
+    (let* ((index (or (make-jlindex)
+        (error "Amount of Julia references excedeed")))
+            (id (|jl_wapply4_wrapped_index| sym index
+                (jlrefId var1) (jlrefId var2) (jlrefId var3) (jlrefId var4))))
+        (if (not (zerop id))
+            (let ((ret (make-instance 'jlref :id id)))
+                    #+:sbcl (sb-ext:finalize ret (lambda ()
+                        (sb-concurrency:enqueue index *jqueue*)))
+                ret)
+            (error "Invalid command given to Julia"))))
+
+(defun |make_jlref_wapply5| (sym var1 var2 var3 var4 var5)
+    (let* ((index (or (make-jlindex)
+        (error "Amount of Julia references excedeed")))
+            (id (|jl_wapply5_wrapped_index| sym index
+                (jlrefId var1) (jlrefId var2) (jlrefId var3)
+                (jlrefId var4) (jlrefId var5))))
+        (if (not (zerop id))
+            (let ((ret (make-instance 'jlref :id id)))
+                    #+:sbcl (sb-ext:finalize ret (lambda ()
+                        (sb-concurrency:enqueue index *jqueue*)))
+                ret)
+            (error "Invalid command given to Julia"))))
+
+(defun |make_jlref_wapply_list| (sym list)
+    (let* ((index (or (make-jlindex)
+        (error "Amount of Julia references excedeed")))
+            (id (|jl_wapply_list_wrapped_index| sym index (jlrefId list))))
+        (if (not (zerop id))
+            (let ((ret (make-instance 'jlref :id id)))
+                    #+:sbcl (sb-ext:finalize ret (lambda ()
+                        (sb-concurrency:enqueue index *jqueue*)))
+                ret)
+            (error "Invalid command given to Julia"))))
+
+(defun |make_jlref_wgetproperty| (var prop)
+    (let* ((index (or (make-jlindex)
+        (error "Amount of Julia references excedeed")))
+            (id (|jl_getproperty_wrapped_index| index (jlrefId var) prop)))
+        (if (not (zerop id))
+            (let ((ret (make-instance 'jlref :id id)))
+                    #+:sbcl (sb-ext:finalize ret (lambda ()
+                        (sb-concurrency:enqueue index *jqueue*)))
+                ret)
+            (error "Invalid property given to Julia"))))
+
+(defun |make_jlref_wgetfield| (var field)
+    (let* ((index (or (make-jlindex)
+        (error "Amount of Julia references excedeed")))
+            (id (|jl_getfield_wrapped_index| index (jlrefId var) field)))
+        (if (not (zerop id))
+            (let ((ret (make-instance 'jlref :id id)))
+                    #+:sbcl (sb-ext:finalize ret (lambda ()
+                        (sb-concurrency:enqueue index *jqueue*)))
+                ret)
+            (error "Invalid field given to Julia"))))
+
+(defun |make_jlref_wgetindex_int64| (var i)
+    (let* ((index (or (make-jlindex)
+        (error "Amount of Julia references excedeed")))
+            (id (|jl_getindex_int64_wrapped_index| index (jlrefId var) i)))
+        (if (not (zerop id))
+            (let ((ret (make-instance 'jlref :id id)))
+                    #+:sbcl (sb-ext:finalize ret (lambda ()
+                        (sb-concurrency:enqueue index *jqueue*)))
+                ret)
+            (error "Invalid index given to Julia"))))
+
+(defun |make_jlref_wgetindex2_int64| (var i j)
+    (let* ((index (or (make-jlindex)
+        (error "Amount of Julia references excedeed")))
+            (id (|jl_getindex2_int64_wrapped_index| index (jlrefId var) i j)))
+        (if (not (zerop id))
+            (let ((ret (make-instance 'jlref :id id)))
+                    #+:sbcl (sb-ext:finalize ret (lambda ()
+                        (sb-concurrency:enqueue index *jqueue*)))
+                ret)
+            (error "Invalid indices given to Julia"))))
+
+(defun |make_jlref_wcall2_integer| (func var n)
+    (if (typep n '(signed-byte 64))
+        (let* ((index (or (make-jlindex)
+            (error "Amount of Julia references excedeed")))
+                (id (|jl_call2_wrapped_index_int64| func index (jlrefId var) n)))
+            (if (not (zerop id))
+                (let ((ret (make-instance 'jlref :id id)))
+                        #+:sbcl (sb-ext:finalize ret (lambda ()
+                            (sb-concurrency:enqueue index *jqueue*)))
+                    ret)
+                (error "Invalid command given to Julia")))
+        (let ((bignum-ref (if (typep n 'jlref) n (|make_jlref| (format nil "parse(BigInt, \"~A\")" n)))))
+            (|make_jlref_wcall2| func var bignum-ref))))
+
+(defun |make_jlref_integer_wcall2| (func n var)
+    (if (typep n '(signed-byte 64))
+        (let* ((index (or (make-jlindex)
+            (error "Amount of Julia references excedeed")))
+                (id (|jl_call2_int64_wrapped_index| func index n (jlrefId var))))
+            (if (not (zerop id))
+                (let ((ret (make-instance 'jlref :id id)))
+                        #+:sbcl (sb-ext:finalize ret (lambda ()
+                            (sb-concurrency:enqueue index *jqueue*)))
+                    ret)
+                (error "Invalid command given to Julia")))
+        (let ((bignum-ref (if (typep n 'jlref) n (|make_jlref| (format nil "parse(BigInt, \"~A\")" n)))))
+            (|make_jlref_wcall2| func bignum-ref var))))
+
+(setf (fdefinition '|make_jlref_wcall2_int64|) #'|make_jlref_wcall2_integer|)
+(setf (fdefinition '|make_jlref_int64_wcall2|) #'|make_jlref_integer_wcall2|)
 
 (defun |make_jlref_from_fvec| (cplx vec)
     (let* ((index (or (make-jlindex)
@@ -453,40 +776,38 @@
         (1- (the (signed-byte 64) ,i))) (the (signed-byte 64) ,s)))
 
 
-; 2D array emulation - 1-based index - row major ordering access
-; column major order done in Spad
-
-; sizea: row length
-; sizeb: col length
-; i: rown
-; j: coln
+; 2D array emulation - 1-based index - column major ordering access
+; sizea: nrows (leading dimension)
+; sizeb: ncols
+; i: row (1-based)
+; j: col (1-based)
 (defmacro dfaref21(v sizea sizeb i j)
     (declare (ignore sizeb))
     `(aref (the (simple-array double-float (*)) ,v)
-        (1- (+ (* (the fixnum ,sizea) (1- (the fixnum ,i)))
-                (the fixnum ,j)))))
+        (+ (* (the fixnum ,sizea) (1- (the fixnum ,j)))
+           (1- (the fixnum ,i)))))
 
 (defmacro dfsetaref21(v sizea sizeb i j s)
     (declare (ignore sizeb))
     `(setf
         (aref (the (simple-array double-float (*)) ,v)
-            (1- (+ (* (the fixnum ,sizea) (1- (the fixnum ,i)))
-                    (the fixnum ,j))))
+            (+ (* (the fixnum ,sizea) (1- (the fixnum ,j)))
+               (1- (the fixnum ,i))))
         (the double-float ,s)))
 
 ; 32 bits
 (defmacro sfaref21(v sizea sizeb i j)
     (declare (ignore sizeb))
     `(aref (the (simple-array single-float (*)) ,v)
-        (1- (+ (* (the fixnum ,sizea) (1- (the fixnum ,i)))
-                (the fixnum ,j)))))
+        (+ (* (the fixnum ,sizea) (1- (the fixnum ,j)))
+           (1- (the fixnum ,i)))))
 
 (defmacro sfsetaref21(v sizea sizeb i j s)
     (declare (ignore sizeb))
     `(setf
         (aref (the (simple-array single-float (*)) ,v)
-            (1- (+ (* (the fixnum ,sizea) (1- (the fixnum ,i)))
-                    (the fixnum ,j))))
+            (+ (* (the fixnum ,sizea) (1- (the fixnum ,j)))
+               (1- (the fixnum ,i))))
         (the single-float ,s)))
 
 ; Complex double float vectors
@@ -541,44 +862,40 @@
         ,s)))
 
 ; Complex double float matrices
-; Row major access - 1-based index
+; Column major access - 1-based index
 
 (defmacro jcdelt2(ov osizea oi oj)
    (let ((v (gensym))
          (sizea (gensym))
          (i (gensym))
-         (j (gensym)))
-   `(let ((,v ,ov)
-          (,sizea ,osizea)
-          (,i ,oi)
-          (,j ,oj))
+         (j (gensym))
+         (idx (gensym)))
+   `(let* ((,v ,ov)
+           (,sizea ,osizea)
+           (,i ,oi)
+           (,j ,oj)
+           (,idx (* 2 (+ (* (the fixnum ,sizea) (1- (the fixnum ,j)))
+                         (1- (the fixnum ,i))))))
         (cons
-            (aref (the (simple-array double-float (*)) ,v)
-                (- (+ (* (the fixnum ,sizea) (1- (the fixnum ,i)) 2)
-                    (* (the fixnum ,j) 2)) 2))
-            (aref (the (simple-array double-float (*)) ,v)
-                (1- (+ (* (the fixnum ,sizea) (1- (the fixnum ,i)) 2)
-                    (* (the fixnum ,j) 2))))))))
+            (aref (the (simple-array double-float (*)) ,v) ,idx)
+            (aref (the (simple-array double-float (*)) ,v) (1+ ,idx))))))
 
 (defmacro jcdsetelt2(ov osizea oi oj os)
    (let ((v (gensym))
          (sizea (gensym))
          (i (gensym))
          (j (gensym))
-         (s (gensym)))
-   `(let ((,v ,ov)
-          (,sizea ,osizea)
-          (,i ,oi)
-          (,j ,oj)
-          (,s ,os))
-        (setf (aref (the (simple-array double-float (*)) ,v)
-            (- (+ (* (the fixnum ,sizea) (1- (the fixnum ,i)) 2)
-                (* (the fixnum ,j) 2)) 2))
-            (car ,s))
-        (setf (aref (the (simple-array double-float (*)) ,v)
-            (1- (+ (* (the fixnum ,sizea) (1- (the fixnum ,i)) 2)
-                (* (the fixnum ,j) 2))))
-            (cdr ,s))
+         (s (gensym))
+         (idx (gensym)))
+   `(let* ((,v ,ov)
+           (,sizea ,osizea)
+           (,i ,oi)
+           (,j ,oj)
+           (,s ,os)
+           (,idx (* 2 (+ (* (the fixnum ,sizea) (1- (the fixnum ,j)))
+                         (1- (the fixnum ,i))))))
+        (setf (aref (the (simple-array double-float (*)) ,v) ,idx) (car ,s))
+        (setf (aref (the (simple-array double-float (*)) ,v) (1+ ,idx)) (cdr ,s))
         ,s)))
 
 ; 32 bits
@@ -586,38 +903,34 @@
    (let ((v (gensym))
          (sizea (gensym))
          (i (gensym))
-         (j (gensym)))
-   `(let ((,v ,ov)
-          (,sizea ,osizea)
-          (,i ,oi)
-          (,j ,oj))
+         (j (gensym))
+         (idx (gensym)))
+   `(let* ((,v ,ov)
+           (,sizea ,osizea)
+           (,i ,oi)
+           (,j ,oj)
+           (,idx (* 2 (+ (* (the fixnum ,sizea) (1- (the fixnum ,j)))
+                         (1- (the fixnum ,i))))))
         (cons
-            (aref (the (simple-array single-float (*)) ,v)
-                (- (+ (* (the fixnum ,sizea) (1- (the fixnum ,i)) 2)
-                    (* (the fixnum ,j) 2)) 2))
-            (aref (the (simple-array single-float (*)) ,v)
-                (1- (+ (* (the fixnum ,sizea) (1- (the fixnum ,i)) 2)
-                    (* (the fixnum ,j) 2))))))))
+            (aref (the (simple-array single-float (*)) ,v) ,idx)
+            (aref (the (simple-array single-float (*)) ,v) (1+ ,idx))))))
 
 (defmacro jcfsetelt2(ov osizea oi oj os)
    (let ((v (gensym))
          (sizea (gensym))
          (i (gensym))
          (j (gensym))
-         (s (gensym)))
-   `(let ((,v ,ov)
-          (,sizea ,osizea)
-          (,i ,oi)
-          (,j ,oj)
-          (,s ,os))
-        (setf (aref (the (simple-array single-float (*)) ,v)
-            (- (+ (* (the fixnum ,sizea) (1- (the fixnum ,i)) 2)
-                (* (the fixnum ,j) 2)) 2))
-            (car ,s))
-        (setf (aref (the (simple-array single-float (*)) ,v)
-            (1- (+ (* (the fixnum ,sizea) (1- (the fixnum ,i)) 2)
-                (* (the fixnum ,j) 2))))
-            (cdr ,s))
+         (s (gensym))
+         (idx (gensym)))
+   `(let* ((,v ,ov)
+           (,sizea ,osizea)
+           (,i ,oi)
+           (,j ,oj)
+           (,s ,os)
+           (,idx (* 2 (+ (* (the fixnum ,sizea) (1- (the fixnum ,j)))
+                         (1- (the fixnum ,i))))))
+        (setf (aref (the (simple-array single-float (*)) ,v) ,idx) (car ,s))
+        (setf (aref (the (simple-array single-float (*)) ,v) (1+ ,idx)) (cdr ,s))
         ,s)))
 
 

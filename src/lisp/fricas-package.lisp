@@ -51,7 +51,9 @@
           |handle_input_file| |handle_output_file| |maybe_delete_file|
           |remove_directory| |writablep| |openServer| |sockGetInt|
           |sockSendInt| |sockSendString| |sockGetFloat| |sockSendFloat|
-          |serverSwitch| |sockSendSignal| |sockGetStringFrom|))
+          |serverSwitch| |sockSendSignal| |sockGetStringFrom|
+          *julia-initialized* *next-jlindex* *free-jlindices*
+          *jqueue* jgc))
 
 #+:GCL
 (progn

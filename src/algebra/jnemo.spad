@@ -99,6 +99,10 @@ NMInteger() : Exports == Implementation where
     ++ true if n is a prime power and n = r^e for r prime, and false otherwise.
     "*" : (%, Integer) -> %
     ++ x*n is the product of x by the integer n.
+    shift : (%, Integer) -> %
+    ++ shift(a, i) shifts a by i bits.
+    shift : (%, %) -> %
+    ++ shift(a, i) shifts a by i bits.
     abs2 : % -> %
     ++ abs2(x) returns the squared absolute value of x.
     probablePrime? : % -> Boolean
@@ -217,17 +221,18 @@ NMInteger() : Exports == Implementation where
     primePower? x == junbfunc("is_prime_power", x)
     primePowerWithData? x == junbfunc("is_prime_power_with_data", x)
 
-    x  * y : Integer == jlref(concat([getind(x), "*", string(y)]))
+    x  * y : Integer == make_jlref_wcall2_integer("*", x, y)$Lisp
     abs(x) == junfunc("abs", x)
     abs2(x) == junfunc("abs2", x)
     flog(a,b) == jbinfunc("flog", a, b)
     clog(a,b) == jbinfunc("clog", a, b)
 
-    length(x) == coerce(jlEvalString(concat(["nbits(", getind(x),")"]))@Integer)
-    shift(a, sh) ==
+    length(x) == coerce(jl_call1_int64_wrapped_index("nbits", jlId(x))$Lisp pretend Integer)
+    shift(a : %, sh : Integer) : % ==
       zero? sh => a
-      sh > 0 => jlref(concat(["<<(", getind(a), ",", string(sh), ")"]))
-      jlref(concat([">>(", getind(a), ",", string(abs sh), ")"]))
+      sh > 0 => make_jlref_wcall2_integer("<<", a, sh)$Lisp
+      make_jlref_wcall2_integer(">>", a, abs sh)$Lisp
+    shift(a : %, sh : %) : % == shift(a, convert(sh)@Integer)
 
     addmod(a, b, p) ==
       (c := a + b) >= p => c - p
@@ -236,15 +241,15 @@ NMInteger() : Exports == Implementation where
       (c := a - b) < 0 => c + p
       c
     mulmod(a, b, p) ==
-      jlref(concat(["mulmod(", getind(a), ",", getind(b), ",", getind(p), ")"]))
+      jterfunc("mulmod", a, b, p)
     powmod(a, b, p) ==
-      jlref(concat(["powermod(", getind(a), ",", string(b), ",", getind(p), ")"]))
+      jterfunc("powermod", a, b, p)
     invmod(a, p) == jbinfunc("invmod", a, p)
     sqrtmod(a,p) == jbinfunc("sqrtmod", a, p)
     isqrt(a) == junfunc("isqrt", a)
     isqrtRemainder(a) == junfunc("isqrtrem", a)
-    nthRoot(a, n : PositiveInteger) == jlref(concat(["root(", getind(a), ",", string(n), ")"]))
-    integerRoot(a, n : PositiveInteger) == jlref(concat(["iroot(", getind(a), ",", string(n), ")"]))
+    nthRoot(a, n : PositiveInteger) == make_jlref_wcall2_integer("root", a, n)$Lisp
+    integerRoot(a, n : PositiveInteger) == make_jlref_wcall2_integer("iroot", a, n)$Lisp
 
     eulerPhi x == junfunc("euler_phi", x)
     mobiusMu x == junfunc("moebius_mu", x)
@@ -268,7 +273,7 @@ NMInteger() : Exports == Implementation where
     divisorSigma(n, k) == jbinfunc("divisor_sigma", n, k)
     permutation(n, m) == permutation(n, m)$IntegerCombinatoricFunctions(%)
     partition(n) == junfunc("number_of_partitions", n)
-    risingFactorial(a, n) == jlref(concat["rising_factorial(", getind(a), ",", string(n), ")"])
+    risingFactorial(a, n) == make_jlref_wcall2_integer("rising_factorial", a, n)$Lisp
 
     -- x quo y == jbinfunc("div", x, y)
     x quo y == jbinfunc("÷", x, y)
@@ -292,7 +297,7 @@ NMInteger() : Exports == Implementation where
     numberOfDigits(n : %, b : PositiveInteger) ==
       jlEvalString(concat ["number_of_digits(", getind(n), ",", string(b), ")"])
     numberOfBits(n : %) ==
-      jlEvalString(concat ["nbits(", getind(n), ")"])
+      jl_call1_int64_wrapped_index("nbits", jlId(n))$Lisp
 
     convert(i) : JLObjBigInt == jlref(concat ["BigInt(", getind(i), ")"])
     coerce(jsi : %) : JI64 ==
@@ -503,13 +508,13 @@ NMAlgebraicNumber() : Exports == Implementation where
     inv(x) == junfunc("inv", x)
     x :% / y : % == jbinfunc("/", x, y)
     x : % ^ y : % == jbinfunc("^", x, y)
-    x : % * y : Integer == jlref(concat [getind(x),"*", string(y)])
+    x : % * y : Integer == make_jlref_wcall2_integer("*", x, y)$Lisp
     x : % * y : NMInteger == jbinfunc("*", x, y)
     x : % * y : NMFraction(NMInteger) == jbinfunc("*", x, y)
     x * y : Fraction Integer ==
       jlref(concat [getind(x), "*(", string(numer(y)),
         "//", string(denom(y)),")"])
-    x ^ y : Integer == jlref(concat [getind(x), "^", string(y)])
+    x ^ y : Integer == make_jlref_wcall2_integer("^", x, y)$Lisp
     x ^ y : Fraction(Integer) ==
       jlref(concat [ getind(x), "^(", string(numer(y)),"//", string(denom(y)),")"])
     recip(x) ==
@@ -524,14 +529,14 @@ NMAlgebraicNumber() : Exports == Implementation where
     gcd(a,b) == jbinfunc("gcd",a,b)
     lcm(a,b) == jbinfunc("lcm",a,b)
     sqrt(a : %)  == junfunc("sqrt", a)
-    nthRoot(x, i) == jlref(concat(["root(", getind(x),",",string(i),")"]))
+    nthRoot(x, i) == make_jlref_wcall2_integer("root", x, i)$Lisp
     differentiate(x : %) : % == 0
     -- Different complexity here (minimal polynomial based)
     height(an) ==
-      ret := jlref(concat ["height(", getind(an),")"])$NMInteger
+      ret : NMInteger := junfunc("height", an)
       convert(ret)@Integer pretend NNI
     heightBits(an) ==
-      ret := jlref(concat ["height(", getind(an),")"])$NMInteger
+      ret : NMInteger := junfunc("height", an)
       convert(ret)@Integer pretend NNI
     abs(an) == junfunc("abs", an)
     abs2(an) == junfunc("abs2", an)
@@ -555,7 +560,7 @@ NMAlgebraicNumber() : Exports == Implementation where
         getind(a), "); QQBar((iseven(degree(p)) ? 1 : -1) * coeff(p, 0)) end"])
 
     conjugates(a) ==
-      jlref(concat(["conjugates(", getind(a),")"]))$JLVector(%)
+      junfunc("conjugates", a)
 
     --pToCaString(p : SparseUnivariatePolynomial %) : String ==
     --  ts := listOfTerms p
@@ -606,8 +611,8 @@ NMAlgebraicNumber() : Exports == Implementation where
     zeroOf(p : Polynomial %) : % == rootOf(univariate(p))
     zerosOf(p : Polynomial %) : List % == rootsOf(univariate(p))
     numerator(a) == junfunc("numerator", a)
-    denominator(a) == jlref(concat(["denominator(", getind(a),")"]))$NMInteger
-    degree(a : %) == jlEvalString(concat(["degree(", getind(a), ")"]))@JLInt64
+    denominator(a) == junfunc("denominator", a)
+    degree(a : %) == jl_call1_int64_wrapped_index("degree", jlId(a))$Lisp
 
     retractIfCan(x : %) : Union(Integer, "failed") ==
       not integer? x => "failed"
@@ -2208,7 +2213,7 @@ NMFactored(R : Join(NMRing, IntegralDomain)) :
     unit(fac) == junfunc("unit", fac)
     factor(intd : R) : % == junfunc("factor", intd)
     factorSquareFree(intd : R) : % == junfunc("factor_squarefree", intd)
-    unit(fr) == junfunc("unit",fr) pretend R
+    unit(fr) == junfunc("unit",fr)
 
     -- TODO: not as an integer factorization (OutputForm)
     mkFF : (R, List FFE) -> Record(unt : R, fct : List FFE)
@@ -2218,45 +2223,37 @@ NMFactored(R : Join(NMRing, IntegralDomain)) :
       zero?(intd) => 0
       ret := empty()$List(FFE)
       fr : % := junfunc("factor", intd)
-      if R has OrderedSet then
-        sz :=
-          jlEvalString(concat(["tmp=sort(collect(", getind(fr),"));length(tmp)"]))@NNI
-      else
-        sz :=
-          jlEvalString(concat(["tmp=collect(", getind(fr),");length(tmp)"]))@NNI
-      sz = 0 => mkFF(jlref(concat(["unit(", getind(fr), ")"]))$R,
-        ret) pretend Factored(R)
-      c := jlref("tmp[1][1]")$R
-      e := jlEvalString("tmp[1][2]")@NNI
-      ret := concat(ret, ["prime", c, e]$FFE)
-      for i in 2..sz repeat
-        c := jlref(concat(["tmp[", string(i), "][1]"]))$R
-        e := jlEvalString(concat(["tmp[", string(i), "][2]"]))@NNI
+      coll : JLObject :=
+        if R has OrderedSet then
+          make_jlref_wcall1("sort", make_jlref_wcall1("collect", fr)$Lisp)$Lisp
+        else
+          make_jlref_wcall1("collect", fr)$Lisp
+      sz := jl_length_wrapped_index(jlId(coll))$Lisp
+      sz = 0 => mkFF(junfunc("unit", fr), ret) pretend Factored(R)
+      for i in 1..sz repeat
+        pair : JLObject := make_jlref_wgetindex_int64(coll, i)$Lisp
+        c : R := make_jlref_wcall1("first", pair)$Lisp
+        e : NNI := jl_call1_int64_wrapped_index("last", jlId(pair))$Lisp
         ret := concat(ret, ["prime", c, e]$FFE)
-      jlEvalString("tmp=nothing")@Void
-      mkFF(jlref(concat(["unit(", getind(fr), ")"]))$R, ret) pretend Factored(R)
+      mkFF(junfunc("unit", fr), ret) pretend Factored(R)
 
     factorSquareFree(intd : R) : Factored(R) ==
       sz : NNI
       zero?(intd) => 0
       ret := empty()$List(FFE)
       fr : % := junfunc("factor_squarefree", intd)
-      if R has OrderedSet then
-        sz :=
-          jlEvalString(concat(["tmp=sort(collect(", getind(fr),"));length(tmp)"]))@NNI
-      else
-        sz :=
-          jlEvalString(concat(["tmp=collect(", getind(fr),");length(tmp)"]))@NNI
-      sz = 0 => mkFF(jlref(concat(["unit(", getind(fr), ")"]))$R,
-        ret) pretend Factored(R)
-      c := jlref("tmp[1][1]")$R
-      e := jlEvalString("tmp[1][2]")@NNI
-      ret := concat(ret, ["sqfr", c, e]$FFE)
-      for i in 2..sz repeat
-        c := jlref(concat(["tmp[", string(i), "][1]"]))$R
-        e := jlEvalString(concat(["tmp[", string(i), "][2]"]))@NNI
+      coll : JLObject :=
+        if R has OrderedSet then
+          make_jlref_wcall1("sort", make_jlref_wcall1("collect", fr)$Lisp)$Lisp
+        else
+          make_jlref_wcall1("collect", fr)$Lisp
+      sz := jl_length_wrapped_index(jlId(coll))$Lisp
+      sz = 0 => mkFF(junfunc("unit", fr), ret) pretend Factored(R)
+      for i in 1..sz repeat
+        pair : JLObject := make_jlref_wgetindex_int64(coll, i)$Lisp
+        c : R := make_jlref_wcall1("first", pair)$Lisp
+        e : NNI := jl_call1_int64_wrapped_index("last", jlId(pair))$Lisp
         ret := concat(ret, ["sqfr", c, e]$FFE)
-      jlEvalString("tmp=nothing")@Void
-      mkFF(jlref(concat(["unit(", getind(fr), ")"]))$R, ret) pretend Factored(R)
+      mkFF(junfunc("unit", fr), ret) pretend Factored(R)
     coerce(ob : %) : OutputForm ==
       message(jlRegexReplace(string(ob), jlString("//"), jlString("/")))

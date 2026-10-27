@@ -556,9 +556,13 @@
                         :address ptr2 :address ptr3
                         :signed-doubleword m :signed-doubleword n :void)))))))
 
+(declaim (special *next-jlindex* *free-jlindices*))
+
 (defun |init_julia_env| ()
     (if (not *julia-initialized*)
         (progn
+            (setf *next-jlindex* 1)
+            (setf *free-jlindices* nil)
             (ccl::external-call "jl_init_env" :void)
             (setf *julia-initialized* t))
         *julia-initialized*))
@@ -566,6 +570,8 @@
 (defun |clear_julia_env| ()
     (if *julia-initialized*
         (progn
+            (setf *next-jlindex* 1)
+            (setf *free-jlindices* nil)
             (ccl::external-call "jl_clear_env" :void)
             (setf  *julia-initialized* nil))
         *julia-initialized*))

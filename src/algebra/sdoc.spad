@@ -3,7 +3,7 @@
 ++ Date Created: march, 2026
 ++ Description: This package provides simple
 ++ Spad documentation for the interpreter and
-++ the MCP server.
+++ the MCP server using BrowserInformation.
 SpadDoc : Exports == Implementation where
   OPDOC ==> Record(origin: String, signature: String, doc: String)
   Exports ==> with
@@ -36,7 +36,6 @@ SpadDoc : Exports == Implementation where
     ++ listPackages(pack) returns a list of the packages matching
     ++ the packages pack.
   Implementation ==> add
-    import from String
     import from BrowserInformation
 
     extract_brace(s : String, pos : Integer) : _

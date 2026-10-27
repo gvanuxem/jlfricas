@@ -243,14 +243,14 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
 
     a : R * b : % == jbinfunc("*",a,b)
     a : % * b : R == jbinfunc("*",a,b)
-    i : INT  * b : % == jlref(concat [string(i),"*" ,getind(b)])
-    a : % * i : INT  == jlref(concat [getind(a),"*" , string(i)])
-    i : NNI  * b : % == jlref(concat [string(i),"*" ,getind(b)])
-    a : % * i : NNI  == jlref(concat [getind(a),"*" , string(i)])
-    i : PI  * b : % == jlref(concat [string(i),"*" ,getind(b)])
-    a : % * i : PI == jlref(concat [getind(a),"*" , string(i)])
-    a : % ^ i : PI  == jlref(concat [getind(a),"^", string(i)])
-    a : % ^ i : NNI  == jlref(concat [getind(a),"^", string(i)])
+    i : INT  * b : % == make_jlref_integer_wcall2("*", i, b)$Lisp
+    a : % * i : INT  == make_jlref_wcall2_integer("*", a, i)$Lisp
+    i : NNI  * b : % == make_jlref_integer_wcall2("*", i, b)$Lisp
+    a : % * i : NNI  == make_jlref_wcall2_integer("*", a, i)$Lisp
+    i : PI  * b : % == make_jlref_integer_wcall2("*", i, b)$Lisp
+    a : % * i : PI == make_jlref_wcall2_integer("*", a, i)$Lisp
+    a : % ^ i : PI  == make_jlref_wcall2_integer("^", a, i)$Lisp
+    a : % ^ i : NNI  == make_jlref_wcall2_integer("^", a, i)$Lisp
     exactDivide(p,q) == jbinfunc("divexact", p, q)
 
     monomial(c : R, n : NonNegativeInteger) : % ==
@@ -298,7 +298,7 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
     reductum(p) == junfunc("tail",p)
     gcd(p1,p2)  == jbinfunc("gcd",p1,p2)
     lcm(p1,p2)  == jbinfunc("lcm",p1,p2)
-    content(p : %)  == jlref(concat(["content(", getind(p), ")"]))$R
+    content(p : %)  == junfunc("content", p)
     primitivePart(p) == junfunc("primpart", p)
     discriminant(p) == junfunc("discriminant", p)
     length(p) == parsei(string(junfunc("length", p)))
@@ -309,14 +309,14 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
     -- unit(p) == unit factor(p)
 
     coefficient(p : %, n : NNI) ==
-      jlref(concat ["coeff(", getind(p),",", string(n), ")"])$R
+      make_jlref_wcall2_integer("coeff", p, n)$Lisp
     leadingCoefficient(p : %) ==
       junfunc("leading_coefficient", p)
     trailingCoefficient(p) ==
-      jlref(concat ["trailing_coefficient(", getind(p),")"])$R
+      junfunc("trailing_coefficient", p)
     constantCoefficient(p) ==
-      jlref(concat ["constant_coefficient(", getind(p),")"])$R
-    degree(p) == jlEvalString(concat(["degree(", getind(p),")"]))@NNI
+      junfunc("constant_coefficient", p)
+    degree(p) == jl_call1_int64_wrapped_index("degree", jlId(p))$Lisp
     minimumDegree(p) ==
       jlEvalString(concat(["findfirst(!iszero, _
         collect(coefficients(", getind(p),")))-1"]))@NNI
@@ -332,15 +332,15 @@ NMUnivariatePolynomial(R : NMRing, x : Symbol):
           ret := cons([(n - i - 1) pretend NNI, coef], ret)
       reverse!(ret)
     truncate(p,n) ==
-      jlref(concat ["truncate(", getind(p),",", string(n),")"])
+      make_jlref_wcall2_integer("truncate", p, n)$Lisp
     mullow(p1, p2, n) ==
       jlref(concat ["mullow(", getind(p1),",", getind(p2) , ",", string(n),")"])
     reverse(p) == junfunc("reverse",p)
-    reverse(p,n) == jlref(concat ["reverse(", getind(p),",", string(n),")"])
-    shiftLeft(p,n) == jlref(concat ["shift_left(", getind(p),",", string(n),")"])
-    shiftRight(p,n) == jlref(concat ["shift_right(", getind(p),",", string(n),")"])
-    shiftLeft!(p,n) == jlref(concat ["shift_left!(", getind(p),",", string(n),")"])
-    shiftRight!(p,n) == jlref(concat ["shift_right!(", getind(p),",", string(n),")"])
+    reverse(p,n) == make_jlref_wcall2_integer("reverse", p, n)$Lisp
+    shiftLeft(p,n) == make_jlref_wcall2_integer("shift_left", p, n)$Lisp
+    shiftRight(p,n) == make_jlref_wcall2_integer("shift_right", p, n)$Lisp
+    shiftLeft!(p,n) == make_jlref_wcall2_integer("shift_left!", p, n)$Lisp
+    shiftRight!(p,n) == make_jlref_wcall2_integer("shift_right!", p, n)$Lisp
 
     univariate(p : %) : SparseUnivariatePolynomial(R) ==
       res : SparseUnivariatePolynomial(R) := 0

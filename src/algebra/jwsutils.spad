@@ -9,12 +9,11 @@
 ++ TODO: jWSImportString, WSString domain?? Relation to world wide data?
 WSUtilityFunctions() : Exports == Implementation where
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-  junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
-  jbinfunc(func,a,b) ==>
-    jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
-  jterfunc(func,a,b,c) ==>
-    jlref(concat(["weval(", func, getind(a), ",",
-      getind(b), ",", getind(c)"))"]))
+  junfunc(func,a) ==> make_jlref_weval1(func, a)$Lisp
+  jbinfunc(func,a,b) ==> make_jlref_weval2(func, a, b)$Lisp
+  jterfunc(func,a,b,c) ==> make_jlref_weval3(func, a, b, c)$Lisp
+  jquatfunc(func,a,b,c,d) ==> make_jlref_weval4(func, a, b, c, d)$Lisp
+  jquinfunc(func,a,b,c,d,e) ==> make_jlref_weval5(func, a, b, c, d, e)$Lisp
   Exports ==> with
     jlWSSeedRandom! : WSInteger -> WSExpression
     ++ jlWSSeedRandom!(n) reseeds the random number generator with n as seed.
@@ -150,61 +149,61 @@ WSUtilityFunctions() : Exports == Implementation where
 
     if not jlUsing("MathLink") then
       error "The Julia MathLink package is not installed."
-    jlWSSeedRandom!(n) == junfunc("W_"SeedRandom_"(", n)
+    jlWSSeedRandom!(n) == junfunc("SeedRandom", n)
 
     jWSDateObject() == jWSExpression "DateObject[]"
-    jWSDateObject(expr) == junfunc("W_"DateObject_"(", expr)
-    jWSDateObject(expr, type) == jbinfunc("W_"DateObject_"(", expr, type)
+    jWSDateObject(expr) == junfunc("DateObject", expr)
+    jWSDateObject(expr, type) == jbinfunc("DateObject", expr, type)
     jlWSDateString() == jWSExpression "DateString[]"
-    jlWSDateString(expr) == junfunc("W_"DateString_"(", expr)
-    jlWSDateString(expr, form) == jbinfunc("W_"DateString_"(", expr, form)
-    jlWSSnippet(expr, n) == jbinfunc("W_"Snippet_"(", expr, n)
+    jlWSDateString(expr) == junfunc("DateString", expr)
+    jlWSDateString(expr, form) == jbinfunc("DateString", expr, form)
+    jlWSSnippet(expr, n) == jbinfunc("Snippet", expr, n)
 
-    jlWSImport(src) == junfunc("W_"Import_"(", src)
+    jlWSImport(src) == junfunc("Import", src)
     jlWSImport(src, options) ==
-      jbinfunc("W_"Import_"(", src, options)
+      jbinfunc("Import", src, options)
     jlWSFileFormat(src) ==
-      junfunc("W_"FileFormat_"(", src)
+      junfunc("FileFormat", src)
     jlWSFileFormat(src, options) ==
-      jbinfunc("W_"FileFormat_"(", src, options)
+      jbinfunc("FileFormat", src, options)
     jlWSExport(file, options) ==
       savefile : WSExpression := coerce(concat(["_"", file, "_""]))
-      jbinfunc("W_"Export_"(", savefile, options)
+      jbinfunc("Export", savefile, options)
     jlWSExportString(expr, format) ==
-      jlEval(jbinfunc("W_"ExportString_"(", expr, format) pretend WSExpression)
-    jlWSPlot(expr, options) == jbinfunc("W_"Plot_"(", expr, options)
+      jlEval(jbinfunc("ExportString", expr, format) pretend WSExpression)
+    jlWSPlot(expr, options) == jbinfunc("Plot", expr, options)
 
     urand01Real(rows,cols) ==
       range := jWSList("{0,1}")@WSList(WSInteger)
       dims := jWSList([jWSInteger(rows),jWSInteger(cols)])@WSList(WSInteger)
-      jbinfunc("W_"RandomReal_"(", range, dims)
+      jbinfunc("RandomReal", range, dims)
     urand01Real(n) ==
       range := jWSList("{0,1}")@WSList(WSInteger)
-      jbinfunc("W_"RandomReal_"(", range, jWSInteger n)
+      jbinfunc("RandomReal", range, jWSInteger n)
     urand01Complex(n) ==
       range := jWSList("1+I")@WSList(WSInteger)
-      jbinfunc("W_"RandomComplex_"(", range, jWSInteger n)
+      jbinfunc("RandomComplex", range, jWSInteger n)
     urand01Complex(rows,cols) ==
       range := jWSList("1+I")@WSList(WSInteger)
       dims := jWSList([jWSInteger(rows),jWSInteger(cols)])@WSList(WSInteger)
-      jbinfunc("W_"RandomComplex_"(", range, dims)
+      jbinfunc("RandomComplex", range, dims)
 
     jWSRange(n) ==
-      junfunc("W_"Range_"(", n)
+      junfunc("Range", n)
     jWSRange(m,n) ==
-      jbinfunc("W_"Range_"(", m, n)
+      jbinfunc("Range", m, n)
     jWSRange(m,n,step) ==
-      jterfunc("W_"Range_"(", m, n, step)
+      jterfunc("Range", m, n, step)
 
-    hankelMatrix(n) == junfunc("W_"HankelMatrix_"(", jWSInteger(n))
-    hilbertMatrix(n) == junfunc("W_"HilbertMatrix_"(", jWSInteger(n))
-    fourierMatrix(n) == junfunc("W_"FourierMatrix_"(", jWSInteger(n))
-    gaussianMatrix(r) == junfunc("W_"GaussianMatrix_"(", r)
-    vandermondeMatrix(lvars) == junfunc("W_"VandermondeMatrix_"(", lvars)
-    vandermondeMatrix(lvars, m) == jbinfunc("W_"VandermondeMatrix_"(", lvars, m)
-    identityMatrix(n) == junfunc("W_"IdentityMatrix_"(", jWSInteger(n))
+    hankelMatrix(n) == junfunc("HankelMatrix", jWSInteger(n))
+    hilbertMatrix(n) == junfunc("HilbertMatrix", jWSInteger(n))
+    fourierMatrix(n) == junfunc("FourierMatrix", jWSInteger(n))
+    gaussianMatrix(r) == junfunc("GaussianMatrix", r)
+    vandermondeMatrix(lvars) == junfunc("VandermondeMatrix", lvars)
+    vandermondeMatrix(lvars, m) == jbinfunc("VandermondeMatrix", lvars, m)
+    identityMatrix(n) == junfunc("IdentityMatrix", jWSInteger(n))
     zeroMatrix(m,n) ==
-      jbinfunc("W_"ConstantArray_"(", 0$WSInteger,
+      jbinfunc("ConstantArray", 0$WSInteger,
         jWSList([jWSInteger(m), jWSInteger(n)])@WSList(WSInteger))
     jlWSDocumentation(sym) ==
       str : String := string(sym)

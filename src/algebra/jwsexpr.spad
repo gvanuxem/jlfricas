@@ -19,18 +19,14 @@ WSExpression() : Exports == Implementation where
   WSL  ==> WSList
   JF64  ==> JLFloat64
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-  jbinop(op,a,b) ==> jlref(concat(["weval(", getind(a), op, getind(b),")"]))
-  junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
-  jbinfunc(func,a,b) ==>
-    jlref(concat(["weval(",func, getind(a), ",", getind(b),"))"]))
-  jterfunc(func,a,b,c) ==>
-    jlref(concat(["weval(",func, getind(a), ",",
-      getind(b), ",", getind(c), "))"]))
-  jquatfunc(func,a,b,c,d) ==>
-    jlref(concat(["weval(",func, getind(a), ",", getind(b), ",",
-      getind(c), ",", getind(d), "))"]))
+  jbinop(op,a,b) ==> make_jlref_weval_binop(op, a, b)$Lisp
+  junfunc(func,a) ==> make_jlref_weval1(func, a)$Lisp
+  jbinfunc(func,a,b) ==> make_jlref_weval2(func, a, b)$Lisp
+  jterfunc(func,a,b,c) ==> make_jlref_weval3(func, a, b, c)$Lisp
+  jquatfunc(func,a,b,c,d) ==> make_jlref_weval4(func, a, b, c, d)$Lisp
+  jquinfunc(func,a,b,c,d,e) ==> make_jlref_weval5(func, a, b, c, d, e)$Lisp
   jbinbop(op,a,b) ==>
-    jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
+    jl_weval_binbop_wrapped_index(op, jlId(a), jlId(b))$Lisp
   Exports ==> Join(WSAggregate(%), PartialOrder, WSRing,
                   ComplexCategory(%), PartialDifferentialRing(%),
                   ExpressionSpace) with
@@ -426,7 +422,7 @@ WSExpression() : Exports == Implementation where
     sum : (%, %) -> %
     ++ sum(f(n),range) returns the sum f(imin) + ... + f(imax) defined
     ++ by the list range, for example \example{jWSExpression("\{i, imin, imax\}")}.
-    ++ See Wolfram Language specifications.
+    ++ See WS Language specifications.
     sum : (%, %, Segment(Integer)) -> %
     ++ sum(f(n),n, a..b) returns the sum f(a) + ... + f(b).
     sum : (%, Symbol) -> %
@@ -434,7 +430,7 @@ WSExpression() : Exports == Implementation where
     product : (%, %) -> %
     ++ product(f(n),range) returns the product f(imin) * ... * f(imax) defined
     ++ by the list range, for example \example{jWSExpression("\{i, imin, imax\}")}.
-    ++ See Wolfram language specifications.
+    ++ See WS language specifications.
     product : (%, %, Segment(Integer)) -> %
     ++ product(f(n),n, a..b) returns the product f(a) * ... * f(b).
     product : (%, Symbol) -> %
@@ -443,7 +439,7 @@ WSExpression() : Exports == Implementation where
     ++ numericSum(f(n),range) returns an evaluated numerical approximation of
     ++ the sum f(imin) + ... + f(imax) defined by the list range,
     ++ for example \example{jWSExpression("\{i, imin, imax\}")}.
-    ++ See Wolfram language specifications.
+    ++ See WS language specifications.
     numericSum     : (%, %, Segment(Integer)) -> %
     ++ numericSum(f(n),n, a..b) returns an evaluated numerical approximation of the
     ++ sum f(a) + ... + f(b).
@@ -451,7 +447,7 @@ WSExpression() : Exports == Implementation where
     ++ numericProduct(f(n),range) returns an evaluated numerical approximation of
     ++ the sum f(imin) + ... + f(imax) defined by the list range,
     ++ for example \example{jWSExpression("\{i, imin, imax\}")}.
-    ++ See Wolfram language specifications.
+    ++ See WS language specifications.
     numericProduct : (%, %, Segment(Integer)) -> %
     ++ numericProduct(f(n),n, a..b) returns an evaluated numerical approximation of the
     ++ product f(a) * ... * f(b).
@@ -1156,7 +1152,7 @@ WSExpression() : Exports == Implementation where
     ++ coerce(eq) coerces the equation eq to a WSExpression equation.
     coerce  : String  -> %
     ++ coerce(str) coerces the string str to a WSExpression
-    ++ evaluating str as a Wolfram Symbolic Language Expression.
+    ++ evaluating str as a WS Language Expression.
     ++ For example:
     ++ \example{expr := "Sqrt[x]"::WSEXPR;jlEval(expr,"x=2.0")}
     -- The following breaks build process in src/doc and likely in src/input
@@ -1258,13 +1254,37 @@ WSExpression() : Exports == Implementation where
     ++ as a WSExpression.
     jWSExpression : String -> %
     ++ jWSExpression(str) constructs str as a WSExpression evaluating
-    ++ str as a Wolfram Symbolic Language expression.
+    ++ str as a WS Symbolic Language expression.
     ++ For example:
     ++ \example{jWSExpression "Factorial[5]"}
     ++ \example{jWSExpression "3.14159"}
     ++ \example{jlWSDateString(jWSExpression "Tomorrow")}
     ++ \example{toString jWSExpression "TextSentences[WikipediaData[_"Sun_"]][[;; 40]]"}
     ++ Example: jWSExpression "Probability[x < 1, x \[Distributed] NormalDistribution[]]"
+    jlWSEval : (String, %) -> %
+    ++ jlWSEval(func, x) evaluates the WS function func on x.
+    jlWSEval : (String, %, %) -> %
+    ++ jlWSEval(func, x, y) evaluates the WS function func on x and y.
+    jlWSEval : (String, %, %, %) -> %
+    ++ jlWSEval(func, x, y, z) evaluates the WS function func on x, y, and z.
+    jlWSEval : (String, %, %, %, %) -> %
+    ++ jlWSEval(func, a, b, c, d) evaluates the WS function func on 4 arguments.
+    jlWSEval : (String, %, %, %, %, %) -> %
+    ++ jlWSEval(func, a, b, c, d, e) evaluates the WS function func on 5 arguments.
+    jlWSEval : (String, List %) -> %
+    ++ jlWSEval(func, list) evaluates the WS function func on a list of arguments.
+    jlWSApply : (String, %) -> %
+    ++ jlWSApply(sym, x) creates an unevaluated WS expression sym[x].
+    jlWSApply : (String, %, %) -> %
+    ++ jlWSApply(sym, x, y) creates an unevaluated WS expression sym[x, y].
+    jlWSApply : (String, %, %, %) -> %
+    ++ jlWSApply(sym, x, y, z) creates an unevaluated WS expression sym[x, y, z].
+    jlWSApply : (String, %, %, %, %) -> %
+    ++ jlWSApply(sym, a, b, c, d) creates an unevaluated WS expression on 4 arguments.
+    jlWSApply : (String, %, %, %, %, %) -> %
+    ++ jlWSApply(sym, a, b, c, d, e) creates an unevaluated WS expression on 5 arguments.
+    jlWSApply : (String, List %) -> %
+    ++ jlWSApply(sym, list) creates an unevaluated WS expression sym[list...].
   Implementation ==> JLObject add
     import from JLUtilityFunctions
     import from JLStringUtilities
@@ -1277,6 +1297,26 @@ WSExpression() : Exports == Implementation where
     if not jlUsing("MathLink") then
       error "The Julia MathLink package is not installed."
     jlEvalString("import MathLink: WExpr, WSymbol, WReal, WRational, WInteger")
+
+    jlWSEval(func, a : %) == make_jlref_weval1(func, a)$Lisp
+    jlWSEval(func, a, b) == make_jlref_weval2(func, a, b)$Lisp
+    jlWSEval(func, a, b, c) == make_jlref_weval3(func, a, b, c)$Lisp
+    jlWSEval(func, a, b, c, d) == make_jlref_weval4(func, a, b, c, d)$Lisp
+    jlWSEval(func, a, b, c, d, e) == make_jlref_weval5(func, a, b, c, d, e)$Lisp
+    jlWSEval(func, l : List %) ==
+      agg := jlref("W_`{}_`")
+      for x in l repeat agg := make_jlref_weval2("Append", agg, x)$Lisp
+      make_jlref_weval_list(func, agg)$Lisp
+
+    jlWSApply(sym, a : %) == make_jlref_wapply1(sym, a)$Lisp
+    jlWSApply(sym, a, b) == make_jlref_wapply2(sym, a, b)$Lisp
+    jlWSApply(sym, a, b, c) == make_jlref_wapply3(sym, a, b, c)$Lisp
+    jlWSApply(sym, a, b, c, d) == make_jlref_wapply4(sym, a, b, c, d)$Lisp
+    jlWSApply(sym, a, b, c, d, e) == make_jlref_wapply5(sym, a, b, c, d, e)$Lisp
+    jlWSApply(sym, l : List %) ==
+      agg := jlref("W_`{}_`")
+      for x in l repeat agg := make_jlref_weval2("Append", agg, x)$Lisp
+      make_jlref_wapply_list(sym, agg)$Lisp
 
     error1(msg, f) ==> error concat [msg, " ", toString f]
 
@@ -1303,16 +1343,16 @@ WSExpression() : Exports == Implementation where
     1 == jlref("W_`1_`")
     imaginary() == jlref("W_`I_`")
 
-    pi()  == jlref("W_"Pi_"")
-    exp() == jlref("W_"E_"")
-    degree() == jlref("W_"Degree_"")
-    positiveInfinity() == jlref("W_"Infinity_"")
-    eulerGamma() == jlref("W_"EulerGamma_"")
-    catalan() == jlref("W_"Catalan_"")
-    goldenRatio() == jlref("W_"GoldenRatio_"")
+    pi()  == jlref("W_`Pi_`")
+    exp() == jlref("W_`E_`")
+    degree() == jlref("W_`Degree_`")
+    positiveInfinity() == jlref("W_`Infinity_`")
+    eulerGamma() == jlref("W_`EulerGamma_`")
+    catalan() == jlref("W_`Catalan_`")
+    goldenRatio() == jlref("W_`GoldenRatio_`")
 
-    real(z)      == junfunc("W_"Re_"(", z)
-    imag(z)      == junfunc("W_"Im_"(", z)
+    real(z)      == junfunc("Re", z)
+    imag(z)      == junfunc("Im", z)
 
     WS : WSSymbol := WString()
     WL : WSSymbol := WList()
@@ -1324,35 +1364,35 @@ WSExpression() : Exports == Implementation where
     WC : WSSymbol := WComplex()
     WFormat : WSSymbol := WFormat()
 
-    complex(re,im) == jbinfunc("W_"Complex_"(", re, im)
+    complex(re,im) == jbinfunc("Complex", re, im)
 
-    defined?(x) == junfunc("W_"NameQ_"(", x) = WT
-    member?(list, expr) == jbinfunc("W_"MemberQ_"(", list, expr) = WT
-    key?(assoc,key) == jbinfunc("W_"KeyExistsQ_"(",assoc,key) = WT
-    missing?(x) == junfunc("W_"MissingQ_"(", x) = WT
-    real?(x)    == junfunc("W_"RealValuedNumberQ_"(", x) = WT
-    realNumeric?(x) == junfunc("W_"RealValuedNumericQ_"(", x) = WT
-    integer?(x) == junfunc("W_"IntegerQ_"(", x) = WT
+    defined?(x) == junfunc("NameQ", x) = WT
+    member?(list, expr) == jbinfunc("MemberQ", list, expr) = WT
+    key?(assoc,key) == jbinfunc("KeyExistsQ",assoc,key) = WT
+    missing?(x) == junfunc("MissingQ", x) = WT
+    real?(x)    == junfunc("RealValuedNumberQ", x) = WT
+    realNumeric?(x) == junfunc("RealValuedNumericQ", x) = WT
+    integer?(x) == junfunc("IntegerQ", x) = WT
     rational?(x) == jlHead(x) = WRat
-    number?(x) == junfunc("W_"NumberQ_"(", x) = WT
-    machineNumber?(x) == junfunc("W_"MachineNumberQ_"(", x) = WT
-    exactNumber?(x) == junfunc("W_"ExactNumberQ_"(", x) = WT
-    numeric?(x) == junfunc("W_"NumericQ_"(", x) = WT
+    number?(x) == junfunc("NumberQ", x) = WT
+    machineNumber?(x) == junfunc("MachineNumberQ", x) = WT
+    exactNumber?(x) == junfunc("ExactNumberQ", x) = WT
+    numeric?(x) == junfunc("NumericQ", x) = WT
 
     jlWSDefined?(str) == not missing?(jWSData(str))
 
-    zero? expr == coerce junfunc("W_"PossibleZeroQ_"(",expr)
-    one? x == coerce jbinfunc("W_"Equal_"(", x, 1)
+    zero? expr == coerce junfunc("PossibleZeroQ",expr)
+    one? x == coerce jbinfunc("Equal", x, 1)
 
-    negative? x == junfunc("W_"Negative_"(", x) = WT
-    positive? x == junfunc("W_"Positive_"(", x) = WT
+    negative? x == junfunc("Negative", x) = WT
+    positive? x == junfunc("Positive", x) = WT
 
     x = y  == jbinbop("==",x,y)
     x ~= y == jbinbop("!=",x,y)
-    x < y  == jbinfunc("W_"Less_"(", x,y) = WT
-    x > y  == jbinfunc("W_"Greater_"(", x,y) = WT
-    x >= y == jbinfunc("W_"GreaterEqual_"(", x,y) = WT
-    x <= y == jbinfunc("W_"LessEqual_"(", x,y) = WT
+    x < y  == jbinfunc("Less", x,y) = WT
+    x > y  == jbinfunc("Greater", x,y) = WT
+    x >= y == jbinfunc("GreaterEqual", x,y) = WT
+    x <= y == jbinfunc("LessEqual", x,y) = WT
 
     -- TODO: fix space after LaTeX command, \sin, x for (Stats)Plots
     -- Use TeXForm?
@@ -1369,386 +1409,386 @@ WSExpression() : Exports == Implementation where
     x : Fraction(Integer) * y : % == jbinop("*", coerce(x)@WSRational, y)
     x : % / y : % == jbinop("/", x, y)
     x : % ^ y : % == jbinop("^", x, y)
-    x : % ^ y : Integer == jbinop("^", x, coerce(y))
-    x : % ^ y : PositiveInteger == jbinop("^", x, coerce(y))
-    x : % ^ y : NonNegativeInteger == jbinop("^", x, coerce(y))
+    x : % ^ y : Integer == jbinop("^", x, jWSExpression(y))
+    x : % ^ y : PositiveInteger == jbinop("^", x, jWSExpression(y::Integer))
+    x : % ^ y : NonNegativeInteger == jbinop("^", x, jWSExpression(y::Integer))
     x : % ^ q : WSRational == jbinop("^", x, q)
     x : % ^ q : Fraction(Integer) == jbinop("^", x, coerce(q)@WSRational)
 
-    round(x)   == junfunc("W_"Round_"(", x)
-    ceiling(x) == junfunc("W_"Ceiling_"(", x)
-    floor(x)   == junfunc("W_"Floor_"(", x)
-    abs(x)     == junfunc("W_"Abs_"(", x)
-    fractionPart(x) == junfunc("W_"FractionalPart_"(", x)
-    sign(x)    == junfunc("W_"Sign_"(", x)
-    conjugate(x) == junfunc("W_"Conjugate_"(", x)
+    round(x)   == junfunc("Round", x)
+    ceiling(x) == junfunc("Ceiling", x)
+    floor(x)   == junfunc("Floor", x)
+    abs(x)     == junfunc("Abs", x)
+    fractionPart(x) == junfunc("FractionalPart", x)
+    sign(x)    == junfunc("Sign", x)
+    conjugate(x) == junfunc("Conjugate", x)
 
-    exp(x)   == junfunc("W_"Exp_"(",x)
-    sqrt(x)  == junfunc("W_"Sqrt_"(",x)
-    log(x)   == junfunc("W_"Log_"(",x)
-    log2(x)  == junfunc("W_"Log2_"(",x)
-    log10(x) == junfunc("W_"Log10_"(",x)
+    exp(x)   == junfunc("Exp",x)
+    sqrt(x)  == junfunc("Sqrt",x)
+    log(x)   == junfunc("Log",x)
+    log2(x)  == junfunc("Log2",x)
+    log10(x) == junfunc("Log10",x)
 
 
-    sin(x) == junfunc("W_"Sin_"(",x)
-    cos(x) == junfunc("W_"Cos_"(",x)
-    tan(x) == junfunc("W_"Tan_"(",x)
-    sec(x) == junfunc("W_"Sec_"(",x)
-    csc(x) == junfunc("W_"Csc_"(",x)
-    cot(x) == junfunc("W_"Cot_"(",x)
-    sinc(x)== junfunc("W_"Sinc_"(",x)
+    sin(x) == junfunc("Sin",x)
+    cos(x) == junfunc("Cos",x)
+    tan(x) == junfunc("Tan",x)
+    sec(x) == junfunc("Sec",x)
+    csc(x) == junfunc("Csc",x)
+    cot(x) == junfunc("Cot",x)
+    sinc(x)== junfunc("Sinc",x)
 
-    asin(x)   == junfunc("W_"ArcSin_"(",x)
-    acos(x)   == junfunc("W_"ArcCos_"(",x)
-    atan(x)   == junfunc("W_"ArcTan_"(",x)
-    atan(x,y) == jbinfunc("W_"ArcTan_"(",x, y)
-    asec(x)   == junfunc("W_"ArcSec_"(",x)
-    acsc(x)   == junfunc("W_"ArcCsc_"(",x)
-    acot(x)   == junfunc("W_"ArcCot_"(",x)
+    asin(x)   == junfunc("ArcSin",x)
+    acos(x)   == junfunc("ArcCos",x)
+    atan(x)   == junfunc("ArcTan",x)
+    atan(x,y) == jbinfunc("ArcTan",x, y)
+    asec(x)   == junfunc("ArcSec",x)
+    acsc(x)   == junfunc("ArcCsc",x)
+    acot(x)   == junfunc("ArcCot",x)
 
-    sinh(x) == junfunc("W_"Sinh_"(",x)
-    cosh(x) == junfunc("W_"Cosh_"(",x)
-    tanh(x) == junfunc("W_"Tanh_"(",x)
-    sech(x) == junfunc("W_"Sech_"(",x)
-    csch(x) == junfunc("W_"Csch_"(",x)
-    coth(x) == junfunc("W_"Coth_"(",x)
+    sinh(x) == junfunc("Sinh",x)
+    cosh(x) == junfunc("Cosh",x)
+    tanh(x) == junfunc("Tanh",x)
+    sech(x) == junfunc("Sech",x)
+    csch(x) == junfunc("Csch",x)
+    coth(x) == junfunc("Coth",x)
 
-    asinh(x) == junfunc("W_"ArcSinh_"(",x)
-    acosh(x) == junfunc("W_"ArcCosh_"(",x)
-    atanh(x) == junfunc("W_"ArcTanh_"(",x)
-    asech(x) == junfunc("W_"ArcSech_"(",x)
-    acsch(x) == junfunc("W_"ArcCsch_"(",x)
-    acoth(x) == junfunc("W_"ArcCoth_"(",x)
+    asinh(x) == junfunc("ArcSinh",x)
+    acosh(x) == junfunc("ArcCosh",x)
+    atanh(x) == junfunc("ArcTanh",x)
+    asech(x) == junfunc("ArcSech",x)
+    acsch(x) == junfunc("ArcCsch",x)
+    acoth(x) == junfunc("ArcCoth",x)
 
-    erf(x)      == junfunc("W_"Erf_"(",x)
-    erfc(x)     == junfunc("W_"Erfc_"(",x)
-    erf(x, y)   == jbinfunc("W_"Erf_"(",x, y)
-    erfi(x)     == junfunc("W_"Erfi_"(",x)
+    erf(x)      == junfunc("Erf",x)
+    erfc(x)     == junfunc("Erfc",x)
+    erf(x, y)   == jbinfunc("Erf",x, y)
+    erfi(x)     == junfunc("Erfi",x)
 
-    Si(x)       == junfunc("W_"SinIntegral_"(",x)
-    Shi(x)      == junfunc("W_"SinhIntegral_"(",x)
-    Ci(x)       == junfunc("W_"CosIntegral_"(",x)
-    Chi(x)      == junfunc("W_"CoshIntegral_"(",x)
-    Ei(x)       == junfunc("W_"ExpIntegralEi_"(",x)
-    EiEn(n,x)   == jbinfunc("W_"ExpIntegralE_"(",n,x)
-    fresnelC(x) == junfunc("W_"FresnelC_"(",x)
-    fresnelS(x) == junfunc("W_"FresnelS_"(",x)
-    li(x)       == junfunc("W_"LogIntegral_"(",x)
+    Si(x)       == junfunc("SinIntegral",x)
+    Shi(x)      == junfunc("SinhIntegral",x)
+    Ci(x)       == junfunc("CosIntegral",x)
+    Chi(x)      == junfunc("CoshIntegral",x)
+    Ei(x)       == junfunc("ExpIntegralEi",x)
+    EiEn(n,x)   == jbinfunc("ExpIntegralE",n,x)
+    fresnelC(x) == junfunc("FresnelC",x)
+    fresnelS(x) == junfunc("FresnelS",x)
+    li(x)       == junfunc("LogIntegral",x)
     dilog(x)    ==
       two := jWSExpression("2")
-      jbinfunc("W_"PolyLog_"(", two, x)
-    dawson(x)   == junfunc("W_"DawsonF_"(",x)
+      jbinfunc("PolyLog", two, x)
+    dawson(x)   == junfunc("DawsonF",x)
 
-    polylog(x,y) == jbinfunc("W_"PolyLog_"(", x, y)
+    polylog(x,y) == jbinfunc("PolyLog", x, y)
     jacobiTheta(n,z) ==
         error "Use the three argument version of jacobiTheta instead"
-    jacobiTheta(n,z,m) == jterfunc("W_"EllitpicTheta_"(", n, z, m)
+    jacobiTheta(n,z,m) == jterfunc("EllitpicTheta", n, z, m)
 
     weierstrassP(g2,g3,z) ==
-      jbinfunc("W_"WeierstrassP_"(", z, jWSList([g2,g3])@WSList(%))
+      jbinfunc("WeierstrassP", z, jWSList([g2,g3])@WSList(%))
     weierstrassPPrime(g2,g3,z) ==
-      jbinfunc("W_"WeierstrassPPrime_"(", z, jWSList([g2,g3])@WSList(%))
+      jbinfunc("WeierstrassPPrime", z, jWSList([g2,g3])@WSList(%))
     weierstrassSigma(g2,g3,z) ==
-      jbinfunc("W_"WeierstrassSigma_"(", z, jWSList([g2,g3])@WSList(%))
+      jbinfunc("WeierstrassSigma", z, jWSList([g2,g3])@WSList(%))
     weierstrassZeta(g2,g3,z) ==
-      jbinfunc("W_"WeierstrassZeta_"(", z, jWSList([g2,g3])@WSList(%))
+      jbinfunc("WeierstrassZeta", z, jWSList([g2,g3])@WSList(%))
     weierstrassPInverse(g2,g3,z) ==
-      jbinfunc("W_"InverseWeierstrassP_"(", z, jWSList([g2,g3])@WSList(%))
+      jbinfunc("InverseWeierstrassP", z, jWSList([g2,g3])@WSList(%))
 
-    unitStep(x) == junfunc("W_"UnitStep_"(", x)
+    unitStep(x) == junfunc("UnitStep", x)
 
-    riemannZeta(x) == junfunc("W_"Zeta_"(",x)
-    riemannZeta(x,y) == jbinfunc("W_"Zeta_"(",x, y)
+    riemannZeta(x) == junfunc("Zeta",x)
+    riemannZeta(x,y) == jbinfunc("Zeta",x, y)
 
-    eulerPhi(n) == junfunc("W_"EulerPhi_"(", n)
-    eulerE(n) == junfunc("W_"EulerE_"(", n)
-    eulerE(n,x) == jbinfunc("W_"EulerE_"(", n, x)
+    eulerPhi(n) == junfunc("EulerPhi", n)
+    eulerE(n) == junfunc("EulerE", n)
+    eulerE(n,x) == jbinfunc("EulerE", n, x)
 
-    lambertW(x) == junfunc("W_"ProductLog_"(",x)
-    lambertW(x,y) == jbinfunc("W_"ProductLog_"(",x, y)
-    polygamma(x,y) == jbinfunc("W_"PolyGamma_"(", x, y)
+    lambertW(x) == junfunc("ProductLog",x)
+    lambertW(x,y) == jbinfunc("ProductLog",x, y)
+    polygamma(x,y) == jbinfunc("PolyGamma", x, y)
 
-    haversine(z) == junfunc("W_"Haversine_"(", z)
-    inverseHaversine(z) == junfunc("W_"InverseHaversine_"(", z)
-    gudermannian(z) == junfunc("W_"Gudermannian_"(", z)
-    inverseGudermannian(z) == junfunc("W_"InverseGudermannian_"(", z)
+    haversine(z) == junfunc("Haversine", z)
+    inverseHaversine(z) == junfunc("InverseHaversine", z)
+    gudermannian(z) == junfunc("Gudermannian", z)
+    inverseGudermannian(z) == junfunc("InverseGudermannian", z)
 
-    airyAi(z) == junfunc("W_"AiryAi_"(", z)
-    airyAiZero(z) == junfunc("W_"AiryAiZero_"(", z)
-    airyAiZero(n,z) == jbinfunc("W_"AiryAiZero_"(", n, z)
-    airyBi(z) == junfunc("W_"AiryBi_"(", z)
-    airyBiZero(z) == junfunc("W_"AiryBiZero_"(", z)
-    airyBiZero(n,z) == jbinfunc("W_"AiryBiZero_"(", n, z)
-    airyAiPrime(z) == junfunc("W_"AiryAiPrime_"(", z)
-    airyBiPrime(z) == junfunc("W_"AiryBiPrime_"(", z)
+    airyAi(z) == junfunc("AiryAi", z)
+    airyAiZero(z) == junfunc("AiryAiZero", z)
+    airyAiZero(n,z) == jbinfunc("AiryAiZero", n, z)
+    airyBi(z) == junfunc("AiryBi", z)
+    airyBiZero(z) == junfunc("AiryBiZero", z)
+    airyBiZero(n,z) == jbinfunc("AiryBiZero", n, z)
+    airyAiPrime(z) == junfunc("AiryAiPrime", z)
+    airyBiPrime(z) == junfunc("AiryBiPrime", z)
 
-    angerJ(v,z) == jbinfunc("W_"AngerJ_"(", v,z)
-    angerJ(v,n,z) == jterfunc("W_"AngerJ_"(", v,n,z)
-    besselJ(n,z) == jbinfunc("W_"BesselJ_"(", n,z)
-    besselJZero(n,z) == jbinfunc("W_"BesselJZero_"(", n,z)
-    besselY(n,z) == jbinfunc("W_"BesselY_"(", n,z)
-    besselYZero(n,z) == jbinfunc("W_"BesselYZero_"(", n,z)
-    besselI(n,z) == jbinfunc("W_"BesselI_"(", n,z)
-    besselK(n,z) == jbinfunc("W_"BesselK_"(", n,z)
-    kelvinBer(n,z) == jbinfunc("W_"KelvinBer_"(", n,z)
-    kelvinBei(n,z) == jbinfunc("W_"KelvinBei_"(", n,z)
-    kelvinKer(n,z) == jbinfunc("W_"KelvinKer_"(", n,z)
-    kelvinKei(n,z) == jbinfunc("W_"KelvinKei_"(", n,z)
-    hankelH1(n,z) == jbinfunc("W_"HankelH1_"(", n,z)
-    hankelH2(n,z) == jbinfunc("W_"HankelH2_"(", n,z)
+    angerJ(v,z) == jbinfunc("AngerJ", v,z)
+    angerJ(v,n,z) == jterfunc("AngerJ", v,n,z)
+    besselJ(n,z) == jbinfunc("BesselJ", n,z)
+    besselJZero(n,z) == jbinfunc("BesselJZero", n,z)
+    besselY(n,z) == jbinfunc("BesselY", n,z)
+    besselYZero(n,z) == jbinfunc("BesselYZero", n,z)
+    besselI(n,z) == jbinfunc("BesselI", n,z)
+    besselK(n,z) == jbinfunc("BesselK", n,z)
+    kelvinBer(n,z) == jbinfunc("KelvinBer", n,z)
+    kelvinBei(n,z) == jbinfunc("KelvinBei", n,z)
+    kelvinKer(n,z) == jbinfunc("KelvinKer", n,z)
+    kelvinKei(n,z) == jbinfunc("KelvinKei", n,z)
+    hankelH1(n,z) == jbinfunc("HankelH1", n,z)
+    hankelH2(n,z) == jbinfunc("HankelH2", n,z)
 
-    lommelS1(v,n,z) == jterfunc("W_"LommelS1_"(", v,n,z)
-    lommelS2(v,n,z) == jterfunc("W_"LommelS2_"(", v,n,z)
+    lommelS1(v,n,z) == jterfunc("LommelS1", v,n,z)
+    lommelS2(v,n,z) == jterfunc("LommelS2", v,n,z)
 
-    sphericalBesselJ(n,z) == jbinfunc("W_"SphericalBesselJ_"(", n,z)
-    sphericalBesselY(n,z) == jbinfunc("W_"SphericalBesselY_"(", n,z)
-    sphericalHankelH1(n,z) == jbinfunc("W_"SphericalHankelH1_"(", n,z)
-    sphericalHankelH2(n,z) == jbinfunc("W_"SphericalHankelH2_"(", n,z)
-    struveH(n,z) == jbinfunc("W_"StruveH_"(", n,z)
-    struveL(n,z) == jbinfunc("W_"StruveL_"(", n,z)
-    weberE(n,z) == jbinfunc("W_"WeberE_"(", n,z)
-    weberE(v,n,z) == jterfunc("W_"WeberE_"(", v,n,z)
+    sphericalBesselJ(n,z) == jbinfunc("SphericalBesselJ", n,z)
+    sphericalBesselY(n,z) == jbinfunc("SphericalBesselY", n,z)
+    sphericalHankelH1(n,z) == jbinfunc("SphericalHankelH1", n,z)
+    sphericalHankelH2(n,z) == jbinfunc("SphericalHankelH2", n,z)
+    struveH(n,z) == jbinfunc("StruveH", n,z)
+    struveL(n,z) == jbinfunc("StruveL", n,z)
+    weberE(n,z) == jbinfunc("WeberE", n,z)
+    weberE(v,n,z) == jterfunc("WeberE", v,n,z)
 
     -- Check k > s ?
-    dirichletL(k,j,s) == jterfunc("W_"DirichletL_"(", k,j,s)
-    diracDelta(x) == junfunc("W_"DiracDelta_"(", x)
-    lerchPhi(z,s,a) == jterfunc("W_"LerchPhi_"(", z,s,a)
-    polylog(n,p,z) == jterfunc("W_"PolyLog_"(", n,p,z)
-    ramanujanTau(n) == junfunc("W_"RamanujanTau_"(", n)
-    ramanujanTauL(n) == junfunc("W_"RamanujanTauL_"(", n)
-    ramanujanTauTheta(n) == junfunc("W_"RamanujanTauTheta_"(", n)
-    ramanujanTauZ(n) == junfunc("W_"RamanujanTauZ_"(", n)
-    riemannSiegelTheta(t) == junfunc("W_"RiemannSiegelTheta_"(", t)
-    riemannSiegelZ(t) == junfunc("W_"RiemannSiegelZ_"(", t)
+    dirichletL(k,j,s) == jterfunc("DirichletL", k,j,s)
+    diracDelta(x) == junfunc("DiracDelta", x)
+    lerchPhi(z,s,a) == jterfunc("LerchPhi", z,s,a)
+    polylog(n,p,z) == jterfunc("PolyLog", n,p,z)
+    ramanujanTau(n) == junfunc("RamanujanTau", n)
+    ramanujanTauL(n) == junfunc("RamanujanTauL", n)
+    ramanujanTauTheta(n) == junfunc("RamanujanTauTheta", n)
+    ramanujanTauZ(n) == junfunc("RamanujanTauZ", n)
+    riemannSiegelTheta(t) == junfunc("RiemannSiegelTheta", t)
+    riemannSiegelZ(t) == junfunc("RiemannSiegelZ", t)
     stieltjesGamma(n) ==
       negative?(n) => error "stieltjesGamma: n must be a non negative integer"
-      junfunc("W_"StieltjesGamma_"(", n)
+      junfunc("StieltjesGamma", n)
     stieltjesGamma(n,a) ==
       negative?(n) => error "stieltjesGamma: n must be a non negative integer"
-      jbinfunc("W_"StieltjesGamma_"(", n,a)
-    hurwitzZeta(s,a) == jbinfunc("W_"HurwitzZeta_"(", s,a)
-    hurwitzLerchPhi(z,s,a) == jterfunc("W_"HurwitzLerchPhi_"(", z,s,a)
+      jbinfunc("StieltjesGamma", n,a)
+    hurwitzZeta(s,a) == jbinfunc("HurwitzZeta", s,a)
+    hurwitzLerchPhi(z,s,a) == jterfunc("HurwitzLerchPhi", z,s,a)
 
-    inverseErf(s) == junfunc("W_"InverseErf_"(", s)
-    inverseErfc(s) == junfunc("W_"InverseErfc_"(", s)
+    inverseErf(s) == junfunc("InverseErf", s)
+    inverseErfc(s) == junfunc("InverseErfc", s)
 
-    binomial(a, b) == jbinfunc("W_"Binomial_"(", a,b)
-    Beta(x,y) == jbinfunc("W_"Beta_"(", x, y)
-    Beta(z,a,b) == jterfunc("W_"Beta_"(", z,a,b)
-    betaRegularized(z,a,b) == jterfunc("W_"BetaRegularized_"(", z,a,b)
-    Gamma(x) == junfunc("W_"Gamma_"(", x)
-    Gamma(a,z) == jbinfunc("W_"Gamma_"(", a,z)
-    Gamma(a, z1, z2) == jterfunc("W_"Gamma_"(", a, z1,z2)
+    binomial(a, b) == jbinfunc("Binomial", a,b)
+    Beta(x,y) == jbinfunc("Beta", x, y)
+    Beta(z,a,b) == jterfunc("Beta", z,a,b)
+    betaRegularized(z,a,b) == jterfunc("BetaRegularized", z,a,b)
+    Gamma(x) == junfunc("Gamma", x)
+    Gamma(a,z) == jbinfunc("Gamma", a,z)
+    Gamma(a, z1, z2) == jterfunc("Gamma", a, z1,z2)
     -- Checks?
-    gammaRegularized(a,z) == jbinfunc("W_"GammaRegularized_"(", a,z)
+    gammaRegularized(a,z) == jbinfunc("GammaRegularized", a,z)
     inverseBetaRegularized(s,a,b) ==
-      jterfunc("W_"InverseBetaRegularized_"(", s,a,b)
+      jterfunc("InverseBetaRegularized", s,a,b)
     inverseGammaRegularized(a,s) ==
-      jbinfunc("W_"InverseGammaRegularized_"(", a,s)
+      jbinfunc("InverseGammaRegularized", a,s)
 
-    pochhammer(a,n) == jbinfunc("W_"Pochhammer_"(", a, n)
-    digamma(x) == junfunc("W_"PolyGamma_"(", x)
-    digamma(n,z) == jbinfunc("W_"PolyGamma_"(", n, z)
-    logGamma(x) == junfunc("W_"LogGamma_"(", x)
-    logBarnesG(x) == junfunc("W_"LogBarnesG_"(", x)
-    barnesG(x) == junfunc("W_"BarnesG_"(", x)
-    hyperFactorial(x) == junfunc("W_"Hyperfactorial_"(", x)
-    fibonacci(n,z) == jbinfunc("W_"Fibonacci_"(", n, z)
+    pochhammer(a,n) == jbinfunc("Pochhammer", a, n)
+    digamma(x) == junfunc("PolyGamma", x)
+    digamma(n,z) == jbinfunc("PolyGamma", n, z)
+    logGamma(x) == junfunc("LogGamma", x)
+    logBarnesG(x) == junfunc("LogBarnesG", x)
+    barnesG(x) == junfunc("BarnesG", x)
+    hyperFactorial(x) == junfunc("Hyperfactorial", x)
+    fibonacci(n,z) == jbinfunc("Fibonacci", n, z)
 
-    legendreP(n,z) == jbinfunc("W_"LegendreP_"(", n,z)
-    legendreP(n,m,z) == jterfunc("W_"LegendreP_"(", n,m,z)
-    legendreQ(n,z) == jbinfunc("W_"LegendreQ_"(", n,z)
-    legendreQ(n,m,z) == jterfunc("W_"LegendreQ_"(", n,m,z)
+    legendreP(n,z) == jbinfunc("LegendreP", n,z)
+    legendreP(n,m,z) == jterfunc("LegendreP", n,m,z)
+    legendreQ(n,z) == jbinfunc("LegendreQ", n,z)
+    legendreQ(n,m,z) == jterfunc("LegendreQ", n,m,z)
 
     sphericalHarmonicY(l, m, theta, phi) ==
-      jquatfunc("W_"SphericalHarmonicY_"(", l,m,theta,phi)
-    gegenbauerC(n,x) == jbinfunc("W_"GegenbauerC_"(", n,x)
-    gegenbauerC(n,lambda,x) == jterfunc("W_"GegenbauerC_"(",n,lambda,x)
-    chebyshevT(n,x) == jbinfunc("W_"ChebyshevT_"(", n,x)
-    chebyshevU(n,x) == jbinfunc("W_"ChebyshevU_"(", n,x)
-    hermiteH(n,x) == jbinfunc("W_"HermiteH_"(", n,x)
-    laguerreL(n,x) == jbinfunc("W_"LaguerreL_"(", n,x)
-    laguerreL(n,a,x) == jterfunc("W_"LaguerreL_"(", n,a,x)
-    zernikeR(n,m,x) == jterfunc("W_"ZernikeR_"(", n,m,x)
-    jacobiP(n,a,b,x) == jquatfunc("W_"JacobiP_"(", n,a,b,x)
-    factorial(x) == junfunc("W_"Factorial_"(", x)
+      jquatfunc("SphericalHarmonicY", l,m,theta,phi)
+    gegenbauerC(n,x) == jbinfunc("GegenbauerC", n,x)
+    gegenbauerC(n,lambda,x) == jterfunc("GegenbauerC",n,lambda,x)
+    chebyshevT(n,x) == jbinfunc("ChebyshevT", n,x)
+    chebyshevU(n,x) == jbinfunc("ChebyshevU", n,x)
+    hermiteH(n,x) == jbinfunc("HermiteH", n,x)
+    laguerreL(n,x) == jbinfunc("LaguerreL", n,x)
+    laguerreL(n,a,x) == jterfunc("LaguerreL", n,a,x)
+    zernikeR(n,m,x) == jterfunc("ZernikeR", n,m,x)
+    jacobiP(n,a,b,x) == jquatfunc("JacobiP", n,a,b,x)
+    factorial(x) == junfunc("Factorial", x)
 
-    hypergeometric0F1(a,z) == jbinfunc("W_"Hypergeometric0F1_"(", a,z)
+    hypergeometric0F1(a,z) == jbinfunc("Hypergeometric0F1", a,z)
     hypergeometric0F1Regularized(a,z) ==
-      jbinfunc("W_"Hypergeometric0F1Regularized_"(", a,z)
-    hypergeometric1F1(a,b,z) == jterfunc("W_"Hypergeometric1F1_"(", a,b,z)
+      jbinfunc("Hypergeometric0F1Regularized", a,z)
+    hypergeometric1F1(a,b,z) == jterfunc("Hypergeometric1F1", a,b,z)
     hypergeometric1F1Regularized(a,b,z) ==
-      jterfunc("W_"Hypergeometric1F1Regularized_"(", a,b,z)
-    hypergeometricU(a,b,z) == jterfunc("W_"HypergeometricU_"(", a,b,z)
-    whittakerM(k,m,z) == jterfunc("W_"WhittakerM_"(", k,m,z)
-    whittakerW(k,m,z) == jterfunc("W_"WhittakerW_"(", k,m,z)
-    parabolicCylinderD(v,z) == jbinfunc("W_"ParabolicCylinderD_"(", v, z)
-    coulombF(l,eta,ro) == jterfunc("W_"CoulombF_"(", l, eta, ro)
-    coulombG(l,eta,ro) == jterfunc("W_"CoulombG_"(", l, eta, ro)
-    coulombH1(l,eta,ro) == jterfunc("W_"CoulombH1_"(", l, eta, ro)
-    coulombH2(l,eta,ro) == jterfunc("W_"CoulombH2_"(", l, eta, ro)
+      jterfunc("Hypergeometric1F1Regularized", a,b,z)
+    hypergeometricU(a,b,z) == jterfunc("HypergeometricU", a,b,z)
+    whittakerM(k,m,z) == jterfunc("WhittakerM", k,m,z)
+    whittakerW(k,m,z) == jterfunc("WhittakerW", k,m,z)
+    parabolicCylinderD(v,z) == jbinfunc("ParabolicCylinderD", v, z)
+    coulombF(l,eta,ro) == jterfunc("CoulombF", l, eta, ro)
+    coulombG(l,eta,ro) == jterfunc("CoulombG", l, eta, ro)
+    coulombH1(l,eta,ro) == jterfunc("CoulombH1", l, eta, ro)
+    coulombH2(l,eta,ro) == jterfunc("CoulombH2", l, eta, ro)
 
-    qPochhammer(z,q) == jbinfunc("W_"QPochhammer_"(", z,q)
-    qPochhammer(z,q,n) == jterfunc("W_"QPochhammer_"(", z,q,n)
-    qFactorial(z,q) == jbinfunc("W_"QFactorial_"(", z,q)
-    qBinomial(n,m,q) == jterfunc("W_"QBinomial_"(", n,m,q)
-    qGamma(z,q) == jbinfunc("W_"QGamma_"(", z,q)
-    qPolyGamma(z,q) == jbinfunc("W_"QPolyGamma_"(", z,q)
-    qPolyGamma(n,z,q) == jterfunc("W_"QPolyGamma_"(", n,z,q)
+    qPochhammer(z,q) == jbinfunc("QPochhammer", z,q)
+    qPochhammer(z,q,n) == jterfunc("QPochhammer", z,q,n)
+    qFactorial(z,q) == jbinfunc("QFactorial", z,q)
+    qBinomial(n,m,q) == jterfunc("QBinomial", n,m,q)
+    qGamma(z,q) == jbinfunc("QGamma", z,q)
+    qPolyGamma(z,q) == jbinfunc("QPolyGamma", z,q)
+    qPolyGamma(n,z,q) == jterfunc("QPolyGamma", n,z,q)
 
-    mathieuC(a,q,z) == jterfunc("W_"MathieuC_"(", a,q,z)
-    mathieuS(b,q,z)== jterfunc("W_"MathieuS_"(", b,q,z)
-    mathieuCPrime(a,q,z) == jterfunc("W_"MathieuCPrime_"(", a,q,z)
-    mathieuSPrime(b,q,z) == jterfunc("W_"MathieuSPrime_"(", b,q,z)
+    mathieuC(a,q,z) == jterfunc("MathieuC", a,q,z)
+    mathieuS(b,q,z)== jterfunc("MathieuS", b,q,z)
+    mathieuCPrime(a,q,z) == jterfunc("MathieuCPrime", a,q,z)
+    mathieuSPrime(b,q,z) == jterfunc("MathieuSPrime", b,q,z)
     mathieuCharacteristicA(r,q) ==
-      jbinfunc("W_"MathieuCharacteristicA_"(", r,q)
+      jbinfunc("MathieuCharacteristicA", r,q)
     mathieuCharacteristicB(r,q) ==
-      jbinfunc("W_"MathieuCharacteristicB_"(", r,q)
+      jbinfunc("MathieuCharacteristicB", r,q)
     mathieuCharacteristicExponent(a,q) ==
-      jbinfunc("W_"MathieuCharacteristicExponent_"(", a,q)
+      jbinfunc("MathieuCharacteristicExponent", a,q)
 
-    unitStep(x) == junfunc("W_"UnitStep_"(", x)
+    unitStep(x) == junfunc("UnitStep", x)
 
-    jacobiAmplitude(u,m) == jbinfunc("W_"JacobiAmplitude_"(", u,m)
-    jacobiSn(u,m) == jbinfunc("W_"JacobiSN_"(", u,m)
-    jacobiCn(u,m) == jbinfunc("W_"JacobiCN_"(", u,m)
-    jacobiDn(u,m) == jbinfunc("W_"JacobiDN_"(", u,m)
-    inverseJacobiSn(v,m) == jbinfunc("W_"InverseJacobiSN_"(", v,m)
-    inverseJacobiCn(v,m) == jbinfunc("W_"InverseJacobiCN_"(", v,m)
-    ellipticTheta(a,u,q) == jterfunc("W_"EllipticTheta_"(", a,u,q)
-    ellipticThetaPrime(a,u,q) == jterfunc("W_"EllipticThetaPrime_"(", a,u,q)
-    siegelTheta(t,s) == jbinfunc("W_"SiegelTheta_"(", t,s)
-    siegelTheta(v,t,s) == jterfunc("W_"SiegelTheta_"(", v,t,s)
+    jacobiAmplitude(u,m) == jbinfunc("JacobiAmplitude", u,m)
+    jacobiSn(u,m) == jbinfunc("JacobiSN", u,m)
+    jacobiCn(u,m) == jbinfunc("JacobiCN", u,m)
+    jacobiDn(u,m) == jbinfunc("JacobiDN", u,m)
+    inverseJacobiSn(v,m) == jbinfunc("InverseJacobiSN", v,m)
+    inverseJacobiCn(v,m) == jbinfunc("InverseJacobiCN", v,m)
+    ellipticTheta(a,u,q) == jterfunc("EllipticTheta", a,u,q)
+    ellipticThetaPrime(a,u,q) == jterfunc("EllipticThetaPrime", a,u,q)
+    siegelTheta(t,s) == jbinfunc("SiegelTheta", t,s)
+    siegelTheta(v,t,s) == jterfunc("SiegelTheta", v,t,s)
 
-    ellipticK(m) == junfunc("W_"EllipticK_"(", m)
-    ellipticF(x,m) == jbinfunc("W_"EllipticF_"(", x,m)
-    ellipticE(m) == junfunc("W_"EllipticE_"(", m)
-    ellipticE(x,m) == jbinfunc("W_"EllipticE_"(", x,m)
-    ellipticPi(n,m) == jbinfunc("W_"EllipticPi_"(", n,m)
-    ellipticPi(n,x,m) == jterfunc("W_"EllipticPi_"(", n,x,m)
-    jacobiZeta(x,m) == jbinfunc("W_"JacobiZeta_"(", x,m)
+    ellipticK(m) == junfunc("EllipticK", m)
+    ellipticF(x,m) == jbinfunc("EllipticF", x,m)
+    ellipticE(m) == junfunc("EllipticE", m)
+    ellipticE(x,m) == jbinfunc("EllipticE", x,m)
+    ellipticPi(n,m) == jbinfunc("EllipticPi", n,m)
+    ellipticPi(n,x,m) == jterfunc("EllipticPi", n,x,m)
+    jacobiZeta(x,m) == jbinfunc("JacobiZeta", x,m)
 
-    dedekindEta(tau) == junfunc("W_"DedekindEta_"(", tau)
-    dirichletEta(z) == junfunc("W_"DirichletEta_"(", z)
+    dedekindEta(tau) == junfunc("DedekindEta", tau)
+    dirichletEta(z) == junfunc("DirichletEta", z)
 
-    kleinInvariantJ(tau) == junfunc("W_"KleinInvariantJ_"(", tau)
-    modularLambda(tau) == junfunc("W_"ModularLambda_"(", tau)
+    kleinInvariantJ(tau) == junfunc("KleinInvariantJ", tau)
+    modularLambda(tau) == junfunc("ModularLambda", tau)
 
 
     D(expr : %, sym : Symbol) ==
-      jbinfunc("W_"D_"(", expr, jWSExpression(string(sym)))
-    differentiate(expr : %, args : %) == jbinfunc("W_"D_"(", expr, args)
+      jbinfunc("D", expr, jWSExpression(string(sym)))
+    differentiate(expr : %, args : %) == jbinfunc("D", expr, args)
     differentiate(expr : %, sym : Symbol) ==
-      jbinfunc("W_"D_"(", expr, jWSExpression(string(sym)))
+      jbinfunc("D", expr, jWSExpression(string(sym)))
     D(expr : %, sym : Symbol, i : NonNegativeInteger) ==
       arg : % := jlref(concat(["W_`List[", string(sym), ",", string(i),"]_`"]))
-      jbinfunc("W_"D_"(", expr, arg)
+      jbinfunc("D", expr, arg)
 
-    guessGeneratingFunction(l, x) == jbinfunc("W_"FindGeneratingFunction_"(", l, x)
-    guessSequenceFunction(l) == junfunc("W_"FindSequenceFunction_"(", l)
-    guessSequenceFunction(l, x) == jbinfunc("W_"FindSequenceFunction_"(", l, x)
+    guessGeneratingFunction(l, x) == jbinfunc("FindGeneratingFunction", l, x)
+    guessSequenceFunction(l) == junfunc("FindSequenceFunction", l)
+    guessSequenceFunction(l, x) == jbinfunc("FindSequenceFunction", l, x)
 
-    integrate(expr, range : %) == jbinfunc("W_"Integrate_"(", expr, range)
+    integrate(expr, range : %) == jbinfunc("Integrate", expr, range)
     integrate(expr : %, sym : Symbol) ==
-      jbinfunc("W_"Integrate_"(", expr, jWSExpression(string(sym)))
+      jbinfunc("Integrate", expr, jWSExpression(string(sym)))
     integrate(expr, sym, range: Segment(Integer)) ==
       arg : % := jlref(concat(["W_`List[", string(sym), ",",
         string(low(range)), ",", string(high(range)),"]_`"]))
-      jbinfunc("W_"Integrate_"(", expr, arg)
+      jbinfunc("Integrate", expr, arg)
     numericIntegrate(expr, range : %) ==
-      jbinfunc("W_"NIntegrate_"(", expr, range)
+      jbinfunc("NIntegrate", expr, range)
     numericIntegrate(expr, sym, range: Segment(Integer)) ==
       args : % := jlref(concat(["W_`List[", string(sym), ",",
         string(low(range)), ",", string(high(range)),"]_`"]))
-      jbinfunc("W_"NIntegrate_"(", expr, args)
+      jbinfunc("NIntegrate", expr, args)
 
-    series(expr, range : %) == jbinfunc("W_"Series_"(", expr, range)
+    series(expr, range : %) == jbinfunc("Series", expr, range)
 
-    sum(expr, range : %) == jbinfunc("W_"Sum_"(", expr, range)
+    sum(expr, range : %) == jbinfunc("Sum", expr, range)
     sum(expr, sym, range: Segment(Integer)) ==
       arg : % := jlref(concat(["W_`List[", string(sym), ",",
         string(low(range)), ",", string(high(range)),"]_`"]))
-      jbinfunc("W_"Sum_"(", expr, arg)
-    sum(expr, sym : Symbol) == jbinfunc("W_"Sum_"(",
+      jbinfunc("Sum", expr, arg)
+    sum(expr, sym : Symbol) == jbinfunc("Sum",
       expr, jWSExpression(string(sym)))
-    numericSum(expr, range : %) == jbinfunc("W_"NSum_"(",
+    numericSum(expr, range : %) == jbinfunc("NSum",
       expr, range)
     numericSum(expr, sym, range: Segment(Integer)) ==
       arg : % := jlref(concat(["W_`List[", string(sym), ",",
         string(low(range)), ",", string(high(range)),"]_`"]))
-      jbinfunc("W_"NSum_"(", expr, arg)
-    product(expr, range : %) == jbinfunc("W_"Product_"(", expr, range)
+      jbinfunc("NSum", expr, arg)
+    product(expr, range : %) == jbinfunc("Product", expr, range)
     product(expr, sym, range: Segment(Integer)) ==
       arg : % := jlref(concat(["W_`List[", string(sym), ",",
         string(low(range)), ",", string(high(range)),"]_`"]))
-      jbinfunc("W_"Product_"(", expr, arg)
-    product(expr, sym : Symbol) == jbinfunc("W_"Product_"(",
+      jbinfunc("Product", expr, arg)
+    product(expr, sym : Symbol) == jbinfunc("Product",
       expr, jWSExpression(string(sym)))
-    numericProduct(expr, range : %) == jbinfunc("W_"NProduct_"(", expr, range)
+    numericProduct(expr, range : %) == jbinfunc("NProduct", expr, range)
     numericProduct(expr, sym, range: Segment(Integer)) ==
       arg : % := jlref(concat(["W_`List[", string(sym), ",",
         string(low(range)), ",", string(high(range)),"]_`"]))
-      jbinfunc("W_"NProduct_"(", expr, arg)
+      jbinfunc("NProduct", expr, arg)
 
-    minimize(expr, vars : %) == jbinfunc("W_"Minimize_"(", expr, vars)
+    minimize(expr, vars : %) == jbinfunc("Minimize", expr, vars)
     minimize(expr : %, sym : Symbol) ==
-      jbinfunc("W_"Minimize_"(", expr, jWSExpression(string(sym)))
+      jbinfunc("Minimize", expr, jWSExpression(string(sym)))
     minimize(expr, vars : %, dom : %) ==
-      jterfunc("W_"Minimize_"(", expr, vars, dom)
+      jterfunc("Minimize", expr, vars, dom)
 
-    numericMinimize(expr, vars : %) == jbinfunc("W_"NMinimize_"(", expr, vars)
+    numericMinimize(expr, vars : %) == jbinfunc("NMinimize", expr, vars)
     numericMinimize(expr : %, sym : Symbol) ==
-      jbinfunc("W_"NMinimize_"(", expr, jWSExpression(string(sym)))
+      jbinfunc("NMinimize", expr, jWSExpression(string(sym)))
     numericMinimize(expr, vars : %, dom :%) ==
-      jterfunc("W_"NMinimize_"(", expr, vars, dom)
+      jterfunc("NMinimize", expr, vars, dom)
 
-    maximize(expr, vars : %) == jbinfunc("W_"Maximize_"(", expr, vars)
+    maximize(expr, vars : %) == jbinfunc("Maximize", expr, vars)
     maximize(expr : %, sym : Symbol) ==
-      jbinfunc("W_"Maximize_"(", expr, jWSExpression(string(sym)))
+      jbinfunc("Maximize", expr, jWSExpression(string(sym)))
     maximize(expr, vars : %, dom : %) ==
-      jterfunc("W_"Maximize_"(", expr, vars, dom)
+      jterfunc("Maximize", expr, vars, dom)
 
-    numericMaximize(expr, vars : %) == jbinfunc("W_"NMaximize_"(", expr, vars)
+    numericMaximize(expr, vars : %) == jbinfunc("NMaximize", expr, vars)
     numericMaximize(expr : %, sym : Symbol) ==
-      jbinfunc("W_"NMaximize_"(", expr, jWSExpression(string(sym)))
+      jbinfunc("NMaximize", expr, jWSExpression(string(sym)))
     numericMaximize(expr, vars : %, dom : %) ==
-      jterfunc("W_"NMaximize_"(", expr, vars, dom)
+      jterfunc("NMaximize", expr, vars, dom)
 
-    limit(expr, params : %) == jbinfunc("W_"Limit_"(", expr, params)
-    minLimit(expr, params : %) == jbinfunc("W_"MinLimit_"(", expr, params)
-    maxLimit(expr, params : %) == jbinfunc("W_"MaxLimit_"(", expr, params)
+    limit(expr, params : %) == jbinfunc("Limit", expr, params)
+    minLimit(expr, params : %) == jbinfunc("MinLimit", expr, params)
+    maxLimit(expr, params : %) == jbinfunc("MaxLimit", expr, params)
 
     solve(eq : Equation(%), vars : %) ==
       expr := jWSEqual(lhs eq, rhs eq)
-      jbinfunc("W_"Solve_"(", expr, vars)
+      jbinfunc("Solve", expr, vars)
     solve(eq : Equation(%), vars : %, param : %) ==
       expr := jWSEqual(lhs eq, rhs eq)
-      jterfunc("W_"Solve_"(", expr, vars, param)
-    solve(expr : %, vars : %) == jbinfunc("W_"Solve_"(", expr, vars)
-    solve(expr:%,vars:%,param:%) == jterfunc("W_"Solve_"(", expr, vars, param)
+      jterfunc("Solve", expr, vars, param)
+    solve(expr : %, vars : %) == jbinfunc("Solve", expr, vars)
+    solve(expr:%,vars:%,param:%) == jterfunc("Solve", expr, vars, param)
     numericSolve(eq : Equation(%), vars : %) ==
       expr := jWSEqual(lhs eq, rhs eq)
-      jbinfunc("W_"NSolve_"(", expr, vars)
+      jbinfunc("NSolve", expr, vars)
     numericSolve(expr : %, vars : %) ==
-      jbinfunc("W_"NSolve_"(", expr, vars)
+      jbinfunc("NSolve", expr, vars)
     realNumericSolve(eq : Equation(%), vars : %) ==
       expr := jWSEqual(lhs eq, rhs eq)
-      jterfunc("W_"NSolve_"(", expr, vars, jWSExpression("Reals"))
+      jterfunc("NSolve", expr, vars, jWSExpression("Reals"))
     realNumericSolve(expr : %, vars : %) ==
-      jterfunc("W_"NSolve_"(", expr, vars, jWSExpression("Reals"))
+      jterfunc("NSolve", expr, vars, jWSExpression("Reals"))
 
-    fourier(expr : %) == junfunc("W_"Fourier_"(", expr)
-    fourier(expr : %, lpos : %) == jbinfunc("W_"Fourier_"(", expr, lpos)
-    fourier(expr : WSL(%)) == junfunc("W_"Fourier_"(", expr)
+    fourier(expr : %) == junfunc("Fourier", expr)
+    fourier(expr : %, lpos : %) == jbinfunc("Fourier", expr, lpos)
+    fourier(expr : WSL(%)) == junfunc("Fourier", expr)
     fourier(expr : WSL(%), lpos : WSL(%)) ==
-      jbinfunc("W_"Fourier_"(", expr, lpos)
-    inverseFourier(expr : %) == junfunc("W_"InverseFourier_"(", expr)
+      jbinfunc("Fourier", expr, lpos)
+    inverseFourier(expr : %) == junfunc("InverseFourier", expr)
     inverseFourier(expr : %, lpos : %) ==
-      jbinfunc("W_"InverseFourier_"(", expr, lpos)
+      jbinfunc("InverseFourier", expr, lpos)
     inverseFourier(expr : WSL(%)) ==
-      junfunc("W_"InverseFourier_"(", expr)
+      junfunc("InverseFourier", expr)
     inverseFourier(expr : WSL(%), lpos : WSL(%)) ==
-      jbinfunc("W_"InverseFourier_"(", expr, lpos)
+      jbinfunc("InverseFourier", expr, lpos)
 
     derivative(op, n) ==
       d := string name op
@@ -1759,200 +1799,200 @@ WSExpression() : Exports == Implementation where
       expr : String := concat(["Derivative[",
         toString(n),"][", d,"][", toString(var),"]"])
       jWSExpression expr
-    dSolve(expr : %, u : %, var : %) == jterfunc("W_"DSolve_"(", expr, u, var)
+    dSolve(expr : %, u : %, var : %) == jterfunc("DSolve", expr, u, var)
     dSolve(eq : Equation(%), u : %, var : %) ==
       expr := jWSEqual(lhs eq, rhs eq)
-      jterfunc("W_"DSolve_"(", expr, u, var)
+      jterfunc("DSolve", expr, u, var)
     dSolveValue(expr : %, u : %, var : %) ==
-      jterfunc("W_"DSolve_"(", expr, u, var)
+      jterfunc("DSolve", expr, u, var)
     dSolveValue(eq : Equation(%), u : %, var : %) ==
       expr := jWSEqual(lhs eq, rhs eq)
-      jterfunc("W_"DSolve_"(", expr, u, var)
+      jterfunc("DSolve", expr, u, var)
     numericDSolve(expr : %, u : %, xrange : %) ==
-      jterfunc("W_"NDSolve_"(", expr, u, xrange)
+      jterfunc("NDSolve", expr, u, xrange)
     numericDSolve(eq : Equation(%), u : %, xrange : %) ==
       expr := jWSEqual(lhs eq, rhs eq)
-      jterfunc("W_"NDSolve_"(", expr, u, xrange)
+      jterfunc("NDSolve", expr, u, xrange)
     numericDSolve(expr : %, u : %, xrange : %, yrange : %) ==
-      jquatfunc("W_"NDSolve_"(", expr, u, xrange, yrange)
+      jquatfunc("NDSolve", expr, u, xrange, yrange)
     numericDSolveValue(expr : %, u : %, xrange : %) ==
-      jterfunc("W_"NDSolveValue_"(", expr, u, xrange)
+      jterfunc("NDSolveValue", expr, u, xrange)
     numericDSolveValue(eq : Equation(%), u : %, xrange : %) ==
       expr := jWSEqual(lhs eq, rhs eq)
-      jterfunc("W_"NDSolveValue_"(", expr, u, xrange)
+      jterfunc("NDSolveValue", expr, u, xrange)
     numericDSolveValue(expr : %, u : %, xrange : %, yrange : %) ==
-      jquatfunc("W_"NDSolveValue_"(", expr, u, xrange, yrange)
+      jquatfunc("NDSolveValue", expr, u, xrange, yrange)
 
-    residue(expr,param) == jbinfunc("W_"Residue_"(", expr, param)
-    residueSum(expr,param) == jbinfunc("W_"ResidueSum_"(", expr, param)
-    reduce(expr:%, lvars:%) == jbinfunc("W_"Reduce_"(", expr, lvars)
+    residue(expr,param) == jbinfunc("Residue", expr, param)
+    residueSum(expr,param) == jbinfunc("ResidueSum", expr, param)
+    reduce(expr:%, lvars:%) == jbinfunc("Reduce", expr, lvars)
     reduce(eq : Equation(%),lvars) ==
       expr := jWSEqual(lhs eq, rhs eq)
-      jbinfunc("W_"Reduce_"(", expr, lvars)
+      jbinfunc("Reduce", expr, lvars)
     reduce(eq : Equation(%),lvars,dom) ==
       expr := jWSEqual(lhs eq, rhs eq)
-      jterfunc("W_"Reduce_"(", expr, lvars, dom)
+      jterfunc("Reduce", expr, lvars, dom)
     reduce(expr:%, lvars:%, dom : %) ==
-      jterfunc("W_"Reduce_"(", expr, lvars,dom)
+      jterfunc("Reduce", expr, lvars,dom)
     findInstance(expr:%, lvars:%) ==
-      jbinfunc("W_"FindInstance_"(", expr, lvars)
+      jbinfunc("FindInstance", expr, lvars)
     findInstance(eq : Equation(%),lvars) ==
       expr := jWSEqual(lhs eq, rhs eq)
-      jbinfunc("W_"FindInstance_"(", expr, lvars)
+      jbinfunc("FindInstance", expr, lvars)
     findInstance(eq : Equation(%),lvars,dom) ==
       expr := jWSEqual(lhs eq, rhs eq)
-      jterfunc("W_"FindInstance_"(", expr, lvars, dom)
+      jterfunc("FindInstance", expr, lvars, dom)
     findInstance(eq : Equation(%),lvars,dom,n) ==
       expr := jWSEqual(lhs eq, rhs eq)
-      jquatfunc("W_"FindInstance_"(", expr, lvars, dom, n)
+      jquatfunc("FindInstance", expr, lvars, dom, n)
     findInstance(expr:%, lvars:%, dom : %) ==
-      jterfunc("W_"FindInstance_"(", expr, lvars,dom)
+      jterfunc("FindInstance", expr, lvars,dom)
     findInstance(expr:%, lvars:%, dom : %, n) ==
-      jquatfunc("W_"FindInstance_"(", expr, lvars,dom,n)
+      jquatfunc("FindInstance", expr, lvars,dom,n)
 
-    numerator(rexpr)   == junfunc("W_"Numerator_"(", rexpr)
-    denominator(rexpr) == junfunc("W_"Denominator_"(", rexpr)
-    numerDenom(rexpr) ==  junfunc("W_"NumeratorDenominator_"(", rexpr)
+    numerator(rexpr)   == junfunc("Numerator", rexpr)
+    denominator(rexpr) == junfunc("Denominator", rexpr)
+    numerDenom(rexpr) ==  junfunc("NumeratorDenominator", rexpr)
 
     polynomial?(expr, var : %) ==
-      jbinfunc("W_"PolynomialQ_"(", expr, var) = WT
+      jbinfunc("PolynomialQ", expr, var) = WT
     polynomial?(expr, vars : WSL(%)) ==
-      jbinfunc("W_"PolynomialQ_"(", expr, vars) = WT
+      jbinfunc("PolynomialQ", expr, vars) = WT
     polynomialExpression?(expr, var : %) ==
-      jbinfunc("W_"PolynomialExpressionQ_"(", expr, var) = WT
+      jbinfunc("PolynomialExpressionQ", expr, var) = WT
     polynomialExpression?(expr, vars : WSL(%)) ==
-      jbinfunc("W_"PolynomialExpressionQ_"(", expr, vars) = WT
+      jbinfunc("PolynomialExpressionQ", expr, vars) = WT
     rationalExpression?(expr, var : %) ==
-      jbinfunc("W_"RationalExpressionQ_"(", expr, var) = WT
+      jbinfunc("RationalExpressionQ", expr, var) = WT
     rationalExpression?(expr, vars : WSL(%)) ==
-      jbinfunc("W_"RationalExpressionQ_"(", expr, vars) = WT
+      jbinfunc("RationalExpressionQ", expr, vars) = WT
 
-    variables(p) : WSL(%) == junfunc("W_"Variables_"(", p)
+    variables(p) : WSL(%) == junfunc("Variables", p)
     variables(p) : List(Symbol) ==
       l : List(Symbol) := []
-      lvars : WSL(%) := junfunc("W_"Variables_"(", p)
+      lvars : WSL(%) := junfunc("Variables", p)
       for i in 1..integer(length(lvars)) repeat
         l := concat(l, coerce(toString(part(lvars, jWSInteger i)))@Symbol)
       l
-    exponent(p,x) == jbinfunc("W_"Exponent_"(", p, x)
-    exponent(p,x,map) == jterfunc("W_"Exponent_"(", p, x, map)
-    coefficient(p,expr) == jbinfunc("W_"Coefficient_"(",p,expr)
-    coefficient(p,expr,n) == jterfunc("W_"Coefficient_"(",p,expr,n)
-    coefficientList(p,expr) == jbinfunc("W_"CoefficientList_"(",p,expr)
-    coefficientRules(p,expr) == jbinfunc("W_"CoefficientRules_"(",p,expr)
-    monomialList(p) == junfunc("W_"MonomialList_"(", p)
-    coefficientRules(p) == junfunc("W_"CoefficientRules_"(", p)
+    exponent(p,x) == jbinfunc("Exponent", p, x)
+    exponent(p,x,map) == jterfunc("Exponent", p, x, map)
+    coefficient(p,expr) == jbinfunc("Coefficient",p,expr)
+    coefficient(p,expr,n) == jterfunc("Coefficient",p,expr,n)
+    coefficientList(p,expr) == jbinfunc("CoefficientList",p,expr)
+    coefficientRules(p,expr) == jbinfunc("CoefficientRules",p,expr)
+    monomialList(p) == junfunc("MonomialList", p)
+    coefficientRules(p) == junfunc("CoefficientRules", p)
     fromCoefficientRules(list, vars) ==
-      jbinfunc("W_"FromCoefficientRules_"(", list, vars)
+      jbinfunc("FromCoefficientRules", list, vars)
 
     polynomialQuotient(p1,p2,var) ==
-      jterfunc("W_"PolynomialQuotient_"(",p1,p2,var)
+      jterfunc("PolynomialQuotient",p1,p2,var)
     polynomialRemainder(p1,p2,var) ==
-      jterfunc("W_"PolynomialRemainder_"(",p1,p2,var)
+      jterfunc("PolynomialRemainder",p1,p2,var)
     polynomialQuotientRemainder(p1,p2,var) ==
-      jterfunc("W_"PolynomialQuotientRemainder_"(",p1,p2,var)
+      jterfunc("PolynomialQuotientRemainder",p1,p2,var)
     padeApproximant(expr, param) ==
-      jbinfunc("W_"PadeApproximant_"(",expr,param)
+      jbinfunc("PadeApproximant",expr,param)
     symmetricPolynomial(order, vars) ==
-      jbinfunc("W_"SymmetricPolynomial_"(",order,vars)
+      jbinfunc("SymmetricPolynomial",order,vars)
     symmetricReduction(p, vars) ==
-      jbinfunc("W_"SymmetricReduction_"(", p, vars)
+      jbinfunc("SymmetricReduction", p, vars)
     symmetricReduction(p, vars, replnt) ==
-      jterfunc("W_"SymmetricReduction_"(", p, vars, replnt)
-    polynomialGCD(p1,p2) == jbinfunc("W_"PolynomialGCD_"(",p1,p2)
-    polynomialGCD(p1,p2,opt) == jterfunc("W_"PolynomialGCD_"(",p1,p2,opt)
-    polynomialLCM(p1,p2) == jbinfunc("W_"PolynomialLCM_"(",p1,p2)
-    polynomialLCM(p1,p2,opt) == jterfunc("W_"PolynomialLCM_"(",p1,p2,opt)
+      jterfunc("SymmetricReduction", p, vars, replnt)
+    polynomialGCD(p1,p2) == jbinfunc("PolynomialGCD",p1,p2)
+    polynomialGCD(p1,p2,opt) == jterfunc("PolynomialGCD",p1,p2,opt)
+    polynomialLCM(p1,p2) == jbinfunc("PolynomialLCM",p1,p2)
+    polynomialLCM(p1,p2,opt) == jterfunc("PolynomialLCM",p1,p2,opt)
     polynomialExtendedGCD(p1,p2,x) ==
-      jterfunc("W_"PolynomialExtendedGCD_"(",p1,p2,x)
-    polynomialMod(p1,modulus) == jbinfunc("W_"PolynomialMod_"(",p1,modulus)
-    resultant(p1,p2,x) == jterfunc("W_"Resultant_"(",p1,p2,x)
-    subResultants(p1,p2,x) == jterfunc("W_"SubResultants_"(",p1,p2,x)
-    discriminant(p1,var) == jbinfunc("W_"Discriminant_"(",p1,var)
-    groebnerBasis(lpoly,lvar) == jbinfunc("W_"GroebnerBasis_"(",lpoly,lvar)
+      jterfunc("PolynomialExtendedGCD",p1,p2,x)
+    polynomialMod(p1,modulus) == jbinfunc("PolynomialMod",p1,modulus)
+    resultant(p1,p2,x) == jterfunc("Resultant",p1,p2,x)
+    subResultants(p1,p2,x) == jterfunc("SubResultants",p1,p2,x)
+    discriminant(p1,var) == jbinfunc("Discriminant",p1,var)
+    groebnerBasis(lpoly,lvar) == jbinfunc("GroebnerBasis",lpoly,lvar)
     groebnerBasis(lpoly,lvar,evar) ==
-      jterfunc("W_"GroebnerBasis_"(",lpoly,lvar,evar)
+      jterfunc("GroebnerBasis",lpoly,lvar,evar)
     polynomialReduce(poly,lpoly,lvar) ==
-      jterfunc("W_"PolynomialReduce_"(",poly,lpoly,lvar)
+      jterfunc("PolynomialReduce",poly,lpoly,lvar)
 
-    factorInteger(n) == junfunc("W_"FactorInteger_"(", n)
-    factorPolynomial(p) == junfunc("W_"Factor_"(", p)
+    factorInteger(n) == junfunc("FactorInteger", n)
+    factorPolynomial(p) == junfunc("Factor", p)
     factor(expr : %) ==
-      jlHead(expr) = WI => junfunc("W_"FactorInteger_"(", expr)
-      junfunc("W_"Factor_"(", expr)
-    factor(p, opt) == jbinfunc("W_"Factor_"(", p, opt)
-    factorTerms(p) == junfunc("W_"FactorTerms_"(", p)
-    factorTerms(p, var : %) == jbinfunc("W_"FactorTerms_"(", p, var)
-    factorTerms(p, vars : WSL(%)) == jbinfunc("W_"FactorTerms_"(", p, vars)
-    factorTermsList(p) == junfunc("W_"FactorTermsList_"(", p)
-    factorTermsList(p, vars) == jbinfunc("W_"FactorTermsList_"(", p, vars)
-    factorList(p) == junfunc("W_"FactorList_"(", p)
-    factorSquareFree(p) == junfunc("W_"FactorSquareFree_"(", p)
-    factorSquareFreeList(p) == junfunc("W_"FactorSquareFreeList_"(", p)
-    irreducible?(p) == junfunc("W_"IrreduciblePolynomialQ_"(", p) = WT
+      jlHead(expr) = WI => junfunc("FactorInteger", expr)
+      junfunc("Factor", expr)
+    factor(p, opt) == jbinfunc("Factor", p, opt)
+    factorTerms(p) == junfunc("FactorTerms", p)
+    factorTerms(p, var : %) == jbinfunc("FactorTerms", p, var)
+    factorTerms(p, vars : WSL(%)) == jbinfunc("FactorTerms", p, vars)
+    factorTermsList(p) == junfunc("FactorTermsList", p)
+    factorTermsList(p, vars) == jbinfunc("FactorTermsList", p, vars)
+    factorList(p) == junfunc("FactorList", p)
+    factorSquareFree(p) == junfunc("FactorSquareFree", p)
+    factorSquareFreeList(p) == junfunc("FactorSquareFreeList", p)
+    irreducible?(p) == junfunc("IrreduciblePolynomialQ", p) = WT
     irreducible?(p, param) ==
-      jbinfunc("W_"IrreduciblePolynomialQ_"(", p, param) = WT
-    decompose(p,var) == jbinfunc("W_"Decompose_"(", p, var)
+      jbinfunc("IrreduciblePolynomialQ", p, param) = WT
+    decompose(p,var) == jbinfunc("Decompose", p, var)
 
     interpolatingPolynomial(polys,var) ==
-      jbinfunc("W_"InterpolatingPolynomial_"(", polys, var)
+      jbinfunc("InterpolatingPolynomial", polys, var)
 
-    gcd(p1,p2) == jbinfunc("W_"PolynomialGCD_"(", p1, p2)
-    lcm(p1,p2) == jbinfunc("W_"PolynomialLCM_"(", p1, p2)
+    gcd(p1,p2) == jbinfunc("PolynomialGCD", p1, p2)
+    lcm(p1,p2) == jbinfunc("PolynomialLCM", p1, p2)
 
     minimalPolynomial(expr, var) ==
-      jbinfunc("W_"MinimalPolynomial_"(", expr, var)
+      jbinfunc("MinimalPolynomial", expr, var)
     minimalPolynomial(expr, var, ext) ==
-      jterfunc("W_"MinimalPolynomial_"(", expr, var, ext)
-    findRoot(expr,init) == jbinfunc("W_"FindRoot_"(", expr, init)
+      jterfunc("MinimalPolynomial", expr, var, ext)
+    findRoot(expr,init) == jbinfunc("FindRoot", expr, init)
 
-    --finiteField(p,d) == jbinfunc("W_"FiniteField_"(", p, d)
+    --finiteField(p,d) == jbinfunc("FiniteField", p, d)
 
-    normal(expr) == junfunc("W_"Normal_"(", expr)
-    normal(expr, heads) == jbinfunc("W_"Normal_"(", expr, heads)
+    normal(expr) == junfunc("Normal", expr)
+    normal(expr, heads) == jbinfunc("Normal", expr, heads)
 
-    collect(expr, vars : %) == jbinfunc("W_"Collect_"(", expr, vars)
-    collect(expr, vars : WSL(%)) == jbinfunc("W_"Collect_"(", expr, vars)
-    apart(expr) == junfunc("W_"Apart_"(", expr)
-    apart(expr, vars) == jbinfunc("W_"Apart_"(", expr, vars)
-    expandNumerator(expr) == junfunc("W_"ExpandNumerator_"(", expr)
-    expandDenominator(expr) == junfunc("W_"ExpandDenominator_"(", expr)
-    cancel(expr) == junfunc("W_"Cancel_"(", expr)
-    together(expr) == junfunc("W_"Together_"(", expr)
-    distribute(expr) == junfunc("W_"Distribute_"(", expr)
-    distribute(f, g) == jbinfunc("W_"Distribute_"(", f, g)
-    hornerForm(expr, var) == jbinfunc("W_"HornerForm_"(", expr, var)
+    collect(expr, vars : %) == jbinfunc("Collect", expr, vars)
+    collect(expr, vars : WSL(%)) == jbinfunc("Collect", expr, vars)
+    apart(expr) == junfunc("Apart", expr)
+    apart(expr, vars) == jbinfunc("Apart", expr, vars)
+    expandNumerator(expr) == junfunc("ExpandNumerator", expr)
+    expandDenominator(expr) == junfunc("ExpandDenominator", expr)
+    cancel(expr) == junfunc("Cancel", expr)
+    together(expr) == junfunc("Together", expr)
+    distribute(expr) == junfunc("Distribute", expr)
+    distribute(f, g) == jbinfunc("Distribute", f, g)
+    hornerForm(expr, var) == jbinfunc("HornerForm", expr, var)
 
-    simplify(expr) == junfunc("W_"Simplify_"(", expr)
-    simplify(expr, assume) == jbinfunc("W_"Simplify_"(", expr, assume)
-    extendedSimplify(expr) == junfunc("W_"FullSimplify_"(", expr)
+    simplify(expr) == junfunc("Simplify", expr)
+    simplify(expr, assume) == jbinfunc("Simplify", expr, assume)
+    extendedSimplify(expr) == junfunc("FullSimplify", expr)
     extendedSimplify(expr, assume) ==
-      jbinfunc("W_"FullSimplify_"(", expr, assume)
-    refine(expr, assume) == jbinfunc("W_"Refine_"(", expr, assume)
+      jbinfunc("FullSimplify", expr, assume)
+    refine(expr, assume) == jbinfunc("Refine", expr, assume)
     -- TODO: Not always supported by MathLink
-    assuming(assume, expr) == jbinfunc("W_"Assuming_"(", assume, expr)
+    assuming(assume, expr) == jbinfunc("Assuming", assume, expr)
 
-    expand(expr) == junfunc("W_"Expand_"(", expr)
-    extendedExpand(expr) == junfunc("W_"ExpandAll_"(", expr)
-    powerExpand(expr) == junfunc("W_"PowerExpand_"(", expr)
-    powerExpand(expr, assum) == jbinfunc("W_"PowerExpand_"(", expr, assum)
-    complexExpand(expr) == junfunc("W_"ComplexExpand_"(", expr)
-    complexExpand(expr, cvars) == jbinfunc("W_"ComplexExpand_"(", expr, cvars)
-    trigExpand(expr) == junfunc("W_"TrigExpand_"(", expr)
-    functionExpand(expr) == junfunc("W_"FunctionExpand_"(", expr)
+    expand(expr) == junfunc("Expand", expr)
+    extendedExpand(expr) == junfunc("ExpandAll", expr)
+    powerExpand(expr) == junfunc("PowerExpand", expr)
+    powerExpand(expr, assum) == jbinfunc("PowerExpand", expr, assum)
+    complexExpand(expr) == junfunc("ComplexExpand", expr)
+    complexExpand(expr, cvars) == jbinfunc("ComplexExpand", expr, cvars)
+    trigExpand(expr) == junfunc("TrigExpand", expr)
+    functionExpand(expr) == junfunc("FunctionExpand", expr)
     functionExpand(expr, assum) ==
-      jbinfunc("W_"FunctionExpand_"(", expr, assum)
+      jbinfunc("FunctionExpand", expr, assum)
 
-    trigToExp(expr) == junfunc("W_"TrigToExp_"(", expr)
-    expToTrig(expr) == junfunc("W_"ExpToTrig_"(", expr)
+    trigToExp(expr) == junfunc("TrigToExp", expr)
+    expToTrig(expr) == junfunc("ExpToTrig", expr)
 
-    trigFactor(expr) == junfunc("W_"TrigFactor_"(", expr)
-    trigFactorList(expr) == junfunc("W_"TrigFactorList_"(", expr)
-    trigReduce(expr) == junfunc("W_"TrigReduce_"(", expr)
-    rootReduce(expr) == junfunc("W_"RootReduce_"(", expr)
+    trigFactor(expr) == junfunc("TrigFactor", expr)
+    trigFactorList(expr) == junfunc("TrigFactorList", expr)
+    trigReduce(expr) == junfunc("TrigReduce", expr)
+    rootReduce(expr) == junfunc("RootReduce", expr)
 
-    rationalApproximation(expr) == junfunc("W_"Rationalize_"(", expr)
-    rationalApproximation(expr, dx) == jbinfunc("W_"Rationalize_"(", expr, dx)
+    rationalApproximation(expr) == junfunc("Rationalize", expr)
+    rationalApproximation(expr, dx) == jbinfunc("Rationalize", expr, dx)
 
     -- TODO: Pure WS version (high accuracy)
     jlEval(expr, param) ==
@@ -1964,77 +2004,77 @@ WSExpression() : Exports == Implementation where
         param1 ",", param2, ",", param3, ")"]))
 
     eval(expr : %, param : Equation(%)) ==
-      jbinfunc("W_"ReplaceAll_"(", expr, jWSRule param)
+      jbinfunc("ReplaceAll", expr, jWSRule param)
     eval(expr : %, params : List(Equation(%))) ==
       args := jWSList(map(jWSRule, params)$ListFunctions2(Equation(%), %))$WSList(%)
-      jbinfunc("W_"ReplaceAll_"(", expr, args)
+      jbinfunc("ReplaceAll", expr, args)
 
-    length(expr) == junfunc("W_"Length_"(", expr)
-    extract(expr, i) == jbinfunc("W_"Extract_"(", expr, jWSExpression(string(i)))
-    level(expr, level) == jbinfunc("W_"Level_"(", expr, level)
+    length(expr) == junfunc("Length", expr)
+    extract(expr, i) == jbinfunc("Extract", expr, jWSExpression(string(i)))
+    level(expr, level) == jbinfunc("Level", expr, level)
     level(expr, level, head) ==
-      if head then jterfunc("W_"Level_"(", expr, level, jWSExpression "Heads -> True")
-      else jbinfunc("W_"Level_"(", expr, level)
-    lookup(assocs,keys) == jbinfunc("W_"Lookup_"(",assocs,keys)
-    lookup(assocs,keys,def) == jterfunc("W_"Lookup_"(",assocs,keys,def)
-    quantityUnit(val) == junfunc("W_"QuantityUnit_"(", val)
-    quantityMagnitude(val) == junfunc("W_"QuantityMagnitude_"(", val)
+      if head then jterfunc("Level", expr, level, jWSExpression "Heads -> True")
+      else jbinfunc("Level", expr, level)
+    lookup(assocs,keys) == jbinfunc("Lookup",assocs,keys)
+    lookup(assocs,keys,def) == jterfunc("Lookup",assocs,keys,def)
+    quantityUnit(val) == junfunc("QuantityUnit", val)
+    quantityMagnitude(val) == junfunc("QuantityMagnitude", val)
     keys(expr) ==
       -- TODO
       (head := jlHead(expr)) ~= WList() and head ~= WRule()
         => error1("No rule(s) detected in ", expr)
-      junfunc("W_"Keys_"(", expr)
+      junfunc("Keys", expr)
     values(expr) ==
       (head := jlHead(expr)) ~= WList() and head ~= WRule()
         => error1("No rule(s) detected in ", expr)
-      junfunc("W_"Values_"(", expr)
+      junfunc("Values", expr)
 
-    replace(expr, rule) == jbinfunc("W_"Replace_"(", expr, rule)
-    replace(expr, rule, level) == jterfunc("W_"Replace_"(", expr, rule, level)
-    replacePart(expr, part) == jbinfunc("W_"ReplacePart_"(", expr, part)
-    replaceAt(expr, at, n) == jterfunc("W_"ReplaceAt_"(", expr, at, n)
-    replaceAll(expr, rule) == jbinfunc("W_"ReplaceAll_"(", expr, rule)
-    replaceRepeated(expr, rule) == jbinfunc("W_"ReplaceRepeated_"(", expr, rule)
+    replace(expr, rule) == jbinfunc("Replace", expr, rule)
+    replace(expr, rule, level) == jterfunc("Replace", expr, rule, level)
+    replacePart(expr, part) == jbinfunc("ReplacePart", expr, part)
+    replaceAt(expr, at, n) == jterfunc("ReplaceAt", expr, at, n)
+    replaceAll(expr, rule) == jbinfunc("ReplaceAll", expr, rule)
+    replaceRepeated(expr, rule) == jbinfunc("ReplaceRepeated", expr, rule)
     -- HERE: operator form
     --jWSExpression concat(["ReplaceAll[", toString(rule),"][", toString(expr), "]"])
-    select(expr, form) == jbinfunc("W_"Select_"(", expr, form)
-    select(expr, form, n) == jterfunc("W_"Select_"(", expr, form, n)
-    jlWSPrecision(expr) == junfunc("W_"Precision_"(", expr)
-    jlWSAccuracy(expr) == junfunc("W_"Accuracy_"(", expr)
-    jlWSSetPrecision(expr, n) == jbinfunc("W_"SetPrecision_"(", expr, n)
-    jlWSSetAccuracy(expr, n) == jbinfunc("W_"SetAccuracy_"(", expr, n)
-    jlWSSetOptions(arg1, arg2) == jbinfunc("W_"SetOptions_"(", arg1, arg2)
-    jlDisplay(expr) == junfunc("W_"Format_"(", expr)
-    jlDisplay(expr, form) == jbinfunc("W_"Format_"(", expr, form)
+    select(expr, form) == jbinfunc("Select", expr, form)
+    select(expr, form, n) == jterfunc("Select", expr, form, n)
+    jlWSPrecision(expr) == junfunc("Precision", expr)
+    jlWSAccuracy(expr) == junfunc("Accuracy", expr)
+    jlWSSetPrecision(expr, n) == jbinfunc("SetPrecision", expr, n)
+    jlWSSetAccuracy(expr, n) == jbinfunc("SetAccuracy", expr, n)
+    jlWSSetOptions(arg1, arg2) == jbinfunc("SetOptions", arg1, arg2)
+    jlDisplay(expr) == junfunc("Format", expr)
+    jlDisplay(expr, form) == jbinfunc("Format", expr, form)
     jWSData() == jWSExpression "WolframLanguageData[]"
     jWSData(ents : String) ==
-      junfunc("W_"WolframLanguageData_"(", jWSString(ents))
+      junfunc("WolframLanguageData", jWSString(ents))
     jWSData(ent : String, prop : String) ==
-      jbinfunc("W_"WolframLanguageData_"(", jWSString(ent), jWSString(prop))
+      jbinfunc("WolframLanguageData", jWSString(ent), jWSString(prop))
     jWSData(ent : String, prop : String, ann : String) ==
-      jterfunc("W_"WolframLanguageData_"(", jWSString(ent),
+      jterfunc("WolframLanguageData", jWSString(ent),
         jWSString(prop), jWSString(ann))
     jWSData(ents : %) ==
-        junfunc("W_"WolframLanguageData_"(", ents)
+        junfunc("WolframLanguageData", ents)
     jWSData(ents : %, prop : %) ==
-      jbinfunc("W_"WolframLanguageData_"(", ents, prop)
+      jbinfunc("WolframLanguageData", ents, prop)
     jWSData(ent : %, prop : %, ann : %) ==
-      jterfunc("W_"WolframLanguageData_"(", ent, prop, ann)
+      jterfunc("WolframLanguageData", ent, prop, ann)
     jWSAssociation(rules : WSList(%)) ==
-      junfunc("W_"Association_"(", rules)
-    jWSTable(expr, range) == jbinfunc("W_"Table_"(", expr, range)
+      junfunc("Association", rules)
+    jWSTable(expr, range) == jbinfunc("Table", expr, range)
     jWSTable(expr, range1, range2) ==
-      jterfunc("W_"Table_"(", expr, range1, range2)
-    jWSRule(lhs, rhs) == jbinfunc("W_"Rule_"(", lhs, rhs)
-    jWSRule(eq) == jbinfunc("W_"Rule_"(", lhs(eq), rhs(eq))
-    jWSEqual(lhs, rhs) == jbinfunc("W_"Equal_"(", lhs, rhs)
-    jWSNotEqual(lhs, rhs) == jbinfunc("W_"Unequal_"(", lhs, rhs)
-    jWSLess(lhs, rhs) == jbinfunc("W_"Less_"(", lhs, rhs)
-    jWSLessEqual(lhs, rhs) == jbinfunc("W_"LessEqual_"(", lhs, rhs)
-    jWSGreater(lhs, rhs) == jbinfunc("W_"Greater_"(", lhs, rhs)
-    jWSGreaterEqual(lhs, rhs) == jbinfunc("W_"GreaterEqual_"(", lhs, rhs)
-    jWSQuantity(u) == junfunc("W_"Quantity_"(", u)
-    jWSQuantity(m,u) == jbinfunc("W_"Quantity_"(", m, u)
+      jterfunc("Table", expr, range1, range2)
+    jWSRule(lhs, rhs) == jbinfunc("Rule", lhs, rhs)
+    jWSRule(eq) == jbinfunc("Rule", lhs(eq), rhs(eq))
+    jWSEqual(lhs, rhs) == jbinfunc("Equal", lhs, rhs)
+    jWSNotEqual(lhs, rhs) == jbinfunc("Unequal", lhs, rhs)
+    jWSLess(lhs, rhs) == jbinfunc("Less", lhs, rhs)
+    jWSLessEqual(lhs, rhs) == jbinfunc("LessEqual", lhs, rhs)
+    jWSGreater(lhs, rhs) == jbinfunc("Greater", lhs, rhs)
+    jWSGreaterEqual(lhs, rhs) == jbinfunc("GreaterEqual", lhs, rhs)
+    jWSQuantity(u) == junfunc("Quantity", u)
+    jWSQuantity(m,u) == jbinfunc("Quantity", m, u)
     jWSExpression(i : Integer) == jlref(concat(["WInteger(_"", string(i), "_")"]))
     jWSExpression(q : Fraction(Integer)) == jWSRational(q)$WSRational pretend %
     jWSExpression(r : DoubleFloat) == jWSReal(r)$WSReal pretend %
@@ -2049,10 +2089,10 @@ WSExpression() : Exports == Implementation where
     jWSExpression(sym : Symbol) : % == jlref(concat(["weval(W_`", string(sym),  "_`)"]))
     jWSExpression(str : String) : % == jlref(concat(["weval(W_`", str, "_`)"]))
     jWSExpression(l : List(%)) : % == coerce(l)
-    toString(expr, form) == string jbinfunc("W_"ToString_"(", expr, form)
-    toExpression(expr) == junfunc("W_"ToExpression_"(", jWSString expr)
-    toExpression(expr, form) == jbinfunc("W_"ToExpression_"(", jWSString(expr), form)
-    toExpression(expr, form, h) == jterfunc("W_"ToExpression_"(", jWSString(expr), form, h)
+    toString(expr, form) == string jbinfunc("ToString", expr, form)
+    toExpression(expr) == junfunc("ToExpression", jWSString expr)
+    toExpression(expr, form) == jbinfunc("ToExpression", jWSString(expr), form)
+    toExpression(expr, form, h) == jterfunc("ToExpression", jWSString(expr), form, h)
     retractIfCan(expr : %) : Union(JLFloat64, "failed") ==
       machineNumber?(expr) => jlEvalString(string(expr))@JF64
       "failed"
@@ -2131,50 +2171,50 @@ WSExpression() : Exports == Implementation where
         outputSpacing(tmp)$Float
 
     baseForm(x,n) ==
-      integer? x and integer? n => jbinfunc("W_"BaseForm_"(", x,n)
+      integer? x and integer? n => jbinfunc("BaseForm", x,n)
       error "baseForm: Integer(s) not used"
     numberForm(x) ==
-      number? x => junfunc("W_"NumberForm_"(", x)
+      number? x => junfunc("NumberForm", x)
       error "numberForm: Not a number"
     numberForm(x, expr) ==
       number? x and (jlHead(expr) = WL or integer? expr)
-        => jbinfunc("W_"NumberForm_"(", x,expr)
+        => jbinfunc("NumberForm", x,expr)
       error "numberForm: Bad format(s) of arguments"
     decimalForm(x) ==
-      number? x => junfunc("W_"DecimalForm_"(", x)
+      number? x => junfunc("DecimalForm", x)
       error "decimalForm: Not a number"
     decimalForm(x, expr) ==
       number? x and (jlHead(expr) = WL or integer? expr)
-        => jbinfunc("W_"DecimalForm_"(", x, expr)
+        => jbinfunc("DecimalForm", x, expr)
       error "decimalForm: Bad format(s) of arguments"
     scientificForm(x) ==
-      number? x => junfunc("W_"ScientificForm_"(", x)
+      number? x => junfunc("ScientificForm", x)
       error "scientificForm: Not a number"
     scientificForm(x,n) ==
-      number? x and integer? n => jbinfunc("W_"ScientificForm_"(", x,n)
+      number? x and integer? n => jbinfunc("ScientificForm", x,n)
       error "scientificForm: Require numbers"
     engineeringForm(x) ==
-      number? x => junfunc("W_"EngineeringForm_"(", x)
+      number? x => junfunc("EngineeringForm", x)
       error "engineeringForm: Not a number"
     engineeringForm(x,n) ==
-      number? x and integer? n => jbinfunc("W_"EngineeringForm_"(", x,n)
+      number? x and integer? n => jbinfunc("EngineeringForm", x,n)
       error "engineeringForm: Require numbers"
     percentForm(x) ==
-      number? x => junfunc("W_"PercentForm_"(", x)
+      number? x => junfunc("PercentForm", x)
       error "percentForm: Not a number"
     percentForm(x,n) ==
-      number? x and integer? n => jbinfunc("W_"PercentForm_"(", x,n)
+      number? x and integer? n => jbinfunc("PercentForm", x,n)
       error "percentForm: Require numbers"
     accountingForm(x) ==
-      number? x => junfunc("W_"AccountingForm_"(", x)
+      number? x => junfunc("AccountingForm", x)
       error "accountingForm: Not a number"
     accountingForm(x,n) ==
-      number? x and integer? n => jbinfunc("W_"AccountingForm_"(", x,n)
+      number? x and integer? n => jbinfunc("AccountingForm", x,n)
       error "accountingForm: Require numbers"
-    matrixForm(expr) == junfunc("W_"MatrixForm_"(", expr)
-    quantityForm(expr, form : %) == jbinfunc("W_"QuantityForm_"(", expr, form)
+    matrixForm(expr) == junfunc("MatrixForm", expr)
+    quantityForm(expr, form : %) == jbinfunc("QuantityForm", expr, form)
     quantityForm(expr, form : WSL(%)) ==
-      jbinfunc("W_"QuantityForm_"(", expr, form)
+      jbinfunc("QuantityForm", expr, form)
     coerce(expr) : OutputForm ==
       head := jlHead expr
       head = WS or head = WI or head = WFormat => message(string(expr))

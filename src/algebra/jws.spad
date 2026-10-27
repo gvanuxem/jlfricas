@@ -40,6 +40,30 @@ WSObject() : Category == JLObjectType() with
     ++ the Julia WS format.
     coerce : % -> WSExpression
     ++ coerce(expr) returns the WSExpression representation of expr.
+    jlWSEval : (String, %) -> WSExpression
+    ++ jlWSEval(func, x) evaluates the Wolfram function func on x.
+    jlWSEval : (String, %, %) -> WSExpression
+    ++ jlWSEval(func, x, y) evaluates the Wolfram function func on x and y.
+    jlWSEval : (String, %, %, %) -> WSExpression
+    ++ jlWSEval(func, x, y, z) evaluates the Wolfram function func on x, y, and z.
+    jlWSEval : (String, %, %, %, %) -> WSExpression
+    ++ jlWSEval(func, a, b, c, d) evaluates the Wolfram function func on 4 arguments.
+    jlWSEval : (String, %, %, %, %, %) -> WSExpression
+    ++ jlWSEval(func, a, b, c, d, e) evaluates the Wolfram function func on 5 arguments.
+    jlWSEval : (String, List %) -> WSExpression
+    ++ jlWSEval(func, list) evaluates the Wolfram function func on a list of arguments.
+    jlWSApply : (String, %) -> WSExpression
+    ++ jlWSApply(sym, x) creates an unevaluated Wolfram expression sym[x].
+    jlWSApply : (String, %, %) -> WSExpression
+    ++ jlWSApply(sym, x, y) creates an unevaluated Wolfram expression sym[x, y].
+    jlWSApply : (String, %, %, %) -> WSExpression
+    ++ jlWSApply(sym, x, y, z) creates an unevaluated Wolfram expression sym[x, y, z].
+    jlWSApply : (String, %, %, %, %) -> WSExpression
+    ++ jlWSApply(sym, a, b, c, d) creates an unevaluated Wolfram expression on 4 arguments.
+    jlWSApply : (String, %, %, %, %, %) -> WSExpression
+    ++ jlWSApply(sym, a, b, c, d, e) creates an unevaluated Wolfram expression on 5 arguments.
+    jlWSApply : (String, List %) -> WSExpression
+    ++ jlWSApply(sym, list) creates an unevaluated Wolfram expression sym[list...].
   add
     import from JLUtilityFunctions
     import from String
@@ -51,22 +75,37 @@ WSObject() : Category == JLObjectType() with
     jlEvalString("Interpret=W_`Interpreter_`")@Void
 
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-    junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
-    jbinfunc(func,a,b) ==>
-      jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
-    jlApply(sym, arg) ==
-      jlref(concat(["W_"", sym, "_"(", getind(arg),")"]))
-    jlApply(sym, a, b) ==
-      jlref(concat(["W_"", sym, "_"(", getind(a), ",", getind(b),")"]))
-    jlApply(sym, a, b, c) ==
-      jlref(concat(["W_"", sym, "_"(", getind(a), ",", getind(b),
-        ",", getind(c),")"]))
-    jlApply(sym, a, b, c, d) ==
-      jlref(concat(["W_"", sym, "_"(", getind(a), ",", getind(b),
-        ",", getind(c), ",", getind(d),")"]))
-    jlApply(sym, a, b, c, d, e) ==
-      jlref(concat(["W_"", sym, "_"(", getind(a), ",", getind(b),
-        ",", getind(c), ",", getind(d), ",", getind(e),")"]))
+    junfunc(func,a) ==> make_jlref_weval1(func, a)$Lisp
+    jbinfunc(func,a,b) ==> make_jlref_weval2(func, a, b)$Lisp
+    jlWSEval(func : String, a : %) : WSExpression == make_jlref_weval1(func, a)$Lisp
+    jlWSEval(func : String, a : %, b : %) : WSExpression == make_jlref_weval2(func, a, b)$Lisp
+    jlWSEval(func : String, a : %, b : %, c : %) : WSExpression == make_jlref_weval3(func, a, b, c)$Lisp
+    jlWSEval(func : String, a : %, b : %, c : %, d : %) : WSExpression ==
+      make_jlref_weval4(func, a, b, c, d)$Lisp
+    jlWSEval(func : String, a : %, b : %, c : %, d : %, e : %) : WSExpression ==
+      make_jlref_weval5(func, a, b, c, d, e)$Lisp
+    jlWSEval(func : String, l : List %) : WSExpression ==
+      agg := jlref("W_`{}_`")
+      for x in l repeat agg := make_jlref_weval2("Append", agg, x)$Lisp
+      make_jlref_weval_list(func, agg)$Lisp
+
+    jlWSApply(sym : String, a : %) : WSExpression == make_jlref_wapply1(sym, a)$Lisp
+    jlWSApply(sym : String, a : %, b : %) : WSExpression == make_jlref_wapply2(sym, a, b)$Lisp
+    jlWSApply(sym : String, a : %, b : %, c : %) : WSExpression == make_jlref_wapply3(sym, a, b, c)$Lisp
+    jlWSApply(sym : String, a : %, b : %, c : %, d : %) : WSExpression ==
+      make_jlref_wapply4(sym, a, b, c, d)$Lisp
+    jlWSApply(sym : String, a : %, b : %, c : %, d : %, e : %) : WSExpression ==
+      make_jlref_wapply5(sym, a, b, c, d, e)$Lisp
+    jlWSApply(sym : String, l : List %) : WSExpression ==
+      agg := jlref("W_`{}_`")
+      for x in l repeat agg := make_jlref_weval2("Append", agg, x)$Lisp
+      make_jlref_wapply_list(sym, agg)$Lisp
+
+    jlApply(sym, arg) == make_jlref_wapply1(sym, arg)$Lisp
+    jlApply(sym, a, b) == make_jlref_wapply2(sym, a, b)$Lisp
+    jlApply(sym, a, b, c) == make_jlref_wapply3(sym, a, b, c)$Lisp
+    jlApply(sym, a, b, c, d) == make_jlref_wapply4(sym, a, b, c, d)$Lisp
+    jlApply(sym, a, b, c, d, e) == make_jlref_wapply5(sym, a, b, c, d, e)$Lisp
 
     jlSymbolic(jwso) ==
       -- subject to change
@@ -75,7 +114,7 @@ WSObject() : Category == JLObjectType() with
     toString(jwso) ==
       jlEvalString(concat(["weval(W_"ToString_"(W_"OutputForm_"(",
         getind(jwso),")))"]))
-    jlHead(jwso) == jlref(concat(["weval(W_"Head_"(", getind(jwso), "))"]))
+    jlHead(jwso) == junfunc("Head", jwso)
     jlEval(jwso) == make_jlref_wcall1("weval", jwso)$Lisp
     jWSInterpret(form) ==
       jlref(concat ["Interpret(_"", form, "_")"])
@@ -84,10 +123,10 @@ WSObject() : Category == JLObjectType() with
     jWSInterpret(form, form1, form2) ==
       jlref(concat ["Interpret(_"", form, "_",)(_"",
         form1, "_",)(_"", form2, "_")"])
-    numeric(expr) == junfunc("W_"N_"(", expr)
+    numeric(expr) == junfunc("N", expr)
     numeric(expr, p) ==
       prec := jlref(concat(["WInteger(_"", string(p), "_")"]))
-      jbinfunc("W_"N_"(", expr, prec)
+      jbinfunc("N", expr, prec)
     coerce(expr : %) == expr pretend WSExpression
     numeric?(expr : %) == numeric?(coerce expr)$WSExpression
 
@@ -167,6 +206,18 @@ WSSymbol() : Exports == Implementation where
     ++ jWSSym(sym) constructs sym as a WSSymbol.
     jWSSym : String -> %
     ++ jWSSym(str) constructs str as a WSSymbol.
+    elt : (%, WSExpression) -> WSExpression
+    ++ elt(sym, x) applies the symbol sym to x, evaluating it.
+    elt : (%, WSExpression, WSExpression) -> WSExpression
+    ++ elt(sym, x, y) applies the symbol sym to x and y, evaluating it.
+    elt : (%, WSExpression, WSExpression, WSExpression) -> WSExpression
+    ++ elt(sym, x, y, z) applies the symbol sym to x, y, and z, evaluating it.
+    elt : (%, WSExpression, WSExpression, WSExpression, WSExpression) -> WSExpression
+    ++ elt(sym, a, b, c, d) applies the symbol sym to 4 arguments, evaluating it.
+    elt : (%, WSExpression, WSExpression, WSExpression, WSExpression, WSExpression) -> WSExpression
+    ++ elt(sym, a, b, c, d, e) applies the symbol sym to 5 arguments, evaluating it.
+    elt : (%, List WSExpression) -> WSExpression
+    ++ elt(sym, list) applies the symbol sym to a list of arguments, evaluating it.
   Implementation ==> JLObject add
     import from JLUtilityFunctions
     import from String
@@ -205,6 +256,21 @@ WSSymbol() : Exports == Implementation where
     jWSSym(str : String) == jlref(concat(["W_`", str, "_`"]))
     coerce(obj) : OutputForm == jl_string_getindex(jlId(obj))$Lisp
 
+    elt(sym : %, x : WSExpression) : WSExpression ==
+      make_jlref_weval1(string(sym), x)$Lisp
+    elt(sym : %, x : WSExpression, y : WSExpression) : WSExpression ==
+      make_jlref_weval2(string(sym), x, y)$Lisp
+    elt(sym : %, x : WSExpression, y : WSExpression, z : WSExpression) : WSExpression ==
+      make_jlref_weval3(string(sym), x, y, z)$Lisp
+    elt(sym : %, a : WSExpression, b : WSExpression, c : WSExpression, d : WSExpression) : WSExpression ==
+      make_jlref_weval4(string(sym), a, b, c, d)$Lisp
+    elt(sym : %, a : WSExpression, b : WSExpression, c : WSExpression, d : WSExpression, e : WSExpression) : WSExpression ==
+      make_jlref_weval5(string(sym), a, b, c, d, e)$Lisp
+    elt(sym : %, l : List WSExpression) : WSExpression ==
+      agg := jlref("W_`{}_`")
+      for x in l repeat agg := make_jlref_weval2("Append", agg, x)$Lisp
+      make_jlref_weval_list(string(sym), agg)$Lisp
+
 )abbrev domain WSSTR WSString
 ++ Generic domain for Julia WS strings
 ++ Author: G. Vanuxem
@@ -214,8 +280,8 @@ WSSymbol() : Exports == Implementation where
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 WSString() : Exports == Implementation where
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-  jbinbop(op,a,b) ==> jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
-  junfunc(func,a) ==> jlref(concat([func, getind(a),")"]))
+  jbinbop(op,a,b) ==> jl_weval_binbop_wrapped_index(op, jlId(a), jlId(b))$Lisp
+  junfunc(func,a) ==> make_jlref_weval1(func, a)$Lisp
   Exports ==> WSObject with
     characters : % -> WSList(%)
     ++ characters(str) returns the characters of str as a WSList.
@@ -240,7 +306,7 @@ WSString() : Exports == Implementation where
     x ~= y == jbinbop("!=", x, y)
 
     elt(obj,i) == characters(obj).i
-    characters(str : %) : WSList(%) == junfunc("W_"Characters_"(", str)
+    characters(str : %) : WSList(%) == junfunc("Characters", str)
     coerce(str : String) : % == jWSString(str)
     coerce(str : %) : String == string(str)
     coerce(str : %) : WSExpression == str pretend WSExpression
@@ -256,13 +322,11 @@ WSString() : Exports == Implementation where
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 WSInteger() : Exports == Implementation where
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-  jbinop(op,a,b) ==> jlref(concat(["weval(", getind(a), op, getind(b),")"]))
-  junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
-  jbinfunc(func,a,b) ==>
-    jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
-  jterfunc(func,a,b,c) ==>
-    jlref(concat(["weval(", func, getind(a), ",", getind(b), ",", getind(c)"))"]))
-  jbinbop(op,a,b) ==> jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
+  jbinop(op,a,b) ==> make_jlref_weval_binop(op, a, b)$Lisp
+  junfunc(func,a) ==> make_jlref_weval1(func, a)$Lisp
+  jbinfunc(func,a,b) ==> make_jlref_weval2(func, a, b)$Lisp
+  jterfunc(func,a,b,c) ==> make_jlref_weval3(func, a, b, c)$Lisp
+  jbinbop(op,a,b) ==> jl_weval_binbop_wrapped_index(op, jlId(a), jlId(b))$Lisp
   parsei ==> PARSE_-INTEGER$Lisp
   Exports ==> Join(WSNumber, IntegerNumberSystem,
                   Canonical, canonicalsClosed) with
@@ -306,55 +370,55 @@ WSInteger() : Exports == Implementation where
     zero? x == x = 0
     one? x == x = 1
 
-    negative? x == junfunc("W_"Negative_"(", x) = WT
-    positive? x == junfunc("W_"Positive_"(", x) = WT
+    negative? x == junfunc("Negative", x) = WT
+    positive? x == junfunc("Positive", x) = WT
 
     x = y  == jbinbop("==",x,y)
     x ~= y == jbinbop("!=",x,y)
-    x < y  == jbinfunc("W_"Less_"(", x,y) = WT
-    x > y  == jbinfunc("W_"Greater_"(", x,y) = WT
-    x >= y == jbinfunc("W_"GreaterEqual_"(", x,y) = WT
-    x <= y == jbinfunc("W_"LessEqual_"(", x,y) = WT
+    x < y  == jbinfunc("Less", x,y) = WT
+    x > y  == jbinfunc("Greater", x,y) = WT
+    x >= y == jbinfunc("GreaterEqual", x,y) = WT
+    x <= y == jbinfunc("LessEqual", x,y) = WT
 
     x + y == jbinop("+", x, y)
     x - y == jbinop("-", x, y)
     - x   == junfunc("-(", x)
     x : % * y : % == jbinop("*", x, y)
     x : Integer * y : % == jbinop("*", coerce(x), y)
-    x : % ^ y : PositiveInteger == jbinop("^", x, coerce(y))
-    x : % ^ y : NonNegativeInteger == jbinop("^", x, coerce(y))
-    x quo y == jbinfunc("W_"Quotient_"(", x, y)
-    x rem y == jbinfunc("W_"Mod_"(", x, y)
-    powmod(x,y,z) == jterfunc("W_"PowerMod_"(", x, y, z)
+    x : % ^ y : PositiveInteger == jbinop("^", x, coerce(y)@WSInteger)
+    x : % ^ y : NonNegativeInteger == jbinop("^", x, coerce(y)@WSInteger)
+    x quo y == jbinfunc("Quotient", x, y)
+    x rem y == jbinfunc("Mod", x, y)
+    powmod(x,y,z) == jterfunc("PowerMod", x, y, z)
     divide(x, y) ==
       zero?(y) => error "divide$WSInteger: division by 0"
-      ret : WSList(%) := jbinfunc("W_"QuotientRemainder_"(", x, y)
+      ret : WSList(%) := jbinfunc("QuotientRemainder", x, y)
       [first(ret) pretend %, last(ret) pretend %]
 
-    gcd(a,b) == jbinfunc("W_"GCD_"(", a, b)
-    lcm(a,b) == jbinfunc("W_"LCM_"(", a, b)
+    gcd(a,b) == jbinfunc("GCD", a, b)
+    lcm(a,b) == jbinfunc("LCM", a, b)
 
-    length(i) == junfunc("W_"BitLength_"(", i)
-    shift(i,n) == jbinfunc("W_"BitShiftLeft_"(", i, n)
+    length(i) == junfunc("BitLength", i)
+    shift(i,n) == jbinfunc("BitShiftLeft", i, n)
 
-    factorial(n)      == junfunc("W_"Factorial_"(", n)
-    binomial(n,m)     == jbinfunc("W_"Binomial_"(", n, m)
-    hyperFactorial(n) == junfunc("W_"Hyperfactorial_"(", n)
-    qFactorial(z,q)   == jbinfunc("W_"qFactorial_"(", z,q)
-    fibonacci(n)      == junfunc("W_"Fibonacci_"(", n)
+    factorial(n)      == junfunc("Factorial", n)
+    binomial(n,m)     == jbinfunc("Binomial", n, m)
+    hyperFactorial(n) == junfunc("Hyperfactorial", n)
+    qFactorial(z,q)   == jbinfunc("qFactorial", z,q)
+    fibonacci(n)      == junfunc("Fibonacci", n)
     permutation(n,m)  == permutation(n, m)$IntegerCombinatoricFunctions(%)
     -- TODO: length for FriCAS factor function
     -- makeFR()$factored(%)
-    stirling1(n,m) == jbinfunc("W_"StirlingS1_"(", n, m)
-    stirling2(n,m) == jbinfunc("W_"StirlingS2_"(", n, m)
+    stirling1(n,m) == jbinfunc("StirlingS1", n, m)
+    stirling2(n,m) == jbinfunc("StirlingS2", n, m)
     -- TODO: factor jWSInteger 70421676397833365421106577172389167104000000000000
     factor(n) : Factored(%) ==
       error "factor is not implemented for WSInteger, use factor@WSList(WSList(WSInteger)) or factorInteger$WSExpression instead" 
-    factor(n) : WSList WSList(%) == junfunc("W_"FactorInteger_"(", n)
+    factor(n) : WSList WSList(%) == junfunc("FactorInteger", n)
 
-    prime?(z) == junfunc("W_"PrimeQ_"(", z) = WT
+    prime?(z) == junfunc("PrimeQ", z) = WT
 
-    random(n) == junfunc("W_"RandomInteger_"(",n)
+    random(n) == junfunc("RandomInteger",n)
     integer(i) == parsei(string i)
     convert(i : %) : Integer == parsei(string i)
     coerce(x : %) : WSRational ==
@@ -376,12 +440,10 @@ WSInteger() : Exports == Implementation where
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 WSRational() : Exports == Implementation where
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-  jbinop(op,a,b) ==> jlref(concat(["weval(",getind(a), op, getind(b),")"]))
-  junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
-  jbinfunc(func,a,b) ==>
-    jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
-  jbinbop(op,a,b) ==>
-    jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
+  jbinop(op,a,b) ==> make_jlref_weval_binop(op, a, b)$Lisp
+  junfunc(func,a) ==> make_jlref_weval1(func, a)$Lisp
+  jbinfunc(func,a,b) ==> make_jlref_weval2(func, a, b)$Lisp
+  jbinbop(op,a,b) ==> jl_weval_binbop_wrapped_index(op, jlId(a), jlId(b))$Lisp
   parsei ==> PARSE_-INTEGER$Lisp
   Exports ==> Join(WSNumber,
       QuotientFieldCategory(WSInteger)) with
@@ -411,22 +473,22 @@ WSRational() : Exports == Implementation where
     zero? x == x = 0
     one? x  == x = 1
 
-    negative? x == junfunc("W_"Negative_"(", x) = WT
-    positive? x == junfunc("W_"Positive_"(", x) = WT
+    negative? x == junfunc("Negative", x) = WT
+    positive? x == junfunc("Positive", x) = WT
 
     x = y  == jbinbop("==",x,y)
     x ~= y == jbinbop("!=",x,y)
-    x < y  == jbinfunc("W_"Less_"(", x,y) = WT
-    x > y  == jbinfunc("W_"Greater_"(", x,y) = WT
-    x >= y == jbinfunc("W_"GreaterEqual_"(", x,y) = WT
-    x <= y == jbinfunc("W_"LessEqual_"(", x,y) = WT
+    x < y  == jbinfunc("Less", x,y) = WT
+    x > y  == jbinfunc("Greater", x,y) = WT
+    x >= y == jbinfunc("GreaterEqual", x,y) = WT
+    x <= y == jbinfunc("LessEqual", x,y) = WT
 
-    numer(x) == junfunc("W_"Numerator_"(" , x)
-    denom(x) == junfunc("W_"Denominator_"(" , x)
+    numer(x) == junfunc("Numerator" , x)
+    denom(x) == junfunc("Denominator" , x)
     numerator(x) ==
-      jlref(concat(["WRAT(", string(junfunc("W_"Numerator_"" , x)), ",1)("]))
+      jlref(concat(["WRAT(", string(junfunc("Numerator" , x)), ",1)("]))
     denominator(x) ==
-      jlref(concat(["WRAT(", string(junfunc("W_"Denominator_"" , x)), ",1)("]))
+      jlref(concat(["WRAT(", string(junfunc("Denominator" , x)), ",1)("]))
 
     x + y == jbinop("+", x, y)
     x - y == jbinop("-", x, y)
@@ -437,9 +499,9 @@ WSRational() : Exports == Implementation where
     x : Integer * y : % == jbinop("*", coerce(x), y)
     x : % / y : % == jbinop("//", x, y)
     x : WSInteger / y : WSInteger == jbinop("//", x, y)
-    x : % ^ y : Integer == jbinop("^", x, coerce(y))
-    x : % ^ y : PositiveInteger == jbinop("^", x, coerce(y))
-    x : % ^ y : NonNegativeInteger == jbinop("^", x, coerce(y))
+    x : % ^ y : Integer == jbinop("^", x, coerce(y)@WSInteger)
+    x : % ^ y : PositiveInteger == jbinop("^", x, coerce(y)@WSInteger)
+    x : % ^ y : NonNegativeInteger == jbinop("^", x, coerce(y)@WSInteger)
 
     string(q) == toString q
     convert(q) : String == toString q
@@ -450,12 +512,12 @@ WSRational() : Exports == Implementation where
       denom(x) = 1 => numer(x)
       "failed"
     retract(q : %) : Fraction(Integer) ==
-      n : Integer := parsei(toString(junfunc("W_"Numerator_"(" , q)))
-      d : Integer := parsei(toString(junfunc("W_"Denominator_"(" , q)))
+      n : Integer := parsei(toString(junfunc("Numerator" , q)))
+      d : Integer := parsei(toString(junfunc("Denominator" , q)))
       n / d
     retractIfCan(x : %) : Union(Fraction(Integer), "failed") ==
-      n : Integer := parsei(toString(junfunc("W_"Numerator_"(" , x)))
-      d : Integer := parsei(toString(junfunc("W_"Denominator_"(" , x)))
+      n : Integer := parsei(toString(junfunc("Numerator" , x)))
+      d : Integer := parsei(toString(junfunc("Denominator" , x)))
       n / d
 
     numeric(x: %) == numeric(x pretend WSExpression)
@@ -468,12 +530,12 @@ WSRational() : Exports == Implementation where
       jlref(concat(["WRAT(", string(numer(rat)), "," ,string(denom(rat)), ")"]))
 
     convert(x : %) : Fraction(Integer) ==
-      numer : Integer := parsei(toString(junfunc("W_"Numerator_"(" , x)))
-      denom : Integer := parsei(toString(junfunc("W_"Denominator_"(" , x)))
+      numer : Integer := parsei(toString(junfunc("Numerator" , x)))
+      denom : Integer := parsei(toString(junfunc("Denominator" , x)))
       numer / denom
     coerce(x) : OutputForm ==
-      numer : Integer := parsei(toString(junfunc("W_"Numerator_"(" , x)))
-      denom : Integer := parsei(toString(junfunc("W_"Denominator_"(" , x)))
+      numer : Integer := parsei(toString(junfunc("Numerator" , x)))
+      denom : Integer := parsei(toString(junfunc("Denominator" , x)))
       denom = 1 => outputForm(numer)
       (outputForm numer)  / (outputForm denom)
       --concat([toString(numer),"/", toString(denom)]) pretend OutputForm
@@ -488,12 +550,10 @@ WSRational() : Exports == Implementation where
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 WSReal() : Exports == Implementation where
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-  jbinop(op,a,b) ==> jlref(concat(["weval(",getind(a), op, getind(b),")"]))
-  junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
-  jbinfunc(func,a,b) ==>
-    jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
-  jbinbop(op,a,b) ==>
-    jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
+  jbinop(op,a,b) ==> make_jlref_weval_binop(op, a, b)$Lisp
+  junfunc(func,a) ==> make_jlref_weval1(func, a)$Lisp
+  jbinfunc(func,a,b) ==> make_jlref_weval2(func, a, b)$Lisp
+  jbinbop(op,a,b) ==> jl_weval_binbop_wrapped_index(op, jlId(a), jlId(b))$Lisp
   Exports ==> Join(WSNumber, FloatingPointSystem,
                     DifferentialRing, ElementaryFunctionCategory,
                     TranscendentalFunctionCategory,
@@ -580,16 +640,16 @@ WSReal() : Exports == Implementation where
     zero? x == zero?(x pretend WSExpression)
     one? x  == x = 1
 
-    negative? x == junfunc("W_"Negative_"(", x) = WT
-    positive? x == junfunc("W_"Positive_"(", x) = WT
+    negative? x == junfunc("Negative", x) = WT
+    positive? x == junfunc("Positive", x) = WT
 
     x = y  == jbinbop("==",x,y)
     x ~= y == jbinbop("!=",x,y)
-    x < y  == jbinfunc("W_"Less_"(", x,y) = WT
-    x > y  == jbinfunc("W_"Greater_"(", x,y) = WT
-    x >= y == jbinfunc("W_"GreaterEqual_"(", x,y) = WT
-    x <= y == jbinfunc("W_"LessEqual_"(", x,y) = WT
-    jlApprox?(x,y) == jbinfunc("W_"Equal_"(", x,y) = WT
+    x < y  == jbinfunc("Less", x,y) = WT
+    x > y  == jbinfunc("Greater", x,y) = WT
+    x >= y == jbinfunc("GreaterEqual", x,y) = WT
+    x <= y == jbinfunc("LessEqual", x,y) = WT
+    jlApprox?(x,y) == jbinfunc("Equal", x,y) = WT
 
     x + y == jbinop("+", x, y)
     x - y == jbinop("-", x, y)
@@ -603,24 +663,24 @@ WSReal() : Exports == Implementation where
     x : % ^ y : PositiveInteger == jbinop("^", x, coerce(y)@WSInteger)
     x : % ^ y : NonNegativeInteger == jbinop("^", x, coerce(y)@WSInteger)
 
-    round(x)   == junfunc("W_"Round_"(", x)
-    ceiling(x) == junfunc("W_"Ceiling_"(", x)
-    floor(x)   == junfunc("W_"Floor_"(", x)
-    abs(x)     == junfunc("W_"RealAbs_"(", x)
+    round(x)   == junfunc("Round", x)
+    ceiling(x) == junfunc("Ceiling", x)
+    floor(x)   == junfunc("Floor", x)
+    abs(x)     == junfunc("RealAbs", x)
 
     rationalApproximation(x) ==
-      ret : WSRational := junfunc("W_"Rationalize_"(", x)
+      ret : WSRational := junfunc("Rationalize", x)
       jlHead ret = WRational() => ret
       error concat(string(x), " cannot be retracted. Use a tolerance value if needed.")
     rationalApproximation(x, dx) ==
-      ret : WSRational := jbinfunc("W_"Rationalize_"(", x, dx)
+      ret : WSRational := jbinfunc("Rationalize", x, dx)
       jlHead ret = WRational() => ret
       error1("Cannot be retracted with tolerance: ", dx)
 
     float(m, e, b) == jbinop("*",jWSReal(m), jWSReal(b) ^ e)
-    integerPart(x) == junfunc("W_"IntegerPart_"(",x)
-    wholePart(x) == convert(junfunc("W_"IntegerPart_"(",x))$WSInteger
-    fractionPart(x) == junfunc("W_"FractionalPart_"(", x)
+    integerPart(x) == junfunc("IntegerPart",x)
+    wholePart(x) == convert(junfunc("IntegerPart",x))$WSInteger
+    fractionPart(x) == junfunc("FractionalPart", x)
     truncate(x)  == (negative? x => -floor(-x); floor x)
     retractIfCan(x : %):Union(Integer, "failed") ==
       zero? fractionPart(x) => wholePart(x)
@@ -633,88 +693,88 @@ WSReal() : Exports == Implementation where
     retractIfCan(x:%):Union(Fraction Integer, "failed") ==
       convert(rationalApproximation(x))
 
-    exp(x)   == junfunc("W_"Exp_"(",x)
+    exp(x)   == junfunc("Exp",x)
     sqrt(x)  ==
       negative? x => error1("sqrt: result is not real for argument",x)
-      junfunc("W_"Sqrt_"(",x)
+      junfunc("Sqrt",x)
     log(x)   ==
       zero?(x) => error1("log2: invalid argument",x)
       not positive?(x) => error1("log: result is not real for argument",x)
-      junfunc("W_"Log_"(",x)
+      junfunc("Log",x)
     log2(x)  ==
       zero?(x) => error1("log2: invalid argument",x)
       not positive?(x) => error1("log2: result is not real for argument",x)
-      junfunc("W_"Log2_"(",x)
+      junfunc("Log2",x)
     log10(x) ==
       zero?(x) => error1("log10: invalid argument",x)
       not positive?(x) => error1("log10: result is not real for argument",x)
-      junfunc("W_"Log10_"(",x)
+      junfunc("Log10",x)
 
-    sin(x) == junfunc("W_"Sin_"(",x)
-    cos(x) == junfunc("W_"Cos_"(",x)
-    tan(x) == junfunc("W_"Tan_"(",x)
-    sec(x) == junfunc("W_"Sec_"(",x)
-    csc(x) == junfunc("W_"Csc_"(",x)
-    cot(x) == junfunc("W_"Cot_"(",x)
-    sinc(x)== junfunc("W_"Sinc_"(",x)
+    sin(x) == junfunc("Sin",x)
+    cos(x) == junfunc("Cos",x)
+    tan(x) == junfunc("Tan",x)
+    sec(x) == junfunc("Sec",x)
+    csc(x) == junfunc("Csc",x)
+    cot(x) == junfunc("Cot",x)
+    sinc(x)== junfunc("Sinc",x)
 
     asin(x)   ==
-      abs(x) <= 1 => junfunc("W_"ArcSin_"(",x)
+      abs(x) <= 1 => junfunc("ArcSin",x)
       error1("asin: result is not real for argument", x)
     acos(x)   ==
-      abs(x) <= 1 => junfunc("W_"ArcCos_"(",x)
+      abs(x) <= 1 => junfunc("ArcCos",x)
       error1("acos: result is not real for argument", x)
-    atan(x)   == junfunc("W_"ArcTan_"(",x)
-    atan(x,y) == jbinfunc("W_"ArcTan_"(",x, y)
+    atan(x)   == junfunc("ArcTan",x)
+    atan(x,y) == jbinfunc("ArcTan",x, y)
     asec(x)   ==
       abs(x) <= 1 => error1("asec: result is not real for argument", x)
-      junfunc("W_"ArcSec_"(",x)
+      junfunc("ArcSec",x)
     acsc(x)   ==
       zero?(x) => error1("acsc: not defined for argument", x)
       abs(x) <= 1 => error1("acsc: result is not real for argument", x)
-      junfunc("W_"ArcCsc_"(",x)
-    acot(x)   == junfunc("W_"ArcCot_"(",x)
+      junfunc("ArcCsc",x)
+    acot(x)   == junfunc("ArcCot",x)
 
-    sinh(x) == junfunc("W_"Sinh_"(",x)
-    cosh(x) == junfunc("W_"Cosh_"(",x)
-    tanh(x) == junfunc("W_"Tanh_"(",x)
-    sech(x) == junfunc("W_"Sech_"(",x)
-    csch(x) == junfunc("W_"Csch_"(",x)
-    coth(x) == junfunc("W_"Coth_"(",x)
+    sinh(x) == junfunc("Sinh",x)
+    cosh(x) == junfunc("Cosh",x)
+    tanh(x) == junfunc("Tanh",x)
+    sech(x) == junfunc("Sech",x)
+    csch(x) == junfunc("Csch",x)
+    coth(x) == junfunc("Coth",x)
 
-    asinh(x) == junfunc("W_"ArcSinh_"(",x)
+    asinh(x) == junfunc("ArcSinh",x)
     acosh(x) ==
       if x < 1 then error1("acosh: result is not real for argument", x)
-      junfunc("W_"ArcCosh_"(",x)
+      junfunc("ArcCosh",x)
     atanh(x) ==
       if abs(x) > 1 then error1("atanh: result is not real for argument", x)
-      junfunc("W_"ArcTanh_"(",x)
+      junfunc("ArcTanh",x)
     asech(x) ==
       if x <= 0 or x > 1 then
           error1("asech: branch cut or singularity detected for argument", x)
-      junfunc("W_"ArcSech_"(",x)
+      junfunc("ArcSech",x)
     acsch(x) ==
       if zero? x then error1("acsch: not defined for argument", x)
-      junfunc("W_"ArcCsch_"(",x)
+      junfunc("ArcCsch",x)
     acoth(x) ==
       if abs(x) <= 1 then
           error1("acoth: branch cut or singularity detected for argument", x)
-      junfunc("W_"ArcCoth_"(",x)
+      junfunc("ArcCoth",x)
 
-    erf(x)      == junfunc("W_"Erf_"(",x)
-    erfc(x)     == junfunc("W_"Erfc_"(",x)
-    erf(x, y)   == jbinfunc("W_"Erf_"(",x, y)
-    erfi(x)     == junfunc("W_"Erfi_"(",x)
+    erf(x)      == junfunc("Erf",x)
+    erfc(x)     == junfunc("Erfc",x)
+    erf(x, y)   == jbinfunc("Erf",x, y)
+    erfi(x)     == junfunc("Erfi",x)
 
-    Si(x)       == junfunc("W_"SinIntegral_"(",x)
-    Shi(x)      == junfunc("W_"SinhIntegral_"(",x)
-    Ci(x)       == junfunc("W_"CosIntegral_"(",x)
-    Chi(x)      == junfunc("W_"CoshIntegral_"(",x)
-    Ei(x)       == junfunc("W_"ExpIntegralEi_"(",x)
-    fresnelC(x) == junfunc("W_"FresnelC_"(",x)
-    fresnelS(x) == junfunc("W_"FresnelS_"(",x)
-    li(x)       == junfunc("W_"LogIntegral_"(",x)
-    dilog(x)    == jbinfunc("W_"PolyLog_"(", coerce(2)@WSInteger, x)
+    Si(x)       == junfunc("SinIntegral",x)
+    Shi(x)      == junfunc("SinhIntegral",x)
+    Ci(x)       == junfunc("CosIntegral",x)
+    Chi(x)      == junfunc("CoshIntegral",x)
+    Ei(x)       == junfunc("ExpIntegralEi",x)
+    fresnelC(x) == junfunc("FresnelC",x)
+    fresnelS(x) == junfunc("FresnelS",x)
+    li(x)       == junfunc("LogIntegral",x)
+    dilog(x)    == jbinfunc("PolyLog", coerce(2)@WSInteger, x)
     differentiate x == 0
 
     urand01() == jlEval(jWSExpression("RandomReal[]")) pretend %
@@ -779,12 +839,10 @@ WSReal() : Exports == Implementation where
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 WSAPReal(prec : PositiveInteger) : Exports == Implementation where
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-  jbinop(op,a,b) ==> jlref(concat(["weval(",getind(a), op, getind(b),")"]))
-  junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
-  jbinfunc(func,a,b) ==>
-    jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
-  jbinbop(op,a,b) ==>
-    jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
+  jbinop(op,a,b) ==> make_jlref_weval_binop(op, a, b)$Lisp
+  junfunc(func,a) ==> make_jlref_weval1(func, a)$Lisp
+  jbinfunc(func,a,b) ==> make_jlref_weval2(func, a, b)$Lisp
+  jbinbop(op,a,b) ==> jl_weval_binbop_wrapped_index(op, jlId(a), jlId(b))$Lisp
   Exports ==> Join(WSNumber, FloatingPointSystem, arbitraryPrecision,
                     DifferentialRing, ElementaryFunctionCategory,
                     TranscendentalFunctionCategory,
@@ -851,8 +909,8 @@ WSAPReal(prec : PositiveInteger) : Exports == Implementation where
 
     jlEvalString("NN=W_`Interpreter[_"Real_"]_`")@Void
 
-    0    == jlref(concat(["W_"N_"(0,", string(prec), ")"]))
-    1    == jlref(concat(["W_"N_"(1,", string(prec), ")"]))
+    0    == jlref(concat(["W_`N[0,", string(prec), "]_`"]))
+    1    == jlref(concat(["W_`N[1,", string(prec), "]_`"]))
     WT : WSSymbol := WTrue()
 
     pi()  ==
@@ -866,16 +924,16 @@ WSAPReal(prec : PositiveInteger) : Exports == Implementation where
     zero? x == zero?(x pretend WSExpression)
     one? x  == zero?((x pretend WSExpression)-1)
 
-    negative? x == junfunc("W_"Negative_"(", x) = WT
-    positive? x == junfunc("W_"Positive_"(", x) = WT
+    negative? x == junfunc("Negative", x) = WT
+    positive? x == junfunc("Positive", x) = WT
 
     x = y  == jbinbop("==",x,y)
     x ~= y == jbinbop("!=",x,y)
-    x < y  == jbinfunc("W_"Less_"(", x,y) = WT
-    x > y  == jbinfunc("W_"Greater_"(", x,y) = WT
-    x >= y == jbinfunc("W_"GreaterEqual_"(", x,y) = WT
-    x <= y == jbinfunc("W_"LessEqual_"(", x,y) = WT
-    jlApprox?(x,y) == jbinfunc("W_"Equal_"(", x,y) = WT
+    x < y  == jbinfunc("Less", x,y) = WT
+    x > y  == jbinfunc("Greater", x,y) = WT
+    x >= y == jbinfunc("GreaterEqual", x,y) = WT
+    x <= y == jbinfunc("LessEqual", x,y) = WT
+    jlApprox?(x,y) == jbinfunc("Equal", x,y) = WT
 
     precision() == prec
 
@@ -893,17 +951,17 @@ WSAPReal(prec : PositiveInteger) : Exports == Implementation where
     x : % ^ y : PositiveInteger == jbinop("^", x, coerce(y)@WSInteger)
     x : % ^ y : NonNegativeInteger == jbinop("^", x, coerce(y)@WSInteger)
 
-    round(x)   == junfunc("W_"Round_"(", x)
-    ceiling(x) == junfunc("W_"Ceiling_"(", x)
-    floor(x)   == junfunc("W_"Floor_"(", x)
-    abs(x)     == junfunc("W_"RealAbs_"(", x)
+    round(x)   == junfunc("Round", x)
+    ceiling(x) == junfunc("Ceiling", x)
+    floor(x)   == junfunc("Floor", x)
+    abs(x)     == junfunc("RealAbs", x)
     float(m, e, b) == jbinop("*", jWSReal(m), jWSReal(b) ^ e)
 
-    rationalApproximation(x) == junfunc("W_"Rationalize_"(", x)
-    rationalApproximation(x, dx) == jbinfunc("W_"Rationalize_"(", x, dx)
-    integerPart(x) == junfunc("W_"IntegerPart_"(",x)
-    wholePart(x) == convert(junfunc("W_"IntegerPart_"(",x))$WSInteger
-    fractionPart(x) == junfunc("W_"FractionalPart_"(", x)
+    rationalApproximation(x) == junfunc("Rationalize", x)
+    rationalApproximation(x, dx) == jbinfunc("Rationalize", x, dx)
+    integerPart(x) == junfunc("IntegerPart",x)
+    wholePart(x) == convert(junfunc("IntegerPart",x))$WSInteger
+    fractionPart(x) == junfunc("FractionalPart", x)
     truncate(x) == (negative? x => -floor(-x); floor x)
     retractIfCan(x : %):Union(Integer, "failed") ==
       zero? fractionPart(x) => wholePart(x)
@@ -916,87 +974,87 @@ WSAPReal(prec : PositiveInteger) : Exports == Implementation where
     retractIfCan(x:%):Union(Fraction Integer, "failed") ==
       convert(rationalApproximation(x))
 
-    exp(x)   == junfunc("W_"Exp_"(",x)
+    exp(x)   == junfunc("Exp",x)
     sqrt(x)  ==
       negative? x => error1("sqrt: result is not real for argument",x)
-      junfunc("W_"Sqrt_"(",x)
+      junfunc("Sqrt",x)
     log(x)   ==
       zero?(x) => error1("log2: invalid argument",x)
       not positive?(x) => error1("log: result is not real for argument",x)
-      junfunc("W_"Log_"(",x)
+      junfunc("Log",x)
     log2(x)  ==
       zero?(x) => error1("log2: invalid argument",x)
       not positive?(x) => error1("log2: result is not real for argument",x)
-      junfunc("W_"Log2_"(",x)
+      junfunc("Log2",x)
     log10(x) ==
       zero?(x) => error1("log10: invalid argument",x)
       not positive?(x) => error1("log10: result is not real for argument",x)
-      junfunc("W_"Log10_"(",x)
+      junfunc("Log10",x)
 
-    sin(x) == junfunc("W_"Sin_"(",x)
-    cos(x) == junfunc("W_"Cos_"(",x)
-    tan(x) == junfunc("W_"Tan_"(",x)
-    sec(x) == junfunc("W_"Sec_"(",x)
-    csc(x) == junfunc("W_"Csc_"(",x)
-    cot(x) == junfunc("W_"Cot_"(",x)
-    sinc(x)== junfunc("W_"Sinc_"(",x)
+    sin(x) == junfunc("Sin",x)
+    cos(x) == junfunc("Cos",x)
+    tan(x) == junfunc("Tan",x)
+    sec(x) == junfunc("Sec",x)
+    csc(x) == junfunc("Csc",x)
+    cot(x) == junfunc("Cot",x)
+    sinc(x)== junfunc("Sinc",x)
 
     asin(x)   ==
-      abs(x) <= 1 => junfunc("W_"ArcSin_"(",x)
+      abs(x) <= 1 => junfunc("ArcSin",x)
       error1("asin: result is not real for argument", x)
     acos(x)   ==
-      abs(x) <= 1 => junfunc("W_"ArcCos_"(",x)
+      abs(x) <= 1 => junfunc("ArcCos",x)
       error1("acos: result is not real for argument", x)
-    atan(x)   == junfunc("W_"ArcTan_"(",x)
-    atan(x,y) == jbinfunc("W_"ArcTan_"(",x, y)
+    atan(x)   == junfunc("ArcTan",x)
+    atan(x,y) == jbinfunc("ArcTan",x, y)
     asec(x)   ==
       abs(x) <= 1 => error1("asec: result is not real for argument", x)
-      junfunc("W_"ArcSec_"(",x)
+      junfunc("ArcSec",x)
     acsc(x)   ==
       zero?(x) => error1("acsc: not defined for argument", x)
       abs(x) <= 1 => error1("acsc: result is not real for argument", x)
-      junfunc("W_"ArcCsc_"(",x)
-    acot(x)   == junfunc("W_"ArcCot_"(",x)
+      junfunc("ArcCsc",x)
+    acot(x)   == junfunc("ArcCot",x)
 
-    sinh(x) == junfunc("W_"Sinh_"(",x)
-    cosh(x) == junfunc("W_"Cosh_"(",x)
-    tanh(x) == junfunc("W_"Tanh_"(",x)
-    sech(x) == junfunc("W_"Sech_"(",x)
-    csch(x) == junfunc("W_"Csch_"(",x)
-    coth(x) == junfunc("W_"Coth_"(",x)
+    sinh(x) == junfunc("Sinh",x)
+    cosh(x) == junfunc("Cosh",x)
+    tanh(x) == junfunc("Tanh",x)
+    sech(x) == junfunc("Sech",x)
+    csch(x) == junfunc("Csch",x)
+    coth(x) == junfunc("Coth",x)
 
-    asinh(x) == junfunc("W_"ArcSinh_"(",x)
+    asinh(x) == junfunc("ArcSinh",x)
     acosh(x) ==
       x < 1 => error1("acosh: result is not real for argument", x)
-      junfunc("W_"ArcCosh_"(",x)
+      junfunc("ArcCosh",x)
     atanh(x) ==
       if abs(x) >= 1 then error1("atanh: result is not real for argument", x)
-      junfunc("W_"ArcTanh_"(",x)
+      junfunc("ArcTanh",x)
     asech(x) ==
       one? x => 0
       if (x < 0 or x > 1) then error1("asech: result is not real for argument", x)
-      junfunc("W_"ArcSech_"(",x)
+      junfunc("ArcSech",x)
     acsch(x) ==
       if zero? x then error1("acsch: not defined for argument", x)
-      junfunc("W_"ArcCsch_"(",x)
+      junfunc("ArcCsch",x)
     acoth(x) ==
       if abs(x) <= 1 then
         error1("acoth: branch cut or singularity detected for argument", x)
-      junfunc("W_"ArcCoth_"(",x)
+      junfunc("ArcCoth",x)
 
-    erf(x)      == junfunc("W_"Erf_"(",x)
-    erfc(x)     == junfunc("W_"Erfc_"(",x)
-    erf(x, y)   == jbinfunc("W_"Erf_"(",x, y)
-    erfi(x)     == junfunc("W_"Erfi_"(",x)
-    Si(x)       == junfunc("W_"SinIntegral_"(",x)
-    Shi(x)       == junfunc("W_"SinhIntegral_"(",x)
-    Ci(x)       == junfunc("W_"CosIntegral_"(",x)
-    Chi(x)      == junfunc("W_"CoshIntegral_"(",x)
-    Ei(x)       == junfunc("W_"ExpIntegralEi_"(",x)
-    fresnelC(x) == junfunc("W_"FresnelC_"(",x)
-    fresnelS(x) == junfunc("W_"FresnelS_"(",x)
-    li(x)       == junfunc("W_"LogIntegral_"(",x)
-    dilog(x)    == jbinfunc("W_"PolyLog_"(", coerce(2)@WSInteger, x)
+    erf(x)      == junfunc("Erf",x)
+    erfc(x)     == junfunc("Erfc",x)
+    erf(x, y)   == jbinfunc("Erf",x, y)
+    erfi(x)     == junfunc("Erfi",x)
+    Si(x)       == junfunc("SinIntegral",x)
+    Shi(x)       == junfunc("SinhIntegral",x)
+    Ci(x)       == junfunc("CosIntegral",x)
+    Chi(x)      == junfunc("CoshIntegral",x)
+    Ei(x)       == junfunc("ExpIntegralEi",x)
+    fresnelC(x) == junfunc("FresnelC",x)
+    fresnelS(x) == junfunc("FresnelS",x)
+    li(x)       == junfunc("LogIntegral",x)
+    dilog(x)    == jbinfunc("PolyLog", coerce(2)@WSInteger, x)
     differentiate x == 0
 
     urand01() ==
@@ -1066,12 +1124,10 @@ WSAPReal(prec : PositiveInteger) : Exports == Implementation where
 WSGaussianInteger() : Exports == Implementation where
   parsei ==> PARSE_-INTEGER$Lisp
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-  jbinop(op,a,b) ==> jlref(concat(["weval(",getind(a), op, getind(b),")"]))
-  junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
-  jbinfunc(func,a,b) ==>
-    jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
-  jbinbop(op,a,b) ==>
-    jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
+  jbinop(op,a,b) ==> make_jlref_weval_binop(op, a, b)$Lisp
+  junfunc(func,a) ==> make_jlref_weval1(func, a)$Lisp
+  jbinfunc(func,a,b) ==> make_jlref_weval2(func, a, b)$Lisp
+  jbinbop(op,a,b) ==> jl_weval_binbop_wrapped_index(op, jlId(a), jlId(b))$Lisp
   Exports ==> Join(WSNumber, ComplexCategory(WSInteger)) with
     random   : WSInteger -> %
     ++ random(n) returns a gaussian integer where real part is in the range 0..n
@@ -1090,20 +1146,20 @@ WSGaussianInteger() : Exports == Implementation where
     if not jlUsing("MathLink") then
       error "The Julia MathLink package is not installed."
 
-    0 == jlref("W_"Complex_"(0,0)")
-    1 == jlref("W_"Complex_"(1,0)")
+    0 == complex(0, 0)
+    1 == complex(1, 0)
     imaginary()  == jlref("weval(im)")
 
     zero? x == x = 0
     one? x  == x = 1
 
-    real(x)      == junfunc("W_"Re_"(", x)
-    imag(x)      == junfunc("W_"Im_"(", x)
+    real(x)      == junfunc("Re", x)
+    imag(x)      == junfunc("Im", x)
 
-    conjugate(x) == junfunc("W_"Conjugate_"(", x)
+    conjugate(x) == junfunc("Conjugate", x)
     -- norm(z) in FriCAS = re(z)^2+im(z)^2 even for Complex(Float)
     -- Let FriCAS compute it
-    --norm(x)      == junfunc("W_"Norm_"(", x)
+    --norm(x)      == junfunc("Norm", x)
 
     x = y  == jbinbop("==",x,y)
     x ~= y == jbinbop("!=",x,y)
@@ -1114,9 +1170,9 @@ WSGaussianInteger() : Exports == Implementation where
     x : Integer * y : % == jbinop("*", coerce(x)@WSInteger, y)
     x : WSInteger * y : % == jbinop("*", coerce(x), y)
     x : Integer * y : % == jbinop("*", coerce(x), y)
-    x : % ^ y : Integer == jbinop("^", x, coerce(y))
-    x : % ^ y : PositiveInteger == jbinop("^", x, coerce(y))
-    x : % ^ y : NonNegativeInteger == jbinop("^", x, coerce(y))
+    x : % ^ y : Integer == jbinop("^", x, coerce(y)@WSInteger)
+    x : % ^ y : PositiveInteger == jbinop("^", x, coerce(y)@WSInteger)
+    x : % ^ y : NonNegativeInteger == jbinop("^", x, coerce(y)@WSInteger)
 
     unitNormal x ==
       -- TODO: improve
@@ -1130,19 +1186,17 @@ WSGaussianInteger() : Exports == Implementation where
       im < 0 => [-1, complex(-re, -im) ,-1]
       [imaginary(), complex(im, -re), -imaginary()]
 
-    random(n) == complex(junfunc("W_"RandomInteger_"(",n) pretend WSInteger,
-      junfunc("W_"RandomInteger_"(",n) pretend WSInteger)
+    random(n) == complex(junfunc("RandomInteger",n) pretend WSInteger,
+      junfunc("RandomInteger",n) pretend WSInteger)
     string(gi) == toString(gi)
     convert(obj) : String == string obj
     coerce(x : %) : WSExpression == x pretend WSExpression
-    coerce(i : Integer) ==
-      jlref(concat(["W_"Complex_"(", getind(coerce(i)@WSInteger), ",0)"]))
-    coerce(i : WSInteger) ==
-      jlref(concat(["W_"Complex_"(", getind(i), ",0)"]))
+    coerce(i : Integer) == complex(coerce(i)@WSInteger, 0)
+    coerce(i : WSInteger) == complex(i, 0)
     complex(re : WSInteger, im : WSInteger) : % ==
-      jlref(concat(["W_"Complex_"(", getind(re), "," , getind(im), ")"]))
+      jbinfunc("Complex", re, im)
     jWSGI(re : WSInteger, im : WSInteger) : % ==
-      jlref(concat(["W_"Complex_"(", getind(re), "," , getind(im), ")"]))
+      jbinfunc("Complex", re, im)
     coerce(x) : OutputForm == message(toString(x))
       -- Too expensive
       -- re := (r := real x)::OutputForm
@@ -1165,11 +1219,10 @@ WSGaussianInteger() : Exports == Implementation where
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 WSComplex() : Exports == Implementation where
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-  jbinop(op,a,b) ==> jlref(concat(["weval(",getind(a), op, getind(b),")"]))
-  junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
-  jbinfunc(func,a,b) ==>
-    jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
-  jbinbop(op,a,b) ==> jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
+  jbinop(op,a,b) ==> make_jlref_weval_binop(op, a, b)$Lisp
+  junfunc(func,a) ==> make_jlref_weval1(func, a)$Lisp
+  jbinfunc(func,a,b) ==> make_jlref_weval2(func, a, b)$Lisp
+  jbinbop(op,a,b) ==> jl_weval_binbop_wrapped_index(op, jlId(a), jlId(b))$Lisp
   Exports ==> Join(WSNumber, ComplexCategory(WSReal),
                 ElementaryFunctionCategory, TranscendentalFunctionCategory,
                 LiouvillianFunctionCategory) with
@@ -1237,26 +1290,26 @@ WSComplex() : Exports == Implementation where
     pi()  == jlref(concat(["W_`Complex[Pi,0.0]_`"]))
     exp() == jlref(concat(["W_`Complex[E,0.0]_`"]))
 
-    real(z)      == junfunc("W_"Re_"(", z)
-    imag(z)      == junfunc("W_"Im_"(", z)
+    real(z)      == junfunc("Re", z)
+    imag(z)      == junfunc("Im", z)
 
-    conjugate(z) == junfunc("W_"Conjugate_"(", z)
+    conjugate(z) == junfunc("Conjugate", z)
     -- norm(z) in FriCAS = re(z)^2+im(z)^2 even for Complex(Float)
     -- Let FriCAS compute it
-    --norm(x)      == junfunc("W_"Norm_"(", x)
+    --norm(x)      == junfunc("Norm", x)
 
     x = y  == jbinbop("==",x,y)
     x ~= y == jbinbop("!=",x,y)
-    jlApprox?(x,y) == jbinfunc("W_"Equal_"(", x,y) = WT
+    jlApprox?(x,y) == jbinfunc("Equal", x,y) = WT
     x + y == jbinop("+", x, y)
     x - y == jbinop("-", x, y)
     - x   == junfunc("-(", x)
     x : % * y : % == jbinop("*", x, y)
     x : WSInteger * y : % == jbinop("*", coerce(x), y)
     x : Integer * y : % == jbinop("*", coerce(x), y)
-    x : % ^ y : Integer == jbinop("^", x, coerce(y))
-    x : % ^ y : PositiveInteger == jbinop("^", x, coerce(y))
-    x : % ^ y : NonNegativeInteger == jbinop("^", x, coerce(y))
+    x : % ^ y : Integer == jbinop("^", x, coerce(y)@WSInteger)
+    x : % ^ y : PositiveInteger == jbinop("^", x, coerce(y)@WSInteger)
+    x : % ^ y : NonNegativeInteger == jbinop("^", x, coerce(y)@WSInteger)
 
     unitNormal x ==
       -- TODO: to be improved
@@ -1270,87 +1323,87 @@ WSComplex() : Exports == Implementation where
       im < 0 => [-1, complex(-re, -im) ,-1]
       [imaginary(), complex(im, -re), -imaginary()]
 
-    abs(z)     == junfunc("W_"Abs_"(", z)
-    argument(z)  == junfunc("W_"Arg_"(", z)
+    abs(z)     == junfunc("Abs", z)
+    argument(z)  == junfunc("Arg", z)
 
-    exp(z)   == junfunc("W_"Exp_"(",z)
-    sqrt(z)  == junfunc("W_"Sqrt_"(",z)
+    exp(z)   == junfunc("Exp",z)
+    sqrt(z)  == junfunc("Sqrt",z)
     log(z)   ==
       zero? z  => error "log: 0 is an invalid argument"
-      junfunc("W_"Log_"(",z)
+      junfunc("Log",z)
     log2(z)  ==
       zero? z => error "log2: 0 is an invalid argument"
-      junfunc("W_"Log2_"(",z)
+      junfunc("Log2",z)
     log10(z) ==
       zero? z => error "log10: 0 is an invalid argument"
-      junfunc("W_"Log10_"(",z)
+      junfunc("Log10",z)
 
-    sin(z) == junfunc("W_"Sin_"(",z)
-    cos(z) == junfunc("W_"Cos_"(",z)
-    tan(z) == junfunc("W_"Tan_"(",z)
-    sec(z) == junfunc("W_"Sec_"(",z)
-    csc(z) == junfunc("W_"Csc_"(",z)
-    cot(z) == junfunc("W_"Cot_"(",z)
+    sin(z) == junfunc("Sin",z)
+    cos(z) == junfunc("Cos",z)
+    tan(z) == junfunc("Tan",z)
+    sec(z) == junfunc("Sec",z)
+    csc(z) == junfunc("Csc",z)
+    cot(z) == junfunc("Cot",z)
 
-    sinc(z)== junfunc("W_"Sinc_"(",z)
+    sinc(z)== junfunc("Sinc",z)
 
-    asin(z)   == junfunc("W_"ArcSin_"(",z)
-    acos(z)   == junfunc("W_"ArcCos_"(",z)
-    atan(z)   == junfunc("W_"ArcTan_"(",z)
-    atan(z1,z2) == jbinfunc("W_"ArcTan_"(",z1, z2)
+    asin(z)   == junfunc("ArcSin",z)
+    acos(z)   == junfunc("ArcCos",z)
+    atan(z)   == junfunc("ArcTan",z)
+    atan(z1,z2) == jbinfunc("ArcTan",z1, z2)
     asec(z)   ==
       zero?(z) => error1("asec: not defined for argument", z)
-      junfunc("W_"ArcSec_"(",z)
+      junfunc("ArcSec",z)
     acsc(z)   ==
       zero?(z) => error1("acsc: not defined for argument", z)
-      junfunc("W_"ArcCsc_"(",z)
-    acot(z)   == junfunc("W_"ArcCot_"(",z)
+      junfunc("ArcCsc",z)
+    acot(z)   == junfunc("ArcCot",z)
 
-    sinh(z) == junfunc("W_"Sinh_"(",z)
-    cosh(z) == junfunc("W_"Cosh_"(",z)
-    tanh(z) == junfunc("W_"Tanh_"(",z)
-    sech(z) == junfunc("W_"Sech_"(",z)
-    csch(z) == junfunc("W_"Csch_"(",z)
-    coth(z) == junfunc("W_"Coth_"(",z)
+    sinh(z) == junfunc("Sinh",z)
+    cosh(z) == junfunc("Cosh",z)
+    tanh(z) == junfunc("Tanh",z)
+    sech(z) == junfunc("Sech",z)
+    csch(z) == junfunc("Csch",z)
+    coth(z) == junfunc("Coth",z)
 
-    asinh(z) == junfunc("W_"ArcSinh_"(",z)
-    acosh(z) == junfunc("W_"ArcCosh_"(",z)
+    asinh(z) == junfunc("ArcSinh",z)
+    acosh(z) == junfunc("ArcCosh",z)
     atanh(z) ==
       if z = 1 or z = -1 then
         error1("atanh: not defined for argument", z)
-      junfunc("W_"ArcTanh_"(",z)
+      junfunc("ArcTanh",z)
     asech(z) ==
       if zero? z then error1("asech: not defined for argument", z)
-      junfunc("W_"ArcSech_"(",z)
+      junfunc("ArcSech",z)
     acsch(z) ==
       if zero? z then error1("acsch: not defined for argument", z)
-      junfunc("W_"ArcCsch_"(",z)
+      junfunc("ArcCsch",z)
     acoth(z) ==
       if z = 1 or z = -1 then
         error1("acoth: not defined for argument", z)
-      junfunc("W_"ArcCoth_"(",z)
+      junfunc("ArcCoth",z)
 
-    erf(z)      == junfunc("W_"Erf_"(",z)
-    erfc(z)     == junfunc("W_"Erfc_"(",z)
-    erf(z1, z2) == jbinfunc("W_"Erf_"(",z1, z2)
-    erfi(z)     == junfunc("W_"Erfi_"(",z)
-    Si(z)       == junfunc("W_"SinIntegral_"(",z)
-    Shi(z)       == junfunc("W_"SinhIntegral_"(",z)
-    Ci(z)       == junfunc("W_"CosIntegral_"(",z)
-    Chi(z)      == junfunc("W_"CoshIntegral_"(",z)
-    Ei(z)       == junfunc("W_"ExpIntegralEi_"(",z)
-    fresnelC(z) == junfunc("W_"FresnelC_"(",z)
-    fresnelS(z) == junfunc("W_"FresnelS_"(",z)
-    li(z)       == junfunc("W_"LogIntegral_"(",z)
+    erf(z)      == junfunc("Erf",z)
+    erfc(z)     == junfunc("Erfc",z)
+    erf(z1, z2) == jbinfunc("Erf",z1, z2)
+    erfi(z)     == junfunc("Erfi",z)
+    Si(z)       == junfunc("SinIntegral",z)
+    Shi(z)       == junfunc("SinhIntegral",z)
+    Ci(z)       == junfunc("CosIntegral",z)
+    Chi(z)      == junfunc("CoshIntegral",z)
+    Ei(z)       == junfunc("ExpIntegralEi",z)
+    fresnelC(z) == junfunc("FresnelC",z)
+    fresnelS(z) == junfunc("FresnelS",z)
+    li(z)       == junfunc("LogIntegral",z)
     dilog(z)    ==
       two := jWSReal("2")$WSReal
-      jbinfunc("W_"PolyLog_"(", two, z)
+      jbinfunc("PolyLog", two, z)
     differentiate x == 0
 
     urand01() == jWSExpression("RandomComplex[]") pretend %
     string(z) == toString z
     convert(z) : String == string z
-    toString(z, form) == string jbinfunc("W_"ToString_"(", z, form)
+    toString(z, form) == string jbinfunc("ToString", z, form)
     coerce(z : %) : Complex(DoubleFloat) ==
       complex(coerce(real(z)), coerce(imag(z)))
     coerce(z : %) : Complex(JLFloat64) ==
@@ -1395,11 +1448,10 @@ WSComplex() : Exports == Implementation where
 ++ Trademark(s): Wolfram is a registered trademark of Wolfram Research, Inc.
 WSAPComplex(prec : PositiveInteger) : Exports == Implementation where
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-  jbinop(op,a,b) ==> jlref(concat(["weval(",getind(a), op, getind(b),")"]))
-  junfunc(func,a) ==> jlref(concat(["weval(", func, getind(a),"))"]))
-  jbinfunc(func,a,b) ==>
-    jlref(concat(["weval(", func, getind(a), ",", getind(b),"))"]))
-  jbinbop(op,a,b) ==> jlEvalString(concat([getind(a), op, getind(b)]))@Boolean
+  jbinop(op,a,b) ==> make_jlref_weval_binop(op, a, b)$Lisp
+  junfunc(func,a) ==> make_jlref_weval1(func, a)$Lisp
+  jbinfunc(func,a,b) ==> make_jlref_weval2(func, a, b)$Lisp
+  jbinbop(op,a,b) ==> jl_weval_binbop_wrapped_index(op, jlId(a), jlId(b))$Lisp
   Exports ==> Join(WSNumber, ComplexCategory(WSAPReal(prec)),
                 ElementaryFunctionCategory, TranscendentalFunctionCategory,
                 LiouvillianFunctionCategory) with
@@ -1463,17 +1515,17 @@ WSAPComplex(prec : PositiveInteger) : Exports == Implementation where
     pi()  == jlref(concat(["W_`N[Complex[Pi,0],", string(prec), "]_`"]))
     exp() == jlref(concat(["W_`N[Complex[E,0],", string(prec), "]_`"]))
 
-    real(z)      == junfunc("W_"Re_"(", z)
-    imag(z)      == junfunc("W_"Im_"(", z)
+    real(z)      == junfunc("Re", z)
+    imag(z)      == junfunc("Im", z)
 
-    conjugate(z) == junfunc("W_"Conjugate_"(", z)
+    conjugate(z) == junfunc("Conjugate", z)
     -- norm(z) in FriCAS = re(z)^2+im(z)^2 even for Complex(Float)
     -- Let FriCAS compute it
-    --norm(z)      == junfunc("W_"Norm_"(", z)
+    --norm(z)      == junfunc("Norm", z)
 
     x = y  == jbinbop("==",x,y)
     x ~= y == jbinbop("!=",x,y)
-    jlApprox?(x,y) == jbinfunc("W_"Equal_"(", x,y) = WT
+    jlApprox?(x,y) == jbinfunc("Equal", x,y) = WT
     x + y == jbinop("+", x, y)
     x - y == jbinop("-", x, y)
     - x   == junfunc("-(", x)
@@ -1496,81 +1548,81 @@ WSAPComplex(prec : PositiveInteger) : Exports == Implementation where
       im < 0 => [-1, complex(-re, -im) ,-1]
       [imaginary(), complex(im, -re), -imaginary()]
 
-    abs(z)     == junfunc("W_"Abs_"(", z)
-    argument(z)  == junfunc("W_"Arg_"(", z)
+    abs(z)     == junfunc("Abs", z)
+    argument(z)  == junfunc("Arg", z)
 
-    exp(z)   == junfunc("W_"Exp_"(",z)
-    sqrt(z)  == junfunc("W_"Sqrt_"(",z)
+    exp(z)   == junfunc("Exp",z)
+    sqrt(z)  == junfunc("Sqrt",z)
     log(z)   ==
       zero? z  => error "log: 0 is an invalid argument"
-      junfunc("W_"Log_"(",z)
+      junfunc("Log",z)
     log2(z)  ==
       zero? z => error "log2: 0 is an invalid argument"
-      junfunc("W_"Log2_"(",z)
+      junfunc("Log2",z)
     log10(z) ==
       zero? z => error "log10: 0 is an invalid argument"
-      junfunc("W_"Log10_"(",z)
+      junfunc("Log10",z)
 
-    sin(z) == junfunc("W_"Sin_"(",z)
-    cos(z) == junfunc("W_"Cos_"(",z)
-    tan(z) == junfunc("W_"Tan_"(",z)
-    sec(z) == junfunc("W_"Sec_"(",z)
-    csc(z) == junfunc("W_"Csc_"(",z)
-    cot(z) == junfunc("W_"Cot_"(",z)
+    sin(z) == junfunc("Sin",z)
+    cos(z) == junfunc("Cos",z)
+    tan(z) == junfunc("Tan",z)
+    sec(z) == junfunc("Sec",z)
+    csc(z) == junfunc("Csc",z)
+    cot(z) == junfunc("Cot",z)
 
-    sinc(z)== junfunc("W_"Sinc_"(",z)
+    sinc(z)== junfunc("Sinc",z)
 
-    asin(z)   == junfunc("W_"ArcSin_"(",z)
-    acos(z)   == junfunc("W_"ArcCos_"(",z)
-    atan(z)   == junfunc("W_"ArcTan_"(",z)
-    atan(z1,z2) == jbinfunc("W_"ArcTan_"(",z1, z2)
+    asin(z)   == junfunc("ArcSin",z)
+    acos(z)   == junfunc("ArcCos",z)
+    atan(z)   == junfunc("ArcTan",z)
+    atan(z1,z2) == jbinfunc("ArcTan",z1, z2)
     asec(z)   ==
       zero?(z) => error1("asec: not defined for argument", z)
-      junfunc("W_"ArcSec_"(",z)
+      junfunc("ArcSec",z)
     acsc(z)   ==
       zero?(z) => error1("acsc: not defined for argument", z)
-      junfunc("W_"ArcCsc_"(",z)
-    acot(z)   == junfunc("W_"ArcCot_"(",z)
+      junfunc("ArcCsc",z)
+    acot(z)   == junfunc("ArcCot",z)
 
-    sinh(z) == junfunc("W_"Sinh_"(",z)
-    cosh(z) == junfunc("W_"Cosh_"(",z)
-    tanh(z) == junfunc("W_"Tanh_"(",z)
-    sech(z) == junfunc("W_"Sech_"(",z)
-    csch(z) == junfunc("W_"Csch_"(",z)
-    coth(z) == junfunc("W_"Coth_"(",z)
+    sinh(z) == junfunc("Sinh",z)
+    cosh(z) == junfunc("Cosh",z)
+    tanh(z) == junfunc("Tanh",z)
+    sech(z) == junfunc("Sech",z)
+    csch(z) == junfunc("Csch",z)
+    coth(z) == junfunc("Coth",z)
 
-    asinh(z) == junfunc("W_"ArcSinh_"(",z)
-    acosh(z) == junfunc("W_"ArcCosh_"(",z)
+    asinh(z) == junfunc("ArcSinh",z)
+    acosh(z) == junfunc("ArcCosh",z)
     atanh(z) ==
       if z = 1 or z = -1 then
         error1("atanh: not defined for argument", z)
-      junfunc("W_"ArcTanh_"(",z)
+      junfunc("ArcTanh",z)
     asech(z) ==
       if zero? z then error1("asech: not defined for argument", z)
-      junfunc("W_"ArcSech_"(",z)
+      junfunc("ArcSech",z)
     acsch(z) ==
       if zero? z then error1("acsch: not defined for argument", z)
-      junfunc("W_"ArcCsch_"(",z)
+      junfunc("ArcCsch",z)
     acoth(z) ==
       if z = 1 or z = -1 then
         error1("acoth: not defined for argument", z)
-      junfunc("W_"ArcCoth_"(",z)
+      junfunc("ArcCoth",z)
 
-    erf(z)      == junfunc("W_"Erf_"(",z)
-    erfc(z)     == junfunc("W_"Erfc_"(",z)
-    erf(z1, z2)   == jbinfunc("W_"Erf_"(",z1, z2)
-    erfi(z)     == junfunc("W_"Erfi_"(",z)
-    Si(z)       == junfunc("W_"SinIntegral_"(",z)
-    Shi(z)       == junfunc("W_"SinhIntegral_"(",z)
-    Ci(z)       == junfunc("W_"CosIntegral_"(",z)
-    Chi(z)      == junfunc("W_"CoshIntegral_"(",z)
-    Ei(z)       == junfunc("W_"ExpIntegralEi_"(",z)
-    fresnelC(z) == junfunc("W_"FresnelC_"(",z)
-    fresnelS(z) == junfunc("W_"FresnelS_"(",z)
-    li(z)       == junfunc("W_"LogIntegral_"(",z)
+    erf(z)      == junfunc("Erf",z)
+    erfc(z)     == junfunc("Erfc",z)
+    erf(z1, z2)   == jbinfunc("Erf",z1, z2)
+    erfi(z)     == junfunc("Erfi",z)
+    Si(z)       == junfunc("SinIntegral",z)
+    Shi(z)       == junfunc("SinhIntegral",z)
+    Ci(z)       == junfunc("CosIntegral",z)
+    Chi(z)      == junfunc("CoshIntegral",z)
+    Ei(z)       == junfunc("ExpIntegralEi",z)
+    fresnelC(z) == junfunc("FresnelC",z)
+    fresnelS(z) == junfunc("FresnelS",z)
+    li(z)       == junfunc("LogIntegral",z)
     dilog(z)    ==
       two := jWSReal("2")$WSAPReal(prec)
-      jbinfunc("W_"PolyLog_"(", two, z)
+      jbinfunc("PolyLog", two, z)
     differentiate x == 0
 
     urand01() ==
@@ -1578,7 +1630,7 @@ WSAPComplex(prec : PositiveInteger) : Exports == Implementation where
         string(prec),"]"])) pretend %
     string(z) == toString(z pretend WSExpression, jWSExpression("OutputForm"))
     convert(obj) : String == string obj
-    toString(z, form) == string jbinfunc("W_"ToString_"(", z, form)
+    toString(z, form) == string jbinfunc("ToString", z, form)
     coerce(z : %) : WSExpression == z pretend WSExpression
     coerce(i : Integer) ==
       jlref(concat(["weval(W_"Complex_"(",

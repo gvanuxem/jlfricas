@@ -114,10 +114,10 @@ JLObjectType() : Category == JLType() with
     jlimref(cmd) == make_jlimref(cmd)$Lisp
     jlId(obj)    == JLREFID(obj)$Lisp
     jlType(obj)  ==
-      coerce(jlEvalString(concat(["string(typeof(", getind(obj),"))"])))
+      (jl_typeof_wrapped_index(jlId(obj))$Lisp pretend String)::Symbol
     jlRef(obj)   == obj pretend SExpression
     jlGetJuliaIndex(obj) == concat(["getindex(refs,", string(jlId(obj)),")"])
-    jlDump(obj)  == jlEvalString(concat(["dump(", getind(obj),")"]))
+    jlDump(obj)  == jl_call1_void_wrapped_index("dump", jlId(obj))$Lisp
 
     x = y == jl_call2_bool_wrapped_index("==", jlId(x), jlId(y))$Lisp
     x ~= y == jl_call2_bool_wrapped_index("!=", jlId(x), jlId(y))$Lisp
@@ -126,7 +126,7 @@ JLObjectType() : Category == JLType() with
     missing?(x) == jl_call1_bool_wrapped_index("ismissing", jlId(x))$Lisp
 
     jlDisplay(v) ==
-      jlEvalString(concat(["display(", getind(v), ")"]))
+      jl_call1_void_wrapped_index("display", jlId(v))$Lisp
     jlApply(func, a) ==
       defined?(func)
       junfunc(func, a)
@@ -146,14 +146,14 @@ JLObjectType() : Category == JLType() with
       not jlUsing("About") =>
         error(concat("jlAbout: the _"About.jl_" Julia package is not installed.",
           " See the JLObjectType category documentation for information"))
-      jlEvalString(concat(["about(", getind(obj),")"]))@Void
+      jl_call1_void_wrapped_index("about", jlId(obj))$Lisp
     jlNames(obj) == junfunc("names", obj)
     jlFieldNames(obj) == junfunc("fieldnames", obj)
     jlPropertyNames(obj) == junfunc("propertynames", obj)
     jlGetProperty(obj, sym) ==
-      jlref(concat(["getproperty(", getind(obj), ",", string(sym), ")"]))
+      make_jlref_wgetproperty(obj, string(sym))$Lisp
     jlGetField(obj, sym) ==
-      jlref(concat(["getfield(", getind(obj), ",", string(sym), ")"]))
+      make_jlref_wgetfield(obj, string(sym))$Lisp
 
     jlText(obj, mimest)  ==
       jl_stringify_wrapped_index("show",
@@ -207,20 +207,18 @@ JLObjectAggregate() : Category == Join(JLObjectType, Aggregate, finiteAggregate)
     getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
     junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
 
-    #obj == jlEvalString(concat(["length(", getind(obj), ")"]))
+    #obj == jl_length_wrapped_index(jlId(obj))$Lisp
     elt(obj : %, jsy : JLSymbol) ==
-      defined : String := concat(["hasproperty(", getind(obj), ",",
-        str := string(jsy), ")"])
-      not jlEvalString(defined)@Boolean =>
+      str := string(jsy)
+      not jl_hasproperty_wrapped_index(jlId(obj), str)$Lisp =>
         error concat("elt: undefined symbol ", str)
-      jlref(concat(["getproperty(", getind(obj), ",", string(jsy), ")"]))
+      make_jlref_wgetproperty(obj, str)$Lisp
     qelt(obj : %, jsy : JLSymbol) ==
-      jlref(concat(["get(", getind(obj), ",", string(jsy), ", missing)"]))
+      make_jlref_wgetproperty(obj, string(jsy))$Lisp
     elt(obj : %, ind : Integer) ==
-      -- TDOD: do some checks and use a method compatible with Dict
-      jlref(concat([getind(obj), "[", string(ind), "]"]))
+      make_jlref_wgetindex_int64(obj, ind)$Lisp
     qelt(obj : %, ind : Integer) ==
-      jlref(concat([getind(obj), "[", string(ind), "]"]))
+      make_jlref_wgetindex_int64(obj, ind)$Lisp
     empty() == jlref("missing")
     empty? m == junbfunc("ismissing", m)
 
@@ -249,12 +247,12 @@ JLObjectRing() : Category == Join(JLObjectType, JLRing) with
     x - y == jbinfunc("-", x, y)
     - x   == junfunc("-", x)
     x : % * y : % == jbinfunc("*", x, y)
-    x : NMInteger * y : % == jlref(concat([string(x), "*", getind(y)]))
-    x : Integer * y : % == jlref(concat([string(x), "*", getind(y)]))
-    x : PositiveInteger * y : % == jlref(concat([string(x), "*", getind(y)]))
-    x : NonNegativeInteger * y : % == jlref(concat([string(x), "*", getind(y)]))
-    x ^ y : PositiveInteger == jlref(concat [getind(x), "^", string(y)])
-    x ^ y : NonNegativeInteger == jlref(concat [getind(x), "^", string(y)])
+    x : NMInteger * y : % == jbinfunc("*", x, y)
+    x : Integer * y : % == make_jlref_integer_wcall2("*", x, y)$Lisp
+    x : PositiveInteger * y : % == make_jlref_integer_wcall2("*", x, y)$Lisp
+    x : NonNegativeInteger * y : % == make_jlref_integer_wcall2("*", x, y)$Lisp
+    x ^ y : PositiveInteger == make_jlref_wcall2_integer("^", x, y)$Lisp
+    x ^ y : NonNegativeInteger == make_jlref_wcall2_integer("^", x, y)$Lisp
 
 )abbrev category JARBPR JLArbitraryPrecision
 ++ Description:
@@ -318,8 +316,8 @@ JLObject() : Exports == Implementation where
     import from JLStringUtilities
     jlInitialize(true)
 
-    #obj == jlEvalString(concat(["length(", getind(obj), ")"]))
-    jlCollect(obj) == jlref(concat ["collect(", getind(obj),")"])
+    #obj == jl_length_wrapped_index(jlId(obj))$Lisp
+    jlCollect(obj) == make_jlref_wcall1("collect", obj)$Lisp
     coerce(jsy : JLSymbol ) == jlref(convert(jsy))
     coerce(i: Integer) == jlref(string i)
     coerce(str : String) : % == jlref(str)
@@ -434,6 +432,9 @@ JLObjBigInt() : Exports == Implementation where
 ++ It is not meant to be used directly, but rather for returned value
 ++ or function argument for example.
 JLObjDict() : Exports == Implementation where
+  junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+  jbinfunc(func, a, b) ==> make_jlref_wcall2(func, a, b)$Lisp
+  jterfunc(func, a, b, c) ==> make_jlref_wcall3(func, a, b, c)$Lisp
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
   Exports ==> JLObjectAggregate() with
     elt : (%, Any) -> JLObject
@@ -483,7 +484,7 @@ JLObjDict() : Exports == Implementation where
     import from String
     jlInitialize(true)
 
-    #dict == jlEvalString(concat(["length(", getind(dict), ")"]))
+    #dict == jl_length_wrapped_index(jlId(dict))$Lisp
     elt(obj : %, jany : Any) ==
       key : String := first lines formatExpression(jany::OutputForm)$Format1D
       defined := concat(["haskey(", getind(obj), ",", key, ")"])
@@ -501,10 +502,9 @@ JLObjDict() : Exports == Implementation where
     qelt(obj : %, jobj : JLObject) ==
       jlref(concat(["get(", getind(obj), ",", getind(jobj), ", missing)"]))
     setelt!(obj : %, jobj : JLObject, val : JLObject) ==
-      jlref(concat(["setindex!(", getind(obj), ",", getind(jobj), ",",
-        getind(val), ")"]))
+      jterfunc("setindex!", obj, val, jobj)
     delete!(obj : %, jobj : JLObject) ==
-      jlref(concat(["delete!(", getind(obj), ",", getind(jobj), ")"]))
+      jbinfunc("delete!", obj, jobj)
     elt(obj : %, jsy : JLSymbol) ==
       defined := concat(["haskey(", getind(obj), ",",
         str := string(jsy), ")"])
@@ -1504,12 +1504,12 @@ JLDataFrame() : Exports == Implementation where
 
     jlEvalString("function dfa(obj) DataFrame(obj, :auto) end")@Void
 
-    nrows(df) == jlEvalString(concat(["nrow(", getind(df),")"]))
-    ncols(df) == jlEvalString(concat(["ncol(", getind(df),")"]))
+    nrows(df) == jl_call1_int64_wrapped_index("nrow", jlId(df))$Lisp
+    ncols(df) == jl_call1_int64_wrapped_index("ncol", jlId(df))$Lisp
 
     names(df) ==
       ns := jlref(concat(["names(", getind(df), ")"]))
-      n : NNI := jlEvalString(concat(["length(", getind(ns), ")"]))
+      n : NNI := jl_length_wrapped_index(jlId(ns))$Lisp
       [jlEvalString(concat(["string(", getind(ns), "[", string(i), "])"]))@String for i in 1..n]
 
     head(df, n) == jbinfunc("first", df, coerce(n)@JI64)
@@ -1519,13 +1519,12 @@ JLDataFrame() : Exports == Implementation where
 
     #df == nrows(df) * ncols(df)
     elt(obj : %, jsy : JLSymbol) ==
-      defined := concat(["hasproperty(", getind(obj), ",",
-        str := string(jsy), ")"])
-      not jlEvalString(defined)@Boolean =>
+      str := string(jsy)
+      not jl_hasproperty_wrapped_index(jlId(obj), str)$Lisp =>
         error concat("elt: undefined symbol ", str)
-      jlref(concat(["getproperty(", getind(obj), ",", string(jsy), ")"]))
+      make_jlref_wgetproperty(obj, str)$Lisp
     qelt(obj : %, jsy : JLSymbol) ==
-      jlref(concat(["getproperty(", getind(obj), ",", string(jsy), ")"]))
+      make_jlref_wgetproperty(obj, string(jsy))$Lisp
     elt(obj : %, ind : Integer) ==
       jlref(concat([getind(obj), "[!,", string(ind), "]"]))
     qelt(obj : %, ind : Integer) ==
@@ -1595,26 +1594,26 @@ JLVector(R : JLObjectType) : Exports == Implementation where
     jlInitialize(true)
 
     minIndex x == 1$Lisp
-    maxIndex x == jlEvalString(concat(["length(", getind(x),")"]))
-    #v == jlEvalString(concat(["length(", getind(v),")"]))
+    maxIndex x == jl_length_wrapped_index(jlId(x))$Lisp
+    #v == jl_length_wrapped_index(jlId(v))$Lisp
     new(n, x:R) ==
-      jlref(concat(["fill(", getind(x),",", string(n),")"]))
+      make_jlref_wcall2_integer("fill", x, n)$Lisp
     qelt(x, i : PositiveInteger) ==
-      jlref(concat([getind(x),"[",string(i),"]"]))$R
+      make_jlref_wgetindex_int64(x, i)$Lisp
     qelt(x, i : Integer) ==
-      jlref(concat([getind(x),"[",string(i),"]"]))$R
+      make_jlref_wgetindex_int64(x, i)$Lisp
     elt(x, i : Integer) : R ==
-      i > #x => error "elt$JLvector: incompatible index"
-      jlref(concat([getind(x),"[",string(i),"]"]))$R
+      i < 1 or i > #x => error "elt$JLvector: incompatible index"
+      make_jlref_wgetindex_int64(x, i)$Lisp
     elt(x, i : PositiveInteger) : R ==
-      i > #x => error "elt$JLvector: incompatible index"
-      jlref(concat([getind(x),"[",string(i),"]"]))$R
+      i < 1 or i > #x => error "elt$JLvector: incompatible index"
+      make_jlref_wgetindex_int64(x, i)$Lisp
     qsetelt!(v : %, i, s:R) ==
-      jlEvalString(concat([getind(v),"[",string(i), "]=", getind(s)]))@Void
+      jl_setindex_int64_wrapped_index(jlId(v), jlId(s), i)$Lisp
       s
     setelt!(v : %, i : Integer, s : R) ==
-      i > #v => error "setelt!$JLvector: incompatible index"
-      jlEvalString(concat([getind(v),"[",string(i), "]=", getind(s)]))@Void
+      i < 1 or i > #v => error "setelt!$JLvector: incompatible index"
+      jl_setindex_int64_wrapped_index(jlId(v), jlId(s), i)$Lisp
       s
     fill!(v, x) == jbinfunc("fill!", v, x)
     less?(v,n) == #v < n
@@ -1625,7 +1624,7 @@ JLVector(R : JLObjectType) : Exports == Implementation where
     - x   == junfunc("-", x)
     a : R * v : % == jbinfunc("*", a, v)
     v : % * a : R == jbinfunc("*", v, a)
-    x : Integer * y : % == jlref(concat([string(x), "*", getind(y)]))
+    x : Integer * y : % == make_jlref_integer_wcall2("*", x, y)$Lisp
 
     if R is JLFloat then
       urand01(n) : JLVector(JLFloat) ==
@@ -1973,30 +1972,27 @@ JLMatrix(R : JLObjectRing) : Exports == Implementation where
     minRowIndex x == 1
     minColIndex x == 1
     nrows(a : %) : NNI ==
-      jlEvalString(concat(["size(", getind(a), ",1)"]))
+      jl_size_wrapped_index(jlId(a), 1$Lisp)$Lisp
     ncols(a : %) : NNI ==
-      jlEvalString(concat(["size(", getind(a), ",2)"]))
+      jl_size_wrapped_index(jlId(a), 2$Lisp)$Lisp
     maxRowIndex x == nrows(x)
     maxColIndex x == ncols(x)
     --#m == nrows(m) * ncols(m)
-    #m == jlEvalString(concat(["length(", getind(m), ")"]))
+    #m == jl_length_wrapped_index(jlId(m))$Lisp
 
-    qelt(m, i, j) == jlref(concat(["getindex(", getind(m), ",",
-      string(i), ",", string(j), ")"]))$R
+    qelt(m, i, j) ==
+      make_jlref_wgetindex2_int64(m, i, j)$Lisp
     elt(m : %, i : INT, j : INT) ==
-      i > nrows(m) or j > ncols(m) =>
+      i < 1 or i > nrows(m) or j < 1 or j > ncols(m) =>
         error "elt$JLMatrix: incompatible index"
-      jlref(concat(["getindex(", getind(m), ",",
-        string(i), ",", string(j), ")"]))$R
+      make_jlref_wgetindex2_int64(m, i, j)$Lisp
     qsetelt!(m, i:INT, j:INT, r) ==
-      jlEvalString(concat(["setindex!(", getind(m), ",", getind(r)
-        ",", string(i), ",", string(j), ")"]))@Void
+      jl_setindex2_int64_wrapped_index(jlId(m), jlId(r), i, j)$Lisp
       r
     setelt!(m : %, i : Integer, j : Integer, r : R) ==
-      i > nrows(m) or j > ncols(m) =>
+      i < 1 or i > nrows(m) or j < 1 or j > ncols(m) =>
         error "setelt!$JLMatrix: incompatible index"
-      jlEvalString(concat(["setindex!(", getind(m), ",", getind(r)
-        ",", string(i), ",", string(j), ")"]))@Void
+      jl_setindex2_int64_wrapped_index(jlId(m), jlId(r), i, j)$Lisp
       r
     row(m, i) ==
       jlref(concat([getind(m),"[",string(i),",:]"]))$JLVector(R)
@@ -2020,7 +2016,7 @@ JLMatrix(R : JLObjectRing) : Exports == Implementation where
     a : R * m : % == jbinfunc("*", a, m)
     m : % * a : R == jbinfunc("*", m, a)
     m : % / a : R == jbinfunc("/", m, a)
-    x : Integer * y : % == jlref(concat([string(x), "*", getind(y)]))
+    x : Integer * y : % == make_jlref_integer_wcall2("*", x, y)$Lisp
 
     symmetric?(m) == junbfunc("issymmetric",m)
 
