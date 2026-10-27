@@ -308,7 +308,7 @@ WSString() : Exports == Implementation where
     elt(obj,i) == characters(obj).i
     characters(str : %) : WSList(%) == junfunc("Characters", str)
     coerce(str : String) : % == jWSString(str)
-    coerce(str : %) : String == jl_string_getindex(jlId(obj))$Lisp
+    coerce(str : %) : String == jl_string_getindex(jlId(str))$Lisp
     coerce(str : %) : WSExpression == str pretend WSExpression
     jWSString(str) == jlref(concat(["W_`_"", str, "_"_`"]))
     coerce(obj) : OutputForm ==
