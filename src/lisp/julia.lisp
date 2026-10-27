@@ -233,10 +233,10 @@
 
 (defun make-jlindex ()
   #+:sbcl
-  (when (and (null *free-jlindices*) (not (sb-concurrency:queue-empty-p *jqueue*)))
+  (unless (sb-concurrency:queue-empty-p *jqueue*)
     (jgc))
   #+:openmcl
-  (when (and (null *free-jlindices*) (> (queues:qsize *jqueue*) 0))
+  (when (> (queues:qsize *jqueue*) 0)
     (jgc))
   (if *free-jlindices*
       (pop *free-jlindices*)

@@ -12,7 +12,7 @@ system (CAS).
 
 In this work-in-progress repository, a C wrapper using libjulia is embedded in [FriCAS](https://fricas.github.io/) to call [Julia](https://julialang.org) optimized numerical routines such as **BLAS** and **LAPACK**, and more generally to manipulate Julia objects from within FriCAS.
 
-**Update (October 27, 2026): A major overhaul was implemented to minimize string concatenation and evaluation by leveraging C-based calls, yielding a 1.55x speedup (cutting execution time from 2m21s to 1m31s) on time make check j*.input.**
+__Update (October 27, 2026): A major overhaul was implemented to minimize string concatenation and evaluation by leveraging C-based calls, yielding a 1.55x speedup (cutting execution time from 2m21s to 1m31s) on time make check j*.input.__
 
 The build process supports Clozure CL (x86-64) and SBCL (x86-64 and arm64). It must not be considered production-ready though it can be considered stable. An overview of what is added to FriCAS is available [here](https://gvanuxem.github.io/jlfricas.documentation/search.html?q=Julia). [Binary snapshots](https://github.com/gvanuxem/jlfricas/releases) are available.
 
