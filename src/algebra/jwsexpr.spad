@@ -2217,11 +2217,12 @@ WSExpression() : Exports == Implementation where
       jbinfunc("QuantityForm", expr, form)
     coerce(expr) : OutputForm ==
       head := jlHead expr
-      head = WS or head = WI or head = WFormat => message(string(expr))
+      head = WI or head = WFormat => message(string(expr))
       (head = WR and machineNumber?(expr)) => coerce(expr pretend WSReal)$WSReal
       (head = WC and machineNumber?(real expr) and machineNumber?(imag expr)) =>
         coerce(expr pretend WSComplex)$WSComplex
       head = WRat => coerce(expr pretend WSRational)$WSRational
+      head = WS => coerce(jl_string_getindex(jlId(expr))$Lisp pretend String)
       pagew := string(_$LINELENGTH$Lisp pretend Integer - 2)
       sexpr := toString(expr, jWSExpression concat("PageWidth -> ", pagew))
       str : String := jlEvalString(concat(["replace(raw_"", sexpr,

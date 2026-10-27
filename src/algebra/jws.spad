@@ -308,10 +308,11 @@ WSString() : Exports == Implementation where
     elt(obj,i) == characters(obj).i
     characters(str : %) : WSList(%) == junfunc("Characters", str)
     coerce(str : String) : % == jWSString(str)
-    coerce(str : %) : String == string(str)
+    coerce(str : %) : String == jl_string_getindex(jlId(obj))$Lisp
     coerce(str : %) : WSExpression == str pretend WSExpression
     jWSString(str) == jlref(concat(["W_`_"", str, "_"_`"]))
-    coerce(obj) : OutputForm == jl_string_getindex(jlId(obj))$Lisp
+    coerce(obj) : OutputForm ==
+      coerce(jl_string_getindex(jlId(obj))$Lisp pretend String)
 
 )abbrev domain WSINT WSInteger
 ++ Generic domain for Julia WS integers
