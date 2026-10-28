@@ -1013,17 +1013,17 @@ JLFloat() : Exports == Implementation where
     coerce : Float -> %
     ++ coerce(x) coerces x to JLFLoat.
     jfloat : String -> %
-    ++ jfloat(z) returns z as a JFLoat.
+    ++ jfloat(z) returns z as a JLFloat.
     ++ For example where automatic coercions is also used:
     ++ \example{sqrt(jfloat(2.0)^2+7.0^2+9.^2)}
     jfloat : Integer -> %
-    ++ jfloat(z) returns z as a JFLoat.
+    ++ jfloat(z) returns z as a JLFloat.
     ++ For example:
     ++ \example{sqrt(jfloat(2)^2+7.0^2+9.^2)}
     jfloat : Fraction(Integer) -> %
-    ++ jfloat(q) returns q as a JFLoat.
+    ++ jfloat(q) returns q as a JLFloat.
     jfloat : Float -> %
-    ++ jfloat(x) returns x as a JFLoat.
+    ++ jfloat(x) returns x as a JLFloat.
   Implementation ==> add
     import from JLUtilityFunctions
     jlInitialize(true)

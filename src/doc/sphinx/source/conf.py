@@ -16,9 +16,9 @@ sys.path.insert(0, os.path.abspath('_ext'))
 
 # -- Project information -----------------------------------------------------
 # The full version, including alpha/beta/rc tags
-PACKAGE_VERSION = os.environ.get('PACKAGE_VERSION', '0.0.0')
+PACKAGE_VERSION = os.environ.get('PACKAGE_VERSION', '1.4.1-julia-dev')
 PACKAGE_YEAR = os.environ.get('PACKAGE_YEAR', '2026')
-PACKAGE_NAME = os.environ.get('PACKAGE_NAME', 'FriCAS')
+PACKAGE_NAME = os.environ.get('PACKAGE_NAME', 'jlFriCAS')
 PACKAGE_TARNAME = os.environ.get('PACKAGE_TARNAME', PACKAGE_NAME.lower())
 PACKAGE_BUGREPORT = 'https://github.com/gvanuxem/jlfricas/issues'
 

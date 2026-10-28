@@ -200,8 +200,20 @@ SpadDoc : Exports == Implementation where
         src_str := concat([src_str, ", ", s])
       concat(["(", src_str, ") -> ", target])
 
+    match_case_sensitive?(pat : String, target : String) : Boolean ==
+      pat = target => true
+      pat = "*" => false
+      position(char "*", pat) = 0 and position(char " ", pat) = 0 => false
+      pu := parse_pattern(pat, false)$LogicalRegularExpressionMatch
+      pu case "failed" => false
+      do_match(pu::LogicalMatchingAutomaton, target)$LogicalMatchingAutomaton
+
+    filter_syms_case_sensitive(pat : String, syms : List Symbol) : List Symbol ==
+      [s for s in syms | match_case_sensitive?(pat, string(s))]
+
     getOperationDocumentation(op : Symbol) : List OPDOC ==
-      ops := search_operations(string op)
+      pat := string op
+      ops := search_operations(pat)
       ops case ErrorIndicator => []
       docs := (ops::List(Record(name: Symbol,
         sdl: List(Record(signature: SExpression,
@@ -209,11 +221,12 @@ SpadDoc : Exports == Implementation where
             documentation: String)))))
       res_list : List OPDOC := []
       for ops_rec in docs repeat
-        for item in elt(ops_rec, sdl) repeat
-          orig_str : String := formString(elt(item, origin))$Lisp
-          sig_str : String := format_signature(elt(item, signature))
-          doc_str : String := clean_tex(elt(item, documentation))
-          res_list := concat(res_list, [orig_str, sig_str, doc_str]$OPDOC)
+        if match_case_sensitive?(pat, string(elt(ops_rec, name))) then
+          for item in elt(ops_rec, sdl) repeat
+            orig_str : String := formString(elt(item, origin))$Lisp
+            sig_str : String := format_signature(elt(item, signature))
+            doc_str : String := clean_tex(elt(item, documentation))
+            res_list := concat(res_list, [orig_str, sig_str, doc_str]$OPDOC)
       res_list
 
     listOperationDocumentation(op : Symbol) : List(OutputForm) ==
@@ -237,28 +250,35 @@ SpadDoc : Exports == Implementation where
       void()
      
     listConstructors(const) ==
-      consts := search_constructors(string(const), 'k)
+      pat := string(const)
+      consts := search_constructors(pat, 'k)
       consts case ErrorIndicator => [[], [], []]
-      (consts::Record(categories: List(Symbol), _
+      res_rec := (consts::Record(categories: List(Symbol), _
         domains: List(Symbol), packages: List(Symbol)))
+      [filter_syms_case_sensitive(pat, res_rec.categories), _
+       filter_syms_case_sensitive(pat, res_rec.domains), _
+       filter_syms_case_sensitive(pat, res_rec.packages)]
     listCategories(cat : Symbol) ==
-      cats := search_constructors(string(cat), 'c)
+      pat := string(cat)
+      cats := search_constructors(pat, 'c)
       cats case ErrorIndicator => []
       res_rec := (cats::Record(categories: List(Symbol), _
         domains: List(Symbol), packages: List(Symbol)))
-      res_rec.categories
+      filter_syms_case_sensitive(pat, res_rec.categories)
     listDomains(dom : Symbol) ==
-      doms := search_constructors(string(dom), 'd)
+      pat := string(dom)
+      doms := search_constructors(pat, 'd)
       doms case ErrorIndicator => []
       res_rec := (doms::Record(categories: List(Symbol), _
         domains: List(Symbol), packages: List(Symbol)))
-      res_rec.domains
+      filter_syms_case_sensitive(pat, res_rec.domains)
     listPackages(pack : Symbol) ==
-      packs := search_constructors(string(pack), 'p)
+      pat := string(pack)
+      packs := search_constructors(pat, 'p)
       packs case ErrorIndicator => []
       res_rec := (packs::Record(categories: List(Symbol), _
         domains: List(Symbol), packages: List(Symbol)))
-      res_rec.packages
+      filter_syms_case_sensitive(pat, res_rec.packages)
 
     int_to_string(n : Integer) : String ==
       string(formString(n::OutputForm)$Lisp)
