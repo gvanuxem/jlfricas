@@ -1,5 +1,5 @@
 sinclude(config/fricas.m4)
-AC_INIT([jlFriCAS], [1.4.0-julia-dev],
+AC_INIT([jlFriCAS], [1.4.1-julia-dev],
         [https://github.com/gvanuxem/jlfricas/issues],
         [jlfricas],
         [https://gvanuxem.github.io/jlfricas])
