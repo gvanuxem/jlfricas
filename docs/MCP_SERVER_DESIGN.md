@@ -43,15 +43,23 @@ The server follows a three-layer bridge architecture and supports multiple trans
 *   **Input**: `pattern` (String).
 *   **Behavior**: Searches for Categories, Domains, and Packages matching the pattern.
 
-### 4. `compile-spad`
+### 4. `search-documentation`
+*   **Input**:
+    *   `query` (String): The search keyword, phrase, or logical pattern (e.g. `'determinant'`, `'groebner'`, `'*matrix* and *determinant*'`).
+    *   `max_results` (Optional Integer): Maximum number of operation results to return (default: 25, `0` for all).
+    *   `format` (Optional String): Output format (`"text"` or `"markdown"`, default: `"text"`).
+*   **Behavior**: Searches full-text constructor and operation docstrings via `searchDocumentation` in `SpadDoc` / `BrowserInformation`.
+*   **Output**: Cleaned and formatted documentation search results.
+
+### 5. `compile-spad`
 *   **Input**: `path` or `file` (String), `args` or `options` (Optional String).
 *   **Behavior**: Compiles a SPAD (`.spad`) source file using the system command `)compile`.
 
-### 5. `compile-lisp`
+### 6. `compile-lisp`
 *   **Input**: `path` or `file` (String), `args` or `options` (Optional String).
 *   **Behavior**: Compiles and loads a Common Lisp (`.lisp` or `.lsp`) file using the system command `)read`.
 
-### 6. `compile-boot`
+### 7. `compile-boot`
 *   **Input**: `path` or `file` (String), `args` or `options` (Optional String).
 *   **Behavior**: Compiles and loads a Boot (`.boot`) file using the system command `)read`.
 

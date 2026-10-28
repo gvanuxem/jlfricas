@@ -5,7 +5,10 @@
 ++ Spad documentation for the interpreter and
 ++ the MCP server using BrowserInformation.
 SpadDoc : Exports == Implementation where
-  OPDOC ==> Record(origin: String, signature: String, doc: String)
+  OPDOC     ==> Record(origin: String, signature: String, doc: String)
+  CONREC    ==> Record(categories: List(Symbol), domains: List(Symbol), packages: List(Symbol))
+  SEARCHOP  ==> Record(name: Symbol, origin: String, signature: String, doc: String)
+  SEARCHRES ==> Record(constructors: CONREC, operations: List SEARCHOP)
   Exports ==> with
     operationDocumentation  : Symbol -> Void
     ++ operationDocumentation(op) displays the documentation of the
@@ -19,6 +22,24 @@ SpadDoc : Exports == Implementation where
     getConstructorDocumentation : Symbol -> String
     ++ getConstructorDocumentation(term) returns the cleaned documentation
     ++ of constructor term.
+    searchDocumentation : String -> Void
+    ++ searchDocumentation(pat) searches for constructors and operations
+    ++ whose documentation matches pat and displays the results.
+    searchDocumentation : (String, Integer) -> Void
+    ++ searchDocumentation(pat, max_ops) searches for constructors and operations
+    ++ matching pat, displaying at most max_ops operations.
+    searchDocumentation : Symbol -> Void
+    ++ searchDocumentation(pat) searches for constructors and operations
+    ++ whose documentation matches pat and displays the results.
+    searchDocumentation : (Symbol, Integer) -> Void
+    ++ searchDocumentation(pat, max_ops) searches for constructors and operations
+    ++ matching pat, displaying at most max_ops operations.
+    getSearchDocumentation : String -> SEARCHRES
+    ++ getSearchDocumentation(pat) returns structured matching constructors
+    ++ and operations with cleaned documentation and formatted signatures.
+    getSearchDocumentation : Symbol -> SEARCHRES
+    ++ getSearchDocumentation(pat) returns structured matching constructors
+    ++ and operations with cleaned documentation and formatted signatures.
     listConstructors : Symbol -> Record(categories: List(Symbol), _
       domains: List(Symbol), packages: List(Symbol))
     ++ listConstructors(const) returns a list of the categories, domains,
@@ -181,10 +202,11 @@ SpadDoc : Exports == Implementation where
 
     getOperationDocumentation(op : Symbol) : List OPDOC ==
       ops := search_operations(string op)
-      docs := coerce(ops)@List(Record(name: Symbol,
+      ops case ErrorIndicator => []
+      docs := (ops::List(Record(name: Symbol,
         sdl: List(Record(signature: SExpression,
           condition: SExpression, origin: SExpression,
-            documentation: String))))
+            documentation: String)))))
       res_list : List OPDOC := []
       for ops_rec in docs repeat
         for item in elt(ops_rec, sdl) repeat
@@ -216,20 +238,143 @@ SpadDoc : Exports == Implementation where
      
     listConstructors(const) ==
       consts := search_constructors(string(const), 'k)
-      coerce(consts)@Record(categories: List(Symbol), _
-        domains: List(Symbol), packages: List(Symbol))
+      consts case ErrorIndicator => [[], [], []]
+      (consts::Record(categories: List(Symbol), _
+        domains: List(Symbol), packages: List(Symbol)))
     listCategories(cat : Symbol) ==
       cats := search_constructors(string(cat), 'c)
-      res_rec := coerce(cats)@Record(categories: List(Symbol), _
-        domains: List(Symbol), packages: List(Symbol))
+      cats case ErrorIndicator => []
+      res_rec := (cats::Record(categories: List(Symbol), _
+        domains: List(Symbol), packages: List(Symbol)))
       res_rec.categories
     listDomains(dom : Symbol) ==
       doms := search_constructors(string(dom), 'd)
-      res_rec := coerce(doms)@Record(categories: List(Symbol), _
-        domains: List(Symbol), packages: List(Symbol))
+      doms case ErrorIndicator => []
+      res_rec := (doms::Record(categories: List(Symbol), _
+        domains: List(Symbol), packages: List(Symbol)))
       res_rec.domains
     listPackages(pack : Symbol) ==
       packs := search_constructors(string(pack), 'p)
-      res_rec := coerce(packs)@Record(categories: List(Symbol), _
-        domains: List(Symbol), packages: List(Symbol))
+      packs case ErrorIndicator => []
+      res_rec := (packs::Record(categories: List(Symbol), _
+        domains: List(Symbol), packages: List(Symbol)))
       res_rec.packages
+
+    int_to_string(n : Integer) : String ==
+      string(formString(n::OutputForm)$Lisp)
+
+    format_symbol_list(l : List Symbol) : String ==
+      empty?(l) => ""
+      res : String := string first(l)
+      for s in rest(l) repeat
+        res := concat([res, ", ", string(s)])
+      res
+
+    normalize_doc_pattern(pat : String) : String ==
+      words := split(pat, char " ")
+      empty?(words) => ""
+      #words = 1 => first(words)
+      res : String := ""
+      need_op : Boolean := false
+      for w in words repeat
+        if w = "and" or w = "or" then
+          res := concat([res, " ", w])
+          need_op := false
+        else if w = "not" then
+          if need_op then
+            res := concat([res, " and not"])
+          else if res = "" then
+            res := "not"
+          else
+            res := concat([res, " not"])
+          need_op := false
+        else
+          wt : String :=
+            w.1 = char("*") or w(#w) = char("*") or w.1 = char("(") or w(#w) = char(")") => w
+            concat(["*", w, "*"])
+          if need_op then
+            res := concat([res, " and ", wt])
+          else if res = "" then
+            res := wt
+          else
+            res := concat([res, " ", wt])
+          need_op := true
+      res
+
+    getSearchDocumentation(pat : String) : SEARCHRES ==
+      empty_con : CONREC := [[], [], []]
+      empty_res : SEARCHRES := [empty_con, []]
+      pat = "" => empty_res
+      norm_pat := normalize_doc_pattern(pat)
+      norm_pat = "" => empty_res
+      s_res := search_documentation(norm_pat)$BrowserInformation
+      if s_res case ErrorIndicator then
+        s_res := search_documentation(pat)$BrowserInformation
+      s_res case ErrorIndicator => empty_res
+      gen_rec := (s_res::Record(con_info: CONREC, _
+        op_info: List(Record(name: Symbol, _
+          sdl: List(Record(signature: SExpression, condition: SExpression, _
+                           origin: SExpression, documentation: String))))))
+      con_rec : CONREC := elt(gen_rec, con_info)
+      op_list : List SEARCHOP := []
+      for ops_rec in elt(gen_rec, op_info) repeat
+        op_name := elt(ops_rec, name)
+        for item in elt(ops_rec, sdl) repeat
+          orig_str : String := formString(elt(item, origin))$Lisp
+          sig_str : String := format_signature(elt(item, signature))
+          doc_str : String := clean_tex(elt(item, documentation))
+          op_list := concat(op_list, [op_name, orig_str, sig_str, doc_str]$SEARCHOP)
+      [con_rec, op_list]
+
+    getSearchDocumentation(pat : Symbol) : SEARCHRES ==
+      getSearchDocumentation(string pat)
+
+    searchDocumentation(pat : String, max_ops : Integer) : Void ==
+      s_res := getSearchDocumentation(pat)
+      con := elt(s_res, constructors)
+      ops := elt(s_res, operations)
+      cats := elt(con, categories)
+      doms := elt(con, domains)
+      packs := elt(con, packages)
+      num_con := #cats + #doms + #packs
+      num_ops := #ops
+      num_con = 0 and num_ops = 0 =>
+        sayBrightly$Lisp concat ["No documentation found matching: ", pat]
+        void()
+      sayBrightly$Lisp concat ["=== Documentation Search: ", pat, " ==="]
+      if num_con > 0 then
+        sayBrightly$Lisp ""
+        sayBrightly$Lisp "Constructors:"
+        if not empty?(cats) then
+          sayBrightly$Lisp concat ["  Categories: ", format_symbol_list(cats)]
+        if not empty?(doms) then
+          sayBrightly$Lisp concat ["  Domains:    ", format_symbol_list(doms)]
+        if not empty?(packs) then
+          sayBrightly$Lisp concat ["  Packages:   ", format_symbol_list(packs)]
+      if num_ops > 0 then
+        sayBrightly$Lisp ""
+        sayBrightly$Lisp concat ["Operations (", int_to_string(num_ops), " match(es)):"]
+        count : Integer := 0
+        for item in ops repeat
+          if max_ops > 0 and count >= max_ops then
+            sayBrightly$Lisp ""
+            sayBrightly$Lisp concat ["... and ", int_to_string(num_ops - count), " more operation(s)."]
+            break
+          else
+            sayBrightly$Lisp ""
+            sayBrightly$Lisp concat ["* ", string(elt(item, name)), " : ", elt(item, signature)]
+            sayBrightly$Lisp concat ["  From: ", elt(item, origin)]
+            if elt(item, doc) ~= "" then
+              sayBrightly$Lisp concat ["  ", elt(item, doc)]
+            count := count + 1
+      void()
+
+    searchDocumentation(pat : String) : Void ==
+      searchDocumentation(pat, 25)
+
+    searchDocumentation(pat : Symbol) : Void ==
+      searchDocumentation(string pat, 25)
+
+    searchDocumentation(pat : Symbol, max_ops : Integer) : Void ==
+      searchDocumentation(string pat, max_ops)
+
