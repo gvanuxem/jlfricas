@@ -3,15 +3,6 @@
 #+(or :sbcl :openmcl)
 (progn
 
-(eval-when (:compile-toplevel :load-toplevel :execute)
-  (let ((so-path (or (and (probe-file "/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/julia_wrap.so")
-                          "/home/greg/Git/jlfricas/target/x86_64-linux-gnu/lib/julia_wrap.so")
-                     (and (probe-file "/home/greg/.local/lib/fricas/target/x86_64-linux-gnu/lib/julia_wrap.so")
-                          "/home/greg/.local/lib/fricas/target/x86_64-linux-gnu/lib/julia_wrap.so"))))
-    (when so-path
-      #+:sbcl (sb-alien:load-shared-object so-path)
-      #+:openmcl (ccl:open-shared-library so-path))))
-
 (foreign-defs
 (fricas-foreign-call boot::|jl_gc_collect| "jl_gc_collect" void)
 (fricas-foreign-call boot::|jl_eval_string| "jl_eval_str" void

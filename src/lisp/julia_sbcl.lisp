@@ -115,9 +115,7 @@
                     func (ipointer array) size))))
 
 (defun |jl_wrap_1dfarray| (cplx index array)
-    (let ((size (get_vnrows cplx array))
-            (index (or (make-jlindex)
-                (error "Amount of Julia references excedeed"))))
+    (let ((size (get_vnrows cplx array)))
         (sb-sys:with-pinned-objects (array)
                 (sb-alien:alien-funcall
                     (sb-alien::extern-alien "jl_call_wrap_1dfarray"
@@ -129,9 +127,7 @@
                     cplx index (fpointer array) size))))
 
 (defun |jl_wrap_1darray| (cplx index array)
-    (let ((size (get_vnrows cplx array))
-            (index (or (make-jlindex)
-                (error "Amount of Julia references excedeed"))))
+    (let ((size (get_vnrows cplx array)))
         (sb-sys:with-pinned-objects (array)
                 (sb-alien:alien-funcall
                     (sb-alien::extern-alien "jl_call_wrap_1darray"
@@ -363,9 +359,7 @@
                                 (string #\newline))))
 
 (defun |jl_wrap_2dfarray| (cplx index array m)
-    (let ((n (get_ncols cplx array m))
-            (index (or (make-jlindex)
-                (error "Amount of Julia references excedeed"))))
+    (let ((n (get_ncols cplx array m)))
         (sb-sys:with-pinned-objects (array)
            (sb-alien:alien-funcall
                (sb-alien::extern-alien "jl_call_wrap_2dfarray"
@@ -378,9 +372,7 @@
                 cplx index (fpointer array) m n))))
 
 (defun |jl_wrap_2darray| (cplx index array m)
-    (let ((n (get_ncols cplx array m))
-            (index (or (make-jlindex)
-                (error "Amount of Julia references excedeed"))))
+    (let ((n (get_ncols cplx array m)))
         (sb-sys:with-pinned-objects (array)
            (sb-alien:alien-funcall
                (sb-alien::extern-alien "jl_call_wrap_2darray"

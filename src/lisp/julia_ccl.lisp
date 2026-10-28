@@ -7,7 +7,7 @@
 (export (import (find-symbol "FIXNUMP" 'ccl)) 'boot)
 
 (defconstant single-positive-infinity (coerce ccl::double-float-positive-infinity 'single-float))
-(defconstant single-negative-infinity (coerce ccl::double-float-positive-infinity 'single-float))
+(defconstant single-negative-infinity (coerce ccl::double-float-negative-infinity 'single-float))
 (defconstant double-positive-infinity ccl::double-float-positive-infinity)
 (defconstant double-negative-infinity ccl::double-float-negative-infinity)
 (defconstant fnan (coerce ccl::double-float-nan 'single-float))
@@ -77,9 +77,7 @@
                     :signed-doubleword cplx :address s :address ptr :signed-doubleword size :void)))))
 
 (defun |jl_wrap_1dfarray| (cplx index array)
-    (let ((size (get_vnrows cplx array))
-            (index (or (make-jlindex)
-                (error "Amount of Julia references excedeed"))))
+    (let ((size (get_vnrows cplx array)))
             (ccl:with-pointer-to-ivector (ptr array)
                 (ccl::external-call "jl_call_wrap_1dfarray"
                     :signed-doubleword cplx :signed-doubleword index
@@ -87,9 +85,7 @@
                             :signed-doubleword))))
 
 (defun |jl_wrap_1darray| (cplx index array)
-    (let ((size (get_vnrows cplx array))
-            (index (or (make-jlindex)
-                (error "Amount of Julia references excedeed"))))
+    (let ((size (get_vnrows cplx array)))
             (ccl:with-pointer-to-ivector (ptr array)
                 (ccl::external-call "jl_call_wrap_1darray"
                     :signed-doubleword cplx :signed-doubleword index 
@@ -245,9 +241,7 @@
                             (string #\newline))))
 
 (defun |jl_wrap_2dfarray| (cplx index array m)
-    (let ((n (get_ncols cplx array m))
-            (index (or (make-jlindex)
-                (error "Amount of Julia references excedeed"))))
+    (let ((n (get_ncols cplx array m)))
             (ccl:with-pointer-to-ivector (ptr array)
                 (ccl::external-call "jl_call_wrap_2dfarray"
                     :signed-doubleword cplx :signed-doubleword index 
@@ -255,9 +249,7 @@
                             :signed-doubleword))))
 
 (defun |jl_wrap_2darray| (cplx index array m)
-    (let ((n (get_ncols cplx array m))
-            (index (or (make-jlindex)
-                (error "Amount of Julia references excedeed"))))
+    (let ((n (get_ncols cplx array m)))
             (ccl:with-pointer-to-ivector (ptr array)
                 (ccl::external-call "jl_call_wrap_2darray"
                     :signed-doubleword cplx :signed-doubleword index :address ptr
@@ -390,9 +382,9 @@
     (let ((n (get_ncols cplx array m)))
         (ccl::with-encoded-cstrs :utf-8 ((s func))
             (ccl:with-pointer-to-ivector (ptr array)
-                (ccl::external-call "jl_call_flt_2dffunction_dbl"
+                (ccl::external-call "jl_call_flt_2dffunction_flt"
                     :signed-doubleword cplx :address s :address ptr :signed-doubleword m :signed-doubleword n
-                        :double-float val :single-float)))))
+                        :single-float val :single-float)))))
 
 (defun |jl_dbl_2dfunction_dbl| (cplx func array m val)
     (let ((n (get_ncols cplx array m)))
@@ -517,7 +509,7 @@
         (ccl::with-encoded-cstrs :utf-8 ((s func))
             (ccl:with-pointer-to-ivector (ptra array)
                 (ccl:with-pointer-to-ivector (pvec vec)
-                    (ccl::external-call "jl_call_array_1dffunction"
+                    (ccl::external-call "jl_call_farray_1dffunction"
                         :signed-doubleword acplx :signed-doubleword cplx
                         :address s :address pvec :address ptra
                         :signed-doubleword size :void))))))
