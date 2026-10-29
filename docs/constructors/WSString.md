@@ -1,6 +1,6 @@
 # WSString
 
-> **Kind**: Domain &nbsp;|&nbsp; \[[Source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L208)\] &nbsp;|&nbsp; **Group**: WS — MathLink
+> **Kind**: Domain &nbsp;|&nbsp; \[[Source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L274)\] &nbsp;|&nbsp; **Group**: WS — MathLink
 
 ## Description
 
@@ -8,7 +8,7 @@ Julia WS strings using the MathLink Julia package.
 
 **WSString is a domain constructor.**  
 **Abbreviation for WSString is WSSTR**  
-**36 names for 47 operations in this domain.**
+**38 names for 59 operations in this domain.**
 
 ## Signatures
 
@@ -30,7 +30,13 @@ Julia WS strings using the MathLink Julia package.
  jlNames : % -> JLObject    jlObject : () -> String
  jlPropertyNames : % -> JLObject    jlRef : % -> SExpression
  jlSymbolic : % -> String    jlText : (%, String) -> List(String)
- jlType : % -> Symbol    jlimref : String -> %
+ jlType : % -> Symbol    jlWSApply : (String, %) -> WSExpression
+ jlWSApply : (String, %, %) -> WSExpression    jlWSApply : (String, %, %, %) -> WSExpression
+ jlWSApply : (String, %, %, %, %) -> WSExpression    jlWSApply : (String, %, %, %, %, %) -> WSExpression
+ jlWSApply : (String, List(%)) -> WSExpression    jlWSEval : (String, %) -> WSExpression
+ jlWSEval : (String, %, %) -> WSExpression    jlWSEval : (String, %, %, %) -> WSExpression
+ jlWSEval : (String, %, %, %, %) -> WSExpression    jlWSEval : (String, %, %, %, %, %) -> WSExpression
+ jlWSEval : (String, List(%)) -> WSExpression    jlimref : String -> %
  jlref : String -> %    latex : % -> String
  missing? : % -> Boolean    mutable? : % -> Boolean
  nothing? : % -> Boolean    numeric : % -> WSExpression
@@ -51,7 +57,7 @@ Julia WS strings using the MathLink Julia package.
 | [`elt`](#elt) | elt(str,i) returns the i-th character of str. |
 | [`jWSInterpret`](#jwsinterpret) | jWSInterpret(form) interprets form. |
 | [`jWSString`](#jwsstring) | jWSString(str) constructs str as a WSString. |
-| [`jlAbout`](#jlabout) | jlAbout(obj) displays Julia information about obj if you have About.jl installed in Julia.... |
+| [`jlAbout`](#jlabout) | jlAbout(obj) displays Julia information about obj if you have About.jl installed in Julia. |
 | [`jlApply`](#jlapply) | jlApply(func, obj) applies the function func with obj as parameter and returns the result ... |
 | [`jlDisplay`](#jldisplay) | jlDisplay(v) pretty prints v (à la Julia). |
 | [`jlDump`](#jldump) | jlDump(obj) dumps (shows) the Julia object (internal structure with type). |
@@ -69,8 +75,10 @@ Julia WS strings using the MathLink Julia package.
 | [`jlSymbolic`](#jlsymbolic) | jlSymbolic(expr) returns the symbolic 'FullForm'. |
 | [`jlText`](#jltext) | jlText(obj, mimest) returns the text representation of obj as a list of String lines with ... |
 | [`jlType`](#jltype) | jlType(obj) returns the Julia type of obj. |
+| [`jlWSApply`](#jlwsapply) | jlWSApply(sym, x) creates an unevaluated Wolfram expression sym[x]. |
+| [`jlWSEval`](#jlwseval) | jlWSEval(func, x) evaluates the Wolfram function func on x. |
 | [`jlimref`](#jlimref) | jlimref(str) evaluates the Julia command str and returns the corresponding FriCAS Julia im... |
-| [`jlref`](#jlref) | jlRef(obj) returns the internal Lisp representation of the Julia object obj. |
+| [`jlref`](#jlref) | jlref(str) evaluates the Julia command str and returns the corresponding FriCAS Julia muta... |
 | [`latex`](#latex) | latex(s) returns a LaTeX-printable output representation of s. |
 | [`missing?`](#missing) | missing?(obj) checks whether or not obj is missing. |
 | [`mutable?`](#mutable) | mutable?(obj) checks whether or not obj is mutable. |
@@ -83,13 +91,13 @@ Julia WS strings using the MathLink Julia package.
 
 ### Detailed Documentation
 
-#### `characters` <a id="characters"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L220)\]
+#### `characters` <a id="characters"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L286)\]
 
 characters(str) returns the characters of str as a WSList.
 
 - **Signature**: `% -> WSList(%)`
 
-#### `coerce` <a id="coerce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L224)\]
+#### `coerce` <a id="coerce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L290)\]
 
 ##### `coerce` : `String -> %`
 
@@ -121,7 +129,7 @@ coerce(expr) returns the WSExpression representation of expr.
 
 Operation defined in WSString.
 
-#### `convert` <a id="convert"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L359)\]
+#### `convert` <a id="convert"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L424)\]
 
 ##### `convert` : `% -> S`
 
@@ -133,7 +141,7 @@ convert(a) transforms a into an element of S.
 
 Operation defined in WSString.
 
-#### `elt` <a id="elt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L222)\]
+#### `elt` <a id="elt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L288)\]
 
 elt(str,i) returns the i-th character of str.
 
@@ -166,7 +174,7 @@ jWSInterpret(form1,form2,form3) interprets forms.
 
 - **From**: [`WSObject`](WSObject.md)
 
-#### `jWSString` <a id="jwsstring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L229)\]
+#### `jWSString` <a id="jwsstring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L295)\]
 
 jWSString(str) constructs str as a WSString.
 
@@ -174,7 +182,7 @@ jWSString(str) constructs str as a WSString.
 
 #### `jlAbout` <a id="jlabout"></a>
 
-jlAbout(obj) displays Julia information about obj if you have About.jl installed in Julia. In the Julia interpreter, enter in the package management mode with ']', and issue: pkg> add "https://github.com/tecosaur/About.jl"
+jlAbout(obj) displays Julia information about obj if you have About.jl installed in Julia.
 
 - **Signature**: `% -> Void`
 - **From**: [`JLObjectType`](JLObjectType.md)
@@ -312,16 +320,9 @@ jlPropertyNames(obj) returns the property/element names of obj.
 
 #### `jlRef` <a id="jlref"></a>
 
-##### `jlRef` : `% -> SExpression`
-
 jlRef(obj) returns the internal Lisp representation of the Julia object obj.
 
-- **From**: [`JLObjectType`](JLObjectType.md)
-
-##### `jlRef` : `String -> %`
-
-jlref(str) evaluates the Julia command str and returns the corresponding FriCAS Julia mutable object.
-
+- **Signature**: `% -> SExpression`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
 #### `jlSymbolic` <a id="jlsymbolic"></a>
@@ -353,6 +354,82 @@ jlType(obj) returns the Julia type of obj.
 - **Signature**: `% -> Symbol`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
+#### `jlWSApply` <a id="jlwsapply"></a>
+
+##### `jlWSApply` : `(String, %) -> WSExpression`
+
+jlWSApply(sym, x) creates an unevaluated Wolfram expression sym[x].
+
+- **From**: [`WSObject`](WSObject.md)
+
+##### `jlWSApply` : `(String, %, %) -> WSExpression`
+
+jlWSApply(sym, x, y) creates an unevaluated Wolfram expression sym[x, y].
+
+- **From**: [`WSObject`](WSObject.md)
+
+##### `jlWSApply` : `(String, %, %, %) -> WSExpression`
+
+jlWSApply(sym, x, y, z) creates an unevaluated Wolfram expression sym[x, y, z].
+
+- **From**: [`WSObject`](WSObject.md)
+
+##### `jlWSApply` : `(String, %, %, %, %) -> WSExpression`
+
+jlWSApply(sym, a, b, c, d) creates an unevaluated Wolfram expression on 4 arguments.
+
+- **From**: [`WSObject`](WSObject.md)
+
+##### `jlWSApply` : `(String, %, %, %, %, %) -> WSExpression`
+
+jlWSApply(sym, a, b, c, d, e) creates an unevaluated Wolfram expression on 5 arguments.
+
+- **From**: [`WSObject`](WSObject.md)
+
+##### `jlWSApply` : `(String, List(%)) -> WSExpression`
+
+jlWSApply(sym, list) creates an unevaluated Wolfram expression sym[list...].
+
+- **From**: [`WSObject`](WSObject.md)
+
+#### `jlWSEval` <a id="jlwseval"></a>
+
+##### `jlWSEval` : `(String, %) -> WSExpression`
+
+jlWSEval(func, x) evaluates the Wolfram function func on x.
+
+- **From**: [`WSObject`](WSObject.md)
+
+##### `jlWSEval` : `(String, %, %) -> WSExpression`
+
+jlWSEval(func, x, y) evaluates the Wolfram function func on x and y.
+
+- **From**: [`WSObject`](WSObject.md)
+
+##### `jlWSEval` : `(String, %, %, %) -> WSExpression`
+
+jlWSEval(func, x, y, z) evaluates the Wolfram function func on x, y, and z.
+
+- **From**: [`WSObject`](WSObject.md)
+
+##### `jlWSEval` : `(String, %, %, %, %) -> WSExpression`
+
+jlWSEval(func, a, b, c, d) evaluates the Wolfram function func on 4 arguments.
+
+- **From**: [`WSObject`](WSObject.md)
+
+##### `jlWSEval` : `(String, %, %, %, %, %) -> WSExpression`
+
+jlWSEval(func, a, b, c, d, e) evaluates the Wolfram function func on 5 arguments.
+
+- **From**: [`WSObject`](WSObject.md)
+
+##### `jlWSEval` : `(String, List(%)) -> WSExpression`
+
+jlWSEval(func, list) evaluates the Wolfram function func on a list of arguments.
+
+- **From**: [`WSObject`](WSObject.md)
+
 #### `jlimref` <a id="jlimref"></a>
 
 jlimref(str) evaluates the Julia command str and returns the corresponding FriCAS Julia immutable object wrapped in a Julia RefValueAny
@@ -360,18 +437,11 @@ jlimref(str) evaluates the Julia command str and returns the corresponding FriCA
 - **Signature**: `String -> %`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
-#### `jlref` <a id="jlref"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L262)\]
-
-##### `jlref` : `% -> SExpression`
-
-jlRef(obj) returns the internal Lisp representation of the Julia object obj.
-
-- **From**: [`JLObjectType`](JLObjectType.md)
-
-##### `jlref` : `String -> %`
+#### `jlref` <a id="jlref"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L426)\]
 
 jlref(str) evaluates the Julia command str and returns the corresponding FriCAS Julia mutable object.
 
+- **Signature**: `String -> %`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
 #### `latex` <a id="latex"></a>
@@ -402,7 +472,7 @@ nothing?(obj) checks whether or not obj is nothing.
 - **Signature**: `% -> Boolean`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
-#### `numeric` <a id="numeric"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L461)\]
+#### `numeric` <a id="numeric"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L524)\]
 
 ##### `numeric` : `% -> WSExpression`
 
@@ -423,14 +493,14 @@ numeric?(x) checks whether or not x is or would yield a number.
 - **Signature**: `% -> Boolean`
 - **From**: [`WSObject`](WSObject.md)
 
-#### `string` <a id="string"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L444)\]
+#### `string` <a id="string"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L507)\]
 
 string(jt) returns the string representation of jt.
 
 - **Signature**: `% -> String`
 - **From**: [`JLType`](JLType.md)
 
-#### `toString` <a id="tostring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L722)\]
+#### `toString` <a id="tostring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L783)\]
 
 toString(obj) returns the string representation of obj.
 

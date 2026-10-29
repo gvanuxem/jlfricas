@@ -1,6 +1,6 @@
 # WSGaussianInteger
 
-> **Kind**: Domain &nbsp;|&nbsp; \[[Source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1059)\] &nbsp;|&nbsp; **Group**: WS — MathLink
+> **Kind**: Domain &nbsp;|&nbsp; \[[Source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1118)\] &nbsp;|&nbsp; **Group**: WS — MathLink
 
 ## Description
 
@@ -8,7 +8,7 @@ Julia WS gaussian integers using the MathLink Julia package.
 
 **WSGaussianInteger is a domain constructor.**  
 **Abbreviation for WSGaussianInteger is WSGINT**  
-**109 names for 159 operations in this domain.**
+**111 names for 171 operations in this domain.**
 
 ## Signatures
 
@@ -60,7 +60,13 @@ Julia WS gaussian integers using the MathLink Julia package.
  jlNames : % -> JLObject    jlObject : () -> String
  jlPropertyNames : % -> JLObject    jlRef : % -> SExpression
  jlSymbolic : % -> String    jlText : (%, String) -> List(String)
- jlType : % -> Symbol    jlimref : String -> %
+ jlType : % -> Symbol    jlWSApply : (String, %) -> WSExpression
+ jlWSApply : (String, %, %) -> WSExpression    jlWSApply : (String, %, %, %) -> WSExpression
+ jlWSApply : (String, %, %, %, %) -> WSExpression    jlWSApply : (String, %, %, %, %, %) -> WSExpression
+ jlWSApply : (String, List(%)) -> WSExpression    jlWSEval : (String, %) -> WSExpression
+ jlWSEval : (String, %, %) -> WSExpression    jlWSEval : (String, %, %, %) -> WSExpression
+ jlWSEval : (String, %, %, %, %) -> WSExpression    jlWSEval : (String, %, %, %, %, %) -> WSExpression
+ jlWSEval : (String, List(%)) -> WSExpression    jlimref : String -> %
  jlref : String -> %    latex : % -> String
  lcm : (%, %) -> %    lcm : List(%) -> %
  lcmCoef : (%, %) -> Record(llcm_res: %,coeff1: %,coeff2: %)    leftPower : (%, NonNegativeInteger) -> %
@@ -136,7 +142,7 @@ Julia WS gaussian integers using the MathLink Julia package.
 | [`imaginary`](#imaginary) | imaginary() = sqrt(-1) = %i. |
 | [`jWSGI`](#jwsgi) | jWSGI(re, im) constructs a WSGaussianInteger from real part re and imaginary part im. |
 | [`jWSInterpret`](#jwsinterpret) | jWSInterpret(form) interprets form. |
-| [`jlAbout`](#jlabout) | jlAbout(obj) displays Julia information about obj if you have About.jl installed in Julia.... |
+| [`jlAbout`](#jlabout) | jlAbout(obj) displays Julia information about obj if you have About.jl installed in Julia. |
 | [`jlApply`](#jlapply) | jlApply(func, obj) applies the function func with obj as parameter and returns the result ... |
 | [`jlDisplay`](#jldisplay) | jlDisplay(v) pretty prints v (à la Julia). |
 | [`jlDump`](#jldump) | jlDump(obj) dumps (shows) the Julia object (internal structure with type). |
@@ -154,8 +160,10 @@ Julia WS gaussian integers using the MathLink Julia package.
 | [`jlSymbolic`](#jlsymbolic) | jlSymbolic(expr) returns the symbolic 'FullForm'. |
 | [`jlText`](#jltext) | jlText(obj, mimest) returns the text representation of obj as a list of String lines with ... |
 | [`jlType`](#jltype) | jlType(obj) returns the Julia type of obj. |
+| [`jlWSApply`](#jlwsapply) | jlWSApply(sym, x) creates an unevaluated Wolfram expression sym[x]. |
+| [`jlWSEval`](#jlwseval) | jlWSEval(func, x) evaluates the Wolfram function func on x. |
 | [`jlimref`](#jlimref) | jlimref(str) evaluates the Julia command str and returns the corresponding FriCAS Julia im... |
-| [`jlref`](#jlref) | jlRef(obj) returns the internal Lisp representation of the Julia object obj. |
+| [`jlref`](#jlref) | jlref(str) evaluates the Julia command str and returns the corresponding FriCAS Julia muta... |
 | [`latex`](#latex) | latex(s) returns a LaTeX-printable output representation of s. |
 | [`lcm`](#lcm) | lcm(x, y) returns the least common multiple of x and y. |
 | [`lcmCoef`](#lcmcoef) | lcmCoef(c1, c2) computes (llcm_res, coeff1, coeff2) such that llcm_res is least left commo... |
@@ -247,14 +255,14 @@ Operation defined in WSGaussianInteger.
 
 - **Signature**: `(%, %) -> %`
 
-#### `0` <a id="0"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1093)\]
+#### `0` <a id="0"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1150)\]
 
 0 is a distinguished element, in AbelianMonoid it is the additive identity element, in MagmaWithZero it is multiplicative zero.
 
 - **Signature**: `() -> %`
 - **From**: `SetWithZero`
 
-#### `1` <a id="1"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1094)\]
+#### `1` <a id="1"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1151)\]
 
 1 returns the unit element, denoted by 1.
 
@@ -359,7 +367,7 @@ characteristicPolynomial(a) returns the characteristic polynomial of the regular
 
 Operation defined in WSGaussianInteger.
 
-#### `coerce` <a id="coerce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1079)\]
+#### `coerce` <a id="coerce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1136)\]
 
 ##### `coerce` : `R -> %`
 
@@ -416,7 +424,7 @@ commutator(a, b) returns a*b-b*a.
 - **Signature**: `(%, %) -> %`
 - **From**: `NonAssociativeRng`
 
-#### `complex` <a id="complex"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1142)\]
+#### `complex` <a id="complex"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1197)\]
 
 ##### `complex` : `(R, R) -> %`
 
@@ -428,14 +436,14 @@ complex(x, y) constructs x + %i*y.
 
 Operation defined in WSGaussianInteger.
 
-#### `conjugate` <a id="conjugate"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1103)\]
+#### `conjugate` <a id="conjugate"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1160)\]
 
 conjugate(x + %i y) returns x - %i y.
 
 - **Signature**: `% -> %`
 - **From**: `ComplexCategory(R)`
 
-#### `convert` <a id="convert"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1136)\]
+#### `convert` <a id="convert"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1193)\]
 
 ##### `convert` : `UP -> %`
 
@@ -695,7 +703,7 @@ generator() returns the generator for this domain.
 - **Signature**: `() -> %`
 - **From**: `MonogenicAlgebra(R,UP)`
 
-#### `imag` <a id="imag"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1101)\]
+#### `imag` <a id="imag"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1158)\]
 
 ##### `imag` : `% -> R`
 
@@ -707,14 +715,14 @@ imag(x) returns imaginary part of x.
 
 Operation defined in WSGaussianInteger.
 
-#### `imaginary` <a id="imaginary"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1095)\]
+#### `imaginary` <a id="imaginary"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1152)\]
 
 imaginary() = sqrt(-1) = %i.
 
 - **Signature**: `() -> %`
 - **From**: `ComplexCategory(R)`
 
-#### `jWSGI` <a id="jwsgi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1081)\]
+#### `jWSGI` <a id="jwsgi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1138)\]
 
 jWSGI(re, im) constructs a WSGaussianInteger from real part re and imaginary part im.
 
@@ -749,7 +757,7 @@ jWSInterpret(form1,form2,form3) interprets forms.
 
 #### `jlAbout` <a id="jlabout"></a>
 
-jlAbout(obj) displays Julia information about obj if you have About.jl installed in Julia. In the Julia interpreter, enter in the package management mode with ']', and issue: pkg> add "https://github.com/tecosaur/About.jl"
+jlAbout(obj) displays Julia information about obj if you have About.jl installed in Julia.
 
 - **Signature**: `% -> Void`
 - **From**: [`JLObjectType`](JLObjectType.md)
@@ -887,16 +895,9 @@ jlPropertyNames(obj) returns the property/element names of obj.
 
 #### `jlRef` <a id="jlref"></a>
 
-##### `jlRef` : `% -> SExpression`
-
 jlRef(obj) returns the internal Lisp representation of the Julia object obj.
 
-- **From**: [`JLObjectType`](JLObjectType.md)
-
-##### `jlRef` : `String -> %`
-
-jlref(str) evaluates the Julia command str and returns the corresponding FriCAS Julia mutable object.
-
+- **Signature**: `% -> SExpression`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
 #### `jlSymbolic` <a id="jlsymbolic"></a>
@@ -928,6 +929,82 @@ jlType(obj) returns the Julia type of obj.
 - **Signature**: `% -> Symbol`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
+#### `jlWSApply` <a id="jlwsapply"></a>
+
+##### `jlWSApply` : `(String, %) -> WSExpression`
+
+jlWSApply(sym, x) creates an unevaluated Wolfram expression sym[x].
+
+- **From**: [`WSObject`](WSObject.md)
+
+##### `jlWSApply` : `(String, %, %) -> WSExpression`
+
+jlWSApply(sym, x, y) creates an unevaluated Wolfram expression sym[x, y].
+
+- **From**: [`WSObject`](WSObject.md)
+
+##### `jlWSApply` : `(String, %, %, %) -> WSExpression`
+
+jlWSApply(sym, x, y, z) creates an unevaluated Wolfram expression sym[x, y, z].
+
+- **From**: [`WSObject`](WSObject.md)
+
+##### `jlWSApply` : `(String, %, %, %, %) -> WSExpression`
+
+jlWSApply(sym, a, b, c, d) creates an unevaluated Wolfram expression on 4 arguments.
+
+- **From**: [`WSObject`](WSObject.md)
+
+##### `jlWSApply` : `(String, %, %, %, %, %) -> WSExpression`
+
+jlWSApply(sym, a, b, c, d, e) creates an unevaluated Wolfram expression on 5 arguments.
+
+- **From**: [`WSObject`](WSObject.md)
+
+##### `jlWSApply` : `(String, List(%)) -> WSExpression`
+
+jlWSApply(sym, list) creates an unevaluated Wolfram expression sym[list...].
+
+- **From**: [`WSObject`](WSObject.md)
+
+#### `jlWSEval` <a id="jlwseval"></a>
+
+##### `jlWSEval` : `(String, %) -> WSExpression`
+
+jlWSEval(func, x) evaluates the Wolfram function func on x.
+
+- **From**: [`WSObject`](WSObject.md)
+
+##### `jlWSEval` : `(String, %, %) -> WSExpression`
+
+jlWSEval(func, x, y) evaluates the Wolfram function func on x and y.
+
+- **From**: [`WSObject`](WSObject.md)
+
+##### `jlWSEval` : `(String, %, %, %) -> WSExpression`
+
+jlWSEval(func, x, y, z) evaluates the Wolfram function func on x, y, and z.
+
+- **From**: [`WSObject`](WSObject.md)
+
+##### `jlWSEval` : `(String, %, %, %, %) -> WSExpression`
+
+jlWSEval(func, a, b, c, d) evaluates the Wolfram function func on 4 arguments.
+
+- **From**: [`WSObject`](WSObject.md)
+
+##### `jlWSEval` : `(String, %, %, %, %, %) -> WSExpression`
+
+jlWSEval(func, a, b, c, d, e) evaluates the Wolfram function func on 5 arguments.
+
+- **From**: [`WSObject`](WSObject.md)
+
+##### `jlWSEval` : `(String, List(%)) -> WSExpression`
+
+jlWSEval(func, list) evaluates the Wolfram function func on a list of arguments.
+
+- **From**: [`WSObject`](WSObject.md)
+
 #### `jlimref` <a id="jlimref"></a>
 
 jlimref(str) evaluates the Julia command str and returns the corresponding FriCAS Julia immutable object wrapped in a Julia RefValueAny
@@ -935,18 +1012,11 @@ jlimref(str) evaluates the Julia command str and returns the corresponding FriCA
 - **Signature**: `String -> %`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
-#### `jlref` <a id="jlref"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1072)\]
-
-##### `jlref` : `% -> SExpression`
-
-jlRef(obj) returns the internal Lisp representation of the Julia object obj.
-
-- **From**: [`JLObjectType`](JLObjectType.md)
-
-##### `jlref` : `String -> %`
+#### `jlref` <a id="jlref"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1414)\]
 
 jlref(str) evaluates the Julia command str and returns the corresponding FriCAS Julia mutable object.
 
+- **Signature**: `String -> %`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
 #### `latex` <a id="latex"></a>
@@ -1137,7 +1207,7 @@ x quo y is the same as divide(x, y).quotient. See divide from EuclideanDomain.
 - **Signature**: `(%, %) -> %`
 - **From**: `EuclideanDomain`
 
-#### `random` <a id="random"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1076)\]
+#### `random` <a id="random"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1133)\]
 
 random(n) returns a gaussian integer where real part is in the range 0..n as the imaginary part.
 
@@ -1171,7 +1241,7 @@ rationalIfCan(x) returns x as a rational number, or "failed" if x is not a ratio
 - **Signature**: `% -> Union(Fraction(Integer),"failed")`
 - **From**: `ComplexCategory(R)`
 
-#### `real` <a id="real"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1100)\]
+#### `real` <a id="real"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1157)\]
 
 ##### `real` : `% -> R`
 
@@ -1369,7 +1439,7 @@ squareFreePart(x) returns a product of prime factors of x each taken with multip
 - **Signature**: `% -> %`
 - **From**: `UniqueFactorizationDomain`
 
-#### `string` <a id="string"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1135)\]
+#### `string` <a id="string"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1192)\]
 
 string(jt) returns the string representation of jt.
 
@@ -1383,7 +1453,7 @@ subtractIfCan(x, y) returns an element z such that z+y=x or "failed" if no such 
 - **Signature**: `(%, %) -> Union(%,"failed")`
 - **From**: `CancellationAbelianMonoid`
 
-#### `toString` <a id="tostring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1196)\]
+#### `toString` <a id="tostring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1251)\]
 
 toString(obj) returns the string representation of obj.
 
@@ -1445,7 +1515,7 @@ unitNormal(x) tries to choose a canonical element from the associate class of x.
 - **Signature**: `% -> Record(unit: %,canonical: %,associate: %)`
 - **From**: `EntireRing`
 
-#### `zero?` <a id="zero"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1301)\]
+#### `zero?` <a id="zero"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jws.spad#L1356)\]
 
 zero?(x) tests if x is equal to 0.
 

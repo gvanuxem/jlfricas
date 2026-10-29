@@ -35,6 +35,12 @@ Julia WS lists using the MathLink Julia package.
  jlObject : () -> String    jlPropertyNames : % -> JLObject
  jlRef : % -> SExpression    jlSymbolic : % -> String
  jlText : (%, String) -> List(String)    jlType : % -> Symbol
+ jlWSApply : (String, List(%)) -> WSExpression    jlWSApply : (String, %, %, %, %, %) -> WSExpression
+ jlWSApply : (String, %, %, %, %) -> WSExpression    jlWSApply : (String, %, %, %) -> WSExpression
+ jlWSApply : (String, %, %) -> WSExpression    jlWSApply : (String, %) -> WSExpression
+ jlWSEval : (String, List(%)) -> WSExpression    jlWSEval : (String, %, %, %, %, %) -> WSExpression
+ jlWSEval : (String, %, %, %, %) -> WSExpression    jlWSEval : (String, %, %, %) -> WSExpression
+ jlWSEval : (String, %, %) -> WSExpression    jlWSEval : (String, %) -> WSExpression
  jlimref : String -> %    jlref : String -> %
  join : (%, %) -> %    last : % -> E
  latex : % -> String    length : % -> WSInteger
@@ -78,7 +84,7 @@ Julia WS lists using the MathLink Julia package.
 | [`jWSAggregate`](#jwsaggregate) | jWSAggregate(list) constructs agg to a WSAggregate. |
 | [`jWSInterpret`](#jwsinterpret) | jWSInterpret(form) interprets form. |
 | [`jWSList`](#jwslist) | jWSList(list) constructs list as a WSList. |
-| [`jlAbout`](#jlabout) | jlAbout(obj) displays Julia information about obj if you have About.jl installed in Julia.... |
+| [`jlAbout`](#jlabout) | jlAbout(obj) displays Julia information about obj if you have About.jl installed in Julia. |
 | [`jlApply`](#jlapply) | jlApply(func, obj) applies the function func with obj as parameter and returns the result ... |
 | [`jlDisplay`](#jldisplay) | jlDisplay(v) pretty prints v (à la Julia). |
 | [`jlDump`](#jldump) | jlDump(obj) dumps (shows) the Julia object (internal structure with type). |
@@ -96,8 +102,10 @@ Julia WS lists using the MathLink Julia package.
 | [`jlSymbolic`](#jlsymbolic) | jlSymbolic(expr) returns the symbolic 'FullForm'. |
 | [`jlText`](#jltext) | jlText(obj, mimest) returns the text representation of obj as a list of String lines with ... |
 | [`jlType`](#jltype) | jlType(obj) returns the Julia type of obj. |
+| [`jlWSApply`](#jlwsapply) | jlWSApply(sym, x) creates an unevaluated Wolfram expression sym[x]. |
+| [`jlWSEval`](#jlwseval) | jlWSEval(func, x) evaluates the Wolfram function func on x. |
 | [`jlimref`](#jlimref) | jlimref(str) evaluates the Julia command str and returns the corresponding FriCAS Julia im... |
-| [`jlref`](#jlref) | jlRef(obj) returns the internal Lisp representation of the Julia object obj. |
+| [`jlref`](#jlref) | jlref(str) evaluates the Julia command str and returns the corresponding FriCAS Julia muta... |
 | [`join`](#join) | join(agg1, agg2) joins the two aggregates agg1 and agg2. |
 | [`last`](#last) | last(agg) returns the last element of agg. |
 | [`latex`](#latex) | latex(s) returns a LaTeX-printable output representation of s. |
@@ -224,14 +232,14 @@ differences(agg) returns the differences between adjacent elements in agg.
 
 Operation defined in WSList.
 
-#### `dimensions` <a id="dimensions"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L529)\]
+#### `dimensions` <a id="dimensions"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L530)\]
 
 dimensions(agg) returns dimensions of agg.
 
 - **Signature**: `% -> WSList(WSInteger)`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `elt` <a id="elt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L392)\]
+#### `elt` <a id="elt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L393)\]
 
 elt(agg,i) returns the i-th element.
 
@@ -316,7 +324,7 @@ jWSList(str) constructs str as a WSList. str must be in the WS language.
 
 #### `jlAbout` <a id="jlabout"></a>
 
-jlAbout(obj) displays Julia information about obj if you have About.jl installed in Julia. In the Julia interpreter, enter in the package management mode with ']', and issue: pkg> add "https://github.com/tecosaur/About.jl"
+jlAbout(obj) displays Julia information about obj if you have About.jl installed in Julia.
 
 - **Signature**: `% -> Void`
 - **From**: [`JLObjectType`](JLObjectType.md)
@@ -454,16 +462,9 @@ jlPropertyNames(obj) returns the property/element names of obj.
 
 #### `jlRef` <a id="jlref"></a>
 
-##### `jlRef` : `% -> SExpression`
-
 jlRef(obj) returns the internal Lisp representation of the Julia object obj.
 
-- **From**: [`JLObjectType`](JLObjectType.md)
-
-##### `jlRef` : `String -> %`
-
-jlref(str) evaluates the Julia command str and returns the corresponding FriCAS Julia mutable object.
-
+- **Signature**: `% -> SExpression`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
 #### `jlSymbolic` <a id="jlsymbolic"></a>
@@ -495,6 +496,82 @@ jlType(obj) returns the Julia type of obj.
 - **Signature**: `% -> Symbol`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
+#### `jlWSApply` <a id="jlwsapply"></a>
+
+##### `jlWSApply` : `(String, %) -> WSExpression`
+
+jlWSApply(sym, x) creates an unevaluated Wolfram expression sym[x].
+
+- **From**: [`WSObject`](WSObject.md)
+
+##### `jlWSApply` : `(String, %, %) -> WSExpression`
+
+jlWSApply(sym, x, y) creates an unevaluated Wolfram expression sym[x, y].
+
+- **From**: [`WSObject`](WSObject.md)
+
+##### `jlWSApply` : `(String, %, %, %) -> WSExpression`
+
+jlWSApply(sym, x, y, z) creates an unevaluated Wolfram expression sym[x, y, z].
+
+- **From**: [`WSObject`](WSObject.md)
+
+##### `jlWSApply` : `(String, %, %, %, %) -> WSExpression`
+
+jlWSApply(sym, a, b, c, d) creates an unevaluated Wolfram expression on 4 arguments.
+
+- **From**: [`WSObject`](WSObject.md)
+
+##### `jlWSApply` : `(String, %, %, %, %, %) -> WSExpression`
+
+jlWSApply(sym, a, b, c, d, e) creates an unevaluated Wolfram expression on 5 arguments.
+
+- **From**: [`WSObject`](WSObject.md)
+
+##### `jlWSApply` : `(String, List(%)) -> WSExpression`
+
+jlWSApply(sym, list) creates an unevaluated Wolfram expression sym[list...].
+
+- **From**: [`WSObject`](WSObject.md)
+
+#### `jlWSEval` <a id="jlwseval"></a>
+
+##### `jlWSEval` : `(String, %) -> WSExpression`
+
+jlWSEval(func, x) evaluates the Wolfram function func on x.
+
+- **From**: [`WSObject`](WSObject.md)
+
+##### `jlWSEval` : `(String, %, %) -> WSExpression`
+
+jlWSEval(func, x, y) evaluates the Wolfram function func on x and y.
+
+- **From**: [`WSObject`](WSObject.md)
+
+##### `jlWSEval` : `(String, %, %, %) -> WSExpression`
+
+jlWSEval(func, x, y, z) evaluates the Wolfram function func on x, y, and z.
+
+- **From**: [`WSObject`](WSObject.md)
+
+##### `jlWSEval` : `(String, %, %, %, %) -> WSExpression`
+
+jlWSEval(func, a, b, c, d) evaluates the Wolfram function func on 4 arguments.
+
+- **From**: [`WSObject`](WSObject.md)
+
+##### `jlWSEval` : `(String, %, %, %, %, %) -> WSExpression`
+
+jlWSEval(func, a, b, c, d, e) evaluates the Wolfram function func on 5 arguments.
+
+- **From**: [`WSObject`](WSObject.md)
+
+##### `jlWSEval` : `(String, List(%)) -> WSExpression`
+
+jlWSEval(func, list) evaluates the Wolfram function func on a list of arguments.
+
+- **From**: [`WSObject`](WSObject.md)
+
 #### `jlimref` <a id="jlimref"></a>
 
 jlimref(str) evaluates the Julia command str and returns the corresponding FriCAS Julia immutable object wrapped in a Julia RefValueAny
@@ -502,18 +579,11 @@ jlimref(str) evaluates the Julia command str and returns the corresponding FriCA
 - **Signature**: `String -> %`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
-#### `jlref` <a id="jlref"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L245)\]
-
-##### `jlref` : `% -> SExpression`
-
-jlRef(obj) returns the internal Lisp representation of the Julia object obj.
-
-- **From**: [`JLObjectType`](JLObjectType.md)
-
-##### `jlref` : `String -> %`
+#### `jlref` <a id="jlref"></a>
 
 jlref(str) evaluates the Julia command str and returns the corresponding FriCAS Julia mutable object.
 
+- **Signature**: `String -> %`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
 #### `join` <a id="join"></a>
@@ -523,14 +593,14 @@ join(agg1, agg2) joins the two aggregates agg1 and agg2.
 - **Signature**: `(%, %) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `last` <a id="last"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L538)\]
+#### `last` <a id="last"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L539)\]
 
 last(agg) returns the last element of agg.
 
 - **Signature**: `% -> E`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `latex` <a id="latex"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L517)\]
+#### `latex` <a id="latex"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L518)\]
 
 latex(s) returns a LaTeX-printable output representation of s.
 
@@ -600,21 +670,21 @@ prepend(l, elt) prepends elt to the list l.
 - **Signature**: `(%, E) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `qelt` <a id="qelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L394)\]
+#### `qelt` <a id="qelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L395)\]
 
 qelt(agg,i) returns the i-th element. No checks are done at the FriCAS level.
 
 - **Signature**: `(%, Integer) -> E`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `qsetelt` <a id="qsetelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L400)\]
+#### `qsetelt` <a id="qsetelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L401)\]
 
 qsetelt(l,i,elem) returns a copy of l with i-th element replaced by the element elem. No checks are done at the FriCAS level.
 
 - **Signature**: `(%, Integer, E) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `qsetelt!` <a id="qsetelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L403)\]
+#### `qsetelt!` <a id="qsetelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L404)\]
 
 qsetelt!(l,i,elem) returns l with i-th element replaced by elem. No checks are done at the FriCAS level.
 
@@ -683,14 +753,14 @@ setIntersection(agg1, agg2) is the intersection set operator.
 - **Signature**: `(%, %) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `setelt` <a id="setelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L397)\]
+#### `setelt` <a id="setelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L398)\]
 
 setelt(l,i,elem) returns a copy of l with i-th element replaced by the element elem.
 
 - **Signature**: `(%, Integer, E) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `setelt!` <a id="setelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L577)\]
+#### `setelt!` <a id="setelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L578)\]
 
 setelt!(l,i,elem) returns l with i-th element replaced by elem.
 
@@ -730,7 +800,7 @@ take(l,i) returns the first i elements.
 
 Operation defined in WSList.
 
-#### `toString` <a id="tostring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L498)\]
+#### `toString` <a id="tostring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L499)\]
 
 toString(obj) returns the string representation of obj.
 

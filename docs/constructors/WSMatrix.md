@@ -1,6 +1,6 @@
 # WSMatrix
 
-> **Kind**: Domain &nbsp;|&nbsp; \[[Source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L318)\] &nbsp;|&nbsp; **Group**: WS — MathLink
+> **Kind**: Domain &nbsp;|&nbsp; \[[Source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L320)\] &nbsp;|&nbsp; **Group**: WS — MathLink
 
 ## Description
 
@@ -72,7 +72,13 @@ Julia WS matrices using the MathLink Julia package.
  jlNames : % -> JLObject    jlObject : () -> String
  jlPropertyNames : % -> JLObject    jlRef : % -> SExpression
  jlSymbolic : % -> String    jlText : (%, String) -> List(String)
- jlType : % -> Symbol    jlimref : String -> %
+ jlType : % -> Symbol    jlWSApply : (String, List(%)) -> WSExpression
+ jlWSApply : (String, %, %, %, %, %) -> WSExpression    jlWSApply : (String, %, %, %, %) -> WSExpression
+ jlWSApply : (String, %, %, %) -> WSExpression    jlWSApply : (String, %, %) -> WSExpression
+ jlWSApply : (String, %) -> WSExpression    jlWSEval : (String, List(%)) -> WSExpression
+ jlWSEval : (String, %, %, %, %, %) -> WSExpression    jlWSEval : (String, %, %, %, %) -> WSExpression
+ jlWSEval : (String, %, %, %) -> WSExpression    jlWSEval : (String, %, %) -> WSExpression
+ jlWSEval : (String, %) -> WSExpression    jlimref : String -> %
  jlref : String -> %    join : (%, %) -> %
  jordan : % -> Record(s: %,j: %)    kroneckerProduct : (%, %) -> % if E has SRNG
  kroneckerProduct : List(%) -> % if E has SRNG    kroneckerSum : (%, %) -> %
@@ -203,7 +209,7 @@ Julia WS matrices using the MathLink Julia package.
 | [`jWSAggregate`](#jwsaggregate) | jWSAggregate(list) constructs agg to a WSAggregate. |
 | [`jWSInterpret`](#jwsinterpret) | jWSInterpret(form) interprets form. |
 | [`jWSMatrix`](#jwsmatrix) | jWSMatrix(str) constructs str as a WSMatrix. str must be in the WS language (WS list of WS... |
-| [`jlAbout`](#jlabout) | jlAbout(obj) displays Julia information about obj if you have About.jl installed in Julia.... |
+| [`jlAbout`](#jlabout) | jlAbout(obj) displays Julia information about obj if you have About.jl installed in Julia. |
 | [`jlApply`](#jlapply) | jlApply(func, obj) applies the function func with obj as parameter and returns the result ... |
 | [`jlDisplay`](#jldisplay) | jlDisplay(v) pretty prints v (à la Julia). |
 | [`jlDump`](#jldump) | jlDump(obj) dumps (shows) the Julia object (internal structure with type). |
@@ -221,8 +227,10 @@ Julia WS matrices using the MathLink Julia package.
 | [`jlSymbolic`](#jlsymbolic) | jlSymbolic(expr) returns the symbolic 'FullForm'. |
 | [`jlText`](#jltext) | jlText(obj, mimest) returns the text representation of obj as a list of String lines with ... |
 | [`jlType`](#jltype) | jlType(obj) returns the Julia type of obj. |
+| [`jlWSApply`](#jlwsapply) | jlWSApply(sym, x) creates an unevaluated Wolfram expression sym[x]. |
+| [`jlWSEval`](#jlwseval) | jlWSEval(func, x) evaluates the Wolfram function func on x. |
 | [`jlimref`](#jlimref) | jlimref(str) evaluates the Julia command str and returns the corresponding FriCAS Julia im... |
-| [`jlref`](#jlref) | jlRef(obj) returns the internal Lisp representation of the Julia object obj. |
+| [`jlref`](#jlref) | jlref(str) evaluates the Julia command str and returns the corresponding FriCAS Julia muta... |
 | [`join`](#join) | join(agg1, agg2) joins the two aggregates agg1 and agg2. |
 | [`jordan`](#jordan) | jordan(m) computes the Jordan decomposition of the square matrix m. |
 | [`kroneckerProduct`](#kroneckerproduct) | kroneckerProduct(a, b) calculates the Kronecker product of the matrices a and b. This corr... |
@@ -422,19 +430,19 @@ accumulate(agg) returns the partial sums of elements in agg.
 
 Operation defined in WSMatrix.
 
-#### `adjoint` <a id="adjoint"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L412)\]
+#### `adjoint` <a id="adjoint"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L413)\]
 
 adjoint(m) returns the adjoint of m, i.e. the conjugate transposition of m.
 
 - **Signature**: `% -> %`
 
-#### `adjugate` <a id="adjugate"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L414)\]
+#### `adjugate` <a id="adjugate"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L415)\]
 
 adjugate(m) returns the adjugate of square m.
 
 - **Signature**: `% -> %`
 
-#### `antisymmetric?` <a id="antisymmetric"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L357)\]
+#### `antisymmetric?` <a id="antisymmetric"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L358)\]
 
 antisymmetric?(m) returns true if the matrix m is square and antisymmetric (i.e. m[i, j] = -m[j, i] for all i and j) and false otherwise.
 
@@ -497,7 +505,7 @@ blockSplit(a, n, m) splits a into n*m subarrays of equal size row and column wis
 
 - **From**: `TwoDimensionalArrayCategory(R,Row,Col)`
 
-#### `cholesky` <a id="cholesky"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L472)\]
+#### `cholesky` <a id="cholesky"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L473)\]
 
 ##### `cholesky` : `% -> Record(l : %, u : %)`
 
@@ -507,7 +515,7 @@ cholesky(m) computes the Cholesky decomposition of the positive definite/hermiti
 
 Operation defined in WSMatrix.
 
-#### `coerce` <a id="coerce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L699)\]
+#### `coerce` <a id="coerce"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L700)\]
 
 ##### `coerce` : `Col -> %`
 
@@ -558,7 +566,7 @@ colSlice(m) returns a segment s such that for m the access m(i, s) gives the i-t
 - **Signature**: `% -> Segment(Integer)`
 - **From**: `TwoDimensionalArrayCategory(R,Row,Col)`
 
-#### `column` <a id="column"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L408)\]
+#### `column` <a id="column"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L409)\]
 
 ##### `column` : `(%, Integer) -> %`
 
@@ -634,7 +642,7 @@ delete(l, inds) deletes element(s) of the list l at index(es) inds.
 - **Signature**: `(%, WSList(WSInteger)) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `determinant` <a id="determinant"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L668)\]
+#### `determinant` <a id="determinant"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L669)\]
 
 ##### `determinant` : `% -> R`
 
@@ -646,19 +654,19 @@ determinant(m) returns the determinant of the matrix m. Error: if the matrix is 
 
 Operation defined in WSMatrix.
 
-#### `diagonal` <a id="diagonal"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L427)\]
+#### `diagonal` <a id="diagonal"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L428)\]
 
 diagonal(m) returns the diagonal elements of m as a vector.
 
 - **Signature**: `% -> WSVector(E)`
 
-#### `diagonal?` <a id="diagonal"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L348)\]
+#### `diagonal?` <a id="diagonal"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L349)\]
 
 diagonal?(m) returns true if the matrix m is square and diagonal (i.e. all entries of m not on the diagonal are zero) and false otherwise.
 
 - **Signature**: `% -> Boolean`
 
-#### `diagonalMatrix` <a id="diagonalmatrix"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L495)\]
+#### `diagonalMatrix` <a id="diagonalmatrix"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L496)\]
 
 ##### `diagonalMatrix` : `WSList(E) -> %`
 
@@ -692,14 +700,14 @@ differences(agg) returns the differences between adjacent elements in agg.
 
 Operation defined in WSMatrix.
 
-#### `dimensions` <a id="dimensions"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L529)\]
+#### `dimensions` <a id="dimensions"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L530)\]
 
 dimensions(agg) returns dimensions of agg.
 
 - **Signature**: `% -> WSList(WSInteger)`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `eigenSystem` <a id="eigensystem"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L454)\]
+#### `eigenSystem` <a id="eigensystem"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L455)\]
 
 ##### `eigenSystem` : `% -> Record(values : WSVector(WSExpression),`
 
@@ -711,19 +719,19 @@ eigenSystem(m) computes the spectral decomposition of the square matrix m. It re
 
 - **From**: [`WSMatrix(E)`](WSMatrix.md)
 
-#### `eigenvalues` <a id="eigenvalues"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L450)\]
+#### `eigenvalues` <a id="eigenvalues"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L451)\]
 
 eigenvalues(m) returns the eigenvalues of the square matrix m.
 
 - **Signature**: `% -> WSVector(WSExpression)`
 
-#### `eigenvectors` <a id="eigenvectors"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L452)\]
+#### `eigenvectors` <a id="eigenvectors"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L453)\]
 
 eigenvectors(m) returns the eigenvectors of the square matrix m.
 
 - **Signature**: `% -> WSMatrix(WSExpression)`
 
-#### `elt` <a id="elt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L392)\]
+#### `elt` <a id="elt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L393)\]
 
 ##### `elt` : `(%, Integer, Integer) -> E`
 
@@ -963,13 +971,13 @@ hashUpdate!(hs, s) computes new HashState from old and s used for incremental co
 
 Operation defined in WSMatrix.
 
-#### `hermitian?` <a id="hermitian"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L363)\]
+#### `hermitian?` <a id="hermitian"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L364)\]
 
 hermitian?(m) checks whether or not m is hermitian.
 
 - **Signature**: `% -> Boolean`
 
-#### `hessenberg` <a id="hessenberg"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L469)\]
+#### `hessenberg` <a id="hessenberg"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L470)\]
 
 ##### `hessenberg` : `% -> Record(p : %, h : %)`
 
@@ -1026,7 +1034,7 @@ intersection(agg1, agg2) is the intersection operator.
 - **Signature**: `(%, %) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `inverse` <a id="inverse"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L429)\]
+#### `inverse` <a id="inverse"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L430)\]
 
 ##### `inverse` : `% -> %`
 
@@ -1047,7 +1055,7 @@ inverse(m) returns the inverse of the matrix m. If the matrix is not invertible,
 
 Operation defined in WSMatrix.
 
-#### `invertIfCan` <a id="invertifcan"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L435)\]
+#### `invertIfCan` <a id="invertifcan"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L436)\]
 
 ##### `invertIfCan` : `% -> Union(%,"failed")`
 
@@ -1096,7 +1104,7 @@ jWSInterpret(form1,form2,form3) interprets forms.
 
 - **From**: [`WSObject`](WSObject.md)
 
-#### `jWSMatrix` <a id="jwsmatrix"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L503)\]
+#### `jWSMatrix` <a id="jwsmatrix"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L504)\]
 
 jWSMatrix(str) constructs str as a WSMatrix. str must be in the WS language (WS list of WS list(s)).
 
@@ -1104,7 +1112,7 @@ jWSMatrix(str) constructs str as a WSMatrix. str must be in the WS language (WS 
 
 #### `jlAbout` <a id="jlabout"></a>
 
-jlAbout(obj) displays Julia information about obj if you have About.jl installed in Julia. In the Julia interpreter, enter in the package management mode with ']', and issue: pkg> add "https://github.com/tecosaur/About.jl"
+jlAbout(obj) displays Julia information about obj if you have About.jl installed in Julia.
 
 - **Signature**: `% -> Void`
 - **From**: [`JLObjectType`](JLObjectType.md)
@@ -1242,16 +1250,9 @@ jlPropertyNames(obj) returns the property/element names of obj.
 
 #### `jlRef` <a id="jlref"></a>
 
-##### `jlRef` : `% -> SExpression`
-
 jlRef(obj) returns the internal Lisp representation of the Julia object obj.
 
-- **From**: [`JLObjectType`](JLObjectType.md)
-
-##### `jlRef` : `String -> %`
-
-jlref(str) evaluates the Julia command str and returns the corresponding FriCAS Julia mutable object.
-
+- **Signature**: `% -> SExpression`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
 #### `jlSymbolic` <a id="jlsymbolic"></a>
@@ -1283,6 +1284,82 @@ jlType(obj) returns the Julia type of obj.
 - **Signature**: `% -> Symbol`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
+#### `jlWSApply` <a id="jlwsapply"></a>
+
+##### `jlWSApply` : `(String, %) -> WSExpression`
+
+jlWSApply(sym, x) creates an unevaluated Wolfram expression sym[x].
+
+- **From**: [`WSObject`](WSObject.md)
+
+##### `jlWSApply` : `(String, %, %) -> WSExpression`
+
+jlWSApply(sym, x, y) creates an unevaluated Wolfram expression sym[x, y].
+
+- **From**: [`WSObject`](WSObject.md)
+
+##### `jlWSApply` : `(String, %, %, %) -> WSExpression`
+
+jlWSApply(sym, x, y, z) creates an unevaluated Wolfram expression sym[x, y, z].
+
+- **From**: [`WSObject`](WSObject.md)
+
+##### `jlWSApply` : `(String, %, %, %, %) -> WSExpression`
+
+jlWSApply(sym, a, b, c, d) creates an unevaluated Wolfram expression on 4 arguments.
+
+- **From**: [`WSObject`](WSObject.md)
+
+##### `jlWSApply` : `(String, %, %, %, %, %) -> WSExpression`
+
+jlWSApply(sym, a, b, c, d, e) creates an unevaluated Wolfram expression on 5 arguments.
+
+- **From**: [`WSObject`](WSObject.md)
+
+##### `jlWSApply` : `(String, List(%)) -> WSExpression`
+
+jlWSApply(sym, list) creates an unevaluated Wolfram expression sym[list...].
+
+- **From**: [`WSObject`](WSObject.md)
+
+#### `jlWSEval` <a id="jlwseval"></a>
+
+##### `jlWSEval` : `(String, %) -> WSExpression`
+
+jlWSEval(func, x) evaluates the Wolfram function func on x.
+
+- **From**: [`WSObject`](WSObject.md)
+
+##### `jlWSEval` : `(String, %, %) -> WSExpression`
+
+jlWSEval(func, x, y) evaluates the Wolfram function func on x and y.
+
+- **From**: [`WSObject`](WSObject.md)
+
+##### `jlWSEval` : `(String, %, %, %) -> WSExpression`
+
+jlWSEval(func, x, y, z) evaluates the Wolfram function func on x, y, and z.
+
+- **From**: [`WSObject`](WSObject.md)
+
+##### `jlWSEval` : `(String, %, %, %, %) -> WSExpression`
+
+jlWSEval(func, a, b, c, d) evaluates the Wolfram function func on 4 arguments.
+
+- **From**: [`WSObject`](WSObject.md)
+
+##### `jlWSEval` : `(String, %, %, %, %, %) -> WSExpression`
+
+jlWSEval(func, a, b, c, d, e) evaluates the Wolfram function func on 5 arguments.
+
+- **From**: [`WSObject`](WSObject.md)
+
+##### `jlWSEval` : `(String, List(%)) -> WSExpression`
+
+jlWSEval(func, list) evaluates the Wolfram function func on a list of arguments.
+
+- **From**: [`WSObject`](WSObject.md)
+
 #### `jlimref` <a id="jlimref"></a>
 
 jlimref(str) evaluates the Julia command str and returns the corresponding FriCAS Julia immutable object wrapped in a Julia RefValueAny
@@ -1290,18 +1367,11 @@ jlimref(str) evaluates the Julia command str and returns the corresponding FriCA
 - **Signature**: `String -> %`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
-#### `jlref` <a id="jlref"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L336)\]
-
-##### `jlref` : `% -> SExpression`
-
-jlRef(obj) returns the internal Lisp representation of the Julia object obj.
-
-- **From**: [`JLObjectType`](JLObjectType.md)
-
-##### `jlref` : `String -> %`
+#### `jlref` <a id="jlref"></a>
 
 jlref(str) evaluates the Julia command str and returns the corresponding FriCAS Julia mutable object.
 
+- **Signature**: `String -> %`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
 #### `join` <a id="join"></a>
@@ -1311,7 +1381,7 @@ join(agg1, agg2) joins the two aggregates agg1 and agg2.
 - **Signature**: `(%, %) -> %`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `jordan` <a id="jordan"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L467)\]
+#### `jordan` <a id="jordan"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L468)\]
 
 ##### `jordan` : `% -> Record(s : %, j : %)`
 
@@ -1321,7 +1391,7 @@ jordan(m) computes the Jordan decomposition of the square matrix m.
 
 Operation defined in WSMatrix.
 
-#### `kroneckerProduct` <a id="kroneckerproduct"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L686)\]
+#### `kroneckerProduct` <a id="kroneckerproduct"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L687)\]
 
 ##### `kroneckerProduct` : `(%, %) -> %`
 
@@ -1369,7 +1439,7 @@ Should be local but conditional.
 
 Operation defined in WSMatrix.
 
-#### `last` <a id="last"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L538)\]
+#### `last` <a id="last"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L539)\]
 
 ##### `last` : `% -> E`
 
@@ -1381,7 +1451,7 @@ last(agg) returns the last element of agg.
 
 Operation defined in WSMatrix.
 
-#### `latex` <a id="latex"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L517)\]
+#### `latex` <a id="latex"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L518)\]
 
 latex(s) returns a LaTeX-printable output representation of s.
 
@@ -1402,7 +1472,7 @@ less?(u, n) tests if u has less than n elements.
 - **Signature**: `(%, NonNegativeInteger) -> Boolean`
 - **From**: `Aggregate`
 
-#### `linearSolve` <a id="linearsolve"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L442)\]
+#### `linearSolve` <a id="linearsolve"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L443)\]
 
 linearSolve(mat, b) finds x, solution of the equation mat * x = b.
 
@@ -1420,7 +1490,7 @@ listOfLists(m) returns the rows of the array m as a list of lists.
 
 Operation defined in WSMatrix.
 
-#### `lu` <a id="lu"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L475)\]
+#### `lu` <a id="lu"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L476)\]
 
 ##### `lu` : `% -> Record(lu : %, p : %, c : %)`
 
@@ -1486,7 +1556,7 @@ map!(f, u) destructively replaces each element x of u by f(x).
 
 Operation defined in WSMatrix.
 
-#### `matrix` <a id="matrix"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L501)\]
+#### `matrix` <a id="matrix"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L502)\]
 
 ##### `matrix` : `WSVector(E) -> %`
 
@@ -1512,7 +1582,7 @@ Operation defined in WSMatrix.
 
 Operation defined in WSMatrix.
 
-#### `matrixFunction` <a id="matrixfunction"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L477)\]
+#### `matrixFunction` <a id="matrixfunction"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L478)\]
 
 matrixFunction(func, m) applies the matrix function func, if available, to the matrix m. The Wolfram Language operator needs to be used. Note that it is not an element-wise operation. For example:
 
@@ -1545,14 +1615,14 @@ Operation defined in WSMatrix.
 
 Operation defined in WSMatrix.
 
-#### `maxColIndex` <a id="maxcolindex"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L555)\]
+#### `maxColIndex` <a id="maxcolindex"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L556)\]
 
 maxColIndex(m) returns the index of the 'last' column of the array m
 
 - **Signature**: `% -> Integer`
 - **From**: `TwoDimensionalArrayCategory(R,Row,Col)`
 
-#### `maxRowIndex` <a id="maxrowindex"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L553)\]
+#### `maxRowIndex` <a id="maxrowindex"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L554)\]
 
 maxRowIndex(m) returns the index of the 'last' row of the array m
 
@@ -1595,21 +1665,21 @@ min(u) returns minimal element of u. Error if u is empty.
 
 Operation defined in WSMatrix.
 
-#### `minColIndex` <a id="mincolindex"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L552)\]
+#### `minColIndex` <a id="mincolindex"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L553)\]
 
 minColIndex(m) returns the index of the 'first' column of the array m
 
 - **Signature**: `% -> Integer`
 - **From**: `TwoDimensionalArrayCategory(R,Row,Col)`
 
-#### `minRowIndex` <a id="minrowindex"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L551)\]
+#### `minRowIndex` <a id="minrowindex"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L552)\]
 
 minRowIndex(m) returns the index of the 'first' row of the array m
 
 - **Signature**: `% -> Integer`
 - **From**: `TwoDimensionalArrayCategory(R,Row,Col)`
 
-#### `minordet` <a id="minordet"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L676)\]
+#### `minordet` <a id="minordet"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L677)\]
 
 ##### `minordet` : `% -> R`
 
@@ -1621,7 +1691,7 @@ minordet(m) computes the determinant of the matrix m using minors. Error: if the
 
 Operation defined in WSMatrix.
 
-#### `minors` <a id="minors"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L446)\]
+#### `minors` <a id="minors"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L447)\]
 
 ##### `minors` : `% -> %`
 
@@ -1652,7 +1722,7 @@ mutable?(obj) checks whether or not obj is mutable.
 - **Signature**: `% -> Boolean`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
-#### `ncols` <a id="ncols"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L556)\]
+#### `ncols` <a id="ncols"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L557)\]
 
 ncols(m) returns the number of columns in the array m
 
@@ -1671,7 +1741,7 @@ new(m, n, r) is an m-by-n array all of whose entries are r
 
 Operation defined in WSMatrix.
 
-#### `norm` <a id="norm"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L416)\]
+#### `norm` <a id="norm"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L417)\]
 
 ##### `norm` : `% -> E`
 
@@ -1688,14 +1758,14 @@ nothing?(obj) checks whether or not obj is nothing.
 - **Signature**: `% -> Boolean`
 - **From**: [`JLObjectType`](JLObjectType.md)
 
-#### `nrows` <a id="nrows"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L554)\]
+#### `nrows` <a id="nrows"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L555)\]
 
 nrows(m) returns the number of rows in the array m
 
 - **Signature**: `% -> NonNegativeInteger`
 - **From**: `TwoDimensionalArrayCategory(R,Row,Col)`
 
-#### `nullSpace` <a id="nullspace"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L444)\]
+#### `nullSpace` <a id="nullspace"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L445)\]
 
 ##### `nullSpace` : `% -> WSList(WSVector(E))`
 
@@ -1711,7 +1781,7 @@ nullSpace(m) returns a basis for the null space of the matrix m. Note: null spac
 
 Operation defined in WSMatrix.
 
-#### `nullity` <a id="nullity"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L672)\]
+#### `nullity` <a id="nullity"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L673)\]
 
 ##### `nullity` : `% -> NonNegativeInteger`
 
@@ -1774,13 +1844,13 @@ parts(u) returns a list of the consecutive elements of u. For finite collections
 
 Operation defined in WSMatrix.
 
-#### `permanent` <a id="permanent"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L425)\]
+#### `permanent` <a id="permanent"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L426)\]
 
 permanent(m) returns the permanent of m.
 
 - **Signature**: `% -> E`
 
-#### `positiveDefinite?` <a id="positivedefinite"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L361)\]
+#### `positiveDefinite?` <a id="positivedefinite"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L362)\]
 
 positiveDefinite?(m) checks whether or not m is positive definite.
 
@@ -1810,13 +1880,13 @@ prepend(l, elt) prepends elt to the list l.
 
 Operation defined in WSMatrix.
 
-#### `pseudoInverse` <a id="pseudoinverse"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L439)\]
+#### `pseudoInverse` <a id="pseudoinverse"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L440)\]
 
 pseudoInverse(m) computes the pseudo inverse of m also known as Moore-Penrose inverse.
 
 - **Signature**: `% -> %`
 
-#### `qelt` <a id="qelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L394)\]
+#### `qelt` <a id="qelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L395)\]
 
 ##### `qelt` : `(%, Integer, Integer) -> E`
 
@@ -1838,14 +1908,14 @@ qelt(m, i, j) returns the element in the ith row and jth column of the array m N
 
 Operation defined in WSMatrix.
 
-#### `qnew` <a id="qnew"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L690)\]
+#### `qnew` <a id="qnew"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L691)\]
 
 qnew(m, n) is an m-by-n uninitialized array
 
 - **Signature**: `(NonNegativeInteger, NonNegativeInteger) -> %`
 - **From**: `TwoDimensionalArrayCategory(R,Row,Col)`
 
-#### `qr` <a id="qr"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L465)\]
+#### `qr` <a id="qr"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L466)\]
 
 ##### `qr` : `% -> Record(q : %, r : %)`
 
@@ -1855,7 +1925,7 @@ qr(m) computes the QR decomposition of the matrix m.
 
 Operation defined in WSMatrix.
 
-#### `qsetelt` <a id="qsetelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L400)\]
+#### `qsetelt` <a id="qsetelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L401)\]
 
 ##### `qsetelt` : `(%, Integer, Integer, E) -> %`
 
@@ -1871,7 +1941,7 @@ qsetelt(l,i,elem) returns a copy of l with i-th element replaced by the element 
 
 Operation defined in WSMatrix.
 
-#### `qsetelt!` <a id="qsetelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L403)\]
+#### `qsetelt!` <a id="qsetelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L404)\]
 
 ##### `qsetelt!` : `(%, Integer, Integer, E) -> E`
 
@@ -1893,7 +1963,7 @@ qsetelt!(m, i, j, r) sets the element in the ith row and jth column of m to r NO
 
 Operation defined in WSMatrix.
 
-#### `randomComplexMatrix` <a id="randomcomplexmatrix"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L489)\]
+#### `randomComplexMatrix` <a id="randomcomplexmatrix"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L490)\]
 
 randomComplexMatrix(range, dims) returns a random matrix with random complex numbers in the range range and dims dimensions.
 
@@ -1905,7 +1975,7 @@ randomComplexMatrix(range,jWSList("{3,3}")$WSLIST(WSINT))@WSMAT(WSCPLX)
 - **Signature**: `(WSList(WSComplex), WSList(WSInteger)) -> WSMatrix(WSComplex)`
 - **From**: [`WSMatrix(E)`](WSMatrix.md)
 
-#### `randomRealMatrix` <a id="randomrealmatrix"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L483)\]
+#### `randomRealMatrix` <a id="randomrealmatrix"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L484)\]
 
 randomRealMatrix(range, dims) returns a random matrix with random numbers in the range range and dims dimensions.
 
@@ -1917,7 +1987,7 @@ randomRealMatrix(range,jWSList("{3,3}")$WSLIST(WSINT))@WSMAT(WSREAL)
 - **Signature**: `(WSList(WSReal), WSList(WSInteger)) -> WSMatrix(WSReal)`
 - **From**: [`WSMatrix(E)`](WSMatrix.md)
 
-#### `rank` <a id="rank"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L619)\]
+#### `rank` <a id="rank"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L620)\]
 
 ##### `rank` : `% -> NonNegativeInteger`
 
@@ -1984,7 +2054,7 @@ riffle(agg, elts, inds) riffles (interleaves) element(s) elts inserts them. If i
 
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `row` <a id="row"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L406)\]
+#### `row` <a id="row"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L407)\]
 
 ##### `row` : `(%, Integer) -> %`
 
@@ -2000,7 +2070,7 @@ row(m, i) returns the ith row of m error check to determine if index is in prope
 
 Operation defined in WSMatrix.
 
-#### `rowEchelon` <a id="rowechelon"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L617)\]
+#### `rowEchelon` <a id="rowechelon"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L618)\]
 
 ##### `rowEchelon` : `% -> %`
 
@@ -2038,7 +2108,7 @@ scalarMatrix(n, r) returns an n-by-n matrix with r's on the diagonal and zeroes 
 
 Operation defined in WSMatrix.
 
-#### `schur` <a id="schur"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L463)\]
+#### `schur` <a id="schur"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L464)\]
 
 ##### `schur` : `% -> Record(q : %, t : %)`
 
@@ -2079,7 +2149,7 @@ setRow!(m, i, v) sets to ith row of m to v
 
 Operation defined in WSMatrix.
 
-#### `setelt` <a id="setelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L397)\]
+#### `setelt` <a id="setelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L398)\]
 
 ##### `setelt` : `(%, Integer, Integer, E) -> %`
 
@@ -2095,7 +2165,7 @@ setelt(l,i,elem) returns a copy of l with i-th element replaced by the element e
 
 Operation defined in WSMatrix.
 
-#### `setelt!` <a id="setelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L577)\]
+#### `setelt!` <a id="setelt"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L578)\]
 
 ##### `setelt!` : `(%, Integer, E) -> %`
 
@@ -2223,7 +2293,7 @@ sorted?(agg) checks whether agg is sorted or not.
 - **Signature**: `% -> Boolean`
 - **From**: [`WSAggregate(E)`](WSAggregate.md)
 
-#### `square?` <a id="square"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L345)\]
+#### `square?` <a id="square"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L346)\]
 
 square?(m) returns true if m is a square matrix (i.e. if m has the same number of rows as columns) and false otherwise.
 
@@ -2250,7 +2320,7 @@ subMatrix(x, i1, i2, j1, j2) extracts the submatrix [x(i, j)] where the index i 
 - **Signature**: `(%, Integer, Integer, Integer, Integer) -> %`
 - **From**: `TwoDimensionalArrayCategory(R,Row,Col)`
 
-#### `svd` <a id="svd"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L459)\]
+#### `svd` <a id="svd"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L460)\]
 
 ##### `svd` : `% -> Record(S : %, sv : %, V : %)`
 
@@ -2260,7 +2330,7 @@ svd(m) computes the singular value decomposition of the matrix m.
 
 Operation defined in WSMatrix.
 
-#### `svdvals` <a id="svdvals"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L461)\]
+#### `svdvals` <a id="svdvals"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L462)\]
 
 svdvals(m) returns the singular values of the matrix m.
 
@@ -2280,7 +2350,7 @@ swapRows!(m, i, j) interchanges the ith and jth rows of m. This destructively al
 - **Signature**: `(%, Integer, Integer) -> %`
 - **From**: `TwoDimensionalArrayCategory(R,Row,Col)`
 
-#### `symmetric?` <a id="symmetric"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L352)\]
+#### `symmetric?` <a id="symmetric"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L353)\]
 
 symmetric?(m) returns true if the matrix m is square and symmetric (i.e. m[i, j] = m[j, i] for all i and j) and false otherwise.
 
@@ -2298,7 +2368,7 @@ take(l,i) returns the first i elements.
 
 Operation defined in WSMatrix.
 
-#### `toString` <a id="tostring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L498)\]
+#### `toString` <a id="tostring"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L499)\]
 
 ##### `toString` : `(%, WSExpression) -> String`
 
@@ -2322,13 +2392,13 @@ total(agg) returns the sum of the elements in agg.
 
 Operation defined in WSMatrix.
 
-#### `trace` <a id="trace"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L423)\]
+#### `trace` <a id="trace"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L424)\]
 
 trace(m) returns the trace of m.
 
 - **Signature**: `% -> E`
 
-#### `transpose` <a id="transpose"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L410)\]
+#### `transpose` <a id="transpose"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L411)\]
 
 ##### `transpose` : `% -> %`
 

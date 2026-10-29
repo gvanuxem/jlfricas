@@ -13,8 +13,8 @@ JLObjectType() : Category == JLType() with
     ++ the corresponding FriCAS Julia mutable object.
     jlimref : String -> %
     ++ jlimref(str) evaluates the Julia command str and returns
-    ++ the corresponding FriCAS Julia immutable object
-    ++ wrapped in a Julia RefValue{Any}
+    ++ the corresponding FriCAS Julia immutable object.
+    --++ wrapped in a Julia RefValue{Any}
     jlId : % -> Integer
     ++ jlId(obj) returns the Julia indexed dictionary index referencing
     ++ the object obj.
