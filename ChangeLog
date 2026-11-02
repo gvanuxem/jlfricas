@@ -1,3 +1,113 @@
+2026-11-02  Waldek Hebisch  <cas@fricas.org>
+
+	Add code for direct generation of Html documentation
+	for constructors
+	* src/algebra/api2.spad: New file
+	src/algebra/Makefile.in: Adjust
+
+2026-11-01  Fabian Hassler  <fahasch@yahoo.de>
+	    Waldek Hebisch  <cas@fricas.org>
+
+	* configure.ac, src/lisp/num_gmp.lisp: Use GMP with
+	Clozure CL on arm64
+
+2026-11-01  Fabian Hassler  <fahasch@yahoo.de>
+
+	* src/interp/i-map.boot, src/interp/i-analy.boot,
+	src/interp/i-spec1.boot, src/interp/i-spec2.boot: Rename local
+	variable T in generated code
+
+2026-11-01  Fabian Hassler  <fahasch@yahoo.de>
+
+	* src/interp/pf2sex.boot: Report default, import, inline, export,
+	with and add as not supported in the interpreter
+
+2026-11-01  Fabian Hassler  <fahasch@yahoo.de>
+
+	* src/interp/i-syscmd.boot: Read '_' as escape in names given
+	to )clear and )display
+
+2026-11-01  Fabian Hassler  <fahasch@yahoo.de>
+
+	* src/interp/trace.boot: Make )trace ... )off )ops untrace the
+	given operations
+
+2026-11-01  Fabian Hassler  <fahasch@yahoo.de>
+
+	* src/interp/i-spec1.boot: Report unknown tag in case on tagged
+	Union as user error
+
+2026-11-01  Fabian Hassler  <fahasch@yahoo.de>
+
+	* src/interp/trace.boot, src/doc/htex/ug16.htex,
+	src/doc/sphinx/source/faq.rst: Remove )local option of )trace
+
+2026-10-31  Fabian Hassler  <fahasch@yahoo.de>
+
+	* src/algebra/fmt.spad, src/algebra/fmt1d.spad,
+	src/algebra/fmt2d.spad, src/algebra/fmtlatex.spad,
+	src/algebra/fmtmathjax.spad: FormatterCategory does not extend
+	CoercibleTo OutputForm, formatters are packages
+	* src/algebra/mantepse.spad, src/algebra/html.spad,
+	src/algebra/mathml.spad, src/algebra/texmacs.spad:
+	GuessOptionFunctions0, HTMLFormat, MathMLFormat and TexmacsFormat
+	are packages,
+
+2026-10-31  Fabian Hassler  <fahasch@yahoo.de>
+
+	* src/interp/define.boot: Warn about a domain without an exported
+	operation that returns %
+
+2026-10-31  Fabian Hassler  <fahasch@yahoo.de>
+
+	* src/interp/define.boot: Record a constructor as a package when
+	no exported signature contains %, also for a named category
+	* src/interp/cattable.boot: Put packages into the category table
+
+2026-10-31  Fabian Hassler  <fahasch@yahoo.de>
+
+	* src/interp/macex.boot: Rename parameters of nested macro
+	lambdas, define %pform, fix the cycle message
+
+2026-10-31  Fabian Hassler  <fahasch@yahoo.de>
+
+	* src/interp/i-spec1.boot: Use filterWhile and filterUntil for
+	parallel iteration over streams
+
+2026-10-31  Fabian Hassler  <fahasch@yahoo.de>
+
+	* src/interp/apply.boot, src/interp/compiler.boot: Remember
+	successful argument compilations too, also in the retry
+
+2026-10-31  Fabian Hassler  <fahasch@yahoo.de>
+
+	* src/interp/apply.boot: Repeat only the newest message of a
+	cached failed argument compilation
+
+2026-10-30  Fabian Hassler  <fahasch@yahoo.de>
+
+	* src/interp/clam.boot: Clear compiled user functions when
+	constructor caches are cleared
+
+2026-10-29  Fabian Hassler  <fahasch@yahoo.de>
+
+	* src/boot/tytree1.boot: Reject 'by' after a list and constant
+	parameters, do not assign DOT in 'is' patterns
+	* src/boot/btscan2.boot: Reject text after '!' Lisp expression
+	* src/boot/ptyout.boot: Reject assignments separated by commas
+	at top level
+	* src/boot/compiled/ptyout.clisp, src/boot/compiled/btscan2.clisp,
+	src/boot/compiled/tytree1.clisp: Regenerate
+
+	* src/boot/ptyout.boot, src/boot/btincl2.boot: Do not write
+	output file after a syntax error
+	* src/boot/compiled/ptyout.clisp, src/boot/compiled/btincl2.clisp:
+	Regenerate
+	* src/interp/i-syscmd.boot: Do not load Boot file which failed
+	to translate
+	* src/scripts/build_helper: Exit with error status when
+	translation of Boot file fails
+
 2026-10-28  Fabian Hassler  <fahasch@yahoo.de>
 
 	* src/interp/c-util.boot: Keep the value of a variable assigned

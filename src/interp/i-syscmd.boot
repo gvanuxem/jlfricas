@@ -2080,7 +2080,7 @@ read_or_compile(quiet, i_name) ==
     type := file_extention(input_file)
     type = '"boot" =>
         lfile := CONCAT(file_basename(input_file), '".clisp")
-        BOOTTOCLC(input_file, lfile)
+        null BOOTTOCLC(input_file, lfile) => nil
         LOAD(COMPILE_-FILE(lfile))
     type = '"lisp" =>
         ffile := CONCAT(file_basename(input_file), ".", $lisp_bin_filetype)
@@ -2998,10 +2998,20 @@ parseSystemCmd opt ==
     [command, pform]
   [tokTran tok for tok in dumbTokenize opt]
 
+-- an identifier, with "_" read as escape character as by the scanner
+tokTranIdent(tok) ==
+    search_str('"__", tok, 0) and IDENTP(x := ncParseFromString0(tok, nil)) =>
+        x
+    tokTran(tok)
+
 handleTokensizeSystemCommands(unabr, optionList) ==
-  optionList := [dumbTokenize opt for opt in optionList]
-  parcmd := [[tokTran tok for tok in opt] for opt in optionList]
-  parcmd => tokenSystemCommand(unabr, parcmd)
+    optionList := [dumbTokenize(opt) for opt in optionList]
+    parcmd :=
+        -- these commands take names; in file names "_" is no escape
+        MEMQ(unabr, '(clear display)) =>
+            [[tokTranIdent(tok) for tok in opt] for opt in optionList]
+        [[tokTran(tok) for tok in opt] for opt in optionList]
+    parcmd => tokenSystemCommand(unabr, parcmd)
 
 getFirstWord string ==
   spaceIndex := SEARCH('" ", string)

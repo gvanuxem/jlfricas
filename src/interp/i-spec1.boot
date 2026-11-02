@@ -393,7 +393,9 @@ upcase t ==
   if first unionDoms is ['_:,.,.] then
      for i in 0.. for d in unionDoms repeat
         if d is ['_:,=rhs,.] then rhstag := i
-     if NULL rhstag then error '"upcase: bad Union form"
+     if NULL(rhstag) then throw_msg("S2IS0062",
+         '"%1bp is not a tag of the union.  The tags are: %2by",
+           [rhs, [tag for ['_:, tag, .] in unionDoms]])
      $genValue =>
         rhstag = first unwrap objVal triple => code := wrap(true)
         code := wrap(false)
@@ -649,15 +651,16 @@ falseFun(x) == nil
 evalLoopIter itr ==
   -- generate code for loop iterator
   itr is ['STEP,index,lower,step,:upperList] =>
-    ['STEP,getUnname index,getArgValue(lower,$Integer),
+    ['STEP, local_var_code(getUnname(index)), getArgValue(lower, $Integer),
       getArgValue(step,$Integer),
         :[getArgValue(upper,$Integer) for upper in upperList]]
   itr is ['ISTEP,index,lower,step,:upperList] =>
-    ['ISTEP, getUnname index, getArgValue(lower, $SingleInteger),
+    ['ISTEP, local_var_code(getUnname(index)),
+      getArgValue(lower, $SingleInteger),
       getArgValue(step, $SingleInteger),
         :[getArgValue(upper, $SingleInteger) for upper in upperList]]
   itr is ['IN,index,s] =>
-      ['IN, getUnname(index),
+      ['IN, local_var_code(getUnname(index)),
        getArgValue(s, ['List, get0(index, 'mode, $env)])]
   (itr is [x,pred]) and (x in '(WHILE UNTIL SUCHTHAT)) =>
     [x,getArgValue(pred,$Boolean)]
@@ -1020,10 +1023,10 @@ mkAndApplyZippedPredicates (indexList, s,zipType,itrl) ==
   for iter in itrl repeat
     iter is ['WHILE,pred] =>
       predVec := mkIterZippedFun(indexList,pred,zipType,$localVars)
-      s := [mkAtreeNode 'swhile,predVec,s]
+      s := [mkAtreeNode('filterWhile), predVec, s]
     iter is ['UNTIL,pred] =>
       predVec := mkIterZippedFun(indexList,pred,zipType,$localVars)
-      s := [mkAtreeNode 'suntil,predVec,s]
+      s := [mkAtreeNode('filterUntil), predVec, s]
     iter is ['SUCHTHAT,pred] =>
       putTarget(pred,$Boolean)
       predVec := mkIterZippedFun(indexList,pred,zipType,$localVars)
