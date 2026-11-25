@@ -102,19 +102,43 @@ def clean_spad_macros(s: str) -> str:
                     i += 1
                 continue
 
-            if mac in ("spad", "spadop", "spadfun", "spadtype", "url", "em", "it", "bold", "spadvar", "spadgloss", "pspadfun", "spadsys", "spadpaste", "spadignore", "spadcommand", "footnote", "s"):
+            if mac in ("em", "it", "bf", "tt", "sl", "rm", "sc", "sf", "bold"):
+                while i < n and s[i] == " ":
+                    i += 1
                 if i < n and s[i] == "{":
                     inner, next_pos = extract_brace(s, i)
                     cleaned_inner = clean_spad_macros(inner)
-                    if mac in ("em", "it"):
+                    if mac in ("em", "it", "sl"):
                         res.append(f"*{cleaned_inner}*")
-                    elif mac == "bold":
+                    elif mac in ("bold", "bf"):
                         res.append(f"**{cleaned_inner}**")
+                    elif mac == "tt":
+                        res.append(f"`{cleaned_inner}`")
                     else:
                         res.append(cleaned_inner)
                     i = next_pos
+            elif mac in ("spad", "spadop", "spadfun", "spadtype", "url", "spadvar", "spadgloss", "pspadfun", "spadsys", "spadpaste", "spadcommand", "footnote", "s", "centerline"):
+                j = i
+                while j < n and s[j] == " ":
+                    j += 1
+                if j < n and s[j] == "{":
+                    inner, next_pos = extract_brace(s, j)
+                    res.append(clean_spad_macros(inner))
+                    i = next_pos
                 else:
                     res.append(mac)
+            elif mac in ("spadignore", "begin", "end", "indent"):
+                if i < n and s[i] == "{":
+                    _, next_pos = extract_brace(s, i)
+                    i = next_pos
+            elif mac == "spadglossSee":
+                if i < n and s[i] == "{":
+                    arg1, p1 = extract_brace(s, i)
+                    res.append(clean_spad_macros(arg1))
+                    i = p1
+                    if i < n and s[i] == "{":
+                        _, p2 = extract_brace(s, i)
+                        i = p2
             elif mac in ("spadfunFrom", "spadopFrom"):
                 if i < n and s[i] == "{":
                     arg1, p1 = extract_brace(s, i)
@@ -127,8 +151,14 @@ def clean_spad_macros(s: str) -> str:
                         res.append(clean_spad_macros(arg1))
                 else:
                     res.append(mac)
-            elif mac in ("blankline", "newline"):
+            elif mac in ("blankline", "newline", "par"):
                 res.append("\n\n")
+                while i < n and s[i] == " ":
+                    i += 1
+            elif mac == "item":
+                res.append("\n")
+                while i < n and s[i] == " ":
+                    i += 1
             elif mac == "tab":
                 res.append("    ")
             elif mac == "space":

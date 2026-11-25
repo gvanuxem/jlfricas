@@ -1320,7 +1320,7 @@ jlWSEval(func, list) evaluates the Wolfram function func on a list of arguments.
 
 #### `jlimref` <a id="jlimref"></a>
 
-jlimref(str) evaluates the Julia command str and returns the corresponding FriCAS Julia immutable object wrapped in a Julia RefValueAny
+jlimref(str) evaluates the Julia command str and returns the corresponding FriCAS Julia immutable object.
 
 - **Signature**: `String -> %`
 - **From**: [`JLObjectType`](JLObjectType.md)

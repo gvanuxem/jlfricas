@@ -187,7 +187,7 @@ Julia WS matrices using the MathLink Julia package.
 | [`eigenvalues`](#eigenvalues) | eigenvalues(m) returns the eigenvalues of the square matrix m. |
 | [`eigenvectors`](#eigenvectors) | eigenvectors(m) returns the eigenvectors of the square matrix m. |
 | [`elt`](#elt) | elt(mat, m, n) returns the element (m,n) of the matrix mat. |
-| [`empty`](#empty) | empty()$D creates an aggregate of type D with 0 elements. Note: The em $D can be dropped i... |
+| [`empty`](#empty) | empty()$D creates an aggregate of type D with 0 elements. Note: The $D can be dropped if u... |
 | [`empty?`](#empty) | empty?(u) tests if u has 0 elements. |
 | [`eq?`](#eq) | eq?(u, v) tests if u and v are same objects. |
 | [`eval`](#eval) | eval(f, x, v) replaces x by v in f. |
@@ -674,7 +674,7 @@ diagonalMatrix(l) returns a diagonal matrix with elements of l as diagonal eleme
 
 ##### `diagonalMatrix` : `List(%) -> %`
 
-diagonalMatrix([m1, ..., mk]) creates a block diagonal matrix M with block matrices em m1, ..., em mk down the diagonal, with 0 block matrices elsewhere. More precisely: if ri := nrows mi, ci := ncols mi, then m is an (r1+..+rk) by (c1+..+ck) matrix with entries m.i.j = ml.(i-r1-..-r(l-1)).(j-c1-..-c(l-1)), if (r1+..+r(l-1)) < i <= r1+..+rl and (c1+..+c(l-1)) < i <= c1+..+cl, m.i.j = 0 otherwise.
+diagonalMatrix([m1, ..., mk]) creates a block diagonal matrix M with block matrices m1, ..., mk down the diagonal, with 0 block matrices elsewhere. More precisely: if ri := nrows mi, ci := ncols mi, then m is an (r1+..+rk) by (c1+..+ck) matrix with entries m.i.j = ml.(i-r1-..-r(l-1)).(j-c1-..-c(l-1)), if (r1+..+r(l-1)) < i <= r1+..+rl and (c1+..+c(l-1)) < i <= c1+..+cl, m.i.j = 0 otherwise.
 
 - **From**: `MatrixCategory(R,Row,Col)`
 
@@ -831,7 +831,7 @@ Operation defined in WSMatrix.
 
 #### `empty` <a id="empty"></a>
 
-empty()$D creates an aggregate of type D with 0 elements. Note: The em $D can be dropped if understood by context, u: D := empty().
+empty()$D creates an aggregate of type D with 0 elements. Note: The $D can be dropped if understood by context, u: D := empty().
 
 - **Signature**: `() -> %`
 - **From**: `Aggregate`
@@ -1362,7 +1362,7 @@ jlWSEval(func, list) evaluates the Wolfram function func on a list of arguments.
 
 #### `jlimref` <a id="jlimref"></a>
 
-jlimref(str) evaluates the Julia command str and returns the corresponding FriCAS Julia immutable object wrapped in a Julia RefValueAny
+jlimref(str) evaluates the Julia command str and returns the corresponding FriCAS Julia immutable object.
 
 - **Signature**: `String -> %`
 - **From**: [`JLObjectType`](JLObjectType.md)

@@ -4271,7 +4271,7 @@ jlWSSetPrecision(expr, prec) sets precision of expr to prec.
 
 #### `jlimref` <a id="jlimref"></a>
 
-jlimref(str) evaluates the Julia command str and returns the corresponding FriCAS Julia immutable object wrapped in a Julia RefValueAny
+jlimref(str) evaluates the Julia command str and returns the corresponding FriCAS Julia immutable object.
 
 - **Signature**: `String -> %`
 - **From**: [`JLObjectType`](JLObjectType.md)

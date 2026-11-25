@@ -141,7 +141,7 @@ Julia WS vectors using the MathLink Julia package.
 | [`dimensions`](#dimensions) | dimensions(agg) returns dimensions of agg. |
 | [`dot`](#dot) | dot(v1, v2) is the dot product of v1 and v2. |
 | [`elt`](#elt) | elt(agg,i) returns the i-th element. |
-| [`empty`](#empty) | empty()$D creates an aggregate of type D with 0 elements. Note: The em $D can be dropped i... |
+| [`empty`](#empty) | empty()$D creates an aggregate of type D with 0 elements. Note: The $D can be dropped if u... |
 | [`empty?`](#empty) | empty?(u) tests if u has 0 elements. |
 | [`entries`](#entries) | entries(u) returns a list of all the entries of aggregate u in no assumed order. |
 | [`entry?`](#entry) | entry?(x, u) tests if x equals u . i for some index i. |
@@ -582,7 +582,7 @@ Operation defined in WSVector.
 
 #### `empty` <a id="empty"></a>
 
-empty()$D creates an aggregate of type D with 0 elements. Note: The em $D can be dropped if understood by context, u: D := empty().
+empty()$D creates an aggregate of type D with 0 elements. Note: The $D can be dropped if understood by context, u: D := empty().
 
 - **Signature**: `() -> %`
 - **From**: `Aggregate`
@@ -1109,7 +1109,7 @@ jlWSEval(func, list) evaluates the Wolfram function func on a list of arguments.
 
 #### `jlimref` <a id="jlimref"></a>
 
-jlimref(str) evaluates the Julia command str and returns the corresponding FriCAS Julia immutable object wrapped in a Julia RefValueAny
+jlimref(str) evaluates the Julia command str and returns the corresponding FriCAS Julia immutable object.
 
 - **Signature**: `String -> %`
 - **From**: [`JLObjectType`](JLObjectType.md)
