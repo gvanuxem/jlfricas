@@ -1,9 +1,8 @@
 )abbrev package SDOC SpadDoc
 ++ Author: G. Vanuxem
 ++ Date Created: march, 2026
-++ Description: This package provides simple
-++ Spad documentation for the interpreter and
-++ the MCP server using BrowserInformation.
+++ Description: This package provides Spad documentation
+++ for the interpreter and MCP server using BrowserInformation.
 SpadDoc : Exports == Implementation where
   OPDOC     ==> Record(origin: String, signature: String, doc: String)
   CONREC    ==> Record(categories: List(Symbol), domains: List(Symbol), packages: List(Symbol))
