@@ -80,11 +80,24 @@ def extract_brace(s: str, pos: int) -> tuple[str, int]:
             i += 1
     return "".join(res), i
 
-def clean_spad_macros(s: str) -> str:
+def _wrap_code(text: str) -> str:
+    """Wrap text in Markdown inline code backticks, handling embedded backticks."""
+    if not text:
+        return text
+    if "`" in text:
+        return f"`` {text} ``"
+    return f"`{text}`"
+
+def clean_spad_macros(s: str, in_code: bool = False) -> str:
     """Clean SPAD TeX markup macros like \\spad{...}, \\em{...}, \\spadfunFrom{...}{...}, etc."""
     n = len(s)
     res = []
     i = 0
+    code_macros = (
+        "spad", "spadop", "spadfun", "spadtype", "spadvar",
+        "pspadfun", "spadsys", "spadpaste", "spadcommand"
+    )
+    text_macros = ("url", "spadgloss", "footnote", "s", "centerline")
     while i < n:
         if s[i] == "\\":
             i += 1
@@ -96,9 +109,13 @@ def clean_spad_macros(s: str) -> str:
                 i += 1
             mac = s[start:i]
             if not mac:
-                # Escaped char like \{, \}, \%, \\, \_
+                # Escaped char like \{, \}, \%, \\, \_, \$
                 if i < n:
-                    res.append(s[i])
+                    ch = s[i]
+                    if ch == "$" and not in_code:
+                        res.append("\\$")
+                    else:
+                        res.append(ch)
                     i += 1
                 continue
 
@@ -107,23 +124,36 @@ def clean_spad_macros(s: str) -> str:
                     i += 1
                 if i < n and s[i] == "{":
                     inner, next_pos = extract_brace(s, i)
-                    cleaned_inner = clean_spad_macros(inner)
-                    if mac in ("em", "it", "sl"):
+                    cleaned_inner = clean_spad_macros(inner, in_code=in_code)
+                    if in_code:
+                        res.append(cleaned_inner)
+                    elif mac in ("em", "it", "sl"):
                         res.append(f"*{cleaned_inner}*")
                     elif mac in ("bold", "bf"):
                         res.append(f"**{cleaned_inner}**")
                     elif mac == "tt":
-                        res.append(f"`{cleaned_inner}`")
+                        res.append(_wrap_code(cleaned_inner))
                     else:
                         res.append(cleaned_inner)
                     i = next_pos
-            elif mac in ("spad", "spadop", "spadfun", "spadtype", "url", "spadvar", "spadgloss", "pspadfun", "spadsys", "spadpaste", "spadcommand", "footnote", "s", "centerline"):
+            elif mac in code_macros:
                 j = i
                 while j < n and s[j] == " ":
                     j += 1
                 if j < n and s[j] == "{":
                     inner, next_pos = extract_brace(s, j)
-                    res.append(clean_spad_macros(inner))
+                    cleaned_inner = clean_spad_macros(inner, in_code=True)
+                    res.append(cleaned_inner if in_code else _wrap_code(cleaned_inner))
+                    i = next_pos
+                else:
+                    res.append(mac)
+            elif mac in text_macros:
+                j = i
+                while j < n and s[j] == " ":
+                    j += 1
+                if j < n and s[j] == "{":
+                    inner, next_pos = extract_brace(s, j)
+                    res.append(clean_spad_macros(inner, in_code=in_code))
                     i = next_pos
                 else:
                     res.append(mac)
@@ -134,7 +164,7 @@ def clean_spad_macros(s: str) -> str:
             elif mac == "spadglossSee":
                 if i < n and s[i] == "{":
                     arg1, p1 = extract_brace(s, i)
-                    res.append(clean_spad_macros(arg1))
+                    res.append(clean_spad_macros(arg1, in_code=in_code))
                     i = p1
                     if i < n and s[i] == "{":
                         _, p2 = extract_brace(s, i)
@@ -146,9 +176,15 @@ def clean_spad_macros(s: str) -> str:
                     if i < n and s[i] == "{":
                         arg2, p2 = extract_brace(s, i)
                         i = p2
-                        res.append(f"{clean_spad_macros(arg1)} from {clean_spad_macros(arg2)}")
+                        c1 = clean_spad_macros(arg1, in_code=True)
+                        c2 = clean_spad_macros(arg2, in_code=True)
+                        if in_code:
+                            res.append(f"{c1} from {c2}")
+                        else:
+                            res.append(f"{_wrap_code(c1)} from {_wrap_code(c2)}")
                     else:
-                        res.append(clean_spad_macros(arg1))
+                        c1 = clean_spad_macros(arg1, in_code=True)
+                        res.append(c1 if in_code else _wrap_code(c1))
                 else:
                     res.append(mac)
             elif mac in ("blankline", "newline", "par"):
@@ -172,11 +208,14 @@ def clean_spad_macros(s: str) -> str:
             else:
                 if i < n and s[i] == "{":
                     inner, next_pos = extract_brace(s, i)
-                    res.append(clean_spad_macros(inner))
+                    res.append(clean_spad_macros(inner, in_code=in_code))
                     i = next_pos
                 else:
                     res.append(mac)
         elif s[i] in ("{", "}"):
+            i += 1
+        elif s[i] == "$" and not in_code:
+            res.append("\\$")
             i += 1
         else:
             res.append(s[i])
@@ -991,7 +1030,14 @@ def render_md(name: str, kind: str, group: str, info: dict, source_meta: dict) -
                 first_desc = ""
                 for b in relevant_ops[op_name]:
                     if b.get("description"):
-                        first_desc = b["description"].splitlines()[0][:90] + "..." if len(b["description"]) > 90 else b["description"].splitlines()[0]
+                        first_line = b["description"].splitlines()[0]
+                        if len(first_line) > 90:
+                            trunc = first_line[:90].rstrip("\\")
+                            if trunc.count("`") % 2 == 1:
+                                trunc += "`"
+                            first_desc = trunc + "..."
+                        else:
+                            first_desc = first_line
                         break
                 first_desc = first_desc or f"Operation defined in {name}"
                 first_desc = first_desc.replace("|", "\\|")

@@ -729,9 +729,9 @@ NMResidueRing(R, P, poly) : Exports == Implementation where
     characteristic() == characteristic()$R
 
     recip(x) ==
-      -- TODO: compute an euclidean division to check
-      zero?(x) => "failed"
-      junfunc("inv",x)@%
+      ret : JLObjTuple := jlref(concat(["divides(one(", RESRINGD, "),", getind(x), ")"]))
+      not jl_call1_bool_wrapped_index("first", jlId(ret))$Lisp => "failed"
+      junfunc("last", ret)@%
     exactDivide(x, y) == jbinfunc("divexact",x,y)
     gcd(x, y) == jbinfunc("gcd", x, y)
     extendedGcd(x, y) ==
@@ -892,7 +892,7 @@ NMIntegerMod(p : PositiveInteger) : Exports == Implementation where
 
     -- initialize
     NZMOD := concat ["NZMOD",string(p)]
-    jlEvalString(concat([NZMOD,",=residue_ring(ZZ,", string(p),")"]))@Void
+    jlEvalString(concat([NZMOD,",=residue_ring(ZZ,ZZ(_"", string(p),"_"))"]))@Void
     NZMODP := concat(NZMOD,"(")
 
     jlNMRing() == NZMOD
@@ -908,9 +908,9 @@ NMIntegerMod(p : PositiveInteger) : Exports == Implementation where
     x : % * y : NMInteger == jbinfunc("*", x, y)
     x : % * y : Integer == jlref(concat [getind(x), "*", string(y)])
     recip(x) ==
-      -- TODO: compute an euclidean division to check
-      zero?(x) => "failed"
-      junfunc("inv",x)@%
+      ret : JLObjTuple := jlref(concat(["divides(one(", NZMOD, "),", getind(x), ")"]))
+      not jl_call1_bool_wrapped_index("first", jlId(ret))$Lisp => "failed"
+      junfunc("last", ret)@%
 
     size()           == p
     characteristic() == p
@@ -952,6 +952,14 @@ NMPrimeField(p : PositiveInteger) : Exports == Implementation where
                    ConvertibleTo(Integer)) with
     generator? : % -> Boolean
     ++ generator?(x) checks whether or not x is a generator of the NMPrimeField.
+    trace : % -> %
+    ++ trace(x) returns the trace of x.
+    absoluteTrace : % -> %
+    ++ absoluteTrace(x) returns the absolute trace of x.
+    norm : % -> %
+    ++ norm(x) returns the norm of x.
+    absoluteNorm : % -> %
+    ++ absoluteNorm(x) returns the absolute norm of x.
     order : () -> NNI
     ++ order() returns the order of the NMPrimeField.
     "*" : (%, NMInteger) -> %
@@ -996,6 +1004,10 @@ NMPrimeField(p : PositiveInteger) : Exports == Implementation where
     1 == jlref(concat(["one(", NPF,")"]))
 
     generator? x == junbfunc("is_gen",x)
+    trace x == x
+    absoluteTrace x == x
+    norm x == x
+    absoluteNorm x == x
     index(n : PI) == coerce(n)
     random() == coerce(random(p)$Integer)
 
@@ -1007,7 +1019,6 @@ NMPrimeField(p : PositiveInteger) : Exports == Implementation where
         "//", string(denom(y)),")"])
     x ^ y : Integer == jlref(concat [getind(x), "^", string(y)])
     recip(x) ==
-      -- TODO: compute an euclidean division to check
       zero?(x) => "failed"
       junfunc("inv",x)@%
     inv(x) == junfunc("inv",x)
@@ -1812,6 +1823,8 @@ NMExactCalciumField() : Exports == Implementation where
     ++ where real is the real part and cplx the complex part.
   Implementation ==> add
     import from JLUtilityFunctions
+    import from JLStringUtilities
+    import from String
     jlInitialize(true)
 
     NECF := "NECF"
@@ -2257,3 +2270,422 @@ NMFactored(R : Join(NMRing, IntegralDomain)) :
       mkFF(junfunc("unit", fr), ret) pretend Factored(R)
     coerce(ob : %) : OutputForm ==
       message(jlRegexReplace(string(ob), jlString("//"), jlString("/")))
+
+)abbrev category NNFC NMNumberFieldCategory
+++ Category for Nemo algebraic number fields
+++ Author: G. Vanuxem
+++ Date Created: Nov, 2026
+++ Description:
+++  Category for algebraic number fields using the Nemo Julia package.
+NMNumberFieldCategory() : Category == Join(NMField, CharacteristicZero) with
+    gen : () -> %
+    ++ gen() returns the generator of the number field.
+    degree : () -> PositiveInteger
+    ++ degree() returns the degree of the number field over its base field.
+    discriminant : () -> NMFraction(NMInteger)
+    ++ discriminant() returns the discriminant of the number field.
+    basis : () -> JLVector(%)
+    ++ basis() returns a power basis of the number field.
+    norm : % -> NMFraction(NMInteger)
+    ++ norm(x) returns the norm of x.
+    trace : % -> NMFraction(NMInteger)
+    ++ trace(x) returns the trace of x.
+    automorphismList : () -> JLVector(JLObject)
+    ++ automorphismList() returns the list of automorphisms of the number field.
+    "*" : (%, Integer) -> %
+    ++ x * i is multiplication by an integer.
+    "*" : (Integer, %) -> %
+    ++ i * x is multiplication by an integer.
+    "*" : (%, NMInteger) -> %
+    ++ x * i is multiplication by a Nemo integer.
+    "*" : (NMInteger, %) -> %
+    ++ i * x is multiplication by a Nemo integer.
+    "*" : (%, NMFraction(NMInteger)) -> %
+    ++ x * q is multiplication by a Nemo rational.
+    "*" : (NMFraction(NMInteger), %) -> %
+    ++ q * x is multiplication by a Nemo rational.
+    coerce : Integer -> %
+    ++ coerce(i) coerces an integer into the number field.
+    coerce : NMInteger -> %
+    ++ coerce(i) coerces a Nemo integer into the number field.
+    coerce : NMFraction(NMInteger) -> %
+    ++ coerce(q) coerces a Nemo rational into the number field.
+    coerce : Fraction(Integer) -> %
+    ++ coerce(q) coerces a rational into the number field.
+  add
+    import from JLUtilityFunctions
+    import from String
+    getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+    junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+    jbinfunc(func, a, b) ==> make_jlref_wcall2(func, a, b)$Lisp
+
+    0 == jlref(concat(["zero(", jlNMRing(), ")"]))
+    1 == jlref(concat(["one(", jlNMRing(), ")"]))
+    characteristic() == 0
+    degree() == jlEvalString(concat(["degree(", jlNMRing(), ")"]))@PositiveInteger
+    discriminant() == jlref(concat(["QQ(discriminant(", jlNMRing(), "))"]))
+    basis() == jlref(concat(["basis(", jlNMRing(), ")"]))
+    norm(x) == jlref(concat(["QQ(norm(", getind(x), "))"]))
+    trace(x) == jlref(concat(["QQ(tr(", getind(x), "))"]))
+    automorphismList() == jlref(concat(["automorphism_list(", jlNMRing(), ")"]))
+    x : % * y : Integer == jlref(concat([getind(x), "*", string(y)]))
+    y : Integer * x : % == jlref(concat([string(y), "*", getind(x)]))
+    x : % * y : NMInteger == jbinfunc("*", x, y)
+    y : NMInteger * x : % == jbinfunc("*", y, x)
+    x : % * y : NMFraction(NMInteger) == jbinfunc("*", x, y)
+    y : NMFraction(NMInteger) * x : % == jbinfunc("*", y, x)
+    x : % / y : % == jbinfunc("//", x, y)
+    inv(x) == junfunc("inv", x)
+    recip(x) ==
+      zero?(x) => "failed"
+      inv(x)
+    coerce(i : Integer) == jlref(concat([jlNMRing(), "(", string(i), ")"]))
+    coerce(i : NMInteger) == jlref(concat([jlNMRing(), "(", getind(i), ")"]))
+    coerce(q : NMFraction(NMInteger)) == jlref(concat([jlNMRing(), "(", getind(q), ")"]))
+    coerce(q : Fraction(Integer)) ==
+      jlref(concat([jlNMRing(), "(", string(numer(q)), "//", string(denom(q)), ")"]))
+    coerce(x : %) : OutputForm == message(string(x))
+
+)abbrev domain NNF NMNumberField
+++ Domain for Nemo algebraic number fields
+++ Author: G. Vanuxem
+++ Date Created: Nov, 2026
+++ Description:
+++  This domain wraps Julia Nemo's number_field(poly, s) constructor.
+NMNumberField(R : NMField, P : Join(NMUnivariatePolynomialCategory(R), GcdDomain),
+    poly : P, s : Symbol) : Exports == Implementation where
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  Exports ==> NMNumberFieldCategory()
+  Implementation ==> add
+    import from JLUtilityFunctions
+    import from JLStringUtilities
+    import from String
+    jlInitialize(true)
+
+    NFD := concat(["NNF", string(jlApply("hash", poly)), string(s)])
+    jlEvalString(concat([NFD, "=number_field(", getind(poly), ",_"", string(s), "_")"]))@Void
+    NFRING := concat(NFD, "[1]")
+    jlNMRing() == NFRING
+    jlObject() == jlEvalString(concat(["string(", NFRING, ")"]))@String
+    gen() == jlref(concat([NFD, "[2]"]))
+
+)abbrev domain NCYCF NMCyclotomicField
+++ Domain for Nemo cyclotomic number fields
+++ Author: G. Vanuxem
+++ Date Created: Nov, 2026
+++ Description:
+++  This domain wraps Julia Nemo's cyclotomic_field(n, s) constructor.
+NMCyclotomicField(n : PositiveInteger, s : Symbol) : Exports == Implementation where
+  Exports ==> NMNumberFieldCategory()
+  Implementation ==> add
+    import from JLUtilityFunctions
+    import from JLStringUtilities
+    import from String
+    jlInitialize(true)
+
+    CYCFD := concat(["NCYCF", string(n), string(s)])
+    jlEvalString(concat([CYCFD, "=cyclotomic_field(", string(n), ",_"", string(s), "_")"]))@Void
+    CYCFRING := concat(CYCFD, "[1]")
+    jlNMRing() == CYCFRING
+    jlObject() == jlEvalString(concat(["string(", CYCFRING, ")"]))@String
+    gen() == jlref(concat([CYCFD, "[2]"]))
+
+)abbrev domain NCYCRSF NMCyclotomicRealSubfield
+++ Domain for Nemo maximal real subfields of cyclotomic fields
+++ Author: G. Vanuxem
+++ Date Created: Nov, 2026
+++ Description:
+++  This domain wraps Julia Nemo's cyclotomic_real_subfield(n, s) constructor.
+NMCyclotomicRealSubfield(n : PositiveInteger, s : Symbol) : Exports == Implementation where
+  Exports ==> NMNumberFieldCategory()
+  Implementation ==> add
+    import from JLUtilityFunctions
+    import from JLStringUtilities
+    import from String
+    jlInitialize(true)
+
+    CYCRSFD := concat(["NCYCRSF", string(n), string(s)])
+    jlEvalString(concat([CYCRSFD, "=cyclotomic_real_subfield(", string(n), ",_"", string(s), "_")"]))@Void
+    CYCRSFRING := concat(CYCRSFD, "[1]")
+    jlNMRing() == CYCRSFRING
+    jlObject() == jlEvalString(concat(["string(", CYCRSFRING, ")"]))@String
+    gen() == jlref(concat([CYCRSFD, "[2]"]))
+
+)abbrev domain NRFF NMRationalFunctionField
+++ Domain for Nemo univariate rational function fields
+++ Author: G. Vanuxem
+++ Date Created: Nov, 2026
+++ Description:
+++  This domain wraps Julia AbstractAlgebra/Nemo's rational_function_field(R, x).
+NMRationalFunctionField(R : NMField, x : Symbol) : Exports == Implementation where
+  INT ==> Integer
+  NNI ==> NonNegativeInteger
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+  jbinfunc(func, a, b) ==> make_jlref_wcall2(func, a, b)$Lisp
+  jbinbfunc(op, a, b) ==> jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
+  Exports ==> NMField with
+    gen : () -> %
+    ++ gen() returns the generator (indeterminate) of the rational function field.
+    differentiate : % -> %
+    ++ differentiate(f) differentiates f with respect to the generator.
+    "*" : (%, Integer) -> %
+    ++ f * i is integer multiplication.
+    "*" : (Integer, %) -> %
+    ++ i * f is integer multiplication.
+    "*" : (%, R) -> %
+    ++ f * r is scalar multiplication.
+    "*" : (R, %) -> %
+    ++ r * f is scalar multiplication.
+    coerce : Variable(x) -> %
+    ++ coerce(x) converts the variable x to the generator.
+    coerce : Integer -> %
+    ++ coerce(i) coerces an integer.
+    coerce : R -> %
+    ++ coerce(r) coerces a base field element.
+  Implementation ==> add
+    import from JLUtilityFunctions
+    import from JLStringUtilities
+    import from String
+    jlInitialize(true)
+
+    tmp : SExpression := devaluate(R)$Lisp
+    RFF := jlRegexReplace(concat(["NRFF", FORMAT(false, "~a", tmp)$Lisp, string(x)]),
+      jlRegex("[(|)|\s]"), jlSubstitute(""))
+    tuple : Boolean := jbinbfunc("isa", jobject(jlNMRing()$R)$JLObject,
+      jobject("Tuple")$JLObject)
+    if tuple then
+      jlEvalString(concat([RFF, "=rational_function_field(", jlNMRing()$R, "[1],_"", string(x), "_")"]))@Void
+    else
+      jlEvalString(concat([RFF, "=rational_function_field(", jlNMRing()$R, ",_"", string(x), "_")"]))@Void
+    RFFRING := concat(RFF, "[1]")
+    jlNMRing() == RFFRING
+    jlObject() == jlEvalString(concat(["string(", RFFRING, ")"]))@String
+
+    0 == jlref(concat(["zero(", RFFRING, ")"]))
+    1 == jlref(concat(["one(", RFFRING, ")"]))
+    characteristic() == characteristic()$R
+    gen() == jlref(concat([RFF, "[2]"]))
+    differentiate(f) == junfunc("derivative", f)
+    f : % * i : Integer == jlref(concat([getind(f), "*", string(i)]))
+    i : Integer * f : % == jlref(concat([string(i), "*", getind(f)]))
+    f : % * r : R == jbinfunc("*", f, r)
+    r : R * f : % == jbinfunc("*", r, f)
+    f : % / g : % == jbinfunc("/", f, g)
+    inv(f) == junfunc("inv", f)
+    recip(f) ==
+      zero?(f) => "failed"
+      inv(f)
+    coerce(v : Variable(x)) == gen()
+    coerce(i : Integer) == jlref(concat([RFFRING, "(", string(i), ")"]))
+    coerce(r : R) == jlref(concat([RFFRING, "(", getind(r), ")"]))
+    coerce(f : %) : OutputForm == message(string(f))
+
+)abbrev domain NMRFF NMMultivariateRationalFunctionField
+++ Domain for Nemo multivariate rational function fields
+++ Author: G. Vanuxem
+++ Date Created: Nov, 2026
+++ Description:
+++  This domain wraps Julia AbstractAlgebra/Nemo's rational_function_field(R, vars).
+NMMultivariateRationalFunctionField(R : NMField, VarSet : List Symbol) :
+    Exports == Implementation where
+  OVL ==> OrderedVariableList(VarSet)
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+  jbinfunc(func, a, b) ==> make_jlref_wcall2(func, a, b)$Lisp
+  jbinbfunc(op, a, b) ==> jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
+  Exports ==> NMField with
+    gens : () -> JLVector(%)
+    ++ gens() returns the generators of the rational function field.
+    differentiate : (%, OVL) -> %
+    ++ differentiate(f, v) differentiates f with respect to v.
+    "*" : (%, Integer) -> %
+    ++ f * i is integer multiplication.
+    "*" : (Integer, %) -> %
+    ++ i * f is integer multiplication.
+    "*" : (%, R) -> %
+    ++ f * r is scalar multiplication.
+    "*" : (R, %) -> %
+    ++ r * f is scalar multiplication.
+    coerce : OVL -> %
+    ++ coerce(v) converts a variable in VarSet to its generator.
+    coerce : Integer -> %
+    ++ coerce(i) coerces an integer.
+    coerce : R -> %
+    ++ coerce(r) coerces a base field element.
+  Implementation ==> add
+    import from JLUtilityFunctions
+    import from JLStringUtilities
+    import from String
+    jlInitialize(true)
+
+    #VarSet ~= #removeDuplicates(VarSet) =>
+      error "Duplicate symbols in NMMultivariateRationalFunctionField constructor"
+
+    tmp : SExpression := devaluate(R)$Lisp
+    lvars := map(v +-> string(v), VarSet)$ListFunctions2(Symbol, String)
+    jvars := first lines formatExpression(lvars::OutputForm)$Format1D
+    MRFF := jlRegexReplace(concat(["NMRFF", FORMAT(false, "~a", tmp)$Lisp, concat(lvars)]),
+      jlRegex("[(|)|\s]"), jlSubstitute(""))
+    tuple : Boolean := jbinbfunc("isa", jobject(jlNMRing()$R)$JLObject,
+      jobject("Tuple")$JLObject)
+    if tuple then
+      jlEvalString(concat([MRFF, "=rational_function_field(", jlNMRing()$R, "[1],", jvars, ")"]))@Void
+    else
+      jlEvalString(concat([MRFF, "=rational_function_field(", jlNMRing()$R, ",", jvars, ")"]))@Void
+    MRFFRING := concat(MRFF, "[1]")
+    jlNMRing() == MRFFRING
+    jlObject() == jlEvalString(concat(["string(", MRFFRING, ")"]))@String
+
+    0 == jlref(concat(["zero(", MRFFRING, ")"]))
+    1 == jlref(concat(["one(", MRFFRING, ")"]))
+    characteristic() == characteristic()$R
+    gens() == jlref(concat([MRFF, "[2]"]))
+    differentiate(f : %, v : OVL) : % ==
+      jlref(concat(["derivative(", getind(f), ",numerator(", getind(v::%), "))"]))
+    f : % * i : Integer == jlref(concat([getind(f), "*", string(i)]))
+    i : Integer * f : % == jlref(concat([string(i), "*", getind(f)]))
+    f : % * r : R == jbinfunc("*", f, r)
+    r : R * f : % == jbinfunc("*", r, f)
+    f : % / g : % == jbinfunc("/", f, g)
+    inv(f) == junfunc("inv", f)
+    recip(f) ==
+      zero?(f) => "failed"
+      inv(f)
+    coerce(v : OVL) ==
+      i := lookup(v)$OVL
+      jlref(concat([MRFF, "[2][", string(i), "]"]))
+    coerce(i : Integer) == jlref(concat([MRFFRING, "(", string(i), ")"]))
+    coerce(r : R) == jlref(concat([MRFFRING, "(", getind(r), ")"]))
+    coerce(f : %) : OutputForm == message(string(f))
+
+)abbrev domain NFFRAC NMFactoredFractionField
+++ Domain for Nemo factored fraction fields
+++ Author: G. Vanuxem
+++ Date Created: Nov, 2026
+++ Description:
+++  This domain wraps Julia AbstractAlgebra/Nemo's factored_fraction_field(R).
+NMFactoredFractionField(R : Join(NMCommutativeRing, IntegralDomain)) :
+    Exports == Implementation where
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+  jbinfunc(func, a, b) ==> make_jlref_wcall2(func, a, b)$Lisp
+  jbinbfunc(op, a, b) ==> jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
+  Exports ==> NMField with
+    "/" : (R, R) -> %
+    ++ a / b forms a factored fraction.
+    "/" : (R, %) -> %
+    ++ r / x is division.
+    "*" : (%, Integer) -> %
+    ++ x * i is integer multiplication.
+    "*" : (Integer, %) -> %
+    ++ i * x is integer multiplication.
+    numer : % -> R
+    ++ numer(x) returns the numerator of x.
+    denom : % -> R
+    ++ denom(x) returns the denominator of x.
+    coerce : R -> %
+    ++ coerce(r) coerces r into the factored fraction field.
+    coerce : Integer -> %
+    ++ coerce(i) coerces i into the factored fraction field.
+  Implementation ==> add
+    import from JLUtilityFunctions
+    import from JLStringUtilities
+    import from String
+    jlInitialize(true)
+
+    tmp : SExpression := devaluate(R)$Lisp
+    FFR := jlRegexReplace(concat(["NFFR", FORMAT(false, "~a", tmp)$Lisp]),
+      jlRegex("[(|)|\s]"), jlSubstitute(""))
+    tuple : Boolean := jbinbfunc("isa", jobject(jlNMRing()$R)$JLObject,
+      jobject("Tuple")$JLObject)
+    if tuple then
+      jlEvalString(concat([FFR, "=factored_fraction_field(", jlNMRing()$R, "[1])"]))@Void
+    else
+      jlEvalString(concat([FFR, "=factored_fraction_field(", jlNMRing()$R, ")"]))@Void
+    jlNMRing() == FFR
+    jlObject() == jlEvalString(concat(["string(", FFR, ")"]))@String
+
+    0 == jlref(concat(["zero(", FFR, ")"]))
+    1 == jlref(concat(["one(", FFR, ")"]))
+    characteristic() == characteristic()$R
+    numer(x) == junfunc("numerator", x)
+    denom(x) == junfunc("denominator", x)
+    a : R / b : R == jlref(concat([FFR, "(", getind(a), ")/", FFR, "(", getind(b), ")"]))
+    r : R / x : % == jlref(concat([FFR, "(", getind(r), ")/", getind(x)]))
+    x : % / y : % == jbinfunc("/", x, y)
+    x : % * i : Integer == jlref(concat([getind(x), "*", string(i)]))
+    i : Integer * x : % == jlref(concat([string(i), "*", getind(x)]))
+    inv(x) == junfunc("inv", x)
+    recip(x) ==
+      zero?(x) => "failed"
+      inv(x)
+    coerce(r : R) == jlref(concat([FFR, "(", getind(r), ")"]))
+    coerce(i : Integer) == jlref(concat([FFR, "(", string(i), ")"]))
+    coerce(x : %) : OutputForm == message(string(x))
+
+)abbrev domain NTOTFRAC NMTotalRingOfFractions
+++ Domain for Nemo total ring of fractions
+++ Author: G. Vanuxem
+++ Date Created: Nov, 2026
+++ Description:
+++  This domain wraps Julia AbstractAlgebra/Nemo's total_ring_of_fractions(R).
+NMTotalRingOfFractions(R : NMCommutativeRing) : Exports == Implementation where
+  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+  junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
+  jbinfunc(func, a, b) ==> make_jlref_wcall2(func, a, b)$Lisp
+  jbinbfunc(op, a, b) ==> jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
+  Exports ==> NMCommutativeRing with
+    "/" : (R, R) -> %
+    ++ a / b forms a fraction in the total ring of fractions.
+    "/" : (%, %) -> %
+    ++ x / y divides x by y if y is not a zero divisor.
+    "*" : (%, Integer) -> %
+    ++ x * i is integer multiplication.
+    "*" : (Integer, %) -> %
+    ++ i * x is integer multiplication.
+    numer : % -> R
+    ++ numer(x) returns the numerator of x.
+    denom : % -> R
+    ++ denom(x) returns the denominator of x.
+    inv : % -> %
+    ++ inv(x) returns the inverse of x if it exists.
+    coerce : R -> %
+    ++ coerce(r) coerces r into the total ring of fractions.
+    coerce : Integer -> %
+    ++ coerce(i) coerces i into the total ring of fractions.
+  Implementation ==> add
+    import from JLUtilityFunctions
+    import from JLStringUtilities
+    import from String
+    jlInitialize(true)
+
+    tmp : SExpression := devaluate(R)$Lisp
+    TFR := jlRegexReplace(concat(["NTFR", FORMAT(false, "~a", tmp)$Lisp]),
+      jlRegex("[(|)|\s]"), jlSubstitute(""))
+    tuple : Boolean := jbinbfunc("isa", jobject(jlNMRing()$R)$JLObject,
+      jobject("Tuple")$JLObject)
+    if tuple then
+      jlEvalString(concat([TFR, "=total_ring_of_fractions(", jlNMRing()$R, "[1])"]))@Void
+    else
+      jlEvalString(concat([TFR, "=total_ring_of_fractions(", jlNMRing()$R, ")"]))@Void
+    jlNMRing() == TFR
+    jlObject() == jlEvalString(concat(["string(", TFR, ")"]))@String
+
+    0 == jlref(concat(["zero(", TFR, ")"]))
+    1 == jlref(concat(["one(", TFR, ")"]))
+    characteristic() == characteristic()$R
+    numer(x) == junfunc("numerator", x)
+    denom(x) == junfunc("denominator", x)
+    a : R / b : R == jlref(concat([TFR, "(", getind(a), ",", getind(b), ")"]))
+    x : % / y : % == jbinfunc("*", x, junfunc("inv", y))
+    x : % * i : Integer == jlref(concat([getind(x), "*", string(i)]))
+    i : Integer * x : % == jlref(concat([string(i), "*", getind(x)]))
+    inv(x) == junfunc("inv", x)
+    recip(x) ==
+      ret : JLObjTuple := jlref(concat(["divides(one(", TFR, "),", getind(x), ")"]))
+      not jl_call1_bool_wrapped_index("first", jlId(ret))$Lisp => "failed"
+      junfunc("last", ret)@%
+    coerce(r : R) == jlref(concat([TFR, "(", getind(r), ")"]))
+    coerce(i : Integer) == jlref(concat([TFR, "(", string(i), ")"]))
+    coerce(x : %) : OutputForm == message(string(x))

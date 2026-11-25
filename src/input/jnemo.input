@@ -175,4 +175,62 @@ testTrue("not (res2 case _"failed_")")
 testEquals("res2::Fraction(Integer)", "5/1")
 testEquals("retract(nf2)@Fraction(Integer)", "5/1")
 
+testcase "NMIntegerMod recip and arbitrary-precision modulus"
+testTrue("recip(2::NZMOD(6)) case _"failed_"")
+testEquals("recip(5::NZMOD(6))::NZMOD(6)", "5::NZMOD(6)")
+bigm : PositiveInteger := (10^25 + 7)::PositiveInteger
+testEquals("characteristic()$NZMOD(bigm)", "bigm")
+testEquals("(3::NZMOD(bigm)) + (4::NZMOD(bigm))", "7::NZMOD(bigm)")
+
+testcase "NMPrimeField trace and norm"
+p7 := 3::NPF(7)
+testEquals("trace(p7)", "p7")
+testEquals("absoluteTrace(p7)", "p7")
+testEquals("norm(p7)", "p7")
+testEquals("absoluteNorm(p7)", "p7")
+
+testcase "NMNumberField"
+PQ := NUP(NFRAC(NINT), 'x)
+xq := 'x::PQ
+K := NNF(NFRAC(NINT), PQ, xq^2 - 2, 'a)
+a := gen()$K
+testEquals("degree()$K", "2")
+testEquals("a^2", "2::K")
+testEquals("norm(a + 1)", "(-1)::NFRAC(NINT)")
+testEquals("trace(a + 1)", "2::NFRAC(NINT)")
+
+testcase "NMCyclotomicField and NMCyclotomicRealSubfield"
+C5 := NCYCF(5, 'z)
+z5 := gen()$C5
+testEquals("degree()$C5", "4")
+testEquals("z5^5", "1$C5")
+testEquals("trace(z5)", "(-1)::NFRAC(NINT)")
+CR5 := NCYCRSF(5, 'zr)
+zr5 := gen()$CR5
+testEquals("degree()$CR5", "2")
+testEquals("zr5^2 + zr5 - 1", "0$CR5")
+
+testcase "NMRationalFunctionField and NMMultivariateRationalFunctionField"
+RF1 := NRFF(NFRAC(NINT), 'x)
+rx := gen()$RF1
+testEquals("differentiate(rx/(rx + 1))", "1/((rx + 1)^2)")
+RF2 := NMRFF(NFRAC(NINT), ['x, 'y])
+V2 := OrderedVariableList(['x, 'y])
+rx2 := ('x::V2)::RF2
+ry2 := ('y::V2)::RF2
+testEquals("differentiate(rx2*ry2 + rx2^2, 'x::V2)", "ry2 + 2*rx2")
+
+testcase "NMFactoredFractionField and NMTotalRingOfFractions"
+P1 := NUP(NINT, 'x)
+px := 'x::P1
+FFR := NFFRAC(P1)
+f1 := (px::FFR) / ((px + 1)::FFR)
+testEquals("numer(f1)", "px")
+testEquals("denom(f1)", "px + 1")
+TF := NTOTFRAC(NINT)
+t1 := (3::TF) / (7::TF)
+testEquals("numer(t1)", "3::NINT")
+testEquals("denom(t1)", "7::NINT")
+testTrue("recip(0$TF) case _"failed_"")
+
 statistics()

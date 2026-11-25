@@ -41,4 +41,12 @@ testEquals("valuation(q3)", "0")
 f := frobenius(q2, 1)
 testEquals("valuation(f)", "1")
 
+testcase "NMExtendedPadicRational zero, one, inv, recip and degree"
+qep := NMExtendedPadicRational(7, 2, 32)
+testTrue("zero?(0$qep)")
+testTrue("one?(1$qep)")
+testTrue("recip(0$qep) case _"failed_"")
+testEquals("(3::qep) * inv(3::qep)", "1$qep")
+testEquals("recip(3::qep)::qep", "inv(3::qep)")
+
 statistics()

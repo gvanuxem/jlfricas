@@ -282,4 +282,51 @@ testEquals("length(p_nested)", "2")
 q_nested := p_nested^2
 testEquals("length(q_nested)", "3")
 
+testcase "NMUnivariatePolynomial resultant and eval"
+P := NUP(NINT, 'x)
+x := 'x::P
+testEquals("resultant(x^2 - 1, x - 1)", "0$NINT")
+testEquals("eval(x^2 + 1, x + 1)", "x^2 + 2*x + 2")
+
+testcase "NMUnivariateLaurentPolynomial extra operations"
+LP := NULP(NFRAC(NINT), 't)
+t := 't::LP
+p := t^-2 + 3*t + 5
+testTrue("not constant?(p)")
+testTrue("constant?(5::LP)")
+testEquals("length(p)", "4")
+testTrue("square?(t^2)")
+testEquals("reductum(p)", "5 + t^-2")
+testEquals("constantCoefficient(p)", "5::NFRAC(NINT)")
+
+testcase "NMMultivariatePolynomial eval and resultant"
+VarSet : List Symbol := ['x, 'y]
+V := OrderedVariableList(VarSet)
+MP := NMP(NINT, VarSet)
+mx := ('x::V)::MP
+my := ('y::V)::MP
+testEquals("eval(mx^2 + my, ['x::V, 'y::V], [2::MP, 3::MP])", "7::MP")
+testTrue("(eval(mx^2 + my, 'x::V, 2::NINT) = (my + 4::MP))@Boolean")
+testTrue("zero?(resultant(mx^2 - 1, mx - 1, 'x::V))")
+
+testcase "NMPuiseuxPolynomial"
+VarSetP : List Symbol := ['x, 'y]
+VP := OrderedVariableList(VarSetP)
+PP := NMPP(NFRAC(NINT), VarSetP)
+px := ('x::VP)::PP
+py := ('y::VP)::PP
+pp := px^(1/2) + 2*py^(-3/4)
+testEquals("length(pp)", "2")
+testEquals("constantCoefficient(pp + 3::PP)", "3::NFRAC(NINT)")
+testTrue("monomial?(px^(1/2))")
+
+testcase "NMUniversalLaurentPolynomial"
+ULP := NULPOLY(NINT)
+ux := 'x::ULP
+uy := 'y::ULP
+up := ux^(-2) + 3*ux*uy
+testEquals("length(up)", "2")
+testEquals("differentiate(up, 'x)", "(-2)*ux^(-3) + 3*uy")
+testTrue("unit?(ux^(-2))")
+
 statistics()

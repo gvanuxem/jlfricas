@@ -245,7 +245,7 @@ NMUnivariateLaurentSeries(R, x, prec) : Exports == Implementation where
     variable : % -> Symbol
     ++ variable(f) returns the (unique) Laurent series variable of
     ++ the power series f.
-    valuation : % -> NNI
+    valuation : % -> INT
     ++ valuation(s) returns the valuation of the given power series,
     ++ the degree of the first nonzero term
     inverse : % -> %
@@ -272,7 +272,7 @@ NMUnivariateLaurentSeries(R, x, prec) : Exports == Implementation where
     op_of_Ring : Symbol := CAR(tmp)$Lisp
 
     NRing : String := string(op_of_Ring)
-    NULSRing := concat(["NUPS", FORMAT(false, "~a", tmp)$Lisp,
+    NULSRing := concat(["NULS", FORMAT(false, "~a", tmp)$Lisp,
         string(prec) , string(x)])
     NULSRing := jlRegexReplace(NULSRing,jlRegex("[(|)|\s\:]"),
       jlSubstitute(""))
@@ -408,7 +408,7 @@ NMUnivariatePuiseuxSeries(R, x, prec) : Exports == Implementation where
     ++ the power series f.
     if R has PartialDifferentialRing Symbol then
       PartialDifferentialRing Symbol
-    valuation : % -> NNI
+    valuation : % -> Fraction(INT)
     ++ valuation(s) returns the valuation of the given power series,
     ++ the degree of the first nonzero term
     inverse : % -> %
@@ -422,6 +422,8 @@ NMUnivariatePuiseuxSeries(R, x, prec) : Exports == Implementation where
     ++ \spad{f(x)} with constant coefficient 0.
     coefficient : (%, INT) -> R
     ++ coefficient(s, i) returns the coefficient of the term of degree i.
+    coefficient : (%, Fraction(INT)) -> R
+    ++ coefficient(s, q) returns the coefficient of the term of degree q.
     coerce   : Variable(x) -> %
     ++ coerce(x) converts the variable x to a Nemo univariate Puiseux series.
   Implementation ==> add
@@ -433,7 +435,7 @@ NMUnivariatePuiseuxSeries(R, x, prec) : Exports == Implementation where
     op_of_Ring : Symbol := CAR(tmp)$Lisp
 
     NRing : String := string(op_of_Ring)
-    NUPSXRing := concat(["NUPS", FORMAT(false, "~a", tmp)$Lisp,
+    NUPSXRing := concat(["NUPXS", FORMAT(false, "~a", tmp)$Lisp,
         string(prec) , string(x)])
     NUPSXRing := jlRegexReplace(NUPSXRing,jlRegex("[(|)|\s\:]"),
       jlSubstitute(""))
@@ -491,7 +493,11 @@ NMUnivariatePuiseuxSeries(R, x, prec) : Exports == Implementation where
     coefficient(s: %, q: Fraction(INT)) ==
       jlref(concat ["coeff(", getind(s),",",
         string(numer q),"//",string(denom q) ,")"])$R
-    valuation(s) == jlEvalString(concat ["valuation(",getind(s),")"])
+    valuation(s) ==
+      v : JLObject := jlref(concat(["valuation(", getind(s), ")"]))$JLObject
+      num : INT := jlEvalString(concat(["numerator(", getind(v), ")"]))@INT
+      den : INT := jlEvalString(concat(["denominator(", getind(v), ")"]))@INT
+      num / den
 
     jlNMRing() == NUPSXRing
     jlObject() == jlEvalString(concat ["string(",NUPSXRing,")"])@String

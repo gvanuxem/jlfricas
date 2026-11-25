@@ -331,7 +331,7 @@ NMExtendedPadicRational(p,deg,prec) : Exports == Implementation where
     jlImport "Nemo.O"
     
     -- Set up the field
-    PADICQ := concat(["PADICQ", string(p), "p",string(prec)])
+    PADICQ := concat(["PADICQ", string(p), "d", string(deg), "p", string(prec)])
     jlEvalString(concat([PADICQ, ",_=qadic_field(ZZ(", string(p), "),", string(deg),
       ",precision=", string(prec),")"]))
     jlNMRing() == PADICQ
@@ -343,8 +343,12 @@ NMExtendedPadicRational(p,deg,prec) : Exports == Implementation where
     one?(a) == junbfunc("isone", a)
     zero?(a) == junbfunc("iszero", a)
   
-    0 ==  jlref(concat ["zero(", PADICQP, "))"])
-    1 ==  jlref(concat ["one(", PADICQP, "))"])
+    0 == jlref(concat ["zero(", PADICQ, ")"])
+    1 == jlref(concat ["one(", PADICQ, ")"])
+    inv(x) == junfunc("inv", x)
+    recip(x) ==
+      zero?(x) => "failed"
+      junfunc("inv", x)@%
     pa : % = pb : % == jbinbfunc("==", pa,pb) 
     pa : % ~= pb : % == jbinbfunc("!=", pa,pb)
   
