@@ -41,7 +41,7 @@ PACKAGE_SOURCE_VIEW = os.environ.get(
 PACKAGE_SOURCE_EDIT = os.environ.get(
     'PACKAGE_SOURCE_EDIT', PACKAGE_SOURCE + '/edit/master')
 
-PACKAGE_BOOK = os.environ.get('PACKAGE_BOOK', FRICAS_URL + '/book.pdf')
+PACKAGE_BOOK = 'https://gvanuxem.github.io/book.pdf'
 
 ###################################################################
 copyright = '2007-' + PACKAGE_YEAR + ', FriCAS Team'
