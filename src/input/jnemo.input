@@ -233,4 +233,21 @@ testEquals("numer(t1)", "3::NINT")
 testEquals("denom(t1)", "7::NINT")
 testTrue("recip(0$TF) case _"failed_"")
 
+testcase "NMResidueRing and NMResidueField"
+PQ := NUP(NFRAC(NINT), 'x)
+xq := 'x::PQ
+RR := NRESRING(NFRAC(NINT), PQ, xq^2 - 1)
+ax := xq::RR
+testEquals("ax^2", "1$RR")
+testTrue("recip(ax - 1) case _"failed_"")
+testEquals("recip(ax)::RR", "ax")
+testEquals("modulus()$RR", "xq^2 - 1")
+testEquals("lift(ax^3)", "xq")
+RFLD := NRESFLD(NFRAC(NINT), PQ, xq^2 + 1)
+bx := xq::RFLD
+testEquals("bx^2", "(-1)::RFLD")
+testEquals("bx * inv(bx)", "1$RFLD")
+testEquals("modulus()$RFLD", "xq^2 + 1")
+testEquals("lift(bx)", "xq")
+
 statistics()

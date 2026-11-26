@@ -681,11 +681,20 @@ NMResidueRing(R, P, poly) : Exports == Implementation where
   getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
   junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
   jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
+  jbinbfunc(op,a,b) ==> jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
   Exports ==> NMCommutativeRing with
     "*" : (%, Integer) -> %
     ++ x*i is the multiplication by an integer.
+    "*" : (Integer, %) -> %
+    ++ i*x is the multiplication by an integer.
     "*" : (%, NMInteger) -> %
     ++ x*i is the multiplication by a Nemo integer.
+    "*" : (NMInteger, %) -> %
+    ++ i*x is the multiplication by a Nemo integer.
+    "*" : (%, R) -> %
+    ++ x*r is scalar multiplication.
+    "*" : (R, %) -> %
+    ++ r*x is scalar multiplication.
     modulus : () -> P
     ++ modulus returns the modulus of the residue ring.
     gcd : (%, %) -> %
@@ -703,30 +712,48 @@ NMResidueRing(R, P, poly) : Exports == Implementation where
     ++ coerce(i) coerces i.
     coerce : NMInteger -> %
     ++ coerce(i) coerces i.
+    coerce : R -> %
+    ++ coerce(r) coerces r.
     coerce : P -> %
     ++ coerce(p) coerces p.
     jnresidue : Integer -> %
     ++ jnresidue(i) returns i as an element of the residue ring NMResidueRing.
     jnresidue : NMInteger -> %
     ++ jnresidue(i) returns i as an element of the residue ring NMResidueRing.
+    jnresidue : R -> %
+    ++ jnresidue(r) returns r as an element of the residue ring NMResidueRing.
     jnresidue : P -> %
     ++ jnresidue(p) returns p as an element of the residue ring NMResidueRing.
   Implementation ==> add
     import from JLUtilityFunctions
+    import from JLStringUtilities
     import from NMInteger
     jlInitialize(true)
 
     -- Set up the ring
-    RESRINGD := concat("RESRING", string(jlApply("hash",(poly))))
-    jlEvalString(concat([RESRINGD, ",=residue_ring(", jlNMRing()$P, "[1]," , getind(poly),")"]))
+    PRingName := jlRegexReplace(jlNMRing()$P, jlRegex("[\[|\]|\s]"), jlSubstitute(""))
+    RESRINGD := concat(["RESRING", PRingName, string(jlApply("hash", poly))])
+    tuple : Boolean := jbinbfunc("isa", jobject(jlNMRing()$P)$JLObject,
+      jobject("Tuple")$JLObject)
+    if tuple then
+      jlEvalString(concat([RESRINGD, ",=residue_ring(", jlNMRing()$P, "[1]," , getind(poly),")"]))
+    else
+      jlEvalString(concat([RESRINGD, ",=residue_ring(", jlNMRing()$P, "," , getind(poly),")"]))
     jlNMRing() == RESRINGD
     RESRINGDP := concat(RESRINGD,"(")
     jlObject() == jlEvalString(concat(["string(", RESRINGD, ")"]))
 
     0 == jlref(concat(["zero(", RESRINGD, ")"]))
     1 == jlref(concat(["one(", RESRINGD,")"]))
-    modulus() == jlref(concat(["modulus(", RESRINGD, ")"]))
+    modulus() == poly
     characteristic() == characteristic()$R
+
+    x : % * i : Integer == jlref(concat([getind(x), "*", string(i)]))
+    i : Integer * x : % == jlref(concat([string(i), "*", getind(x)]))
+    x : % * y : NMInteger == jbinfunc("*", x, y)
+    y : NMInteger * x : % == jbinfunc("*", y, x)
+    x : % * r : R == jbinfunc("*", x, r)
+    r : R * x : % == jbinfunc("*", r, x)
 
     recip(x) ==
       ret : JLObjTuple := jlref(concat(["divides(one(", RESRINGD, "),", getind(x), ")"]))
@@ -742,11 +769,14 @@ NMResidueRing(R, P, poly) : Exports == Implementation where
     lift(x : %) == junfunc("lift", x)
 
     coerce(p : P) == junfunc(RESRINGD, p)
+    coerce(r : R) : % == junfunc(RESRINGD, r)
     coerce(x : NMInteger) : % == junfunc(RESRINGD, x)
     coerce(i : Integer) == jlref(concat([RESRINGDP, string(i), ")"]))
     jnresidue(x : NMInteger) == coerce(x)
     jnresidue(i : Integer) == coerce(i)
+    jnresidue(r : R) == coerce(r)
     jnresidue(p : P) == coerce(p)
+    coerce(x : %) : OutputForm == message(string(x))
 
 )abbrev domain NRESFLD NMResidueField
 ++ Domain for Nemo residue fields
@@ -770,16 +800,22 @@ NMResidueField(R, P, poly) : Exports == Implementation where
   junfunc(func, a) ==> make_jlref_wcall1(func, a)$Lisp
   jbinfunc(func,a,b) ==> make_jlref_wcall2(func, a, b)$Lisp
   junbfunc(bfunc, a) ==> jl_call1_bool_wrapped_index(bfunc, jlId(a))$Lisp
+  jbinbfunc(op,a,b) ==> jl_call2_bool_wrapped_index(op, jlId(a), jlId(b))$Lisp
   Exports ==> NMField with
-    square? : % -> Boolean
-    ++ square?(x) returns true if x is a square in the field.
-    ++ Only for ResFieldElem.
     "*" : (%, Integer) -> %
     ++ x*i is the multiplication by an integer.
+    "*" : (Integer, %) -> %
+    ++ i*x is the multiplication by an integer.
     "*" : (%, NMInteger) -> %
     ++ x*i is the multiplication by a Nemo integer.
+    "*" : (NMInteger, %) -> %
+    ++ i*x is the multiplication by a Nemo integer.
+    "*" : (%, R) -> %
+    ++ x*r is scalar multiplication.
+    "*" : (R, %) -> %
+    ++ r*x is scalar multiplication.
     modulus : () -> P
-    ++ modulus returns the modulus of the residue ring.
+    ++ modulus returns the modulus of the residue field.
     gcd : (%, %) -> %
     ++ gcd(x, y) returns a greatest common divisor of x and y
     ++ using the data and modulus associated.
@@ -791,48 +827,56 @@ NMResidueField(R, P, poly) : Exports == Implementation where
     lift : % -> P
     ++ lift(x) returns the lift of x. See https://nemocas.github.io/AbstractAlgebra.jl/stable/residue_interface/
     ++ for more information for the difference with data.
-    sqrt : % -> Union(%, "failed")
-    ++ sqrt(x) returns the square root of x if possible.
-    ++ Only for ResFieldElem.
     coerce : Integer -> %
     ++ coerce(i) coerces i.
     coerce : NMInteger -> %
     ++ coerce(i) coerces i.
+    coerce : R -> %
+    ++ coerce(r) coerces r.
     coerce : P -> %
     ++ coerce(p) coerces p.
     jnresidue : Integer -> %
     ++ jnresidue(i) returns i as an element of the residue field NMResidueField.
     jnresidue : NMInteger -> %
     ++ jnresidue(i) returns i as an element of the residue field NMResidueField.
+    jnresidue : R -> %
+    ++ jnresidue(r) returns r as an element of the residue field NMResidueField.
     jnresidue : P -> %
     ++ jnresidue(p) returns p as an element of the residue field NMResidueField.
   Implementation ==> add
     import from JLUtilityFunctions
+    import from JLStringUtilities
     import from NMInteger
     jlInitialize(true)
 
-    --degree(poly) < 1 => error "The modulus must be a polynomial of degree at least 1."
-    --lc := leadingCoefficient poly
-    --if not unit?(lc) then error "Leading coefficient is not a unit."
-        -- make it monic - GcdDomain
-        -- poly := jbinfunc("divexact", poly, lc)@P
     not irreducible?(poly) => error "The modulus must be irreducible."
 
     -- Set up the field
-    RESFIELDD := concat("RESFIELD", string(jlApply("hash",(poly))))
-    jlEvalString(concat([RESFIELDD, ",=residue_field(", jlNMRing()$P, "[1]," , getind(poly),")"]))
+    PRingName := jlRegexReplace(jlNMRing()$P, jlRegex("[\[|\]|\s]"), jlSubstitute(""))
+    RESFIELDD := concat(["RESFIELD", PRingName, string(jlApply("hash", poly))])
+    tuple : Boolean := jbinbfunc("isa", jobject(jlNMRing()$P)$JLObject,
+      jobject("Tuple")$JLObject)
+    if tuple then
+      jlEvalString(concat([RESFIELDD, ",=residue_field(", jlNMRing()$P, "[1]," , getind(poly),")"]))
+    else
+      jlEvalString(concat([RESFIELDD, ",=residue_field(", jlNMRing()$P, "," , getind(poly),")"]))
     jlNMRing() == RESFIELDD
     RESFIELDDP := concat(RESFIELDD,"(")
     jlObject() == jlEvalString(concat(["string(", RESFIELDD, ")"]))
 
     0 == jlref(concat(["zero(", RESFIELDD, ")"]))
     1 == jlref(concat(["one(", RESFIELDD,")"]))
-    modulus() == jlref(concat(["modulus(", RESFIELDD, ")"]))
+    modulus() == poly
     characteristic() == characteristic()$R
-    square?(x : %) == junbfunc("is_square", x)
-    sqrt(x : %) ==
-      square?(x) => junfunc("sqrt", x)@%
-      "failed"
+
+    x : % * i : Integer == jlref(concat([getind(x), "*", string(i)]))
+    i : Integer * x : % == jlref(concat([string(i), "*", getind(x)]))
+    x : % * y : NMInteger == jbinfunc("*", x, y)
+    y : NMInteger * x : % == jbinfunc("*", y, x)
+    x : % * r : R == jbinfunc("*", x, r)
+    r : R * x : % == jbinfunc("*", r, x)
+    x : % / y : % == jbinfunc("/", x, y)
+    inv(x) == junfunc("inv", x)
 
     recip(x) ==
       zero?(x) => "failed"
@@ -843,15 +887,25 @@ NMResidueField(R, P, poly) : Exports == Implementation where
       tuple : JLObjTuple := jbinfunc("gcdx", x, y)
       [elt(tuple, 1) pretend %, elt(tuple, 2) pretend %, elt(tuple, 3) pretend %]
 
-    data(x : %) == junfunc("data", x)
-    lift(x : %) == junfunc("lift", x)
+    data(x : %) ==
+      jbinbfunc("isa", x, jobject("AbsSimpleNumFieldElem")$JLObject) =>
+        lift(x)
+      junfunc("data", x)
+    lift(x : %) ==
+      jbinbfunc("isa", x, jobject("AbsSimpleNumFieldElem")$JLObject) =>
+        PR := if tuple then concat([jlNMRing()$P, "[1]"]) else jlNMRing()$P
+        jlref(concat([PR, "([coeff(", getind(x), ", i) for i in 0:(degree(", RESFIELDD, ")-1)])"]))
+      junfunc("lift", x)
 
     coerce(p : P) == junfunc(RESFIELDD, p)
+    coerce(r : R) : % == junfunc(RESFIELDD, r)
     coerce(x : NMInteger) : % == junfunc(RESFIELDD, x)
     coerce(i : Integer) == jlref(concat([RESFIELDDP, string(i), ")"]))
     jnresidue(x : NMInteger) == coerce(x)
     jnresidue(i : Integer) == coerce(i)
+    jnresidue(r : R) == coerce(r)
     jnresidue(p : P) == coerce(p)
+    coerce(x : %) : OutputForm == message(string(x))
 
 )abbrev domain NZMOD NMIntegerMod
 ++ Domain for Nemo integer mod n
