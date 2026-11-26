@@ -97,15 +97,15 @@ Julia WS numerical special functions using the MathLink Julia package.
 
 | Operation | Summary |
 | :--- | :--- |
-| [`Beta`](#beta) | Beta(x, y) is Gamma(x) * Gamma(y)/Gamma(x+y). |
+| [`Beta`](#beta) | Beta(x, y) is `Gamma(x) * Gamma(y)/Gamma(x+y)`. |
 | [`EiEn`](#eien) | EiEn(n,z) returns the exponential integral En of z. |
 | [`Gamma`](#gamma) | Gamma(z) is the Euler Gamma function. |
-| [`airyAi`](#airyai) | airyAi(z) is the Airy function Ai(z). |
-| [`airyAiPrime`](#airyaiprime) | airyAiPrime(z) is the derivative of the Airy function Ai(z). |
-| [`airyAiZero`](#airyaizero) | airyAiZero(n) is the n-th zero function of the Airy function Ai(z). |
-| [`airyBi`](#airybi) | airyBi(z) is the Airy function Bi(z). |
-| [`airyBiPrime`](#airybiprime) | airyBiPrime(z) is the derivative of the Airy function Bi(z). |
-| [`airyBiZero`](#airybizero) | airyBiZero(n) is the n-th zero function of the Airy function Bi(z). |
+| [`airyAi`](#airyai) | airyAi(z) is the Airy function `Ai(z)`. |
+| [`airyAiPrime`](#airyaiprime) | airyAiPrime(z) is the derivative of the Airy function `Ai(z)`. |
+| [`airyAiZero`](#airyaizero) | airyAiZero(n) is the n-th zero function of the Airy function `Ai(z)`. |
+| [`airyBi`](#airybi) | airyBi(z) is the Airy function `Bi(z)`. |
+| [`airyBiPrime`](#airybiprime) | airyBiPrime(z) is the derivative of the Airy function `Bi(z)`. |
+| [`airyBiZero`](#airybizero) | airyBiZero(n) is the n-th zero function of the Airy function `Bi(z)`. |
 | [`angerJ`](#angerj) | angerJ(v, z) is the Anger J function. |
 | [`barnesG`](#barnesg) | barnesG(z) computes the Barnes G-function of z. |
 | [`besselI`](#besseli) | besselI(v, z) is the modified Bessel function of the first kind. |
@@ -125,7 +125,7 @@ Julia WS numerical special functions using the MathLink Julia package.
 | [`coulombH2`](#coulombh2) | coulombH2(l,eta,ro) is the incoming irregular Coulomb wave function H^(-). |
 | [`dawson`](#dawson) | dawson(x) computes the Dawson integral of x. |
 | [`dedekindEta`](#dedekindeta) | dedekindEta(tau) computes the Dedekind eta modular function. |
-| [`digamma`](#digamma) | digamma(z) is the logarithmic derivative of Gamma(z) (often written psi(z) in the literatu... |
+| [`digamma`](#digamma) | digamma(z) is the logarithmic derivative of `Gamma(z)` (often written `psi(z)` in the lite... |
 | [`diracDelta`](#diracdelta) | diracDelta(x) returns the Dirac delta function of x. |
 | [`dirichletEta`](#dirichleteta) | dirichletEta(z) computes the Dirichlet eta function of z. |
 | [`dirichletL`](#dirichletl) | dirichletL(k,j,s) returns Dirichlet L-function of s, modulus k, index j. |
@@ -160,20 +160,20 @@ Julia WS numerical special functions using the MathLink Julia package.
 | [`inverseJacobiCn`](#inversejacobicn) | inverseJacobiCn(nu, m) computes the inverse Jacobi's CN elliptic function. |
 | [`inverseJacobiSn`](#inversejacobisn) | inverseJacobiSn(nu, m) computes the inverse Jacobi's SN elliptic function. |
 | [`jacobiAmplitude`](#jacobiamplitude) | jacobiAmplitude(u,m) computes the amplitude function am. |
-| [`jacobiCn`](#jacobicn) | jacobiCn(z, m) is the Jacobi elliptic cn function, defined by jacobiCn(z, m)^2 + jacobiSn(... |
-| [`jacobiDn`](#jacobidn) | jacobiDn(z, m) is the Jacobi elliptic dn function, defined by jacobiDn(z, m)^2 + m*jacobiS... |
+| [`jacobiCn`](#jacobicn) | jacobiCn(z, m) is the Jacobi elliptic cn function, defined by `jacobiCn(z, m)^2 + jacobiSn`... |
+| [`jacobiDn`](#jacobidn) | jacobiDn(z, m) is the Jacobi elliptic dn function, defined by `jacobiDn(z, m)^2 + m*jacobi`... |
 | [`jacobiP`](#jacobip) | jacobiP(n, a, b, z) evaluates the Jacobi polynomial at z. |
-| [`jacobiSn`](#jacobisn) | jacobiSn(z, m) is the Jacobi elliptic sn function, defined by the formula jacobiSn(ellipti... |
+| [`jacobiSn`](#jacobisn) | jacobiSn(z, m) is the Jacobi elliptic sn function, defined by the formula `jacobiSn(ellipt`... |
 | [`jacobiTheta`](#jacobitheta) | jacobiTheta(n, z, m) are the Jacobi theta functions. |
-| [`jacobiZeta`](#jacobizeta) | jacobiZeta(z, m) is the Jacobi elliptic zeta function, defined by D(jacobiZeta(z, m), z) =... |
+| [`jacobiZeta`](#jacobizeta) | jacobiZeta(z, m) is the Jacobi elliptic zeta function, defined by `D(jacobiZeta(z, m), z) `... |
 | [`jlWSEval`](#jlwseval) | jlWSEval(func, a, b) evaluates Wolfram function func with arguments a and b. |
-| [`kelvinBei`](#kelvinbei) | kelvinBei(v, z) is the Kelvin bei function defined by equality kelvinBei(v, z) = imag(bess... |
-| [`kelvinBer`](#kelvinber) | kelvinBer(v, z) is the Kelvin ber function defined by equality kelvinBer(v, z) = real(bess... |
-| [`kelvinKei`](#kelvinkei) | kelvinKei(v, z) is the Kelvin kei function defined by equality kelvinKei(v, z) = imag(exp(... |
-| [`kelvinKer`](#kelvinker) | kelvinKer(v, z) is the Kelvin ker function defined by equality kelvinKer(v, z) = real(exp(... |
+| [`kelvinBei`](#kelvinbei) | kelvinBei(v, z) is the Kelvin bei function defined by equality `kelvinBei(v, z) = imag(bes`... |
+| [`kelvinBer`](#kelvinber) | kelvinBer(v, z) is the Kelvin ber function defined by equality `kelvinBer(v, z) = real(bes`... |
+| [`kelvinKei`](#kelvinkei) | kelvinKei(v, z) is the Kelvin kei function defined by equality `kelvinKei(v, z) = imag(exp`... |
+| [`kelvinKer`](#kelvinker) | kelvinKer(v, z) is the Kelvin ker function defined by equality `kelvinKer(v, z) = real(exp`... |
 | [`kleinInvariantJ`](#kleininvariantj) | kleinInvariantJ(tau) computes the Klein's absolute invariant. |
 | [`laguerreL`](#laguerrel) | laguerreL(n, z) evaluates the Laguerre polynomial at z. |
-| [`lambertW`](#lambertw) | lambertW(z) = w is the principal branch of the solution to the equation we^w = z. |
+| [`lambertW`](#lambertw) | lambertW(z) = w is the principal branch of the solution to the equation `we^w = z`. |
 | [`legendreP`](#legendrep) | legendreP(nu, mu, z) is the Legendre P function. |
 | [`legendreQ`](#legendreq) | legendreQ(nu, mu, z) is the Legendre Q function. |
 | [`lerchPhi`](#lerchphi) | lerchPhi(z, s, a) is the Lerch Phi function. |
@@ -191,7 +191,7 @@ Julia WS numerical special functions using the MathLink Julia package.
 | [`modularLambda`](#modularlambda) | modularLambda(tau) computes the lambda modular function. |
 | [`parabolicCylinderD`](#paraboliccylinderd) | parabolicCylinderD(nu,z) computes the parabolic cylinder function D of z. |
 | [`pochhammer`](#pochhammer) | pochhammer(a,n) returns the Pochhammer symbol. |
-| [`polygamma`](#polygamma) | polygamma(k, z) is the k-th derivative of digamma(z), (often written psi(k, z) in the lite... |
+| [`polygamma`](#polygamma) | polygamma(k, z) is the `k-th` derivative of `digamma(z)`, (often written `psi(k, z)` in th... |
 | [`polylog`](#polylog) | polylog(s, z) is the polylogarithm of order s at z. |
 | [`qBinomial`](#qbinomial) | qBinomial(n,m,q) returns the q-analog of binomial coefficient. |
 | [`qFactorial`](#qfactorial) | qFactorial(z,q) returns the q-analog of factorial of z. |
@@ -213,7 +213,7 @@ Julia WS numerical special functions using the MathLink Julia package.
 | [`sphericalHarmonicY`](#sphericalharmonicy) | sphericalHarmonicY(l, m, theta, phi) returns the spherical harmonic Y or evaluates it. |
 | [`stieltjesGamma`](#stieltjesgamma) | stieltjesGamma(n) returns the n-th Stieltjes constant. |
 | [`struveH`](#struveh) | struveH(v, z) is the Struve H function. |
-| [`struveL`](#struvel) | struveL(v, z) is the Struve L function defined by the formula struveL(v, z) = -Ri^exp(-v*R... |
+| [`struveL`](#struvel) | struveL(v, z) is the Struve L function defined by the formula `struveL(v, z) = -Ri^exp(-v*`... |
 | [`unitStep`](#unitstep) | unitStep(x) returns the unit step function i.e. 0 for x less than 0, 1 for x greater or eq... |
 | [`weberE`](#webere) | weberE(v, z) is the Weber E function. |
 | [`weierstrassP`](#weierstrassp) | weierstrassP(g2, g3, z) is the Weierstrass P function. |
@@ -231,7 +231,7 @@ Julia WS numerical special functions using the MathLink Julia package.
 
 ##### `Beta` : `(R, R) ->R`
 
-Beta(x, y) is Gamma(x) * Gamma(y)/Gamma(x+y).
+Beta(x, y) is `Gamma(x) * Gamma(y)/Gamma(x+y)`.
 
 ##### `Beta` : `(R, R, R) -> R`
 
@@ -239,7 +239,9 @@ Beta(z, a, b) is the incomplete Beta function.
 
 ##### `Beta` : `(R, R) -> R`
 
-Operation defined in WSNumericalSpecialFunctions.
+Beta(x, y) is Gamma(x) * Gamma(y)/Gamma(x+y).
+
+- **From**: [`WSNumericalSpecialFunctions(R)`](WSNumericalSpecialFunctions.md)
 
 #### `EiEn` <a id="eien"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsnsf.spad#L188)\]
 
@@ -263,13 +265,13 @@ Gamma(a,z1,z2) computes the generalized incomplete Gamma function.
 
 #### `airyAi` <a id="airyai"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsnsf.spad#L64)\]
 
-airyAi(z) is the Airy function Ai(z).
+airyAi(z) is the Airy function `Ai(z)`.
 
 - **Signature**: `R -> R`
 
 #### `airyAiPrime` <a id="airyaiprime"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsnsf.spad#L66)\]
 
-airyAiPrime(z) is the derivative of the Airy function Ai(z).
+airyAiPrime(z) is the derivative of the Airy function `Ai(z)`.
 
 - **Signature**: `R -> R`
 
@@ -277,21 +279,21 @@ airyAiPrime(z) is the derivative of the Airy function Ai(z).
 
 ##### `airyAiZero` : `R -> R`
 
-airyAiZero(n) is the n-th zero function of the Airy function Ai(z).
+airyAiZero(n) is the n-th zero function of the Airy function `Ai(z)`.
 
 ##### `airyAiZero` : `(R, R) -> R`
 
-airyAiZero(n,x) is the n-th zero function of the Airy function Ai(z) smaller than x.
+airyAiZero(n,x) is the n-th zero function of the Airy function `Ai(z)` smaller than x.
 
 #### `airyBi` <a id="airybi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsnsf.spad#L73)\]
 
-airyBi(z) is the Airy function Bi(z).
+airyBi(z) is the Airy function `Bi(z)`.
 
 - **Signature**: `R -> R`
 
 #### `airyBiPrime` <a id="airybiprime"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsnsf.spad#L80)\]
 
-airyBiPrime(z) is the derivative of the Airy function Bi(z).
+airyBiPrime(z) is the derivative of the Airy function `Bi(z)`.
 
 - **Signature**: `R -> R`
 
@@ -299,11 +301,11 @@ airyBiPrime(z) is the derivative of the Airy function Bi(z).
 
 ##### `airyBiZero` : `R -> R`
 
-airyBiZero(n) is the n-th zero function of the Airy function Bi(z).
+airyBiZero(n) is the n-th zero function of the Airy function `Bi(z)`.
 
 ##### `airyBiZero` : `(R, R) -> R`
 
-airyBiZero(n,x) is the n-th zero function of the Airy function Bi(z) smaller than x.
+airyBiZero(n,x) is the n-th zero function of the Airy function `Bi(z)` smaller than x.
 
 #### `angerJ` <a id="angerj"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsnsf.spad#L82)\]
 
@@ -427,7 +429,7 @@ dedekindEta(tau) computes the Dedekind eta modular function.
 
 ##### `digamma` : `R -> R`
 
-digamma(z) is the logarithmic derivative of Gamma(z) (often written psi(z) in the literature).
+digamma(z) is the logarithmic derivative of `Gamma(z)` (often written `psi(z)` in the literature).
 
 ##### `digamma` : `(R, R) -> R`
 
@@ -655,13 +657,13 @@ jacobiAmplitude(u,m) computes the amplitude function am.
 
 #### `jacobiCn` <a id="jacobicn"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsnsf.spad#L158)\]
 
-jacobiCn(z, m) is the Jacobi elliptic cn function, defined by jacobiCn(z, m)^2 + jacobiSn(z, m)^2 = 1 and jacobiCn(0, m) = 1.
+jacobiCn(z, m) is the Jacobi elliptic cn function, defined by `jacobiCn(z, m)^2 + jacobiSn(z, m)^2 = 1` and `jacobiCn(0, m) = 1`.
 
 - **Signature**: `(R, R) -> R`
 
 #### `jacobiDn` <a id="jacobidn"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsnsf.spad#L162)\]
 
-jacobiDn(z, m) is the Jacobi elliptic dn function, defined by jacobiDn(z, m)^2 + m*jacobiSn(z, m)^2 = 1 and jacobiDn(0, m) = 1.
+jacobiDn(z, m) is the Jacobi elliptic dn function, defined by `jacobiDn(z, m)^2 + m*jacobiSn(z, m)^2 = 1` and `jacobiDn(0, m) = 1`.
 
 - **Signature**: `(R, R) -> R`
 
@@ -673,7 +675,7 @@ jacobiP(n, a, b, z) evaluates the Jacobi polynomial at z.
 
 #### `jacobiSn` <a id="jacobisn"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsnsf.spad#L155)\]
 
-jacobiSn(z, m) is the Jacobi elliptic sn function, defined by the formula jacobiSn(ellipticF(z, m), m) = z.
+jacobiSn(z, m) is the Jacobi elliptic sn function, defined by the formula `jacobiSn(ellipticF(z, m), m) = z`.
 
 - **Signature**: `(R, R) -> R`
 
@@ -687,7 +689,7 @@ jacobiTheta(n, z, m) are the Jacobi theta functions.
 
 ##### `jacobiZeta` : `(R, R) -> R`
 
-jacobiZeta(z, m) is the Jacobi elliptic zeta function, defined by D(jacobiZeta(z, m), z) = jacobiDn(z, m)^2 - ellipticE(m)/ellipticK(m) and jacobiZeta(0, m) = 0.
+jacobiZeta(z, m) is the Jacobi elliptic zeta function, defined by `D(jacobiZeta(z, m), z) = jacobiDn(z, m)^2 - ellipticE(m)/ellipticK(m)` and `jacobiZeta(0, m) = 0`.
 
 ##### `jacobiZeta` : `(R, R) -> R`
 
@@ -731,25 +733,25 @@ jlWSEval(func, a) evaluates Wolfram function func with argument a.
 
 #### `kelvinBei` <a id="kelvinbei"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsnsf.spad#L137)\]
 
-kelvinBei(v, z) is the Kelvin bei function defined by equality kelvinBei(v, z) = imag(besselJ(v, exp(3*Rpi*Ri/4)*z)) for z and v real.
+kelvinBei(v, z) is the Kelvin bei function defined by equality `kelvinBei(v, z) = imag(besselJ(v, exp(3*Rpi*Ri/4)*z))` for z and v real.
 
 - **Signature**: `(R, R) -> R`
 
 #### `kelvinBer` <a id="kelvinber"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsnsf.spad#L141)\]
 
-kelvinBer(v, z) is the Kelvin ber function defined by equality kelvinBer(v, z) = real(besselJ(v, exp(3*Rpi*Ri/4)*z)) for z and v real.
+kelvinBer(v, z) is the Kelvin ber function defined by equality `kelvinBer(v, z) = real(besselJ(v, exp(3*Rpi*Ri/4)*z))` for z and v real.
 
 - **Signature**: `(R, R) -> R`
 
 #### `kelvinKei` <a id="kelvinkei"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsnsf.spad#L145)\]
 
-kelvinKei(v, z) is the Kelvin kei function defined by equality kelvinKei(v, z) = imag(exp(-v*Rpi*Ri/2)*besselK(v, exp(Rpi*Ri/4)*z)) for z and v real.
+kelvinKei(v, z) is the Kelvin kei function defined by equality `kelvinKei(v, z) = imag(exp(-v*Rpi*Ri/2)*besselK(v, exp(Rpi*Ri/4)*z))` for z and v real.
 
 - **Signature**: `(R, R) -> R`
 
 #### `kelvinKer` <a id="kelvinker"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsnsf.spad#L150)\]
 
-kelvinKer(v, z) is the Kelvin ker function defined by equality kelvinKer(v, z) = real(exp(-v*Rpi*Ri/2)*besselK(v, exp(Rpi*Ri/4)*z)) for z and v real.
+kelvinKer(v, z) is the Kelvin ker function defined by equality `kelvinKer(v, z) = real(exp(-v*Rpi*Ri/2)*besselK(v, exp(Rpi*Ri/4)*z))` for z and v real.
 
 - **Signature**: `(R, R) -> R`
 
@@ -773,7 +775,7 @@ laguerreL(n, a, z) evaluates the generalized Laguerre polynomial a z.
 
 ##### `lambertW` : `R -> R`
 
-lambertW(z) = w is the principal branch of the solution to the equation we^w = z.
+lambertW(z) = w is the principal branch of the solution to the equation `we^w = z`.
 
 ##### `lambertW` : `(WSInteger, R) -> R`
 
@@ -903,7 +905,7 @@ pochhammer(a,n) returns the Pochhammer symbol.
 
 #### `polygamma` <a id="polygamma"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsnsf.spad#L45)\]
 
-polygamma(k, z) is the k-th derivative of digamma(z), (often written psi(k, z) in the literature).
+polygamma(k, z) is the `k-th` derivative of `digamma(z)`, (often written `psi(k, z)` in the literature).
 
 - **Signature**: `(R, R) -> R`
 
@@ -1055,7 +1057,7 @@ struveH(v, z) is the Struve H function.
 
 #### `struveL` <a id="struvel"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsnsf.spad#L120)\]
 
-struveL(v, z) is the Struve L function defined by the formula struveL(v, z) = -Ri^exp(-v*Rpi*Ri/2)*struveH(v, Ri*z).
+struveL(v, z) is the Struve L function defined by the formula `struveL(v, z) = -Ri^exp(-v*Rpi*Ri/2)*struveH(v, Ri*z)`.
 
 - **Signature**: `(R, R) -> R`
 
@@ -1083,7 +1085,7 @@ weierstrassP(g2, g3, z) is the Weierstrass P function.
 
 #### `weierstrassPInverse` <a id="weierstrasspinverse"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsnsf.spad#L104)\]
 
-weierstrassPInverse(g2, g3, z) is the inverse of Weierstrass P function, defined by the formula weierstrassP(g2, g3, weierstrassPInverse(g2, g3, z)) = z.
+weierstrassPInverse(g2, g3, z) is the inverse of Weierstrass P function, defined by the formula `weierstrassP(g2, g3, weierstrassPInverse(g2, g3, z)) = z`.
 
 - **Signature**: `(R, R, R) -> R`
 

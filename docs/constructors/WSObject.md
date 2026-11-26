@@ -62,7 +62,7 @@ Julia WS Object category using the Wolfram Symbol Transport Protocol.
 | [`jlHead`](#jlhead) | jlHead(expr) returns the Head type of expr. |
 | [`jlId`](#jlid) | jlId(obj) returns the Julia indexed dictionary index referencing the object obj. |
 | [`jlNames`](#jlnames) | jlNames(obj) returns the names of obj depending of the type of obj. |
-| [`jlObject`](#jlobject) | jlObject() returns the internal Julia name of the Julia module used. For example:... |
+| [`jlObject`](#jlobject) | jlObject() returns the internal Julia name of the Julia module used. For example: |
 | [`jlPropertyNames`](#jlpropertynames) | jlPropertyNames(obj) returns the property/element names of obj. |
 | [`jlRef`](#jlref) | jlRef(obj) returns the internal Lisp representation of the Julia object obj. |
 | [`jlSymbolic`](#jlsymbolic) | jlSymbolic(expr) returns the symbolic 'FullForm'. |
@@ -134,7 +134,7 @@ jWSInterpret("Real","3.2")@WSREAL
 jWSInterpret("Location","Lille")$WSEXPR
 ```
 
-See jWSExpression "$InterpreterTypes"
+See jWSExpression "\$InterpreterTypes"
 
 ##### `jWSInterpret` : `(String, String, String) -> %`
 

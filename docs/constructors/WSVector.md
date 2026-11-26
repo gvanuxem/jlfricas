@@ -141,7 +141,7 @@ Julia WS vectors using the MathLink Julia package.
 | [`dimensions`](#dimensions) | dimensions(agg) returns dimensions of agg. |
 | [`dot`](#dot) | dot(v1, v2) is the dot product of v1 and v2. |
 | [`elt`](#elt) | elt(agg,i) returns the i-th element. |
-| [`empty`](#empty) | empty()$D creates an aggregate of type D with 0 elements. Note: The $D can be dropped if u... |
+| [`empty`](#empty) | empty()\$D creates an aggregate of type D with 0 elements. Note: The \$D can be dropped if... |
 | [`empty?`](#empty) | empty?(u) tests if u has 0 elements. |
 | [`entries`](#entries) | entries(u) returns a list of all the entries of aggregate u in no assumed order. |
 | [`entry?`](#entry) | entry?(x, u) tests if x equals u . i for some index i. |
@@ -173,7 +173,7 @@ Julia WS vectors using the MathLink Julia package.
 | [`jlHead`](#jlhead) | jlHead(expr) returns the Head type of expr. |
 | [`jlId`](#jlid) | jlId(obj) returns the Julia indexed dictionary index referencing the object obj. |
 | [`jlNames`](#jlnames) | jlNames(obj) returns the names of obj depending of the type of obj. |
-| [`jlObject`](#jlobject) | jlObject() returns the internal Julia name of the Julia module used. For example:... |
+| [`jlObject`](#jlobject) | jlObject() returns the internal Julia name of the Julia module used. For example: |
 | [`jlPropertyNames`](#jlpropertynames) | jlPropertyNames(obj) returns the property/element names of obj. |
 | [`jlRef`](#jlref) | jlRef(obj) returns the internal Lisp representation of the Julia object obj. |
 | [`jlSymbolic`](#jlsymbolic) | jlSymbolic(expr) returns the symbolic 'FullForm'. |
@@ -427,7 +427,7 @@ Operation defined in WSVector.
 
 ##### `construct` : `List(S) -> %`
 
-construct([x, y, ..., z]) returns the collection of elements x, y, ..., z ordered as given. Equivalently written as [x, y, ..., z]$D, where D is the domain. D may be omitted for those of type List.
+construct([x, y, ..., z]) returns the collection of elements x, y, ..., z ordered as given. Equivalently written as [x, y, ..., z]\$D, where D is the domain. D may be omitted for those of type List.
 
 - **From**: `Collection(S)`
 
@@ -582,7 +582,7 @@ Operation defined in WSVector.
 
 #### `empty` <a id="empty"></a>
 
-empty()$D creates an aggregate of type D with 0 elements. Note: The $D can be dropped if understood by context, u: D := empty().
+empty()\$D creates an aggregate of type D with 0 elements. Note: The \$D can be dropped if understood by context, u: D := empty().
 
 - **Signature**: `() -> %`
 - **From**: `Aggregate`

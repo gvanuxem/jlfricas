@@ -162,7 +162,7 @@ Julia WS matrices using the MathLink Julia package.
 | [`accumulate`](#accumulate) | accumulate(agg) returns the partial sums of elements in agg. |
 | [`adjoint`](#adjoint) | adjoint(m) returns the adjoint of m, i.e. the conjugate transposition of m. |
 | [`adjugate`](#adjugate) | adjugate(m) returns the adjugate of square m. |
-| [`antisymmetric?`](#antisymmetric) | antisymmetric?(m) returns true if the matrix m is square and antisymmetric (i.e. m[i, j] =... |
+| [`antisymmetric?`](#antisymmetric) | `antisymmetric?(m)` returns true if the matrix m is square and antisymmetric (i.e. `m[i, j`... |
 | [`any?`](#any) | any?(p, u) tests if p(x) is true for any element x of u. Note: for collections, any?(p, u)... |
 | [`append`](#append) | append(l, elt) appends elt to the list l. |
 | [`array2`](#array2) | array2(ll) constructs a 2-dimensional array, the inner list being the rows. |
@@ -179,15 +179,15 @@ Julia WS matrices using the MathLink Julia package.
 | [`delete`](#delete) | delete(l, inds) deletes element(s) of the list l at index(es) inds. |
 | [`determinant`](#determinant) | determinant(m) returns the determinant of the matrix m. Error: if the matrix is not square... |
 | [`diagonal`](#diagonal) | diagonal(m) returns the diagonal elements of m as a vector. |
-| [`diagonal?`](#diagonal) | diagonal?(m) returns true if the matrix m is square and diagonal (i.e. all entries of m no... |
-| [`diagonalMatrix`](#diagonalmatrix) | diagonalMatrix(l) returns a diagonal matrix with elements of l as diagonal elements. |
+| [`diagonal?`](#diagonal) | `diagonal?(m)` returns true if the matrix m is square and diagonal (i.e. all entries of m ... |
+| [`diagonalMatrix`](#diagonalmatrix) | `diagonalMatrix(l)` returns a diagonal matrix with elements of l as diagonal elements. |
 | [`differences`](#differences) | differences(agg) returns the differences between adjacent elements in agg. |
 | [`dimensions`](#dimensions) | dimensions(agg) returns dimensions of agg. |
 | [`eigenSystem`](#eigensystem) | eigenvectors(m) returns the eigenvectors of the square matrix m. |
 | [`eigenvalues`](#eigenvalues) | eigenvalues(m) returns the eigenvalues of the square matrix m. |
 | [`eigenvectors`](#eigenvectors) | eigenvectors(m) returns the eigenvectors of the square matrix m. |
 | [`elt`](#elt) | elt(mat, m, n) returns the element (m,n) of the matrix mat. |
-| [`empty`](#empty) | empty()$D creates an aggregate of type D with 0 elements. Note: The $D can be dropped if u... |
+| [`empty`](#empty) | empty()\$D creates an aggregate of type D with 0 elements. Note: The \$D can be dropped if... |
 | [`empty?`](#empty) | empty?(u) tests if u has 0 elements. |
 | [`eq?`](#eq) | eq?(u, v) tests if u and v are same objects. |
 | [`eval`](#eval) | eval(f, x, v) replaces x by v in f. |
@@ -198,13 +198,13 @@ Julia WS matrices using the MathLink Julia package.
 | [`first`](#first) | first(agg) returns the first element of agg. |
 | [`hash`](#hash) | hash(s) calculates a hash code for s. |
 | [`hashUpdate!`](#hashupdate) | hashUpdate!(hs, s) computes new HashState from old and s used for incremental computation ... |
-| [`hermitian?`](#hermitian) | hermitian?(m) checks whether or not m is hermitian. |
+| [`hermitian?`](#hermitian) | `hermitian?(m)` checks whether or not m is hermitian. |
 | [`hessenberg`](#hessenberg) | hessenberg(m) computes the Hessenberg decomposition of the square matrix m. |
 | [`horizConcat`](#horizconcat) | horizConcat(x, y) horizontally concatenates two arrays with an equal number of rows. The e... |
 | [`horizSplit`](#horizsplit) | horizSplit(a, [n1, n2, ..., ni]) splits a into arrays having n1, ..., ni columns. Error: i... |
 | [`insert`](#insert) | insert(l, elt, ind) inserts elt to the list l at index ind. |
 | [`intersection`](#intersection) | intersection(agg1, agg2) is the intersection operator. |
-| [`inverse`](#inverse) | inverse(m) computes the inverse of m. For example:... |
+| [`inverse`](#inverse) | inverse(m) computes the inverse of m. For example: |
 | [`invertIfCan`](#invertifcan) | invertIfCan(m) returns the inverse of the matrix m. If the matrix is not invertible, "fail... |
 | [`jWSAggregate`](#jwsaggregate) | jWSAggregate(list) constructs agg to a WSAggregate. |
 | [`jWSInterpret`](#jwsinterpret) | jWSInterpret(form) interprets form. |
@@ -221,7 +221,7 @@ Julia WS matrices using the MathLink Julia package.
 | [`jlHead`](#jlhead) | jlHead(expr) returns the Head type of expr. |
 | [`jlId`](#jlid) | jlId(obj) returns the Julia indexed dictionary index referencing the object obj. |
 | [`jlNames`](#jlnames) | jlNames(obj) returns the names of obj depending of the type of obj. |
-| [`jlObject`](#jlobject) | jlObject() returns the internal Julia name of the Julia module used. For example:... |
+| [`jlObject`](#jlobject) | jlObject() returns the internal Julia name of the Julia module used. For example: |
 | [`jlPropertyNames`](#jlpropertynames) | jlPropertyNames(obj) returns the property/element names of obj. |
 | [`jlRef`](#jlref) | jlRef(obj) returns the internal Lisp representation of the Julia object obj. |
 | [`jlSymbolic`](#jlsymbolic) | jlSymbolic(expr) returns the symbolic 'FullForm'. |
@@ -272,7 +272,7 @@ Julia WS matrices using the MathLink Julia package.
 | [`part`](#part) | part(agg,i) returns the i-th element. |
 | [`parts`](#parts) | parts(m) returns a list of the elements of m in row major order |
 | [`permanent`](#permanent) | permanent(m) returns the permanent of m. |
-| [`positiveDefinite?`](#positivedefinite) | positiveDefinite?(m) checks whether or not m is positive definite. |
+| [`positiveDefinite?`](#positivedefinite) | `positiveDefinite?(m)` checks whether or not m is positive definite. |
 | [`positivePower`](#positivepower) | positivePower(x, n) computes a positive integral power of the matrix x. Error: if the matr... |
 | [`prepend`](#prepend) | prepend(l, elt) prepends elt to the list l. |
 | [`pseudoInverse`](#pseudoinverse) | pseudoInverse(m) computes the pseudo inverse of m also known as Moore-Penrose inverse. |
@@ -305,7 +305,7 @@ Julia WS matrices using the MathLink Julia package.
 | [`smaller?`](#smaller) | smaller?(x, y) is a strict ordering on depending on representatives of elements of the set... |
 | [`sort`](#sort) | sort(agg) returns agg in sorted order. For complex numbers, sorts them by their real part ... |
 | [`sorted?`](#sorted) | sorted?(agg) checks whether agg is sorted or not. |
-| [`square?`](#square) | square?(m) returns true if m is a square matrix (i.e. if m has the same number of rows as ... |
+| [`square?`](#square) | `square?(m)` returns true if m is a square matrix (i.e. if m has the same number of rows a... |
 | [`squareTop`](#squaretop) | squareTop(m) returns an n-by-n array consisting of the first n rows of the m-by-n array m.... |
 | [`string`](#string) | string(jt) returns the string representation of jt. |
 | [`subMatrix`](#submatrix) | subMatrix(x, i1, i2, j1, j2) extracts the submatrix [x(i, j)] where the index i ranges fro... |
@@ -313,7 +313,7 @@ Julia WS matrices using the MathLink Julia package.
 | [`svdvals`](#svdvals) | svdvals(m) returns the singular values of the matrix m. |
 | [`swapColumns!`](#swapcolumns) | swapColumns!(m, i, j) interchanges the ith and jth columns of m. This destructively alters... |
 | [`swapRows!`](#swaprows) | swapRows!(m, i, j) interchanges the ith and jth rows of m. This destructively alters the a... |
-| [`symmetric?`](#symmetric) | symmetric?(m) returns true if the matrix m is square and symmetric (i.e. m[i, j] = m[j, i]... |
+| [`symmetric?`](#symmetric) | `symmetric?(m)` returns true if the matrix m is square and symmetric (i.e. `m[i, j] = m[j,`... |
 | [`take`](#take) | take(l,i) returns the first i elements. |
 | [`toString`](#tostring) | toString(mat, form) returns the string representation of mat with WS language format form. |
 | [`total`](#total) | total(agg) returns the sum of the elements in agg. |
@@ -358,19 +358,19 @@ n*a scales the matrix a by n.
 
 ##### `*` : `(E, %) -> %`
 
-r*x is the left scalar multiple of the scalar r and the matrix x.
+`r*x` is the left scalar multiple of the scalar r and the matrix x.
 
 ##### `*` : `(%, E) -> %`
 
-x * r is the right scalar multiple of the scalar r and the matrix x.
+`x * r` is the right scalar multiple of the scalar r and the matrix x.
 
 ##### `*` : `(%, WSVector(E)) -> %`
 
-x * c is the product of the matrix x and the column vector c. Error: if the dimensions are incompatible.
+`x * c` is the product of the matrix x and the column vector c. Error: if the dimensions are incompatible.
 
 ##### `*` : `(WSVector(E), %) -> %`
 
-r * x is the product of the row vector r and the matrix x. Error: if the dimensions are incompatible.
+`r * x` is the product of the row vector r and the matrix x. Error: if the dimensions are incompatible.
 
 ##### `*` : `(%, WSVector(E)) -> WSVector(E) if E has SRNG`
 
@@ -444,7 +444,7 @@ adjugate(m) returns the adjugate of square m.
 
 #### `antisymmetric?` <a id="antisymmetric"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L358)\]
 
-antisymmetric?(m) returns true if the matrix m is square and antisymmetric (i.e. m[i, j] = -m[j, i] for all i and j) and false otherwise.
+`antisymmetric?(m)` returns true if the matrix m is square and antisymmetric (i.e. `m[i, j] = -m[j, i]` for all i and j) and false otherwise.
 
 - **Signature**: `% -> Boolean`
 
@@ -662,7 +662,7 @@ diagonal(m) returns the diagonal elements of m as a vector.
 
 #### `diagonal?` <a id="diagonal"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L349)\]
 
-diagonal?(m) returns true if the matrix m is square and diagonal (i.e. all entries of m not on the diagonal are zero) and false otherwise.
+`diagonal?(m)` returns true if the matrix m is square and diagonal (i.e. all entries of m not on the diagonal are zero) and false otherwise.
 
 - **Signature**: `% -> Boolean`
 
@@ -670,7 +670,7 @@ diagonal?(m) returns true if the matrix m is square and diagonal (i.e. all entri
 
 ##### `diagonalMatrix` : `WSList(E) -> %`
 
-diagonalMatrix(l) returns a diagonal matrix with elements of l as diagonal elements.
+`diagonalMatrix(l)` returns a diagonal matrix with elements of l as diagonal elements.
 
 ##### `diagonalMatrix` : `List(%) -> %`
 
@@ -831,7 +831,7 @@ Operation defined in WSMatrix.
 
 #### `empty` <a id="empty"></a>
 
-empty()$D creates an aggregate of type D with 0 elements. Note: The $D can be dropped if understood by context, u: D := empty().
+empty()\$D creates an aggregate of type D with 0 elements. Note: The \$D can be dropped if understood by context, u: D := empty().
 
 - **Signature**: `() -> %`
 - **From**: `Aggregate`
@@ -973,7 +973,7 @@ Operation defined in WSMatrix.
 
 #### `hermitian?` <a id="hermitian"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L364)\]
 
-hermitian?(m) checks whether or not m is hermitian.
+`hermitian?(m)` checks whether or not m is hermitian.
 
 - **Signature**: `% -> Boolean`
 
@@ -1852,7 +1852,7 @@ permanent(m) returns the permanent of m.
 
 #### `positiveDefinite?` <a id="positivedefinite"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L362)\]
 
-positiveDefinite?(m) checks whether or not m is positive definite.
+`positiveDefinite?(m)` checks whether or not m is positive definite.
 
 - **Signature**: `% -> Boolean`
 
@@ -2295,7 +2295,7 @@ sorted?(agg) checks whether agg is sorted or not.
 
 #### `square?` <a id="square"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L346)\]
 
-square?(m) returns true if m is a square matrix (i.e. if m has the same number of rows as columns) and false otherwise.
+`square?(m)` returns true if m is a square matrix (i.e. if m has the same number of rows as columns) and false otherwise.
 
 - **Signature**: `% -> Boolean`
 
@@ -2352,7 +2352,7 @@ swapRows!(m, i, j) interchanges the ith and jth rows of m. This destructively al
 
 #### `symmetric?` <a id="symmetric"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsagg.spad#L353)\]
 
-symmetric?(m) returns true if the matrix m is square and symmetric (i.e. m[i, j] = m[j, i] for all i and j) and false otherwise.
+`symmetric?(m)` returns true if the matrix m is square and symmetric (i.e. `m[i, j] = m[j, i]` for all i and j) and false otherwise.
 
 - **Signature**: `% -> Boolean`
 

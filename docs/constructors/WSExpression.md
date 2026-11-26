@@ -477,10 +477,10 @@ Julia WS expressions using the MathLink Julia package. It supports the Eltable c
 | [`acsch`](#acsch) | acsch(x) returns the hyperbolic arc-cosecant of x. |
 | [`airyAi`](#airyai) | airyAi(x) is the Airy function Ai(x). |
 | [`airyAiPrime`](#airyaiprime) | airyAiPrime(x) is the derivative of the Airy function Ai(x). |
-| [`airyAiZero`](#airyaizero) | airyAiZero(n) is the n-th zero of the Airy function Ai(z). |
+| [`airyAiZero`](#airyaizero) | airyAiZero(n) is the n-th zero of the Airy function `Ai(z)`. |
 | [`airyBi`](#airybi) | airyBi(x) is the Airy function Bi(x). |
 | [`airyBiPrime`](#airybiprime) | airyBiPrime(x) is the derivative of the Airy function Bi(x). |
-| [`airyBiZero`](#airybizero) | airyBiZero(n) is the n-th zero of the Airy function Bi(z). |
+| [`airyBiZero`](#airybizero) | airyBiZero(n) is the n-th zero of the Airy function `Bi(z)`. |
 | [`algtower`](#algtower) | algtower(f) is algtower([f]) |
 | [`angerJ`](#angerj) | angerJ(v, n, z) is the associated Anger J function. |
 | [`annihilate?`](#annihilate) | annihilate?(x,y) holds when the product of x and y is 0. |
@@ -519,7 +519,7 @@ Julia WS expressions using the MathLink Julia package. It supports the Eltable c
 | [`charlierC`](#charlierc) | charlierC(n, a, z) is the Charlier polynomial. |
 | [`chebyshevT`](#chebyshevt) | chebyshevT(n, x) returns the Chebyshev polynomial of the first kind or evaluates it at x i... |
 | [`chebyshevU`](#chebyshevu) | chebyshevU(n, x) returns Chebyshev polynomial of the second kind or evaluates it at x if x... |
-| [`coefficient`](#coefficient) | coefficient(p,expr) returns the coefficient of expr in p.... |
+| [`coefficient`](#coefficient) | coefficient(p,expr) returns the coefficient of expr in p. |
 | [`coefficientList`](#coefficientlist) | coefficientList(p,expr) returns the list of coefficients of expr in p. |
 | [`coefficientRules`](#coefficientrules) | coefficientRules(p) returns the coefficients and exponents of p as WS rules. |
 | [`coerce`](#coerce) | coerce(z) coerces the integer z to a WSExpression. Convenience function. |
@@ -553,7 +553,7 @@ Julia WS expressions using the MathLink Julia package. It supports the Eltable c
 | [`denom`](#denom) | denom(f) returns the denominator of f viewed as a polynomial in the kernels over R. |
 | [`denominator`](#denominator) | denominator(expr) returns the denominator of expr. |
 | [`derivationCoordinates`](#derivationcoordinates) | derivationCoordinates(b, ') returns M such that b' = M b. |
-| [`derivative`](#derivative) | derivative(func,n) returns the derivative of order n of func.... |
+| [`derivative`](#derivative) | derivative(func,n) returns the derivative of order n of func. |
 | [`differentiate`](#differentiate) | differentiate(x, v) computes the partial derivative of x with respect to v. |
 | [`digamma`](#digamma) | digamma(n,z) is the n-th derivative of the digamma function. |
 | [`dilog`](#dilog) | dilog(x) returns the dilogarithm of x, the integral of log(x) / (1 - x) dx. |
@@ -562,7 +562,7 @@ Julia WS expressions using the MathLink Julia package. It supports the Eltable c
 | [`dirichletEta`](#dirichleteta) | dirichletEta(z) computes the Dirichlet eta. |
 | [`dirichletL`](#dirichletl) | dirichletL(k,j,s) returns Dirichlet L-function of s, modulus k, index j. |
 | [`discriminant`](#discriminant) | discriminant(p, x) returns the discriminant of p with respect to x. |
-| [`distribute`](#distribute) | distribute(expr) distributes expr over addition. For illustration:... |
+| [`distribute`](#distribute) | distribute(expr) distributes expr over addition. For illustration: |
 | [`divide`](#divide) | divide(x, y) divides x by y producing a record containing a quotient and remainder, where ... |
 | [`ellipticE`](#elliptice) | ellipticE(x) computes the complete elliptic integral of the second kind. |
 | [`ellipticF`](#ellipticf) | ellipticF(phi,m) computes the elliptic integral of the first kind. |
@@ -586,7 +586,7 @@ Julia WS expressions using the MathLink Julia package. It supports the Eltable c
 | [`expand`](#expand) | expand(expr) puts out products and positive powers of integers of the expression expr. |
 | [`expandDenominator`](#expanddenominator) | expandDenominator(expr) expands denominators of rational expression expr. |
 | [`expandNumerator`](#expandnumerator) | expandNumerator(expr) expands numerators of rational expression expr. |
-| [`exponent`](#exponent) | exponent(p,expr) returns the maximum exponent of p for expr.... |
+| [`exponent`](#exponent) | exponent(p,expr) returns the maximum exponent of p for expr. |
 | [`expressIdealMember`](#expressidealmember) | expressIdealMember([f1, ..., fn], h) returns a representation of h as a linear combination... |
 | [`exquo`](#exquo) | exquo(a, b) either returns an element c such that c*b=a or "failed" if no such element can... |
 | [`extendedEuclidean`](#extendedeuclidean) | extendedEuclidean(x, y) returns a record rec where rec.coef1*x+rec.coef2*y = rec.generator... |
@@ -594,9 +594,9 @@ Julia WS expressions using the MathLink Julia package. It supports the Eltable c
 | [`extendedSimplify`](#extendedsimplify) | extendedSimplify(expr) is the extended version of simplify. This is the full version of si... |
 | [`extract`](#extract) | extract(expr,i) returns the i-th element of expr seen as a list. |
 | [`factor`](#factor) | factor(expr) factors the expression or polynomial expr. |
-| [`factorInteger`](#factorinteger) | factorInteger(n) factorizes the integer n into its prime factors. For example:... |
+| [`factorInteger`](#factorinteger) | factorInteger(n) factorizes the integer n into its prime factors. For example: |
 | [`factorList`](#factorlist) | factorList(expr) factors the expression or polynomial expr, but returns the result as a li... |
-| [`factorPolynomial`](#factorpolynomial) | factorPolynomial(p) factorizes the polynomial p. For example:... |
+| [`factorPolynomial`](#factorpolynomial) | factorPolynomial(p) factorizes the polynomial p. For example: |
 | [`factorSquareFree`](#factorsquarefree) | factorSquareFree(expr) factors the expression or polynomial expr in square free factors. |
 | [`factorSquareFreeList`](#factorsquarefreelist) | factorSquareFreeList(expr) factors the expression or polynomial expr in square free factor... |
 | [`factorSquareFreePolynomial`](#factorsquarefreepolynomial) | factorSquareFreePolynomial(p) factors the univariate polynomial p into irreducibles where ... |
@@ -606,7 +606,7 @@ Julia WS expressions using the MathLink Julia package. It supports the Eltable c
 | [`factorials`](#factorials) | factorials(f) rewrites the permutations and binomials in f in terms of factorials. |
 | [`fibonacci`](#fibonacci) | fibonacci(n, x) returns the Fibonacci polynomial or evaluates it at x if x is a number. |
 | [`findInstance`](#findinstance) | findInstance(expr,lvars) tries to find an instance of the equation in expr. |
-| [`findRoot`](#findroot) | findRoot(expr,start) tries to find the root of expr starting at start.... |
+| [`findRoot`](#findroot) | findRoot(expr,start) tries to find the root of expr starting at start. |
 | [`first`](#first) | first(agg) returns the first element of agg. |
 | [`floor`](#floor) | floor(x) returns the greatest integer less than or equal to x |
 | [`fourier`](#fourier) | fourier(expr) returns the discrete Fourier transform from a list of numbers. |
@@ -627,7 +627,7 @@ Julia WS expressions using the MathLink Julia package. It supports the Eltable c
 | [`ground?`](#ground) | ground?(f) tests if f is an element of R. |
 | [`gudermannian`](#gudermannian) | gudermannian(z) computes the Gudermannian of z. |
 | [`guessGeneratingFunction`](#guessgeneratingfunction) | guessGeneratingFunction(l,x) finds the generating function applied to x from the list of c... |
-| [`guessSequenceFunction`](#guesssequencefunction) | guessSequenceFunction(l) finds the sequence from the list of coefficients l. For example:... |
+| [`guessSequenceFunction`](#guesssequencefunction) | guessSequenceFunction(l) finds the sequence from the list of coefficients l. For example: |
 | [`hahnQ`](#hahnq) | hahnQ(n, a, b, N, z) s the Hahn polynomial. |
 | [`hahnR`](#hahnr) | hahnR(n, c, d, N, z) is the dual Hahn polynomial. |
 | [`hahnS`](#hahns) | hahnS(n, a, b, c, z) is the continuous dual Hahn polynomial. |
@@ -682,7 +682,7 @@ Julia WS expressions using the MathLink Julia package. It supports the Eltable c
 | [`jWSLess`](#jwsless) | jWSLess(lhs,rhs) returns the Julia WS inequality lhs < rhs. |
 | [`jWSLessEqual`](#jwslessequal) | jWSLessEqual(lhs,rhs) returns the Julia WS inequality lhs <= rhs. |
 | [`jWSNotEqual`](#jwsnotequal) | jWSNotEqual(lhs,rhs) returns the Julia WS inequality lhs != rhs. |
-| [`jWSQuantity`](#jwsquantity) | jWSQuantity(jWSString(u)) returns quantity unit u of 1. For example:... |
+| [`jWSQuantity`](#jwsquantity) | jWSQuantity(jWSString(u)) returns quantity unit u of 1. For example: |
 | [`jWSRule`](#jwsrule) | jWSRule(lhs,rhs) returns the Julia WS rule lhs->rhs. |
 | [`jWSTable`](#jwstable) | jWSTable(expr, range) applies the expr to the defined range. |
 | [`jacobiAmplitude`](#jacobiamplitude) | jacobiAmplitude(u,m) computes the amplitude function am. |
@@ -704,7 +704,7 @@ Julia WS expressions using the MathLink Julia package. It supports the Eltable c
 | [`jlHead`](#jlhead) | jlHead(expr) returns the Head type of expr. |
 | [`jlId`](#jlid) | jlId(obj) returns the Julia indexed dictionary index referencing the object obj. |
 | [`jlNames`](#jlnames) | jlNames(obj) returns the names of obj depending of the type of obj. |
-| [`jlObject`](#jlobject) | jlObject() returns the internal Julia name of the Julia module used. For example:... |
+| [`jlObject`](#jlobject) | jlObject() returns the internal Julia name of the Julia module used. For example: |
 | [`jlPropertyNames`](#jlpropertynames) | jlPropertyNames(obj) returns the property/element names of obj. |
 | [`jlRef`](#jlref) | jlRef(obj) returns the internal Lisp representation of the Julia object obj. |
 | [`jlSymbolic`](#jlsymbolic) | jlSymbolic(expr) returns the symbolic 'FullForm'. |
@@ -811,7 +811,7 @@ Julia WS expressions using the MathLink Julia package. It supports the Eltable c
 | [`parabolicCylinderD`](#paraboliccylinderd) | parabolicCylinderD(nu,x) computes the parabolic cylinder function D of x. |
 | [`paren`](#paren) | paren(f) returns (f). This prevents f from being evaluated when operators are applied to i... |
 | [`part`](#part) | part(agg,i) returns the i-th element. |
-| [`percentForm`](#percentform) | percentForm(x) returns the printed representation of x in percent form. For example:... |
+| [`percentForm`](#percentform) | percentForm(x) returns the printed representation of x in percent form. For example: |
 | [`permutation`](#permutation) | permutation(n, m) returns the number of permutations of n objects taken m at a time. Note:... |
 | [`pi`](#pi) | pi() returns the constant pi. |
 | [`plenaryPower`](#plenarypower) | plenaryPower(a, n) is recursively defined to be plenaryPower(a, n-1)*plenaryPower(a, n-1) ... |
@@ -896,13 +896,13 @@ Julia WS expressions using the MathLink Julia package. It supports the Eltable c
 | [`sec`](#sec) | sec(x) returns the secant of x. |
 | [`sech`](#sech) | sech(x) returns the hyperbolic secant of x. |
 | [`select`](#select) | select(expr, form) selects elements of expr if form(element) is true. |
-| [`series`](#series) | series(expr, opt) returns a series from expr.... |
+| [`series`](#series) | series(expr, opt) returns a series from expr. |
 | [`setIntersection`](#setintersection) | setIntersection(agg1, agg2) is the intersection set operator. |
 | [`setelt`](#setelt) | setelt(l,i,elem) returns a copy of l with i-th element replaced by the element elem. |
 | [`setelt!`](#setelt) | setelt!(l,i,elem) returns l with i-th element replaced by elem. |
 | [`siegelTheta`](#siegeltheta) | siegelTheta(tau, s) computes the Siegel theta function. |
 | [`sign`](#sign) | sign(x) returns the sign of x. |
-| [`simplify`](#simplify) | simplify(expr) simplifies the expr.... |
+| [`simplify`](#simplify) | simplify(expr) simplifies the expr. |
 | [`sin`](#sin) | sin(x) returns the sine of x. |
 | [`sinc`](#sinc) | sinc(x) computes the unnormalized sinc of x, sin(x)/x and 0 if x = 0. |
 | [`sinh`](#sinh) | sinh(x) returns the hyperbolic sine of x. |
@@ -965,7 +965,7 @@ Julia WS expressions using the MathLink Julia package. It supports the Eltable c
 | [`whittakerW`](#whittakerw) | whittakerW(k,m,z) computes the Whittaker function W of z. |
 | [`wilsonW`](#wilsonw) | wilsonW(n, a, b, c, d, z) is the Wilson polynomial. |
 | [`zernikeR`](#zerniker) | zernikeR(n, m, x) returns the Zernike radial polynomial or evaluates it at x if x is a num... |
-| [`zero?`](#zero) | zero? x tries to determine if x is 0. For example:... |
+| [`zero?`](#zero) | zero? x tries to determine if x is 0. For example: |
 | [`zeroOf`](#zeroof) | zeroOf(p) returns y such that p(y) = 0. The value y is expressed in terms of radicals if p... |
 | [`zerosOf`](#zerosof) | zerosOf(p) returns [y1, ..., yn] such that p(yi) = 0. The yi's are expressed in radicals i... |
 | [`~=`](#op-neq) | Operation defined in WSExpression |
@@ -1316,11 +1316,11 @@ airyAiPrime(x) is the derivative of the Airy function Ai(x).
 
 ##### `airyAiZero` : `% -> %`
 
-airyAiZero(n) is the n-th zero of the Airy function Ai(z).
+airyAiZero(n) is the n-th zero of the Airy function `Ai(z)`.
 
 ##### `airyAiZero` : `(%, %) -> %`
 
-airyAiZero(n,x) is the n-th zero of the Airy function Ai(z) less than x.
+airyAiZero(n,x) is the n-th zero of the Airy function `Ai(z)` less than x.
 
 #### `airyBi` <a id="airybi"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L1519)\]
 
@@ -1340,11 +1340,11 @@ airyBiPrime(x) is the derivative of the Airy function Bi(x).
 
 ##### `airyBiZero` : `% -> %`
 
-airyBiZero(n) is the n-th zero of the Airy function Bi(z).
+airyBiZero(n) is the n-th zero of the Airy function `Bi(z)`.
 
 ##### `airyBiZero` : `(%, %) -> %`
 
-airyBiZero(n,x) is the n-th zero of the Airy function Bi(z) less than x.
+airyBiZero(n,x) is the n-th zero of the Airy function `Bi(z)` less than x.
 
 #### `algtower` <a id="algtower"></a>
 
@@ -6582,7 +6582,7 @@ weierstrassP(g2, g3, z) is the Weierstrass P function.
 
 #### `weierstrassPInverse` <a id="weierstrasspinverse"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsexpr.spad#L185)\]
 
-weierstrassPInverse(g2, g3, z) is the inverse of Weierstrass P function, defined by the formula WeierstrassP(g2, g3, WeierstrassPInverse(g2, g3, z)) = z.
+weierstrassPInverse(g2, g3, z) is the inverse of Weierstrass P function, defined by the formula `WeierstrassP(g2, g3, WeierstrassPInverse(g2, g3, z)) = z`.
 
 - **Signature**: `(%, %, %) -> %`
 

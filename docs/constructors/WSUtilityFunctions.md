@@ -37,18 +37,18 @@ Julia WS utility functions using the MathLink Julia package.
 | Operation | Summary |
 | :--- | :--- |
 | [`fourierMatrix`](#fouriermatrix) | fourierMatrix(n) returns the n x n Fourier matrix. |
-| [`gaussianMatrix`](#gaussianmatrix) | gaussianMatrix(r) returns the Gaussian matrix with radius r. For example:... |
+| [`gaussianMatrix`](#gaussianmatrix) | gaussianMatrix(r) returns the Gaussian matrix with radius r. For example: |
 | [`hankelMatrix`](#hankelmatrix) | hankelMatrix(n) returns the square Hankel matrix with integer coefficients. |
 | [`hilbertMatrix`](#hilbertmatrix) | hilbertMatrix(n) returns the square Hilbert matrix. |
 | [`identityMatrix`](#identitymatrix) | identityMatrix(n) returns the identity matrix of size n. |
 | [`jWSDateObject`](#jwsdateobject) | jWSDateObject() returns the WSExpression object of the local date and time. |
-| [`jWSRange`](#jwsrange) | jWSRange(n) returns a WSList that ranges from 1 to n. For example:... |
-| [`jlWSDateString`](#jlwsdatestring) | jlWSDateString() returns the WSExpression string of the local date and time. For example:... |
+| [`jWSRange`](#jwsrange) | jWSRange(n) returns a WSList that ranges from 1 to n. For example: |
+| [`jlWSDateString`](#jlwsdatestring) | jlWSDateString() returns the WSExpression string of the local date and time. For example: |
 | [`jlWSDocumentation`](#jlwsdocumentation) | jlWSDocumentation(sym) prints WS information about the symbol sym. Note that the WS langua... |
 | [`jlWSExport`](#jlwsexport) | jlWSExport(file.ext, obj) exports the object obj to the file file.ext. The extension ext w... |
 | [`jlWSExportString`](#jlwsexportstring) | jlWSExportString(expr, form) returns the string representation of expr in the specified fo... |
 | [`jlWSFileFormat`](#jlwsfileformat) | jlWSFileFormat(src) tries to determine the format of the source src from its content. Can ... |
-| [`jlWSImport`](#jlwsimport) | jlWSImport(src) imports the source src. For example:... |
+| [`jlWSImport`](#jlwsimport) | jlWSImport(src) imports the source src. For example: |
 | [`jlWSPlot`](#jlwsplot) | jlWSPlot(expr, options) is the WS plot function. Since it should be run in a Wolfram noteb... |
 | [`jlWSSeedRandom!`](#jlwsseedrandom) | jlWSSeedRandom!(n) reseeds the random number generator with n as seed. Returns the random ... |
 | [`jlWSSnippet`](#jlwssnippet) | jlWSSnippet(expr, n) returns the first (or last) n snippets of the WSExpression expr. For ... |
@@ -200,7 +200,7 @@ jlWSFileFormat("examples/customers-100.csv")
 
 ##### `jlWSFileFormat` : `(WSString, WSExpression) -> WSExpression`
 
-jlWSFileFormat(src, list(form)) tries to determine the format of the source src from its content using the list of formats form. Returns WS None if no format is found. Can be used with jWSImport. For example: jlWSFileFormat("examples/customers-100.csv",jWSExpression "_"CSV_",_"TSV_"")
+jlWSFileFormat(src, list(form)) tries to determine the format of the source src from its content using the list of formats form. Returns WS None if no format is found. Can be used with jWSImport. For example: `jlWSFileFormat("examples/customers-100.csv",jWSExpression "_"CSV_",_"TSV_"")`
 
 #### `jlWSImport` <a id="jlwsimport"></a> &nbsp; \[[source](https://github.com/gvanuxem/jlfricas/blob/master/src/algebra/jwsutils.spad#L97)\]
 

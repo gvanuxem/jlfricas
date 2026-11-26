@@ -162,7 +162,7 @@ Julia WS integers using the MathLink Julia package.
 | [`jlHead`](#jlhead) | jlHead(expr) returns the Head type of expr. |
 | [`jlId`](#jlid) | jlId(obj) returns the Julia indexed dictionary index referencing the object obj. |
 | [`jlNames`](#jlnames) | jlNames(obj) returns the names of obj depending of the type of obj. |
-| [`jlObject`](#jlobject) | jlObject() returns the internal Julia name of the Julia module used. For example:... |
+| [`jlObject`](#jlobject) | jlObject() returns the internal Julia name of the Julia module used. For example: |
 | [`jlPropertyNames`](#jlpropertynames) | jlPropertyNames(obj) returns the property/element names of obj. |
 | [`jlRef`](#jlref) | jlRef(obj) returns the internal Lisp representation of the Julia object obj. |
 | [`jlSymbolic`](#jlsymbolic) | jlSymbolic(expr) returns the symbolic 'FullForm'. |
@@ -220,8 +220,8 @@ Julia WS integers using the MathLink Julia package.
 | [`smaller?`](#smaller) | smaller?(x, y) is a strict ordering on depending on representatives of elements of the set... |
 | [`squareFree`](#squarefree) | squareFree(x) returns the square-free factorization of x such that the factors are pairwis... |
 | [`squareFreePart`](#squarefreepart) | squareFreePart(x) returns a product of prime factors of x each taken with multiplicity one... |
-| [`stirling1`](#stirling1) | stirling1(n,m) returns the Stirling number of the first kind from n and m. For example:... |
-| [`stirling2`](#stirling2) | stirling2(n,m) returns the Stirling number of the second kind from n and m. For example:... |
+| [`stirling1`](#stirling1) | stirling1(n,m) returns the Stirling number of the first kind from n and m. For example: |
+| [`stirling2`](#stirling2) | stirling2(n,m) returns the Stirling number of the second kind from n and m. For example: |
 | [`string`](#string) | string(jt) returns the string representation of jt. |
 | [`submod`](#submod) | submod(a, b, p), 0<=a, b<p>1, means a-b mod p. |
 | [`subtractIfCan`](#subtractifcan) | subtractIfCan(x, y) returns an element z such that z+y=x or "failed" if no such element ex... |
