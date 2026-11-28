@@ -59,8 +59,6 @@ JLUtilityFunctions() : Exports == Implementation where
     jlSeed! : JLInt64 -> Void
     ++ jlSeed!(n) reseeds the Julia random number generator
     ++ if applicable (Some random number generators don't accept a seed).
-    jlRandomString : PI -> String
-    ++ jlRandomString(n) returns a random string of n characters.
     jlEvalString   : STR -> Void
     ++ jlEvalString(str) evaluates str in Julia with no output.
     jlEvalString   : STR -> Boolean
@@ -93,11 +91,9 @@ JLUtilityFunctions() : Exports == Implementation where
     ZZ : Integer -> NMInteger
     ++ ZZ(i) returns i as a Nemo integer.
     ++ Convenience function.
-
   Implementation ==> add
     import from String
     import from JLStringUtilities
-    import from BrowserInformation
     import from JLObject
     jlInitialize(true)
 
@@ -144,9 +140,6 @@ JLUtilityFunctions() : Exports == Implementation where
 
     jlSeed!(n) == jlEvalString(concat ["Random.seed!(", string(n), ")"])
 
-    jlRandomString(n) ==
-      jl_string_eval_string(concat ["randstring(", string(n), ")"])$Lisp
-
     jlEvalString(s : STR)   : Void    == jl_eval_string(s)$Lisp
     jlEvalString(s : STR)   : Boolean == jl_bool_eval_string(s)$Lisp
     jlEvalString(s : STR)   : JI64    == jl_int64_eval_string(s)$Lisp
@@ -182,6 +175,8 @@ JLStringUtilities() : Exports == Implementation where
         ++ `color` (english color).
         ++ For example:
         ++ \example{jlMessageStyled("I AM HERE!!!", "red")}
+        jlRandomString : PI -> String
+        ++ jlRandomString(n) returns a random string of n characters.
         jlToLatex : String -> String
         ++ jlToLatex(str) converts the string str to LaTeX
         ++ for supported expressions.
@@ -246,6 +241,8 @@ JLStringUtilities() : Exports == Implementation where
             jlMessageStyled("The Julia package Latexify should be installed. " _
                 "You will not be able to latexify a string (jlToLatex).\n\n", jsym "green")
 
+        jlRandomString(n) ==
+            jl_string_eval_string(concat ["randstring(", string(n), ")"])$Lisp
         jlRegex(s) == concat ["r_"", s, "_""]
         jlSubstitute(s) == concat ["s_"", s, "_""]
         jlLatex(s) == concat ["L_"", s, "_""]
