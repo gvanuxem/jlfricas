@@ -559,8 +559,7 @@ NMAlgebraicNumber() : Exports == Implementation where
       jlref(concat ["let (Rq, x) = QQ[_"x_"]; p = minimal_polynomial(Rq, ",
         getind(a), "); QQBar((iseven(degree(p)) ? 1 : -1) * coeff(p, 0)) end"])
 
-    conjugates(a) ==
-      junfunc("conjugates", a)
+    conjugates(a) == junfunc("conjugates", a)
 
     --pToCaString(p : SparseUnivariatePolynomial %) : String ==
     --  ts := listOfTerms p
