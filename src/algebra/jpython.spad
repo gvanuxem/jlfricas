@@ -190,49 +190,50 @@ JLObjPy() : Exports == Implementation where
     jpython(str : String) == jlref(concat(["Py(", str, ")"]))
     coerce(pyobj : %) : OutputForm == jl_string_getindex(jlId pyobj)$Lisp
 
-)abbrev package JPYPARI JLPyPari
-++ Experimental interface to PARI/GP functions with Julia
-++ via PythonCall using CyPari 2. Thanks to the SageMath community.
-++ Author: G. Vanuxem
-++ Date Created: November 2026
-++ Description:
-++  This package provides an experimental Julia Python interface
-++  to the number theory library PARI/GP
-++  \url{https://pari.math.u-bordeaux.fr/}.
-++  \url{https://cypari2.readthedocs.io/en/latest/index.html}.
-++  CyPari 2 (cypari2) must be installed in Julia using CondaPkg.
-JLPyPari() : Exports == Implementation where
-  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
-  Exports ==> with
-    jlPari  : String -> JLObjPy
-    ++ jlPari(s) evaluates s using Pari/GP.
-    jlPari : JLObjPy -> JLObjPy
-    ++ jlPari(pyobj) evaluates pyobj using Pari/GP i.e.
-    ++ in Julia this is equivalent to 'pari(pyobj)'.
-    jlPari : (String, JLObjPy) -> JLObjPy
-    ++ jlPari(pfunc, pyobj) evaluates pfunc using Pari/GP with the
-    ++ argument pyobj as an input.
-    jlPari : (String, JLObjPy, JLObjPy) -> JLObjPy
-    ++ jlPari(pfunc, pyobj1, pyobj2) evaluates pfunc using Pari/GP with the
-    ++ arguments pyobj1 and pyobj2 as inputs.
-    jlPari : (String, JLObjPy, JLObjPy, JLObjPy) -> JLObjPy
-    ++ jlPari(pfunc, pyobj1, pyobj2, pyobj3) evaluates pfunc using Pari/GP with the
-    ++ arguments pyobj1, pyobj2 and pyobj3 as inputs.
-  Implementation ==> add
-    import from JLUtilityFunctions
-    import from JLObject
-    import from JLObjPy
-    jlInitialize(true)
+-- Too unstable support of Cython in PythonCall, disabled for now
+-- )abbrev package JPYPARI JLPyPari
+-- ++ Experimental interface to PARI/GP functions with Julia
+-- ++ via PythonCall using CyPari 2. Thanks to the SageMath community.
+-- ++ Author: G. Vanuxem
+-- ++ Date Created: November 2026
+-- ++ Description:
+-- ++  This package provides an experimental Julia Python interface
+-- ++  to the number theory library PARI/GP
+-- ++  \url{https://pari.math.u-bordeaux.fr/}.
+-- ++  \url{https://cypari2.readthedocs.io/en/latest/index.html}.
+-- ++  CyPari 2 (cypari2) must be installed in Julia using CondaPkg.
+--JLPyPari() : Exports == Implementation where
+--  getind(a) ==> concat(["getindex(refs,", string(jlId(a)), ")"])
+--  Exports ==> with
+--    jlPari  : String -> JLObjPy
+--    ++ jlPari(s) evaluates s using Pari/GP.
+--    jlPari : JLObjPy -> JLObjPy
+--    ++ jlPari(pyobj) evaluates pyobj using Pari/GP i.e.
+--    ++ in Julia this is equivalent to 'pari(pyobj)'.
+--    jlPari : (String, JLObjPy) -> JLObjPy
+--    ++ jlPari(pfunc, pyobj) evaluates pfunc using Pari/GP with the
+--    ++ argument pyobj as an input.
+--    jlPari : (String, JLObjPy, JLObjPy) -> JLObjPy
+--    ++ jlPari(pfunc, pyobj1, pyobj2) evaluates pfunc using Pari/GP with the
+--    ++ arguments pyobj1 and pyobj2 as inputs.
+--    jlPari : (String, JLObjPy, JLObjPy, JLObjPy) -> JLObjPy
+--    ++ jlPari(pfunc, pyobj1, pyobj2, pyobj3) evaluates pfunc using Pari/GP with the
+--    ++ arguments pyobj1, pyobj2 and pyobj3 as inputs.
+--  Implementation ==> add
+--    import from JLUtilityFunctions
+--    import from JLObject
+--    import from JLObjPy
+--    jlInitialize(true)
 
-    jlEvalString "using PythonCall;pari=pyimport(_"cypari2_").Pari()"
+--    jlEvalString "using PythonCall;pari=pyimport(_"cypari2_").Pari()"
 
-    jlPari(s : String) ==
-      jlref(concat["pari(", s, ")"])
-    jlPari(pyobj : JLObjPy) ==
-      jlref(concat["pari(", getind(pyobj), ")"])
-    jlPari(pfunc : String, pyobj : JLObjPy) ==
-      jlref(concat["pari.", pfunc, "(", getind(pyobj), ")"])
-    jlPari(pfunc : String, pyobj1 : JLObjPy, pyobj2 : JLObjPy) ==
-      jlref(concat["pari.", pfunc, "(", getind(pyobj1), ",", getind(pyobj2), ")"])
-    jlPari(pfunc : String, pyobj1 : JLObjPy, pyobj2 : JLObjPy, pyobj3 : JLObjPy) ==
-      jlref(concat["pari.", pfunc, "(", getind(pyobj1), ",", getind(pyobj2), ",", getind(pyobj3), ")"])
+--    jlPari(s : String) ==
+--      jlref(concat["pari(", s, ")"])
+--    jlPari(pyobj : JLObjPy) ==
+--      jlref(concat["pari(", getind(pyobj), ")"])
+--    jlPari(pfunc : String, pyobj : JLObjPy) ==
+--      jlref(concat["pari.", pfunc, "(", getind(pyobj), ")"])
+--    jlPari(pfunc : String, pyobj1 : JLObjPy, pyobj2 : JLObjPy) ==
+--      jlref(concat["pari.", pfunc, "(", getind(pyobj1), ",", getind(pyobj2), ")"])
+--    jlPari(pfunc : String, pyobj1 : JLObjPy, pyobj2 : JLObjPy, pyobj3 : JLObjPy) ==
+--      jlref(concat["pari.", pfunc, "(", getind(pyobj1), ",", getind(pyobj2), ",", getind(pyobj3), ")"])
